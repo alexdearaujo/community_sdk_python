@@ -1,0 +1,9 @@
+from enum import Enum
+
+
+class SortingConfigOrder(str, Enum):
+    ORDER_UNSPECIFIED = "ORDER_UNSPECIFIED"
+
+    ORDER_ASCENDING = "ORDER_ASCENDING"
+
+    ORDER_DESCENDING = "ORDER_DESCENDING"

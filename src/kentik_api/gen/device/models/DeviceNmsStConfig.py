@@ -1,0 +1,21 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+
+class DeviceNmsStConfig(BaseModel):
+    """
+    DeviceNmsStConfig model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    credentialName: Optional[str] = Field(
+        validation_alias="credentialName", default=None
+    )
+
+    port: Optional[int] = Field(validation_alias="port", default=None)
+
+    timeout: Optional[str] = Field(validation_alias="timeout", default=None)
+
+    secure: Optional[bool] = Field(validation_alias="secure", default=None)

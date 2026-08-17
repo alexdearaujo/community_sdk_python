@@ -1,0 +1,9 @@
+from enum import Enum
+
+
+class TopKeysConditionTopKeysEvent(str, Enum):
+    TOP_KEYS_EVENT_UNSPECIFIED = "TOP_KEYS_EVENT_UNSPECIFIED"
+
+    TOP_KEYS_EVENT_JOINS = "TOP_KEYS_EVENT_JOINS"
+
+    TOP_KEYS_EVENT_LEAVES = "TOP_KEYS_EVENT_LEAVES"

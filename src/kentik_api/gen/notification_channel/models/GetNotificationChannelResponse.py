@@ -1,0 +1,17 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from .NotificationChannel import NotificationChannel
+
+
+class GetNotificationChannelResponse(BaseModel):
+    """
+    GetNotificationChannelResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    notificationChannel: Optional[NotificationChannel] = Field(
+        validation_alias="notificationChannel", default=None
+    )

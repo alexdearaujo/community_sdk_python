@@ -1,0 +1,17 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+
+class HTTPResponseData(BaseModel):
+    """
+    HTTPResponseData model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    status: Optional[int] = Field(validation_alias="status", default=None)
+
+    size: Optional[int] = Field(validation_alias="size", default=None)
+
+    data: Optional[str] = Field(validation_alias="data", default=None)

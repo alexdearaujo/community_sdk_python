@@ -1,0 +1,17 @@
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
+from .PtrResult import PtrResult
+
+
+class ResolveAddressesResponse(BaseModel):
+    """
+    ResolveAddressesResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    results: Optional[List[Optional[PtrResult]]] = Field(
+        validation_alias="results", default=None
+    )

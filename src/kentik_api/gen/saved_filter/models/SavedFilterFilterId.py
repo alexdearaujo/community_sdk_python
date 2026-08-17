@@ -1,0 +1,15 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+
+class SavedFilterFilterId(BaseModel):
+    """
+    SavedFilterFilterId model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    filterId: Optional[str] = Field(validation_alias="filterId", default=None)
+
+    isNot: Optional[bool] = Field(validation_alias="isNot", default=None)

@@ -1,0 +1,17 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from .SessionStatus import SessionStatus
+
+
+class CreateChatSessionResponse(BaseModel):
+    """
+    CreateChatSessionResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    id: Optional[str] = Field(validation_alias="id", default=None)
+
+    status: Optional[SessionStatus] = Field(validation_alias="status", default=None)

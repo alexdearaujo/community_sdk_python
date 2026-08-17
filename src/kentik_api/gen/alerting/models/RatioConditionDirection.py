@@ -1,0 +1,11 @@
+from enum import Enum
+
+
+class RatioConditionDirection(str, Enum):
+    DIRECTION_UNSPECIFIED = "DIRECTION_UNSPECIFIED"
+
+    DIRECTION_BOTH = "DIRECTION_BOTH"
+
+    DIRECTION_RIGHT = "DIRECTION_RIGHT"
+
+    DIRECTION_LEFT = "DIRECTION_LEFT"

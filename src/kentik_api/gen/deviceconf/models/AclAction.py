@@ -1,0 +1,9 @@
+from enum import Enum
+
+
+class AclAction(str, Enum):
+    ACL_ACTION_UNSPECIFIED = "ACL_ACTION_UNSPECIFIED"
+
+    ACL_ACTION_ALLOW = "ACL_ACTION_ALLOW"
+
+    ACL_ACTION_DENY = "ACL_ACTION_DENY"

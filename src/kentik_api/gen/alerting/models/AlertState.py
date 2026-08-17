@@ -1,0 +1,9 @@
+from enum import Enum
+
+
+class AlertState(str, Enum):
+    ALERT_STATE_UNSPECIFIED = "ALERT_STATE_UNSPECIFIED"
+
+    ALERT_STATE_CLEAR = "ALERT_STATE_CLEAR"
+
+    ALERT_STATE_ACTIVE = "ALERT_STATE_ACTIVE"

@@ -1,0 +1,15 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+
+class SummaryStatusUtilStatus(BaseModel):
+    """
+    UtilStatus model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    status: Optional[str] = Field(validation_alias="status", default=None)
+
+    highestPct: Optional[int] = Field(validation_alias="highestPct", default=None)

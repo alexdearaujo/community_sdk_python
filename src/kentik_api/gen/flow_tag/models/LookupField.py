@@ -1,0 +1,7 @@
+from enum import Enum
+
+
+class LookupField(str, Enum):
+    LOOKUP_FIELD_UNSPECIFIED = "LOOKUP_FIELD_UNSPECIFIED"
+
+    LOOKUP_FIELD_VALUE = "LOOKUP_FIELD_VALUE"

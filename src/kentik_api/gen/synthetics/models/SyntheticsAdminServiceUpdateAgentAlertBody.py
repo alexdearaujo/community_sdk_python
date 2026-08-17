@@ -1,0 +1,19 @@
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
+
+class SyntheticsAdminServiceUpdateAgentAlertBody(BaseModel):
+    """
+    SyntheticsAdminServiceUpdateAgentAlertBody model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    thresholdSeconds: Optional[int] = Field(
+        validation_alias="thresholdSeconds", default=None
+    )
+
+    notificationChannelIds: Optional[List[str]] = Field(
+        validation_alias="notificationChannelIds", default=None
+    )

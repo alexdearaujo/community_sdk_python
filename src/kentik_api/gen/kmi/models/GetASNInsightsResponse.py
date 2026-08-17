@@ -1,0 +1,17 @@
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
+from .Insight import Insight
+
+
+class GetASNInsightsResponse(BaseModel):
+    """
+    GetASNInsightsResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    insights: Optional[List[Optional[Insight]]] = Field(
+        validation_alias="insights", default=None
+    )

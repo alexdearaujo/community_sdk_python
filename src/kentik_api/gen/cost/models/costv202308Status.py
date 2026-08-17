@@ -1,0 +1,9 @@
+from enum import Enum
+
+
+class costv202308Status(str, Enum):
+    STATUS_UNSPECIFIED = "STATUS_UNSPECIFIED"
+
+    STATUS_INCOMPLETE = "STATUS_INCOMPLETE"
+
+    STATUS_COMPLETE = "STATUS_COMPLETE"

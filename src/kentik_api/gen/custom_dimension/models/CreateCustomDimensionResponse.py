@@ -1,0 +1,17 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from .CustomDimension import CustomDimension
+
+
+class CreateCustomDimensionResponse(BaseModel):
+    """
+    CreateCustomDimensionResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    dimension: Optional[CustomDimension] = Field(
+        validation_alias="dimension", default=None
+    )

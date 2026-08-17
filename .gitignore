@@ -15,5 +15,3 @@ wheels/
 
 # Generated content
 bin/
-docs/source/services/
-src/kentik_api/gen/

@@ -1,0 +1,17 @@
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
+from .TagValue import TagValue
+
+
+class GetTagValuesResponse(BaseModel):
+    """
+    GetTagValuesResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    tagValues: Optional[List[Optional[TagValue]]] = Field(
+        validation_alias="tagValues", default=None
+    )

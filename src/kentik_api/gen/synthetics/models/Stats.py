@@ -1,0 +1,17 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+
+class Stats(BaseModel):
+    """
+    Stats model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    average: Optional[int] = Field(validation_alias="average", default=None)
+
+    min: Optional[int] = Field(validation_alias="min", default=None)
+
+    max: Optional[int] = Field(validation_alias="max", default=None)

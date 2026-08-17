@@ -1,0 +1,15 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from .Interface import Interface
+
+
+class UpdateInterfaceResponse(BaseModel):
+    """
+    UpdateInterfaceResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    interface: Optional[Interface] = Field(validation_alias="interface", default=None)

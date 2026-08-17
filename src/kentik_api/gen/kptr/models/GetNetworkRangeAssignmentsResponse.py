@@ -1,0 +1,15 @@
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
+
+class GetNetworkRangeAssignmentsResponse(BaseModel):
+    """
+    GetNetworkRangeAssignmentsResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    networkRanges: Optional[List[str]] = Field(
+        validation_alias="networkRanges", default=None
+    )

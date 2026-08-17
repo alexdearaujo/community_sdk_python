@@ -1,0 +1,15 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from .MitigationMethod import MitigationMethod
+
+
+class MitigationMethodsServiceGetResponse(BaseModel):
+    """
+    MitigationMethodsServiceGetResponse model
+    """
+
+    model_config = {"populate_by_name": True, "validate_assignment": True}
+
+    method: Optional[MitigationMethod] = Field(validation_alias="method", default=None)
