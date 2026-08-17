@@ -1,4 +1,4 @@
-.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-e2e lint clean deep-clean
+.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e lint clean deep-clean
 
 .DEFAULT_GOAL := all
 
@@ -54,6 +54,9 @@ test-runtime: ## Run shared runtime tests only
 
 test-smoke: ## Run smoke tests only
 	$(PYTEST) tests/smoke/
+
+test-generator: ## Run generator (scripts/generation/) unit tests only
+	$(PYTEST) tests/generator/
 
 test-e2e: ## Run end-to-end tests against the REAL Kentik API (opt-in, needs .env)
 	$(PYTEST) -m e2e tests/e2e/

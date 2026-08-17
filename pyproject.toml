@@ -67,6 +67,7 @@ docs = [
 "__init__.py" = ["F401", "F403"]
 
 [tool.pytest.ini_options]
+pythonpath = ["."]
 markers = [
     "e2e: end-to-end tests against the real Kentik API. Opt-in only -- excluded by default, run with `-m e2e` or `make test-e2e`. Requires real KENTIK_EMAIL/KENTIK_API_TOKEN in a project-root .env.",
 ]

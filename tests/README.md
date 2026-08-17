@@ -7,6 +7,7 @@ This folder uses a layered testing strategy so generation changes can be validat
 - generated: contract tests for all generated snake_case service wrappers, plus exhaustive per-endpoint/per-status-code schema coverage. Mocked, no network.
 - runtime: focused tests for shared runtime helpers used by generated code. Mocked, no network.
 - smoke: lightweight checks for client wiring and selected wrapper call paths. Mocked, no network.
+- generator: unit tests for the SDK generator's phase modules (`scripts/generation/`) -- error package generation, swagger selection/parity validation, wrapper generation. Mocked, no network.
 - e2e: end-to-end tests against the **real** Kentik API. Opt-in only -- never part of `make test`/`make all`. See section 4 below before touching this one.
 
 `tests/_discovery.py` (at the tests/ root, not inside any one layer) holds the schema/wrapper discovery helpers shared by `generated/` and `e2e/`, so they can't drift apart. `tests/conftest.py` puts `tests/` on `sys.path` so `import _discovery` resolves the same way no matter which layer pytest is invoked against. Neither file is itself a test file.
@@ -23,6 +24,8 @@ From the repository root:
   make test-runtime
 - Run smoke tests only:
   make test-smoke
+- Run generator unit tests only:
+  make test-generator
 - Run end-to-end tests against the real API (opt-in, needs a real .env):
   make test-e2e
 
@@ -32,14 +35,15 @@ You can also call pytest directly:
 - uv run pytest tests/generated/
 - uv run pytest tests/runtime/
 - uv run pytest tests/smoke/
+- uv run pytest tests/generator/
 - uv run pytest -m e2e tests/e2e/
 
 `pyproject.toml` registers the `e2e` marker with `addopts = "-m 'not e2e'"`, so plain `pytest tests/` (and therefore `make test`) always deselects `tests/e2e/` -- you have to opt in explicitly with `-m e2e`.
 
 ## When To Run Which Suite
 
-- While editing scripts/generate_sdk.py or template behavior:
-  use test-generated first for fast feedback.
+- While editing scripts/generate_sdk.py, scripts/generation/, or template behavior:
+  use test-generator for fast feedback on the generator itself, then test-generated to check the SDK it produces.
 - While editing shared request/auth/error behavior in src/kentik_api/core:
   use test-runtime first.
 - Before opening a PR or merging:
@@ -88,7 +92,17 @@ Primary file:
 
 Add small high-value checks for overall wiring. Keep this suite small and fast.
 
-### 4) End-to-end tests (real API, opt-in)
+### 4) Generator tests
+
+Primary files:
+
+- tests/generator/test_parity.py -- swagger selection and generated/schema directory parity
+- tests/generator/test_error_package.py -- error class naming, error-response extraction/merging, and the runtime error-dispatch injection seam
+- tests/generator/test_wrapper_generation.py -- annotation qualification and end-to-end wrapper/client-mixin generation against a temp directory
+
+Add tests here when `scripts/generation/*.py` logic changes. These are unit tests against the generator itself (not the SDK it produces), so they don't need a real or local schema checkout -- build minimal swagger fragments or fake generated-file fixtures with `tmp_path` instead.
+
+### 5) End-to-end tests (real API, opt-in)
 
 Primary files:
 
