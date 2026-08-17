@@ -1,108 +1,140 @@
-# Kentik API Python library
+# Kentik Community Python SDK
 
-This is a Python client library for [Kentik APIs](https://kb.kentik.com/v0/Ab09.htm).
-It is distributed as [_kentik-api_ PyPI package](https://pypi.org/project/kentik-api/).
+An automated Python SDK for the Kentik API, generated from OpenAPI schemas and powered by `uv`, `Pydantic v2`, and `HTTPX`.
 
-## Installation with pip
+## Overview
 
-1. Install the library using pip:  
-```pip3 install kentik-api```
-2. Check installation successful - no errors should be reported:
-```python3 -c "import kentik_api"```
-3. Run an example (optional):
-  ```bash
-  export KTAPI_AUTH_EMAIL=<your kentik api credentials email>
-  export KTAPI_AUTH_TOKEN=<your kentik api credentials token>
-  python3 examples/sites_example.py
-  ```
+This SDK is not maintained manually. Instead, it is **generated and patched** automatically from the [Kentik API Public Schema](https://github.com/kentik/api-schema-public). Our generation pipeline fixes common OpenAPI generator bugs, scrubs versioning from class names for a cleaner developer experience, and automatically generates architecture diagrams.
 
-## Getting started
+## Prerequisites
 
-The best way to get started coding with the SDK is to study provided [examples](examples).
+* **Python 3.12+**
+* **[uv](https://github.com/astral-sh/uv)**: The lightning-fast Python package manager.
+* **Java (JRE)**: Required to render PlantUML diagrams.
+* **Graphviz**: Required by PlantUML for graph layouts.
 
-Interfaces for manipulating all Kentik API resources are available under the `KentikAPI` object.  
-Every Kentik API resource is represented by a public class, and all related data types are located in the same source
-file or directory as the implementation of the class:
-- [CustomApplication](kentik_api/public/custom_application.py)
-- [CustomDimension](kentik_api/public/custom_dimension.py)
-- [DeviceLabel](kentik_api/public/device_label.py)
-- [Device](kentik_api/public/device.py)
-- [ManualMitigation](kentik_api/public/manual_mitigation.py)
-- [Plan](kentik_api/public/plan.py)
-- [QueryObject](kentik_api/public/query_object.py)
-- [QuerySQL](kentik_api/public/query_sql.py)
-- [SavedFilter](kentik_api/public/saved_filter.py)
-- [Site](kentik_api/public/site.py)
-- [Synthetic Tests](kentik_api/synthetics)
-- [Tag](kentik_api/public/tag.py)
-- [Tenant](kentik_api/public/tenant.py)
-- [User](kentik_api/public/user.py)
+    ```bash
+    # macOS
+    brew install openjdk graphviz
+    echo 'export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"' >> ~/.zshrc
+    source ~/.zshrc
 
-## Additional utilities available in the `utils` sub-module
+    # Ubuntu/Debian
+    sudo apt install default-jre graphviz
+    ```
 
-### Authentication support
+## Development Setup
 
-- `get_credentials`: function for retrieving authentication credentials from the environment or a profile stored on
-  the disk. API authentication credentials can be provided via environment variables `KTAPI_AUTH_EMAIL` and
-  `KTAPI_AUTH_TOKEN` or via named profile (specified as argument to the `get_credentials` functions, defaulting
-  to `default`) which is a JSON file with following format:
-```json
-{
-  "email": "<email address>",
-  "api-key": "<the API key>"
-}
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/kentik/community_sdk_python.git
+    cd community_sdk_python
+    ```
+
+2. Sync the environment:
+
+    ```bash
+    make install
+    ```
+
+## Authentication via .env
+
+The SDK can load credentials automatically from a `.env` file at your project root.
+
+Create `.env` in the repository root:
+
+```bash
+KENTIK_EMAIL=you@example.com
+KENTIK_API_TOKEN=your_api_token
 ```
-Path to the profile file can be provided in `KTAPI_CFG_FILE`. Otherwise, it is first searched in
-`${KTAPI_HOME}/<profile_name>` and then in `${HOME}/.kentik/<profile_name>`.
 
-### Support for caching of device data
+When `KentikAPI(...)` is created without `email` and `api_token`, it will:
 
-The `DeviceCache` class allows caching of device related data obtained from the Kentik API. It internally builds
-index of devices by `name` and by `id`. Devices are represented by the [Device](kentik_api/public/device.py) class which
-internally builds dictionary of device interfaces  (represented by the `DeviceInterface` class) by `name`.
+1. Load the nearest `.env` file from the current working directory.
+2. Read `KENTIK_EMAIL` and `KENTIK_API_TOKEN`.
 
-## Analytic support
+You can still pass `email` and `api_token` explicitly, and explicit values take precedence.
 
-The `analytics` package provides support for processing Kentik time series data using Pandas Dataframes.
-The [pandas](https://pandas.pydata.org) and [PyYAML](https://pyyaml.org/) modules are required by the `analytics`
-sub-module and are automatically installed with the `kentik-api[analytics]` option.
-See [analytics readme](kentik_api/analytics/README.md) for more details.
+## Generating the SDK
 
-## Available Examples
+The SDK generation script performs the following tasks:
 
-- [alerting_example.py](examples/alerting_example.py) - create Manual Mitigation
-- [applications_example.py](examples/applications_example.py) - create/update/delete Custom Application
-- [bulk_user_create.py](examples/bulk_user_create.py) - create users from YAML file
-- [devices_example.py](examples/devices_example.py) - create/update/get/delete/list Devices
-- [dimensions_example.py](examples/dimensions_example.py) - create/update/get/delete/list Custom Dimensions,
-                                                            create/update/delete Populator
-- [labels_example.py](examples/labels_example.py) - create/update/get/delete/list Device Labels
-- [my_kentik_portal_example.py](examples/my_kentik_portal_example.py) - get/list Tenants, create/delete Tenant User
-- [plans_example.py](examples/plans_example.py) - list plans
-- [queries_example.py](examples/queries_example.py) - query for SQL/URL/data/chart
-- [saved_filters_example.py](examples/saved_filters_example.py) - create/update/get/delete/list Saved Filters
-- [sites_example.py](examples/sites_example.py) - create/update/get/delete/list Sites
-- [tags_example.py](examples/tags_example.py) - create/update/get/delete/list Tags
-- [users_example.py](examples/users_example.py) - create/update/get/delete/list Users
-- [error_handling_example.py](examples/error_handling_example.py) - handling errors raised by the library
-- [analytics_example_sql.py](examples/analytics_example_sql.py) - use of `SQLQueryDefinition`, `flatness_analysis`
-                                                                  methods and the`DeviceCache`
-- [analytics_example_topx.py](examples/analytics_example_sql.py) - use of `DataQueryDefinition`, `flatness_analysis`
-                                                                  methods and the`DeviceCache`
-  (see also [analytics readme](kentik_api/analytics/README.md))
-- [synthetics_example.py](examples/synthetics_example.py) - interact with synthetics API
-- [cloud_export_example.py](examples/cloud_export_example.py) - interact with cloud export API
+1. Clones/Updates the Kentik API schemas.
+2. Scrubs version prefixes (e.g., v2023...) from model names.
+3. Fixes generator bugs (Ghost variables, Pydantic v2 compatibility, Path sanitization).
+4. Generates PlantUML architecture diagrams.
+5. Formats the output with Ruff.
 
-## Development
+**To generate from the remote GitHub repo:**
 
-[Instructions for developers](docs/README.md)
+```bash
+make generate
+```
 
-## Open-source libraries
+**To generate from a local schema folder (for testing):**
 
-This software uses the following open-source libraries:
-- [dacite](https://pypi.org/project/dacite/) by Konrad Hałas - MIT License
-- [requests](https://pypi.org/project/requests/) by Kenneth Reitz - Apache Software License (Apache 2.0)
-- [typing-extensions](https://pypi.org/project/typing-extensions/) by  Guido van Rossum, Jukka Lehtosalo, Lukasz Langa,
-                                                                   Michael Lee - PSFL License
-- [pandas](https://pandas.pydata.org) supported by NumFOCUS - BSD 3-Clause License
-- [pyyaml](https://pyyaml.org/) by Ingy döt Net and Kirill Simonov - MIT license
+```bash
+make generate local
+```
+
+**To generate from a custom local schema path:**
+
+```bash
+make generate LOCAL_REPO=/path/to/api-schema-public
+```
+
+**To run the full pipeline (services + docs + tests):**
+
+```bash
+make
+```
+
+**To run stages independently:**
+
+```bash
+make services
+make docs
+make tests
+```
+
+## Documentation
+
+Documentation is built using **Sphinx** and **MyST (Markdown)**. It includes automatically generated service diagrams and code references.
+
+1. **Generate the SDK and Docs Source:**
+Running the `generate_sdk.py` script automatically prepares the documentation source.
+
+2. **Build the HTML site:**
+
+    ```bash
+    make docs
+    ```
+
+3. **View the Docs:**
+Open `docs/build/html/index.html` in your browser.
+
+## Testing
+
+We use `pytest` for testing. Ensure you run the generator before running tests to ensure the latest models are present.
+
+```bash
+make tests
+```
+
+## Code Quality
+
+We use Ruff for linting and formatting. The generation script runs this automatically, but you can run it manually at any time:
+
+```bash
+make lint
+```
+
+## Generation Pipeline Logic (Internal)
+
+If you are modifying `scripts/generate_sdk.py`, keep in mind the following custom patches currently applied:
+
+* **Flattened Structure**: Subdirectories for versions are removed; only the latest version of each service is kept.
+* **Wildcard Patching**: from `.models import *` is replaced with explicit re-exports (`import X as X`) to satisfy Pylance/Ruff.
+* **Ghost Data Fix**: Removes `json=data.dict()` calls in functions where the generator failed to provide a payload argument.
+* **Pydantic v2**: Injects `.model_construct()` for empty API responses to prevent validation crashes.

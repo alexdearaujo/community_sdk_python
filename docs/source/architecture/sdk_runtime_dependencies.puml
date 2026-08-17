@@ -1,0 +1,43 @@
+@startuml
+title Kentik SDK Runtime Dependency Map
+left to right direction
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+component "API Config" as API_Config
+component "Auth Credentials" as Auth_Credentials
+component "Client API" as Client_API
+component "Client Mixin" as Client_Mixin
+component "Error Types" as Error_Types
+component "Generated Error Classes" as Generated_Error_Classes
+component "Generated Models" as Generated_Models
+component "Generated REST Services" as Generated_REST_Services
+component "Generated Service Wrappers" as Generated_Service_Wrappers
+component "REST Runtime" as REST_Runtime
+component "REST Transport" as REST_Transport
+component "Transport Base" as Transport_Base
+component "gRPC Transport" as gRPC_Transport
+
+API_Config --> Error_Types
+Client_API --> Auth_Credentials
+Client_API --> Client_Mixin
+Client_API --> REST_Transport
+Client_API --> gRPC_Transport
+Client_Mixin --> Generated_Service_Wrappers : x32
+Client_Mixin --> REST_Transport
+Client_Mixin --> gRPC_Transport
+Generated_REST_Services --> API_Config : x43
+Generated_REST_Services --> Generated_Error_Classes : x43
+Generated_REST_Services --> Generated_Models : x43
+Generated_REST_Services --> REST_Runtime : x43
+Generated_Service_Wrappers --> Generated_REST_Services : x43
+Generated_Service_Wrappers --> REST_Transport : x32
+Generated_Service_Wrappers --> gRPC_Transport : x32
+REST_Runtime --> API_Config
+REST_Runtime --> Error_Types
+REST_Transport --> API_Config
+REST_Transport --> Auth_Credentials
+REST_Transport --> Transport_Base
+gRPC_Transport --> Auth_Credentials
+gRPC_Transport --> Transport_Base
+@enduml
