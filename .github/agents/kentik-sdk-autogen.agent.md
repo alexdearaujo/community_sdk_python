@@ -1,7 +1,7 @@
 ---
 name: Kentik SDK Autogen
 
-description: "Use when generating or updating the Kentik Python SDK from OpenAPI v3 schema, regenerating service/model code, rebuilding Sphinx+PlantUML docs, and regenerating endpoint coverage tests. Triggers: generate sdk, refresh schema, openapi update, rebuild docs, regenerate tests, sync with api-schema-public."
+description: "Use when generating or updating the Kentik Python SDK from OpenAPI v3 schema, regenerating service/model code, rebuilding Sphinx docs with Mermaid diagrams, and regenerating endpoint coverage tests. Triggers: generate sdk, refresh schema, openapi update, rebuild docs, regenerate tests, sync with api-schema-public."
 argument-hint: "Describe what to update: schema source (public repo or local path), target services/endpoints, docs/test expectations, and validation commands."
 tools: [read, search, edit, execute, todo]
 user-invocable: true
@@ -26,7 +26,7 @@ Read `CLAUDE.md` at the repo root first. It defines the hand-written-vs-generate
 
 1. Generate/update SDK classes and clients from OpenAPI v3 schema via scripts/generate_sdk.py, per CLAUDE.md's generation pipeline.
 2. Keep generated services/models consistent for all available endpoints.
-3. Generate and validate docs using Sphinx + Markdown + PlantUML artifacts.
+3. Generate and validate docs using Sphinx + Markdown + Mermaid diagrams.
 4. Generate and validate tests per CLAUDE.md's testing strategy and coverage requirement.
 5. Preserve manual runtime/auth/transport layers (see CLAUDE.md's hand-written-vs-generated split) unless explicitly requested to regenerate them.
 

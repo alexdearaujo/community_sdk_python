@@ -1,21 +1,19 @@
 # Generated Services (`kentik_api.gen`)
 
 Fully generated. Every `make generate` run wipes and rebuilds every
-subdirectory here. **Never hand-edit a file under this folder.** If
-output here is wrong, fix the generator (`scripts/generate_sdk.py`,
-a phase module in
+subdirectory here, and rewrites this file too. **Never hand-edit
+anything under this folder**, including this README. If output here is
+wrong, fix the generator (`scripts/generate_sdk.py`, a phase module in
 [`scripts/generation/`](../../../scripts/generation/README.md)), or a
 template in
 [`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
-Then regenerate. This file itself is the one exception: it is a plain
-file, not a directory, so the generator's cleanup step leaves it in
-place.
+Then regenerate.
 
 ## Layout
 
 Each subdirectory is one Kentik API service (`device`, `alerting`,
 `user`, and so on), built from that service's OpenAPI v3 schema files.
-Every service directory has the same four-part shape:
+Every service directory has the same shape:
 
 | Path | Contents |
 | --- | --- |

@@ -20,12 +20,17 @@ extensions = [
     "myst_parser",
     "sphinx.ext.autodoc",
     "sphinxcontrib.autodoc_pydantic",  # Formats Pydantic v2 models beautifully
+    "sphinxcontrib.mermaid",  # Renders Mermaid diagrams (replaces PlantUML)
 ]
 
 # Tell MyST we want to use the {include} and {eval-rst} directives
 myst_enable_extensions = [
     "colon_fence",
 ]
+
+# Route plain ```mermaid fenced blocks through the mermaid directive, so the
+# same fence renders natively on GitHub and via sphinxcontrib.mermaid here.
+myst_fence_as_directive = ["mermaid"]
 
 html_theme = "sphinx_book_theme"
 

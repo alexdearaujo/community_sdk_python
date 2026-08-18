@@ -1,54 +1,72 @@
-"""Runtime architecture diagrams, rendered PlantUML/SVG, and per-service READMEs."""
+"""Runtime architecture docs (inline Mermaid), the gen/ root README, and per-service READMEs."""
 
 import ast
 import re
-import subprocess
-import urllib.request
 from pathlib import Path
 
 from ._shared import PROJECT_ROOT, SDK_OUTPUT_DIR
 
 
-def _render_diagrams():
-    """Downloads PlantUML JAR (if missing) and renders the runtime architecture diagram to .svg."""
-    PLANTUML_JAR_URL = "https://github.com/plantuml/plantuml/releases/download/v1.2026.6/plantuml-1.2026.6.jar"
-    bin_dir = PROJECT_ROOT / "bin"
-    bin_dir.mkdir(exist_ok=True)
-    jar_path = bin_dir / "plantuml.jar"
+# Top-level README for src/kentik_api/gen/. This lives inside the fully-wiped
+# gen/ tree, so it is generated here rather than hand-written: `make clean`
+# (rm -rf gen/) would otherwise delete it with no way to regenerate it.
+_GEN_ROOT_README = """\
+# Generated Services (`kentik_api.gen`)
 
-    # 1. Ensure the JAR exists locally
-    if not jar_path.exists():
-        print("Downloading PlantUML JAR...")
-        urllib.request.urlretrieve(PLANTUML_JAR_URL, jar_path)
+Fully generated. Every `make generate` run wipes and rebuilds every
+subdirectory here, and rewrites this file too. **Never hand-edit
+anything under this folder**, including this README. If output here is
+wrong, fix the generator (`scripts/generate_sdk.py`, a phase module in
+[`scripts/generation/`](../../../scripts/generation/README.md)), or a
+template in
+[`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
+Then regenerate.
 
-    print("Patching local PUML titles and rendering to SVG...")
+## Layout
 
-    # 2. Find all .puml files
-    puml_paths = sorted(
-        (PROJECT_ROOT / "docs" / "source" / "architecture").glob("*.puml")
-    )
+Each subdirectory is one Kentik API service (`device`, `alerting`,
+`user`, and so on), built from that service's OpenAPI v3 schema files.
+Every service directory has the same shape:
 
-    if not puml_paths:
-        print("⚠️ No .puml files found to render.")
-        return
+| Path | Contents |
+| --- | --- |
+| `models/` | Pydantic v2 request/response models |
+| `services/` | Raw REST operation functions, plus a unified `<Service>ServiceWrapper` class |
+| `error/` | Per-operation error classes, dispatched from each declared response status code |
+| `pb/` | gRPC stubs (`*_pb2.py`, `*_pb2_grpc.py`); transport is a stub today, see below |
+| `README.md` | One-paragraph pointer to the full Sphinx reference for that service |
 
-    # 3. Patch the files (removes duplicate @startuml tags or artifacts)
-    for puml_path in puml_paths:
-        content = puml_path.read_text(encoding="utf-8")
-        patched = re.sub(r"^@startuml.*$", "@startuml", content, flags=re.MULTILINE)
-        if patched != content:
-            puml_path.write_text(patched, encoding="utf-8")
+```mermaid
+flowchart TD
+    G["kentik_api.gen.device"] --> M[models/]
+    G --> S[services/]
+    G --> E[error/]
+    G --> P[pb/]
+    S -->|calls| R["kentik_api.core.rest_runtime.request_json()"]
+    S -->|on error status| E
+```
 
-    # 4. Execute the JAR against all found files at once
-    print(f"Rendering {len(puml_paths)} diagrams using local JAR...")
-    cmd = ["java", "-jar", str(jar_path), "-tsvg"] + [str(p) for p in puml_paths]
+## Where a call actually runs
 
-    try:
-        # We use check=True to catch if Java fails to execute
-        subprocess.run(cmd, check=True)
-        print("✅ Diagram generation complete!")
-    except subprocess.CalledProcessError as e:
-        print(f"❌ PlantUML rendering failed: {e}")
+Every generated REST operation, across every service, routes through
+one shared function: `request_json()` in
+[`kentik_api.core`](../core/README.md). No service directory here
+implements its own HTTP, auth, or retry logic. gRPC transport is
+intentionally a stub: generated wrapper methods raise
+`NotImplementedError` for `GrpcTransport`. Only REST is fully wired.
+
+## Full reference
+
+For endpoint parameters, response shapes, and usage examples per
+service, see `docs/source/services/<service>.md`, or the built
+Sphinx docs.
+"""
+
+
+def _generate_gen_root_readme() -> None:
+    """Writes src/kentik_api/gen/README.md, kept in sync with the gen/ tree."""
+    SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    (SDK_OUTPUT_DIR / "README.md").write_text(_GEN_ROOT_README, encoding="utf-8")
 
 
 def _generate_service_readmes():
@@ -131,11 +149,9 @@ def _module_group(module_name: str, source_file: Path | None = None) -> str | No
 
 
 def _generate_runtime_architecture_docs() -> None:
-    """Generates a high-level runtime architecture page and dependency graph."""
+    """Generates a high-level runtime architecture page with an inline dependency graph."""
     package_root = PROJECT_ROOT / "src" / "kentik_api"
     docs_root = PROJECT_ROOT / "docs" / "source"
-    architecture_dir = docs_root / "architecture"
-    architecture_dir.mkdir(parents=True, exist_ok=True)
 
     scan_paths: list[Path] = []
     scan_paths.extend([package_root / "client.py", package_root / "client_mixin.py"])
@@ -191,31 +207,18 @@ def _generate_runtime_architecture_docs() -> None:
                 key = (src_group, dst_group)
                 edge_counts[key] = edge_counts.get(key, 0) + 1
 
-    puml_lines = [
-        "@startuml",
-        "title Kentik SDK Runtime Dependency Map",
-        "left to right direction",
-        "skinparam componentStyle rectangle",
-        "skinparam shadowing false",
-        "",
-    ]
+    mermaid_lines = ["flowchart LR"]
 
     for node_name in sorted(nodes):
-        puml_lines.append(
-            f'component "{node_name}" as {re.sub(r"[^A-Za-z0-9_]", "_", node_name)}'
-        )
+        node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
+        mermaid_lines.append(f'    {node_id}["{node_name}"]')
 
-    puml_lines.append("")
+    mermaid_lines.append("")
     for (src, dst), count in sorted(edge_counts.items()):
         src_id = re.sub(r"[^A-Za-z0-9_]", "_", src)
         dst_id = re.sub(r"[^A-Za-z0-9_]", "_", dst)
-        label = f" : x{count}" if count > 1 else ""
-        puml_lines.append(f"{src_id} --> {dst_id}{label}")
-
-    puml_lines.append("@enduml")
-    (architecture_dir / "sdk_runtime_dependencies.puml").write_text(
-        "\n".join(puml_lines) + "\n", encoding="utf-8"
-    )
+        label = f'|"x{count}"|' if count > 1 else ""
+        mermaid_lines.append(f"    {src_id} -->{label} {dst_id}")
 
     architecture_md = [
         "# SDK Runtime Architecture",
@@ -232,7 +235,9 @@ def _generate_runtime_architecture_docs() -> None:
         "",
         "## Module Dependency Graph",
         "",
-        "![Runtime Dependency Graph](architecture/sdk_runtime_dependencies.svg)",
+        "```mermaid",
+        *mermaid_lines,
+        "```",
         "",
         "## Reading The Graph",
         "",
@@ -261,7 +266,7 @@ def _generate_runtime_architecture_docs() -> None:
 
 
 def generate() -> None:
-    """Generates the runtime architecture docs, renders diagrams, then per-service READMEs."""
+    """Generates the runtime architecture docs, the gen/ root README, and per-service READMEs."""
     _generate_runtime_architecture_docs()
-    _render_diagrams()
+    _generate_gen_root_readme()
     _generate_service_readmes()

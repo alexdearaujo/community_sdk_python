@@ -67,7 +67,7 @@ def extract_endpoint_docs(swagger_path: Path) -> list[EndpointDoc]:
     Unlike collect_operation_error_responses (which only looks at non-2xx
     responses, for error-class generation), this captures every declared
     response so it can be rendered as real Sphinx text -- tables and a
-    generated usage example -- instead of a PlantUML table image.
+    generated usage example -- instead of a rendered diagram image.
     """
     with open(swagger_path, "r", encoding="utf-8") as f:
         schema = json.load(f)
@@ -471,10 +471,10 @@ def _autodoc_directive_for_model(models_dir: Path, class_name: str) -> str:
 def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
     """Generates Sphinx MyST stubs with real per-endpoint text and model docs.
 
-    Replaces the old PlantUML "API table" image (unreadable once summaries/
+    Replaces an image-rendered "API table" (unreadable once summaries/
     descriptions got long, and rendered even for swagger files with zero
     operations) with real MyST tables plus an auto-generated usage example
-    per endpoint, and replaces the PlantUML model class diagrams (illegible
+    per endpoint, and replaces image-rendered model class diagrams (illegible
     once a service has more than a couple dozen models, e.g. alerting's 185)
     with sphinxcontrib.autodoc_pydantic's per-model field/JSON-schema docs.
     """

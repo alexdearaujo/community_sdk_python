@@ -56,18 +56,10 @@ flowchart TB
 * **Python**: 3.12 or later.
 * **[uv](https://github.com/astral-sh/uv)**: The Python package
   manager.
-* **Java (JRE)**: Required to render PlantUML diagrams.
-* **Graphviz**: Required by PlantUML for graph layouts.
 
-    ```bash
-    # macOS
-    brew install openjdk graphviz
-    echo 'export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"' >> ~/.zshrc
-    source ~/.zshrc
-
-    # Ubuntu/Debian
-    sudo apt install default-jre graphviz
-    ```
+Diagrams render as Mermaid, which needs no local toolchain. GitHub
+draws them natively, and the Sphinx build renders them in the
+browser.
 
 ## Development Setup
 
@@ -113,7 +105,7 @@ The SDK generation script performs the following tasks:
 2. Scrubs version prefixes (e.g., v2023...) from model names.
 3. Fixes generator bugs (Ghost variables, Pydantic v2 compatibility,
    Path sanitization).
-4. Generates PlantUML architecture diagrams.
+4. Generates Mermaid architecture diagrams.
 5. Formats the output with Ruff.
 
 **To generate from the remote GitHub repo:**

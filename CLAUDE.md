@@ -41,8 +41,9 @@ repo.
   each with `models/`, `services/` (raw REST functions + a unified
   `<Service>ServiceWrapper`), `error/`, `pb/` (gRPC stubs), and a
   `README.md`
-- `docs/source/architecture/sdk_runtime_dependencies.puml` and
-  `docs/source/sdk_runtime_architecture.md`
+- `src/kentik_api/gen/README.md` — the `gen/` root README
+- `docs/source/sdk_runtime_architecture.md` — the runtime
+  architecture page, with an inline Mermaid dependency graph
 
 **Rule: never hand-edit generated files.** If output is wrong, fix
 the generator, a phase module in `scripts/generation/`, or a
@@ -75,9 +76,10 @@ subpackage of independently testable phase modules (see
 - `wrapper_generation.py` — generates service wrappers and the
   client mixin, collapsed into a single `generate()` entrypoint
   (wrappers first, then the mixin that imports them).
-- `docs_rendering.py` — generates the runtime architecture diagram,
-  renders it to PlantUML/SVG, and writes per-service READMEs,
-  collapsed into a single `generate()` entrypoint.
+- `docs_rendering.py` — generates the runtime architecture page with
+  an inline Mermaid dependency graph, writes the `gen/` root README,
+  and writes per-service READMEs, collapsed into a single
+  `generate()` entrypoint.
 - `endpoint_docs.py` — exposes `EndpointDocsCollector`, not a plain
   function. `collector.extract(service, swagger_path)` must run once
   per swagger file, while the file is still available, during
@@ -173,10 +175,12 @@ structurally, not just by convention or discipline.
   — a full overwrite, on every run. The next `make generate` silently
   overwrites any manual edits here.
 - **`docs/source/sdk_runtime_architecture.md`** and
-  **`docs/source/architecture/*.puml` / `*.svg`** —
-  `docs_rendering.generate()` fully rewrites these every run. By
-  contrast, `docs/source/index.md` is genuinely hand-written. The
-  generator only *inserts* a toctree line into it if missing — a
+  **`src/kentik_api/gen/README.md`** — `docs_rendering.generate()`
+  fully rewrites these every run. The architecture page embeds its
+  dependency graph as an inline Mermaid fence, so there are no
+  separate diagram artifacts to track. By contrast,
+  `docs/source/index.md` is genuinely hand-written. The generator
+  only *inserts* a toctree line into it if missing — a
   non-destructive append, not an overwrite.
 
 ### A fragile coupling worth knowing about
@@ -206,14 +210,14 @@ with any such rename.
   architecture: the module dependency graph and the
   generated-vs-hand-written boundary.
 
-### Per-service API docs: real MyST text, not PlantUML images
+### Per-service API docs: real MyST text, not rendered diagram images
 
 `endpoint_docs.EndpointDocsCollector.render()` generates
 `docs/source/services/<service>.md` as real Sphinx/MyST text, not
-diagrams. This is deliberate. The prior PlantUML-rendered "API
-table" and model-class-diagram images became unreadable and
-uncopyable once a service had more than a handful of operations or
-models. For example, `alerting`'s model diagram was 4329×1686px.
+rendered diagram images. This is deliberate. A rendered "API table"
+and model-class-diagram image become unreadable and uncopyable once
+a service has more than a handful of operations or models. For
+example, an image of `alerting`'s model diagram runs to 4329×1686px.
 
 - **Endpoints**: one section per operation, with a parameter table,
   a response table, and an auto-generated Python usage example.
