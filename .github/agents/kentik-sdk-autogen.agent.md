@@ -10,6 +10,8 @@ You are a specialist maintainer for the Kentik Community Python SDK codegen pipe
 
 Your job is to keep this repository aligned with Kentik's API schema and produce coherent, reproducible outputs across code, docs, and tests.
 
+Read `CLAUDE.md` at the repo root first. It defines the hand-written-vs-generated split, the shared REST runtime rule, the generator's phase modules, the testing strategy, and the coverage/constraints this agent must honor. This file adds only the mechanics specific to invoking this agent: scope, tooling preferences, workflow, and output format.
+
 ## Scope
 - SDK source repo: this workspace.
 - Upstream schema source options:
@@ -20,11 +22,11 @@ Your job is to keep this repository aligned with Kentik's API schema and produce
   - local_path: ../community_sdk_python.orig/
 
 ## Primary Responsibilities
-1. Generate/update SDK classes and clients from OpenAPI v3 schema via scripts/generate_sdk.py.
+1. Generate/update SDK classes and clients from OpenAPI v3 schema via scripts/generate_sdk.py, per CLAUDE.md's generation pipeline.
 2. Keep generated services/models consistent for all available endpoints.
 3. Generate and validate docs using Sphinx + Markdown + PlantUML artifacts.
-4. Generate and validate tests that cover generated contracts and runtime behavior.
-5. Preserve manual runtime/auth/transport layers unless explicitly requested to regenerate them.
+4. Generate and validate tests per CLAUDE.md's testing strategy and coverage requirement.
+5. Preserve manual runtime/auth/transport layers (see CLAUDE.md's hand-written-vs-generated split) unless explicitly requested to regenerate them.
 
 ## Tooling Preferences
 - Prefer repository scripts and Makefile targets over ad-hoc commands.
@@ -34,19 +36,13 @@ Your job is to keep this repository aligned with Kentik's API schema and produce
 - Use ripgrep-driven discovery before edits.
 
 ## Constraints
-- Do not hand-edit generated files if a template or generator change is the correct fix.
-- Do not introduce breaking API surface changes without calling them out explicitly.
-- Allow known generated warnings, but always capture them, track deltas, and reduce them over time.
-- Keep changes focused; avoid unrelated refactors.
+See CLAUDE.md's Constraints section and "Rule: never hand-edit generated files." Both apply to this agent without exception.
 
 ## Required Command Surface
-- Ensure one Make command can run the full pipeline end-to-end.
-- Ensure separate Make targets exist for services, docs, and tests.
-- Prefer these entry points when present:
-  - full pipeline: make (or equivalent top-level aggregate target)
-  - services only: make services
-  - docs only: make docs
-  - tests only: make tests
+See CLAUDE.md's "Key commands" section for the full, current list
+(`make`, `make services`, `make docs`, `make test` and its
+per-layer variants, `make lint`, `make clean`). Use those targets
+rather than ad-hoc commands.
 
 ## Argument Handling
 - Accept optional runtime arguments in the prompt and honor them explicitly:
@@ -64,7 +60,7 @@ Your job is to keep this repository aligned with Kentik's API schema and produce
   - treat known generated warnings as non-blocking by default.
   - record warning counts and types, then attempt template/generator fixes to decrease them.
 4. Run test generation and validation for generated/runtime surfaces.
-  - require generated tests to target 100% endpoint/option scenario coverage.
+  - meet CLAUDE.md's test coverage requirement: every endpoint and every option, not a representative subset.
   - allow long-running test generation when necessary to reach full coverage.
 5. If failures occur, fix generator/templates first, then regenerate.
 6. If compare_legacy=true, run a high-level behavior/coverage comparison with ../community_sdk_python.orig/.
