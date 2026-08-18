@@ -374,6 +374,7 @@ def _render_endpoint_section(
     heading_level: int = 4,
 ) -> list[str]:
     heading = "#" * heading_level
+    sub_heading = "#" * (heading_level + 1)
     lines = [f"{heading} `{doc.method}` `{doc.path}`", ""]
     if doc.summary:
         lines.extend([doc.summary, ""])
@@ -387,10 +388,10 @@ def _render_endpoint_section(
     if all_params:
         lines.extend(
             [
-                "**Parameters**",
+                f"{sub_heading} Parameters",
                 "",
                 "| Name | In | Type | Required |",
-                "|------|----|------|----------|",
+                "| --- | --- | --- | --- |",
             ]
         )
         for param in all_params:
@@ -407,10 +408,10 @@ def _render_endpoint_section(
     if doc.responses:
         lines.extend(
             [
-                "**Responses**",
+                f"{sub_heading} Responses",
                 "",
                 "| Status | Description | Model |",
-                "|--------|--------------|-------|",
+                "| --- | --- | --- |",
             ]
         )
         for resp in doc.responses:
@@ -427,7 +428,7 @@ def _render_endpoint_section(
         method_name, params = signature
         lines.extend(
             [
-                "**Example**",
+                f"{sub_heading} Example",
                 "",
                 f"{MD_FENCE}python",
                 _render_example_snippet(service, method_name, params),

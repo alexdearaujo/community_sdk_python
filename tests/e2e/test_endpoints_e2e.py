@@ -1,20 +1,3 @@
-from __future__ import annotations
-
-import importlib
-from dataclasses import dataclass
-
-import pytest
-
-from kentik_api.errors import KentikError
-
-from _discovery import (
-    WrapperCase,
-    build_all_kwargs,
-    case_label,
-    discover_cases,
-    parse_rest_call_metadata,
-)
-
 """End-to-end coverage against the real Kentik API.
 
 Every other suite under tests/generated/ proves the SDK is internally
@@ -45,6 +28,22 @@ Opt-in only: excluded from `make test`/`make all` by the `e2e` pytest marker
 `pytest -m e2e`. The `real_client` fixture (tests/e2e/conftest.py) skips the
 whole module if no real credentials are configured.
 """
+
+from __future__ import annotations
+
+import importlib
+from dataclasses import dataclass
+
+import pytest
+from _discovery import (
+    WrapperCase,
+    build_all_kwargs,
+    case_label,
+    discover_cases,
+    parse_rest_call_metadata,
+)
+
+from kentik_api.errors import KentikError
 
 pytestmark = pytest.mark.e2e
 

@@ -15,7 +15,7 @@ It also generates architecture diagrams.
 
 ## Prerequisites
 
-* **Python 3.12+**
+* **Python**: 3.12 or later.
 * **[uv](https://github.com/astral-sh/uv)**: The Python package
   manager.
 * **Java (JRE)**: Required to render PlantUML diagrams.

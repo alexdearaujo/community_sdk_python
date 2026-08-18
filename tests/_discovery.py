@@ -1,15 +1,3 @@
-from __future__ import annotations
-
-import ast
-import importlib
-import inspect
-from dataclasses import dataclass
-from enum import Enum
-from pathlib import Path
-from typing import Any, Optional, Union, get_args, get_origin
-
-from pydantic import BaseModel
-
 """Shared schema/wrapper discovery helpers for the tests/ tree.
 
 Every operation, parameter, and declared response status code exercised by
@@ -22,6 +10,18 @@ tests/generated/*.py and tests/e2e/*.py import it; tests/conftest.py puts
 tests/ on sys.path so `import _discovery` resolves the same way regardless
 of which subdirectory pytest is invoked against.
 """
+
+from __future__ import annotations
+
+import ast
+import importlib
+import inspect
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
+from typing import Any, Optional, Union, get_args, get_origin
+
+from pydantic import BaseModel
 
 
 @dataclass(frozen=True)

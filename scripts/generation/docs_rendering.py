@@ -68,7 +68,6 @@ def _generate_service_readmes():
             "For the full endpoint reference (parameters, responses, usage "
             "examples) and data model documentation, see the Sphinx docs: "
             f"`docs/source/services/{service_name}.md`.",
-            "",
         ]
 
         doc_content = "\n".join(lines) + "\n"

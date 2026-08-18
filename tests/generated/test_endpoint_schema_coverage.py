@@ -1,29 +1,3 @@
-from __future__ import annotations
-
-import importlib
-import inspect
-from dataclasses import dataclass
-from typing import Any, Optional
-
-import httpx
-import pytest
-import respx
-from pydantic import BaseModel
-
-from kentik_api.auth.credentials import KentikCredentials
-from kentik_api.errors import HTTPException
-from kentik_api.transports.rest_client import RestTransport
-
-from _discovery import (
-    WrapperCase,
-    build_all_kwargs,
-    case_label,
-    discover_cases,
-    error_module_for,
-    parse_rest_call_metadata,
-    sample_model_instance,
-)
-
 """Exhaustive endpoint x declared-response-status coverage.
 
 `test_wrapper_contracts.py` proves every wrapper method forwards its
@@ -39,6 +13,31 @@ Status codes come from each service's generated `error/__init__.py`
 (`{Operation}Error.response_error_map`), which `scripts/generate_sdk.py`
 builds directly from the swagger files' declared non-2xx responses.
 """
+
+from __future__ import annotations
+
+import importlib
+import inspect
+from dataclasses import dataclass
+from typing import Any, Optional
+
+import httpx
+import pytest
+import respx
+from _discovery import (
+    WrapperCase,
+    build_all_kwargs,
+    case_label,
+    discover_cases,
+    error_module_for,
+    parse_rest_call_metadata,
+    sample_model_instance,
+)
+from pydantic import BaseModel
+
+from kentik_api.auth.credentials import KentikCredentials
+from kentik_api.errors import HTTPException
+from kentik_api.transports.rest_client import RestTransport
 
 
 @dataclass(frozen=True)
@@ -192,6 +191,8 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
                 error_module = error_module_for(
                     getattr(module, wrapper_case.rest_module_alias)
                 )
+                # error_class_name is only None for success cases, excluded by this branch.
+                assert case.error_class_name is not None
                 expected_cls = getattr(error_module, case.error_class_name)
                 with pytest.raises(HTTPException) as exc_info:
                     method(**kwargs)
