@@ -13,6 +13,44 @@ The pipeline fixes common OpenAPI generator bugs.
 It removes schema-version prefixes from class names.
 It also generates architecture diagrams.
 
+The diagram below shows the split that matters most in this
+repository: hand-written code that survives every regeneration,
+next to generated code that `make generate` wipes and rebuilds.
+See [CLAUDE.md](CLAUDE.md) for the full explanation of each piece.
+
+```mermaid
+flowchart TB
+    subgraph HW["Hand-written (survives every regeneration)"]
+        Client["client.py<br/>KentikAPI entrypoint"]
+        Auth["auth/<br/>Credentials"]
+        Core["core/<br/>APIConfig + rest_runtime"]
+        Errors["errors/<br/>Base exception hierarchy"]
+        Transports["transports/<br/>REST / gRPC transport base"]
+    end
+
+    subgraph GEN["Generated (wiped and rebuilt by make generate)"]
+        Mixin["client_mixin.py<br/>mounts every service wrapper"]
+        Wrappers["gen/&lt;service&gt;/services/<br/>ServiceWrapper classes"]
+        Models["gen/&lt;service&gt;/models/"]
+        GenErrors["gen/&lt;service&gt;/error/"]
+    end
+
+    Client --> Mixin
+    Client --> Auth
+    Client --> Transports
+    Mixin --> Wrappers
+    Wrappers --> Models
+    Wrappers --> Core
+    Wrappers --> GenErrors
+    Core --> Errors
+    Transports --> Auth
+
+    classDef handwritten fill:#d7ecff,stroke:#1c6fb0,color:#0b3554
+    classDef generated fill:#fde9c8,stroke:#c8791a,color:#5a3506
+    class Client,Auth,Core,Errors,Transports handwritten
+    class Mixin,Wrappers,Models,GenErrors generated
+```
+
 ## Prerequisites
 
 * **Python**: 3.12 or later.
