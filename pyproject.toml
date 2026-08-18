@@ -3,16 +3,16 @@ name = "kentik-api"
 version = "2.0.0"
 description = "The modern Python SDK for the Kentik API v6"
 readme = "README.md"
-requires-python = ">=3.14"
-license = {file = "LICENSE"}
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     { name = "Alex DeAraujo", email = "adearaujo@kentik.com" }
 ]
 
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -30,14 +30,14 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/kentik/community_sdk_python"
-Documentation = "https://kb.kentik.com/docs/apis-overview"
-Repository = "https://github.com/kentik/community_sdk_python"
+Homepage = "https://github.com/alexdearaujo/community_sdk_python"
+Documentation = "https://github.com/alexdearaujo/community_sdk_python/tree/FA-2-Update-the-python-SDK-from-V5-to-V6/docs/source"
+Repository = "https://github.com/alexdearaujo/community_sdk_python"
 "Issue Tracker" = "https://github.com/kentik/community_sdk_python/issues"
-"Changelog" = "https://github.com/kentik/community_sdk_python/releases"
+"Changelog" = "https://github.com/alexdearaujo/community_sdk_python/releases"
 
 [build-system]
-requires = ["uv_build>=0.10.9,<0.12.0"]
+requires = ["uv_build>=0.10.9,<0.13.0"]
 build-backend = "uv_build"
 
 [dependency-groups]

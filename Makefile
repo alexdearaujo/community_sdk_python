@@ -21,7 +21,7 @@ GENERATE_ARGS := $(if $(LOCAL_REPO),--local-repo $(LOCAL_REPO),)
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-all: services docs tests ## Generate services, build docs, and run tests
+all: services tests ## Generate services and run tests (docs is opt-in: run `make docs`)
 
 install: ## Install dependencies and sync environment
 	uv sync
