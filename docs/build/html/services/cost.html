@@ -728,14 +728,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.cost&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;CostService (3 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;CostServiceWrapper\nclient.cost&quot;]
+        REST[&quot;REST functions\ngen/cost/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/cost/models/&quot;]
+        E[&quot;Error classes\ngen/cost/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -743,7 +751,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cost/v202308/cost/providers</span></code><a class="headerlink" href="#get-cost-v202308-cost-providers" title="Link to this heading">#</a></h3>
 <p>List all cost providers.</p>
 <p>Returns list of configured cost providers.</p>
-<section id="responses">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_cost_providers()
+    W-&gt;&gt;API: GET /cost/v202308/cost/providers
+    alt success
+        API--&gt;&gt;W: ListCostProvidersResponse
+        W--&gt;&gt;C: ListCostProvidersResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="responses">
 <h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -780,7 +803,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cost/v202308/cost/summary</span></code><a class="headerlink" href="#get-cost-v202308-cost-summary" title="Link to this heading">#</a></h3>
 <p>List all cost provider summaries.</p>
 <p>Returns list of summaries of configured cost providers.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_cost_provider_summaries()
+    W-&gt;&gt;API: GET /cost/v202308/cost/summary
+    alt success
+        API--&gt;&gt;W: ListCostProviderSummariesResponse
+        W--&gt;&gt;C: ListCostProviderSummariesResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -837,7 +875,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cost/v202308/cost/summary/{id}</span></code><a class="headerlink" href="#get-cost-v202308-cost-summary-id" title="Link to this heading">#</a></h3>
 <p>Get cost provider summary.</p>
 <p>Returns summary of configured cost provider.</p>
-<section id="id3">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_cost_provider_summary(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /cost/v202308/cost/summary/{id}
+    alt success
+        API--&gt;&gt;W: GetCostProviderSummaryResponse
+        W--&gt;&gt;C: GetCostProviderSummaryResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id3">
 <h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

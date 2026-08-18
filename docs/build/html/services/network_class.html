@@ -706,14 +706,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.network_class&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;NetworkClassService (2 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;Network ClassServiceWrapper\nclient.network_class&quot;]
+        REST[&quot;REST functions\ngen/network_class/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/network_class/models/&quot;]
+        E[&quot;Error classes\ngen/network_class/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -721,7 +729,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/network_class/v202109alpha1/network_class</span></code><a class="headerlink" href="#get-network-class-v202109alpha1-network-class" title="Link to this heading">#</a></h3>
 <p>Get a network classification.</p>
 <p>Returns information about a network classification for the company.</p>
-<section id="responses">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.network_class
+    participant API as Kentik API
+
+    C-&gt;&gt;W: network_class_get()
+    W-&gt;&gt;API: GET /network_class/v202109alpha1/network_class
+    alt success
+        API--&gt;&gt;W: GetNetworkClassResponse
+        W--&gt;&gt;C: GetNetworkClassResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="responses">
 <h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -758,7 +781,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/network_class/v202109alpha1/network_class</span></code><a class="headerlink" href="#post-network-class-v202109alpha1-network-class" title="Link to this heading">#</a></h3>
 <p>Update a network classification.</p>
 <p>Replaces the entire network classification attributes for the company.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.network_class
+    participant API as Kentik API
+
+    C-&gt;&gt;W: network_class_update(data=UpdateNetworkClassRequest(...))
+    W-&gt;&gt;API: POST /network_class/v202109alpha1/network_class
+    alt success
+        API--&gt;&gt;W: UpdateNetworkClassResponse
+        W--&gt;&gt;C: UpdateNetworkClassResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

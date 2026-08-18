@@ -4,28 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.alerting"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["AlertService (8 ops)"]
-    G0 --> RJ
-    Client --> G1["AlertAutoAckService (5 ops)"]
-    G1 --> RJ
-    Client --> G2["MitigationsService (6 ops)"]
-    G2 --> RJ
-    Client --> G3["MitigationMethodsService (2 ops)"]
-    G3 --> RJ
-    Client --> G4["MitigationPlatformsService (2 ops)"]
-    G4 --> RJ
-    Client --> G5["PolicyService (4 ops)"]
-    G5 --> RJ
-    Client --> G6["AlertSilenceNotificationsService (5 ops)"]
-    G6 --> RJ
-    Client --> G7["SuppressionService (5 ops)"]
-    G7 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["AlertingServiceWrapper\nclient.alerting"]
+        REST["REST functions\ngen/alerting/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/alerting/models/"]
+        E["Error classes\ngen/alerting/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -37,6 +31,23 @@ flowchart LR
 List Alerts
 
 Returns an array of alert objects that contain information about individual alerts.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: alert_list(data=AlertServiceListRequest(...))
+    W->>API: POST /v202505/alerts
+    alt success
+        API-->>W: AlertServiceListResponse
+        W-->>C: AlertServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -70,6 +81,23 @@ Clear Alerts
 
 Clears alerts.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: clear(data=AlertServiceClearRequest(...))
+    W->>API: POST /v202505/alerts/clear
+    alt success
+        API-->>W: AlertServiceClearResponse
+        W-->>C: AlertServiceClearResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -102,6 +130,23 @@ List Alert Comments
 
 Returns all comments for an alert.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: list_comments(alertId="alertId-example")
+    W->>API: GET /v202505/alerts/{alertId}/comments
+    alt success
+        API-->>W: AlertServiceListCommentsResponse
+        W-->>C: AlertServiceListCommentsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -133,6 +178,23 @@ response = client.alerting.list_comments(
 Add Alert Comment
 
 Adds a comment to an alert.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: add_comment(alertId="alertId-example", data=AlertServiceAddCommentBody(...))
+    W->>API: POST /v202505/alerts/{alertId}/comments
+    alt success
+        API-->>W: AlertServiceAddCommentResponse
+        W-->>C: AlertServiceAddCommentResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -168,6 +230,23 @@ Set External Context for Alert
 
 Add or replace external context
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: set_external_context(alertId="alertId-example", data=AlertServiceSetExternalContextBody(...))
+    W->>API: PUT /v202505/alerts/{alertId}/external-context
+    alt success
+        API-->>W: AlertServiceSetExternalContextResponse
+        W-->>C: AlertServiceSetExternalContextResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -202,6 +281,23 @@ Get Alert
 
 Returns an alert object that contains information about an individual alert.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: alert_get(id="id-example")
+    W->>API: GET /v202505/alerts/{id}
+    alt success
+        API-->>W: AlertServiceGetResponse
+        W-->>C: AlertServiceGetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -233,6 +329,23 @@ response = client.alerting.alert_get(
 Ack Alert
 
 Acknowledges an alert.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: ack(id="id-example", data=AlertServiceAckBody(...))
+    W->>API: POST /v202505/alerts/{id}/ack
+    alt success
+        API-->>W: AlertServiceAckResponse
+        W-->>C: AlertServiceAckResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -268,6 +381,23 @@ UnAck Alert
 
 Unacknowledges an alert (removes the acknowledgement).
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: un_ack(id="id-example", data=AlertServiceUnAckBody(...))
+    W->>API: POST /v202505/alerts/{id}/unack
+    alt success
+        API-->>W: AlertServiceUnAckResponse
+        W-->>C: AlertServiceUnAckResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -302,6 +432,23 @@ Create Auto-Ack
 
 Creates a new auto-ack configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: create(data=AlertAutoAckServiceCreateRequest(...))
+    W->>API: POST /v202505/alerts/ack/auto
+    alt success
+        API-->>W: AlertAutoAckServiceCreateResponse
+        W-->>C: AlertAutoAckServiceCreateResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -333,6 +480,23 @@ response = client.alerting.create(
 List Auto-Acks
 
 Returns a list of auto-ack configurations.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: list(data=AlertAutoAckServiceListRequest(...))
+    W->>API: POST /v202505/alerts/ack/auto/list
+    alt success
+        API-->>W: AlertAutoAckServiceListResponse
+        W-->>C: AlertAutoAckServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -366,6 +530,23 @@ Get Auto-Ack
 
 Returns an auto-ack configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: get(autoAckid="autoAckid-example")
+    W->>API: GET /v202505/alerts/ack/auto/{autoAck.id}
+    alt success
+        API-->>W: AlertAutoAckServiceGetResponse
+        W-->>C: AlertAutoAckServiceGetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -397,6 +578,23 @@ response = client.alerting.get(
 Replace Auto-Ack
 
 Replaces an auto-ack configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
+    W->>API: PATCH /v202505/alerts/ack/auto/{autoAck.id}
+    alt success
+        API-->>W: AlertAutoAckServiceReplaceResponse
+        W-->>C: AlertAutoAckServiceReplaceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -432,6 +630,23 @@ Delete Auto-Ack
 
 Deletes an auto-ack configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: delete(autoAckid="autoAckid-example")
+    W->>API: DELETE /v202505/alerts/ack/auto/{autoAck.id}
+    alt success
+        API-->>W: AlertAutoAckServiceDeleteResponse
+        W-->>C: AlertAutoAckServiceDeleteResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -463,6 +678,23 @@ response = client.alerting.delete(
 List Mitigations
 
 Returns a list of mitigations.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: mitigations_list()
+    W->>API: GET /v202505/mitigations
+    alt success
+        API-->>W: MitigationsServiceListResponse
+        W-->>C: MitigationsServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -506,6 +738,23 @@ Create Mitigation
 
 Creates a new manual mitigation.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: mitigations_create(data=MitigationsServiceCreateRequest(...))
+    W->>API: POST /v202505/mitigations
+    alt success
+        API-->>W: MitigationsServiceCreateResponse
+        W-->>C: MitigationsServiceCreateResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -538,6 +787,23 @@ Get Available Actions
 
 Returns available actions for mitigations.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: available_actions()
+    W->>API: GET /v202505/mitigations/actions
+    alt success
+        API-->>W: MitigationsServiceAvailableActionsResponse
+        W-->>C: MitigationsServiceAvailableActionsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Responses
 
 | Status | Description | Model |
@@ -561,6 +827,23 @@ response = client.alerting.available_actions()
 Get Mitigation
 
 Returns a mitigation.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: mitigations_get(action="action-example")
+    W->>API: GET /v202505/mitigations/{action}
+    alt success
+        API-->>W: MitigationsServiceGetResponse
+        W-->>C: MitigationsServiceGetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -593,6 +876,23 @@ response = client.alerting.mitigations_get(
 Act on Mitigation
 
 Performs an action on one or more mitigations.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: act(action="action-example", data=MitigationsServiceActBody(...))
+    W->>API: POST /v202505/mitigations/{action}
+    alt success
+        API-->>W: MitigationsServiceActResponse
+        W-->>C: MitigationsServiceActResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -628,6 +928,23 @@ Get Available Actions for Mitigation
 
 Returns available actions for a specific mitigation.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: available_actions_for_mitigation(id="id-example")
+    W->>API: GET /v202505/mitigations/{id}/actions
+    alt success
+        API-->>W: MitigationsServiceAvailableActionsForMitigationResponse
+        W-->>C: MitigationsServiceAvailableActionsForMitigationResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -659,6 +976,23 @@ response = client.alerting.available_actions_for_mitigation(
 List Mitigation Methods
 
 Returns a list of mitigation methods.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: mitigation_methods_list()
+    W->>API: GET /v202505/mitigations/methods
+    alt success
+        API-->>W: MitigationMethodsServiceListResponse
+        W-->>C: MitigationMethodsServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -698,6 +1032,23 @@ Get Mitigation Method
 
 Returns a mitigation method.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: mitigation_methods_get(id="id-example")
+    W->>API: GET /v202505/mitigations/methods/{id}
+    alt success
+        API-->>W: MitigationMethodsServiceGetResponse
+        W-->>C: MitigationMethodsServiceGetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -729,6 +1080,23 @@ response = client.alerting.mitigation_methods_get(
 List Mitigation Platforms
 
 Returns a list of mitigation platforms.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: mitigation_platforms_list()
+    W->>API: GET /v202505/mitigations/platforms
+    alt success
+        API-->>W: MitigationPlatformsServiceListResponse
+        W-->>C: MitigationPlatformsServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -768,6 +1136,23 @@ Get Mitigation Platform
 
 Returns a mitigation platform.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: mitigation_platforms_get(id="id-example")
+    W->>API: GET /v202505/mitigations/platforms/{id}
+    alt success
+        API-->>W: MitigationPlatformsServiceGetResponse
+        W-->>C: MitigationPlatformsServiceGetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -800,6 +1185,23 @@ List Policies
 
 Returns a list of alerting policies.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: policy_list(data=PolicyServiceListRequest(...))
+    W->>API: POST /v202505/policies/list
+    alt success
+        API-->>W: PolicyServiceListResponse
+        W-->>C: PolicyServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -831,6 +1233,23 @@ response = client.alerting.policy_list(
 Get Policy
 
 Returns an alerting policy.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: policy_get(policyType="policyType-example", id="id-example")
+    W->>API: GET /v202505/policies/{policyType}/{id}
+    alt success
+        API-->>W: PolicyServiceGetResponse
+        W-->>C: PolicyServiceGetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -865,6 +1284,23 @@ response = client.alerting.policy_get(
 Disable Policy
 
 Disables an alerting policy.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: disable(policyType="policyType-example", id="id-example", data=PolicyServiceDisableBody(...))
+    W->>API: POST /v202505/policies/{policyType}/{id}/disable
+    alt success
+        API-->>W: PolicyServiceDisableResponse
+        W-->>C: PolicyServiceDisableResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -902,6 +1338,23 @@ Enable Policy
 
 Enables an alerting policy.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: enable(policyType="policyType-example", id="id-example", data=PolicyServiceEnableBody(...))
+    W->>API: POST /v202505/policies/{policyType}/{id}/enable
+    alt success
+        API-->>W: PolicyServiceEnableResponse
+        W-->>C: PolicyServiceEnableResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -938,6 +1391,23 @@ Create Alert Silence Notifications
 
 Creates a new alert silence notifications configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: alert_silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
+    W->>API: POST /v202505/alerts/silence
+    alt success
+        API-->>W: AlertSilenceNotificationsServiceCreateResponse
+        W-->>C: AlertSilenceNotificationsServiceCreateResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -969,6 +1439,23 @@ response = client.alerting.alert_silence_notifications_create(
 List Alert Notification Silences
 
 Returns a list of alert silence notifications configurations.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: alert_silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
+    W->>API: POST /v202505/alerts/silence/list
+    alt success
+        API-->>W: AlertSilenceNotificationsServiceListResponse
+        W-->>C: AlertSilenceNotificationsServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -1002,6 +1489,23 @@ Get Alert Silence Notifications
 
 Returns an alert silence notifications configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: alert_silence_notifications_get(id="id-example")
+    W->>API: GET /v202505/alerts/silence/{id}
+    alt success
+        API-->>W: AlertSilenceNotificationsServiceGetResponse
+        W-->>C: AlertSilenceNotificationsServiceGetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -1033,6 +1537,23 @@ response = client.alerting.alert_silence_notifications_get(
 Replace Alert Notification Silence
 
 Replaces an alert silence notifications configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: alert_silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
+    W->>API: PATCH /v202505/alerts/silence/{id}
+    alt success
+        API-->>W: AlertSilenceNotificationsServiceReplaceResponse
+        W-->>C: AlertSilenceNotificationsServiceReplaceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -1068,6 +1589,23 @@ Delete Alert Notification Silence
 
 Deletes an alert silence notifications configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: alert_silence_notifications_delete(id="id-example")
+    W->>API: DELETE /v202505/alerts/silence/{id}
+    alt success
+        API-->>W: AlertSilenceNotificationsServiceDeleteResponse
+        W-->>C: AlertSilenceNotificationsServiceDeleteResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -1099,6 +1637,23 @@ response = client.alerting.alert_silence_notifications_delete(
 Create Suppression
 
 Creates a new suppression configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: suppression_create(data=SuppressionServiceCreateRequest(...))
+    W->>API: POST /v202505/suppressions
+    alt success
+        API-->>W: SuppressionServiceCreateResponse
+        W-->>C: SuppressionServiceCreateResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -1132,6 +1687,23 @@ List Suppressions
 
 Returns a list of suppression configurations.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: suppression_list(data=SuppressionServiceListRequest(...))
+    W->>API: POST /v202505/suppressions/list
+    alt success
+        API-->>W: SuppressionServiceListResponse
+        W-->>C: SuppressionServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -1164,6 +1736,23 @@ Get Suppression
 
 Returns a suppression configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: suppression_get(id="id-example")
+    W->>API: GET /v202505/suppressions/{id}
+    alt success
+        API-->>W: SuppressionServiceGetResponse
+        W-->>C: SuppressionServiceGetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -1195,6 +1784,23 @@ response = client.alerting.suppression_get(
 Replace Suppression
 
 Replaces a suppression configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: suppression_replace(id="id-example", data=SuppressionServiceReplaceBody(...))
+    W->>API: PATCH /v202505/suppressions/{id}
+    alt success
+        API-->>W: SuppressionServiceReplaceResponse
+        W-->>C: SuppressionServiceReplaceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -1229,6 +1835,23 @@ response = client.alerting.suppression_replace(
 Delete Suppression
 
 Deletes a suppression configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C->>W: suppression_delete(id="id-example")
+    W->>API: DELETE /v202505/suppressions/{id}
+    alt success
+        API-->>W: SuppressionServiceDeleteResponse
+        W-->>C: SuppressionServiceDeleteResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 

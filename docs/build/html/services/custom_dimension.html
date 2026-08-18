@@ -810,14 +810,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.custom_dimension&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;CustomDimensionService (10 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;Custom DimensionServiceWrapper\nclient.custom_dimension&quot;]
+        REST[&quot;REST functions\ngen/custom_dimension/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/custom_dimension/models/&quot;]
+        E[&quot;Error classes\ngen/custom_dimension/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -825,7 +833,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1</span></code><a class="headerlink" href="#get-custom-dimensions-v202411alpha1" title="Link to this heading">#</a></h3>
 <p>List Custom Dimensions</p>
 <p>Returns an array of custom dimension objects that each contain information about an individual custom dimension.</p>
-<section id="responses">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_custom_dimensions()
+    W-&gt;&gt;API: GET /custom_dimensions/v202411alpha1
+    alt success
+        API--&gt;&gt;W: ListCustomDimensionsResponse
+        W--&gt;&gt;C: ListCustomDimensionsResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="responses">
 <h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -862,7 +885,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code><a class="headerlink" href="#get-custom-dimensions-v202411alpha1-customdimensionid" title="Link to this heading">#</a></h3>
 <p>Custom Dimension Info</p>
 <p>Returns a custom dimension object containing information about an individual custom dimension.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_custom_dimension_info(customDimensionId=&quot;customDimensionId-example&quot;)
+    W-&gt;&gt;API: GET /custom_dimensions/v202411alpha1/{customDimensionId}
+    alt success
+        API--&gt;&gt;W: GetCustomDimensionInfoResponse
+        W--&gt;&gt;C: GetCustomDimensionInfoResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -921,7 +959,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code><a class="headerlink" href="#put-custom-dimensions-v202411alpha1-customdimensionid" title="Link to this heading">#</a></h3>
 <p>Update Custom Dimension</p>
 <p>Updates and returns a custom dimension object containing information about an individual custom dimension (see About Custom Dimensions). Populators are not sent back in the response body. To get them use ‘Custom Dimension info’ API instead.</p>
-<section id="id3">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: update_custom_dimension(customDimensionId=&quot;customDimensionId-example&quot;)
+    W-&gt;&gt;API: PUT /custom_dimensions/v202411alpha1/{customDimensionId}
+    alt success
+        API--&gt;&gt;W: UpdateCustomDimensionResponse
+        W--&gt;&gt;C: UpdateCustomDimensionResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id3">
 <h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -985,7 +1038,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code><a class="headerlink" href="#delete-custom-dimensions-v202411alpha1-customdimensionid" title="Link to this heading">#</a></h3>
 <p>Delete Custom Dimension</p>
 <p>Deletes a custom dimension.</p>
-<section id="id6">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: delete_custom_dimension(customDimensionId=&quot;customDimensionId-example&quot;)
+    W-&gt;&gt;API: DELETE /custom_dimensions/v202411alpha1/{customDimensionId}
+    alt success
+        API--&gt;&gt;W: DeleteCustomDimensionResponse
+        W--&gt;&gt;C: DeleteCustomDimensionResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id6">
 <h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1044,7 +1112,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator</span></code><a class="headerlink" href="#post-custom-dimensions-v202411alpha1-customdimensionid-populator" title="Link to this heading">#</a></h3>
 <p>Create Populator</p>
 <p>Creates and returns a populator object containing information about an individual populator.</p>
-<section id="id9">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: create_populator(customDimensionId=&quot;customDimensionId-example&quot;)
+    W-&gt;&gt;API: POST /custom_dimensions/v202411alpha1/{customDimensionId}/populator
+    alt success
+        API--&gt;&gt;W: CreatePopulatorResponse
+        W--&gt;&gt;C: CreatePopulatorResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id9">
 <h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1108,7 +1191,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code><a class="headerlink" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid" title="Link to this heading">#</a></h3>
 <p>Get Populator</p>
 <p>Get Populator by Dimension and Populator ID.</p>
-<section id="id12">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_populator(customDimensionId=&quot;customDimensionId-example&quot;, populatorId=&quot;populatorId-example&quot;)
+    W-&gt;&gt;API: GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}
+    alt success
+        API--&gt;&gt;W: GetPopulatorResponse
+        W--&gt;&gt;C: GetPopulatorResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id12">
 <h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1178,7 +1276,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code><a class="headerlink" href="#put-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid" title="Link to this heading">#</a></h3>
 <p>Update Populator</p>
 <p>Updates and returns a populator object containing information about an individual populator.</p>
-<section id="id15">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: update_populator(customDimensionId=&quot;customDimensionId-example&quot;, populatorId=&quot;populatorId-example&quot;)
+    W-&gt;&gt;API: PUT /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}
+    alt success
+        API--&gt;&gt;W: UpdatePopulatorResponse
+        W--&gt;&gt;C: UpdatePopulatorResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id15">
 <h4>Parameters<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1248,7 +1361,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code><a class="headerlink" href="#delete-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid" title="Link to this heading">#</a></h3>
 <p>Delete Populator</p>
 <p>Deletes a populator.</p>
-<section id="id18">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: delete_populator(customDimensionId=&quot;customDimensionId-example&quot;, populatorId=&quot;populatorId-example&quot;)
+    W-&gt;&gt;API: DELETE /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}
+    alt success
+        API--&gt;&gt;W: DeletePopulatorResponse
+        W--&gt;&gt;C: DeletePopulatorResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id18">
 <h4>Parameters<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1313,7 +1441,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}</span></code><a class="headerlink" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid-field-fieldname" title="Link to this heading">#</a></h3>
 <p>Get Populator Field</p>
 <p>Get Populator field by Dimension, Populator ID, and field name.</p>
-<section id="id21">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_populator_field(customDimensionId=&quot;customDimensionId-example&quot;, populatorId=&quot;populatorId-example&quot;, fieldName=&quot;fieldName-example&quot;)
+    W-&gt;&gt;API: GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}
+    alt success
+        API--&gt;&gt;W: GetPopulatorFieldResponse
+        W--&gt;&gt;C: GetPopulatorFieldResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id21">
 <h4>Parameters<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1394,7 +1537,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v1/customdimension</span></code><a class="headerlink" href="#post-v1-customdimension" title="Link to this heading">#</a></h3>
 <p>Create Custom Dimension</p>
 <p>Creates and returns a custom dimension object containing information about an individual custom dimension</p>
-<section id="id24">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant API as Kentik API
+
+    C-&gt;&gt;W: create_custom_dimension()
+    W-&gt;&gt;API: POST /v1/customdimension
+    alt success
+        API--&gt;&gt;W: CreateCustomDimensionResponse
+        W--&gt;&gt;C: CreateCustomDimensionResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id24">
 <h4>Parameters<a class="headerlink" href="#id24" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

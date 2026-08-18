@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.asset_tags"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["AssetTagsService (9 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["Asset TagsServiceWrapper\nclient.asset_tags"]
+        REST["REST functions\ngen/asset_tags/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/asset_tags/models/"]
+        E["Error classes\ngen/asset_tags/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 Gets tag values by asset id and type.
 
 Returns a list of tag values.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
+    W->>API: GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values
+    alt success
+        API-->>W: GetTagValuesResponse
+        W-->>C: GetTagValuesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -56,6 +81,23 @@ Lists all tag keys.
 
 Returns a list of tag keys.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: list_tag_keys()
+    W->>API: GET /asset_tags/v20260515beta1/keys
+    alt success
+        API-->>W: ListTagKeysResponse
+        W-->>C: ListTagKeysResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Responses
 
 | Status | Description | Model |
@@ -79,6 +121,23 @@ response = client.asset_tags.list_tag_keys()
 Creates a new tag key.
 
 Returns the created tag key.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: create_tag_key(data=CreateTagKeyRequest(...))
+    W->>API: POST /asset_tags/v20260515beta1/keys
+    alt success
+        API-->>W: CreateTagKeyResponse
+        W-->>C: CreateTagKeyResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -112,6 +171,23 @@ Get a single tag key by id.
 
 Returns a single tag key.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: get_tag_key(id="id-example")
+    W->>API: GET /asset_tags/v20260515beta1/keys/{id}
+    alt success
+        API-->>W: GetTagKeyResponse
+        W-->>C: GetTagKeyResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -143,6 +219,23 @@ response = client.asset_tags.get_tag_key(
 Updates the display name of a tag key.
 
 Returns the updated tag key.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
+    W->>API: PUT /asset_tags/v20260515beta1/keys/{id}
+    alt success
+        API-->>W: UpdateTagKeyResponse
+        W-->>C: UpdateTagKeyResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -178,6 +271,23 @@ Deletes a tag key by id.
 
 Returns an empty response
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: delete_tag_key(id="id-example")
+    W->>API: DELETE /asset_tags/v20260515beta1/keys/{id}
+    alt success
+        API-->>W: DeleteTagKeyResponse
+        W-->>C: DeleteTagKeyResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -209,6 +319,23 @@ response = client.asset_tags.delete_tag_key(
 Lists all tag values by id, optionally filtered by asset type.
 
 Returns a list of tag values.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
+    W->>API: GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values
+    alt success
+        API-->>W: ListTagValuesResponse
+        W-->>C: ListTagValuesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -244,6 +371,23 @@ Bulk upserts a tag value for a list of asset ids of a given type.
 
 Returns a list of tag values.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: set_tag_values(data=SetTagValuesRequest(...))
+    W->>API: PUT /asset_tags/v20260515beta1/values
+    alt success
+        API-->>W: SetTagValuesResponse
+        W-->>C: SetTagValuesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -275,6 +419,23 @@ response = client.asset_tags.set_tag_values(
 Bulk deletes a tag values for a list of asset ids of a given type.
 
 Returns an empty response.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C->>W: delete_tag_values(data=DeleteTagValuesRequest(...))
+    W->>API: POST /asset_tags/v20260515beta1/values/delete
+    alt success
+        API-->>W: DeleteTagValuesResponse
+        W-->>C: DeleteTagValuesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

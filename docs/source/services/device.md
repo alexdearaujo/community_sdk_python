@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.device"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["DeviceService (10 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["DeviceServiceWrapper\nclient.device"]
+        REST["REST functions\ngen/device/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/device/models/"]
+        E["Error classes\ngen/device/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List all devices.
 
 Returns list of configured devices. Use the 'view' parameter to control response detail: FULL (default), BASIC (id, name, status), or ID_ONLY (id only). See [About Devices](https://kb.kentik.com/v4/Cb01.htm).
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: list_devices()
+    W->>API: GET /device/v202504beta2/device
+    alt success
+        API-->>W: ListDevicesResponse
+        W-->>C: ListDevicesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -52,6 +77,23 @@ response = client.device.list_devices()
 Configure a new device.
 
 Create configuration for a new device. Returns the newly created configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: create_device(data=CreateDeviceRequest(...))
+    W->>API: POST /device/v202504beta2/device
+    alt success
+        API-->>W: CreateDeviceResponse
+        W-->>C: CreateDeviceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -85,6 +127,23 @@ Configure multiple devices (max 100).
 
 Create configuration for multiple devices. Returns the newly created configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: create_devices(data=CreateDevicesRequest(...))
+    W->>API: POST /device/v202504beta2/device/batch_create
+    alt success
+        API-->>W: CreateDevicesResponse
+        W-->>C: CreateDevicesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -116,6 +175,23 @@ response = client.device.create_devices(
 Delete configuration of multiple devices.
 
 Deletes configuration of multiple devices with specific IDs (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: delete_devices(data=DeleteDevicesRequest(...))
+    W->>API: POST /device/v202504beta2/device/batch_delete
+    alt success
+        API-->>W: DeleteDevicesResponse
+        W-->>C: DeleteDevicesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -149,6 +225,23 @@ Updates configuration of multiple devices (max 100).
 
 Replaces configuration of multiple devices with attributes in the request. Returns the updated configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: update_devices(data=UpdateDevicesRequest(...))
+    W->>API: PUT /device/v202504beta2/device/batch_update
+    alt success
+        API-->>W: UpdateDevicesResponse
+        W-->>C: UpdateDevicesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -180,6 +273,23 @@ response = client.device.update_devices(
 Retrieve configuration of a device by name.
 
 Returns configuration of a device specified by name (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: get_device_by_name(deviceName="deviceName-example")
+    W->>API: GET /device/v202504beta2/device/name/{deviceName}
+    alt success
+        API-->>W: GetDeviceByNameResponse
+        W-->>C: GetDeviceByNameResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -214,6 +324,23 @@ Retrieve configuration of a device.
 
 Returns configuration of a device specified by ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: get_device(deviceid="deviceid-example")
+    W->>API: GET /device/v202504beta2/device/{device.id}
+    alt success
+        API-->>W: GetDeviceResponse
+        W-->>C: GetDeviceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -246,6 +373,23 @@ response = client.device.get_device(
 Updates configuration of a device.
 
 Replaces configuration of a device with attributes in the request. Returns the updated configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: update_device(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
+    W->>API: PUT /device/v202504beta2/device/{device.id}
+    alt success
+        API-->>W: UpdateDeviceResponse
+        W-->>C: UpdateDeviceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -281,6 +425,23 @@ Delete configuration of a device.
 
 Deletes configuration of a device with specific ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: delete_device(deviceid="deviceid-example")
+    W->>API: DELETE /device/v202504beta2/device/{device.id}
+    alt success
+        API-->>W: DeleteDeviceResponse
+        W-->>C: DeleteDeviceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -312,6 +473,23 @@ response = client.device.delete_device(
 Updates labels of a device.
 
 Removes all existing labels from the device and applies the device labels (see [About Device Labels](https://kb.kentik.com/v4/Cb16.htm)) specified by id. Returns the updated configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant API as Kentik API
+
+    C->>W: update_device_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
+    W->>API: PUT /device/v202504beta2/device/{id}/labels
+    alt success
+        API-->>W: UpdateDeviceLabelsResponse
+        W-->>C: UpdateDeviceLabelsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

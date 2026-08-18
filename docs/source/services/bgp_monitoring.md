@@ -4,16 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.bgp_monitoring"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["BgpMonitoringDataService (2 ops)"]
-    G0 --> RJ
-    Client --> G1["BgpMonitoringAdminService (6 ops)"]
-    G1 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["Bgp MonitoringServiceWrapper\nclient.bgp_monitoring"]
+        REST["REST functions\ngen/bgp_monitoring/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/bgp_monitoring/models/"]
+        E["Error classes\ngen/bgp_monitoring/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -25,6 +31,23 @@ flowchart LR
 Get metrics for a BGP prefix.
 
 Retrieve metric data for single BGP prefix and time interval.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant API as Kentik API
+
+    C->>W: get_metrics_for_target(data=GetMetricsForTargetRequest(...))
+    W->>API: POST /bgp_monitoring/v202210/metrics
+    alt success
+        API-->>W: GetMetricsForTargetResponse
+        W-->>C: GetMetricsForTargetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -58,6 +81,23 @@ Get routes for a BGP prefix.
 
 Retrieve snapshot of route information for single BGP prefix at specific time.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant API as Kentik API
+
+    C->>W: get_routes_for_target(data=GetRoutesForTargetRequest(...))
+    W->>API: POST /bgp_monitoring/v202210/routes
+    alt success
+        API-->>W: GetRoutesForTargetResponse
+        W-->>C: GetRoutesForTargetResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -90,6 +130,23 @@ List BGP Monitors.
 
 Returns list of all BGP monitors present in the account.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant API as Kentik API
+
+    C->>W: list_monitors()
+    W->>API: GET /bgp_monitoring/v202210/monitors
+    alt success
+        API-->>W: ListMonitorsResponse
+        W-->>C: ListMonitorsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Responses
 
 | Status | Description | Model |
@@ -113,6 +170,23 @@ response = client.bgp_monitoring.list_monitors()
 Create new BGP Monitor instance.
 
 Creates new BGP Monitor and if successful returns its configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant API as Kentik API
+
+    C->>W: create_monitor(data=CreateMonitorRequest(...))
+    W->>API: POST /bgp_monitoring/v202210/monitors
+    alt success
+        API-->>W: CreateMonitorResponse
+        W-->>C: CreateMonitorResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -146,6 +220,23 @@ Get BGP Monitor configuration.
 
 Returns configuration of existing BGP monitor with specific ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant API as Kentik API
+
+    C->>W: get_monitor(id="id-example")
+    W->>API: GET /bgp_monitoring/v202210/monitors/{id}
+    alt success
+        API-->>W: GetMonitorResponse
+        W-->>C: GetMonitorResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -177,6 +268,23 @@ response = client.bgp_monitoring.get_monitor(
 Update configuration of a BGP monitor.
 
 Updates configuration of BGP monitor with specific ID and returns updated  configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant API as Kentik API
+
+    C->>W: update_monitor(id="id-example", data=BgpMonitoringAdminServiceUpdateMonitorBody(...))
+    W->>API: PUT /bgp_monitoring/v202210/monitors/{id}
+    alt success
+        API-->>W: UpdateMonitorResponse
+        W-->>C: UpdateMonitorResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -212,6 +320,23 @@ Delete existing BGP Monitor.
 
 Delete BGP monitor with with specific ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant API as Kentik API
+
+    C->>W: delete_monitor(id="id-example")
+    W->>API: DELETE /bgp_monitoring/v202210/monitors/{id}
+    alt success
+        API-->>W: DeleteMonitorResponse
+        W-->>C: DeleteMonitorResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -243,6 +368,23 @@ response = client.bgp_monitoring.delete_monitor(
 Sets administrative status of a BGP monitor.
 
 Sets administrative status of BGP monitor with specific ID.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant API as Kentik API
+
+    C->>W: set_monitor_status(id="id-example", data=BgpMonitoringAdminServiceSetMonitorStatusBody(...))
+    W->>API: PUT /bgp_monitoring/v202210/monitors/{id}/status
+    alt success
+        API-->>W: SetMonitorStatusResponse
+        W-->>C: SetMonitorStatusResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 

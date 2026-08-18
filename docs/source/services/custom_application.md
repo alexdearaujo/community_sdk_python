@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.custom_application"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["CustomApplicationService (5 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["Custom ApplicationServiceWrapper\nclient.custom_application"]
+        REST["REST functions\ngen/custom_application/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/custom_application/models/"]
+        E["Error classes\ngen/custom_application/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List Custom Applications
 
 Returns an array of custom application objects that each contain information about an individual custom application.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant API as Kentik API
+
+    C->>W: list_custom_applications()
+    W->>API: GET /custom_application/v202501alpha1
+    alt success
+        API-->>W: ListCustomApplicationsResponse
+        W-->>C: ListCustomApplicationsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -45,6 +70,23 @@ response = client.custom_application.list_custom_applications()
 Create Custom Application
 
 Creates and returns a custom application object containing information about an individual custom application.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant API as Kentik API
+
+    C->>W: create_custom_application()
+    W->>API: POST /custom_application/v202501alpha1
+    alt success
+        API-->>W: CreateCustomApplicationResponse
+        W-->>C: CreateCustomApplicationResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -75,6 +117,23 @@ response = client.custom_application.create_custom_application()
 Custom Application Info
 
 Returns a custom application object containing information about an individual custom application.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant API as Kentik API
+
+    C->>W: get_custom_application(customApplicationId="customApplicationId-example")
+    W->>API: GET /custom_application/v202501alpha1/{customApplicationId}
+    alt success
+        API-->>W: GetCustomApplicationResponse
+        W-->>C: GetCustomApplicationResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -108,6 +167,23 @@ Update Custom Application
 
 Updates and returns a custom application object containing information about an individual custom application.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant API as Kentik API
+
+    C->>W: update_custom_application(customApplicationId="customApplicationId-example")
+    W->>API: PUT /custom_application/v202501alpha1/{customApplicationId}
+    alt success
+        API-->>W: UpdateCustomApplicationResponse
+        W-->>C: UpdateCustomApplicationResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -140,6 +216,23 @@ response = client.custom_application.update_custom_application(
 Delete Custom Application
 
 Deletes a custom application.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant API as Kentik API
+
+    C->>W: delete_custom_application(customApplicationId="customApplicationId-example")
+    W->>API: DELETE /custom_application/v202501alpha1/{customApplicationId}
+    alt success
+        API-->>W: DeleteCustomApplicationResponse
+        W-->>C: DeleteCustomApplicationResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

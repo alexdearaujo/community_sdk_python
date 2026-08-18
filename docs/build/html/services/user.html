@@ -761,14 +761,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.user&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;UserService (7 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;UserServiceWrapper\nclient.user&quot;]
+        REST[&quot;REST functions\ngen/user/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/user/models/&quot;]
+        E[&quot;Error classes\ngen/user/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -776,7 +784,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/user/v202211/users</span></code><a class="headerlink" href="#get-user-v202211-users" title="Link to this heading">#</a></h3>
 <p>List all users.</p>
 <p>Returns a list of all user accounts in the company.</p>
-<section id="responses">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_users()
+    W-&gt;&gt;API: GET /user/v202211/users
+    alt success
+        API--&gt;&gt;W: ListUsersResponse
+        W--&gt;&gt;C: ListUsersResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="responses">
 <h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -813,7 +836,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/user/v202211/users</span></code><a class="headerlink" href="#post-user-v202211-users" title="Link to this heading">#</a></h3>
 <p>Create new user account.</p>
 <p>Creates new user account based on attributes in the request. Returns attributes of the newly created account.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C-&gt;&gt;W: create_user(data=CreateUserRequest(...))
+    W-&gt;&gt;API: POST /user/v202211/users
+    alt success
+        API--&gt;&gt;W: CreateUserResponse
+        W--&gt;&gt;C: CreateUserResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -872,7 +910,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/user/v202211/users/{id}</span></code><a class="headerlink" href="#get-user-v202211-users-id" title="Link to this heading">#</a></h3>
 <p>Get attributes of a user account.</p>
 <p>Returns attributes of a user account specified by ID.</p>
-<section id="id3">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_user(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /user/v202211/users/{id}
+    alt success
+        API--&gt;&gt;W: GetUserResponse
+        W--&gt;&gt;C: GetUserResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id3">
 <h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -931,7 +984,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/user/v202211/users/{id}</span></code><a class="headerlink" href="#put-user-v202211-users-id" title="Link to this heading">#</a></h3>
 <p>Update attributes of a user account.</p>
 <p>Replaces all attributes of a user account specified by ID with attributes in the request. Returns updated attributes.</p>
-<section id="id6">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C-&gt;&gt;W: update_user(id=&quot;id-example&quot;, data=UserServiceUpdateUserBody(...))
+    W-&gt;&gt;API: PUT /user/v202211/users/{id}
+    alt success
+        API--&gt;&gt;W: UpdateUserResponse
+        W--&gt;&gt;C: UpdateUserResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id6">
 <h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -996,7 +1064,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/user/v202211/users/{id}</span></code><a class="headerlink" href="#delete-user-v202211-users-id" title="Link to this heading">#</a></h3>
 <p>Delete a user account.</p>
 <p>Deletes user account specified by ID.</p>
-<section id="id9">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C-&gt;&gt;W: delete_user(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: DELETE /user/v202211/users/{id}
+    alt success
+        API--&gt;&gt;W: DeleteUserResponse
+        W--&gt;&gt;C: DeleteUserResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id9">
 <h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1055,7 +1138,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/user/v202211/users/{id}/reset_active_sessions</span></code><a class="headerlink" href="#put-user-v202211-users-id-reset-active-sessions" title="Link to this heading">#</a></h3>
 <p>Resets active sessions for a user.</p>
 <p>Resets active sessions for a user specified by ID.</p>
-<section id="id12">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C-&gt;&gt;W: reset_active_sessions(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: PUT /user/v202211/users/{id}/reset_active_sessions
+    alt success
+        API--&gt;&gt;W: ResetActiveSessionsResponse
+        W--&gt;&gt;C: ResetActiveSessionsResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id12">
 <h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1114,7 +1212,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/user/v202211/users/{id}/reset_api_token</span></code><a class="headerlink" href="#put-user-v202211-users-id-reset-api-token" title="Link to this heading">#</a></h3>
 <p>Reset API token for a user.</p>
 <p>Resets API token for a user specified by ID.</p>
-<section id="id15">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C-&gt;&gt;W: reset_api_token(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: PUT /user/v202211/users/{id}/reset_api_token
+    alt success
+        API--&gt;&gt;W: ResetApiTokenResponse
+        W--&gt;&gt;C: ResetApiTokenResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id15">
 <h4>Parameters<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

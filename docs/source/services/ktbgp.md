@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.ktbgp"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["RouteService (3 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["KtbgpServiceWrapper\nclient.ktbgp"]
+        REST["REST functions\ngen/ktbgp/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/ktbgp/models/"]
+        E["Error classes\ngen/ktbgp/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -19,6 +27,23 @@ flowchart LR
 ### `POST` `/routes/announce`
 
 Announce a BGP route to a specified set of devices
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ktbgp
+    participant API as Kentik API
+
+    C->>W: route_service__announce(data=RouteServiceAnnounceRequest(...))
+    W->>API: POST /routes/announce
+    alt success
+        API-->>W: RouteServiceAnnounceResponse
+        W-->>C: RouteServiceAnnounceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -50,6 +75,23 @@ response = client.ktbgp.route_service__announce(
 
 List active BGP updates for a specified set of devices
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ktbgp
+    participant API as Kentik API
+
+    C->>W: route_service__list(data=RouteServiceListRequest(...))
+    W->>API: POST /routes/list
+    alt success
+        API-->>W: RouteServiceListResponse
+        W-->>C: RouteServiceListResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -79,6 +121,23 @@ response = client.ktbgp.route_service__list(
 ### `POST` `/routes/withdraw`
 
 Withdraw active BGP updates from devices
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ktbgp
+    participant API as Kentik API
+
+    C->>W: route_service__withdraw(data=RouteServiceWithdrawRequest(...))
+    W->>API: POST /routes/withdraw
+    alt success
+        API-->>W: RouteServiceWithdrawResponse
+        W-->>C: RouteServiceWithdrawResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

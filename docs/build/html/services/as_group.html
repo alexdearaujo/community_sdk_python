@@ -745,14 +745,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.as_group&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;ASGroupService (5 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;As GroupServiceWrapper\nclient.as_group&quot;]
+        REST[&quot;REST functions\ngen/as_group/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/as_group/models/&quot;]
+        E[&quot;Error classes\ngen/as_group/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -760,7 +768,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/as_group/v202212/as_group</span></code><a class="headerlink" href="#get-as-group-v202212-as-group" title="Link to this heading">#</a></h3>
 <p>List all AS groups.</p>
 <p>Returns list of configured AS groups.</p>
-<section id="responses">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_a_s_groups()
+    W-&gt;&gt;API: GET /as_group/v202212/as_group
+    alt success
+        API--&gt;&gt;W: ListASGroupsResponse
+        W--&gt;&gt;C: ListASGroupsResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="responses">
 <h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -797,7 +820,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/as_group/v202212/as_group</span></code><a class="headerlink" href="#post-as-group-v202212-as-group" title="Link to this heading">#</a></h3>
 <p>Configure a new AS group.</p>
 <p>Create configuration for a new AS group. Returns the newly created configuration.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant API as Kentik API
+
+    C-&gt;&gt;W: create_a_s_group(data=CreateASGroupRequest(...))
+    W-&gt;&gt;API: POST /as_group/v202212/as_group
+    alt success
+        API--&gt;&gt;W: CreateASGroupResponse
+        W--&gt;&gt;C: CreateASGroupResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -856,7 +894,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/as_group/v202212/as_group/{asGroup.id}</span></code><a class="headerlink" href="#get-as-group-v202212-as-group-asgroup-id" title="Link to this heading">#</a></h3>
 <p>Retrieve configuration of a AS group.</p>
 <p>Returns configuration of a AS group specified by ID.</p>
-<section id="id3">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_a_s_group(asGroupid=&quot;asGroupid-example&quot;)
+    W-&gt;&gt;API: GET /as_group/v202212/as_group/{asGroup.id}
+    alt success
+        API--&gt;&gt;W: GetASGroupResponse
+        W--&gt;&gt;C: GetASGroupResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id3">
 <h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -915,7 +968,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/as_group/v202212/as_group/{asGroup.id}</span></code><a class="headerlink" href="#put-as-group-v202212-as-group-asgroup-id" title="Link to this heading">#</a></h3>
 <p>Updates configuration of a AS group.</p>
 <p>Replaces configuration of a AS group with attributes in the request. Returns the updated configuration.</p>
-<section id="id6">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant API as Kentik API
+
+    C-&gt;&gt;W: update_a_s_group(asGroupid=&quot;asGroupid-example&quot;, data=ASGroupServiceUpdateASGroupBody(...))
+    W-&gt;&gt;API: PUT /as_group/v202212/as_group/{asGroup.id}
+    alt success
+        API--&gt;&gt;W: UpdateASGroupResponse
+        W--&gt;&gt;C: UpdateASGroupResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id6">
 <h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -980,7 +1048,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/as_group/v202212/as_group/{asGroup.id}</span></code><a class="headerlink" href="#delete-as-group-v202212-as-group-asgroup-id" title="Link to this heading">#</a></h3>
 <p>Delete configuration of a AS group.</p>
 <p>Deletes configuration of a AS group with specific ID.</p>
-<section id="id9">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant API as Kentik API
+
+    C-&gt;&gt;W: delete_a_s_group(asGroupid=&quot;asGroupid-example&quot;)
+    W-&gt;&gt;API: DELETE /as_group/v202212/as_group/{asGroup.id}
+    alt success
+        API--&gt;&gt;W: DeleteASGroupResponse
+        W--&gt;&gt;C: DeleteASGroupResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id9">
 <h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

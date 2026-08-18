@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.pathfinder"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["PathfinderAdminService (1 op)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["PathfinderServiceWrapper\nclient.pathfinder"]
+        REST["REST functions\ngen/pathfinder/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/pathfinder/models/"]
+        E["Error classes\ngen/pathfinder/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 Create a Pathfinder Report.
 
 Create a pathfinder report based on configuration provided in the request.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.pathfinder
+    participant API as Kentik API
+
+    C->>W: create_pathfinder_report(data=CreatePathfinderReportRequest(...))
+    W->>API: POST /pathfinder/v202505beta1/create
+    alt success
+        API-->>W: CreatePathfinderReportResponse
+        W-->>C: CreatePathfinderReportResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

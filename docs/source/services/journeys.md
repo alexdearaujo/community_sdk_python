@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.journeys"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["JourneysDataService (1 op)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["JourneysServiceWrapper\nclient.journeys"]
+        REST["REST functions\ngen/journeys/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/journeys/models/"]
+        E["Error classes\ngen/journeys/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 Journeys AI NLQ Service
 
 Perform Natural Language (NLQ) to query object translation
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.journeys
+    participant API as Kentik API
+
+    C->>W: get_journeys_nlq(prompt="prompt-example")
+    W->>API: GET /journeys/v202406/GetJourneysNlq
+    alt success
+        API-->>W: GetJourneysNlqResponse
+        W-->>C: GetJourneysNlqResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

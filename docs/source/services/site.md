@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.site"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["SiteService (10 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["SiteServiceWrapper\nclient.site"]
+        REST["REST functions\ngen/site/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/site/models/"]
+        E["Error classes\ngen/site/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List all site markets.
 
 Returns list of configured site markets.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: list_site_markets()
+    W->>API: GET /site/v202509/site_markets
+    alt success
+        API-->>W: ListSiteMarketsResponse
+        W-->>C: ListSiteMarketsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -45,6 +70,23 @@ response = client.site.list_site_markets()
 Configure a new site market.
 
 Create configuration for a new site market. Returns the newly created configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: create_site_market(data=CreateSiteMarketRequest(...))
+    W->>API: POST /site/v202509/site_markets
+    alt success
+        API-->>W: CreateSiteMarketResponse
+        W-->>C: CreateSiteMarketResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -78,6 +120,23 @@ Retrieve configuration of a site market.
 
 Returns configuration of a site market specified by ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: get_site_market(id="id-example")
+    W->>API: GET /site/v202509/site_markets/{id}
+    alt success
+        API-->>W: GetSiteMarketResponse
+        W-->>C: GetSiteMarketResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -109,6 +168,23 @@ response = client.site.get_site_market(
 Updates configuration of a site market.
 
 Replaces configuration of a site market with attributes in the request. Returns the updated configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: update_site_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
+    W->>API: PUT /site/v202509/site_markets/{id}
+    alt success
+        API-->>W: UpdateSiteMarketResponse
+        W-->>C: UpdateSiteMarketResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -144,6 +220,23 @@ Delete configuration of a site market.
 
 Deletes configuration of a site market with specific ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: delete_site_market(id="id-example")
+    W->>API: DELETE /site/v202509/site_markets/{id}
+    alt success
+        API-->>W: DeleteSiteMarketResponse
+        W-->>C: DeleteSiteMarketResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -176,6 +269,23 @@ List all sites.
 
 Returns list of configured sites.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: list_sites()
+    W->>API: GET /site/v202509/sites
+    alt success
+        API-->>W: ListSitesResponse
+        W-->>C: ListSitesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Responses
 
 | Status | Description | Model |
@@ -199,6 +309,23 @@ response = client.site.list_sites()
 Configure a new site.
 
 Create configuration for a new site. Returns the newly created configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: create_site(data=CreateSiteRequest(...))
+    W->>API: POST /site/v202509/sites
+    alt success
+        API-->>W: CreateSiteResponse
+        W-->>C: CreateSiteResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -232,6 +359,23 @@ Retrieve configuration of a site.
 
 Returns configuration of a site specified by ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: get_site(id="id-example")
+    W->>API: GET /site/v202509/sites/{id}
+    alt success
+        API-->>W: GetSiteResponse
+        W-->>C: GetSiteResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -263,6 +407,23 @@ response = client.site.get_site(
 Updates configuration of a site.
 
 Replaces configuration of a site with attributes in the request. Returns the updated configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: update_site(id="id-example", data=SiteServiceUpdateSiteBody(...))
+    W->>API: PUT /site/v202509/sites/{id}
+    alt success
+        API-->>W: UpdateSiteResponse
+        W-->>C: UpdateSiteResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -297,6 +458,23 @@ response = client.site.update_site(
 Delete configuration of a site.
 
 Deletes configuration of a site with specific ID.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant API as Kentik API
+
+    C->>W: delete_site(id="id-example")
+    W->>API: DELETE /site/v202509/sites/{id}
+    alt success
+        API-->>W: DeleteSiteResponse
+        W-->>C: DeleteSiteResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

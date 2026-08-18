@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.plan"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["PlanService (1 op)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["PlanServiceWrapper\nclient.plan"]
+        REST["REST functions\ngen/plan/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/plan/models/"]
+        E["Error classes\ngen/plan/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List Plans
 
 Returns all plans configured for the user's company.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.plan
+    participant API as Kentik API
+
+    C->>W: list_plans()
+    W->>API: GET /plans/v202501alpha1
+    alt success
+        API-->>W: ListPlansResponse
+        W-->>C: ListPlansResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 

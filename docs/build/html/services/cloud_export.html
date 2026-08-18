@@ -805,14 +805,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.cloud_export&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;CloudExportAdminService (5 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;Cloud ExportServiceWrapper\nclient.cloud_export&quot;]
+        REST[&quot;REST functions\ngen/cloud_export/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/cloud_export/models/&quot;]
+        E[&quot;Error classes\ngen/cloud_export/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -820,7 +828,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code><a class="headerlink" href="#get-cloud-export-v202506-exports" title="Link to this heading">#</a></h3>
 <p>List cloud exports.</p>
 <p>Returns a list of all cloud exports in the account.</p>
-<section id="responses">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_cloud_exports()
+    W-&gt;&gt;API: GET /cloud_export/v202506/exports
+    alt success
+        API--&gt;&gt;W: ListCloudExportsResponse
+        W--&gt;&gt;C: ListCloudExportsResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="responses">
 <h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -857,7 +880,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code><a class="headerlink" href="#post-cloud-export-v202506-exports" title="Link to this heading">#</a></h3>
 <p>Create Cloud Export.</p>
 <p>Create new cloud export based on configuration in the request.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C-&gt;&gt;W: create_cloud_export(data=CreateCloudExportRequest(...))
+    W-&gt;&gt;API: POST /cloud_export/v202506/exports
+    alt success
+        API--&gt;&gt;W: CreateCloudExportResponse
+        W--&gt;&gt;C: CreateCloudExportResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -916,7 +954,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code><a class="headerlink" href="#get-cloud-export-v202506-exports-export-id" title="Link to this heading">#</a></h3>
 <p>Get cloud export configuration and status.</p>
 <p>Returns configuration and status of cloud export with specified ID.</p>
-<section id="id3">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_cloud_export(exportid=&quot;exportid-example&quot;)
+    W-&gt;&gt;API: GET /cloud_export/v202506/exports/{export.id}
+    alt success
+        API--&gt;&gt;W: GetCloudExportResponse
+        W--&gt;&gt;C: GetCloudExportResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id3">
 <h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -975,7 +1028,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code><a class="headerlink" href="#put-cloud-export-v202506-exports-export-id" title="Link to this heading">#</a></h3>
 <p>Update configuration of cloud export.</p>
 <p>Replace complete configuration of a cloud export with data in the request.</p>
-<section id="id6">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C-&gt;&gt;W: update_cloud_export(exportid=&quot;exportid-example&quot;, data=CloudExportAdminServiceUpdateCloudExportBody(...))
+    W-&gt;&gt;API: PUT /cloud_export/v202506/exports/{export.id}
+    alt success
+        API--&gt;&gt;W: UpdateCloudExportResponse
+        W--&gt;&gt;C: UpdateCloudExportResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id6">
 <h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1040,7 +1108,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code><a class="headerlink" href="#delete-cloud-export-v202506-exports-export-id" title="Link to this heading">#</a></h3>
 <p>Delete a cloud export.</p>
 <p>Delete cloud export with specified ID.</p>
-<section id="id9">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C-&gt;&gt;W: delete_cloud_export(exportid=&quot;exportid-example&quot;)
+    W-&gt;&gt;API: DELETE /cloud_export/v202506/exports/{export.id}
+    alt success
+        API--&gt;&gt;W: DeleteCloudExportResponse
+        W--&gt;&gt;C: DeleteCloudExportResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id9">
 <h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

@@ -367,6 +367,45 @@ def _render_example_snippet(
     return "\n".join(lines)
 
 
+def _render_operation_sequence_diagram(
+    service: str,
+    doc: EndpointDoc,
+    method_name: str,
+    params: list[tuple[str, str, bool]],
+) -> list[str]:
+    """Renders a sequence diagram for one operation showing the full call path."""
+    req_params = [(p, t) for p, t, r in params if r]
+    if req_params:
+        call_args = ", ".join(
+            f"{p}={_example_value_for_annotation(t, p)}" for p, t in req_params
+        )
+    else:
+        call_args = ""
+
+    success_resp = next((r for r in doc.responses if r.status.startswith("2")), None)
+    success_model = success_resp.type_label if success_resp else "response"
+
+    return [
+        f"{MD_FENCE}mermaid",
+        "sequenceDiagram",
+        "    participant C as Caller",
+        f"    participant W as client.{service}",
+        "    participant API as Kentik API",
+        "",
+        f"    C->>W: {method_name}({call_args})",
+        f"    W->>API: {doc.method} {doc.path}",
+        "    alt success",
+        f"        API-->>W: {success_model}",
+        f"        W-->>C: {success_model}",
+        "    else error status",
+        "        API-->>W: error body",
+        "        W-->>C: raise HTTPException",
+        "    end",
+        MD_FENCE,
+        "",
+    ]
+
+
 def _render_endpoint_section(
     service: str,
     doc: EndpointDoc,
@@ -375,11 +414,26 @@ def _render_endpoint_section(
 ) -> list[str]:
     heading = "#" * heading_level
     sub_heading = "#" * (heading_level + 1)
+
+    # Resolve the wrapper signature early so we can use it for the sequence
+    # diagram, which appears before the parameter/response detail tables.
+    signature = wrapper_signatures.get(
+        (doc.method, _normalize_path_for_matching(doc.path))
+    )
+    method_name, params = signature if signature else (None, None)
+
     lines = [f"{heading} `{doc.method}` `{doc.path}`", ""]
     if doc.summary:
         lines.extend([doc.summary, ""])
     if doc.description and doc.description != doc.summary:
         lines.extend([doc.description, ""])
+
+    # Sequence diagram gives the reader a visual of the full call path
+    # before they read the parameter/response detail tables.
+    if method_name is not None:
+        lines.extend(
+            _render_operation_sequence_diagram(service, doc, method_name, params)
+        )
 
     all_params = list(doc.parameters)
     if doc.request_body:
@@ -421,11 +475,7 @@ def _render_endpoint_section(
             )
         lines.append("")
 
-    signature = wrapper_signatures.get(
-        (doc.method, _normalize_path_for_matching(doc.path))
-    )
-    if signature:
-        method_name, params = signature
+    if method_name is not None:
         lines.extend(
             [
                 f"{sub_heading} Example",
@@ -568,35 +618,38 @@ def _render_model_relationship_diagram(
 def _render_service_overview(
     service: str, group_order: list[str], grouped: dict[str, list[EndpointDoc]]
 ) -> list[str]:
-    """Renders a compact Mermaid flowchart of the service's call path.
+    """Renders a component diagram showing the SDK code structure for this service.
 
-    Every operation, whichever wrapper it belongs to, routes through the one
-    shared `request_json()`, then splits into a success response model or a
-    per-operation error class. Returns nothing for schema-only services.
+    Returns nothing for schema-only services.
     """
     if not group_order:
         return []
 
-    lines = [
+    title = service.replace("_", " ").title()
+    return [
         "## Overview",
         "",
         f"{MD_FENCE}mermaid",
         "flowchart LR",
-        f'    Client["client.{service}"]',
-        '    RJ["request_json()"]',
-        '    OK["success: response model"]',
-        '    ERR["per-operation error class"]',
+        '    subgraph sdk["kentik_api"]',
+        '        KA["KentikAPI"]',
+        f'        W["{title}ServiceWrapper\\nclient.{service}"]',
+        f'        REST["REST functions\\ngen/{service}/services/"]',
+        '        RJ["request_json()\\ncore/rest_runtime"]',
+        f'        M["Models\\ngen/{service}/models/"]',
+        f'        E["Error classes\\ngen/{service}/error/"]',
+        "    end",
+        '    API["Kentik API"]',
+        "",
+        "    KA --> W",
+        "    W --> REST",
+        "    REST --> RJ",
+        "    REST --> M",
+        "    REST --> E",
+        "    RJ --> API",
+        MD_FENCE,
+        "",
     ]
-    for idx, tag in enumerate(group_order):
-        gid = f"G{idx}"
-        count = len(grouped[tag])
-        suffix = "op" if count == 1 else "ops"
-        lines.append(f'    Client --> {gid}["{tag} ({count} {suffix})"]')
-        lines.append(f"    {gid} --> RJ")
-    lines.append("    RJ --> OK")
-    lines.append('    RJ -->|"error status"| ERR')
-    lines.extend([MD_FENCE, ""])
-    return lines
 
 
 def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):

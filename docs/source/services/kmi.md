@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.kmi"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["KmiService (5 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["KmiServiceWrapper\nclient.kmi"]
+        REST["REST functions\ngen/kmi/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/kmi/models/"]
+        E["Error classes\ngen/kmi/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List global KMI insights.
 
 Returns list of global KMI insights.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant API as Kentik API
+
+    C->>W: get_global_insights()
+    W->>API: GET /kmi/v202212/insights
+    alt success
+        API-->>W: GetGlobalInsightsResponse
+        W-->>C: GetGlobalInsightsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -56,6 +81,23 @@ response = client.kmi.get_global_insights()
 List ASN-specific KMI insights.
 
 Returns list of KMI insights for a specific Autonomous System.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant API as Kentik API
+
+    C->>W: get_a_s_n_insights(asn="asn-example")
+    W->>API: GET /kmi/v202212/insights/{asn}
+    alt success
+        API-->>W: GetASNInsightsResponse
+        W-->>C: GetASNInsightsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -95,6 +137,23 @@ List metadata and list of customers, providers, and peers for an Autonomous Syst
 
 Returns metadata and list of customers, providers, and peers for an Autonomous System.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant API as Kentik API
+
+    C->>W: get_a_s_n_details(marketId="marketId-example", asn="asn-example", type="type-example", data=KmiServiceGetASNDetailsBody(...))
+    W->>API: POST /kmi/v202212/market/{marketId}/network/{asn}/{type}
+    alt success
+        API-->>W: GetASNDetailsResponse
+        W-->>C: GetASNDetailsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -133,6 +192,23 @@ List KMI rankings by geo market and rank type.
 
 Returns list of KMI rankings.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant API as Kentik API
+
+    C->>W: get_rankings(marketId="marketId-example", rankType="rankType-example", ip="ip-example", data=KmiServiceGetRankingsBody(...))
+    W->>API: POST /kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}
+    alt success
+        API-->>W: GetRankingsResponse
+        W-->>C: GetRankingsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -170,6 +246,23 @@ response = client.kmi.get_rankings(
 List all geo markets for KMI.
 
 Returns list of geo markets for KMI.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant API as Kentik API
+
+    C->>W: list_markets()
+    W->>API: GET /kmi/v202212/markets
+    alt success
+        API-->>W: ListMarketsResponse
+        W-->>C: ListMarketsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 

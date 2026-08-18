@@ -726,14 +726,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.audit&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;AuditService (3 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;AuditServiceWrapper\nclient.audit&quot;]
+        REST[&quot;REST functions\ngen/audit/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/audit/models/&quot;]
+        E[&quot;Error classes\ngen/audit/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -741,7 +749,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/audit/v202601/events</span></code><a class="headerlink" href="#get-audit-v202601-events" title="Link to this heading">#</a></h3>
 <p>List Audit Events.</p>
 <p>Returns a list of audit events.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.audit
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_audit_events()
+    W-&gt;&gt;API: GET /audit/v202601/events
+    alt success
+        API--&gt;&gt;W: ListAuditEventsResponse
+        W--&gt;&gt;C: ListAuditEventsResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -813,7 +836,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/audit/v202601/events/{id}</span></code><a class="headerlink" href="#get-audit-v202601-events-id" title="Link to this heading">#</a></h3>
 <p>Get an Audit Event</p>
 <p>Return a specific audit event.</p>
-<section id="id1">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.audit
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_audit_event(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /audit/v202601/events/{id}
+    alt success
+        API--&gt;&gt;W: GetAuditEventResponse
+        W--&gt;&gt;C: GetAuditEventResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id1">
 <h4>Parameters<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -877,7 +915,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/audit/v202601/events/{id}/{ctime}</span></code><a class="headerlink" href="#get-audit-v202601-events-id-ctime" title="Link to this heading">#</a></h3>
 <p>Get an Audit Event</p>
 <p>Return a specific audit event.</p>
-<section id="id4">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.audit
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_audit_event_2(id=&quot;id-example&quot;, ctime=&quot;ctime-example&quot;)
+    W-&gt;&gt;API: GET /audit/v202601/events/{id}/{ctime}
+    alt success
+        API--&gt;&gt;W: GetAuditEventResponse
+        W--&gt;&gt;C: GetAuditEventResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id4">
 <h4>Parameters<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.enrichments"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["EnumerationsAdminService (1 op)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["EnrichmentsServiceWrapper\nclient.enrichments"]
+        REST["REST functions\ngen/enrichments/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/enrichments/models/"]
+        E["Error classes\ngen/enrichments/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 Resolve enumeration IDs to values.
 
 Return the string values for the supplied enumeration lookup IDs within the authenticated company. Unknown IDs are omitted from the response.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.enrichments
+    participant API as Kentik API
+
+    C->>W: fetch_values_by_ids(data=FetchValuesByIdsRequest(...))
+    W->>API: POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids
+    alt success
+        API-->>W: FetchValuesByIdsResponse
+        W-->>C: FetchValuesByIdsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

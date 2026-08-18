@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.user"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["UserService (7 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["UserServiceWrapper\nclient.user"]
+        REST["REST functions\ngen/user/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/user/models/"]
+        E["Error classes\ngen/user/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List all users.
 
 Returns a list of all user accounts in the company.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C->>W: list_users()
+    W->>API: GET /user/v202211/users
+    alt success
+        API-->>W: ListUsersResponse
+        W-->>C: ListUsersResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -45,6 +70,23 @@ response = client.user.list_users()
 Create new user account.
 
 Creates new user account based on attributes in the request. Returns attributes of the newly created account.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C->>W: create_user(data=CreateUserRequest(...))
+    W->>API: POST /user/v202211/users
+    alt success
+        API-->>W: CreateUserResponse
+        W-->>C: CreateUserResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -78,6 +120,23 @@ Get attributes of a user account.
 
 Returns attributes of a user account specified by ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C->>W: get_user(id="id-example")
+    W->>API: GET /user/v202211/users/{id}
+    alt success
+        API-->>W: GetUserResponse
+        W-->>C: GetUserResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -109,6 +168,23 @@ response = client.user.get_user(
 Update attributes of a user account.
 
 Replaces all attributes of a user account specified by ID with attributes in the request. Returns updated attributes.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C->>W: update_user(id="id-example", data=UserServiceUpdateUserBody(...))
+    W->>API: PUT /user/v202211/users/{id}
+    alt success
+        API-->>W: UpdateUserResponse
+        W-->>C: UpdateUserResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -144,6 +220,23 @@ Delete a user account.
 
 Deletes user account specified by ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C->>W: delete_user(id="id-example")
+    W->>API: DELETE /user/v202211/users/{id}
+    alt success
+        API-->>W: DeleteUserResponse
+        W-->>C: DeleteUserResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -176,6 +269,23 @@ Resets active sessions for a user.
 
 Resets active sessions for a user specified by ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C->>W: reset_active_sessions(id="id-example")
+    W->>API: PUT /user/v202211/users/{id}/reset_active_sessions
+    alt success
+        API-->>W: ResetActiveSessionsResponse
+        W-->>C: ResetActiveSessionsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -207,6 +317,23 @@ response = client.user.reset_active_sessions(
 Reset API token for a user.
 
 Resets API token for a user specified by ID.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.user
+    participant API as Kentik API
+
+    C->>W: reset_api_token(id="id-example")
+    W->>API: PUT /user/v202211/users/{id}/reset_api_token
+    alt success
+        API-->>W: ResetApiTokenResponse
+        W-->>C: ResetApiTokenResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

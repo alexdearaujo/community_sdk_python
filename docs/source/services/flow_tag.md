@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.flow_tag"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["FlowTagService (5 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["Flow TagServiceWrapper\nclient.flow_tag"]
+        REST["REST functions\ngen/flow_tag/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/flow_tag/models/"]
+        E["Error classes\ngen/flow_tag/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 Search flow tag configuration.
 
 Returns configuration of flow tag with search parameters.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant API as Kentik API
+
+    C->>W: search_flow_tag()
+    W->>API: GET /flow_tag/v202404alpha1/tag
+    alt success
+        API-->>W: SearchFlowTagResponse
+        W-->>C: SearchFlowTagResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -56,6 +81,23 @@ Create flow tag configuration.
 
 Create a flow tag configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant API as Kentik API
+
+    C->>W: create_flow_tag(data=CreateFlowTagRequest(...))
+    W->>API: POST /flow_tag/v202404alpha1/tag
+    alt success
+        API-->>W: CreateFlowTagResponse
+        W-->>C: CreateFlowTagResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -88,6 +130,23 @@ Get flow tag configuration.
 
 Returns configuration of flow tag with specified ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant API as Kentik API
+
+    C->>W: get_flow_tag(flowTagid="flowTagid-example")
+    W->>API: GET /flow_tag/v202404alpha1/tag/{flowTag.id}
+    alt success
+        API-->>W: GetFlowTagResponse
+        W-->>C: GetFlowTagResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -119,6 +178,23 @@ response = client.flow_tag.get_flow_tag(
 Update flow tag configuration.
 
 Update a flow tag configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant API as Kentik API
+
+    C->>W: update_flow_tag(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
+    W->>API: PUT /flow_tag/v202404alpha1/tag/{flowTag.id}
+    alt success
+        API-->>W: UpdateFlowTagResponse
+        W-->>C: UpdateFlowTagResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -153,6 +229,23 @@ response = client.flow_tag.update_flow_tag(
 Delete flow tag configuration.
 
 Delete a flow tag configuration with id.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant API as Kentik API
+
+    C->>W: delete_flow_tag(flowTagid="flowTagid-example")
+    W->>API: DELETE /flow_tag/v202404alpha1/tag/{flowTag.id}
+    alt success
+        API-->>W: DeleteFlowTagResponse
+        W-->>C: DeleteFlowTagResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

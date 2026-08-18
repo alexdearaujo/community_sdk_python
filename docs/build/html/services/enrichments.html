@@ -683,14 +683,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.enrichments&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;EnumerationsAdminService (1 op)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;EnrichmentsServiceWrapper\nclient.enrichments&quot;]
+        REST[&quot;REST functions\ngen/enrichments/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/enrichments/models/&quot;]
+        E[&quot;Error classes\ngen/enrichments/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -698,7 +706,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/enrichments/enumerations/v202601alpha1/values:fetch_by_ids</span></code><a class="headerlink" href="#post-enrichments-enumerations-v202601alpha1-values-fetch-by-ids" title="Link to this heading">#</a></h3>
 <p>Resolve enumeration IDs to values.</p>
 <p>Return the string values for the supplied enumeration lookup IDs within the authenticated company. Unknown IDs are omitted from the response.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.enrichments
+    participant API as Kentik API
+
+    C-&gt;&gt;W: fetch_values_by_ids(data=FetchValuesByIdsRequest(...))
+    W-&gt;&gt;API: POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids
+    alt success
+        API--&gt;&gt;W: FetchValuesByIdsResponse
+        W--&gt;&gt;C: FetchValuesByIdsResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.label"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["LabelService (4 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["LabelServiceWrapper\nclient.label"]
+        REST["REST functions\ngen/label/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/label/models/"]
+        E["Error classes\ngen/label/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List all configured labels
 
 Returns list of all labels configured in the account.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.label
+    participant API as Kentik API
+
+    C->>W: list_labels()
+    W->>API: GET /label/v202210/labels
+    alt success
+        API-->>W: ListLabelsResponse
+        W-->>C: ListLabelsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -45,6 +70,23 @@ response = client.label.list_labels()
 Create a new label.
 
 Creates a new label based on data in the request.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.label
+    participant API as Kentik API
+
+    C->>W: create_label(data=CreateLabelRequest(...))
+    W->>API: POST /label/v202210/labels
+    alt success
+        API-->>W: CreateLabelResponse
+        W-->>C: CreateLabelResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -77,6 +119,23 @@ response = client.label.create_label(
 Update an existing label.
 
 Updates configuration of a label.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.label
+    participant API as Kentik API
+
+    C->>W: update_label(id="id-example", data=LabelServiceUpdateLabelBody(...))
+    W->>API: POST /label/v202210/labels/{id}
+    alt success
+        API-->>W: UpdateLabelResponse
+        W-->>C: UpdateLabelResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -111,6 +170,23 @@ response = client.label.update_label(
 Delete a label.
 
 Deletes label with specified with id.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.label
+    participant API as Kentik API
+
+    C->>W: delete_label(id="id-example")
+    W->>API: DELETE /label/v202210/labels/{id}
+    alt success
+        API-->>W: DeleteLabelResponse
+        W-->>C: DeleteLabelResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

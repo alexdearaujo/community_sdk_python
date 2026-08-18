@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.dictionary"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["DictionaryService (1 op)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["DictionaryServiceWrapper\nclient.dictionary"]
+        REST["REST functions\ngen/dictionary/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/dictionary/models/"]
+        E["Error classes\ngen/dictionary/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 Get Dictionary
 
 Returns the full UDE dictionary for the authenticated company, including all measurements with their dimension and metric fields, operator sets, and metric family definitions.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.dictionary
+    participant API as Kentik API
+
+    C->>W: get_dictionary()
+    W->>API: GET /dictionary/v20260604alpha1
+    alt success
+        API-->>W: GetDictionaryResponse
+        W-->>C: GetDictionaryResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 

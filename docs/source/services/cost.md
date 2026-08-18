@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.cost"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["CostService (3 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["CostServiceWrapper\nclient.cost"]
+        REST["REST functions\ngen/cost/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/cost/models/"]
+        E["Error classes\ngen/cost/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List all cost providers.
 
 Returns list of configured cost providers.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant API as Kentik API
+
+    C->>W: list_cost_providers()
+    W->>API: GET /cost/v202308/cost/providers
+    alt success
+        API-->>W: ListCostProvidersResponse
+        W-->>C: ListCostProvidersResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -45,6 +70,23 @@ response = client.cost.list_cost_providers()
 List all cost provider summaries.
 
 Returns list of summaries of configured cost providers.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant API as Kentik API
+
+    C->>W: list_cost_provider_summaries()
+    W->>API: GET /cost/v202308/cost/summary
+    alt success
+        API-->>W: ListCostProviderSummariesResponse
+        W-->>C: ListCostProviderSummariesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -75,6 +117,23 @@ response = client.cost.list_cost_provider_summaries()
 Get cost provider summary.
 
 Returns summary of configured cost provider.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant API as Kentik API
+
+    C->>W: get_cost_provider_summary(id="id-example")
+    W->>API: GET /cost/v202308/cost/summary/{id}
+    alt success
+        API-->>W: GetCostProviderSummaryResponse
+        W-->>C: GetCostProviderSummaryResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

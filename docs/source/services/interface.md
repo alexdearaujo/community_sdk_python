@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.interface"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["InterfaceService (6 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["InterfaceServiceWrapper\nclient.interface"]
+        REST["REST functions\ngen/interface/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/interface/models/"]
+        E["Error classes\ngen/interface/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 Fetch Search Interfaces
 
 Return list of interfaces matches search critera.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C->>W: list_interface()
+    W->>API: GET /interface/v202108alpha1/interfaces
+    alt success
+        API-->>W: ListInterfaceResponse
+        W-->>C: ListInterfaceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -58,6 +83,23 @@ Create a interface.
 
 Create a interface from request. returns created.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C->>W: interface_create(data=CreateInterfaceRequest(...))
+    W->>API: POST /interface/v202108alpha1/interfaces
+    alt success
+        API-->>W: CreateInterfaceResponse
+        W-->>C: CreateInterfaceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -90,6 +132,23 @@ Get a interface.
 
 Returns information about a interface specified with ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C->>W: interface_get(id="id-example")
+    W->>API: GET /interface/v202108alpha1/interfaces/{id}
+    alt success
+        API-->>W: GetInterfaceResponse
+        W-->>C: GetInterfaceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -121,6 +180,23 @@ response = client.interface.interface_get(
 Update a interface.
 
 Replaces the entire interface attributes specified with id.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C->>W: interface_update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
+    W->>API: PUT /interface/v202108alpha1/interfaces/{id}
+    alt success
+        API-->>W: UpdateInterfaceResponse
+        W-->>C: UpdateInterfaceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -156,6 +232,23 @@ Delete a interface.
 
 Deletes the interface specified with id.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C->>W: interface_delete(id="id-example")
+    W->>API: DELETE /interface/v202108alpha1/interfaces/{id}
+    alt success
+        API-->>W: DeleteInterfaceResponse
+        W-->>C: DeleteInterfaceResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -187,6 +280,23 @@ response = client.interface.interface_delete(
 Manual Classify Interface
 
 Manually set interface(s) classification.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C->>W: manual_classify(data=ManualClassifyRequest(...))
+    W->>API: POST /interface/v202108alpha1/manual_classify
+    alt success
+        API-->>W: ManualClassifyResponse
+        W-->>C: ManualClassifyResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

@@ -1871,28 +1871,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.alerting&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;AlertService (8 ops)&quot;]
-    G0 --&gt; RJ
-    Client --&gt; G1[&quot;AlertAutoAckService (5 ops)&quot;]
-    G1 --&gt; RJ
-    Client --&gt; G2[&quot;MitigationsService (6 ops)&quot;]
-    G2 --&gt; RJ
-    Client --&gt; G3[&quot;MitigationMethodsService (2 ops)&quot;]
-    G3 --&gt; RJ
-    Client --&gt; G4[&quot;MitigationPlatformsService (2 ops)&quot;]
-    G4 --&gt; RJ
-    Client --&gt; G5[&quot;PolicyService (4 ops)&quot;]
-    G5 --&gt; RJ
-    Client --&gt; G6[&quot;AlertSilenceNotificationsService (5 ops)&quot;]
-    G6 --&gt; RJ
-    Client --&gt; G7[&quot;SuppressionService (5 ops)&quot;]
-    G7 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;AlertingServiceWrapper\nclient.alerting&quot;]
+        REST[&quot;REST functions\ngen/alerting/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/alerting/models/&quot;]
+        E[&quot;Error classes\ngen/alerting/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -1902,7 +1896,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts</span></code><a class="headerlink" href="#post-v202505-alerts" title="Link to this heading">#</a></h4>
 <p>List Alerts</p>
 <p>Returns an array of alert objects that contain information about individual alerts.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: alert_list(data=AlertServiceListRequest(...))
+    W-&gt;&gt;API: POST /v202505/alerts
+    alt success
+        API--&gt;&gt;W: AlertServiceListResponse
+        W--&gt;&gt;C: AlertServiceListResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h5>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1961,7 +1970,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/clear</span></code><a class="headerlink" href="#post-v202505-alerts-clear" title="Link to this heading">#</a></h4>
 <p>Clear Alerts</p>
 <p>Clears alerts.</p>
-<section id="id1">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: clear(data=AlertServiceClearRequest(...))
+    W-&gt;&gt;API: POST /v202505/alerts/clear
+    alt success
+        API--&gt;&gt;W: AlertServiceClearResponse
+        W--&gt;&gt;C: AlertServiceClearResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id1">
 <h5>Parameters<a class="headerlink" href="#id1" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2020,7 +2044,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/{alertId}/comments</span></code><a class="headerlink" href="#get-v202505-alerts-alertid-comments" title="Link to this heading">#</a></h4>
 <p>List Alert Comments</p>
 <p>Returns all comments for an alert.</p>
-<section id="id4">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_comments(alertId=&quot;alertId-example&quot;)
+    W-&gt;&gt;API: GET /v202505/alerts/{alertId}/comments
+    alt success
+        API--&gt;&gt;W: AlertServiceListCommentsResponse
+        W--&gt;&gt;C: AlertServiceListCommentsResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id4">
 <h5>Parameters<a class="headerlink" href="#id4" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2079,7 +2118,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/{alertId}/comments</span></code><a class="headerlink" href="#post-v202505-alerts-alertid-comments" title="Link to this heading">#</a></h4>
 <p>Add Alert Comment</p>
 <p>Adds a comment to an alert.</p>
-<section id="id7">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: add_comment(alertId=&quot;alertId-example&quot;, data=AlertServiceAddCommentBody(...))
+    W-&gt;&gt;API: POST /v202505/alerts/{alertId}/comments
+    alt success
+        API--&gt;&gt;W: AlertServiceAddCommentResponse
+        W--&gt;&gt;C: AlertServiceAddCommentResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id7">
 <h5>Parameters<a class="headerlink" href="#id7" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2144,7 +2198,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/{alertId}/external-context</span></code><a class="headerlink" href="#put-v202505-alerts-alertid-external-context" title="Link to this heading">#</a></h4>
 <p>Set External Context for Alert</p>
 <p>Add or replace external context</p>
-<section id="id10">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: set_external_context(alertId=&quot;alertId-example&quot;, data=AlertServiceSetExternalContextBody(...))
+    W-&gt;&gt;API: PUT /v202505/alerts/{alertId}/external-context
+    alt success
+        API--&gt;&gt;W: AlertServiceSetExternalContextResponse
+        W--&gt;&gt;C: AlertServiceSetExternalContextResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id10">
 <h5>Parameters<a class="headerlink" href="#id10" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2209,7 +2278,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/{id}</span></code><a class="headerlink" href="#get-v202505-alerts-id" title="Link to this heading">#</a></h4>
 <p>Get Alert</p>
 <p>Returns an alert object that contains information about an individual alert.</p>
-<section id="id13">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: alert_get(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /v202505/alerts/{id}
+    alt success
+        API--&gt;&gt;W: AlertServiceGetResponse
+        W--&gt;&gt;C: AlertServiceGetResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id13">
 <h5>Parameters<a class="headerlink" href="#id13" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2268,7 +2352,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/{id}/ack</span></code><a class="headerlink" href="#post-v202505-alerts-id-ack" title="Link to this heading">#</a></h4>
 <p>Ack Alert</p>
 <p>Acknowledges an alert.</p>
-<section id="id16">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: ack(id=&quot;id-example&quot;, data=AlertServiceAckBody(...))
+    W-&gt;&gt;API: POST /v202505/alerts/{id}/ack
+    alt success
+        API--&gt;&gt;W: AlertServiceAckResponse
+        W--&gt;&gt;C: AlertServiceAckResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id16">
 <h5>Parameters<a class="headerlink" href="#id16" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2333,7 +2432,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/{id}/unack</span></code><a class="headerlink" href="#post-v202505-alerts-id-unack" title="Link to this heading">#</a></h4>
 <p>UnAck Alert</p>
 <p>Unacknowledges an alert (removes the acknowledgement).</p>
-<section id="id19">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: un_ack(id=&quot;id-example&quot;, data=AlertServiceUnAckBody(...))
+    W-&gt;&gt;API: POST /v202505/alerts/{id}/unack
+    alt success
+        API--&gt;&gt;W: AlertServiceUnAckResponse
+        W--&gt;&gt;C: AlertServiceUnAckResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id19">
 <h5>Parameters<a class="headerlink" href="#id19" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2400,7 +2514,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/ack/auto</span></code><a class="headerlink" href="#post-v202505-alerts-ack-auto" title="Link to this heading">#</a></h4>
 <p>Create Auto-Ack</p>
 <p>Creates a new auto-ack configuration.</p>
-<section id="id22">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: create(data=AlertAutoAckServiceCreateRequest(...))
+    W-&gt;&gt;API: POST /v202505/alerts/ack/auto
+    alt success
+        API--&gt;&gt;W: AlertAutoAckServiceCreateResponse
+        W--&gt;&gt;C: AlertAutoAckServiceCreateResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id22">
 <h5>Parameters<a class="headerlink" href="#id22" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2459,7 +2588,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/ack/auto/list</span></code><a class="headerlink" href="#post-v202505-alerts-ack-auto-list" title="Link to this heading">#</a></h4>
 <p>List Auto-Acks</p>
 <p>Returns a list of auto-ack configurations.</p>
-<section id="id25">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list(data=AlertAutoAckServiceListRequest(...))
+    W-&gt;&gt;API: POST /v202505/alerts/ack/auto/list
+    alt success
+        API--&gt;&gt;W: AlertAutoAckServiceListResponse
+        W--&gt;&gt;C: AlertAutoAckServiceListResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id25">
 <h5>Parameters<a class="headerlink" href="#id25" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2518,7 +2662,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/ack/auto/{autoAck.id}</span></code><a class="headerlink" href="#get-v202505-alerts-ack-auto-autoack-id" title="Link to this heading">#</a></h4>
 <p>Get Auto-Ack</p>
 <p>Returns an auto-ack configuration.</p>
-<section id="id28">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get(autoAckid=&quot;autoAckid-example&quot;)
+    W-&gt;&gt;API: GET /v202505/alerts/ack/auto/{autoAck.id}
+    alt success
+        API--&gt;&gt;W: AlertAutoAckServiceGetResponse
+        W--&gt;&gt;C: AlertAutoAckServiceGetResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id28">
 <h5>Parameters<a class="headerlink" href="#id28" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2577,7 +2736,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">PATCH</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/ack/auto/{autoAck.id}</span></code><a class="headerlink" href="#patch-v202505-alerts-ack-auto-autoack-id" title="Link to this heading">#</a></h4>
 <p>Replace Auto-Ack</p>
 <p>Replaces an auto-ack configuration.</p>
-<section id="id31">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: replace(autoAckid=&quot;autoAckid-example&quot;, data=AlertAutoAckServiceReplaceBody(...))
+    W-&gt;&gt;API: PATCH /v202505/alerts/ack/auto/{autoAck.id}
+    alt success
+        API--&gt;&gt;W: AlertAutoAckServiceReplaceResponse
+        W--&gt;&gt;C: AlertAutoAckServiceReplaceResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id31">
 <h5>Parameters<a class="headerlink" href="#id31" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2642,7 +2816,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/ack/auto/{autoAck.id}</span></code><a class="headerlink" href="#delete-v202505-alerts-ack-auto-autoack-id" title="Link to this heading">#</a></h4>
 <p>Delete Auto-Ack</p>
 <p>Deletes an auto-ack configuration.</p>
-<section id="id34">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: delete(autoAckid=&quot;autoAckid-example&quot;)
+    W-&gt;&gt;API: DELETE /v202505/alerts/ack/auto/{autoAck.id}
+    alt success
+        API--&gt;&gt;W: AlertAutoAckServiceDeleteResponse
+        W--&gt;&gt;C: AlertAutoAckServiceDeleteResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id34">
 <h5>Parameters<a class="headerlink" href="#id34" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2703,7 +2892,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations</span></code><a class="headerlink" href="#get-v202505-mitigations" title="Link to this heading">#</a></h4>
 <p>List Mitigations</p>
 <p>Returns a list of mitigations.</p>
-<section id="id37">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: mitigations_list()
+    W-&gt;&gt;API: GET /v202505/mitigations
+    alt success
+        API--&gt;&gt;W: MitigationsServiceListResponse
+        W--&gt;&gt;C: MitigationsServiceListResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id37">
 <h5>Parameters<a class="headerlink" href="#id37" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2820,7 +3024,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations</span></code><a class="headerlink" href="#post-v202505-mitigations" title="Link to this heading">#</a></h4>
 <p>Create Mitigation</p>
 <p>Creates a new manual mitigation.</p>
-<section id="id40">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: mitigations_create(data=MitigationsServiceCreateRequest(...))
+    W-&gt;&gt;API: POST /v202505/mitigations
+    alt success
+        API--&gt;&gt;W: MitigationsServiceCreateResponse
+        W--&gt;&gt;C: MitigationsServiceCreateResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id40">
 <h5>Parameters<a class="headerlink" href="#id40" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2879,7 +3098,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations/actions</span></code><a class="headerlink" href="#get-v202505-mitigations-actions" title="Link to this heading">#</a></h4>
 <p>Get Available Actions</p>
 <p>Returns available actions for mitigations.</p>
-<section id="id43">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: available_actions()
+    W-&gt;&gt;API: GET /v202505/mitigations/actions
+    alt success
+        API--&gt;&gt;W: MitigationsServiceAvailableActionsResponse
+        W--&gt;&gt;C: MitigationsServiceAvailableActionsResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id43">
 <h5>Responses<a class="headerlink" href="#id43" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2916,7 +3150,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations/{action}</span></code><a class="headerlink" href="#get-v202505-mitigations-action" title="Link to this heading">#</a></h4>
 <p>Get Mitigation</p>
 <p>Returns a mitigation.</p>
-<section id="id45">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: mitigations_get(action=&quot;action-example&quot;)
+    W-&gt;&gt;API: GET /v202505/mitigations/{action}
+    alt success
+        API--&gt;&gt;W: MitigationsServiceGetResponse
+        W--&gt;&gt;C: MitigationsServiceGetResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id45">
 <h5>Parameters<a class="headerlink" href="#id45" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -2975,7 +3224,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations/{action}</span></code><a class="headerlink" href="#post-v202505-mitigations-action" title="Link to this heading">#</a></h4>
 <p>Act on Mitigation</p>
 <p>Performs an action on one or more mitigations.</p>
-<section id="id48">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: act(action=&quot;action-example&quot;, data=MitigationsServiceActBody(...))
+    W-&gt;&gt;API: POST /v202505/mitigations/{action}
+    alt success
+        API--&gt;&gt;W: MitigationsServiceActResponse
+        W--&gt;&gt;C: MitigationsServiceActResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id48">
 <h5>Parameters<a class="headerlink" href="#id48" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3040,7 +3304,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations/{id}/actions</span></code><a class="headerlink" href="#get-v202505-mitigations-id-actions" title="Link to this heading">#</a></h4>
 <p>Get Available Actions for Mitigation</p>
 <p>Returns available actions for a specific mitigation.</p>
-<section id="id51">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: available_actions_for_mitigation(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /v202505/mitigations/{id}/actions
+    alt success
+        API--&gt;&gt;W: MitigationsServiceAvailableActionsForMitigationResponse
+        W--&gt;&gt;C: MitigationsServiceAvailableActionsForMitigationResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id51">
 <h5>Parameters<a class="headerlink" href="#id51" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3101,7 +3380,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations/methods</span></code><a class="headerlink" href="#get-v202505-mitigations-methods" title="Link to this heading">#</a></h4>
 <p>List Mitigation Methods</p>
 <p>Returns a list of mitigation methods.</p>
-<section id="id54">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: mitigation_methods_list()
+    W-&gt;&gt;API: GET /v202505/mitigations/methods
+    alt success
+        API--&gt;&gt;W: MitigationMethodsServiceListResponse
+        W--&gt;&gt;C: MitigationMethodsServiceListResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id54">
 <h5>Parameters<a class="headerlink" href="#id54" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3198,7 +3492,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations/methods/{id}</span></code><a class="headerlink" href="#get-v202505-mitigations-methods-id" title="Link to this heading">#</a></h4>
 <p>Get Mitigation Method</p>
 <p>Returns a mitigation method.</p>
-<section id="id57">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: mitigation_methods_get(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /v202505/mitigations/methods/{id}
+    alt success
+        API--&gt;&gt;W: MitigationMethodsServiceGetResponse
+        W--&gt;&gt;C: MitigationMethodsServiceGetResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id57">
 <h5>Parameters<a class="headerlink" href="#id57" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3259,7 +3568,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations/platforms</span></code><a class="headerlink" href="#get-v202505-mitigations-platforms" title="Link to this heading">#</a></h4>
 <p>List Mitigation Platforms</p>
 <p>Returns a list of mitigation platforms.</p>
-<section id="id60">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: mitigation_platforms_list()
+    W-&gt;&gt;API: GET /v202505/mitigations/platforms
+    alt success
+        API--&gt;&gt;W: MitigationPlatformsServiceListResponse
+        W--&gt;&gt;C: MitigationPlatformsServiceListResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id60">
 <h5>Parameters<a class="headerlink" href="#id60" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3356,7 +3680,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/mitigations/platforms/{id}</span></code><a class="headerlink" href="#get-v202505-mitigations-platforms-id" title="Link to this heading">#</a></h4>
 <p>Get Mitigation Platform</p>
 <p>Returns a mitigation platform.</p>
-<section id="id63">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: mitigation_platforms_get(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /v202505/mitigations/platforms/{id}
+    alt success
+        API--&gt;&gt;W: MitigationPlatformsServiceGetResponse
+        W--&gt;&gt;C: MitigationPlatformsServiceGetResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id63">
 <h5>Parameters<a class="headerlink" href="#id63" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3417,7 +3756,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/policies/list</span></code><a class="headerlink" href="#post-v202505-policies-list" title="Link to this heading">#</a></h4>
 <p>List Policies</p>
 <p>Returns a list of alerting policies.</p>
-<section id="id66">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: policy_list(data=PolicyServiceListRequest(...))
+    W-&gt;&gt;API: POST /v202505/policies/list
+    alt success
+        API--&gt;&gt;W: PolicyServiceListResponse
+        W--&gt;&gt;C: PolicyServiceListResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id66">
 <h5>Parameters<a class="headerlink" href="#id66" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3476,7 +3830,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/policies/{policyType}/{id}</span></code><a class="headerlink" href="#get-v202505-policies-policytype-id" title="Link to this heading">#</a></h4>
 <p>Get Policy</p>
 <p>Returns an alerting policy.</p>
-<section id="id69">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: policy_get(policyType=&quot;policyType-example&quot;, id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /v202505/policies/{policyType}/{id}
+    alt success
+        API--&gt;&gt;W: PolicyServiceGetResponse
+        W--&gt;&gt;C: PolicyServiceGetResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id69">
 <h5>Parameters<a class="headerlink" href="#id69" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3541,7 +3910,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/policies/{policyType}/{id}/disable</span></code><a class="headerlink" href="#post-v202505-policies-policytype-id-disable" title="Link to this heading">#</a></h4>
 <p>Disable Policy</p>
 <p>Disables an alerting policy.</p>
-<section id="id72">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: disable(policyType=&quot;policyType-example&quot;, id=&quot;id-example&quot;, data=PolicyServiceDisableBody(...))
+    W-&gt;&gt;API: POST /v202505/policies/{policyType}/{id}/disable
+    alt success
+        API--&gt;&gt;W: PolicyServiceDisableResponse
+        W--&gt;&gt;C: PolicyServiceDisableResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id72">
 <h5>Parameters<a class="headerlink" href="#id72" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3612,7 +3996,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/policies/{policyType}/{id}/enable</span></code><a class="headerlink" href="#post-v202505-policies-policytype-id-enable" title="Link to this heading">#</a></h4>
 <p>Enable Policy</p>
 <p>Enables an alerting policy.</p>
-<section id="id75">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: enable(policyType=&quot;policyType-example&quot;, id=&quot;id-example&quot;, data=PolicyServiceEnableBody(...))
+    W-&gt;&gt;API: POST /v202505/policies/{policyType}/{id}/enable
+    alt success
+        API--&gt;&gt;W: PolicyServiceEnableResponse
+        W--&gt;&gt;C: PolicyServiceEnableResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id75">
 <h5>Parameters<a class="headerlink" href="#id75" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3685,7 +4084,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/silence</span></code><a class="headerlink" href="#post-v202505-alerts-silence" title="Link to this heading">#</a></h4>
 <p>Create Alert Silence Notifications</p>
 <p>Creates a new alert silence notifications configuration.</p>
-<section id="id78">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: alert_silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
+    W-&gt;&gt;API: POST /v202505/alerts/silence
+    alt success
+        API--&gt;&gt;W: AlertSilenceNotificationsServiceCreateResponse
+        W--&gt;&gt;C: AlertSilenceNotificationsServiceCreateResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id78">
 <h5>Parameters<a class="headerlink" href="#id78" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3744,7 +4158,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/silence/list</span></code><a class="headerlink" href="#post-v202505-alerts-silence-list" title="Link to this heading">#</a></h4>
 <p>List Alert Notification Silences</p>
 <p>Returns a list of alert silence notifications configurations.</p>
-<section id="id81">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: alert_silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
+    W-&gt;&gt;API: POST /v202505/alerts/silence/list
+    alt success
+        API--&gt;&gt;W: AlertSilenceNotificationsServiceListResponse
+        W--&gt;&gt;C: AlertSilenceNotificationsServiceListResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id81">
 <h5>Parameters<a class="headerlink" href="#id81" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3803,7 +4232,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/silence/{id}</span></code><a class="headerlink" href="#get-v202505-alerts-silence-id" title="Link to this heading">#</a></h4>
 <p>Get Alert Silence Notifications</p>
 <p>Returns an alert silence notifications configuration.</p>
-<section id="id84">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: alert_silence_notifications_get(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /v202505/alerts/silence/{id}
+    alt success
+        API--&gt;&gt;W: AlertSilenceNotificationsServiceGetResponse
+        W--&gt;&gt;C: AlertSilenceNotificationsServiceGetResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id84">
 <h5>Parameters<a class="headerlink" href="#id84" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3862,7 +4306,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">PATCH</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/silence/{id}</span></code><a class="headerlink" href="#patch-v202505-alerts-silence-id" title="Link to this heading">#</a></h4>
 <p>Replace Alert Notification Silence</p>
 <p>Replaces an alert silence notifications configuration.</p>
-<section id="id87">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: alert_silence_notifications_replace(id=&quot;id-example&quot;, data=AlertSilenceNotificationsServiceReplaceBody(...))
+    W-&gt;&gt;API: PATCH /v202505/alerts/silence/{id}
+    alt success
+        API--&gt;&gt;W: AlertSilenceNotificationsServiceReplaceResponse
+        W--&gt;&gt;C: AlertSilenceNotificationsServiceReplaceResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id87">
 <h5>Parameters<a class="headerlink" href="#id87" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3927,7 +4386,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/alerts/silence/{id}</span></code><a class="headerlink" href="#delete-v202505-alerts-silence-id" title="Link to this heading">#</a></h4>
 <p>Delete Alert Notification Silence</p>
 <p>Deletes an alert silence notifications configuration.</p>
-<section id="id90">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: alert_silence_notifications_delete(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: DELETE /v202505/alerts/silence/{id}
+    alt success
+        API--&gt;&gt;W: AlertSilenceNotificationsServiceDeleteResponse
+        W--&gt;&gt;C: AlertSilenceNotificationsServiceDeleteResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id90">
 <h5>Parameters<a class="headerlink" href="#id90" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -3988,7 +4462,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/suppressions</span></code><a class="headerlink" href="#post-v202505-suppressions" title="Link to this heading">#</a></h4>
 <p>Create Suppression</p>
 <p>Creates a new suppression configuration.</p>
-<section id="id93">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: suppression_create(data=SuppressionServiceCreateRequest(...))
+    W-&gt;&gt;API: POST /v202505/suppressions
+    alt success
+        API--&gt;&gt;W: SuppressionServiceCreateResponse
+        W--&gt;&gt;C: SuppressionServiceCreateResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id93">
 <h5>Parameters<a class="headerlink" href="#id93" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -4047,7 +4536,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/suppressions/list</span></code><a class="headerlink" href="#post-v202505-suppressions-list" title="Link to this heading">#</a></h4>
 <p>List Suppressions</p>
 <p>Returns a list of suppression configurations.</p>
-<section id="id96">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: suppression_list(data=SuppressionServiceListRequest(...))
+    W-&gt;&gt;API: POST /v202505/suppressions/list
+    alt success
+        API--&gt;&gt;W: SuppressionServiceListResponse
+        W--&gt;&gt;C: SuppressionServiceListResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id96">
 <h5>Parameters<a class="headerlink" href="#id96" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -4106,7 +4610,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/suppressions/{id}</span></code><a class="headerlink" href="#get-v202505-suppressions-id" title="Link to this heading">#</a></h4>
 <p>Get Suppression</p>
 <p>Returns a suppression configuration.</p>
-<section id="id99">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: suppression_get(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /v202505/suppressions/{id}
+    alt success
+        API--&gt;&gt;W: SuppressionServiceGetResponse
+        W--&gt;&gt;C: SuppressionServiceGetResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id99">
 <h5>Parameters<a class="headerlink" href="#id99" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -4165,7 +4684,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">PATCH</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/suppressions/{id}</span></code><a class="headerlink" href="#patch-v202505-suppressions-id" title="Link to this heading">#</a></h4>
 <p>Replace Suppression</p>
 <p>Replaces a suppression configuration.</p>
-<section id="id102">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: suppression_replace(id=&quot;id-example&quot;, data=SuppressionServiceReplaceBody(...))
+    W-&gt;&gt;API: PATCH /v202505/suppressions/{id}
+    alt success
+        API--&gt;&gt;W: SuppressionServiceReplaceResponse
+        W--&gt;&gt;C: SuppressionServiceReplaceResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id102">
 <h5>Parameters<a class="headerlink" href="#id102" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -4230,7 +4764,22 @@ window.runMermaid = runMermaid;</script>
 <h4><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/v202505/suppressions/{id}</span></code><a class="headerlink" href="#delete-v202505-suppressions-id" title="Link to this heading">#</a></h4>
 <p>Delete Suppression</p>
 <p>Deletes a suppression configuration.</p>
-<section id="id105">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant API as Kentik API
+
+    C-&gt;&gt;W: suppression_delete(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: DELETE /v202505/suppressions/{id}
+    alt success
+        API--&gt;&gt;W: SuppressionServiceDeleteResponse
+        W--&gt;&gt;C: SuppressionServiceDeleteResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id105">
 <h5>Parameters<a class="headerlink" href="#id105" title="Link to this heading">#</a></h5>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

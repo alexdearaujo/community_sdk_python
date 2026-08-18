@@ -700,14 +700,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.connectivity_checker&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;ConnectivityCheckerAdminService (1 op)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;Connectivity CheckerServiceWrapper\nclient.connectivity_checker&quot;]
+        REST[&quot;REST functions\ngen/connectivity_checker/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/connectivity_checker/models/&quot;]
+        E[&quot;Error classes\ngen/connectivity_checker/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -715,7 +723,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/connectivity_checker/v202410beta1/create</span></code><a class="headerlink" href="#post-connectivity-checker-v202410beta1-create" title="Link to this heading">#</a></h3>
 <p>Create a Connectivity Checker Report.</p>
 <p>Create a connectivity checker report based on configuration provided in the request.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.connectivity_checker
+    participant API as Kentik API
+
+    C-&gt;&gt;W: create_connectivity_report(data=CreateConnectivityReportRequest(...))
+    W-&gt;&gt;API: POST /connectivity_checker/v202410beta1/create
+    alt success
+        API--&gt;&gt;W: CreateConnectivityReportResponse
+        W--&gt;&gt;C: CreateConnectivityReportResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

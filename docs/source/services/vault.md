@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.vault"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["VaultService (2 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["VaultServiceWrapper\nclient.vault"]
+        REST["REST functions\ngen/vault/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/vault/models/"]
+        E["Error classes\ngen/vault/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List secrets.
 
 Returns list of secret values stored in Kentik vault.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.vault
+    participant API as Kentik API
+
+    C->>W: list_secret(names=["names-example"])
+    W->>API: GET /vault/v202312alpha1/secrets
+    alt success
+        API-->>W: ListSecretResponse
+        W-->>C: ListSecretResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -53,6 +78,23 @@ response = client.vault.list_secret(
 Get a secret by name.
 
 Returns a secret value stored in Kentik vault.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.vault
+    participant API as Kentik API
+
+    C->>W: get_secret(name="name-example")
+    W->>API: GET /vault/v202312alpha1/secrets/{name}
+    alt success
+        API-->>W: GetSecretResponse
+        W-->>C: GetSecretResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

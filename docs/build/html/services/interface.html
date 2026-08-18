@@ -798,14 +798,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.interface&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;InterfaceService (6 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;InterfaceServiceWrapper\nclient.interface&quot;]
+        REST[&quot;REST functions\ngen/interface/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/interface/models/&quot;]
+        E[&quot;Error classes\ngen/interface/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -813,7 +821,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code><a class="headerlink" href="#get-interface-v202108alpha1-interfaces" title="Link to this heading">#</a></h3>
 <p>Fetch Search Interfaces</p>
 <p>Return list of interfaces matches search critera.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_interface()
+    W-&gt;&gt;API: GET /interface/v202108alpha1/interfaces
+    alt success
+        API--&gt;&gt;W: ListInterfaceResponse
+        W--&gt;&gt;C: ListInterfaceResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -900,7 +923,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code><a class="headerlink" href="#post-interface-v202108alpha1-interfaces" title="Link to this heading">#</a></h3>
 <p>Create a interface.</p>
 <p>Create a interface from request. returns created.</p>
-<section id="id1">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C-&gt;&gt;W: interface_create(data=CreateInterfaceRequest(...))
+    W-&gt;&gt;API: POST /interface/v202108alpha1/interfaces
+    alt success
+        API--&gt;&gt;W: CreateInterfaceResponse
+        W--&gt;&gt;C: CreateInterfaceResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id1">
 <h4>Parameters<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -959,7 +997,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code><a class="headerlink" href="#get-interface-v202108alpha1-interfaces-id" title="Link to this heading">#</a></h3>
 <p>Get a interface.</p>
 <p>Returns information about a interface specified with ID.</p>
-<section id="id4">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C-&gt;&gt;W: interface_get(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /interface/v202108alpha1/interfaces/{id}
+    alt success
+        API--&gt;&gt;W: GetInterfaceResponse
+        W--&gt;&gt;C: GetInterfaceResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id4">
 <h4>Parameters<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1018,7 +1071,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code><a class="headerlink" href="#put-interface-v202108alpha1-interfaces-id" title="Link to this heading">#</a></h3>
 <p>Update a interface.</p>
 <p>Replaces the entire interface attributes specified with id.</p>
-<section id="id7">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C-&gt;&gt;W: interface_update(id=&quot;id-example&quot;, data=InterfaceServiceUpdateInterfaceBody(...))
+    W-&gt;&gt;API: PUT /interface/v202108alpha1/interfaces/{id}
+    alt success
+        API--&gt;&gt;W: UpdateInterfaceResponse
+        W--&gt;&gt;C: UpdateInterfaceResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id7">
 <h4>Parameters<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1083,7 +1151,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code><a class="headerlink" href="#delete-interface-v202108alpha1-interfaces-id" title="Link to this heading">#</a></h3>
 <p>Delete a interface.</p>
 <p>Deletes the interface specified with id.</p>
-<section id="id10">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C-&gt;&gt;W: interface_delete(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: DELETE /interface/v202108alpha1/interfaces/{id}
+    alt success
+        API--&gt;&gt;W: DeleteInterfaceResponse
+        W--&gt;&gt;C: DeleteInterfaceResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id10">
 <h4>Parameters<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1142,7 +1225,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/manual_classify</span></code><a class="headerlink" href="#post-interface-v202108alpha1-manual-classify" title="Link to this heading">#</a></h3>
 <p>Manual Classify Interface</p>
 <p>Manually set interface(s) classification.</p>
-<section id="id13">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant API as Kentik API
+
+    C-&gt;&gt;W: manual_classify(data=ManualClassifyRequest(...))
+    W-&gt;&gt;API: POST /interface/v202108alpha1/manual_classify
+    alt success
+        API--&gt;&gt;W: ManualClassifyResponse
+        W--&gt;&gt;C: ManualClassifyResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id13">
 <h4>Parameters<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

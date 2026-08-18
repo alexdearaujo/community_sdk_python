@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.notification_channel"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["NotificationChannelService (3 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["Notification ChannelServiceWrapper\nclient.notification_channel"]
+        REST["REST functions\ngen/notification_channel/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/notification_channel/models/"]
+        E["Error classes\ngen/notification_channel/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List available notification channels
 
 Returns list of all configured notification channels.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.notification_channel
+    participant API as Kentik API
+
+    C->>W: list_notification_channels()
+    W->>API: GET /notification_channel/v202210/notification_channels
+    alt success
+        API-->>W: ListNotificationChannelsResponse
+        W-->>C: ListNotificationChannelsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -45,6 +70,23 @@ response = client.notification_channel.list_notification_channels()
 Retrieve notification channels matching criteria.
 
 Returns list of all notification channels matching request criteria. Match criteria are treated as a logical AND, i.e. all provided criteria must match in order for an entry to be included in the response.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.notification_channel
+    participant API as Kentik API
+
+    C->>W: search_notification_channels(data=SearchNotificationChannelsRequest(...))
+    W->>API: POST /notification_channel/v202210/notification_channels/search
+    alt success
+        API-->>W: SearchNotificationChannelsResponse
+        W-->>C: SearchNotificationChannelsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -77,6 +119,23 @@ response = client.notification_channel.search_notification_channels(
 Get information about a notification channel
 
 Returns information about a notification channel with specific ID.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.notification_channel
+    participant API as Kentik API
+
+    C->>W: get_notification_channel(id="id-example")
+    W->>API: GET /notification_channel/v202210/notification_channels/{id}
+    alt success
+        API-->>W: GetNotificationChannelResponse
+        W-->>C: GetNotificationChannelResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

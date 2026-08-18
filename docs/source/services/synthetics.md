@@ -4,16 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.synthetics"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["SyntheticsAdminService (15 ops)"]
-    G0 --> RJ
-    Client --> G1["SyntheticsDataService (3 ops)"]
-    G1 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["SyntheticsServiceWrapper\nclient.synthetics"]
+        REST["REST functions\ngen/synthetics/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/synthetics/models/"]
+        E["Error classes\ngen/synthetics/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -25,6 +31,23 @@ flowchart LR
 List agent alert configurations
 
 Lists all agent alert configurations, optionally filtered by a list of agent ids.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: list_agent_alerts()
+    W->>API: GET /synthetics/v202309/agentAlerts
+    alt success
+        API-->>W: ListAgentAlertsResponse
+        W-->>C: ListAgentAlertsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -55,6 +78,23 @@ response = client.synthetics.list_agent_alerts()
 Create an agent alert configuration
 
 Creates a new agent alert configuration.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: create_agent_alert(data=CreateAgentAlertRequest(...))
+    W->>API: POST /synthetics/v202309/agentAlerts
+    alt success
+        API-->>W: CreateAgentAlertResponse
+        W-->>C: CreateAgentAlertResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -88,6 +128,23 @@ Get an agent alert configuration
 
 Retrieves an existing agent alert configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: get_agent_alert(id="id-example")
+    W->>API: GET /synthetics/v202309/agentAlerts/{id}
+    alt success
+        API-->>W: GetAgentAlertResponse
+        W-->>C: GetAgentAlertResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -119,6 +176,23 @@ response = client.synthetics.get_agent_alert(
 Update an agent alert configuration
 
 Updates an existing agent alert configuration with the time threshold and notification channels provided.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: update_agent_alert(id="id-example", data=SyntheticsAdminServiceUpdateAgentAlertBody(...))
+    W->>API: PUT /synthetics/v202309/agentAlerts/{id}
+    alt success
+        API-->>W: UpdateAgentAlertResponse
+        W-->>C: UpdateAgentAlertResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -154,6 +228,23 @@ Delete an agent alert configuration
 
 Deletes an existing agent alert configuration.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: delete_agent_alert(id="id-example")
+    W->>API: DELETE /synthetics/v202309/agentAlerts/{id}
+    alt success
+        API-->>W: DeleteAgentAlertResponse
+        W-->>C: DeleteAgentAlertResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -186,6 +277,23 @@ List available agents
 
 Returns list of all synthetic agents available in the account.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: list_agents()
+    W->>API: GET /synthetics/v202309/agents
+    alt success
+        API-->>W: ListAgentsResponse
+        W-->>C: ListAgentsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Responses
 
 | Status | Description | Model |
@@ -209,6 +317,23 @@ response = client.synthetics.list_agents()
 Get information about an agent
 
 Returns information about the requested synthetic agent.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: get_agent(agentid="agentid-example")
+    W->>API: GET /synthetics/v202309/agents/{agent.id}
+    alt success
+        API-->>W: GetAgentResponse
+        W-->>C: GetAgentResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -241,6 +366,23 @@ response = client.synthetics.get_agent(
 Update configuration of an agent
 
 Update configuration of a synthetic agent.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: update_agent(agentid="agentid-example", data=SyntheticsAdminServiceUpdateAgentBody(...))
+    W->>API: PUT /synthetics/v202309/agents/{agent.id}
+    alt success
+        API-->>W: UpdateAgentResponse
+        W-->>C: UpdateAgentResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -276,6 +418,23 @@ Delete an agent
 
 Deletes the requested agent. The deleted agent is removed from configuration of all tests.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: delete_agent(agentid="agentid-example")
+    W->>API: DELETE /synthetics/v202309/agents/{agent.id}
+    alt success
+        API-->>W: DeleteAgentResponse
+        W-->>C: DeleteAgentResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -308,6 +467,23 @@ List all tests
 
 Returns a list of all configured active and paused synthetic tests.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: list_tests()
+    W->>API: GET /synthetics/v202309/tests
+    alt success
+        API-->>W: ListTestsResponse
+        W-->>C: ListTestsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Responses
 
 | Status | Description | Model |
@@ -331,6 +507,23 @@ response = client.synthetics.list_tests()
 Create a test
 
 Create synthetic test based on configuration provided in the request.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: create_test(data=CreateTestRequest(...))
+    W->>API: POST /synthetics/v202309/tests
+    alt success
+        API-->>W: CreateTestResponse
+        W-->>C: CreateTestResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -364,6 +557,23 @@ Get information about a test
 
 Returns configuration and status for the requested synthetic test.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: get_test(id="id-example")
+    W->>API: GET /synthetics/v202309/tests/{id}
+    alt success
+        API-->>W: GetTestResponse
+        W-->>C: GetTestResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -395,6 +605,23 @@ response = client.synthetics.get_test(
 Update configuration of a test
 
 Updates configuration of a synthetic test.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: update_test(id="id-example", data=SyntheticsAdminServiceUpdateTestBody(...))
+    W->>API: PUT /synthetics/v202309/tests/{id}
+    alt success
+        API-->>W: UpdateTestResponse
+        W-->>C: UpdateTestResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -430,6 +657,23 @@ Delete a synthetic test.
 
 Deletes the synthetics test. All accumulated results for the test cease to be accessible.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: delete_test(id="id-example")
+    W->>API: DELETE /synthetics/v202309/tests/{id}
+    alt success
+        API-->>W: DeleteTestResponse
+        W-->>C: DeleteTestResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -459,6 +703,23 @@ response = client.synthetics.delete_test(
 #### `PUT` `/synthetics/v202309/tests/{id}/status`
 
 Update status of a synthetic test
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: set_test_status(id="id-example", data=SyntheticsAdminServiceSetTestStatusBody(...))
+    W->>API: PUT /synthetics/v202309/tests/{id}/status
+    alt success
+        API-->>W: SetTestStatusResponse
+        W-->>C: SetTestStatusResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -494,6 +755,23 @@ Get results for tests
 
 Returns probe results for a set of tests for specified period of time.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: get_results_for_tests(data=GetResultsForTestsRequest(...))
+    W->>API: POST /synthetics/v202309/results
+    alt success
+        API-->>W: GetResultsForTestsResponse
+        W-->>C: GetResultsForTestsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -526,6 +804,23 @@ Get test results in CSV format
 
 Returns probe results for tests in CSV format.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: get_results_for_tests_csv(data=GetResultsForTestsCsvRequest(...))
+    W->>API: POST /synthetics/v202309/results/csv
+    alt success
+        API-->>W: GetResultsForTestsCsvResponse
+        W-->>C: GetResultsForTestsCsvResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -557,6 +852,23 @@ response = client.synthetics.get_results_for_tests_csv(
 Get network trace data for a test
 
 Get network trace data for a specific synthetic test. The test must have traceroute task configured.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.synthetics
+    participant API as Kentik API
+
+    C->>W: get_trace_for_test(data=GetTraceForTestRequest(...))
+    W->>API: POST /synthetics/v202309/trace
+    alt success
+        API-->>W: GetTraceForTestResponse
+        W-->>C: GetTraceForTestResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 

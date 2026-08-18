@@ -794,14 +794,22 @@ window.runMermaid = runMermaid;</script>
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         flowchart LR
-    Client[&quot;client.asset_tags&quot;]
-    RJ[&quot;request_json()&quot;]
-    OK[&quot;success: response model&quot;]
-    ERR[&quot;per-operation error class&quot;]
-    Client --&gt; G0[&quot;AssetTagsService (9 ops)&quot;]
-    G0 --&gt; RJ
-    RJ --&gt; OK
-    RJ --&gt;|&quot;error status&quot;| ERR
+    subgraph sdk[&quot;kentik_api&quot;]
+        KA[&quot;KentikAPI&quot;]
+        W[&quot;Asset TagsServiceWrapper\nclient.asset_tags&quot;]
+        REST[&quot;REST functions\ngen/asset_tags/services/&quot;]
+        RJ[&quot;request_json()\ncore/rest_runtime&quot;]
+        M[&quot;Models\ngen/asset_tags/models/&quot;]
+        E[&quot;Error classes\ngen/asset_tags/error/&quot;]
+    end
+    API[&quot;Kentik API&quot;]
+
+    KA --&gt; W
+    W --&gt; REST
+    REST --&gt; RJ
+    REST --&gt; M
+    REST --&gt; E
+    RJ --&gt; API
     </pre></section>
 <section id="endpoints">
 <h2>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">#</a></h2>
@@ -809,7 +817,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values</span></code><a class="headerlink" href="#get-asset-tags-v20260515beta1-assets-assettype-assetid-values" title="Link to this heading">#</a></h3>
 <p>Gets tag values by asset id and type.</p>
 <p>Returns a list of tag values.</p>
-<section id="parameters">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_tag_values(assetType=&quot;assetType-example&quot;, assetId=&quot;assetId-example&quot;)
+    W-&gt;&gt;API: GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values
+    alt success
+        API--&gt;&gt;W: GetTagValuesResponse
+        W--&gt;&gt;C: GetTagValuesResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -874,7 +897,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/keys</span></code><a class="headerlink" href="#get-asset-tags-v20260515beta1-keys" title="Link to this heading">#</a></h3>
 <p>Lists all tag keys.</p>
 <p>Returns a list of tag keys.</p>
-<section id="id1">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_tag_keys()
+    W-&gt;&gt;API: GET /asset_tags/v20260515beta1/keys
+    alt success
+        API--&gt;&gt;W: ListTagKeysResponse
+        W--&gt;&gt;C: ListTagKeysResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id1">
 <h4>Responses<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -911,7 +949,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/keys</span></code><a class="headerlink" href="#post-asset-tags-v20260515beta1-keys" title="Link to this heading">#</a></h3>
 <p>Creates a new tag key.</p>
 <p>Returns the created tag key.</p>
-<section id="id3">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: create_tag_key(data=CreateTagKeyRequest(...))
+    W-&gt;&gt;API: POST /asset_tags/v20260515beta1/keys
+    alt success
+        API--&gt;&gt;W: CreateTagKeyResponse
+        W--&gt;&gt;C: CreateTagKeyResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id3">
 <h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -970,7 +1023,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/keys/{id}</span></code><a class="headerlink" href="#get-asset-tags-v20260515beta1-keys-id" title="Link to this heading">#</a></h3>
 <p>Get a single tag key by id.</p>
 <p>Returns a single tag key.</p>
-<section id="id6">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: get_tag_key(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: GET /asset_tags/v20260515beta1/keys/{id}
+    alt success
+        API--&gt;&gt;W: GetTagKeyResponse
+        W--&gt;&gt;C: GetTagKeyResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id6">
 <h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1029,7 +1097,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/keys/{id}</span></code><a class="headerlink" href="#put-asset-tags-v20260515beta1-keys-id" title="Link to this heading">#</a></h3>
 <p>Updates the display name of a tag key.</p>
 <p>Returns the updated tag key.</p>
-<section id="id9">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: update_tag_key(id=&quot;id-example&quot;, data=AssetTagsServiceUpdateTagKeyBody(...))
+    W-&gt;&gt;API: PUT /asset_tags/v20260515beta1/keys/{id}
+    alt success
+        API--&gt;&gt;W: UpdateTagKeyResponse
+        W--&gt;&gt;C: UpdateTagKeyResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id9">
 <h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1094,7 +1177,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/keys/{id}</span></code><a class="headerlink" href="#delete-asset-tags-v20260515beta1-keys-id" title="Link to this heading">#</a></h3>
 <p>Deletes a tag key by id.</p>
 <p>Returns an empty response</p>
-<section id="id12">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: delete_tag_key(id=&quot;id-example&quot;)
+    W-&gt;&gt;API: DELETE /asset_tags/v20260515beta1/keys/{id}
+    alt success
+        API--&gt;&gt;W: DeleteTagKeyResponse
+        W--&gt;&gt;C: DeleteTagKeyResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id12">
 <h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1153,7 +1251,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values</span></code><a class="headerlink" href="#get-asset-tags-v20260515beta1-keys-tagid-assettype-values" title="Link to this heading">#</a></h3>
 <p>Lists all tag values by id, optionally filtered by asset type.</p>
 <p>Returns a list of tag values.</p>
-<section id="id15">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: list_tag_values(tagId=&quot;tagId-example&quot;, assetType=&quot;assetType-example&quot;)
+    W-&gt;&gt;API: GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values
+    alt success
+        API--&gt;&gt;W: ListTagValuesResponse
+        W--&gt;&gt;C: ListTagValuesResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id15">
 <h4>Parameters<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1218,7 +1331,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/values</span></code><a class="headerlink" href="#put-asset-tags-v20260515beta1-values" title="Link to this heading">#</a></h3>
 <p>Bulk upserts a tag value for a list of asset ids of a given type.</p>
 <p>Returns a list of tag values.</p>
-<section id="id18">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: set_tag_values(data=SetTagValuesRequest(...))
+    W-&gt;&gt;API: PUT /asset_tags/v20260515beta1/values
+    alt success
+        API--&gt;&gt;W: SetTagValuesResponse
+        W--&gt;&gt;C: SetTagValuesResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id18">
 <h4>Parameters<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1277,7 +1405,22 @@ window.runMermaid = runMermaid;</script>
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/asset_tags/v20260515beta1/values/delete</span></code><a class="headerlink" href="#post-asset-tags-v20260515beta1-values-delete" title="Link to this heading">#</a></h3>
 <p>Bulk deletes a tag values for a list of asset ids of a given type.</p>
 <p>Returns an empty response.</p>
-<section id="id21">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant API as Kentik API
+
+    C-&gt;&gt;W: delete_tag_values(data=DeleteTagValuesRequest(...))
+    W-&gt;&gt;API: POST /asset_tags/v20260515beta1/values/delete
+    alt success
+        API--&gt;&gt;W: DeleteTagValuesResponse
+        W--&gt;&gt;C: DeleteTagValuesResponse
+    else error status
+        API--&gt;&gt;W: error body
+        W--&gt;&gt;C: raise HTTPException
+    end
+    </pre><section id="id21">
 <h4>Parameters<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>

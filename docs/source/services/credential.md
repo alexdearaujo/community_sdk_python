@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.credential"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["CredentialService (2 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["CredentialServiceWrapper\nclient.credential"]
+        REST["REST functions\ngen/credential/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/credential/models/"]
+        E["Error classes\ngen/credential/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List credential groups.
 
 Returns list of credential group information in Kentik vault.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.credential
+    participant API as Kentik API
+
+    C->>W: list_credential_group()
+    W->>API: GET /credential/v202407alpha1/group
+    alt success
+        API-->>W: ListCredentialGroupResponse
+        W-->>C: ListCredentialGroupResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -45,6 +70,23 @@ response = client.credential.list_credential_group()
 Get a credential group by id.
 
 Returns specific credential group information in Kentik vault.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.credential
+    participant API as Kentik API
+
+    C->>W: get_credential_group(id="id-example")
+    W->>API: GET /credential/v202407alpha1/group/{id}
+    alt success
+        API-->>W: GetCredentialGroupResponse
+        W-->>C: GetCredentialGroupResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

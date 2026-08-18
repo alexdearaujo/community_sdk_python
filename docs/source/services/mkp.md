@@ -4,18 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.mkp"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["PackageService (5 ops)"]
-    G0 --> RJ
-    Client --> G1["TenantService (5 ops)"]
-    G1 --> RJ
-    Client --> G2["TenantUserService (4 ops)"]
-    G2 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["MkpServiceWrapper\nclient.mkp"]
+        REST["REST functions\ngen/mkp/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/mkp/models/"]
+        E["Error classes\ngen/mkp/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -27,6 +31,23 @@ flowchart LR
 List MKP packages.
 
 Returns a list of MKP packages.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: package_list()
+    W->>API: GET /mkp/v202407/packages
+    alt success
+        API-->>W: ListPackageResponse
+        W-->>C: ListPackageResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Responses
 
@@ -51,6 +72,23 @@ response = client.mkp.package_list()
 Create a package template.
 
 Create package from request. returns created package.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: package_create(data=CreatePackageRequest(...))
+    W->>API: POST /mkp/v202407/packages
+    alt success
+        API-->>W: CreatePackageResponse
+        W-->>C: CreatePackageResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -84,6 +122,23 @@ Get information aboout a package.
 
 Returns information about package specified with ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: package_get(id="id-example")
+    W->>API: GET /mkp/v202407/packages/{id}
+    alt success
+        API-->>W: GetPackageResponse
+        W-->>C: GetPackageResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -115,6 +170,23 @@ response = client.mkp.package_get(
 Update a package.
 
 Update package attributes specified with id.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: package_update(id="id-example", data=PackageServiceUpdatePackageBody(...))
+    W->>API: PUT /mkp/v202407/packages/{id}
+    alt success
+        API-->>W: UpdatePackageResponse
+        W-->>C: UpdatePackageResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -150,6 +222,23 @@ Delete a package.
 
 Deletes the package specified with id.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: package_delete(id="id-example")
+    W->>API: DELETE /mkp/v202407/packages/{id}
+    alt success
+        API-->>W: DeletePackageResponse
+        W-->>C: DeletePackageResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -182,6 +271,23 @@ List MKP tenants.
 
 Returns a list of MKP tenants.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_list()
+    W->>API: GET /mkp/v202407/tenants
+    alt success
+        API-->>W: ListTenantResponse
+        W-->>C: ListTenantResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Responses
 
 | Status | Description | Model |
@@ -205,6 +311,23 @@ response = client.mkp.tenant_list()
 Create a tenant.
 
 Create tenant from request. returns created tenant.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_create(data=CreateTenantRequest(...))
+    W->>API: POST /mkp/v202407/tenants
+    alt success
+        API-->>W: CreateTenantResponse
+        W-->>C: CreateTenantResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -238,6 +361,23 @@ Get information aboout a tenant.
 
 Returns information about package specified with ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_get(id="id-example")
+    W->>API: GET /mkp/v202407/tenants/{id}
+    alt success
+        API-->>W: GetTenantResponse
+        W-->>C: GetTenantResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -269,6 +409,23 @@ response = client.mkp.tenant_get(
 Update a tenant.
 
 Update tenant attributes specified with id.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_update(id="id-example", data=TenantServiceUpdateTenantBody(...))
+    W->>API: PUT /mkp/v202407/tenants/{id}
+    alt success
+        API-->>W: UpdateTenantResponse
+        W-->>C: UpdateTenantResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -304,6 +461,23 @@ Delete a tenant.
 
 Deletes the tenant specified with id.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_delete(id="id-example")
+    W->>API: DELETE /mkp/v202407/tenants/{id}
+    alt success
+        API-->>W: DeleteTenantResponse
+        W-->>C: DeleteTenantResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -336,6 +510,23 @@ List users for a tenant.
 
 Returns a list of users associated with the specified tenant.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_user_list(tenantId="tenantId-example")
+    W->>API: GET /mkp/v202407/tenants/{tenantId}/users
+    alt success
+        API-->>W: ListTenantUserResponse
+        W-->>C: ListTenantUserResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 ##### Parameters
 
 | Name | In | Type | Required |
@@ -367,6 +558,23 @@ response = client.mkp.tenant_user_list(
 Add a user to a tenant.
 
 Creates a user association with the specified tenant.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_user_create(tenantId="tenantId-example", data=TenantUserServiceCreateTenantUserBody(...))
+    W->>API: POST /mkp/v202407/tenants/{tenantId}/users
+    alt success
+        API-->>W: CreateTenantUserResponse
+        W-->>C: CreateTenantUserResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -401,6 +609,23 @@ response = client.mkp.tenant_user_create(
 Update a tenant user.
 
 Updates the user associated with the specified tenant and user ID.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_user_update(tenantId="tenantId-example", id="id-example", data=TenantUserServiceUpdateTenantUserBody(...))
+    W->>API: PUT /mkp/v202407/tenants/{tenantId}/users/{id}
+    alt success
+        API-->>W: UpdateTenantUserResponse
+        W-->>C: UpdateTenantUserResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 
@@ -437,6 +662,23 @@ response = client.mkp.tenant_user_update(
 Remove a user from a tenant.
 
 Deletes the user association with the specified tenant.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant API as Kentik API
+
+    C->>W: tenant_user_delete(tenantId="tenantId-example", id="id-example")
+    W->>API: DELETE /mkp/v202407/tenants/{tenantId}/users/{id}
+    alt success
+        API-->>W: DeleteTenantUserResponse
+        W-->>C: DeleteTenantUserResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 ##### Parameters
 

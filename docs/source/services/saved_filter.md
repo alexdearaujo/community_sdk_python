@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.saved_filter"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["SavedFilterService (6 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["Saved FilterServiceWrapper\nclient.saved_filter"]
+        REST["REST functions\ngen/saved_filter/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/saved_filter/models/"]
+        E["Error classes\ngen/saved_filter/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 Create Saved Filter
 
 Creates and returns a saved filter object containing information about an individual saved filter.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant API as Kentik API
+
+    C->>W: create_saved_filter()
+    W->>API: POST /saved-filter/v202501alpha1
+    alt success
+        API-->>W: CreateSavedFilterResponse
+        W-->>C: CreateSavedFilterResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -51,6 +76,23 @@ response = client.saved_filter.create_saved_filter()
 Custom Saved Filter Info
 
 Returns a saved filter object containing information about an individual saved filter.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant API as Kentik API
+
+    C->>W: get_saved_filter(id="id-example")
+    W->>API: GET /saved-filter/v202501alpha1/{id}
+    alt success
+        API-->>W: GetSavedFilterResponse
+        W-->>C: GetSavedFilterResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -83,6 +125,23 @@ response = client.saved_filter.get_saved_filter(
 Update Saved Filter
 
 Updates and returns a saved filter object containing information about an individual saved filter.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant API as Kentik API
+
+    C->>W: update_saved_filter(id="id-example")
+    W->>API: PUT /saved-filter/v202501alpha1/{id}
+    alt success
+        API-->>W: UpdateSavedFilterResponse
+        W-->>C: UpdateSavedFilterResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -117,6 +176,23 @@ Delete Saved Filter
 
 Deletes a saved filter.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant API as Kentik API
+
+    C->>W: delete_saved_filter(id="id-example")
+    W->>API: DELETE /saved-filter/v202501alpha1/{id}
+    alt success
+        API-->>W: DeleteSavedFilterResponse
+        W-->>C: DeleteSavedFilterResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -149,6 +225,23 @@ List Saved Filters
 
 Returns all custom saved filters created by the user's company.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant API as Kentik API
+
+    C->>W: list_saved_filters()
+    W->>API: GET /saved-filters/v202501alpha1
+    alt success
+        API-->>W: ListSavedFiltersResponse
+        W-->>C: ListSavedFiltersResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Responses
 
 | Status | Description | Model |
@@ -172,6 +265,23 @@ response = client.saved_filter.list_saved_filters()
 List All Saved Filters
 
 Returns all saved filters, including system default filters.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant API as Kentik API
+
+    C->>W: list_saved_filters_all()
+    W->>API: GET /saved-filters/v202501alpha1/all
+    alt success
+        API-->>W: ListSavedFiltersAllResponse
+        W-->>C: ListSavedFiltersAllResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 

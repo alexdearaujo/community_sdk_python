@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.capacity_plan"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["CapacityPlanService (4 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["Capacity PlanServiceWrapper\nclient.capacity_plan"]
+        REST["REST functions\ngen/capacity_plan/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/capacity_plan/models/"]
+        E["Error classes\ngen/capacity_plan/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List all capacity plans.
 
 Returns list of capacity plans.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.capacity_plan
+    participant API as Kentik API
+
+    C->>W: list_capacity_plans()
+    W->>API: GET /capacity_plan/v202212/capacity_plan
+    alt success
+        API-->>W: ListCapacityPlansResponse
+        W-->>C: ListCapacityPlansResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -46,6 +71,23 @@ List all capacity summaries.
 
 Returns list of capacity summaries.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.capacity_plan
+    participant API as Kentik API
+
+    C->>W: list_capacity_summaries()
+    W->>API: GET /capacity_plan/v202212/capacity_plan/summary
+    alt success
+        API-->>W: ListCapacitySummariesResponse
+        W-->>C: ListCapacitySummariesResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Responses
 
 | Status | Description | Model |
@@ -69,6 +111,23 @@ response = client.capacity_plan.list_capacity_summaries()
 Retrieve capacity plan.
 
 Returns capacity plan specified by ID.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.capacity_plan
+    participant API as Kentik API
+
+    C->>W: get_capacity_plan(id="id-example")
+    W->>API: GET /capacity_plan/v202212/capacity_plan/{id}
+    alt success
+        API-->>W: GetCapacityPlanResponse
+        W-->>C: GetCapacityPlanResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -101,6 +160,23 @@ response = client.capacity_plan.get_capacity_plan(
 Retrieve capacity plan summary.
 
 Returns capacity plan summary specified by ID.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.capacity_plan
+    participant API as Kentik API
+
+    C->>W: get_capacity_summary(id="id-example")
+    W->>API: GET /capacity_plan/v202212/capacity_plan/{id}/summary
+    alt success
+        API-->>W: GetCapacitySummaryResponse
+        W-->>C: GetCapacitySummaryResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 

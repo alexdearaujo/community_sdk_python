@@ -4,14 +4,22 @@
 
 ```mermaid
 flowchart LR
-    Client["client.cloud_export"]
-    RJ["request_json()"]
-    OK["success: response model"]
-    ERR["per-operation error class"]
-    Client --> G0["CloudExportAdminService (5 ops)"]
-    G0 --> RJ
-    RJ --> OK
-    RJ -->|"error status"| ERR
+    subgraph sdk["kentik_api"]
+        KA["KentikAPI"]
+        W["Cloud ExportServiceWrapper\nclient.cloud_export"]
+        REST["REST functions\ngen/cloud_export/services/"]
+        RJ["request_json()\ncore/rest_runtime"]
+        M["Models\ngen/cloud_export/models/"]
+        E["Error classes\ngen/cloud_export/error/"]
+    end
+    API["Kentik API"]
+
+    KA --> W
+    W --> REST
+    REST --> RJ
+    REST --> M
+    REST --> E
+    RJ --> API
 ```
 
 ## Endpoints
@@ -21,6 +29,23 @@ flowchart LR
 List cloud exports.
 
 Returns a list of all cloud exports in the account.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C->>W: list_cloud_exports()
+    W->>API: GET /cloud_export/v202506/exports
+    alt success
+        API-->>W: ListCloudExportsResponse
+        W-->>C: ListCloudExportsResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Responses
 
@@ -45,6 +70,23 @@ response = client.cloud_export.list_cloud_exports()
 Create Cloud Export.
 
 Create new cloud export based on configuration in the request.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C->>W: create_cloud_export(data=CreateCloudExportRequest(...))
+    W->>API: POST /cloud_export/v202506/exports
+    alt success
+        API-->>W: CreateCloudExportResponse
+        W-->>C: CreateCloudExportResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -78,6 +120,23 @@ Get cloud export configuration and status.
 
 Returns configuration and status of cloud export with specified ID.
 
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C->>W: get_cloud_export(exportid="exportid-example")
+    W->>API: GET /cloud_export/v202506/exports/{export.id}
+    alt success
+        API-->>W: GetCloudExportResponse
+        W-->>C: GetCloudExportResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
 #### Parameters
 
 | Name | In | Type | Required |
@@ -109,6 +168,23 @@ response = client.cloud_export.get_cloud_export(
 Update configuration of cloud export.
 
 Replace complete configuration of a cloud export with data in the request.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C->>W: update_cloud_export(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
+    W->>API: PUT /cloud_export/v202506/exports/{export.id}
+    alt success
+        API-->>W: UpdateCloudExportResponse
+        W-->>C: UpdateCloudExportResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
@@ -143,6 +219,23 @@ response = client.cloud_export.update_cloud_export(
 Delete a cloud export.
 
 Delete cloud export with specified ID.
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant API as Kentik API
+
+    C->>W: delete_cloud_export(exportid="exportid-example")
+    W->>API: DELETE /cloud_export/v202506/exports/{export.id}
+    alt success
+        API-->>W: DeleteCloudExportResponse
+        W-->>C: DeleteCloudExportResponse
+    else error status
+        API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
 
 #### Parameters
 
