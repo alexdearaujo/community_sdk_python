@@ -17,6 +17,29 @@ hand-written-vs-generated architecture.
 | `transports/` | Hand-written. REST/gRPC transport selection. See [transports/README.md](transports/README.md). |
 | `gen/` | Fully generated, one directory per Kentik API service. See [gen/README.md](gen/README.md). |
 
+## Request flow
+
+The diagram below traces one API call through these pieces, from
+`KentikAPI()` construction to a successful response or a raised
+error.
+
+```mermaid
+flowchart LR
+    A["KentikAPI()"] --> B["auth/<br/>load .env credentials"]
+    A --> C["transports/<br/>pick REST or gRPC transport"]
+    A --> D["client_mixin.py<br/>mount service wrappers"]
+    D --> E["gen/&lt;service&gt;<br/>ServiceWrapper, e.g. client.device"]
+    E --> F["core/rest_runtime.request_json<br/>shared REST call path"]
+    F --> G["core/api_config.py<br/>APIConfig"]
+    F -->|failure| H["errors/<br/>KentikError hierarchy"]
+    E -->|failure| I["gen/&lt;service&gt;/error/<br/>per-operation error classes"]
+    I --> H
+```
+
+Every generated operation, in every service, calls
+`core/rest_runtime.request_json` the same way. No service wrapper
+implements its own HTTP, auth, or error-parsing logic.
+
 ## Using the client
 
 ```python
