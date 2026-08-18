@@ -388,6 +388,15 @@ credentials.
 - Known generator warnings are non-blocking. Track and reduce them
   over time — don't ignore them silently.
 
+## Branch naming (exception to the shared rule below)
+
+Jira creates every branch in this repo automatically from its
+ticket, using the ticket key and title as-is (for example
+`FA-2-Update-the-python-SDK-from-V5-to-V6`). This repo does not use
+the `<category>/<short-kebab-description>` convention from the
+shared agent rules below. Use the Jira-generated branch name as-is,
+even though it does not match that pattern.
+
 <!-- shared-rules:start -->
 <!-- Synced from ~/.claude/CLAUDE.md; regenerate by re-running the
      agents-md skill instead of hand-editing this block. AGENTS.md
