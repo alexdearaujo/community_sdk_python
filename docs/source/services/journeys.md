@@ -8,20 +8,20 @@ Journeys AI NLQ Service
 
 Perform Natural Language (NLQ) to query object translation
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `prompt` | query | `string` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetJourneysNlqResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI

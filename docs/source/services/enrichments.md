@@ -8,20 +8,20 @@ Resolve enumeration IDs to values.
 
 Return the string values for the supplied enumeration lookup IDs within the authenticated company. Unknown IDs are omitted from the response.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `FetchValuesByIdsRequest` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `FetchValuesByIdsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI

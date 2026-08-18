@@ -10,20 +10,20 @@ List Alerts
 
 Returns an array of alert objects that contain information about individual alerts.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `AlertServiceListRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -42,20 +42,20 @@ Clear Alerts
 
 Clears alerts.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `AlertServiceClearRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertServiceClearResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -74,20 +74,20 @@ List Alert Comments
 
 Returns all comments for an alert.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `alertId` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertServiceListCommentsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -106,21 +106,21 @@ Add Alert Comment
 
 Adds a comment to an alert.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `alertId` | path | `string` | Yes |
 | `data` | body | `AlertServiceAddCommentBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertServiceAddCommentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -140,21 +140,21 @@ Set External Context for Alert
 
 Add or replace external context
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `alertId` | path | `string` | Yes |
 | `data` | body | `AlertServiceSetExternalContextBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertServiceSetExternalContextResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -174,20 +174,20 @@ Get Alert
 
 Returns an alert object that contains information about an individual alert.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -206,21 +206,21 @@ Ack Alert
 
 Acknowledges an alert.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `AlertServiceAckBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertServiceAckResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -240,21 +240,21 @@ UnAck Alert
 
 Unacknowledges an alert (removes the acknowledgement).
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `AlertServiceUnAckBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertServiceUnAckResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -274,20 +274,20 @@ Create Auto-Ack
 
 Creates a new auto-ack configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `AlertAutoAckServiceCreateRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertAutoAckServiceCreateResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -306,20 +306,20 @@ List Auto-Acks
 
 Returns a list of auto-ack configurations.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `AlertAutoAckServiceListRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertAutoAckServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -338,20 +338,20 @@ Get Auto-Ack
 
 Returns an auto-ack configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `autoAckid` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertAutoAckServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -370,21 +370,21 @@ Replace Auto-Ack
 
 Replaces an auto-ack configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `autoAckid` | path | `string` | Yes |
 | `data` | body | `AlertAutoAckServiceReplaceBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertAutoAckServiceReplaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -404,20 +404,20 @@ Delete Auto-Ack
 
 Deletes an auto-ack configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `autoAckid` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertAutoAckServiceDeleteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -436,10 +436,10 @@ List Mitigations
 
 Returns a list of mitigations.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `paginationlimit` | query | `string (uint64)` | No |
 | `paginationoffset` | query | `string (uint64)` | No |
 | `paginationincludeTotalCount` | query | `boolean` | No |
@@ -454,14 +454,14 @@ Returns a list of mitigations.
 | `filtersipCidrPattern` | query | `string` | No |
 | `filterstypes` | query | `string[]` | No |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationsServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -478,20 +478,20 @@ Create Mitigation
 
 Creates a new manual mitigation.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `MitigationsServiceCreateRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationsServiceCreateResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -510,14 +510,14 @@ Get Available Actions
 
 Returns available actions for mitigations.
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationsServiceAvailableActionsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -534,20 +534,20 @@ Get Mitigation
 
 Returns a mitigation.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `action` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationsServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -566,21 +566,21 @@ Act on Mitigation
 
 Performs an action on one or more mitigations.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `action` | path | `string` | Yes |
 | `data` | body | `MitigationsServiceActBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationsServiceActResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -600,20 +600,20 @@ Get Available Actions for Mitigation
 
 Returns available actions for a specific mitigation.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string (int64)` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationsServiceAvailableActionsForMitigationResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -632,10 +632,10 @@ List Mitigation Methods
 
 Returns a list of mitigation methods.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `paginationlimit` | query | `string (uint64)` | No |
 | `paginationoffset` | query | `string (uint64)` | No |
 | `paginationincludeTotalCount` | query | `boolean` | No |
@@ -646,14 +646,14 @@ Returns a list of mitigation methods.
 | `filtersmodifiedAtstart` | query | `string (date-time)` | No |
 | `filtersmodifiedAtend` | query | `string (date-time)` | No |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationMethodsServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -670,20 +670,20 @@ Get Mitigation Method
 
 Returns a mitigation method.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationMethodsServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -702,10 +702,10 @@ List Mitigation Platforms
 
 Returns a list of mitigation platforms.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `paginationlimit` | query | `string (uint64)` | No |
 | `paginationoffset` | query | `string (uint64)` | No |
 | `paginationincludeTotalCount` | query | `boolean` | No |
@@ -716,14 +716,14 @@ Returns a list of mitigation platforms.
 | `filtersmodifiedAtstart` | query | `string (date-time)` | No |
 | `filtersmodifiedAtend` | query | `string (date-time)` | No |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationPlatformsServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -740,20 +740,20 @@ Get Mitigation Platform
 
 Returns a mitigation platform.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `MitigationPlatformsServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -772,20 +772,20 @@ List Policies
 
 Returns a list of alerting policies.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `PolicyServiceListRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `PolicyServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -804,21 +804,21 @@ Get Policy
 
 Returns an alerting policy.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `policyType` | path | `string` | Yes |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `PolicyServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -838,22 +838,22 @@ Disable Policy
 
 Disables an alerting policy.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `policyType` | path | `string` | Yes |
 | `id` | path | `string` | Yes |
 | `data` | body | `PolicyServiceDisableBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `PolicyServiceDisableResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -874,22 +874,22 @@ Enable Policy
 
 Enables an alerting policy.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `policyType` | path | `string` | Yes |
 | `id` | path | `string` | Yes |
 | `data` | body | `PolicyServiceEnableBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `PolicyServiceEnableResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -910,20 +910,20 @@ Create Alert Silence Notifications
 
 Creates a new alert silence notifications configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `AlertSilenceNotificationsServiceCreateRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertSilenceNotificationsServiceCreateResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -942,20 +942,20 @@ List Alert Notification Silences
 
 Returns a list of alert silence notifications configurations.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `AlertSilenceNotificationsServiceListRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertSilenceNotificationsServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -974,20 +974,20 @@ Get Alert Silence Notifications
 
 Returns an alert silence notifications configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertSilenceNotificationsServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -1006,21 +1006,21 @@ Replace Alert Notification Silence
 
 Replaces an alert silence notifications configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `AlertSilenceNotificationsServiceReplaceBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertSilenceNotificationsServiceReplaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -1040,20 +1040,20 @@ Delete Alert Notification Silence
 
 Deletes an alert silence notifications configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `AlertSilenceNotificationsServiceDeleteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -1072,20 +1072,20 @@ Create Suppression
 
 Creates a new suppression configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `SuppressionServiceCreateRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `SuppressionServiceCreateResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -1104,20 +1104,20 @@ List Suppressions
 
 Returns a list of suppression configurations.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `SuppressionServiceListRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `SuppressionServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -1136,20 +1136,20 @@ Get Suppression
 
 Returns a suppression configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `SuppressionServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -1168,21 +1168,21 @@ Replace Suppression
 
 Replaces a suppression configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `SuppressionServiceReplaceBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `SuppressionServiceReplaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -1202,20 +1202,20 @@ Delete Suppression
 
 Deletes a suppression configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `SuppressionServiceDeleteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI

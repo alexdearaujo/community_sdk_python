@@ -8,20 +8,20 @@ Create AI Advisor Chat Session
 
 Create a new AI Advisor Chat session with a prompt
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `CreateChatSessionRequest` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreateChatSessionResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -40,20 +40,20 @@ Update AI Advisor Chat Session
 
 Update AI Advisor Chat session with a prompt
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `UpdateChatSessionRequest` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateChatSessionResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -72,20 +72,20 @@ Get AI Advisor Chat Session
 
 Retrieve the status and results of an AI Advisor chat session
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetChatSessionResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI

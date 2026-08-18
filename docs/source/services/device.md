@@ -8,21 +8,21 @@ List all devices.
 
 Returns list of configured devices. Use the 'view' parameter to control response detail: FULL (default), BASIC (id, name, status), or ID_ONLY (id only). See [About Devices](https://kb.kentik.com/v4/Cb01.htm).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `querynoCustomColumns` | query | `boolean` | No |
 | `view` | query | `string` | No |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListDevicesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -39,20 +39,20 @@ Configure a new device.
 
 Create configuration for a new device. Returns the newly created configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `CreateDeviceRequest` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreateDeviceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -71,20 +71,20 @@ Configure multiple devices (max 100).
 
 Create configuration for multiple devices. Returns the newly created configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `CreateDevicesRequest` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreateDevicesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -103,20 +103,20 @@ Delete configuration of multiple devices.
 
 Deletes configuration of multiple devices with specific IDs (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `DeleteDevicesRequest` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeleteDevicesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -135,20 +135,20 @@ Updates configuration of multiple devices (max 100).
 
 Replaces configuration of multiple devices with attributes in the request. Returns the updated configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `UpdateDevicesRequest` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateDevicesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -167,21 +167,21 @@ Retrieve configuration of a device by name.
 
 Returns configuration of a device specified by name (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `deviceName` | path | `string` | Yes |
 | `querynoCustomColumns` | query | `boolean` | No |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetDeviceByNameResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -200,21 +200,21 @@ Retrieve configuration of a device.
 
 Returns configuration of a device specified by ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `deviceid` | path | `string` | Yes |
 | `querynoCustomColumns` | query | `boolean` | No |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetDeviceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -233,21 +233,21 @@ Updates configuration of a device.
 
 Replaces configuration of a device with attributes in the request. Returns the updated configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `deviceid` | path | `string` | Yes |
 | `data` | body | `DeviceServiceUpdateDeviceBody` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateDeviceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -267,20 +267,20 @@ Delete configuration of a device.
 
 Deletes configuration of a device with specific ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `deviceid` | path | `string` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeleteDeviceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -299,21 +299,21 @@ Updates labels of a device.
 
 Removes all existing labels from the device and applies the device labels (see [About Device Labels](https://kb.kentik.com/v4/Cb16.htm)) specified by id. Returns the updated configuration.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `DeviceServiceUpdateDeviceLabelsBody` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateDeviceLabelsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI

@@ -8,14 +8,14 @@ List credential groups.
 
 Returns list of credential group information in Kentik vault.
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListCredentialGroupResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -32,20 +32,20 @@ Get a credential group by id.
 
 Returns specific credential group information in Kentik vault.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetCredentialGroupResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI

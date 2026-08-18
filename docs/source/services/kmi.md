@@ -8,10 +8,10 @@ List global KMI insights.
 
 Returns list of global KMI insights.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `limit` | query | `integer (int64)` | No |
 | `marketId` | query | `string` | No |
 | `ip` | query | `string` | No |
@@ -19,14 +19,14 @@ Returns list of global KMI insights.
 | `types` | query | `string[]` | No |
 | `magnitude` | query | `integer (int64)` | No |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetGlobalInsightsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -43,10 +43,10 @@ List ASN-specific KMI insights.
 
 Returns list of KMI insights for a specific Autonomous System.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `asn` | path | `string` | Yes |
 | `limit` | query | `integer (int64)` | No |
 | `marketId` | query | `string` | No |
@@ -55,14 +55,14 @@ Returns list of KMI insights for a specific Autonomous System.
 | `types` | query | `string[]` | No |
 | `magnitude` | query | `integer (int64)` | No |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetASNInsightsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -81,23 +81,23 @@ List metadata and list of customers, providers, and peers for an Autonomous Syst
 
 Returns metadata and list of customers, providers, and peers for an Autonomous System.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `marketId` | path | `string` | Yes |
 | `asn` | path | `string` | Yes |
 | `type` | path | `string` | Yes |
 | `data` | body | `KmiServiceGetASNDetailsBody` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetASNDetailsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -119,23 +119,23 @@ List KMI rankings by geo market and rank type.
 
 Returns list of KMI rankings.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `marketId` | path | `string` | Yes |
 | `rankType` | path | `string` | Yes |
 | `ip` | path | `string` | Yes |
 | `data` | body | `KmiServiceGetRankingsBody` | Yes |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetRankingsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -157,14 +157,14 @@ List all geo markets for KMI.
 
 Returns list of geo markets for KMI.
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListMarketsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI

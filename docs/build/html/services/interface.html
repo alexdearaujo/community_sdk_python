@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
-    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css?v=a0a71c94" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
@@ -231,54 +231,6 @@
 
 
 
-
-
-<div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../_sources/services/interface.md" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="btn__text-container">.md</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="btn__text-container">.pdf</span>
-</button>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
 <button onclick="toggleFullScreen()"
   class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
@@ -328,12 +280,42 @@
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints">Endpoints</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-interface-v202108alpha1-interfaces"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-interface-v202108alpha1-interfaces"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-interface-v202108alpha1-manual-classify"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/manual_classify</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-interface-v202108alpha1-interfaces"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-interface-v202108alpha1-interfaces"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-interface-v202108alpha1-manual-classify"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/manual_classify</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
@@ -461,7 +443,8 @@
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code><a class="headerlink" href="#get-interface-v202108alpha1-interfaces" title="Link to this heading">#</a></h3>
 <p>Fetch Search Interfaces</p>
 <p>Return list of interfaces matches search critera.</p>
-<p><strong>Parameters</strong></p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -509,7 +492,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="responses">
+<h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -529,7 +514,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -537,12 +524,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="post-interface-v202108alpha1-interfaces">
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code><a class="headerlink" href="#post-interface-v202108alpha1-interfaces" title="Link to this heading">#</a></h3>
 <p>Create a interface.</p>
 <p>Create a interface from request. returns created.</p>
-<p><strong>Parameters</strong></p>
+<section id="id1">
+<h4>Parameters<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -560,7 +549,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id2">
+<h4>Responses<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -580,7 +571,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id3">
+<h4>Example<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -590,12 +583,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="get-interface-v202108alpha1-interfaces-id">
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code><a class="headerlink" href="#get-interface-v202108alpha1-interfaces-id" title="Link to this heading">#</a></h3>
 <p>Get a interface.</p>
 <p>Returns information about a interface specified with ID.</p>
-<p><strong>Parameters</strong></p>
+<section id="id4">
+<h4>Parameters<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -613,7 +608,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id5">
+<h4>Responses<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -633,7 +630,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id6">
+<h4>Example<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -643,12 +642,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="put-interface-v202108alpha1-interfaces-id">
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code><a class="headerlink" href="#put-interface-v202108alpha1-interfaces-id" title="Link to this heading">#</a></h3>
 <p>Update a interface.</p>
 <p>Replaces the entire interface attributes specified with id.</p>
-<p><strong>Parameters</strong></p>
+<section id="id7">
+<h4>Parameters<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -671,7 +672,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id8">
+<h4>Responses<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -691,7 +694,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id9">
+<h4>Example<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -702,12 +707,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="delete-interface-v202108alpha1-interfaces-id">
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code><a class="headerlink" href="#delete-interface-v202108alpha1-interfaces-id" title="Link to this heading">#</a></h3>
 <p>Delete a interface.</p>
 <p>Deletes the interface specified with id.</p>
-<p><strong>Parameters</strong></p>
+<section id="id10">
+<h4>Parameters<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -725,7 +732,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id11">
+<h4>Responses<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -745,7 +754,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id12">
+<h4>Example<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -755,12 +766,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="post-interface-v202108alpha1-manual-classify">
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/manual_classify</span></code><a class="headerlink" href="#post-interface-v202108alpha1-manual-classify" title="Link to this heading">#</a></h3>
 <p>Manual Classify Interface</p>
 <p>Manually set interface(s) classification.</p>
-<p><strong>Parameters</strong></p>
+<section id="id13">
+<h4>Parameters<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -778,7 +791,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id14">
+<h4>Responses<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -798,7 +813,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id15">
+<h4>Example<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -807,6 +824,7 @@
 <span class="p">)</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 <section id="data-models">
@@ -5031,12 +5049,42 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints">Endpoints</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-interface-v202108alpha1-interfaces"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-interface-v202108alpha1-interfaces"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-interface-v202108alpha1-manual-classify"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/manual_classify</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-interface-v202108alpha1-interfaces"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-interface-v202108alpha1-interfaces"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-interface-v202108alpha1-interfaces-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/interfaces/{id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-interface-v202108alpha1-manual-classify"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/interface/v202108alpha1/manual_classify</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">

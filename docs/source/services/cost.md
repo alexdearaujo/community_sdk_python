@@ -8,14 +8,14 @@ List all cost providers.
 
 Returns list of configured cost providers.
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListCostProvidersResponse` |
 | default | An unexpected error response. | `googlerpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -32,20 +32,20 @@ List all cost provider summaries.
 
 Returns list of summaries of configured cost providers.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `date` | query | `string` | No |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListCostProviderSummariesResponse` |
 | default | An unexpected error response. | `googlerpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -62,21 +62,21 @@ Get cost provider summary.
 
 Returns summary of configured cost provider.
 
-**Parameters**
+#### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `date` | query | `string` | No |
 
-**Responses**
+#### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetCostProviderSummaryResponse` |
 | default | An unexpected error response. | `googlerpcStatus` |
 
-**Example**
+#### Example
 
 ```python
 from kentik_api.client import KentikAPI

@@ -29,6 +29,18 @@ myst_enable_extensions = [
 
 html_theme = "sphinx_book_theme"
 
+# Skip copying every source page into build/html/_sources/. Those copies are
+# byte-identical to docs/source/**, and this repo already tracks the
+# rendered HTML in git, so the copies were pure duplication.
+html_copy_source = False
+html_show_sourcelink = False
+
+# The theme's "download source" button links to _sources/ regardless of
+# html_show_sourcelink, so it needs its own opt-out too.
+html_theme_options = {
+    "use_download_button": False,
+}
+
 # Clean up Pydantic model rendering
 autodoc_pydantic_model_show_json = True
 autodoc_pydantic_settings_show_json = False

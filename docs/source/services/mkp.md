@@ -10,14 +10,14 @@ List MKP packages.
 
 Returns a list of MKP packages.
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListPackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -34,20 +34,20 @@ Create a package template.
 
 Create package from request. returns created package.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `CreatePackageRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreatePackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -66,20 +66,20 @@ Get information aboout a package.
 
 Returns information about package specified with ID.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetPackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -98,21 +98,21 @@ Update a package.
 
 Update package attributes specified with id.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `PackageServiceUpdatePackageBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdatePackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -132,20 +132,20 @@ Delete a package.
 
 Deletes the package specified with id.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeletePackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -164,14 +164,14 @@ List MKP tenants.
 
 Returns a list of MKP tenants.
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -188,20 +188,20 @@ Create a tenant.
 
 Create tenant from request. returns created tenant.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `CreateTenantRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreateTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -220,20 +220,20 @@ Get information aboout a tenant.
 
 Returns information about package specified with ID.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -252,21 +252,21 @@ Update a tenant.
 
 Update tenant attributes specified with id.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `TenantServiceUpdateTenantBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -286,20 +286,20 @@ Delete a tenant.
 
 Deletes the tenant specified with id.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeleteTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -318,20 +318,20 @@ List users for a tenant.
 
 Returns a list of users associated with the specified tenant.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `tenantId` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListTenantUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -350,21 +350,21 @@ Add a user to a tenant.
 
 Creates a user association with the specified tenant.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `tenantId` | path | `string` | Yes |
 | `data` | body | `TenantUserServiceCreateTenantUserBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreateTenantUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -384,22 +384,22 @@ Update a tenant user.
 
 Updates the user associated with the specified tenant and user ID.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `tenantId` | path | `string` | Yes |
 | `id` | path | `string` | Yes |
 | `data` | body | `TenantUserServiceUpdateTenantUserBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateTenantUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -420,21 +420,21 @@ Remove a user from a tenant.
 
 Deletes the user association with the specified tenant.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `tenantId` | path | `string` | Yes |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeleteTenantUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI

@@ -10,20 +10,20 @@ List agent alert configurations
 
 Lists all agent alert configurations, optionally filtered by a list of agent ids.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `agentIds` | query | `string[]` | No |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListAgentAlertsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -40,20 +40,20 @@ Create an agent alert configuration
 
 Creates a new agent alert configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `CreateAgentAlertRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreateAgentAlertResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -72,20 +72,20 @@ Get an agent alert configuration
 
 Retrieves an existing agent alert configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetAgentAlertResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -104,21 +104,21 @@ Update an agent alert configuration
 
 Updates an existing agent alert configuration with the time threshold and notification channels provided.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `SyntheticsAdminServiceUpdateAgentAlertBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateAgentAlertResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -138,20 +138,20 @@ Delete an agent alert configuration
 
 Deletes an existing agent alert configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeleteAgentAlertResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -170,14 +170,14 @@ List available agents
 
 Returns list of all synthetic agents available in the account.
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListAgentsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -194,20 +194,20 @@ Get information about an agent
 
 Returns information about the requested synthetic agent.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `agentid` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -226,21 +226,21 @@ Update configuration of an agent
 
 Update configuration of a synthetic agent.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `agentid` | path | `string` | Yes |
 | `data` | body | `SyntheticsAdminServiceUpdateAgentBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -260,20 +260,20 @@ Delete an agent
 
 Deletes the requested agent. The deleted agent is removed from configuration of all tests.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `agentid` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeleteAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -292,14 +292,14 @@ List all tests
 
 Returns a list of all configured active and paused synthetic tests.
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListTestsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -316,20 +316,20 @@ Create a test
 
 Create synthetic test based on configuration provided in the request.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `CreateTestRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreateTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -348,20 +348,20 @@ Get information about a test
 
 Returns configuration and status for the requested synthetic test.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -380,21 +380,21 @@ Update configuration of a test
 
 Updates configuration of a synthetic test.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `SyntheticsAdminServiceUpdateTestBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -414,20 +414,20 @@ Delete a synthetic test.
 
 Deletes the synthetics test. All accumulated results for the test cease to be accessible.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeleteTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -444,21 +444,21 @@ response = client.synthetics.delete_test(
 
 Update status of a synthetic test
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `SyntheticsAdminServiceSetTestStatusBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `SetTestStatusResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -478,20 +478,20 @@ Get results for tests
 
 Returns probe results for a set of tests for specified period of time.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `GetResultsForTestsRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetResultsForTestsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -510,20 +510,20 @@ Get test results in CSV format
 
 Returns probe results for tests in CSV format.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `GetResultsForTestsCsvRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetResultsForTestsCsvResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -542,20 +542,20 @@ Get network trace data for a test
 
 Get network trace data for a specific synthetic test. The test must have traceroute task configured.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `GetTraceForTestRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetTraceForTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI

@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
-    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css?v=a0a71c94" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
@@ -231,54 +231,6 @@
 
 
 
-
-
-<div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../_sources/services/custom_dimension.md" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="btn__text-container">.md</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="btn__text-container">.pdf</span>
-</button>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
 <button onclick="toggleFullScreen()"
   class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
@@ -328,16 +280,65 @@
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints">Endpoints</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-custom-dimensions-v202411alpha1-customdimensionid-populator"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid-field-fieldname"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-v1-customdimension"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v1/customdimension</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-custom-dimensions-v202411alpha1-customdimensionid-populator"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid-field-fieldname"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-v1-customdimension"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v1/customdimension</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
@@ -454,7 +455,8 @@
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1</span></code><a class="headerlink" href="#get-custom-dimensions-v202411alpha1" title="Link to this heading">#</a></h3>
 <p>List Custom Dimensions</p>
 <p>Returns an array of custom dimension objects that each contain information about an individual custom dimension.</p>
-<p><strong>Responses</strong></p>
+<section id="responses">
+<h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -474,7 +476,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -482,12 +486,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="get-custom-dimensions-v202411alpha1-customdimensionid">
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code><a class="headerlink" href="#get-custom-dimensions-v202411alpha1-customdimensionid" title="Link to this heading">#</a></h3>
 <p>Custom Dimension Info</p>
 <p>Returns a custom dimension object containing information about an individual custom dimension.</p>
-<p><strong>Parameters</strong></p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -505,7 +511,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id1">
+<h4>Responses<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -525,7 +533,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id2">
+<h4>Example<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -535,12 +545,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="put-custom-dimensions-v202411alpha1-customdimensionid">
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code><a class="headerlink" href="#put-custom-dimensions-v202411alpha1-customdimensionid" title="Link to this heading">#</a></h3>
 <p>Update Custom Dimension</p>
 <p>Updates and returns a custom dimension object containing information about an individual custom dimension (see About Custom Dimensions). Populators are not sent back in the response body. To get them use ‘Custom Dimension info’ API instead.</p>
-<p><strong>Parameters</strong></p>
+<section id="id3">
+<h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -563,7 +575,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id4">
+<h4>Responses<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -583,7 +597,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id5">
+<h4>Example<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -593,12 +609,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="delete-custom-dimensions-v202411alpha1-customdimensionid">
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code><a class="headerlink" href="#delete-custom-dimensions-v202411alpha1-customdimensionid" title="Link to this heading">#</a></h3>
 <p>Delete Custom Dimension</p>
 <p>Deletes a custom dimension.</p>
-<p><strong>Parameters</strong></p>
+<section id="id6">
+<h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -616,7 +634,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id7">
+<h4>Responses<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -636,7 +656,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id8">
+<h4>Example<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -646,12 +668,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="post-custom-dimensions-v202411alpha1-customdimensionid-populator">
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator</span></code><a class="headerlink" href="#post-custom-dimensions-v202411alpha1-customdimensionid-populator" title="Link to this heading">#</a></h3>
 <p>Create Populator</p>
 <p>Creates and returns a populator object containing information about an individual populator.</p>
-<p><strong>Parameters</strong></p>
+<section id="id9">
+<h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -674,7 +698,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id10">
+<h4>Responses<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -694,7 +720,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id11">
+<h4>Example<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -704,12 +732,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid">
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code><a class="headerlink" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid" title="Link to this heading">#</a></h3>
 <p>Get Populator</p>
 <p>Get Populator by Dimension and Populator ID.</p>
-<p><strong>Parameters</strong></p>
+<section id="id12">
+<h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -737,7 +767,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id13">
+<h4>Responses<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -757,7 +789,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id14">
+<h4>Example<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -768,12 +802,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="put-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid">
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code><a class="headerlink" href="#put-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid" title="Link to this heading">#</a></h3>
 <p>Update Populator</p>
 <p>Updates and returns a populator object containing information about an individual populator.</p>
-<p><strong>Parameters</strong></p>
+<section id="id15">
+<h4>Parameters<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -801,7 +837,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id16">
+<h4>Responses<a class="headerlink" href="#id16" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -821,7 +859,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id17">
+<h4>Example<a class="headerlink" href="#id17" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -832,12 +872,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="delete-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid">
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code><a class="headerlink" href="#delete-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid" title="Link to this heading">#</a></h3>
 <p>Delete Populator</p>
 <p>Deletes a populator.</p>
-<p><strong>Parameters</strong></p>
+<section id="id18">
+<h4>Parameters<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -860,7 +902,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id19">
+<h4>Responses<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -880,7 +924,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id20">
+<h4>Example<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -891,12 +937,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid-field-fieldname">
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}</span></code><a class="headerlink" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid-field-fieldname" title="Link to this heading">#</a></h3>
 <p>Get Populator Field</p>
 <p>Get Populator field by Dimension, Populator ID, and field name.</p>
-<p><strong>Parameters</strong></p>
+<section id="id21">
+<h4>Parameters<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -934,7 +982,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id22">
+<h4>Responses<a class="headerlink" href="#id22" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -954,7 +1004,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id23">
+<h4>Example<a class="headerlink" href="#id23" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -966,12 +1018,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="post-v1-customdimension">
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v1/customdimension</span></code><a class="headerlink" href="#post-v1-customdimension" title="Link to this heading">#</a></h3>
 <p>Create Custom Dimension</p>
 <p>Creates and returns a custom dimension object containing information about an individual custom dimension</p>
-<p><strong>Parameters</strong></p>
+<section id="id24">
+<h4>Parameters<a class="headerlink" href="#id24" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -989,7 +1043,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id25">
+<h4>Responses<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -1009,13 +1065,16 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id26">
+<h4>Example<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">custom_dimension</span><span class="o">.</span><span class="n">create_custom_dimension</span><span class="p">()</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 <section id="data-models">
@@ -5843,16 +5902,65 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints">Endpoints</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-custom-dimensions-v202411alpha1-customdimensionid-populator"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid-field-fieldname"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-v1-customdimension"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v1/customdimension</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-custom-dimensions-v202411alpha1-customdimensionid"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-custom-dimensions-v202411alpha1-customdimensionid-populator"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-custom-dimensions-v202411alpha1-customdimensionid-populator-populatorid-field-fieldname"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-v1-customdimension"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/v1/customdimension</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">

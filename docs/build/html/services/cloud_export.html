@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
-    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css?v=a0a71c94" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
@@ -231,54 +231,6 @@
 
 
 
-
-
-<div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../_sources/services/cloud_export.md" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="btn__text-container">.md</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="btn__text-container">.pdf</span>
-</button>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
 <button onclick="toggleFullScreen()"
   class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
@@ -328,11 +280,35 @@
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints">Endpoints</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-cloud-export-v202506-exports"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-cloud-export-v202506-exports"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-cloud-export-v202506-exports"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-cloud-export-v202506-exports"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
@@ -474,7 +450,8 @@
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code><a class="headerlink" href="#get-cloud-export-v202506-exports" title="Link to this heading">#</a></h3>
 <p>List cloud exports.</p>
 <p>Returns a list of all cloud exports in the account.</p>
-<p><strong>Responses</strong></p>
+<section id="responses">
+<h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -494,7 +471,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -502,12 +481,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="post-cloud-export-v202506-exports">
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code><a class="headerlink" href="#post-cloud-export-v202506-exports" title="Link to this heading">#</a></h3>
 <p>Create Cloud Export.</p>
 <p>Create new cloud export based on configuration in the request.</p>
-<p><strong>Parameters</strong></p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -525,7 +506,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id1">
+<h4>Responses<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -545,7 +528,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id2">
+<h4>Example<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -555,12 +540,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="get-cloud-export-v202506-exports-export-id">
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code><a class="headerlink" href="#get-cloud-export-v202506-exports-export-id" title="Link to this heading">#</a></h3>
 <p>Get cloud export configuration and status.</p>
 <p>Returns configuration and status of cloud export with specified ID.</p>
-<p><strong>Parameters</strong></p>
+<section id="id3">
+<h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -578,7 +565,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id4">
+<h4>Responses<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -598,7 +587,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id5">
+<h4>Example<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -608,12 +599,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="put-cloud-export-v202506-exports-export-id">
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code><a class="headerlink" href="#put-cloud-export-v202506-exports-export-id" title="Link to this heading">#</a></h3>
 <p>Update configuration of cloud export.</p>
 <p>Replace complete configuration of a cloud export with data in the request.</p>
-<p><strong>Parameters</strong></p>
+<section id="id6">
+<h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -636,7 +629,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id7">
+<h4>Responses<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -656,7 +651,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id8">
+<h4>Example<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -667,12 +664,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="delete-cloud-export-v202506-exports-export-id">
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code><a class="headerlink" href="#delete-cloud-export-v202506-exports-export-id" title="Link to this heading">#</a></h3>
 <p>Delete a cloud export.</p>
 <p>Delete cloud export with specified ID.</p>
-<p><strong>Parameters</strong></p>
+<section id="id9">
+<h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -690,7 +689,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id10">
+<h4>Responses<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -710,7 +711,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id11">
+<h4>Example<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -719,6 +722,7 @@
 <span class="p">)</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 <section id="data-models">
@@ -6292,11 +6296,35 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints">Endpoints</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-cloud-export-v202506-exports"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-cloud-export-v202506-exports"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-cloud-export-v202506-exports"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-cloud-export-v202506-exports"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-cloud-export-v202506-exports-export-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/cloud_export/v202506/exports/{export.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">

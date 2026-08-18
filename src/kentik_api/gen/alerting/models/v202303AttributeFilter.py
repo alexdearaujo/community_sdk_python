@@ -28,4 +28,6 @@ class v202303AttributeFilter(BaseModel):
         validation_alias="in", default=None
     )
 
+    matchesRegex: Optional[str] = Field(validation_alias="matchesRegex", default=None)
+
     any: Optional[bool] = Field(validation_alias="any", default=None)

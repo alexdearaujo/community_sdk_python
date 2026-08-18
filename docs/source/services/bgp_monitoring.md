@@ -10,20 +10,20 @@ Get metrics for a BGP prefix.
 
 Retrieve metric data for single BGP prefix and time interval.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `GetMetricsForTargetRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetMetricsForTargetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -42,20 +42,20 @@ Get routes for a BGP prefix.
 
 Retrieve snapshot of route information for single BGP prefix at specific time.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `GetRoutesForTargetRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetRoutesForTargetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -74,14 +74,14 @@ List BGP Monitors.
 
 Returns list of all BGP monitors present in the account.
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `ListMonitorsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -98,20 +98,20 @@ Create new BGP Monitor instance.
 
 Creates new BGP Monitor and if successful returns its configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `data` | body | `CreateMonitorRequest` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `CreateMonitorResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -130,20 +130,20 @@ Get BGP Monitor configuration.
 
 Returns configuration of existing BGP monitor with specific ID.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `GetMonitorResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -162,21 +162,21 @@ Update configuration of a BGP monitor.
 
 Updates configuration of BGP monitor with specific ID and returns updated  configuration.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `BgpMonitoringAdminServiceUpdateMonitorBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `UpdateMonitorResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -196,20 +196,20 @@ Delete existing BGP Monitor.
 
 Delete BGP monitor with with specific ID.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `DeleteMonitorResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI
@@ -228,21 +228,21 @@ Sets administrative status of a BGP monitor.
 
 Sets administrative status of BGP monitor with specific ID.
 
-**Parameters**
+##### Parameters
 
 | Name | In | Type | Required |
-|------|----|------|----------|
+| --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
 | `data` | body | `BgpMonitoringAdminServiceSetMonitorStatusBody` | Yes |
 
-**Responses**
+##### Responses
 
 | Status | Description | Model |
-|--------|--------------|-------|
+| --- | --- | --- |
 | 200 | A successful response. | `SetMonitorStatusResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
-**Example**
+##### Example
 
 ```python
 from kentik_api.client import KentikAPI

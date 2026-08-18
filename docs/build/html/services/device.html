@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
-    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css?v=a0a71c94" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
@@ -231,54 +231,6 @@
 
 
 
-
-
-<div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../_sources/services/device.md" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="btn__text-container">.md</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="btn__text-container">.pdf</span>
-</button>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
 <button onclick="toggleFullScreen()"
   class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
@@ -328,16 +280,66 @@
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints">Endpoints</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device-batch-create"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_create</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device-batch-delete"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_delete</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-batch-update"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_update</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device-name-devicename"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/name/{deviceName}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-id-labels"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{id}/labels</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device-batch-create"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_create</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device-batch-delete"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_delete</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-batch-update"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_update</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device-name-devicename"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/name/{deviceName}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-id-labels"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{id}/labels</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
@@ -637,7 +639,8 @@
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code><a class="headerlink" href="#get-device-v202504beta2-device" title="Link to this heading">#</a></h3>
 <p>List all devices.</p>
 <p>Returns list of configured devices. Use the ‘view’ parameter to control response detail: FULL (default), BASIC (id, name, status), or ID_ONLY (id only). See <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>.</p>
-<p><strong>Parameters</strong></p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -660,7 +663,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="responses">
+<h4>Responses<a class="headerlink" href="#responses" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -680,7 +685,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -688,12 +695,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="post-device-v202504beta2-device">
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code><a class="headerlink" href="#post-device-v202504beta2-device" title="Link to this heading">#</a></h3>
 <p>Configure a new device.</p>
 <p>Create configuration for a new device. Returns the newly created configuration (see <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>).</p>
-<p><strong>Parameters</strong></p>
+<section id="id1">
+<h4>Parameters<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -711,7 +720,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id2">
+<h4>Responses<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -731,7 +742,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id3">
+<h4>Example<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -741,12 +754,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="post-device-v202504beta2-device-batch-create">
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_create</span></code><a class="headerlink" href="#post-device-v202504beta2-device-batch-create" title="Link to this heading">#</a></h3>
 <p>Configure multiple devices (max 100).</p>
 <p>Create configuration for multiple devices. Returns the newly created configurations (see <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>).</p>
-<p><strong>Parameters</strong></p>
+<section id="id4">
+<h4>Parameters<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -764,7 +779,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id5">
+<h4>Responses<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -784,7 +801,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id6">
+<h4>Example<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -794,12 +813,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="post-device-v202504beta2-device-batch-delete">
 <h3><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_delete</span></code><a class="headerlink" href="#post-device-v202504beta2-device-batch-delete" title="Link to this heading">#</a></h3>
 <p>Delete configuration of multiple devices.</p>
 <p>Deletes configuration of multiple devices with specific IDs (see <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>).</p>
-<p><strong>Parameters</strong></p>
+<section id="id7">
+<h4>Parameters<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -817,7 +838,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id8">
+<h4>Responses<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -837,7 +860,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id9">
+<h4>Example<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -847,12 +872,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="put-device-v202504beta2-device-batch-update">
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_update</span></code><a class="headerlink" href="#put-device-v202504beta2-device-batch-update" title="Link to this heading">#</a></h3>
 <p>Updates configuration of multiple devices (max 100).</p>
 <p>Replaces configuration of multiple devices with attributes in the request. Returns the updated configurations (see <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>).</p>
-<p><strong>Parameters</strong></p>
+<section id="id10">
+<h4>Parameters<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -870,7 +897,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id11">
+<h4>Responses<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -890,7 +919,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id12">
+<h4>Example<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -900,12 +931,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="get-device-v202504beta2-device-name-devicename">
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/name/{deviceName}</span></code><a class="headerlink" href="#get-device-v202504beta2-device-name-devicename" title="Link to this heading">#</a></h3>
 <p>Retrieve configuration of a device by name.</p>
 <p>Returns configuration of a device specified by name (see <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>).</p>
-<p><strong>Parameters</strong></p>
+<section id="id13">
+<h4>Parameters<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -928,7 +961,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id14">
+<h4>Responses<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -948,7 +983,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id15">
+<h4>Example<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -958,12 +995,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="get-device-v202504beta2-device-device-id">
 <h3><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code><a class="headerlink" href="#get-device-v202504beta2-device-device-id" title="Link to this heading">#</a></h3>
 <p>Retrieve configuration of a device.</p>
 <p>Returns configuration of a device specified by ID (see <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>).</p>
-<p><strong>Parameters</strong></p>
+<section id="id16">
+<h4>Parameters<a class="headerlink" href="#id16" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -986,7 +1025,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id17">
+<h4>Responses<a class="headerlink" href="#id17" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -1006,7 +1047,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id18">
+<h4>Example<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -1016,12 +1059,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="put-device-v202504beta2-device-device-id">
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code><a class="headerlink" href="#put-device-v202504beta2-device-device-id" title="Link to this heading">#</a></h3>
 <p>Updates configuration of a device.</p>
 <p>Replaces configuration of a device with attributes in the request. Returns the updated configuration (see <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>).</p>
-<p><strong>Parameters</strong></p>
+<section id="id19">
+<h4>Parameters<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -1044,7 +1089,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id20">
+<h4>Responses<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -1064,7 +1111,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id21">
+<h4>Example<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -1075,12 +1124,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="delete-device-v202504beta2-device-device-id">
 <h3><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code><a class="headerlink" href="#delete-device-v202504beta2-device-device-id" title="Link to this heading">#</a></h3>
 <p>Delete configuration of a device.</p>
 <p>Deletes configuration of a device with specific ID (see <a class="reference external" href="https://kb.kentik.com/v4/Cb01.htm">About Devices</a>).</p>
-<p><strong>Parameters</strong></p>
+<section id="id22">
+<h4>Parameters<a class="headerlink" href="#id22" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -1098,7 +1149,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id23">
+<h4>Responses<a class="headerlink" href="#id23" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -1118,7 +1171,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id24">
+<h4>Example<a class="headerlink" href="#id24" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -1128,12 +1183,14 @@
 </pre></div>
 </div>
 </section>
+</section>
 <hr class="docutils" />
 <section id="put-device-v202504beta2-device-id-labels">
 <h3><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{id}/labels</span></code><a class="headerlink" href="#put-device-v202504beta2-device-id-labels" title="Link to this heading">#</a></h3>
 <p>Updates labels of a device.</p>
 <p>Removes all existing labels from the device and applies the device labels (see <a class="reference external" href="https://kb.kentik.com/v4/Cb16.htm">About Device Labels</a>) specified by id. Returns the updated configuration.</p>
-<p><strong>Parameters</strong></p>
+<section id="id25">
+<h4>Parameters<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -1156,7 +1213,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Responses</strong></p>
+</section>
+<section id="id26">
+<h4>Responses<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Status</p></th>
@@ -1176,7 +1235,9 @@
 </tbody>
 </table>
 </div>
-<p><strong>Example</strong></p>
+</section>
+<section id="id27">
+<h4>Example<a class="headerlink" href="#id27" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kentik_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KentikAPI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">KentikAPI</span><span class="p">()</span>  <span class="c1"># loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env</span>
@@ -1186,6 +1247,7 @@
 <span class="p">)</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 <section id="data-models">
@@ -21506,16 +21568,66 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints">Endpoints</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device-batch-create"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_create</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device-batch-delete"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_delete</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-batch-update"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_update</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device-name-devicename"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/name/{deviceName}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-id-labels"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{id}/labels</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#responses">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device-batch-create"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_create</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-device-v202504beta2-device-batch-delete"><code class="docutils literal notranslate"><span class="pre">POST</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_delete</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-batch-update"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/batch_update</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device-name-devicename"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/name/{deviceName}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">GET</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-device-v202504beta2-device-device-id"><code class="docutils literal notranslate"><span class="pre">DELETE</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{device.id}</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Example</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-device-v202504beta2-device-id-labels"><code class="docutils literal notranslate"><span class="pre">PUT</span></code> <code class="docutils literal notranslate"><span class="pre">/device/v202504beta2/device/{id}/labels</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Responses</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
