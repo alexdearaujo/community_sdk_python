@@ -9,7 +9,7 @@ from .NetworkBoundary import NetworkBoundary
 class ManualClassifyRequest(BaseModel):
     """
     ManualClassifyRequest model
-        Set connection type, network boundary, and provider of interface id(s) specified.
+    Set connection type, network boundary, and provider of interface id(s) specified.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

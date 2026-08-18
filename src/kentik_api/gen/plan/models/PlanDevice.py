@@ -8,7 +8,7 @@ from .DeviceSubtype import DeviceSubtype
 class PlanDevice(BaseModel):
     """
     PlanDevice model
-        Represents a device that is associated with a plan.
+    Represents a device that is associated with a plan.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

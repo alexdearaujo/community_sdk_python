@@ -169,8 +169,12 @@ def normalize_triple_quoted_docstrings(content: str) -> str:
 
         lines = dedented.split("\n")
         inner_indent = indent + ("    " if indent else "")
+        # Flatten each line to the same indent. Generated docstrings are free
+        # prose (schema title + description), so uneven per-line leading
+        # whitespace only makes docutils misread the deeper lines as block
+        # quotes. Stripping both sides puts every line at inner_indent.
         formatted_lines = [
-            (f"{inner_indent}{line.rstrip()}" if line.strip() else "") for line in lines
+            (f"{inner_indent}{line.strip()}" if line.strip() else "") for line in lines
         ]
         return f"{indent}{quote}\n" + "\n".join(formatted_lines) + f"\n{indent}{quote}"
 

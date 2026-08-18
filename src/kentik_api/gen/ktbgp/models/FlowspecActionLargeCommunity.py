@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionLargeCommunity(BaseModel):
     """
-        FlowspecActionLargeCommunity
+    FlowspecActionLargeCommunity
     BGP Large Communities attribute encoded as an unordered set of one or more
     twelve-octet values, each consisting of a four-octet Global
     Administrator field and two four-octet operator-defined fields, each

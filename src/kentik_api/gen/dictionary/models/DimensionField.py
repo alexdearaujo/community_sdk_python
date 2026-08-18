@@ -10,7 +10,7 @@ from .OperatorSetKey import OperatorSetKey
 class DimensionField(BaseModel):
     """
     DimensionField model
-        A field that can be used as a dimension/filter in a query.
+    A field that can be used as a dimension/filter in a query.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

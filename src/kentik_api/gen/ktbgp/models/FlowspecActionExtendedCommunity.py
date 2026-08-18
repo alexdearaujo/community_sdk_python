@@ -7,7 +7,7 @@ from .ExtendedCommunityRouteType import ExtendedCommunityRouteType
 
 class FlowspecActionExtendedCommunity(BaseModel):
     """
-        FlowspecActionExtendedCommunity
+    FlowspecActionExtendedCommunity
     The attribute consists of a set of &#34;extended communities&#34;.
     All routes with the Extended Communities attribute belong to
     the communities listed in the attribute.

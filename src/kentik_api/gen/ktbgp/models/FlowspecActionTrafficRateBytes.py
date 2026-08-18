@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionTrafficRateBytes(BaseModel):
     """
-        FlowspecActionTrafficRateBytes model
-            FlowspecActionTrafficRateBytes specifies the maximum traffic rate
+    FlowspecActionTrafficRateBytes model
+    FlowspecActionTrafficRateBytes specifies the maximum traffic rate
     in bytes per second.
 
     Extended Community type and sub-type: 0x8006

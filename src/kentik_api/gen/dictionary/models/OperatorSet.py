@@ -9,7 +9,7 @@ from .OperatorSetKey import OperatorSetKey
 class OperatorSet(BaseModel):
     """
     OperatorSet model
-        A named group of operators applicable to a given data type.
+    A named group of operators applicable to a given data type.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

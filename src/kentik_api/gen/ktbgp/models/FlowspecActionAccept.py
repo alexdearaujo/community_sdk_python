@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class FlowspecActionAccept(BaseModel):
     """
-        FlowspecActionAccept specifies that the traffic should be accepted.
+    FlowspecActionAccept specifies that the traffic should be accepted.
     https://datatracker.ietf.org/doc/html/rfc8955 model
     """
 

@@ -9,7 +9,7 @@ from .MetricQuantity import MetricQuantity
 class MetricFamilyDef(BaseModel):
     """
     MetricFamilyDef model
-        Definition of a metric family grouping related metrics by quantity and unit.
+    Definition of a metric family grouping related metrics by quantity and unit.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionRouteTargetRedirect(BaseModel):
     """
-        FlowspecActionRouteTargetRedirect model
-            FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF
+    FlowspecActionRouteTargetRedirect model
+    FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF
     routing instance that lists the specified route-target in its import policy.
 
     Depending on the contents of the message, this will be encoded as:

@@ -9,7 +9,7 @@ from .PlanDevice import PlanDevice
 class Plan(BaseModel):
     """
     Plan model
-        Represents a plan object.
+    Represents a plan object.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -9,8 +9,8 @@ from .v202501TCPFlagsFormula import v202501TCPFlagsFormula
 
 class v202501FlowspecMatch(BaseModel):
     """
-        v202501FlowspecMatch model
-            FlowspecMatch represents the traffic filtering criteria encoded
+    v202501FlowspecMatch model
+    FlowspecMatch represents the traffic filtering criteria encoded
     as Flow Specification NLRI as per RFC 8955:
     https://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-
     and other related documents.

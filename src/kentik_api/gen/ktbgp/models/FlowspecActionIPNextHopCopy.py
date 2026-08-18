@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionIPNextHopCopy(BaseModel):
     """
-        FlowspecActionIPNextHopCopy model
-            FlowspecActionIPNextHopCopy allows the traffic to be copied
+    FlowspecActionIPNextHopCopy model
+    FlowspecActionIPNextHopCopy allows the traffic to be copied
     to a specific Next Hop IP address.
 
     Extended Community type and sub-type: 0x0800 with least-significant bit &#39;C&#39; set to 1

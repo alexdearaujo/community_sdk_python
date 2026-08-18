@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionRegularCommunity(BaseModel):
     """
-        FlowspecActionRegularCommunity
+    FlowspecActionRegularCommunity
     Extenstion of the two-octed AS numbers as four-octed entinties.
     https://datatracker.ietf.org/doc/html/rfc6793 model
     """

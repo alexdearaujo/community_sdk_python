@@ -8,7 +8,7 @@ from .GenericEvent import GenericEvent
 class AuditEvent(BaseModel):
     """
     AuditEvent model
-        AuditEvent represents an audit event with request and enriched contextual information.
+    AuditEvent represents an audit event with request and enriched contextual information.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

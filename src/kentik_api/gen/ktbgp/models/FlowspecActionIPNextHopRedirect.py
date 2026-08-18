@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionIPNextHopRedirect(BaseModel):
     """
-        FlowspecActionIPNextHopRedirect model
-            FlowspecActionIPNextHopRedirect allows the traffic to be redirected
+    FlowspecActionIPNextHopRedirect model
+    FlowspecActionIPNextHopRedirect allows the traffic to be redirected
     to a specific Next Hop IP address.
 
     Extended Community type and sub-type: 0x0800

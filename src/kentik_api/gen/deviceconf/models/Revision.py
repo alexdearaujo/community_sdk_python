@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 class Revision(BaseModel):
     """
-        TODO: I somewhat regret embedding &#34;Revision&#34; inside &#34;Snapshot&#34;.
+    TODO: I somewhat regret embedding &#34;Revision&#34; inside &#34;Snapshot&#34;.
     Being embedded means that any time we add something to Revision, it affects
     Snapshot as well. For example, when we added device_id to Revision, it
     meant that now Snapshot has device_id in two places (top-level and inside

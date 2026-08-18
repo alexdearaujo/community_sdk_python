@@ -10,7 +10,7 @@ from .NetworkBoundary import NetworkBoundary
 class InterfaceFilter(BaseModel):
     """
     InterfaceFilter model
-        Supports multiple search criteria. Fields are combined to AND statements to perform search.
+    Supports multiple search criteria. Fields are combined to AND statements to perform search.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

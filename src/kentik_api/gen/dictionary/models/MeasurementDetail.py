@@ -10,7 +10,7 @@ from .MetricField import MetricField
 class MeasurementDetail(BaseModel):
     """
     MeasurementDetail model
-        Full detail for a single measurement (e.g. a traffic flow table or NMS measurement).
+    Full detail for a single measurement (e.g. a traffic flow table or NMS measurement).
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

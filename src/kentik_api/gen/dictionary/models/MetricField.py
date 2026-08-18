@@ -10,7 +10,7 @@ from .FieldDirection import FieldDirection
 class MetricField(BaseModel):
     """
     MetricField model
-        A field that represents a measurable metric in a query.
+    A field that represents a measurable metric in a query.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -1338,19 +1338,19 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionAccept&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionDiscard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionDiscard model\n        FlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard model\nFlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionExtendedCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;routeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1392,7 +1392,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopCopy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopCopy model\n        FlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopCopy model\nFlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1411,7 +1411,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopRedirect model\n        FlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopRedirect model\nFlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1430,7 +1430,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionLargeCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1473,7 +1473,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionMarkDSCP&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionMarkDSCP model\n        FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionMarkDSCP model\nFlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dscp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1492,7 +1492,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRegularCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1523,7 +1523,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRouteTargetRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRouteTargetRedirect model\n        FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRouteTargetRedirect model\nFlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1554,7 +1554,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTerminalSample&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTerminalSample model\n        FlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTerminalSample model\nFlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;terminal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1585,7 +1585,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTrafficRateBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTrafficRateBytes model\n        FlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTrafficRateBytes model\nFlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;bytesPerSecond&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -1604,7 +1604,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecMatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecMatch model\n        FlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecMatch model\nFlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dstPrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2616,19 +2616,19 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionAccept&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionDiscard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionDiscard model\n        FlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard model\nFlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionExtendedCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;routeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2670,7 +2670,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopCopy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopCopy model\n        FlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopCopy model\nFlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2689,7 +2689,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopRedirect model\n        FlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopRedirect model\nFlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2708,7 +2708,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionLargeCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2751,7 +2751,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionMarkDSCP&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionMarkDSCP model\n        FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionMarkDSCP model\nFlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dscp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2770,7 +2770,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRegularCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2801,7 +2801,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRouteTargetRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRouteTargetRedirect model\n        FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRouteTargetRedirect model\nFlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2832,7 +2832,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTerminalSample&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTerminalSample model\n        FlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTerminalSample model\nFlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;terminal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2863,7 +2863,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTrafficRateBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTrafficRateBytes model\n        FlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTrafficRateBytes model\nFlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;bytesPerSecond&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2962,14 +2962,12 @@ window.runMermaid = runMermaid;</script>
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionAccept">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionAccept</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionAccept" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><p>FlowspecActionAccept specifies that the traffic should be accepted.</p>
-</div></blockquote>
-<p><a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc8955">https://datatracker.ietf.org/doc/html/rfc8955</a> model</p>
+<dd><p>FlowspecActionAccept specifies that the traffic should be accepted.
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc8955">https://datatracker.ietf.org/doc/html/rfc8955</a> model</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
@@ -2980,19 +2978,15 @@ window.runMermaid = runMermaid;</script>
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionDiscard">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionDiscard</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionDiscard" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><dl class="simple">
-<dt>FlowspecActionDiscard model</dt><dd><p>FlowspecActionDiscard specifies that the traffic should be discarded.</p>
-</dd>
-</dl>
-</div></blockquote>
+<dd><p>FlowspecActionDiscard model
+FlowspecActionDiscard specifies that the traffic should be discarded.</p>
 <p>This is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.
 Extended Community type and sub-type: 0x8006
 <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes">https://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes</a></p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionDiscard model\n        FlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard model\nFlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
@@ -3003,17 +2997,15 @@ Extended Community type and sub-type: 0x8006
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionExtendedCommunity">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionExtendedCommunity</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionExtendedCommunity" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><p>FlowspecActionExtendedCommunity</p>
-</div></blockquote>
-<p>The attribute consists of a set of &quot;extended communities&quot;.
+<dd><p>FlowspecActionExtendedCommunity
+The attribute consists of a set of &quot;extended communities&quot;.
 All routes with the Extended Communities attribute belong to
 the communities listed in the attribute.
 <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc4360">https://datatracker.ietf.org/doc/html/rfc4360</a> model</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionExtendedCommunity&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;routeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3095,13 +3087,9 @@ the communities listed in the attribute.
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionIPNextHopCopy">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionIPNextHopCopy</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionIPNextHopCopy" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><dl class="simple">
-<dt>FlowspecActionIPNextHopCopy model</dt><dd><p>FlowspecActionIPNextHopCopy allows the traffic to be copied</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>to a specific Next Hop IP address.</p>
+<dd><p>FlowspecActionIPNextHopCopy model
+FlowspecActionIPNextHopCopy allows the traffic to be copied
+to a specific Next Hop IP address.</p>
 <p>Extended Community type and sub-type: 0x0800 with least-significant bit 'C' set to 1</p>
 <p>The target next-hop address refers to the 'Network Address of Next-Hop' field
 of the associated NLRI.
@@ -3109,7 +3097,7 @@ of the associated NLRI.
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopCopy&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopCopy model\n        FlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopCopy model\nFlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3145,13 +3133,9 @@ of the associated NLRI.
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionIPNextHopRedirect">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionIPNextHopRedirect</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionIPNextHopRedirect" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><dl class="simple">
-<dt>FlowspecActionIPNextHopRedirect model</dt><dd><p>FlowspecActionIPNextHopRedirect allows the traffic to be redirected</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>to a specific Next Hop IP address.</p>
+<dd><p>FlowspecActionIPNextHopRedirect model
+FlowspecActionIPNextHopRedirect allows the traffic to be redirected
+to a specific Next Hop IP address.</p>
 <p>Extended Community type and sub-type: 0x0800</p>
 <p>The target next-hop address refers to the 'Network Address of Next-Hop' field
 of the associated NLRI.
@@ -3159,7 +3143,7 @@ of the associated NLRI.
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopRedirect&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopRedirect model\n        FlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopRedirect model\nFlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3195,10 +3179,8 @@ of the associated NLRI.
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionLargeCommunity">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionLargeCommunity</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionLargeCommunity" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><p>FlowspecActionLargeCommunity</p>
-</div></blockquote>
-<p>BGP Large Communities attribute encoded as an unordered set of one or more
+<dd><p>FlowspecActionLargeCommunity
+BGP Large Communities attribute encoded as an unordered set of one or more
 twelve-octet values, each consisting of a four-octet Global
 Administrator field and two four-octet operator-defined fields, each
 of which can be used to denote properties or actions significant to
@@ -3207,7 +3189,7 @@ the operator of the AS assigning the values.
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionLargeCommunity&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3279,18 +3261,14 @@ the operator of the AS assigning the values.
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionMarkDSCP">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionMarkDSCP</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionMarkDSCP" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><dl class="simple">
-<dt>FlowspecActionMarkDSCP model</dt><dd><p>FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.</p>
-</dd>
-</dl>
-</div></blockquote>
+<dd><p>FlowspecActionMarkDSCP model
+FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.</p>
 <p>Extended Community type and sub-type: 0x8009
 <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype">https://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype</a></p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionMarkDSCP&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionMarkDSCP model\n        FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionMarkDSCP model\nFlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;dscp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3326,15 +3304,13 @@ the operator of the AS assigning the values.
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionRegularCommunity">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionRegularCommunity</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionRegularCommunity" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><p>FlowspecActionRegularCommunity</p>
-</div></blockquote>
-<p>Extenstion of the two-octed AS numbers as four-octed entinties.
+<dd><p>FlowspecActionRegularCommunity
+Extenstion of the two-octed AS numbers as four-octed entinties.
 <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc6793">https://datatracker.ietf.org/doc/html/rfc6793</a> model</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRegularCommunity&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;asn1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3388,13 +3364,9 @@ the operator of the AS assigning the values.
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionRouteTargetRedirect">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionRouteTargetRedirect</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionRouteTargetRedirect" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><dl class="simple">
-<dt>FlowspecActionRouteTargetRedirect model</dt><dd><p>FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>routing instance that lists the specified route-target in its import policy.</p>
+<dd><p>FlowspecActionRouteTargetRedirect model
+FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF
+routing instance that lists the specified route-target in its import policy.</p>
 <p>Depending on the contents of the message, this will be encoded as:
 Extended Community type and sub-type: 0x8008 (2-octet ASN)
 or
@@ -3403,7 +3375,7 @@ Extended Community type and sub-type: 0x8208 (4-octet ASN)
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRouteTargetRedirect&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRouteTargetRedirect model\n        FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRouteTargetRedirect model\nFlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3457,18 +3429,14 @@ Extended Community type and sub-type: 0x8208 (4-octet ASN)
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionTerminalSample">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionTerminalSample</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionTerminalSample" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><dl class="simple">
-<dt>FlowspecActionTerminalSample model</dt><dd><p>FlowspecActionTerminalSample specifies that the traffic action extended community.</p>
-</dd>
-</dl>
-</div></blockquote>
+<dd><p>FlowspecActionTerminalSample model
+FlowspecActionTerminalSample specifies that the traffic action extended community.</p>
 <p>terminal, sample or sample-terminal action types.
 <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti">https://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti</a></p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTerminalSample&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTerminalSample model\n        FlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTerminalSample model\nFlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;terminal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3522,19 +3490,15 @@ Extended Community type and sub-type: 0x8208 (4-octet ASN)
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecActionTrafficRateBytes">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecActionTrafficRateBytes</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecActionTrafficRateBytes" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><dl class="simple">
-<dt>FlowspecActionTrafficRateBytes model</dt><dd><p>FlowspecActionTrafficRateBytes specifies the maximum traffic rate</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>in bytes per second.</p>
+<dd><p>FlowspecActionTrafficRateBytes model
+FlowspecActionTrafficRateBytes specifies the maximum traffic rate
+in bytes per second.</p>
 <p>Extended Community type and sub-type: 0x8006
 <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes">https://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes</a></p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTrafficRateBytes&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTrafficRateBytes model\n        FlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTrafficRateBytes model\nFlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;bytesPerSecond&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3570,19 +3534,15 @@ Extended Community type and sub-type: 0x8208 (4-octet ASN)
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="kentik_api.gen.ktbgp.models.FlowspecMatch">
 <span class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kentik_api.gen.ktbgp.models.</span></span><span class="sig-name descname"><span class="pre">FlowspecMatch</span></span><a class="headerlink" href="#kentik_api.gen.ktbgp.models.FlowspecMatch" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><dl class="simple">
-<dt>FlowspecMatch model</dt><dd><p>FlowspecMatch represents the traffic filtering criteria encoded</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>as Flow Specification NLRI as per RFC 8955:
+<dd><p>FlowspecMatch model
+FlowspecMatch represents the traffic filtering criteria encoded
+as Flow Specification NLRI as per RFC 8955:
 <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow">https://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow</a>-
 and other related documents.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecMatch&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecMatch model\n        FlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecMatch model\nFlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;dstPrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -4508,19 +4468,19 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionAccept&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionDiscard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionDiscard model\n        FlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard model\nFlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionExtendedCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;routeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4562,7 +4522,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopCopy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopCopy model\n        FlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopCopy model\nFlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4581,7 +4541,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopRedirect model\n        FlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopRedirect model\nFlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4600,7 +4560,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionLargeCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4643,7 +4603,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionMarkDSCP&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionMarkDSCP model\n        FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionMarkDSCP model\nFlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dscp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4662,7 +4622,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRegularCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4693,7 +4653,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRouteTargetRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRouteTargetRedirect model\n        FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRouteTargetRedirect model\nFlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4724,7 +4684,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTerminalSample&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTerminalSample model\n        FlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTerminalSample model\nFlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;terminal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4755,7 +4715,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTrafficRateBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTrafficRateBytes model\n        FlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTrafficRateBytes model\nFlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;bytesPerSecond&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4774,7 +4734,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecMatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecMatch model\n        FlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecMatch model\nFlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dstPrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6535,19 +6495,19 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionAccept&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionDiscard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionDiscard model\n        FlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard model\nFlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionExtendedCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;routeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6589,7 +6549,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopCopy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopCopy model\n        FlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopCopy model\nFlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6608,7 +6568,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopRedirect model\n        FlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopRedirect model\nFlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6627,7 +6587,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionLargeCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6670,7 +6630,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionMarkDSCP&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionMarkDSCP model\n        FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionMarkDSCP model\nFlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dscp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6689,7 +6649,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRegularCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6720,7 +6680,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRouteTargetRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRouteTargetRedirect model\n        FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRouteTargetRedirect model\nFlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6751,7 +6711,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTerminalSample&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTerminalSample model\n        FlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTerminalSample model\nFlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;terminal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6782,7 +6742,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTrafficRateBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTrafficRateBytes model\n        FlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTrafficRateBytes model\nFlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;bytesPerSecond&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -6801,7 +6761,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecMatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecMatch model\n        FlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecMatch model\nFlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dstPrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8079,19 +8039,19 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionAccept&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept specifies that the traffic should be accepted.\nhttps://datatracker.ietf.org/doc/html/rfc8955 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionAccept&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionDiscard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionDiscard model\n        FlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard model\nFlowspecActionDiscard specifies that the traffic should be discarded.\n\nThis is a special case of FlowspecActionTrafficRateBytes with 0 bytes per second.\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionDiscard&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionExtendedCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionExtendedCommunity\nThe attribute consists of a set of &amp;#34;extended communities&amp;#34;.\nAll routes with the Extended Communities attribute belong to\nthe communities listed in the attribute.\nhttps://datatracker.ietf.org/doc/html/rfc4360 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;routeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8133,7 +8093,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopCopy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopCopy model\n        FlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopCopy model\nFlowspecActionIPNextHopCopy allows the traffic to be copied\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800 with least-significant bit &amp;#39;C&amp;#39; set to 1\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8152,7 +8112,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionIPNextHopRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionIPNextHopRedirect model\n        FlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionIPNextHopRedirect model\nFlowspecActionIPNextHopRedirect allows the traffic to be redirected\nto a specific Next Hop IP address.\n\nExtended Community type and sub-type: 0x0800\n\nThe target next-hop address refers to the &amp;#39;Network Address of Next-Hop&amp;#39; field\nof the associated NLRI.\nhttps://datatracker.ietf.org/doc/html/draft-simpson-idr-flowspec-redirect&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;nextHop&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8171,7 +8131,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionLargeCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionLargeCommunity\nBGP Large Communities attribute encoded as an unordered set of one or more\ntwelve-octet values, each consisting of a four-octet Global\nAdministrator field and two four-octet operator-defined fields, each\nof which can be used to denote properties or actions significant to\nthe operator of the AS assigning the values.\nhttps://datatracker.ietf.org/doc/html/rfc8092 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8214,7 +8174,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionMarkDSCP&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionMarkDSCP model\n        FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionMarkDSCP model\nFlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.\n\nExtended Community type and sub-type: 0x8009\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_marking_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dscp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8233,7 +8193,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRegularCommunity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRegularCommunity\nExtenstion of the two-octed AS numbers as four-octed entinties.\nhttps://datatracker.ietf.org/doc/html/rfc6793 model&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8264,7 +8224,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionRouteTargetRedirect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionRouteTargetRedirect model\n        FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionRouteTargetRedirect model\nFlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF\nrouting instance that lists the specified route-target in its import policy.\n\nDepending on the contents of the message, this will be encoded as:\nExtended Community type and sub-type: 0x8008 (2-octet ASN)\nor\nExtended Community type and sub-type: 0x8208 (4-octet ASN)\nhttps://datatracker.ietf.org/doc/html/rfc8955#rt_redirect_action_subtype&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;asn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8295,7 +8255,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTerminalSample&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTerminalSample model\n        FlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTerminalSample model\nFlowspecActionTerminalSample specifies that the traffic action extended community.\n\nterminal, sample or sample-terminal action types.\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-traffic-action-traffic-acti&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;terminal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8326,7 +8286,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecActionTrafficRateBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecActionTrafficRateBytes model\n        FlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecActionTrafficRateBytes model\nFlowspecActionTrafficRateBytes specifies the maximum traffic rate\nin bytes per second.\n\nExtended Community type and sub-type: 0x8006\nhttps://datatracker.ietf.org/doc/html/rfc8955#traffic_rate_in_bytes&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;bytesPerSecond&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -8345,7 +8305,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecMatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecMatch model\n        FlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecMatch model\nFlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dstPrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -9247,7 +9207,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecMatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecMatch model\n        FlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecMatch model\nFlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dstPrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -10418,7 +10378,7 @@ and other related documents.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;FlowspecMatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;    FlowspecMatch model\n        FlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FlowspecMatch model\nFlowspecMatch represents the traffic filtering criteria encoded\nas Flow Specification NLRI as per RFC 8955:\nhttps://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-\nand other related documents.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;dstPrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
