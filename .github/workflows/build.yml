@@ -1,0 +1,32 @@
+name: build
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: [FA-2-Update-the-python-SDK-from-V5-to-V6, main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Verify wheel imports cleanly
+        run: |
+          uv run --with dist/*.whl python -c "from kentik_api.client import KentikAPI; print('import ok')"
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
