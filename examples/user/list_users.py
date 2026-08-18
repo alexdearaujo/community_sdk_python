@@ -6,7 +6,7 @@ from kentik_api.client import KentikAPI
 def main() -> None:
     client = KentikAPI()
     response = client.user.list_users()
-    users = response.users or []
+    users = [user for user in (response.users or []) if user is not None]
     print(f"Found {len(users)} user(s).")
     for user in users[:10]:
         print(f"  {user.id}: {user.userEmail} ({user.userFullName})")

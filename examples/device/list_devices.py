@@ -6,7 +6,7 @@ from kentik_api.client import KentikAPI
 def main() -> None:
     client = KentikAPI()  # loads KENTIK_EMAIL / KENTIK_API_TOKEN from .env
     response = client.device.list_devices()
-    devices = response.devices or []
+    devices = [device for device in (response.devices or []) if device is not None]
     print(f"Found {len(devices)} device(s).")
     for device in devices[:5]:  # show first five
         print(f"  {device.id}: {device.deviceName}")

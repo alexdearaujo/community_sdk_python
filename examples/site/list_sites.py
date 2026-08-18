@@ -7,13 +7,13 @@ def main() -> None:
     client = KentikAPI()
 
     sites_resp = client.site.list_sites()
-    sites = sites_resp.sites or []
+    sites = [site for site in (sites_resp.sites or []) if site is not None]
     print(f"Found {len(sites)} site(s).")
     for site in sites[:5]:
         print(f"  {site.id}: {site.title}")
 
     markets_resp = client.site.list_site_markets()
-    markets = markets_resp.siteMarkets or []
+    markets = [market for market in (markets_resp.siteMarkets or []) if market is not None]
     print(f"\nFound {len(markets)} site market(s).")
     for market in markets[:5]:
         print(f"  {market.id}: {market.name}")

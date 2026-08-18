@@ -13,7 +13,7 @@ def main() -> None:
 
     # Fetch the first page of alerts with default filters.
     response = client.alerting.alert_list(data=AlertServiceListRequest())
-    alerts = response.alerts or []
+    alerts = [alert for alert in (response.alerts or []) if alert is not None]
     print(f"Found {len(alerts)} active alert(s).")
     for alert in alerts[:10]:
         sev = alert.severity if alert.severity else "-"

@@ -420,7 +420,7 @@ def _render_endpoint_section(
     signature = wrapper_signatures.get(
         (doc.method, _normalize_path_for_matching(doc.path))
     )
-    method_name, params = signature if signature else (None, None)
+    method_name, params = signature if signature else (None, [])
 
     lines = [f"{heading} `{doc.method}` `{doc.path}`", ""]
     if doc.summary:
