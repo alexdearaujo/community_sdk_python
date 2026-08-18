@@ -12,6 +12,13 @@ script. Both are hand-written and survive every `make generate` run.
 | `generation/` | The generator's phase modules. See [generation/README.md](generation/README.md). |
 | `openapi_templates/` | Custom Jinja2 templates fed into the OpenAPI generator. See [openapi_templates/README.md](openapi_templates/README.md). |
 
+```mermaid
+flowchart LR
+    G["generate_sdk.py"] -->|orchestrates| PH["generation/ phase modules"]
+    G -->|writes| SDK["src/kentik_api/gen/"]
+    C["sample_consume_sdk.py"] -->|exercises| SDK
+```
+
 ## Run the generator
 
 ```bash

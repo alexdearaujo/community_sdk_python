@@ -6,13 +6,30 @@ exception hierarchy every generated per-service error class builds on.
 ## Hierarchy
 
 ```mermaid
-flowchart TD
-    A[KentikError] --> B[ConfigurationError]
-    A --> C[AuthenticationError]
-    A --> D[TransportError]
-    A --> E[HTTPException]
-    E --> F["Generated per-operation error classes, e.g. gen/device/error/"]
+classDiagram
+    class KentikError {
+        <<base>>
+    }
+    class HTTPException {
+        +int status_code
+        +str message
+        +str method
+        +str path
+        +dict details
+        +from_response()
+    }
+    class GeneratedOperationError {
+        <<generated>>
+    }
+    KentikError <|-- ConfigurationError
+    KentikError <|-- AuthenticationError
+    KentikError <|-- TransportError
+    KentikError <|-- HTTPException
+    HTTPException <|-- GeneratedOperationError
 ```
+
+`GeneratedOperationError` stands in for the per-operation classes each
+service generates under `gen/<service>/error/`.
 
 | Class | Raised when |
 | --- | --- |

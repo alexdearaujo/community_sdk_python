@@ -23,13 +23,28 @@ in every one of the ~38 services under
 [`../../scripts/openapi_templates/README.md`](../../../scripts/openapi_templates/README.md).
 
 ```mermaid
-flowchart TD
-    A["Generated operation, e.g. device.list_devices()"] --> B["request_json()"]
-    B --> C[Build headers + clean query params]
-    C --> D[httpx.Client request]
-    D -->|network failure| E["raise TransportError"]
-    D -->|status != expected| F["error_cls.from_response(...)"]
-    D -->|status == expected| G[Return parsed JSON]
+sequenceDiagram
+    participant Op as Generated operation
+    participant RJ as request_json
+    participant HX as httpx.Client
+    participant API as Kentik API
+    Op->>RJ: api_config, params, expected_status
+    RJ->>RJ: add auth headers, clean query params
+    alt network failure
+        RJ->>HX: send request
+        HX-->>RJ: httpx.RequestError
+        RJ-->>Op: raise TransportError
+    else response received
+        RJ->>HX: send request
+        HX->>API: HTTP request
+        API-->>HX: HTTP response
+        HX-->>RJ: response
+        alt status == expected
+            RJ-->>Op: parsed JSON
+        else status mismatch
+            RJ-->>Op: raise error_cls.from_response(...)
+        end
+    end
 ```
 
 `request_json()` centralizes:

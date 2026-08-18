@@ -12,11 +12,19 @@ and credential-wiring code, not per-endpoint logic.
 | `GrpcTransport` | `grpc_client.py` | Opens a `grpc.secure_channel` using the credentials' gRPC auth plugin. |
 
 ```mermaid
-flowchart LR
-    A[KentikCredentials] --> B[RestTransport]
-    A --> C[GrpcTransport]
-    B -->|api_config| D["Generated REST wrapper calls"]
-    C -->|channel| E["Generated gRPC stub calls (NotImplementedError today)"]
+classDiagram
+    class BaseTransport {
+        <<abstract>>
+        +close()
+    }
+    class RestTransport {
+        +APIConfig api_config
+    }
+    class GrpcTransport {
+        +secure_channel
+    }
+    BaseTransport <|-- RestTransport
+    BaseTransport <|-- GrpcTransport
 ```
 
 ## gRPC is a stub

@@ -15,6 +15,15 @@ Both files import shared discovery and sample-building helpers from
 [`tests/_discovery.py`](../_discovery.py), so they stay in sync with
 the e2e suite automatically.
 
+```mermaid
+flowchart LR
+    GEN["make generate"] --> SVC["gen/*/services/*.py"]
+    SVC --> DISC["tests/_discovery.py"]
+    DISC --> WC["test_wrapper_contracts.py"]
+    DISC --> SC["test_endpoint_schema_coverage.py"]
+    SC --> RJ["request_json() via respx mock"]
+```
+
 ## Run
 
 ```bash
