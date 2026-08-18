@@ -1,5 +1,19 @@
 # Device Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.device"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["DeviceService (10 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/device/v202504beta2/device`
@@ -326,6 +340,49 @@ response = client.device.update_device_labels(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (21 of 33 models)</summary>
+
+```mermaid
+classDiagram
+    class CreateDeviceRequest
+    class CreateDeviceResponse
+    class CreateDevicesRequest
+    class CreateDevicesResponse
+    class DeleteDeviceResponse
+    class DeleteDevicesRequest
+    class DeleteDevicesResponse
+    class DeviceConcise
+    class DeviceDetailed
+    class DeviceServiceUpdateDeviceBody
+    class DeviceServiceUpdateDeviceLabelsBody
+    class GetDeviceByNameResponse
+    class GetDeviceResponse
+    class LabelConcise
+    class ListDevicesResponse
+    class UpdateDeviceLabelsResponse
+    class UpdateDeviceResponse
+    class UpdateDevicesRequest
+    class UpdateDevicesResponse
+    class protobufAny
+    class rpcStatus
+    CreateDeviceRequest --> DeviceConcise
+    CreateDeviceResponse --> DeviceDetailed
+    CreateDevicesRequest --> DeviceConcise
+    CreateDevicesResponse --> DeviceDetailed
+    DeviceServiceUpdateDeviceLabelsBody --> LabelConcise
+    GetDeviceByNameResponse --> DeviceDetailed
+    GetDeviceResponse --> DeviceDetailed
+    ListDevicesResponse --> DeviceDetailed
+    UpdateDeviceLabelsResponse --> DeviceDetailed
+    UpdateDeviceResponse --> DeviceDetailed
+    UpdateDevicesRequest --> DeviceConcise
+    UpdateDevicesResponse --> DeviceDetailed
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.device.models.CreateDeviceRequest

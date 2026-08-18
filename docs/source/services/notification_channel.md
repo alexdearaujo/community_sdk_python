@@ -1,5 +1,19 @@
 # Notification Channel Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.notification_channel"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["NotificationChannelService (3 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/notification_channel/v202210/notification_channels`
@@ -89,6 +103,29 @@ response = client.notification_channel.get_notification_channel(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (8 of 8 models)</summary>
+
+```mermaid
+classDiagram
+    class ChannelType
+    class GetNotificationChannelResponse
+    class ListNotificationChannelsResponse
+    class NotificationChannel
+    class SearchNotificationChannelsRequest
+    class SearchNotificationChannelsResponse
+    class protobufAny
+    class rpcStatus
+    GetNotificationChannelResponse --> NotificationChannel
+    ListNotificationChannelsResponse --> NotificationChannel
+    NotificationChannel --> ChannelType
+    SearchNotificationChannelsRequest --> ChannelType
+    SearchNotificationChannelsResponse --> NotificationChannel
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.notification_channel.models.ChannelType

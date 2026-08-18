@@ -1,5 +1,19 @@
 # Network Class Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.network_class"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["NetworkClassService (2 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/network_class/v202109alpha1/network_class`
@@ -57,6 +71,25 @@ response = client.network_class.network_class_update(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (6 of 8 models)</summary>
+
+```mermaid
+classDiagram
+    class GetNetworkClassResponse
+    class NetworkClass
+    class UpdateNetworkClassRequest
+    class UpdateNetworkClassResponse
+    class protobufAny
+    class rpcStatus
+    GetNetworkClassResponse --> NetworkClass
+    UpdateNetworkClassRequest --> NetworkClass
+    UpdateNetworkClassResponse --> NetworkClass
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.network_class.models.CloudSubnet

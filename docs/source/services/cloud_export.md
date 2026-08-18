@@ -1,5 +1,19 @@
 # Cloud Export Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.cloud_export"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["CloudExportAdminService (5 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/cloud_export/v202506/exports`
@@ -155,6 +169,31 @@ response = client.cloud_export.delete_cloud_export(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (10 of 19 models)</summary>
+
+```mermaid
+classDiagram
+    class CloudExport
+    class CloudExportAdminServiceUpdateCloudExportBody
+    class CreateCloudExportRequest
+    class CreateCloudExportResponse
+    class DeleteCloudExportResponse
+    class GetCloudExportResponse
+    class ListCloudExportsResponse
+    class UpdateCloudExportResponse
+    class protobufAny
+    class rpcStatus
+    CreateCloudExportRequest --> CloudExport
+    CreateCloudExportResponse --> CloudExport
+    GetCloudExportResponse --> CloudExport
+    ListCloudExportsResponse --> CloudExport
+    UpdateCloudExportResponse --> CloudExport
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.cloud_export.models.AwsProperties

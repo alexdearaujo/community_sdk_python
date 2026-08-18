@@ -6,7 +6,6 @@ from pathlib import Path
 
 from ._shared import PROJECT_ROOT, SDK_OUTPUT_DIR
 
-
 # Top-level README for src/kentik_api/gen/. This lives inside the fully-wiped
 # gen/ tree, so it is generated here rather than hand-written: `make clean`
 # (rm -rf gen/) would otherwise delete it with no way to regenerate it.

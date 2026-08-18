@@ -1,5 +1,19 @@
 # Saved Filter Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.saved_filter"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["SavedFilterService (6 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `POST` `/saved-filter/v202501alpha1`
@@ -176,6 +190,30 @@ response = client.saved_filter.list_saved_filters_all()
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (9 of 16 models)</summary>
+
+```mermaid
+classDiagram
+    class CreateSavedFilterResponse
+    class DeleteSavedFilterResponse
+    class GetSavedFilterResponse
+    class ListSavedFiltersAllResponse
+    class ListSavedFiltersResponse
+    class SavedFilter
+    class UpdateSavedFilterResponse
+    class protobufAny
+    class rpcStatus
+    CreateSavedFilterResponse --> SavedFilter
+    GetSavedFilterResponse --> SavedFilter
+    ListSavedFiltersAllResponse --> SavedFilter
+    ListSavedFiltersResponse --> SavedFilter
+    UpdateSavedFilterResponse --> SavedFilter
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.saved_filter.models.CreateSavedFilterResponse

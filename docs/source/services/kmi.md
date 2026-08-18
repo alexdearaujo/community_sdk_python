@@ -1,5 +1,19 @@
 # Kmi Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.kmi"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["KmiService (5 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/kmi/v202212/insights`
@@ -174,6 +188,34 @@ response = client.kmi.list_markets()
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (13 of 15 models)</summary>
+
+```mermaid
+classDiagram
+    class ASNDetails
+    class GetASNDetailsResponse
+    class GetASNInsightsResponse
+    class GetGlobalInsightsResponse
+    class GetRankingsResponse
+    class Insight
+    class KmiServiceGetASNDetailsBody
+    class KmiServiceGetRankingsBody
+    class ListMarketsResponse
+    class Market
+    class Ranking
+    class protobufAny
+    class rpcStatus
+    GetASNDetailsResponse --> ASNDetails
+    GetASNInsightsResponse --> Insight
+    GetGlobalInsightsResponse --> Insight
+    GetRankingsResponse --> Ranking
+    ListMarketsResponse --> Market
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.kmi.models.ASNDetails

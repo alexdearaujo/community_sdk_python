@@ -1,5 +1,19 @@
 # Label Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.label"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["LabelService (4 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/label/v202210/labels`
@@ -123,6 +137,29 @@ response = client.label.delete_label(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (9 of 9 models)</summary>
+
+```mermaid
+classDiagram
+    class CreateLabelRequest
+    class CreateLabelResponse
+    class DeleteLabelResponse
+    class LabelServiceUpdateLabelBody
+    class ListLabelsResponse
+    class UpdateLabelResponse
+    class labelv202210Label
+    class protobufAny
+    class rpcStatus
+    CreateLabelRequest --> labelv202210Label
+    CreateLabelResponse --> labelv202210Label
+    ListLabelsResponse --> labelv202210Label
+    UpdateLabelResponse --> labelv202210Label
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.label.models.CreateLabelRequest

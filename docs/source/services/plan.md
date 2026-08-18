@@ -1,5 +1,19 @@
 # Plan Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.plan"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["PlanService (1 op)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/plans/v202501alpha1`
@@ -25,6 +39,21 @@ response = client.plan.list_plans()
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (4 of 6 models)</summary>
+
+```mermaid
+classDiagram
+    class ListPlansResponse
+    class Plan
+    class protobufAny
+    class rpcStatus
+    ListPlansResponse --> Plan
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.plan.models.DeviceSubtype

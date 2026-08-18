@@ -1,5 +1,19 @@
 # Cost Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.cost"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["CostService (3 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/cost/v202308/cost/providers`
@@ -88,6 +102,26 @@ response = client.cost.get_cost_provider_summary(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (7 of 8 models)</summary>
+
+```mermaid
+classDiagram
+    class CostProviderConcise
+    class CostProviderSummary
+    class GetCostProviderSummaryResponse
+    class ListCostProviderSummariesResponse
+    class ListCostProvidersResponse
+    class googlerpcStatus
+    class protobufAny
+    GetCostProviderSummaryResponse --> CostProviderSummary
+    ListCostProviderSummariesResponse --> CostProviderSummary
+    ListCostProvidersResponse --> CostProviderConcise
+    googlerpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.cost.models.CostProviderConcise

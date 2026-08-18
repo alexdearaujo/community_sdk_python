@@ -1,5 +1,19 @@
 # Audit Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.audit"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["AuditService (3 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/audit/v202601/events`
@@ -101,6 +115,23 @@ response = client.audit.get_audit_event_2(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (5 of 6 models)</summary>
+
+```mermaid
+classDiagram
+    class AuditEvent
+    class GetAuditEventResponse
+    class ListAuditEventsResponse
+    class protobufAny
+    class rpcStatus
+    GetAuditEventResponse --> AuditEvent
+    ListAuditEventsResponse --> AuditEvent
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.audit.models.AuditEvent

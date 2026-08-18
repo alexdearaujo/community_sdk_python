@@ -1,5 +1,19 @@
 # Ktbgp Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.ktbgp"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["RouteService (3 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `POST` `/routes/announce`
@@ -91,6 +105,39 @@ response = client.ktbgp.route_service__withdraw(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (14 of 45 models)</summary>
+
+```mermaid
+classDiagram
+    class DeviceAdverts
+    class FlowspecUpdate
+    class RTBHUpdate
+    class RouteServiceAnnounceRequest
+    class RouteServiceAnnounceResponse
+    class RouteServiceListRequest
+    class RouteServiceListResponse
+    class RouteServiceWithdrawRequest
+    class RouteServiceWithdrawResponse
+    class RoutesFilter
+    class UpdateResult
+    class ktbgpv202501Withdraw
+    class protobufAny
+    class rpcStatus
+    DeviceAdverts --> FlowspecUpdate
+    DeviceAdverts --> RTBHUpdate
+    RouteServiceAnnounceRequest --> FlowspecUpdate
+    RouteServiceAnnounceRequest --> RTBHUpdate
+    RouteServiceAnnounceResponse --> UpdateResult
+    RouteServiceListRequest --> RoutesFilter
+    RouteServiceListResponse --> DeviceAdverts
+    RouteServiceWithdrawRequest --> ktbgpv202501Withdraw
+    RouteServiceWithdrawResponse --> UpdateResult
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.ktbgp.models.AdvertStatus

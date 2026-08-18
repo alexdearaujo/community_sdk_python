@@ -1,5 +1,21 @@
 # Bgp Monitoring Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.bgp_monitoring"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["BgpMonitoringDataService (2 ops)"]
+    G0 --> RJ
+    Client --> G1["BgpMonitoringAdminService (6 ops)"]
+    G1 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### BgpMonitoringDataService
@@ -255,6 +271,51 @@ response = client.bgp_monitoring.set_monitor_status(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (21 of 28 models)</summary>
+
+```mermaid
+classDiagram
+    class BgpMetric
+    class BgpMetricType
+    class BgpMonitor
+    class BgpMonitorStatus
+    class BgpMonitoringAdminServiceSetMonitorStatusBody
+    class BgpMonitoringAdminServiceUpdateMonitorBody
+    class CreateMonitorRequest
+    class CreateMonitorResponse
+    class DeleteMonitorResponse
+    class GetMetricsForTargetRequest
+    class GetMetricsForTargetResponse
+    class GetMonitorResponse
+    class GetRoutesForTargetRequest
+    class GetRoutesForTargetResponse
+    class ListMonitorsResponse
+    class Nlri
+    class RouteInfo
+    class SetMonitorStatusResponse
+    class UpdateMonitorResponse
+    class protobufAny
+    class rpcStatus
+    BgpMetric --> Nlri
+    BgpMonitor --> BgpMonitorStatus
+    BgpMonitoringAdminServiceSetMonitorStatusBody --> BgpMonitorStatus
+    CreateMonitorRequest --> BgpMonitor
+    CreateMonitorResponse --> BgpMonitor
+    GetMetricsForTargetRequest --> BgpMetricType
+    GetMetricsForTargetRequest --> Nlri
+    GetMetricsForTargetResponse --> BgpMetric
+    GetMonitorResponse --> BgpMonitor
+    GetRoutesForTargetRequest --> Nlri
+    GetRoutesForTargetResponse --> RouteInfo
+    ListMonitorsResponse --> BgpMonitor
+    RouteInfo --> Nlri
+    UpdateMonitorResponse --> BgpMonitor
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.BgpHealthSettings

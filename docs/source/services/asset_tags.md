@@ -1,5 +1,19 @@
 # Asset Tags Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.asset_tags"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["AssetTagsService (9 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values`
@@ -287,6 +301,44 @@ response = client.asset_tags.delete_tag_values(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (18 of 18 models)</summary>
+
+```mermaid
+classDiagram
+    class AssetTagsServiceUpdateTagKeyBody
+    class AssetType
+    class CreateTagKeyRequest
+    class CreateTagKeyResponse
+    class DeleteTagKeyResponse
+    class DeleteTagValuesRequest
+    class DeleteTagValuesResponse
+    class GetTagKeyResponse
+    class GetTagValuesResponse
+    class ListTagKeysResponse
+    class ListTagValuesResponse
+    class SetTagValuesRequest
+    class SetTagValuesResponse
+    class TagKey
+    class TagValue
+    class UpdateTagKeyResponse
+    class protobufAny
+    class rpcStatus
+    CreateTagKeyResponse --> TagKey
+    DeleteTagValuesRequest --> AssetType
+    GetTagKeyResponse --> TagKey
+    GetTagValuesResponse --> TagValue
+    ListTagKeysResponse --> TagKey
+    ListTagValuesResponse --> TagValue
+    SetTagValuesRequest --> AssetType
+    SetTagValuesResponse --> TagValue
+    TagValue --> AssetType
+    UpdateTagKeyResponse --> TagKey
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.asset_tags.models.AssetTagsServiceUpdateTagKeyBody

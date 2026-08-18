@@ -6,6 +6,23 @@ This service's schema defines shared types only -- no REST endpoints.
 
 ## Data Models
 
+<details>
+<summary>Model relationships (6 of 6 models)</summary>
+
+```mermaid
+classDiagram
+    class GetNetworkRangeAssignmentsResponse
+    class PtrResult
+    class ResolveAddressesResponse
+    class UpdateAddressNamesResponse
+    class protobufAny
+    class rpcStatus
+    ResolveAddressesResponse --> PtrResult
+    rpcStatus --> protobufAny
+```
+
+</details>
+
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.kptr.models.GetNetworkRangeAssignmentsResponse
 ```

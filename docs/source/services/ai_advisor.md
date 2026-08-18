@@ -1,5 +1,19 @@
 # Ai Advisor Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.ai_advisor"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["AiAdvisorDataService (3 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `POST` `/ai_advisor/v202511/chat`
@@ -97,6 +111,30 @@ response = client.ai_advisor.get_chat_session(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (9 of 9 models)</summary>
+
+```mermaid
+classDiagram
+    class ChatMessage
+    class CreateChatSessionRequest
+    class CreateChatSessionResponse
+    class GetChatSessionResponse
+    class SessionStatus
+    class UpdateChatSessionRequest
+    class UpdateChatSessionResponse
+    class protobufAny
+    class rpcStatus
+    ChatMessage --> SessionStatus
+    CreateChatSessionResponse --> SessionStatus
+    GetChatSessionResponse --> ChatMessage
+    GetChatSessionResponse --> SessionStatus
+    UpdateChatSessionResponse --> SessionStatus
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.ai_advisor.models.ChatMessage

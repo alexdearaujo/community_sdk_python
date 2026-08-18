@@ -1,5 +1,19 @@
 # Pathfinder Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.pathfinder"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["PathfinderAdminService (1 op)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `POST` `/pathfinder/v202505beta1/create`
@@ -33,6 +47,26 @@ response = client.pathfinder.create_pathfinder_report(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (7 of 7 models)</summary>
+
+```mermaid
+classDiagram
+    class CloudProvider
+    class CreatePathfinderReportRequest
+    class CreatePathfinderReportResponse
+    class EntityType
+    class PathElement
+    class protobufAny
+    class rpcStatus
+    CreatePathfinderReportRequest --> CloudProvider
+    CreatePathfinderReportRequest --> EntityType
+    CreatePathfinderReportResponse --> PathElement
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.pathfinder.models.CloudProvider

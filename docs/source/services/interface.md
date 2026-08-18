@@ -1,5 +1,19 @@
 # Interface Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.interface"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["InterfaceService (6 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/interface/v202108alpha1/interfaces`
@@ -199,6 +213,39 @@ response = client.interface.manual_classify(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (14 of 17 models)</summary>
+
+```mermaid
+classDiagram
+    class ConnectivityType
+    class CreateInterfaceRequest
+    class CreateInterfaceResponse
+    class DeleteInterfaceResponse
+    class GetInterfaceResponse
+    class Interface
+    class InterfaceServiceUpdateInterfaceBody
+    class ListInterfaceResponse
+    class ManualClassifyRequest
+    class ManualClassifyResponse
+    class NetworkBoundary
+    class UpdateInterfaceResponse
+    class protobufAny
+    class rpcStatus
+    CreateInterfaceRequest --> Interface
+    CreateInterfaceResponse --> Interface
+    GetInterfaceResponse --> Interface
+    Interface --> ConnectivityType
+    Interface --> NetworkBoundary
+    ListInterfaceResponse --> Interface
+    ManualClassifyRequest --> ConnectivityType
+    ManualClassifyRequest --> NetworkBoundary
+    UpdateInterfaceResponse --> Interface
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.interface.models.ConnectivityType

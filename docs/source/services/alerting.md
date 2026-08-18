@@ -1,5 +1,33 @@
 # Alerting Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.alerting"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["AlertService (8 ops)"]
+    G0 --> RJ
+    Client --> G1["AlertAutoAckService (5 ops)"]
+    G1 --> RJ
+    Client --> G2["MitigationsService (6 ops)"]
+    G2 --> RJ
+    Client --> G3["MitigationMethodsService (2 ops)"]
+    G3 --> RJ
+    Client --> G4["MitigationPlatformsService (2 ops)"]
+    G4 --> RJ
+    Client --> G5["PolicyService (4 ops)"]
+    G5 --> RJ
+    Client --> G6["AlertSilenceNotificationsService (5 ops)"]
+    G6 --> RJ
+    Client --> G7["SuppressionService (5 ops)"]
+    G7 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### AlertService
@@ -1227,6 +1255,58 @@ response = client.alerting.suppression_delete(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (30 of 185 models)</summary>
+
+```mermaid
+classDiagram
+    class Alert
+    class AlertAutoAck
+    class AlertAutoAckFilters
+    class AlertAutoAckServiceCreateRequest
+    class AlertAutoAckServiceCreateResponse
+    class AlertAutoAckServiceDeleteResponse
+    class AlertAutoAckServiceGetResponse
+    class AlertAutoAckServiceListRequest
+    class AlertAutoAckServiceListResponse
+    class AlertAutoAckServiceReplaceBody
+    class AlertAutoAckServiceReplaceResponse
+    class AlertFilters
+    class AlertPhase
+    class AlertServiceAckBody
+    class AlertServiceAckResponse
+    class AlertServiceAddCommentBody
+    class AlertServiceAddCommentResponse
+    class AlertServiceClearRequest
+    class AlertServiceClearResponse
+    class AlertServiceGetResponse
+    class AlertServiceListCommentsResponse
+    class AlertServiceListRequest
+    class AlertServiceListResponse
+    class AlertServiceSetExternalContextBody
+    class AlertServiceSetExternalContextResponse
+    class AlertServiceUnAckBody
+    class AlertServiceUnAckResponse
+    class AlertSilenceNotificationFilters
+    class AlertSilenceNotificationsDefinition
+    class AlertSilenceNotificationsServiceCreateRequest
+    AlertAutoAckServiceCreateRequest --> AlertAutoAck
+    AlertAutoAckServiceCreateResponse --> AlertAutoAck
+    AlertAutoAckServiceGetResponse --> AlertAutoAck
+    AlertAutoAckServiceListRequest --> AlertAutoAckFilters
+    AlertAutoAckServiceListResponse --> AlertAutoAck
+    AlertAutoAckServiceReplaceResponse --> AlertAutoAck
+    AlertServiceAckResponse --> Alert
+    AlertServiceGetResponse --> Alert
+    AlertServiceGetResponse --> AlertPhase
+    AlertServiceListRequest --> AlertFilters
+    AlertServiceListResponse --> Alert
+    AlertServiceUnAckResponse --> Alert
+    AlertSilenceNotificationsServiceCreateRequest --> AlertSilenceNotificationsDefinition
+```
+
+</details>
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.alerting.models.AggregationType

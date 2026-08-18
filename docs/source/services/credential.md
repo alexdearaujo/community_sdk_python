@@ -1,5 +1,19 @@
 # Credential Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.credential"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["CredentialService (2 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/credential/v202407alpha1/group`
@@ -57,6 +71,23 @@ response = client.credential.get_credential_group(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (5 of 11 models)</summary>
+
+```mermaid
+classDiagram
+    class CredentialGroup
+    class GetCredentialGroupResponse
+    class ListCredentialGroupResponse
+    class protobufAny
+    class rpcStatus
+    GetCredentialGroupResponse --> CredentialGroup
+    ListCredentialGroupResponse --> CredentialGroup
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.credential.models.CredentialGroup

@@ -1,5 +1,19 @@
 # As Group Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.as_group"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["ASGroupService (5 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/as_group/v202212/as_group`
@@ -155,6 +169,32 @@ response = client.as_group.delete_a_s_group(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (11 of 12 models)</summary>
+
+```mermaid
+classDiagram
+    class ASGroupConcise
+    class ASGroupDetailed
+    class ASGroupServiceUpdateASGroupBody
+    class CreateASGroupRequest
+    class CreateASGroupResponse
+    class DeleteASGroupResponse
+    class GetASGroupResponse
+    class ListASGroupsResponse
+    class UpdateASGroupResponse
+    class protobufAny
+    class rpcStatus
+    CreateASGroupRequest --> ASGroupConcise
+    CreateASGroupResponse --> ASGroupDetailed
+    GetASGroupResponse --> ASGroupDetailed
+    ListASGroupsResponse --> ASGroupDetailed
+    UpdateASGroupResponse --> ASGroupDetailed
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.as_group.models.ASGroupConcise

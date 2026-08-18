@@ -1,5 +1,21 @@
 # Synthetics Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.synthetics"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["SyntheticsAdminService (15 ops)"]
+    G0 --> RJ
+    Client --> G1["SyntheticsDataService (3 ops)"]
+    G1 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### SyntheticsAdminService
@@ -567,6 +583,58 @@ response = client.synthetics.get_trace_for_test(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (30 of 77 models)</summary>
+
+```mermaid
+classDiagram
+    class Agent
+    class AgentAlert
+    class CreateAgentAlertRequest
+    class CreateAgentAlertResponse
+    class CreateTestRequest
+    class CreateTestResponse
+    class DeleteAgentAlertResponse
+    class DeleteAgentResponse
+    class DeleteTestResponse
+    class GetAgentAlertResponse
+    class GetAgentResponse
+    class GetResultsForTestsCsvRequest
+    class GetResultsForTestsCsvResponse
+    class GetResultsForTestsRequest
+    class GetResultsForTestsResponse
+    class GetTestResponse
+    class GetTraceForTestRequest
+    class GetTraceForTestResponse
+    class ListAgentAlertsResponse
+    class ListAgentsResponse
+    class ListTestsResponse
+    class Path
+    class SetTestStatusResponse
+    class SyntheticsAdminServiceSetTestStatusBody
+    class SyntheticsAdminServiceUpdateAgentAlertBody
+    class SyntheticsAdminServiceUpdateAgentBody
+    class SyntheticsAdminServiceUpdateTestBody
+    class Test
+    class TestResults
+    class TestStatus
+    CreateAgentAlertResponse --> AgentAlert
+    CreateTestRequest --> Test
+    CreateTestResponse --> Test
+    GetAgentAlertResponse --> AgentAlert
+    GetAgentResponse --> Agent
+    GetResultsForTestsResponse --> TestResults
+    GetTestResponse --> Test
+    GetTraceForTestResponse --> Path
+    ListAgentAlertsResponse --> AgentAlert
+    ListAgentsResponse --> Agent
+    ListTestsResponse --> Test
+    SyntheticsAdminServiceSetTestStatusBody --> TestStatus
+    Test --> TestStatus
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.synthetics.models.ActivationSettings

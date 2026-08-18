@@ -1,5 +1,19 @@
 # Journeys Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.journeys"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["JourneysDataService (1 op)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/journeys/v202406/GetJourneysNlq`
@@ -33,6 +47,23 @@ response = client.journeys.get_journeys_nlq(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (5 of 5 models)</summary>
+
+```mermaid
+classDiagram
+    class GetJourneysNlqResponse
+    class ResultFormat
+    class ResultType
+    class protobufAny
+    class rpcStatus
+    GetJourneysNlqResponse --> ResultFormat
+    GetJourneysNlqResponse --> ResultType
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.journeys.models.GetJourneysNlqResponse

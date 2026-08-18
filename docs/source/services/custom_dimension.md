@@ -1,5 +1,19 @@
 # Custom Dimension Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.custom_dimension"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["CustomDimensionService (10 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/custom_dimensions/v202411alpha1`
@@ -327,6 +341,38 @@ response = client.custom_dimension.create_custom_dimension()
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (14 of 15 models)</summary>
+
+```mermaid
+classDiagram
+    class CreateCustomDimensionResponse
+    class CreatePopulatorResponse
+    class CustomDimension
+    class DeleteCustomDimensionResponse
+    class DeletePopulatorResponse
+    class GetCustomDimensionInfoResponse
+    class GetPopulatorFieldResponse
+    class GetPopulatorResponse
+    class ListCustomDimensionsResponse
+    class Populator
+    class UpdateCustomDimensionResponse
+    class UpdatePopulatorResponse
+    class protobufAny
+    class rpcStatus
+    CreateCustomDimensionResponse --> CustomDimension
+    CreatePopulatorResponse --> Populator
+    CustomDimension --> Populator
+    GetCustomDimensionInfoResponse --> CustomDimension
+    GetPopulatorResponse --> Populator
+    ListCustomDimensionsResponse --> CustomDimension
+    UpdateCustomDimensionResponse --> CustomDimension
+    UpdatePopulatorResponse --> Populator
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.custom_dimension.models.CreateCustomDimensionResponse

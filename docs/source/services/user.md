@@ -1,5 +1,19 @@
 # User Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.user"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["UserService (7 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/user/v202211/users`
@@ -219,6 +233,33 @@ response = client.user.reset_api_token(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (12 of 15 models)</summary>
+
+```mermaid
+classDiagram
+    class CreateUserRequest
+    class CreateUserResponse
+    class DeleteUserResponse
+    class GetUserResponse
+    class ListUsersResponse
+    class ResetActiveSessionsResponse
+    class ResetApiTokenResponse
+    class UpdateUserResponse
+    class User
+    class UserServiceUpdateUserBody
+    class protobufAny
+    class rpcStatus
+    CreateUserRequest --> User
+    CreateUserResponse --> User
+    GetUserResponse --> User
+    ListUsersResponse --> User
+    UpdateUserResponse --> User
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.user.models.CreateUserRequest

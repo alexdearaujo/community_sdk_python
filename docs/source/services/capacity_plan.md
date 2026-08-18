@@ -1,5 +1,19 @@
 # Capacity Plan Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.capacity_plan"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["CapacityPlanService (4 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/capacity_plan/v202212/capacity_plan`
@@ -113,6 +127,28 @@ response = client.capacity_plan.get_capacity_summary(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (8 of 17 models)</summary>
+
+```mermaid
+classDiagram
+    class CapacityPlan
+    class CapacitySummary
+    class GetCapacityPlanResponse
+    class GetCapacitySummaryResponse
+    class ListCapacityPlansResponse
+    class ListCapacitySummariesResponse
+    class protobufAny
+    class rpcStatus
+    GetCapacityPlanResponse --> CapacityPlan
+    GetCapacitySummaryResponse --> CapacitySummary
+    ListCapacityPlansResponse --> CapacityPlan
+    ListCapacitySummariesResponse --> CapacitySummary
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.capacity_plan.models.CapacityPlan

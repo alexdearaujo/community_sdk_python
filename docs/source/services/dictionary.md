@@ -1,5 +1,19 @@
 # Dictionary Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.dictionary"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["DictionaryService (1 op)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/dictionary/v20260604alpha1`
@@ -25,6 +39,25 @@ response = client.dictionary.get_dictionary()
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (6 of 15 models)</summary>
+
+```mermaid
+classDiagram
+    class GetDictionaryResponse
+    class MeasurementDetail
+    class MetricFamilyDef
+    class OperatorSet
+    class protobufAny
+    class rpcStatus
+    GetDictionaryResponse --> MeasurementDetail
+    GetDictionaryResponse --> MetricFamilyDef
+    GetDictionaryResponse --> OperatorSet
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.dictionary.models.BaseUnit

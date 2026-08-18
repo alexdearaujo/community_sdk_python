@@ -1,5 +1,19 @@
 # Enrichments Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.enrichments"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["EnumerationsAdminService (1 op)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `POST` `/enrichments/enumerations/v202601alpha1/values:fetch_by_ids`
@@ -33,6 +47,20 @@ response = client.enrichments.fetch_values_by_ids(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (4 of 4 models)</summary>
+
+```mermaid
+classDiagram
+    class FetchValuesByIdsRequest
+    class FetchValuesByIdsResponse
+    class protobufAny
+    class rpcStatus
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.enrichments.models.FetchValuesByIdsRequest

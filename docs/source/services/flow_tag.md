@@ -1,5 +1,19 @@
 # Flow Tag Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.flow_tag"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["FlowTagService (5 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/flow_tag/v202404alpha1/tag`
@@ -165,6 +179,31 @@ response = client.flow_tag.delete_flow_tag(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (10 of 15 models)</summary>
+
+```mermaid
+classDiagram
+    class CreateFlowTagRequest
+    class CreateFlowTagResponse
+    class DeleteFlowTagResponse
+    class FlowTag
+    class FlowTagServiceUpdateFlowTagBody
+    class GetFlowTagResponse
+    class SearchFlowTagResponse
+    class UpdateFlowTagResponse
+    class protobufAny
+    class rpcStatus
+    CreateFlowTagRequest --> FlowTag
+    CreateFlowTagResponse --> FlowTag
+    GetFlowTagResponse --> FlowTag
+    SearchFlowTagResponse --> FlowTag
+    UpdateFlowTagResponse --> FlowTag
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.flow_tag.models.AddressInfo

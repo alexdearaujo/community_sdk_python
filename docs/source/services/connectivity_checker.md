@@ -1,5 +1,19 @@
 # Connectivity Checker Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.connectivity_checker"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["ConnectivityCheckerAdminService (1 op)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `POST` `/connectivity_checker/v202410beta1/create`
@@ -33,6 +47,24 @@ response = client.connectivity_checker.create_connectivity_report(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (6 of 6 models)</summary>
+
+```mermaid
+classDiagram
+    class CloudProvider
+    class CreateConnectivityReportRequest
+    class CreateConnectivityReportResponse
+    class EntityType
+    class protobufAny
+    class rpcStatus
+    CreateConnectivityReportRequest --> CloudProvider
+    CreateConnectivityReportRequest --> EntityType
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.connectivity_checker.models.CloudProvider

@@ -1,5 +1,23 @@
 # Mkp Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.mkp"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["PackageService (5 ops)"]
+    G0 --> RJ
+    Client --> G1["TenantService (5 ops)"]
+    G1 --> RJ
+    Client --> G2["TenantUserService (4 ops)"]
+    G2 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### PackageService
@@ -447,6 +465,55 @@ response = client.mkp.tenant_user_delete(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (25 of 42 models)</summary>
+
+```mermaid
+classDiagram
+    class CreatePackageRequest
+    class CreatePackageResponse
+    class CreateTenantRequest
+    class CreateTenantResponse
+    class CreateTenantUserResponse
+    class DeletePackageResponse
+    class DeleteTenantResponse
+    class DeleteTenantUserResponse
+    class GetPackageResponse
+    class GetTenantResponse
+    class ListPackageResponse
+    class ListTenantResponse
+    class ListTenantUserResponse
+    class Package
+    class PackageServiceUpdatePackageBody
+    class Tenant
+    class TenantServiceUpdateTenantBody
+    class TenantUser
+    class TenantUserServiceCreateTenantUserBody
+    class TenantUserServiceUpdateTenantUserBody
+    class UpdatePackageResponse
+    class UpdateTenantResponse
+    class UpdateTenantUserResponse
+    class protobufAny
+    class rpcStatus
+    CreatePackageRequest --> Package
+    CreatePackageResponse --> Package
+    CreateTenantRequest --> Tenant
+    CreateTenantResponse --> Tenant
+    CreateTenantUserResponse --> TenantUser
+    GetPackageResponse --> Package
+    GetTenantResponse --> Tenant
+    ListPackageResponse --> Package
+    ListTenantResponse --> Tenant
+    ListTenantUserResponse --> TenantUser
+    Tenant --> Package
+    UpdatePackageResponse --> Package
+    UpdateTenantResponse --> Tenant
+    UpdateTenantUserResponse --> TenantUser
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.mkp.models.Activate

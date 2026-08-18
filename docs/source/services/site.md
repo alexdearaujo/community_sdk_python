@@ -1,5 +1,19 @@
 # Site Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.site"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["SiteService (10 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/site/v202509/site_markets`
@@ -309,6 +323,45 @@ response = client.site.delete_site(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (18 of 24 models)</summary>
+
+```mermaid
+classDiagram
+    class CreateSiteMarketRequest
+    class CreateSiteMarketResponse
+    class CreateSiteRequest
+    class CreateSiteResponse
+    class DeleteSiteMarketResponse
+    class DeleteSiteResponse
+    class GetSiteMarketResponse
+    class GetSiteResponse
+    class ListSiteMarketsResponse
+    class ListSitesResponse
+    class Site
+    class SiteMarket
+    class SiteServiceUpdateSiteBody
+    class SiteServiceUpdateSiteMarketBody
+    class UpdateSiteMarketResponse
+    class UpdateSiteResponse
+    class protobufAny
+    class rpcStatus
+    CreateSiteMarketRequest --> SiteMarket
+    CreateSiteMarketResponse --> SiteMarket
+    CreateSiteRequest --> Site
+    CreateSiteResponse --> Site
+    GetSiteMarketResponse --> SiteMarket
+    GetSiteResponse --> Site
+    ListSiteMarketsResponse --> SiteMarket
+    ListSitesResponse --> Site
+    Site --> SiteMarket
+    UpdateSiteMarketResponse --> SiteMarket
+    UpdateSiteResponse --> Site
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.site.models.CreateSiteMarketRequest

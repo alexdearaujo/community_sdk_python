@@ -1,5 +1,19 @@
 # Custom Application Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.custom_application"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["CustomApplicationService (5 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/custom_application/v202501alpha1`
@@ -152,6 +166,28 @@ response = client.custom_application.delete_custom_application(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (8 of 8 models)</summary>
+
+```mermaid
+classDiagram
+    class CreateCustomApplicationResponse
+    class CustomApplication
+    class DeleteCustomApplicationResponse
+    class GetCustomApplicationResponse
+    class ListCustomApplicationsResponse
+    class UpdateCustomApplicationResponse
+    class protobufAny
+    class rpcStatus
+    CreateCustomApplicationResponse --> CustomApplication
+    GetCustomApplicationResponse --> CustomApplication
+    ListCustomApplicationsResponse --> CustomApplication
+    UpdateCustomApplicationResponse --> CustomApplication
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.custom_application.models.CreateCustomApplicationResponse

@@ -468,6 +468,137 @@ def _autodoc_directive_for_model(models_dir: Path, class_name: str) -> str:
     return "autopydantic_model"
 
 
+def _model_reference_edges(
+    models_dir: Path, model_classes: list[str]
+) -> dict[str, set[str]]:
+    """Maps each model to the sibling models it names in a field annotation.
+
+    Parses annotations statically (no import) and matches sibling class names
+    by word boundary, so `Optional[List[FooConfig]]` yields an edge to
+    `FooConfig` when `FooConfig` is another model in the same service.
+    """
+    names = set(model_classes)
+    edges: dict[str, set[str]] = {}
+    for cls in model_classes:
+        refs: set[str] = set()
+        try:
+            tree = ast.parse((models_dir / f"{cls}.py").read_text(encoding="utf-8"))
+        except Exception:
+            edges[cls] = refs
+            continue
+        for node in ast.walk(tree):
+            annotation = getattr(node, "annotation", None)
+            if annotation is None:
+                continue
+            text = ast.unparse(annotation)
+            for other in names:
+                if other != cls and re.search(rf"\b{re.escape(other)}\b", text):
+                    refs.add(other)
+        edges[cls] = refs
+    return edges
+
+
+# Cap the model class diagram so dense services (e.g. alerting's 185 models)
+# stay legible and don't overwhelm the browser-side Mermaid renderer.
+_MODEL_DIAGRAM_MAX_NODES = 30
+
+
+def _render_model_relationship_diagram(
+    endpoint_docs: list[EndpointDoc],
+    models_dir: Path,
+    model_classes: list[str],
+) -> list[str]:
+    """Renders a collapsible Mermaid classDiagram of the service's model graph.
+
+    Focuses on the public surface -- the request/response models the operations
+    use, plus the models they directly reference -- and falls back to the
+    service's own models for schema-only services. Caps the node count so dense
+    services stay readable.
+    """
+    if not model_classes:
+        return []
+
+    edges = _model_reference_edges(models_dir, model_classes)
+    names = set(model_classes)
+
+    entry: set[str] = set()
+    for doc in endpoint_docs:
+        labels = [r.type_label for r in doc.responses]
+        if doc.request_body:
+            labels.append(doc.request_body.type_label)
+        for label in labels:
+            base = label.replace("[]", "").strip()
+            if base in names:
+                entry.add(base)
+
+    if not entry:
+        entry = set(model_classes)
+
+    nodes: set[str] = set(entry)
+    for cls in entry:
+        nodes |= edges.get(cls, set())
+
+    if len(nodes) > _MODEL_DIAGRAM_MAX_NODES:
+        nodes = set(sorted(nodes)[:_MODEL_DIAGRAM_MAX_NODES])
+
+    shown_edges = sorted(
+        (src, dst) for src in nodes for dst in edges.get(src, set()) if dst in nodes
+    )
+
+    diagram = ["classDiagram"]
+    for name in sorted(nodes):
+        diagram.append(f"    class {name}")
+    for src, dst in shown_edges:
+        diagram.append(f"    {src} --> {dst}")
+
+    summary = f"Model relationships ({len(nodes)} of {len(model_classes)} models)"
+    return [
+        "<details>",
+        f"<summary>{summary}</summary>",
+        "",
+        f"{MD_FENCE}mermaid",
+        *diagram,
+        MD_FENCE,
+        "",
+        "</details>",
+        "",
+    ]
+
+
+def _render_service_overview(
+    service: str, group_order: list[str], grouped: dict[str, list[EndpointDoc]]
+) -> list[str]:
+    """Renders a compact Mermaid flowchart of the service's call path.
+
+    Every operation, whichever wrapper it belongs to, routes through the one
+    shared `request_json()`, then splits into a success response model or a
+    per-operation error class. Returns nothing for schema-only services.
+    """
+    if not group_order:
+        return []
+
+    lines = [
+        "## Overview",
+        "",
+        f"{MD_FENCE}mermaid",
+        "flowchart LR",
+        f'    Client["client.{service}"]',
+        '    RJ["request_json()"]',
+        '    OK["success: response model"]',
+        '    ERR["per-operation error class"]',
+    ]
+    for idx, tag in enumerate(group_order):
+        gid = f"G{idx}"
+        count = len(grouped[tag])
+        suffix = "op" if count == 1 else "ops"
+        lines.append(f'    Client --> {gid}["{tag} ({count} {suffix})"]')
+        lines.append(f"    {gid} --> RJ")
+    lines.append("    RJ --> OK")
+    lines.append('    RJ -->|"error status"| ERR')
+    lines.extend([MD_FENCE, ""])
+    return lines
+
+
 def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
     """Generates Sphinx MyST stubs with real per-endpoint text and model docs.
 
@@ -508,9 +639,20 @@ def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
             else {}
         )
 
-        lines = [f"# {title} Service", "", "## Endpoints", ""]
+        lines = [f"# {title} Service", ""]
 
         endpoint_docs = service_endpoint_docs.get(service, [])
+        grouped: dict[str, list[EndpointDoc]] = {}
+        group_order: list[str] = []
+        for doc in endpoint_docs:
+            if doc.tag not in grouped:
+                grouped[doc.tag] = []
+                group_order.append(doc.tag)
+            grouped[doc.tag].append(doc)
+
+        lines.extend(_render_service_overview(service, group_order, grouped))
+        lines.extend(["## Endpoints", ""])
+
         if not endpoint_docs:
             lines.extend(
                 [
@@ -519,14 +661,6 @@ def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
                 ]
             )
         else:
-            grouped: dict[str, list[EndpointDoc]] = {}
-            group_order: list[str] = []
-            for doc in endpoint_docs:
-                if doc.tag not in grouped:
-                    grouped[doc.tag] = []
-                    group_order.append(doc.tag)
-                grouped[doc.tag].append(doc)
-
             show_group_headers = len(group_order) > 1
             endpoint_heading_level = 4 if show_group_headers else 3
             for group_name in group_order:
@@ -554,6 +688,11 @@ def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
         if not model_classes:
             lines.extend(["No data models for this service.", ""])
         else:
+            lines.extend(
+                _render_model_relationship_diagram(
+                    endpoint_docs, models_dir, model_classes
+                )
+            )
             for class_name in model_classes:
                 directive = _autodoc_directive_for_model(models_dir, class_name)
                 lines.extend(

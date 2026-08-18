@@ -1,5 +1,19 @@
 # Vault Service
 
+## Overview
+
+```mermaid
+flowchart LR
+    Client["client.vault"]
+    RJ["request_json()"]
+    OK["success: response model"]
+    ERR["per-operation error class"]
+    Client --> G0["VaultService (2 ops)"]
+    G0 --> RJ
+    RJ --> OK
+    RJ -->|"error status"| ERR
+```
+
 ## Endpoints
 
 ### `GET` `/vault/v202312alpha1/secrets`
@@ -65,6 +79,23 @@ response = client.vault.get_secret(
 ```
 
 ## Data Models
+
+<details>
+<summary>Model relationships (5 of 6 models)</summary>
+
+```mermaid
+classDiagram
+    class GetSecretResponse
+    class ListSecretResponse
+    class Secret
+    class protobufAny
+    class rpcStatus
+    GetSecretResponse --> Secret
+    ListSecretResponse --> Secret
+    rpcStatus --> protobufAny
+```
+
+</details>
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.vault.models.GetSecretResponse
