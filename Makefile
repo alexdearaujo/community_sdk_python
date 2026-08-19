@@ -38,7 +38,7 @@ local: ## Marker target for `make generate local`
 		echo "Or override: make generate LOCAL_REPO=/path/to/api-schema-public"; \
 	fi
 
-docs: ## Build the HTML documentation
+docs: generate ## Build the HTML documentation (generates SDK and service stubs first)
 	$(SPHINX) -b html docs/sphinx docs/build/html
 
 tests: test ## Run the full test suite (alias)
