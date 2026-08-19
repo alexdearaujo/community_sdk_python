@@ -28,9 +28,9 @@ flowchart TB
 
     subgraph GEN["Generated (wiped and rebuilt by make generate)"]
         Mixin["client_mixin.py<br/>mounts every service wrapper"]
-        Wrappers["gen/<service>/services/<br/>ServiceWrapper classes"]
-        Models["gen/<service>/models/"]
-        GenErrors["gen/<service>/error/"]
+        Wrappers["gen/{service}/services/<br/>ServiceWrapper classes"]
+        Models["gen/{service}/models/"]
+        GenErrors["gen/{service}/error/"]
     end
 
     Client --> Mixin
