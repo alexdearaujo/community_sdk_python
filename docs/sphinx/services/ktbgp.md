@@ -28,19 +28,44 @@ flowchart LR
 
 Announce a BGP route to a specified set of devices
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.ktbgp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: route_service__announce(data=RouteServiceAnnounceRequest(...))
     W->>API: POST /routes/announce
     alt success
-        API-->>W: RouteServiceAnnounceResponse
+        API-->>W: RouteServiceAnnounceResponse (JSON)
         W-->>C: RouteServiceAnnounceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ktbgp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: route_service__announce(data=RouteServiceAnnounceRequest(...))
+    W->>B: ParseDict(params, RouteService_AnnounceRequest)
+    B->>API: route_service__announce (gRPC/TLS)
+    alt success
+        API-->>B: RouteServiceAnnounceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: RouteServiceAnnounceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -76,19 +101,44 @@ response = client.ktbgp.route_service__announce(
 
 List active BGP updates for a specified set of devices
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.ktbgp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: route_service__list(data=RouteServiceListRequest(...))
     W->>API: POST /routes/list
     alt success
-        API-->>W: RouteServiceListResponse
+        API-->>W: RouteServiceListResponse (JSON)
         W-->>C: RouteServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ktbgp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: route_service__list(data=RouteServiceListRequest(...))
+    W->>B: ParseDict(params, RouteService_ListRequest)
+    B->>API: route_service__list (gRPC/TLS)
+    alt success
+        API-->>B: RouteServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: RouteServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -124,19 +174,44 @@ response = client.ktbgp.route_service__list(
 
 Withdraw active BGP updates from devices
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.ktbgp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: route_service__withdraw(data=RouteServiceWithdrawRequest(...))
     W->>API: POST /routes/withdraw
     alt success
-        API-->>W: RouteServiceWithdrawResponse
+        API-->>W: RouteServiceWithdrawResponse (JSON)
         W-->>C: RouteServiceWithdrawResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ktbgp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: route_service__withdraw(data=RouteServiceWithdrawRequest(...))
+    W->>B: ParseDict(params, RouteService_WithdrawRequest)
+    B->>API: route_service__withdraw (gRPC/TLS)
+    alt success
+        API-->>B: RouteServiceWithdrawResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: RouteServiceWithdrawResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

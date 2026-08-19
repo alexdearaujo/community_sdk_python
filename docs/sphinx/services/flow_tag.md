@@ -30,19 +30,44 @@ Search flow tag configuration.
 
 Returns configuration of flow tag with search parameters.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: search_flow_tag()
     W->>API: GET /flow_tag/v202404alpha1/tag
     alt success
-        API-->>W: SearchFlowTagResponse
+        API-->>W: SearchFlowTagResponse (JSON)
         W-->>C: SearchFlowTagResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: search_flow_tag()
+    W->>B: ParseDict(params, SearchFlowTagRequest)
+    B->>API: search_flow_tag (gRPC/TLS)
+    alt success
+        API-->>B: SearchFlowTagResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SearchFlowTagResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -82,19 +107,44 @@ Create flow tag configuration.
 
 Create a flow tag configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_flow_tag(data=CreateFlowTagRequest(...))
     W->>API: POST /flow_tag/v202404alpha1/tag
     alt success
-        API-->>W: CreateFlowTagResponse
+        API-->>W: CreateFlowTagResponse (JSON)
         W-->>C: CreateFlowTagResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_flow_tag(data=CreateFlowTagRequest(...))
+    W->>B: ParseDict(params, CreateFlowTagRequest)
+    B->>API: create_flow_tag (gRPC/TLS)
+    alt success
+        API-->>B: CreateFlowTagResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateFlowTagResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -132,19 +182,44 @@ Get flow tag configuration.
 
 Returns configuration of flow tag with specified ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_flow_tag(flowTagid="flowTagid-example")
     W->>API: GET /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
-        API-->>W: GetFlowTagResponse
+        API-->>W: GetFlowTagResponse (JSON)
         W-->>C: GetFlowTagResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_flow_tag(flowTagid="flowTagid-example")
+    W->>B: ParseDict(params, GetFlowTagRequest)
+    B->>API: get_flow_tag (gRPC/TLS)
+    alt success
+        API-->>B: GetFlowTagResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetFlowTagResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -182,19 +257,44 @@ Update flow tag configuration.
 
 Update a flow tag configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_flow_tag(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
     W->>API: PUT /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
-        API-->>W: UpdateFlowTagResponse
+        API-->>W: UpdateFlowTagResponse (JSON)
         W-->>C: UpdateFlowTagResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_flow_tag(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
+    W->>B: ParseDict(params, UpdateFlowTagRequest)
+    B->>API: update_flow_tag (gRPC/TLS)
+    alt success
+        API-->>B: UpdateFlowTagResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateFlowTagResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -234,19 +334,44 @@ Delete flow tag configuration.
 
 Delete a flow tag configuration with id.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_flow_tag(flowTagid="flowTagid-example")
     W->>API: DELETE /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
-        API-->>W: DeleteFlowTagResponse
+        API-->>W: DeleteFlowTagResponse (JSON)
         W-->>C: DeleteFlowTagResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.flow_tag
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_flow_tag(flowTagid="flowTagid-example")
+    W->>B: ParseDict(params, DeleteFlowTagRequest)
+    B->>API: delete_flow_tag (gRPC/TLS)
+    alt success
+        API-->>B: DeleteFlowTagResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteFlowTagResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

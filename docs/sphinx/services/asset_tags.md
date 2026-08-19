@@ -30,19 +30,44 @@ Gets tag values by asset id and type.
 
 Returns a list of tag values.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
     W->>API: GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values
     alt success
-        API-->>W: GetTagValuesResponse
+        API-->>W: GetTagValuesResponse (JSON)
         W-->>C: GetTagValuesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
+    W->>B: ParseDict(params, GetTagValuesRequest)
+    B->>API: get_tag_values (gRPC/TLS)
+    alt success
+        API-->>B: GetTagValuesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetTagValuesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -82,19 +107,44 @@ Lists all tag keys.
 
 Returns a list of tag keys.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_tag_keys()
     W->>API: GET /asset_tags/v20260515beta1/keys
     alt success
-        API-->>W: ListTagKeysResponse
+        API-->>W: ListTagKeysResponse (JSON)
         W-->>C: ListTagKeysResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_tag_keys()
+    W->>B: ParseDict(params, ListTagKeysRequest)
+    B->>API: list_tag_keys (gRPC/TLS)
+    alt success
+        API-->>B: ListTagKeysResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListTagKeysResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -124,19 +174,44 @@ Creates a new tag key.
 
 Returns the created tag key.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_tag_key(data=CreateTagKeyRequest(...))
     W->>API: POST /asset_tags/v20260515beta1/keys
     alt success
-        API-->>W: CreateTagKeyResponse
+        API-->>W: CreateTagKeyResponse (JSON)
         W-->>C: CreateTagKeyResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_tag_key(data=CreateTagKeyRequest(...))
+    W->>B: ParseDict(params, CreateTagKeyRequest)
+    B->>API: create_tag_key (gRPC/TLS)
+    alt success
+        API-->>B: CreateTagKeyResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateTagKeyResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -174,19 +249,44 @@ Get a single tag key by id.
 
 Returns a single tag key.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_tag_key(id="id-example")
     W->>API: GET /asset_tags/v20260515beta1/keys/{id}
     alt success
-        API-->>W: GetTagKeyResponse
+        API-->>W: GetTagKeyResponse (JSON)
         W-->>C: GetTagKeyResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_tag_key(id="id-example")
+    W->>B: ParseDict(params, GetTagKeyRequest)
+    B->>API: get_tag_key (gRPC/TLS)
+    alt success
+        API-->>B: GetTagKeyResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetTagKeyResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -224,19 +324,44 @@ Updates the display name of a tag key.
 
 Returns the updated tag key.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
     W->>API: PUT /asset_tags/v20260515beta1/keys/{id}
     alt success
-        API-->>W: UpdateTagKeyResponse
+        API-->>W: UpdateTagKeyResponse (JSON)
         W-->>C: UpdateTagKeyResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
+    W->>B: ParseDict(params, UpdateTagKeyRequest)
+    B->>API: update_tag_key (gRPC/TLS)
+    alt success
+        API-->>B: UpdateTagKeyResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateTagKeyResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -276,19 +401,44 @@ Deletes a tag key by id.
 
 Returns an empty response
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_tag_key(id="id-example")
     W->>API: DELETE /asset_tags/v20260515beta1/keys/{id}
     alt success
-        API-->>W: DeleteTagKeyResponse
+        API-->>W: DeleteTagKeyResponse (JSON)
         W-->>C: DeleteTagKeyResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_tag_key(id="id-example")
+    W->>B: ParseDict(params, DeleteTagKeyRequest)
+    B->>API: delete_tag_key (gRPC/TLS)
+    alt success
+        API-->>B: DeleteTagKeyResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteTagKeyResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -326,19 +476,44 @@ Lists all tag values by id, optionally filtered by asset type.
 
 Returns a list of tag values.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
     W->>API: GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values
     alt success
-        API-->>W: ListTagValuesResponse
+        API-->>W: ListTagValuesResponse (JSON)
         W-->>C: ListTagValuesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
+    W->>B: ParseDict(params, ListTagValuesRequest)
+    B->>API: list_tag_values (gRPC/TLS)
+    alt success
+        API-->>B: ListTagValuesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListTagValuesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -378,19 +553,44 @@ Bulk upserts a tag value for a list of asset ids of a given type.
 
 Returns a list of tag values.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: set_tag_values(data=SetTagValuesRequest(...))
     W->>API: PUT /asset_tags/v20260515beta1/values
     alt success
-        API-->>W: SetTagValuesResponse
+        API-->>W: SetTagValuesResponse (JSON)
         W-->>C: SetTagValuesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: set_tag_values(data=SetTagValuesRequest(...))
+    W->>B: ParseDict(params, SetTagValuesRequest)
+    B->>API: set_tag_values (gRPC/TLS)
+    alt success
+        API-->>B: SetTagValuesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SetTagValuesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -428,19 +628,44 @@ Bulk deletes a tag values for a list of asset ids of a given type.
 
 Returns an empty response.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_tag_values(data=DeleteTagValuesRequest(...))
     W->>API: POST /asset_tags/v20260515beta1/values/delete
     alt success
-        API-->>W: DeleteTagValuesResponse
+        API-->>W: DeleteTagValuesResponse (JSON)
         W-->>C: DeleteTagValuesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.asset_tags
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_tag_values(data=DeleteTagValuesRequest(...))
+    W->>B: ParseDict(params, DeleteTagValuesRequest)
+    B->>API: delete_tag_values (gRPC/TLS)
+    alt success
+        API-->>B: DeleteTagValuesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteTagValuesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

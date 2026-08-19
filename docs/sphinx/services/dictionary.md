@@ -30,19 +30,44 @@ Get Dictionary
 
 Returns the full UDE dictionary for the authenticated company, including all measurements with their dimension and metric fields, operator sets, and metric family definitions.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.dictionary
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_dictionary()
     W->>API: GET /dictionary/v20260604alpha1
     alt success
-        API-->>W: GetDictionaryResponse
+        API-->>W: GetDictionaryResponse (JSON)
         W-->>C: GetDictionaryResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.dictionary
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_dictionary()
+    W->>B: ParseDict(params, GetDictionaryRequest)
+    B->>API: get_dictionary (gRPC/TLS)
+    alt success
+        API-->>B: GetDictionaryResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetDictionaryResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

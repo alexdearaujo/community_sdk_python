@@ -30,19 +30,44 @@ List Custom Applications
 
 Returns an array of custom application objects that each contain information about an individual custom application.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_custom_applications()
     W->>API: GET /custom_application/v202501alpha1
     alt success
-        API-->>W: ListCustomApplicationsResponse
+        API-->>W: ListCustomApplicationsResponse (JSON)
         W-->>C: ListCustomApplicationsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_custom_applications()
+    W->>B: ParseDict(params, ListCustomApplicationsRequest)
+    B->>API: list_custom_applications (gRPC/TLS)
+    alt success
+        API-->>B: ListCustomApplicationsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListCustomApplicationsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Create Custom Application
 
 Creates and returns a custom application object containing information about an individual custom application.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_custom_application()
     W->>API: POST /custom_application/v202501alpha1
     alt success
-        API-->>W: CreateCustomApplicationResponse
+        API-->>W: CreateCustomApplicationResponse (JSON)
         W-->>C: CreateCustomApplicationResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_custom_application()
+    W->>B: ParseDict(params, CreateCustomApplicationRequest)
+    B->>API: create_custom_application (gRPC/TLS)
+    alt success
+        API-->>B: CreateCustomApplicationResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateCustomApplicationResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -120,19 +170,44 @@ Custom Application Info
 
 Returns a custom application object containing information about an individual custom application.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_custom_application(customApplicationId="customApplicationId-example")
     W->>API: GET /custom_application/v202501alpha1/{customApplicationId}
     alt success
-        API-->>W: GetCustomApplicationResponse
+        API-->>W: GetCustomApplicationResponse (JSON)
         W-->>C: GetCustomApplicationResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_custom_application(customApplicationId="customApplicationId-example")
+    W->>B: ParseDict(params, GetCustomApplicationRequest)
+    B->>API: get_custom_application (gRPC/TLS)
+    alt success
+        API-->>B: GetCustomApplicationResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetCustomApplicationResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -170,19 +245,44 @@ Update Custom Application
 
 Updates and returns a custom application object containing information about an individual custom application.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_custom_application(customApplicationId="customApplicationId-example")
     W->>API: PUT /custom_application/v202501alpha1/{customApplicationId}
     alt success
-        API-->>W: UpdateCustomApplicationResponse
+        API-->>W: UpdateCustomApplicationResponse (JSON)
         W-->>C: UpdateCustomApplicationResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_custom_application(customApplicationId="customApplicationId-example")
+    W->>B: ParseDict(params, UpdateCustomApplicationRequest)
+    B->>API: update_custom_application (gRPC/TLS)
+    alt success
+        API-->>B: UpdateCustomApplicationResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateCustomApplicationResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -221,19 +321,44 @@ Delete Custom Application
 
 Deletes a custom application.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_custom_application(customApplicationId="customApplicationId-example")
     W->>API: DELETE /custom_application/v202501alpha1/{customApplicationId}
     alt success
-        API-->>W: DeleteCustomApplicationResponse
+        API-->>W: DeleteCustomApplicationResponse (JSON)
         W-->>C: DeleteCustomApplicationResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_application
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_custom_application(customApplicationId="customApplicationId-example")
+    W->>B: ParseDict(params, DeleteCustomApplicationRequest)
+    B->>API: delete_custom_application (gRPC/TLS)
+    alt success
+        API-->>B: DeleteCustomApplicationResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteCustomApplicationResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

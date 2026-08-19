@@ -32,19 +32,44 @@ List MKP packages.
 
 Returns a list of MKP packages.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: package_list()
     W->>API: GET /mkp/v202407/packages
     alt success
-        API-->>W: ListPackageResponse
+        API-->>W: ListPackageResponse (JSON)
         W-->>C: ListPackageResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: package_list()
+    W->>B: ParseDict(params, PackageListRequest)
+    B->>API: package_list (gRPC/TLS)
+    alt success
+        API-->>B: ListPackageResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListPackageResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -74,19 +99,44 @@ Create a package template.
 
 Create package from request. returns created package.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: package_create(data=CreatePackageRequest(...))
     W->>API: POST /mkp/v202407/packages
     alt success
-        API-->>W: CreatePackageResponse
+        API-->>W: CreatePackageResponse (JSON)
         W-->>C: CreatePackageResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: package_create(data=CreatePackageRequest(...))
+    W->>B: ParseDict(params, PackageCreateRequest)
+    B->>API: package_create (gRPC/TLS)
+    alt success
+        API-->>B: CreatePackageResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreatePackageResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -124,19 +174,44 @@ Get information aboout a package.
 
 Returns information about package specified with ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: package_get(id="id-example")
     W->>API: GET /mkp/v202407/packages/{id}
     alt success
-        API-->>W: GetPackageResponse
+        API-->>W: GetPackageResponse (JSON)
         W-->>C: GetPackageResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: package_get(id="id-example")
+    W->>B: ParseDict(params, PackageGetRequest)
+    B->>API: package_get (gRPC/TLS)
+    alt success
+        API-->>B: GetPackageResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetPackageResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -174,19 +249,44 @@ Update a package.
 
 Update package attributes specified with id.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: package_update(id="id-example", data=PackageServiceUpdatePackageBody(...))
     W->>API: PUT /mkp/v202407/packages/{id}
     alt success
-        API-->>W: UpdatePackageResponse
+        API-->>W: UpdatePackageResponse (JSON)
         W-->>C: UpdatePackageResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: package_update(id="id-example", data=PackageServiceUpdatePackageBody(...))
+    W->>B: ParseDict(params, PackageUpdateRequest)
+    B->>API: package_update (gRPC/TLS)
+    alt success
+        API-->>B: UpdatePackageResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdatePackageResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -226,19 +326,44 @@ Delete a package.
 
 Deletes the package specified with id.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: package_delete(id="id-example")
     W->>API: DELETE /mkp/v202407/packages/{id}
     alt success
-        API-->>W: DeletePackageResponse
+        API-->>W: DeletePackageResponse (JSON)
         W-->>C: DeletePackageResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: package_delete(id="id-example")
+    W->>B: ParseDict(params, PackageDeleteRequest)
+    B->>API: package_delete (gRPC/TLS)
+    alt success
+        API-->>B: DeletePackageResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeletePackageResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -276,19 +401,44 @@ List MKP tenants.
 
 Returns a list of MKP tenants.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_list()
     W->>API: GET /mkp/v202407/tenants
     alt success
-        API-->>W: ListTenantResponse
+        API-->>W: ListTenantResponse (JSON)
         W-->>C: ListTenantResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_list()
+    W->>B: ParseDict(params, TenantListRequest)
+    B->>API: tenant_list (gRPC/TLS)
+    alt success
+        API-->>B: ListTenantResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListTenantResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -318,19 +468,44 @@ Create a tenant.
 
 Create tenant from request. returns created tenant.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_create(data=CreateTenantRequest(...))
     W->>API: POST /mkp/v202407/tenants
     alt success
-        API-->>W: CreateTenantResponse
+        API-->>W: CreateTenantResponse (JSON)
         W-->>C: CreateTenantResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_create(data=CreateTenantRequest(...))
+    W->>B: ParseDict(params, TenantCreateRequest)
+    B->>API: tenant_create (gRPC/TLS)
+    alt success
+        API-->>B: CreateTenantResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateTenantResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -368,19 +543,44 @@ Get information aboout a tenant.
 
 Returns information about package specified with ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_get(id="id-example")
     W->>API: GET /mkp/v202407/tenants/{id}
     alt success
-        API-->>W: GetTenantResponse
+        API-->>W: GetTenantResponse (JSON)
         W-->>C: GetTenantResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_get(id="id-example")
+    W->>B: ParseDict(params, TenantGetRequest)
+    B->>API: tenant_get (gRPC/TLS)
+    alt success
+        API-->>B: GetTenantResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetTenantResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -418,19 +618,44 @@ Update a tenant.
 
 Update tenant attributes specified with id.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_update(id="id-example", data=TenantServiceUpdateTenantBody(...))
     W->>API: PUT /mkp/v202407/tenants/{id}
     alt success
-        API-->>W: UpdateTenantResponse
+        API-->>W: UpdateTenantResponse (JSON)
         W-->>C: UpdateTenantResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_update(id="id-example", data=TenantServiceUpdateTenantBody(...))
+    W->>B: ParseDict(params, TenantUpdateRequest)
+    B->>API: tenant_update (gRPC/TLS)
+    alt success
+        API-->>B: UpdateTenantResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateTenantResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -470,19 +695,44 @@ Delete a tenant.
 
 Deletes the tenant specified with id.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_delete(id="id-example")
     W->>API: DELETE /mkp/v202407/tenants/{id}
     alt success
-        API-->>W: DeleteTenantResponse
+        API-->>W: DeleteTenantResponse (JSON)
         W-->>C: DeleteTenantResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_delete(id="id-example")
+    W->>B: ParseDict(params, TenantDeleteRequest)
+    B->>API: tenant_delete (gRPC/TLS)
+    alt success
+        API-->>B: DeleteTenantResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteTenantResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -520,19 +770,44 @@ List users for a tenant.
 
 Returns a list of users associated with the specified tenant.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_user_list(tenantId="tenantId-example")
     W->>API: GET /mkp/v202407/tenants/{tenantId}/users
     alt success
-        API-->>W: ListTenantUserResponse
+        API-->>W: ListTenantUserResponse (JSON)
         W-->>C: ListTenantUserResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_user_list(tenantId="tenantId-example")
+    W->>B: ParseDict(params, TenantUserListRequest)
+    B->>API: tenant_user_list (gRPC/TLS)
+    alt success
+        API-->>B: ListTenantUserResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListTenantUserResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -570,19 +845,44 @@ Add a user to a tenant.
 
 Creates a user association with the specified tenant.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_user_create(tenantId="tenantId-example", data=TenantUserServiceCreateTenantUserBody(...))
     W->>API: POST /mkp/v202407/tenants/{tenantId}/users
     alt success
-        API-->>W: CreateTenantUserResponse
+        API-->>W: CreateTenantUserResponse (JSON)
         W-->>C: CreateTenantUserResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_user_create(tenantId="tenantId-example", data=TenantUserServiceCreateTenantUserBody(...))
+    W->>B: ParseDict(params, TenantUserCreateRequest)
+    B->>API: tenant_user_create (gRPC/TLS)
+    alt success
+        API-->>B: CreateTenantUserResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateTenantUserResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -622,19 +922,44 @@ Update a tenant user.
 
 Updates the user associated with the specified tenant and user ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_user_update(tenantId="tenantId-example", id="id-example", data=TenantUserServiceUpdateTenantUserBody(...))
     W->>API: PUT /mkp/v202407/tenants/{tenantId}/users/{id}
     alt success
-        API-->>W: UpdateTenantUserResponse
+        API-->>W: UpdateTenantUserResponse (JSON)
         W-->>C: UpdateTenantUserResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_user_update(tenantId="tenantId-example", id="id-example", data=TenantUserServiceUpdateTenantUserBody(...))
+    W->>B: ParseDict(params, TenantUserUpdateRequest)
+    B->>API: tenant_user_update (gRPC/TLS)
+    alt success
+        API-->>B: UpdateTenantUserResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateTenantUserResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -676,19 +1001,44 @@ Remove a user from a tenant.
 
 Deletes the user association with the specified tenant.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.mkp
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: tenant_user_delete(tenantId="tenantId-example", id="id-example")
     W->>API: DELETE /mkp/v202407/tenants/{tenantId}/users/{id}
     alt success
-        API-->>W: DeleteTenantUserResponse
+        API-->>W: DeleteTenantUserResponse (JSON)
         W-->>C: DeleteTenantUserResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.mkp
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: tenant_user_delete(tenantId="tenantId-example", id="id-example")
+    W->>B: ParseDict(params, TenantUserDeleteRequest)
+    B->>API: tenant_user_delete (gRPC/TLS)
+    alt success
+        API-->>B: DeleteTenantUserResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteTenantUserResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

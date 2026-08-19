@@ -30,19 +30,44 @@ List all devices.
 
 Returns list of configured devices. Use the 'view' parameter to control response detail: FULL (default), BASIC (id, name, status), or ID_ONLY (id only). See [About Devices](https://kb.kentik.com/v4/Cb01.htm).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_devices()
     W->>API: GET /device/v202504beta2/device
     alt success
-        API-->>W: ListDevicesResponse
+        API-->>W: ListDevicesResponse (JSON)
         W-->>C: ListDevicesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_devices()
+    W->>B: ParseDict(params, ListDevicesRequest)
+    B->>API: list_devices (gRPC/TLS)
+    alt success
+        API-->>B: ListDevicesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListDevicesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -79,19 +104,44 @@ Configure a new device.
 
 Create configuration for a new device. Returns the newly created configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_device(data=CreateDeviceRequest(...))
     W->>API: POST /device/v202504beta2/device
     alt success
-        API-->>W: CreateDeviceResponse
+        API-->>W: CreateDeviceResponse (JSON)
         W-->>C: CreateDeviceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_device(data=CreateDeviceRequest(...))
+    W->>B: ParseDict(params, CreateDeviceRequest)
+    B->>API: create_device (gRPC/TLS)
+    alt success
+        API-->>B: CreateDeviceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateDeviceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -129,19 +179,44 @@ Configure multiple devices (max 100).
 
 Create configuration for multiple devices. Returns the newly created configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_devices(data=CreateDevicesRequest(...))
     W->>API: POST /device/v202504beta2/device/batch_create
     alt success
-        API-->>W: CreateDevicesResponse
+        API-->>W: CreateDevicesResponse (JSON)
         W-->>C: CreateDevicesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_devices(data=CreateDevicesRequest(...))
+    W->>B: ParseDict(params, CreateDevicesRequest)
+    B->>API: create_devices (gRPC/TLS)
+    alt success
+        API-->>B: CreateDevicesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateDevicesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -179,19 +254,44 @@ Delete configuration of multiple devices.
 
 Deletes configuration of multiple devices with specific IDs (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_devices(data=DeleteDevicesRequest(...))
     W->>API: POST /device/v202504beta2/device/batch_delete
     alt success
-        API-->>W: DeleteDevicesResponse
+        API-->>W: DeleteDevicesResponse (JSON)
         W-->>C: DeleteDevicesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_devices(data=DeleteDevicesRequest(...))
+    W->>B: ParseDict(params, DeleteDevicesRequest)
+    B->>API: delete_devices (gRPC/TLS)
+    alt success
+        API-->>B: DeleteDevicesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteDevicesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -229,19 +329,44 @@ Updates configuration of multiple devices (max 100).
 
 Replaces configuration of multiple devices with attributes in the request. Returns the updated configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_devices(data=UpdateDevicesRequest(...))
     W->>API: PUT /device/v202504beta2/device/batch_update
     alt success
-        API-->>W: UpdateDevicesResponse
+        API-->>W: UpdateDevicesResponse (JSON)
         W-->>C: UpdateDevicesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_devices(data=UpdateDevicesRequest(...))
+    W->>B: ParseDict(params, UpdateDevicesRequest)
+    B->>API: update_devices (gRPC/TLS)
+    alt success
+        API-->>B: UpdateDevicesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateDevicesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -279,19 +404,44 @@ Retrieve configuration of a device by name.
 
 Returns configuration of a device specified by name (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_device_by_name(deviceName="deviceName-example")
     W->>API: GET /device/v202504beta2/device/name/{deviceName}
     alt success
-        API-->>W: GetDeviceByNameResponse
+        API-->>W: GetDeviceByNameResponse (JSON)
         W-->>C: GetDeviceByNameResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_device_by_name(deviceName="deviceName-example")
+    W->>B: ParseDict(params, GetDeviceByNameRequest)
+    B->>API: get_device_by_name (gRPC/TLS)
+    alt success
+        API-->>B: GetDeviceByNameResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetDeviceByNameResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -330,19 +480,44 @@ Retrieve configuration of a device.
 
 Returns configuration of a device specified by ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_device(deviceid="deviceid-example")
     W->>API: GET /device/v202504beta2/device/{device.id}
     alt success
-        API-->>W: GetDeviceResponse
+        API-->>W: GetDeviceResponse (JSON)
         W-->>C: GetDeviceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_device(deviceid="deviceid-example")
+    W->>B: ParseDict(params, GetDeviceRequest)
+    B->>API: get_device (gRPC/TLS)
+    alt success
+        API-->>B: GetDeviceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetDeviceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -381,19 +556,44 @@ Updates configuration of a device.
 
 Replaces configuration of a device with attributes in the request. Returns the updated configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_device(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
     W->>API: PUT /device/v202504beta2/device/{device.id}
     alt success
-        API-->>W: UpdateDeviceResponse
+        API-->>W: UpdateDeviceResponse (JSON)
         W-->>C: UpdateDeviceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_device(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
+    W->>B: ParseDict(params, UpdateDeviceRequest)
+    B->>API: update_device (gRPC/TLS)
+    alt success
+        API-->>B: UpdateDeviceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateDeviceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -433,19 +633,44 @@ Delete configuration of a device.
 
 Deletes configuration of a device with specific ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_device(deviceid="deviceid-example")
     W->>API: DELETE /device/v202504beta2/device/{device.id}
     alt success
-        API-->>W: DeleteDeviceResponse
+        API-->>W: DeleteDeviceResponse (JSON)
         W-->>C: DeleteDeviceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_device(deviceid="deviceid-example")
+    W->>B: ParseDict(params, DeleteDeviceRequest)
+    B->>API: delete_device (gRPC/TLS)
+    alt success
+        API-->>B: DeleteDeviceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteDeviceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -483,19 +708,44 @@ Updates labels of a device.
 
 Removes all existing labels from the device and applies the device labels (see [About Device Labels](https://kb.kentik.com/v4/Cb16.htm)) specified by id. Returns the updated configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_device_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
     W->>API: PUT /device/v202504beta2/device/{id}/labels
     alt success
-        API-->>W: UpdateDeviceLabelsResponse
+        API-->>W: UpdateDeviceLabelsResponse (JSON)
         W-->>C: UpdateDeviceLabelsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.device
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_device_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
+    W->>B: ParseDict(params, UpdateDeviceLabelsRequest)
+    B->>API: update_device_labels (gRPC/TLS)
+    alt success
+        API-->>B: UpdateDeviceLabelsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateDeviceLabelsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

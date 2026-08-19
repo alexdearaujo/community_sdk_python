@@ -30,19 +30,44 @@ List secrets.
 
 Returns list of secret values stored in Kentik vault.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.vault
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_secret(names=["names-example"])
     W->>API: GET /vault/v202312alpha1/secrets
     alt success
-        API-->>W: ListSecretResponse
+        API-->>W: ListSecretResponse (JSON)
         W-->>C: ListSecretResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.vault
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_secret(names=["names-example"])
+    W->>B: ParseDict(params, ListSecretRequest)
+    B->>API: list_secret (gRPC/TLS)
+    alt success
+        API-->>B: ListSecretResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListSecretResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -80,19 +105,44 @@ Get a secret by name.
 
 Returns a secret value stored in Kentik vault.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.vault
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_secret(name="name-example")
     W->>API: GET /vault/v202312alpha1/secrets/{name}
     alt success
-        API-->>W: GetSecretResponse
+        API-->>W: GetSecretResponse (JSON)
         W-->>C: GetSecretResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.vault
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_secret(name="name-example")
+    W->>B: ParseDict(params, GetSecretRequest)
+    B->>API: get_secret (gRPC/TLS)
+    alt success
+        API-->>B: GetSecretResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetSecretResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

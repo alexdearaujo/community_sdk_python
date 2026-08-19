@@ -30,19 +30,44 @@ Create a Connectivity Checker Report.
 
 Create a connectivity checker report based on configuration provided in the request.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.connectivity_checker
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_connectivity_report(data=CreateConnectivityReportRequest(...))
     W->>API: POST /connectivity_checker/v202410beta1/create
     alt success
-        API-->>W: CreateConnectivityReportResponse
+        API-->>W: CreateConnectivityReportResponse (JSON)
         W-->>C: CreateConnectivityReportResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.connectivity_checker
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_connectivity_report(data=CreateConnectivityReportRequest(...))
+    W->>B: ParseDict(params, CreateConnectivityReportRequest)
+    B->>API: create_connectivity_report (gRPC/TLS)
+    alt success
+        API-->>B: CreateConnectivityReportResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateConnectivityReportResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

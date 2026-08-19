@@ -30,19 +30,44 @@ Journeys AI NLQ Service
 
 Perform Natural Language (NLQ) to query object translation
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.journeys
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_journeys_nlq(prompt="prompt-example")
     W->>API: GET /journeys/v202406/GetJourneysNlq
     alt success
-        API-->>W: GetJourneysNlqResponse
+        API-->>W: GetJourneysNlqResponse (JSON)
         W-->>C: GetJourneysNlqResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.journeys
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_journeys_nlq(prompt="prompt-example")
+    W->>B: ParseDict(params, GetJourneysNlqRequest)
+    B->>API: get_journeys_nlq (gRPC/TLS)
+    alt success
+        API-->>B: GetJourneysNlqResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetJourneysNlqResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

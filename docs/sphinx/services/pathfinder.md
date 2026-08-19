@@ -30,19 +30,44 @@ Create a Pathfinder Report.
 
 Create a pathfinder report based on configuration provided in the request.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.pathfinder
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_pathfinder_report(data=CreatePathfinderReportRequest(...))
     W->>API: POST /pathfinder/v202505beta1/create
     alt success
-        API-->>W: CreatePathfinderReportResponse
+        API-->>W: CreatePathfinderReportResponse (JSON)
         W-->>C: CreatePathfinderReportResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.pathfinder
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_pathfinder_report(data=CreatePathfinderReportRequest(...))
+    W->>B: ParseDict(params, CreatePathfinderReportRequest)
+    B->>API: create_pathfinder_report (gRPC/TLS)
+    alt success
+        API-->>B: CreatePathfinderReportResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreatePathfinderReportResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

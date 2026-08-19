@@ -30,19 +30,44 @@ Fetch Search Interfaces
 
 Return list of interfaces matches search critera.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_interface()
     W->>API: GET /interface/v202108alpha1/interfaces
     alt success
-        API-->>W: ListInterfaceResponse
+        API-->>W: ListInterfaceResponse (JSON)
         W-->>C: ListInterfaceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_interface()
+    W->>B: ParseDict(params, ListInterfaceRequest)
+    B->>API: list_interface (gRPC/TLS)
+    alt success
+        API-->>B: ListInterfaceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListInterfaceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -84,19 +109,44 @@ Create a interface.
 
 Create a interface from request. returns created.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: interface_create(data=CreateInterfaceRequest(...))
     W->>API: POST /interface/v202108alpha1/interfaces
     alt success
-        API-->>W: CreateInterfaceResponse
+        API-->>W: CreateInterfaceResponse (JSON)
         W-->>C: CreateInterfaceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: interface_create(data=CreateInterfaceRequest(...))
+    W->>B: ParseDict(params, InterfaceCreateRequest)
+    B->>API: interface_create (gRPC/TLS)
+    alt success
+        API-->>B: CreateInterfaceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateInterfaceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -134,19 +184,44 @@ Get a interface.
 
 Returns information about a interface specified with ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: interface_get(id="id-example")
     W->>API: GET /interface/v202108alpha1/interfaces/{id}
     alt success
-        API-->>W: GetInterfaceResponse
+        API-->>W: GetInterfaceResponse (JSON)
         W-->>C: GetInterfaceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: interface_get(id="id-example")
+    W->>B: ParseDict(params, InterfaceGetRequest)
+    B->>API: interface_get (gRPC/TLS)
+    alt success
+        API-->>B: GetInterfaceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetInterfaceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -184,19 +259,44 @@ Update a interface.
 
 Replaces the entire interface attributes specified with id.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: interface_update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
     W->>API: PUT /interface/v202108alpha1/interfaces/{id}
     alt success
-        API-->>W: UpdateInterfaceResponse
+        API-->>W: UpdateInterfaceResponse (JSON)
         W-->>C: UpdateInterfaceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: interface_update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
+    W->>B: ParseDict(params, InterfaceUpdateRequest)
+    B->>API: interface_update (gRPC/TLS)
+    alt success
+        API-->>B: UpdateInterfaceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateInterfaceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -236,19 +336,44 @@ Delete a interface.
 
 Deletes the interface specified with id.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: interface_delete(id="id-example")
     W->>API: DELETE /interface/v202108alpha1/interfaces/{id}
     alt success
-        API-->>W: DeleteInterfaceResponse
+        API-->>W: DeleteInterfaceResponse (JSON)
         W-->>C: DeleteInterfaceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: interface_delete(id="id-example")
+    W->>B: ParseDict(params, InterfaceDeleteRequest)
+    B->>API: interface_delete (gRPC/TLS)
+    alt success
+        API-->>B: DeleteInterfaceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteInterfaceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -286,19 +411,44 @@ Manual Classify Interface
 
 Manually set interface(s) classification.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: manual_classify(data=ManualClassifyRequest(...))
     W->>API: POST /interface/v202108alpha1/manual_classify
     alt success
-        API-->>W: ManualClassifyResponse
+        API-->>W: ManualClassifyResponse (JSON)
         W-->>C: ManualClassifyResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.interface
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: manual_classify(data=ManualClassifyRequest(...))
+    W->>B: ParseDict(params, ManualClassifyRequest)
+    B->>API: manual_classify (gRPC/TLS)
+    alt success
+        API-->>B: ManualClassifyResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ManualClassifyResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

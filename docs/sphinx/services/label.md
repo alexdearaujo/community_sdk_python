@@ -30,19 +30,44 @@ List all configured labels
 
 Returns list of all labels configured in the account.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.label
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_labels()
     W->>API: GET /label/v202210/labels
     alt success
-        API-->>W: ListLabelsResponse
+        API-->>W: ListLabelsResponse (JSON)
         W-->>C: ListLabelsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.label
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_labels()
+    W->>B: ParseDict(params, ListLabelsRequest)
+    B->>API: list_labels (gRPC/TLS)
+    alt success
+        API-->>B: ListLabelsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListLabelsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Create a new label.
 
 Creates a new label based on data in the request.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.label
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_label(data=CreateLabelRequest(...))
     W->>API: POST /label/v202210/labels
     alt success
-        API-->>W: CreateLabelResponse
+        API-->>W: CreateLabelResponse (JSON)
         W-->>C: CreateLabelResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.label
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_label(data=CreateLabelRequest(...))
+    W->>B: ParseDict(params, CreateLabelRequest)
+    B->>API: create_label (gRPC/TLS)
+    alt success
+        API-->>B: CreateLabelResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateLabelResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -122,19 +172,44 @@ Update an existing label.
 
 Updates configuration of a label.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.label
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_label(id="id-example", data=LabelServiceUpdateLabelBody(...))
     W->>API: POST /label/v202210/labels/{id}
     alt success
-        API-->>W: UpdateLabelResponse
+        API-->>W: UpdateLabelResponse (JSON)
         W-->>C: UpdateLabelResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.label
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_label(id="id-example", data=LabelServiceUpdateLabelBody(...))
+    W->>B: ParseDict(params, UpdateLabelRequest)
+    B->>API: update_label (gRPC/TLS)
+    alt success
+        API-->>B: UpdateLabelResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateLabelResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -174,19 +249,44 @@ Delete a label.
 
 Deletes label with specified with id.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.label
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_label(id="id-example")
     W->>API: DELETE /label/v202210/labels/{id}
     alt success
-        API-->>W: DeleteLabelResponse
+        API-->>W: DeleteLabelResponse (JSON)
         W-->>C: DeleteLabelResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.label
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_label(id="id-example")
+    W->>B: ParseDict(params, DeleteLabelRequest)
+    B->>API: delete_label (gRPC/TLS)
+    alt success
+        API-->>B: DeleteLabelResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteLabelResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

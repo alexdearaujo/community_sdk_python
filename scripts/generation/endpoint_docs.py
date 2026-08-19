@@ -374,7 +374,7 @@ def _render_operation_sequence_diagram(
     method_name: str,
     params: list[tuple[str, str, bool]],
 ) -> list[str]:
-    """Renders a sequence diagram for one operation showing the full call path."""
+    """Renders REST and gRPC sequence diagrams side by side for one operation."""
     req_params = [(p, t) for p, t, r in params if r]
     if req_params:
         call_args = ", ".join(
@@ -386,25 +386,59 @@ def _render_operation_sequence_diagram(
     success_resp = next((r for r in doc.responses if r.status.startswith("2")), None)
     success_model = success_resp.type_label if success_resp else "response"
 
-    return [
+    # gRPC request class follows the convention {OperationId}Request where OperationId
+    # comes from the HTTP method + path, so we derive it from the swagger operationId.
+    grpc_req_class = f"{doc.operation_id}Request" if doc.operation_id != "-" else "Request"
+
+    rest_diagram = [
+        "**REST transport**",
+        "",
         f"{MD_FENCE}mermaid",
         "sequenceDiagram",
         "    participant C as Caller",
         f"    participant W as client.{service}",
-        "    participant API as Kentik API",
+        "    participant API as Kentik REST API",
         "",
         f"    C->>W: {method_name}({call_args})",
         f"    W->>API: {doc.method} {doc.path}",
         "    alt success",
-        f"        API-->>W: {success_model}",
+        f"        API-->>W: {success_model} (JSON)",
         f"        W-->>C: {success_model}",
-        "    else error status",
+        "    else error",
         "        API-->>W: error body",
         "        W-->>C: raise HTTPException",
         "    end",
         MD_FENCE,
         "",
     ]
+
+    grpc_diagram = [
+        "**gRPC transport**",
+        "",
+        f"{MD_FENCE}mermaid",
+        "sequenceDiagram",
+        "    participant C as Caller",
+        f"    participant W as client.{service}",
+        "    participant B as proto bridge",
+        "    participant API as Kentik gRPC API",
+        "",
+        f"    C->>W: {method_name}({call_args})",
+        f"    W->>B: ParseDict(params, {grpc_req_class})",
+        f"    B->>API: {method_name} (gRPC/TLS)",
+        "    alt success",
+        f"        API-->>B: {success_model} proto",
+        f"        B-->>W: MessageToDict(response)",
+        f"        W-->>C: {success_model}",
+        "    else gRPC error",
+        "        API-->>B: gRPC status + details",
+        "        B-->>W: raise HTTPException",
+        "        W-->>C: raise HTTPException",
+        "    end",
+        MD_FENCE,
+        "",
+    ]
+
+    return rest_diagram + grpc_diagram
 
 
 def _render_endpoint_section(

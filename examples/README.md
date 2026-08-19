@@ -2,58 +2,57 @@
 
 These scripts demonstrate the v6 SDK against the live Kentik API.
 Each script is self-contained and safe to run read-only.
-Mutating operations (create, update, delete) are clearly marked and
-commented out by default.
 
 ## Setup
 
-1. Create a `.env` file in the repository root:
+1. Create `.env` in the repository root:
 
     ```bash
     KENTIK_EMAIL=you@example.com
     KENTIK_API_TOKEN=your_api_token
     ```
 
-2. Run any example:
+2. Run any example with `python -m` from the project root (the `-m` flag
+   prevents `grpc.py` from shadowing the `grpc` package):
 
     ```bash
-    uv run python examples/device/list_devices.py
-    uv run python examples/user/list_users.py
+    uv run python -m examples.device.rest
+    uv run python -m examples.device.grpc
     ```
 
 ## Layout
 
-| Directory | Service |
-| --- | --- |
-| `device/` | Device management |
-| `user/` | User management |
-| `label/` | Device labels |
-| `site/` | Sites and site markets |
-| `alerting/` | Alerting (alert listing, suppression) |
-| `synthetics/` | Synthetic tests and agents |
-| `error_handling.py` | Catching SDK errors |
-| `utils.py` | Shared helpers used by all scripts |
-| `grpc_usage.py` | gRPC transport demo and proto-dep explanation |
+Each service has a `rest.py` and a `grpc.py` that perform the same
+operation over each transport. The API surface is identical; only the
+`protocol=` argument differs.
+
+| Directory | Service | REST | gRPC |
+| --- | --- | --- | --- |
+| [`device/`](device/) | Device management | [`rest.py`](device/rest.py) | [`grpc.py`](device/grpc.py) |
+| [`user/`](user/) | User management | [`rest.py`](user/rest.py) | [`grpc.py`](user/grpc.py) |
+| [`label/`](label/) | Device labels | [`rest.py`](label/rest.py) | [`grpc.py`](label/grpc.py) |
+| [`site/`](site/) | Sites and markets | [`rest.py`](site/rest.py) | [`grpc.py`](site/grpc.py) |
+| [`alerting/`](alerting/) | Alerting | [`rest.py`](alerting/rest.py) | [`grpc.py`](alerting/grpc.py) |
+| [`synthetics/`](synthetics/) | Synthetic tests | [`rest.py`](synthetics/rest.py) | [`grpc.py`](synthetics/grpc.py) |
+| [`common/`](common/) | Shared helpers | [`utils.py`](common/utils.py) | [`error_handling.py`](common/error_handling.py) |
 
 ## Transport selection
 
-All examples use REST by default. gRPC is also fully supported.
-Switch transports by changing the `protocol` arg:
+Both transports return the same Pydantic models. Switch with one argument:
 
 ```python
 client = KentikAPI(protocol="rest")  # REST transport (default)
-client = KentikAPI(protocol="grpc")  # gRPC transport (fully supported)
+client = KentikAPI(protocol="grpc")  # gRPC transport
 ```
 
-See `grpc_usage.py` for a complete gRPC example.
+See the [gRPC guide](../docs/guides/grpc.md) for transport internals and
+sequence diagrams.
 
-## Authentication
+## Further reading
 
-`KentikAPI()` loads `KENTIK_EMAIL` and `KENTIK_API_TOKEN` from the
-nearest `.env` file. Pass credentials explicitly to override:
+- [docs/guides/quickstart.md](../docs/guides/quickstart.md)
+- [docs/guides/rest.md](../docs/guides/rest.md)
+- [docs/guides/grpc.md](../docs/guides/grpc.md)
+- [docs/guides/error_handling.md](../docs/guides/error_handling.md)
 
-```python
-from kentik_api.client import KentikAPI
-
-client = KentikAPI(protocol="rest", email="you@example.com", api_token="...")
 ```

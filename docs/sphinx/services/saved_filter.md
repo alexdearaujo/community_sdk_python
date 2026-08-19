@@ -30,19 +30,44 @@ Create Saved Filter
 
 Creates and returns a saved filter object containing information about an individual saved filter.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_saved_filter()
     W->>API: POST /saved-filter/v202501alpha1
     alt success
-        API-->>W: CreateSavedFilterResponse
+        API-->>W: CreateSavedFilterResponse (JSON)
         W-->>C: CreateSavedFilterResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_saved_filter()
+    W->>B: ParseDict(params, CreateSavedFilterRequest)
+    B->>API: create_saved_filter (gRPC/TLS)
+    alt success
+        API-->>B: CreateSavedFilterResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateSavedFilterResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -78,19 +103,44 @@ Custom Saved Filter Info
 
 Returns a saved filter object containing information about an individual saved filter.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_saved_filter(id="id-example")
     W->>API: GET /saved-filter/v202501alpha1/{id}
     alt success
-        API-->>W: GetSavedFilterResponse
+        API-->>W: GetSavedFilterResponse (JSON)
         W-->>C: GetSavedFilterResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_saved_filter(id="id-example")
+    W->>B: ParseDict(params, GetSavedFilterRequest)
+    B->>API: get_saved_filter (gRPC/TLS)
+    alt success
+        API-->>B: GetSavedFilterResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetSavedFilterResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -128,19 +178,44 @@ Update Saved Filter
 
 Updates and returns a saved filter object containing information about an individual saved filter.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_saved_filter(id="id-example")
     W->>API: PUT /saved-filter/v202501alpha1/{id}
     alt success
-        API-->>W: UpdateSavedFilterResponse
+        API-->>W: UpdateSavedFilterResponse (JSON)
         W-->>C: UpdateSavedFilterResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_saved_filter(id="id-example")
+    W->>B: ParseDict(params, UpdateSavedFilterRequest)
+    B->>API: update_saved_filter (gRPC/TLS)
+    alt success
+        API-->>B: UpdateSavedFilterResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateSavedFilterResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -179,19 +254,44 @@ Delete Saved Filter
 
 Deletes a saved filter.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_saved_filter(id="id-example")
     W->>API: DELETE /saved-filter/v202501alpha1/{id}
     alt success
-        API-->>W: DeleteSavedFilterResponse
+        API-->>W: DeleteSavedFilterResponse (JSON)
         W-->>C: DeleteSavedFilterResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_saved_filter(id="id-example")
+    W->>B: ParseDict(params, DeleteSavedFilterRequest)
+    B->>API: delete_saved_filter (gRPC/TLS)
+    alt success
+        API-->>B: DeleteSavedFilterResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteSavedFilterResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -229,19 +329,44 @@ List Saved Filters
 
 Returns all custom saved filters created by the user's company.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_saved_filters()
     W->>API: GET /saved-filters/v202501alpha1
     alt success
-        API-->>W: ListSavedFiltersResponse
+        API-->>W: ListSavedFiltersResponse (JSON)
         W-->>C: ListSavedFiltersResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_saved_filters()
+    W->>B: ParseDict(params, ListSavedFiltersRequest)
+    B->>API: list_saved_filters (gRPC/TLS)
+    alt success
+        API-->>B: ListSavedFiltersResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListSavedFiltersResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -271,19 +396,44 @@ List All Saved Filters
 
 Returns all saved filters, including system default filters.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_saved_filters_all()
     W->>API: GET /saved-filters/v202501alpha1/all
     alt success
-        API-->>W: ListSavedFiltersAllResponse
+        API-->>W: ListSavedFiltersAllResponse (JSON)
         W-->>C: ListSavedFiltersAllResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.saved_filter
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_saved_filters_all()
+    W->>B: ParseDict(params, ListSavedFiltersAllRequest)
+    B->>API: list_saved_filters_all (gRPC/TLS)
+    alt success
+        API-->>B: ListSavedFiltersAllResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListSavedFiltersAllResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

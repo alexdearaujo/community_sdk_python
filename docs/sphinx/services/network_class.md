@@ -30,19 +30,44 @@ Get a network classification.
 
 Returns information about a network classification for the company.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.network_class
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: network_class_get()
     W->>API: GET /network_class/v202109alpha1/network_class
     alt success
-        API-->>W: GetNetworkClassResponse
+        API-->>W: GetNetworkClassResponse (JSON)
         W-->>C: GetNetworkClassResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.network_class
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: network_class_get()
+    W->>B: ParseDict(params, NetworkClassGetRequest)
+    B->>API: network_class_get (gRPC/TLS)
+    alt success
+        API-->>B: GetNetworkClassResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetNetworkClassResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Update a network classification.
 
 Replaces the entire network classification attributes for the company.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.network_class
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: network_class_update(data=UpdateNetworkClassRequest(...))
     W->>API: POST /network_class/v202109alpha1/network_class
     alt success
-        API-->>W: UpdateNetworkClassResponse
+        API-->>W: UpdateNetworkClassResponse (JSON)
         W-->>C: UpdateNetworkClassResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.network_class
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: network_class_update(data=UpdateNetworkClassRequest(...))
+    W->>B: ParseDict(params, NetworkClassUpdateRequest)
+    B->>API: network_class_update (gRPC/TLS)
+    alt success
+        API-->>B: UpdateNetworkClassResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateNetworkClassResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

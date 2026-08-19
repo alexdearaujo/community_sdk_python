@@ -30,19 +30,44 @@ List available notification channels
 
 Returns list of all configured notification channels.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.notification_channel
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_notification_channels()
     W->>API: GET /notification_channel/v202210/notification_channels
     alt success
-        API-->>W: ListNotificationChannelsResponse
+        API-->>W: ListNotificationChannelsResponse (JSON)
         W-->>C: ListNotificationChannelsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.notification_channel
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_notification_channels()
+    W->>B: ParseDict(params, ListNotificationChannelsRequest)
+    B->>API: list_notification_channels (gRPC/TLS)
+    alt success
+        API-->>B: ListNotificationChannelsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListNotificationChannelsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Retrieve notification channels matching criteria.
 
 Returns list of all notification channels matching request criteria. Match criteria are treated as a logical AND, i.e. all provided criteria must match in order for an entry to be included in the response.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.notification_channel
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: search_notification_channels(data=SearchNotificationChannelsRequest(...))
     W->>API: POST /notification_channel/v202210/notification_channels/search
     alt success
-        API-->>W: SearchNotificationChannelsResponse
+        API-->>W: SearchNotificationChannelsResponse (JSON)
         W-->>C: SearchNotificationChannelsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.notification_channel
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: search_notification_channels(data=SearchNotificationChannelsRequest(...))
+    W->>B: ParseDict(params, SearchNotificationChannelsRequest)
+    B->>API: search_notification_channels (gRPC/TLS)
+    alt success
+        API-->>B: SearchNotificationChannelsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SearchNotificationChannelsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -122,19 +172,44 @@ Get information about a notification channel
 
 Returns information about a notification channel with specific ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.notification_channel
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_notification_channel(id="id-example")
     W->>API: GET /notification_channel/v202210/notification_channels/{id}
     alt success
-        API-->>W: GetNotificationChannelResponse
+        API-->>W: GetNotificationChannelResponse (JSON)
         W-->>C: GetNotificationChannelResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.notification_channel
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_notification_channel(id="id-example")
+    W->>B: ParseDict(params, GetNotificationChannelRequest)
+    B->>API: get_notification_channel (gRPC/TLS)
+    alt success
+        API-->>B: GetNotificationChannelResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetNotificationChannelResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

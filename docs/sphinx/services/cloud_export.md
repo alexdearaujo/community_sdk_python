@@ -30,19 +30,44 @@ List cloud exports.
 
 Returns a list of all cloud exports in the account.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_cloud_exports()
     W->>API: GET /cloud_export/v202506/exports
     alt success
-        API-->>W: ListCloudExportsResponse
+        API-->>W: ListCloudExportsResponse (JSON)
         W-->>C: ListCloudExportsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_cloud_exports()
+    W->>B: ParseDict(params, ListCloudExportsRequest)
+    B->>API: list_cloud_exports (gRPC/TLS)
+    alt success
+        API-->>B: ListCloudExportsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListCloudExportsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Create Cloud Export.
 
 Create new cloud export based on configuration in the request.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_cloud_export(data=CreateCloudExportRequest(...))
     W->>API: POST /cloud_export/v202506/exports
     alt success
-        API-->>W: CreateCloudExportResponse
+        API-->>W: CreateCloudExportResponse (JSON)
         W-->>C: CreateCloudExportResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_cloud_export(data=CreateCloudExportRequest(...))
+    W->>B: ParseDict(params, CreateCloudExportRequest)
+    B->>API: create_cloud_export (gRPC/TLS)
+    alt success
+        API-->>B: CreateCloudExportResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateCloudExportResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -122,19 +172,44 @@ Get cloud export configuration and status.
 
 Returns configuration and status of cloud export with specified ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_cloud_export(exportid="exportid-example")
     W->>API: GET /cloud_export/v202506/exports/{export.id}
     alt success
-        API-->>W: GetCloudExportResponse
+        API-->>W: GetCloudExportResponse (JSON)
         W-->>C: GetCloudExportResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_cloud_export(exportid="exportid-example")
+    W->>B: ParseDict(params, GetCloudExportRequest)
+    B->>API: get_cloud_export (gRPC/TLS)
+    alt success
+        API-->>B: GetCloudExportResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetCloudExportResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -172,19 +247,44 @@ Update configuration of cloud export.
 
 Replace complete configuration of a cloud export with data in the request.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_cloud_export(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
     W->>API: PUT /cloud_export/v202506/exports/{export.id}
     alt success
-        API-->>W: UpdateCloudExportResponse
+        API-->>W: UpdateCloudExportResponse (JSON)
         W-->>C: UpdateCloudExportResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_cloud_export(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
+    W->>B: ParseDict(params, UpdateCloudExportRequest)
+    B->>API: update_cloud_export (gRPC/TLS)
+    alt success
+        API-->>B: UpdateCloudExportResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateCloudExportResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -224,19 +324,44 @@ Delete a cloud export.
 
 Delete cloud export with specified ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_cloud_export(exportid="exportid-example")
     W->>API: DELETE /cloud_export/v202506/exports/{export.id}
     alt success
-        API-->>W: DeleteCloudExportResponse
+        API-->>W: DeleteCloudExportResponse (JSON)
         W-->>C: DeleteCloudExportResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cloud_export
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_cloud_export(exportid="exportid-example")
+    W->>B: ParseDict(params, DeleteCloudExportRequest)
+    B->>API: delete_cloud_export (gRPC/TLS)
+    alt success
+        API-->>B: DeleteCloudExportResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteCloudExportResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

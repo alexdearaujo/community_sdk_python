@@ -30,19 +30,44 @@ List global KMI insights.
 
 Returns list of global KMI insights.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_global_insights()
     W->>API: GET /kmi/v202212/insights
     alt success
-        API-->>W: GetGlobalInsightsResponse
+        API-->>W: GetGlobalInsightsResponse (JSON)
         W-->>C: GetGlobalInsightsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_global_insights()
+    W->>B: ParseDict(params, GetGlobalInsightsRequest)
+    B->>API: get_global_insights (gRPC/TLS)
+    alt success
+        API-->>B: GetGlobalInsightsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetGlobalInsightsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -83,19 +108,44 @@ List ASN-specific KMI insights.
 
 Returns list of KMI insights for a specific Autonomous System.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_a_s_n_insights(asn="asn-example")
     W->>API: GET /kmi/v202212/insights/{asn}
     alt success
-        API-->>W: GetASNInsightsResponse
+        API-->>W: GetASNInsightsResponse (JSON)
         W-->>C: GetASNInsightsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_a_s_n_insights(asn="asn-example")
+    W->>B: ParseDict(params, GetASNInsightsRequest)
+    B->>API: get_a_s_n_insights (gRPC/TLS)
+    alt success
+        API-->>B: GetASNInsightsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetASNInsightsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -139,19 +189,44 @@ List metadata and list of customers, providers, and peers for an Autonomous Syst
 
 Returns metadata and list of customers, providers, and peers for an Autonomous System.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_a_s_n_details(marketId="marketId-example", asn="asn-example", type="type-example", data=KmiServiceGetASNDetailsBody(...))
     W->>API: POST /kmi/v202212/market/{marketId}/network/{asn}/{type}
     alt success
-        API-->>W: GetASNDetailsResponse
+        API-->>W: GetASNDetailsResponse (JSON)
         W-->>C: GetASNDetailsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_a_s_n_details(marketId="marketId-example", asn="asn-example", type="type-example", data=KmiServiceGetASNDetailsBody(...))
+    W->>B: ParseDict(params, GetASNDetailsRequest)
+    B->>API: get_a_s_n_details (gRPC/TLS)
+    alt success
+        API-->>B: GetASNDetailsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetASNDetailsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -195,19 +270,44 @@ List KMI rankings by geo market and rank type.
 
 Returns list of KMI rankings.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_rankings(marketId="marketId-example", rankType="rankType-example", ip="ip-example", data=KmiServiceGetRankingsBody(...))
     W->>API: POST /kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}
     alt success
-        API-->>W: GetRankingsResponse
+        API-->>W: GetRankingsResponse (JSON)
         W-->>C: GetRankingsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_rankings(marketId="marketId-example", rankType="rankType-example", ip="ip-example", data=KmiServiceGetRankingsBody(...))
+    W->>B: ParseDict(params, GetRankingsRequest)
+    B->>API: get_rankings (gRPC/TLS)
+    alt success
+        API-->>B: GetRankingsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetRankingsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -251,19 +351,44 @@ List all geo markets for KMI.
 
 Returns list of geo markets for KMI.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_markets()
     W->>API: GET /kmi/v202212/markets
     alt success
-        API-->>W: ListMarketsResponse
+        API-->>W: ListMarketsResponse (JSON)
         W-->>C: ListMarketsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.kmi
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_markets()
+    W->>B: ParseDict(params, ListMarketsRequest)
+    B->>API: list_markets (gRPC/TLS)
+    alt success
+        API-->>B: ListMarketsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListMarketsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

@@ -30,19 +30,44 @@ List all cost providers.
 
 Returns list of configured cost providers.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.cost
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_cost_providers()
     W->>API: GET /cost/v202308/cost/providers
     alt success
-        API-->>W: ListCostProvidersResponse
+        API-->>W: ListCostProvidersResponse (JSON)
         W-->>C: ListCostProvidersResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_cost_providers()
+    W->>B: ParseDict(params, ListCostProvidersRequest)
+    B->>API: list_cost_providers (gRPC/TLS)
+    alt success
+        API-->>B: ListCostProvidersResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListCostProvidersResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ List all cost provider summaries.
 
 Returns list of summaries of configured cost providers.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.cost
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_cost_provider_summaries()
     W->>API: GET /cost/v202308/cost/summary
     alt success
-        API-->>W: ListCostProviderSummariesResponse
+        API-->>W: ListCostProviderSummariesResponse (JSON)
         W-->>C: ListCostProviderSummariesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_cost_provider_summaries()
+    W->>B: ParseDict(params, ListCostProviderSummariesRequest)
+    B->>API: list_cost_provider_summaries (gRPC/TLS)
+    alt success
+        API-->>B: ListCostProviderSummariesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListCostProviderSummariesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -120,19 +170,44 @@ Get cost provider summary.
 
 Returns summary of configured cost provider.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.cost
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_cost_provider_summary(id="id-example")
     W->>API: GET /cost/v202308/cost/summary/{id}
     alt success
-        API-->>W: GetCostProviderSummaryResponse
+        API-->>W: GetCostProviderSummaryResponse (JSON)
         W-->>C: GetCostProviderSummaryResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.cost
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_cost_provider_summary(id="id-example")
+    W->>B: ParseDict(params, GetCostProviderSummaryRequest)
+    B->>API: get_cost_provider_summary (gRPC/TLS)
+    alt success
+        API-->>B: GetCostProviderSummaryResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetCostProviderSummaryResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

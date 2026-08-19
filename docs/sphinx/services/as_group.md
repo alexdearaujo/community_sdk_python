@@ -30,19 +30,44 @@ List all AS groups.
 
 Returns list of configured AS groups.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_a_s_groups()
     W->>API: GET /as_group/v202212/as_group
     alt success
-        API-->>W: ListASGroupsResponse
+        API-->>W: ListASGroupsResponse (JSON)
         W-->>C: ListASGroupsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_a_s_groups()
+    W->>B: ParseDict(params, ListASGroupsRequest)
+    B->>API: list_a_s_groups (gRPC/TLS)
+    alt success
+        API-->>B: ListASGroupsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListASGroupsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Configure a new AS group.
 
 Create configuration for a new AS group. Returns the newly created configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_a_s_group(data=CreateASGroupRequest(...))
     W->>API: POST /as_group/v202212/as_group
     alt success
-        API-->>W: CreateASGroupResponse
+        API-->>W: CreateASGroupResponse (JSON)
         W-->>C: CreateASGroupResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_a_s_group(data=CreateASGroupRequest(...))
+    W->>B: ParseDict(params, CreateASGroupRequest)
+    B->>API: create_a_s_group (gRPC/TLS)
+    alt success
+        API-->>B: CreateASGroupResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateASGroupResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -122,19 +172,44 @@ Retrieve configuration of a AS group.
 
 Returns configuration of a AS group specified by ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_a_s_group(asGroupid="asGroupid-example")
     W->>API: GET /as_group/v202212/as_group/{asGroup.id}
     alt success
-        API-->>W: GetASGroupResponse
+        API-->>W: GetASGroupResponse (JSON)
         W-->>C: GetASGroupResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_a_s_group(asGroupid="asGroupid-example")
+    W->>B: ParseDict(params, GetASGroupRequest)
+    B->>API: get_a_s_group (gRPC/TLS)
+    alt success
+        API-->>B: GetASGroupResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetASGroupResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -172,19 +247,44 @@ Updates configuration of a AS group.
 
 Replaces configuration of a AS group with attributes in the request. Returns the updated configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_a_s_group(asGroupid="asGroupid-example", data=ASGroupServiceUpdateASGroupBody(...))
     W->>API: PUT /as_group/v202212/as_group/{asGroup.id}
     alt success
-        API-->>W: UpdateASGroupResponse
+        API-->>W: UpdateASGroupResponse (JSON)
         W-->>C: UpdateASGroupResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_a_s_group(asGroupid="asGroupid-example", data=ASGroupServiceUpdateASGroupBody(...))
+    W->>B: ParseDict(params, UpdateASGroupRequest)
+    B->>API: update_a_s_group (gRPC/TLS)
+    alt success
+        API-->>B: UpdateASGroupResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateASGroupResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -224,19 +324,44 @@ Delete configuration of a AS group.
 
 Deletes configuration of a AS group with specific ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_a_s_group(asGroupid="asGroupid-example")
     W->>API: DELETE /as_group/v202212/as_group/{asGroup.id}
     alt success
-        API-->>W: DeleteASGroupResponse
+        API-->>W: DeleteASGroupResponse (JSON)
         W-->>C: DeleteASGroupResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.as_group
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_a_s_group(asGroupid="asGroupid-example")
+    W->>B: ParseDict(params, DeleteASGroupRequest)
+    B->>API: delete_a_s_group (gRPC/TLS)
+    alt success
+        API-->>B: DeleteASGroupResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteASGroupResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

@@ -30,19 +30,44 @@ List credential groups.
 
 Returns list of credential group information in Kentik vault.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.credential
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_credential_group()
     W->>API: GET /credential/v202407alpha1/group
     alt success
-        API-->>W: ListCredentialGroupResponse
+        API-->>W: ListCredentialGroupResponse (JSON)
         W-->>C: ListCredentialGroupResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.credential
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_credential_group()
+    W->>B: ParseDict(params, ListCredentialGroupRequest)
+    B->>API: list_credential_group (gRPC/TLS)
+    alt success
+        API-->>B: ListCredentialGroupResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListCredentialGroupResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Get a credential group by id.
 
 Returns specific credential group information in Kentik vault.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.credential
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_credential_group(id="id-example")
     W->>API: GET /credential/v202407alpha1/group/{id}
     alt success
-        API-->>W: GetCredentialGroupResponse
+        API-->>W: GetCredentialGroupResponse (JSON)
         W-->>C: GetCredentialGroupResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.credential
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_credential_group(id="id-example")
+    W->>B: ParseDict(params, GetCredentialGroupRequest)
+    B->>API: get_credential_group (gRPC/TLS)
+    alt success
+        API-->>B: GetCredentialGroupResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetCredentialGroupResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

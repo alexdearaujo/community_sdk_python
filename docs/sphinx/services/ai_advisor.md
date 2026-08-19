@@ -30,19 +30,44 @@ Create AI Advisor Chat Session
 
 Create a new AI Advisor Chat session with a prompt
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.ai_advisor
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_chat_session(data=CreateChatSessionRequest(...))
     W->>API: POST /ai_advisor/v202511/chat
     alt success
-        API-->>W: CreateChatSessionResponse
+        API-->>W: CreateChatSessionResponse (JSON)
         W-->>C: CreateChatSessionResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ai_advisor
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_chat_session(data=CreateChatSessionRequest(...))
+    W->>B: ParseDict(params, CreateChatSessionRequest)
+    B->>API: create_chat_session (gRPC/TLS)
+    alt success
+        API-->>B: CreateChatSessionResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateChatSessionResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -80,19 +105,44 @@ Update AI Advisor Chat Session
 
 Update AI Advisor Chat session with a prompt
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.ai_advisor
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_chat_session(data=UpdateChatSessionRequest(...))
     W->>API: PUT /ai_advisor/v202511/chat
     alt success
-        API-->>W: UpdateChatSessionResponse
+        API-->>W: UpdateChatSessionResponse (JSON)
         W-->>C: UpdateChatSessionResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ai_advisor
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_chat_session(data=UpdateChatSessionRequest(...))
+    W->>B: ParseDict(params, UpdateChatSessionRequest)
+    B->>API: update_chat_session (gRPC/TLS)
+    alt success
+        API-->>B: UpdateChatSessionResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateChatSessionResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -130,19 +180,44 @@ Get AI Advisor Chat Session
 
 Retrieve the status and results of an AI Advisor chat session
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.ai_advisor
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_chat_session(id="id-example")
     W->>API: GET /ai_advisor/v202511/chat/{id}
     alt success
-        API-->>W: GetChatSessionResponse
+        API-->>W: GetChatSessionResponse (JSON)
         W-->>C: GetChatSessionResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.ai_advisor
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_chat_session(id="id-example")
+    W->>B: ParseDict(params, GetChatSessionRequest)
+    B->>API: get_chat_session (gRPC/TLS)
+    alt success
+        API-->>B: GetChatSessionResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetChatSessionResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

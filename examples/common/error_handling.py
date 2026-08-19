@@ -1,11 +1,11 @@
-"""Demonstrate SDK error handling."""
+"""Demonstrate SDK error handling — works identically for REST and gRPC."""
 
 from kentik_api.client import KentikAPI
 from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 
 
-def main() -> None:
-    client = KentikAPI()  # loads KENTIK_EMAIL / KENTIK_API_TOKEN from .env
+def main(protocol: str = "rest") -> None:
+    client = KentikAPI(protocol=protocol)
 
     try:
         devices = client.device.list_devices()
@@ -21,4 +21,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    main(protocol=sys.argv[1] if len(sys.argv) > 1 else "rest")

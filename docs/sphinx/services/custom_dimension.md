@@ -30,19 +30,44 @@ List Custom Dimensions
 
 Returns an array of custom dimension objects that each contain information about an individual custom dimension.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_custom_dimensions()
     W->>API: GET /custom_dimensions/v202411alpha1
     alt success
-        API-->>W: ListCustomDimensionsResponse
+        API-->>W: ListCustomDimensionsResponse (JSON)
         W-->>C: ListCustomDimensionsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_custom_dimensions()
+    W->>B: ParseDict(params, ListCustomDimensionsRequest)
+    B->>API: list_custom_dimensions (gRPC/TLS)
+    alt success
+        API-->>B: ListCustomDimensionsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListCustomDimensionsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Custom Dimension Info
 
 Returns a custom dimension object containing information about an individual custom dimension.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_custom_dimension_info(customDimensionId="customDimensionId-example")
     W->>API: GET /custom_dimensions/v202411alpha1/{customDimensionId}
     alt success
-        API-->>W: GetCustomDimensionInfoResponse
+        API-->>W: GetCustomDimensionInfoResponse (JSON)
         W-->>C: GetCustomDimensionInfoResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_custom_dimension_info(customDimensionId="customDimensionId-example")
+    W->>B: ParseDict(params, GetCustomDimensionInfoRequest)
+    B->>API: get_custom_dimension_info (gRPC/TLS)
+    alt success
+        API-->>B: GetCustomDimensionInfoResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetCustomDimensionInfoResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -122,19 +172,44 @@ Update Custom Dimension
 
 Updates and returns a custom dimension object containing information about an individual custom dimension (see About Custom Dimensions). Populators are not sent back in the response body. To get them use 'Custom Dimension info' API instead.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_custom_dimension(customDimensionId="customDimensionId-example")
     W->>API: PUT /custom_dimensions/v202411alpha1/{customDimensionId}
     alt success
-        API-->>W: UpdateCustomDimensionResponse
+        API-->>W: UpdateCustomDimensionResponse (JSON)
         W-->>C: UpdateCustomDimensionResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_custom_dimension(customDimensionId="customDimensionId-example")
+    W->>B: ParseDict(params, UpdateCustomDimensionRequest)
+    B->>API: update_custom_dimension (gRPC/TLS)
+    alt success
+        API-->>B: UpdateCustomDimensionResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateCustomDimensionResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -173,19 +248,44 @@ Delete Custom Dimension
 
 Deletes a custom dimension.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_custom_dimension(customDimensionId="customDimensionId-example")
     W->>API: DELETE /custom_dimensions/v202411alpha1/{customDimensionId}
     alt success
-        API-->>W: DeleteCustomDimensionResponse
+        API-->>W: DeleteCustomDimensionResponse (JSON)
         W-->>C: DeleteCustomDimensionResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_custom_dimension(customDimensionId="customDimensionId-example")
+    W->>B: ParseDict(params, DeleteCustomDimensionRequest)
+    B->>API: delete_custom_dimension (gRPC/TLS)
+    alt success
+        API-->>B: DeleteCustomDimensionResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteCustomDimensionResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -223,19 +323,44 @@ Create Populator
 
 Creates and returns a populator object containing information about an individual populator.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_populator(customDimensionId="customDimensionId-example")
     W->>API: POST /custom_dimensions/v202411alpha1/{customDimensionId}/populator
     alt success
-        API-->>W: CreatePopulatorResponse
+        API-->>W: CreatePopulatorResponse (JSON)
         W-->>C: CreatePopulatorResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_populator(customDimensionId="customDimensionId-example")
+    W->>B: ParseDict(params, CreatePopulatorRequest)
+    B->>API: create_populator (gRPC/TLS)
+    alt success
+        API-->>B: CreatePopulatorResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreatePopulatorResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -274,19 +399,44 @@ Get Populator
 
 Get Populator by Dimension and Populator ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example")
     W->>API: GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}
     alt success
-        API-->>W: GetPopulatorResponse
+        API-->>W: GetPopulatorResponse (JSON)
         W-->>C: GetPopulatorResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example")
+    W->>B: ParseDict(params, GetPopulatorRequest)
+    B->>API: get_populator (gRPC/TLS)
+    alt success
+        API-->>B: GetPopulatorResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetPopulatorResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -327,19 +477,44 @@ Update Populator
 
 Updates and returns a populator object containing information about an individual populator.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example")
     W->>API: PUT /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}
     alt success
-        API-->>W: UpdatePopulatorResponse
+        API-->>W: UpdatePopulatorResponse (JSON)
         W-->>C: UpdatePopulatorResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example")
+    W->>B: ParseDict(params, UpdatePopulatorRequest)
+    B->>API: update_populator (gRPC/TLS)
+    alt success
+        API-->>B: UpdatePopulatorResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdatePopulatorResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -380,19 +555,44 @@ Delete Populator
 
 Deletes a populator.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example")
     W->>API: DELETE /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}
     alt success
-        API-->>W: DeletePopulatorResponse
+        API-->>W: DeletePopulatorResponse (JSON)
         W-->>C: DeletePopulatorResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example")
+    W->>B: ParseDict(params, DeletePopulatorRequest)
+    B->>API: delete_populator (gRPC/TLS)
+    alt success
+        API-->>B: DeletePopulatorResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeletePopulatorResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -432,19 +632,44 @@ Get Populator Field
 
 Get Populator field by Dimension, Populator ID, and field name.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_populator_field(customDimensionId="customDimensionId-example", populatorId="populatorId-example", fieldName="fieldName-example")
     W->>API: GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}
     alt success
-        API-->>W: GetPopulatorFieldResponse
+        API-->>W: GetPopulatorFieldResponse (JSON)
         W-->>C: GetPopulatorFieldResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_populator_field(customDimensionId="customDimensionId-example", populatorId="populatorId-example", fieldName="fieldName-example")
+    W->>B: ParseDict(params, GetPopulatorFieldRequest)
+    B->>API: get_populator_field (gRPC/TLS)
+    alt success
+        API-->>B: GetPopulatorFieldResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetPopulatorFieldResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -488,19 +713,44 @@ Create Custom Dimension
 
 Creates and returns a custom dimension object containing information about an individual custom dimension
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_custom_dimension()
     W->>API: POST /v1/customdimension
     alt success
-        API-->>W: CreateCustomDimensionResponse
+        API-->>W: CreateCustomDimensionResponse (JSON)
         W-->>C: CreateCustomDimensionResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.custom_dimension
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_custom_dimension()
+    W->>B: ParseDict(params, CreateCustomDimensionRequest)
+    B->>API: create_custom_dimension (gRPC/TLS)
+    alt success
+        API-->>B: CreateCustomDimensionResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateCustomDimensionResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

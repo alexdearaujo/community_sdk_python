@@ -32,19 +32,44 @@ Get metrics for a BGP prefix.
 
 Retrieve metric data for single BGP prefix and time interval.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_metrics_for_target(data=GetMetricsForTargetRequest(...))
     W->>API: POST /bgp_monitoring/v202210/metrics
     alt success
-        API-->>W: GetMetricsForTargetResponse
+        API-->>W: GetMetricsForTargetResponse (JSON)
         W-->>C: GetMetricsForTargetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_metrics_for_target(data=GetMetricsForTargetRequest(...))
+    W->>B: ParseDict(params, GetMetricsForTargetRequest)
+    B->>API: get_metrics_for_target (gRPC/TLS)
+    alt success
+        API-->>B: GetMetricsForTargetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetMetricsForTargetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -82,19 +107,44 @@ Get routes for a BGP prefix.
 
 Retrieve snapshot of route information for single BGP prefix at specific time.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_routes_for_target(data=GetRoutesForTargetRequest(...))
     W->>API: POST /bgp_monitoring/v202210/routes
     alt success
-        API-->>W: GetRoutesForTargetResponse
+        API-->>W: GetRoutesForTargetResponse (JSON)
         W-->>C: GetRoutesForTargetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_routes_for_target(data=GetRoutesForTargetRequest(...))
+    W->>B: ParseDict(params, GetRoutesForTargetRequest)
+    B->>API: get_routes_for_target (gRPC/TLS)
+    alt success
+        API-->>B: GetRoutesForTargetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetRoutesForTargetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -132,19 +182,44 @@ List BGP Monitors.
 
 Returns list of all BGP monitors present in the account.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_monitors()
     W->>API: GET /bgp_monitoring/v202210/monitors
     alt success
-        API-->>W: ListMonitorsResponse
+        API-->>W: ListMonitorsResponse (JSON)
         W-->>C: ListMonitorsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_monitors()
+    W->>B: ParseDict(params, ListMonitorsRequest)
+    B->>API: list_monitors (gRPC/TLS)
+    alt success
+        API-->>B: ListMonitorsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListMonitorsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -174,19 +249,44 @@ Create new BGP Monitor instance.
 
 Creates new BGP Monitor and if successful returns its configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_monitor(data=CreateMonitorRequest(...))
     W->>API: POST /bgp_monitoring/v202210/monitors
     alt success
-        API-->>W: CreateMonitorResponse
+        API-->>W: CreateMonitorResponse (JSON)
         W-->>C: CreateMonitorResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_monitor(data=CreateMonitorRequest(...))
+    W->>B: ParseDict(params, CreateMonitorRequest)
+    B->>API: create_monitor (gRPC/TLS)
+    alt success
+        API-->>B: CreateMonitorResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateMonitorResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -224,19 +324,44 @@ Get BGP Monitor configuration.
 
 Returns configuration of existing BGP monitor with specific ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_monitor(id="id-example")
     W->>API: GET /bgp_monitoring/v202210/monitors/{id}
     alt success
-        API-->>W: GetMonitorResponse
+        API-->>W: GetMonitorResponse (JSON)
         W-->>C: GetMonitorResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_monitor(id="id-example")
+    W->>B: ParseDict(params, GetMonitorRequest)
+    B->>API: get_monitor (gRPC/TLS)
+    alt success
+        API-->>B: GetMonitorResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetMonitorResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -274,19 +399,44 @@ Update configuration of a BGP monitor.
 
 Updates configuration of BGP monitor with specific ID and returns updated  configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_monitor(id="id-example", data=BgpMonitoringAdminServiceUpdateMonitorBody(...))
     W->>API: PUT /bgp_monitoring/v202210/monitors/{id}
     alt success
-        API-->>W: UpdateMonitorResponse
+        API-->>W: UpdateMonitorResponse (JSON)
         W-->>C: UpdateMonitorResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_monitor(id="id-example", data=BgpMonitoringAdminServiceUpdateMonitorBody(...))
+    W->>B: ParseDict(params, UpdateMonitorRequest)
+    B->>API: update_monitor (gRPC/TLS)
+    alt success
+        API-->>B: UpdateMonitorResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateMonitorResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -326,19 +476,44 @@ Delete existing BGP Monitor.
 
 Delete BGP monitor with with specific ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_monitor(id="id-example")
     W->>API: DELETE /bgp_monitoring/v202210/monitors/{id}
     alt success
-        API-->>W: DeleteMonitorResponse
+        API-->>W: DeleteMonitorResponse (JSON)
         W-->>C: DeleteMonitorResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_monitor(id="id-example")
+    W->>B: ParseDict(params, DeleteMonitorRequest)
+    B->>API: delete_monitor (gRPC/TLS)
+    alt success
+        API-->>B: DeleteMonitorResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteMonitorResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -376,19 +551,44 @@ Sets administrative status of a BGP monitor.
 
 Sets administrative status of BGP monitor with specific ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: set_monitor_status(id="id-example", data=BgpMonitoringAdminServiceSetMonitorStatusBody(...))
     W->>API: PUT /bgp_monitoring/v202210/monitors/{id}/status
     alt success
-        API-->>W: SetMonitorStatusResponse
+        API-->>W: SetMonitorStatusResponse (JSON)
         W-->>C: SetMonitorStatusResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.bgp_monitoring
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: set_monitor_status(id="id-example", data=BgpMonitoringAdminServiceSetMonitorStatusBody(...))
+    W->>B: ParseDict(params, SetMonitorStatusRequest)
+    B->>API: set_monitor_status (gRPC/TLS)
+    alt success
+        API-->>B: SetMonitorStatusResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SetMonitorStatusResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

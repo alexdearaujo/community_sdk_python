@@ -13,7 +13,9 @@ def main() -> None:
         print(f"  {site.id}: {site.title}")
 
     markets_resp = client.site.list_site_markets()
-    markets = [market for market in (markets_resp.siteMarkets or []) if market is not None]
+    markets = [
+        market for market in (markets_resp.siteMarkets or []) if market is not None
+    ]
     print(f"\nFound {len(markets)} site market(s).")
     for market in markets[:5]:
         print(f"  {market.id}: {market.name}")

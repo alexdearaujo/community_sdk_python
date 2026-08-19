@@ -30,19 +30,44 @@ Resolve enumeration IDs to values.
 
 Return the string values for the supplied enumeration lookup IDs within the authenticated company. Unknown IDs are omitted from the response.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.enrichments
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: fetch_values_by_ids(data=FetchValuesByIdsRequest(...))
     W->>API: POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids
     alt success
-        API-->>W: FetchValuesByIdsResponse
+        API-->>W: FetchValuesByIdsResponse (JSON)
         W-->>C: FetchValuesByIdsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.enrichments
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: fetch_values_by_ids(data=FetchValuesByIdsRequest(...))
+    W->>B: ParseDict(params, FetchValuesByIdsRequest)
+    B->>API: fetch_values_by_ids (gRPC/TLS)
+    alt success
+        API-->>B: FetchValuesByIdsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: FetchValuesByIdsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

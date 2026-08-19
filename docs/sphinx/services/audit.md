@@ -30,19 +30,44 @@ List Audit Events.
 
 Returns a list of audit events.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.audit
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_audit_events()
     W->>API: GET /audit/v202601/events
     alt success
-        API-->>W: ListAuditEventsResponse
+        API-->>W: ListAuditEventsResponse (JSON)
         W-->>C: ListAuditEventsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.audit
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_audit_events()
+    W->>B: ParseDict(params, ListAuditEventsRequest)
+    B->>API: list_audit_events (gRPC/TLS)
+    alt success
+        API-->>B: ListAuditEventsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListAuditEventsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -81,19 +106,44 @@ Get an Audit Event
 
 Return a specific audit event.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.audit
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_audit_event(id="id-example")
     W->>API: GET /audit/v202601/events/{id}
     alt success
-        API-->>W: GetAuditEventResponse
+        API-->>W: GetAuditEventResponse (JSON)
         W-->>C: GetAuditEventResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.audit
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_audit_event(id="id-example")
+    W->>B: ParseDict(params, GetAuditEventRequest)
+    B->>API: get_audit_event (gRPC/TLS)
+    alt success
+        API-->>B: GetAuditEventResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetAuditEventResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -132,19 +182,44 @@ Get an Audit Event
 
 Return a specific audit event.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.audit
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_audit_event_2(id="id-example", ctime="ctime-example")
     W->>API: GET /audit/v202601/events/{id}/{ctime}
     alt success
-        API-->>W: GetAuditEventResponse
+        API-->>W: GetAuditEventResponse (JSON)
         W-->>C: GetAuditEventResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.audit
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_audit_event_2(id="id-example", ctime="ctime-example")
+    W->>B: ParseDict(params, GetAuditEventRequest)
+    B->>API: get_audit_event_2 (gRPC/TLS)
+    alt success
+        API-->>B: GetAuditEventResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetAuditEventResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

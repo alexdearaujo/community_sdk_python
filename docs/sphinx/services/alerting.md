@@ -32,19 +32,44 @@ List Alerts
 
 Returns an array of alert objects that contain information about individual alerts.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: alert_list(data=AlertServiceListRequest(...))
     W->>API: POST /v202505/alerts
     alt success
-        API-->>W: AlertServiceListResponse
+        API-->>W: AlertServiceListResponse (JSON)
         W-->>C: AlertServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: alert_list(data=AlertServiceListRequest(...))
+    W->>B: ParseDict(params, ListRequest)
+    B->>API: alert_list (gRPC/TLS)
+    alt success
+        API-->>B: AlertServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -82,19 +107,44 @@ Clear Alerts
 
 Clears alerts.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: clear(data=AlertServiceClearRequest(...))
     W->>API: POST /v202505/alerts/clear
     alt success
-        API-->>W: AlertServiceClearResponse
+        API-->>W: AlertServiceClearResponse (JSON)
         W-->>C: AlertServiceClearResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: clear(data=AlertServiceClearRequest(...))
+    W->>B: ParseDict(params, ClearRequest)
+    B->>API: clear (gRPC/TLS)
+    alt success
+        API-->>B: AlertServiceClearResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertServiceClearResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -132,19 +182,44 @@ List Alert Comments
 
 Returns all comments for an alert.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_comments(alertId="alertId-example")
     W->>API: GET /v202505/alerts/{alertId}/comments
     alt success
-        API-->>W: AlertServiceListCommentsResponse
+        API-->>W: AlertServiceListCommentsResponse (JSON)
         W-->>C: AlertServiceListCommentsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_comments(alertId="alertId-example")
+    W->>B: ParseDict(params, ListCommentsRequest)
+    B->>API: list_comments (gRPC/TLS)
+    alt success
+        API-->>B: AlertServiceListCommentsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertServiceListCommentsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -182,19 +257,44 @@ Add Alert Comment
 
 Adds a comment to an alert.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: add_comment(alertId="alertId-example", data=AlertServiceAddCommentBody(...))
     W->>API: POST /v202505/alerts/{alertId}/comments
     alt success
-        API-->>W: AlertServiceAddCommentResponse
+        API-->>W: AlertServiceAddCommentResponse (JSON)
         W-->>C: AlertServiceAddCommentResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: add_comment(alertId="alertId-example", data=AlertServiceAddCommentBody(...))
+    W->>B: ParseDict(params, AddCommentRequest)
+    B->>API: add_comment (gRPC/TLS)
+    alt success
+        API-->>B: AlertServiceAddCommentResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertServiceAddCommentResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -234,19 +334,44 @@ Set External Context for Alert
 
 Add or replace external context
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: set_external_context(alertId="alertId-example", data=AlertServiceSetExternalContextBody(...))
     W->>API: PUT /v202505/alerts/{alertId}/external-context
     alt success
-        API-->>W: AlertServiceSetExternalContextResponse
+        API-->>W: AlertServiceSetExternalContextResponse (JSON)
         W-->>C: AlertServiceSetExternalContextResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: set_external_context(alertId="alertId-example", data=AlertServiceSetExternalContextBody(...))
+    W->>B: ParseDict(params, SetExternalContextRequest)
+    B->>API: set_external_context (gRPC/TLS)
+    alt success
+        API-->>B: AlertServiceSetExternalContextResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertServiceSetExternalContextResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -286,19 +411,44 @@ Get Alert
 
 Returns an alert object that contains information about an individual alert.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: alert_get(id="id-example")
     W->>API: GET /v202505/alerts/{id}
     alt success
-        API-->>W: AlertServiceGetResponse
+        API-->>W: AlertServiceGetResponse (JSON)
         W-->>C: AlertServiceGetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: alert_get(id="id-example")
+    W->>B: ParseDict(params, GetRequest)
+    B->>API: alert_get (gRPC/TLS)
+    alt success
+        API-->>B: AlertServiceGetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertServiceGetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -336,19 +486,44 @@ Ack Alert
 
 Acknowledges an alert.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: ack(id="id-example", data=AlertServiceAckBody(...))
     W->>API: POST /v202505/alerts/{id}/ack
     alt success
-        API-->>W: AlertServiceAckResponse
+        API-->>W: AlertServiceAckResponse (JSON)
         W-->>C: AlertServiceAckResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: ack(id="id-example", data=AlertServiceAckBody(...))
+    W->>B: ParseDict(params, AckRequest)
+    B->>API: ack (gRPC/TLS)
+    alt success
+        API-->>B: AlertServiceAckResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertServiceAckResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -388,19 +563,44 @@ UnAck Alert
 
 Unacknowledges an alert (removes the acknowledgement).
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: un_ack(id="id-example", data=AlertServiceUnAckBody(...))
     W->>API: POST /v202505/alerts/{id}/unack
     alt success
-        API-->>W: AlertServiceUnAckResponse
+        API-->>W: AlertServiceUnAckResponse (JSON)
         W-->>C: AlertServiceUnAckResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: un_ack(id="id-example", data=AlertServiceUnAckBody(...))
+    W->>B: ParseDict(params, UnAckRequest)
+    B->>API: un_ack (gRPC/TLS)
+    alt success
+        API-->>B: AlertServiceUnAckResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertServiceUnAckResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -440,19 +640,44 @@ Create Auto-Ack
 
 Creates a new auto-ack configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create(data=AlertAutoAckServiceCreateRequest(...))
     W->>API: POST /v202505/alerts/ack/auto
     alt success
-        API-->>W: AlertAutoAckServiceCreateResponse
+        API-->>W: AlertAutoAckServiceCreateResponse (JSON)
         W-->>C: AlertAutoAckServiceCreateResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create(data=AlertAutoAckServiceCreateRequest(...))
+    W->>B: ParseDict(params, CreateRequest)
+    B->>API: create (gRPC/TLS)
+    alt success
+        API-->>B: AlertAutoAckServiceCreateResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertAutoAckServiceCreateResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -490,19 +715,44 @@ List Auto-Acks
 
 Returns a list of auto-ack configurations.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list(data=AlertAutoAckServiceListRequest(...))
     W->>API: POST /v202505/alerts/ack/auto/list
     alt success
-        API-->>W: AlertAutoAckServiceListResponse
+        API-->>W: AlertAutoAckServiceListResponse (JSON)
         W-->>C: AlertAutoAckServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list(data=AlertAutoAckServiceListRequest(...))
+    W->>B: ParseDict(params, ListRequest)
+    B->>API: list (gRPC/TLS)
+    alt success
+        API-->>B: AlertAutoAckServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertAutoAckServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -540,19 +790,44 @@ Get Auto-Ack
 
 Returns an auto-ack configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get(autoAckid="autoAckid-example")
     W->>API: GET /v202505/alerts/ack/auto/{autoAck.id}
     alt success
-        API-->>W: AlertAutoAckServiceGetResponse
+        API-->>W: AlertAutoAckServiceGetResponse (JSON)
         W-->>C: AlertAutoAckServiceGetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get(autoAckid="autoAckid-example")
+    W->>B: ParseDict(params, GetRequest)
+    B->>API: get (gRPC/TLS)
+    alt success
+        API-->>B: AlertAutoAckServiceGetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertAutoAckServiceGetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -590,19 +865,44 @@ Replace Auto-Ack
 
 Replaces an auto-ack configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
     W->>API: PATCH /v202505/alerts/ack/auto/{autoAck.id}
     alt success
-        API-->>W: AlertAutoAckServiceReplaceResponse
+        API-->>W: AlertAutoAckServiceReplaceResponse (JSON)
         W-->>C: AlertAutoAckServiceReplaceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
+    W->>B: ParseDict(params, ReplaceRequest)
+    B->>API: replace (gRPC/TLS)
+    alt success
+        API-->>B: AlertAutoAckServiceReplaceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertAutoAckServiceReplaceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -642,19 +942,44 @@ Delete Auto-Ack
 
 Deletes an auto-ack configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete(autoAckid="autoAckid-example")
     W->>API: DELETE /v202505/alerts/ack/auto/{autoAck.id}
     alt success
-        API-->>W: AlertAutoAckServiceDeleteResponse
+        API-->>W: AlertAutoAckServiceDeleteResponse (JSON)
         W-->>C: AlertAutoAckServiceDeleteResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete(autoAckid="autoAckid-example")
+    W->>B: ParseDict(params, DeleteRequest)
+    B->>API: delete (gRPC/TLS)
+    alt success
+        API-->>B: AlertAutoAckServiceDeleteResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertAutoAckServiceDeleteResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -692,19 +1017,44 @@ List Mitigations
 
 Returns a list of mitigations.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: mitigations_list()
     W->>API: GET /v202505/mitigations
     alt success
-        API-->>W: MitigationsServiceListResponse
+        API-->>W: MitigationsServiceListResponse (JSON)
         W-->>C: MitigationsServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_list()
+    W->>B: ParseDict(params, ListRequest)
+    B->>API: mitigations_list (gRPC/TLS)
+    alt success
+        API-->>B: MitigationsServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationsServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -752,19 +1102,44 @@ Create Mitigation
 
 Creates a new manual mitigation.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: mitigations_create(data=MitigationsServiceCreateRequest(...))
     W->>API: POST /v202505/mitigations
     alt success
-        API-->>W: MitigationsServiceCreateResponse
+        API-->>W: MitigationsServiceCreateResponse (JSON)
         W-->>C: MitigationsServiceCreateResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_create(data=MitigationsServiceCreateRequest(...))
+    W->>B: ParseDict(params, CreateRequest)
+    B->>API: mitigations_create (gRPC/TLS)
+    alt success
+        API-->>B: MitigationsServiceCreateResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationsServiceCreateResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -802,19 +1177,44 @@ Get Available Actions
 
 Returns available actions for mitigations.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: available_actions()
     W->>API: GET /v202505/mitigations/actions
     alt success
-        API-->>W: MitigationsServiceAvailableActionsResponse
+        API-->>W: MitigationsServiceAvailableActionsResponse (JSON)
         W-->>C: MitigationsServiceAvailableActionsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: available_actions()
+    W->>B: ParseDict(params, AvailableActionsRequest)
+    B->>API: available_actions (gRPC/TLS)
+    alt success
+        API-->>B: MitigationsServiceAvailableActionsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationsServiceAvailableActionsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -844,19 +1244,44 @@ Get Mitigation
 
 Returns a mitigation.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: mitigations_get(action="action-example")
     W->>API: GET /v202505/mitigations/{action}
     alt success
-        API-->>W: MitigationsServiceGetResponse
+        API-->>W: MitigationsServiceGetResponse (JSON)
         W-->>C: MitigationsServiceGetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_get(action="action-example")
+    W->>B: ParseDict(params, GetRequest)
+    B->>API: mitigations_get (gRPC/TLS)
+    alt success
+        API-->>B: MitigationsServiceGetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationsServiceGetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -894,19 +1319,44 @@ Act on Mitigation
 
 Performs an action on one or more mitigations.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: act(action="action-example", data=MitigationsServiceActBody(...))
     W->>API: POST /v202505/mitigations/{action}
     alt success
-        API-->>W: MitigationsServiceActResponse
+        API-->>W: MitigationsServiceActResponse (JSON)
         W-->>C: MitigationsServiceActResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: act(action="action-example", data=MitigationsServiceActBody(...))
+    W->>B: ParseDict(params, ActRequest)
+    B->>API: act (gRPC/TLS)
+    alt success
+        API-->>B: MitigationsServiceActResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationsServiceActResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -946,19 +1396,44 @@ Get Available Actions for Mitigation
 
 Returns available actions for a specific mitigation.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: available_actions_for_mitigation(id="id-example")
     W->>API: GET /v202505/mitigations/{id}/actions
     alt success
-        API-->>W: MitigationsServiceAvailableActionsForMitigationResponse
+        API-->>W: MitigationsServiceAvailableActionsForMitigationResponse (JSON)
         W-->>C: MitigationsServiceAvailableActionsForMitigationResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: available_actions_for_mitigation(id="id-example")
+    W->>B: ParseDict(params, AvailableActionsForMitigationRequest)
+    B->>API: available_actions_for_mitigation (gRPC/TLS)
+    alt success
+        API-->>B: MitigationsServiceAvailableActionsForMitigationResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationsServiceAvailableActionsForMitigationResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -996,19 +1471,44 @@ List Mitigation Methods
 
 Returns a list of mitigation methods.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: mitigation_methods_list()
     W->>API: GET /v202505/mitigations/methods
     alt success
-        API-->>W: MitigationMethodsServiceListResponse
+        API-->>W: MitigationMethodsServiceListResponse (JSON)
         W-->>C: MitigationMethodsServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: mitigation_methods_list()
+    W->>B: ParseDict(params, ListRequest)
+    B->>API: mitigation_methods_list (gRPC/TLS)
+    alt success
+        API-->>B: MitigationMethodsServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationMethodsServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1052,19 +1552,44 @@ Get Mitigation Method
 
 Returns a mitigation method.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: mitigation_methods_get(id="id-example")
     W->>API: GET /v202505/mitigations/methods/{id}
     alt success
-        API-->>W: MitigationMethodsServiceGetResponse
+        API-->>W: MitigationMethodsServiceGetResponse (JSON)
         W-->>C: MitigationMethodsServiceGetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: mitigation_methods_get(id="id-example")
+    W->>B: ParseDict(params, GetRequest)
+    B->>API: mitigation_methods_get (gRPC/TLS)
+    alt success
+        API-->>B: MitigationMethodsServiceGetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationMethodsServiceGetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1102,19 +1627,44 @@ List Mitigation Platforms
 
 Returns a list of mitigation platforms.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: mitigation_platforms_list()
     W->>API: GET /v202505/mitigations/platforms
     alt success
-        API-->>W: MitigationPlatformsServiceListResponse
+        API-->>W: MitigationPlatformsServiceListResponse (JSON)
         W-->>C: MitigationPlatformsServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: mitigation_platforms_list()
+    W->>B: ParseDict(params, ListRequest)
+    B->>API: mitigation_platforms_list (gRPC/TLS)
+    alt success
+        API-->>B: MitigationPlatformsServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationPlatformsServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1158,19 +1708,44 @@ Get Mitigation Platform
 
 Returns a mitigation platform.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: mitigation_platforms_get(id="id-example")
     W->>API: GET /v202505/mitigations/platforms/{id}
     alt success
-        API-->>W: MitigationPlatformsServiceGetResponse
+        API-->>W: MitigationPlatformsServiceGetResponse (JSON)
         W-->>C: MitigationPlatformsServiceGetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: mitigation_platforms_get(id="id-example")
+    W->>B: ParseDict(params, GetRequest)
+    B->>API: mitigation_platforms_get (gRPC/TLS)
+    alt success
+        API-->>B: MitigationPlatformsServiceGetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: MitigationPlatformsServiceGetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1208,19 +1783,44 @@ List Policies
 
 Returns a list of alerting policies.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: policy_list(data=PolicyServiceListRequest(...))
     W->>API: POST /v202505/policies/list
     alt success
-        API-->>W: PolicyServiceListResponse
+        API-->>W: PolicyServiceListResponse (JSON)
         W-->>C: PolicyServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: policy_list(data=PolicyServiceListRequest(...))
+    W->>B: ParseDict(params, ListRequest)
+    B->>API: policy_list (gRPC/TLS)
+    alt success
+        API-->>B: PolicyServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: PolicyServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1258,19 +1858,44 @@ Get Policy
 
 Returns an alerting policy.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: policy_get(policyType="policyType-example", id="id-example")
     W->>API: GET /v202505/policies/{policyType}/{id}
     alt success
-        API-->>W: PolicyServiceGetResponse
+        API-->>W: PolicyServiceGetResponse (JSON)
         W-->>C: PolicyServiceGetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: policy_get(policyType="policyType-example", id="id-example")
+    W->>B: ParseDict(params, GetRequest)
+    B->>API: policy_get (gRPC/TLS)
+    alt success
+        API-->>B: PolicyServiceGetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: PolicyServiceGetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1310,19 +1935,44 @@ Disable Policy
 
 Disables an alerting policy.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: disable(policyType="policyType-example", id="id-example", data=PolicyServiceDisableBody(...))
     W->>API: POST /v202505/policies/{policyType}/{id}/disable
     alt success
-        API-->>W: PolicyServiceDisableResponse
+        API-->>W: PolicyServiceDisableResponse (JSON)
         W-->>C: PolicyServiceDisableResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: disable(policyType="policyType-example", id="id-example", data=PolicyServiceDisableBody(...))
+    W->>B: ParseDict(params, DisableRequest)
+    B->>API: disable (gRPC/TLS)
+    alt success
+        API-->>B: PolicyServiceDisableResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: PolicyServiceDisableResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1364,19 +2014,44 @@ Enable Policy
 
 Enables an alerting policy.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: enable(policyType="policyType-example", id="id-example", data=PolicyServiceEnableBody(...))
     W->>API: POST /v202505/policies/{policyType}/{id}/enable
     alt success
-        API-->>W: PolicyServiceEnableResponse
+        API-->>W: PolicyServiceEnableResponse (JSON)
         W-->>C: PolicyServiceEnableResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: enable(policyType="policyType-example", id="id-example", data=PolicyServiceEnableBody(...))
+    W->>B: ParseDict(params, EnableRequest)
+    B->>API: enable (gRPC/TLS)
+    alt success
+        API-->>B: PolicyServiceEnableResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: PolicyServiceEnableResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1418,19 +2093,44 @@ Create Alert Silence Notifications
 
 Creates a new alert silence notifications configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: alert_silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
     W->>API: POST /v202505/alerts/silence
     alt success
-        API-->>W: AlertSilenceNotificationsServiceCreateResponse
+        API-->>W: AlertSilenceNotificationsServiceCreateResponse (JSON)
         W-->>C: AlertSilenceNotificationsServiceCreateResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: alert_silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
+    W->>B: ParseDict(params, CreateRequest)
+    B->>API: alert_silence_notifications_create (gRPC/TLS)
+    alt success
+        API-->>B: AlertSilenceNotificationsServiceCreateResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertSilenceNotificationsServiceCreateResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1468,19 +2168,44 @@ List Alert Notification Silences
 
 Returns a list of alert silence notifications configurations.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: alert_silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
     W->>API: POST /v202505/alerts/silence/list
     alt success
-        API-->>W: AlertSilenceNotificationsServiceListResponse
+        API-->>W: AlertSilenceNotificationsServiceListResponse (JSON)
         W-->>C: AlertSilenceNotificationsServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: alert_silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
+    W->>B: ParseDict(params, ListRequest)
+    B->>API: alert_silence_notifications_list (gRPC/TLS)
+    alt success
+        API-->>B: AlertSilenceNotificationsServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertSilenceNotificationsServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1518,19 +2243,44 @@ Get Alert Silence Notifications
 
 Returns an alert silence notifications configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: alert_silence_notifications_get(id="id-example")
     W->>API: GET /v202505/alerts/silence/{id}
     alt success
-        API-->>W: AlertSilenceNotificationsServiceGetResponse
+        API-->>W: AlertSilenceNotificationsServiceGetResponse (JSON)
         W-->>C: AlertSilenceNotificationsServiceGetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: alert_silence_notifications_get(id="id-example")
+    W->>B: ParseDict(params, GetRequest)
+    B->>API: alert_silence_notifications_get (gRPC/TLS)
+    alt success
+        API-->>B: AlertSilenceNotificationsServiceGetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertSilenceNotificationsServiceGetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1568,19 +2318,44 @@ Replace Alert Notification Silence
 
 Replaces an alert silence notifications configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: alert_silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
     W->>API: PATCH /v202505/alerts/silence/{id}
     alt success
-        API-->>W: AlertSilenceNotificationsServiceReplaceResponse
+        API-->>W: AlertSilenceNotificationsServiceReplaceResponse (JSON)
         W-->>C: AlertSilenceNotificationsServiceReplaceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: alert_silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
+    W->>B: ParseDict(params, ReplaceRequest)
+    B->>API: alert_silence_notifications_replace (gRPC/TLS)
+    alt success
+        API-->>B: AlertSilenceNotificationsServiceReplaceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertSilenceNotificationsServiceReplaceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1620,19 +2395,44 @@ Delete Alert Notification Silence
 
 Deletes an alert silence notifications configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: alert_silence_notifications_delete(id="id-example")
     W->>API: DELETE /v202505/alerts/silence/{id}
     alt success
-        API-->>W: AlertSilenceNotificationsServiceDeleteResponse
+        API-->>W: AlertSilenceNotificationsServiceDeleteResponse (JSON)
         W-->>C: AlertSilenceNotificationsServiceDeleteResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: alert_silence_notifications_delete(id="id-example")
+    W->>B: ParseDict(params, DeleteRequest)
+    B->>API: alert_silence_notifications_delete (gRPC/TLS)
+    alt success
+        API-->>B: AlertSilenceNotificationsServiceDeleteResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: AlertSilenceNotificationsServiceDeleteResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1670,19 +2470,44 @@ Create Suppression
 
 Creates a new suppression configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: suppression_create(data=SuppressionServiceCreateRequest(...))
     W->>API: POST /v202505/suppressions
     alt success
-        API-->>W: SuppressionServiceCreateResponse
+        API-->>W: SuppressionServiceCreateResponse (JSON)
         W-->>C: SuppressionServiceCreateResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: suppression_create(data=SuppressionServiceCreateRequest(...))
+    W->>B: ParseDict(params, CreateRequest)
+    B->>API: suppression_create (gRPC/TLS)
+    alt success
+        API-->>B: SuppressionServiceCreateResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SuppressionServiceCreateResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1720,19 +2545,44 @@ List Suppressions
 
 Returns a list of suppression configurations.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: suppression_list(data=SuppressionServiceListRequest(...))
     W->>API: POST /v202505/suppressions/list
     alt success
-        API-->>W: SuppressionServiceListResponse
+        API-->>W: SuppressionServiceListResponse (JSON)
         W-->>C: SuppressionServiceListResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: suppression_list(data=SuppressionServiceListRequest(...))
+    W->>B: ParseDict(params, ListRequest)
+    B->>API: suppression_list (gRPC/TLS)
+    alt success
+        API-->>B: SuppressionServiceListResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SuppressionServiceListResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1770,19 +2620,44 @@ Get Suppression
 
 Returns a suppression configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: suppression_get(id="id-example")
     W->>API: GET /v202505/suppressions/{id}
     alt success
-        API-->>W: SuppressionServiceGetResponse
+        API-->>W: SuppressionServiceGetResponse (JSON)
         W-->>C: SuppressionServiceGetResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: suppression_get(id="id-example")
+    W->>B: ParseDict(params, GetRequest)
+    B->>API: suppression_get (gRPC/TLS)
+    alt success
+        API-->>B: SuppressionServiceGetResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SuppressionServiceGetResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1820,19 +2695,44 @@ Replace Suppression
 
 Replaces a suppression configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: suppression_replace(id="id-example", data=SuppressionServiceReplaceBody(...))
     W->>API: PATCH /v202505/suppressions/{id}
     alt success
-        API-->>W: SuppressionServiceReplaceResponse
+        API-->>W: SuppressionServiceReplaceResponse (JSON)
         W-->>C: SuppressionServiceReplaceResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: suppression_replace(id="id-example", data=SuppressionServiceReplaceBody(...))
+    W->>B: ParseDict(params, ReplaceRequest)
+    B->>API: suppression_replace (gRPC/TLS)
+    alt success
+        API-->>B: SuppressionServiceReplaceResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SuppressionServiceReplaceResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -1872,19 +2772,44 @@ Delete Suppression
 
 Deletes a suppression configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: suppression_delete(id="id-example")
     W->>API: DELETE /v202505/suppressions/{id}
     alt success
-        API-->>W: SuppressionServiceDeleteResponse
+        API-->>W: SuppressionServiceDeleteResponse (JSON)
         W-->>C: SuppressionServiceDeleteResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: suppression_delete(id="id-example")
+    W->>B: ParseDict(params, DeleteRequest)
+    B->>API: suppression_delete (gRPC/TLS)
+    alt success
+        API-->>B: SuppressionServiceDeleteResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: SuppressionServiceDeleteResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

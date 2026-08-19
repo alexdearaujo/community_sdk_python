@@ -30,19 +30,44 @@ List all site markets.
 
 Returns list of configured site markets.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_site_markets()
     W->>API: GET /site/v202509/site_markets
     alt success
-        API-->>W: ListSiteMarketsResponse
+        API-->>W: ListSiteMarketsResponse (JSON)
         W-->>C: ListSiteMarketsResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_site_markets()
+    W->>B: ParseDict(params, ListSiteMarketsRequest)
+    B->>API: list_site_markets (gRPC/TLS)
+    alt success
+        API-->>B: ListSiteMarketsResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListSiteMarketsResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -72,19 +97,44 @@ Configure a new site market.
 
 Create configuration for a new site market. Returns the newly created configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_site_market(data=CreateSiteMarketRequest(...))
     W->>API: POST /site/v202509/site_markets
     alt success
-        API-->>W: CreateSiteMarketResponse
+        API-->>W: CreateSiteMarketResponse (JSON)
         W-->>C: CreateSiteMarketResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_site_market(data=CreateSiteMarketRequest(...))
+    W->>B: ParseDict(params, CreateSiteMarketRequest)
+    B->>API: create_site_market (gRPC/TLS)
+    alt success
+        API-->>B: CreateSiteMarketResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateSiteMarketResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -122,19 +172,44 @@ Retrieve configuration of a site market.
 
 Returns configuration of a site market specified by ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_site_market(id="id-example")
     W->>API: GET /site/v202509/site_markets/{id}
     alt success
-        API-->>W: GetSiteMarketResponse
+        API-->>W: GetSiteMarketResponse (JSON)
         W-->>C: GetSiteMarketResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_site_market(id="id-example")
+    W->>B: ParseDict(params, GetSiteMarketRequest)
+    B->>API: get_site_market (gRPC/TLS)
+    alt success
+        API-->>B: GetSiteMarketResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetSiteMarketResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -172,19 +247,44 @@ Updates configuration of a site market.
 
 Replaces configuration of a site market with attributes in the request. Returns the updated configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_site_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
     W->>API: PUT /site/v202509/site_markets/{id}
     alt success
-        API-->>W: UpdateSiteMarketResponse
+        API-->>W: UpdateSiteMarketResponse (JSON)
         W-->>C: UpdateSiteMarketResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_site_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
+    W->>B: ParseDict(params, UpdateSiteMarketRequest)
+    B->>API: update_site_market (gRPC/TLS)
+    alt success
+        API-->>B: UpdateSiteMarketResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateSiteMarketResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -224,19 +324,44 @@ Delete configuration of a site market.
 
 Deletes configuration of a site market with specific ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_site_market(id="id-example")
     W->>API: DELETE /site/v202509/site_markets/{id}
     alt success
-        API-->>W: DeleteSiteMarketResponse
+        API-->>W: DeleteSiteMarketResponse (JSON)
         W-->>C: DeleteSiteMarketResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_site_market(id="id-example")
+    W->>B: ParseDict(params, DeleteSiteMarketRequest)
+    B->>API: delete_site_market (gRPC/TLS)
+    alt success
+        API-->>B: DeleteSiteMarketResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteSiteMarketResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -274,19 +399,44 @@ List all sites.
 
 Returns list of configured sites.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_sites()
     W->>API: GET /site/v202509/sites
     alt success
-        API-->>W: ListSitesResponse
+        API-->>W: ListSitesResponse (JSON)
         W-->>C: ListSitesResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_sites()
+    W->>B: ParseDict(params, ListSitesRequest)
+    B->>API: list_sites (gRPC/TLS)
+    alt success
+        API-->>B: ListSitesResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListSitesResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -316,19 +466,44 @@ Configure a new site.
 
 Create configuration for a new site. Returns the newly created configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: create_site(data=CreateSiteRequest(...))
     W->>API: POST /site/v202509/sites
     alt success
-        API-->>W: CreateSiteResponse
+        API-->>W: CreateSiteResponse (JSON)
         W-->>C: CreateSiteResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: create_site(data=CreateSiteRequest(...))
+    W->>B: ParseDict(params, CreateSiteRequest)
+    B->>API: create_site (gRPC/TLS)
+    alt success
+        API-->>B: CreateSiteResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: CreateSiteResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -366,19 +541,44 @@ Retrieve configuration of a site.
 
 Returns configuration of a site specified by ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: get_site(id="id-example")
     W->>API: GET /site/v202509/sites/{id}
     alt success
-        API-->>W: GetSiteResponse
+        API-->>W: GetSiteResponse (JSON)
         W-->>C: GetSiteResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: get_site(id="id-example")
+    W->>B: ParseDict(params, GetSiteRequest)
+    B->>API: get_site (gRPC/TLS)
+    alt success
+        API-->>B: GetSiteResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: GetSiteResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -416,19 +616,44 @@ Updates configuration of a site.
 
 Replaces configuration of a site with attributes in the request. Returns the updated configuration.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: update_site(id="id-example", data=SiteServiceUpdateSiteBody(...))
     W->>API: PUT /site/v202509/sites/{id}
     alt success
-        API-->>W: UpdateSiteResponse
+        API-->>W: UpdateSiteResponse (JSON)
         W-->>C: UpdateSiteResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: update_site(id="id-example", data=SiteServiceUpdateSiteBody(...))
+    W->>B: ParseDict(params, UpdateSiteRequest)
+    B->>API: update_site (gRPC/TLS)
+    alt success
+        API-->>B: UpdateSiteResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: UpdateSiteResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
@@ -468,19 +693,44 @@ Delete configuration of a site.
 
 Deletes configuration of a site with specific ID.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: delete_site(id="id-example")
     W->>API: DELETE /site/v202509/sites/{id}
     alt success
-        API-->>W: DeleteSiteResponse
+        API-->>W: DeleteSiteResponse (JSON)
         W-->>C: DeleteSiteResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.site
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: delete_site(id="id-example")
+    W->>B: ParseDict(params, DeleteSiteRequest)
+    B->>API: delete_site (gRPC/TLS)
+    alt success
+        API-->>B: DeleteSiteResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: DeleteSiteResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```

@@ -30,19 +30,44 @@ List Plans
 
 Returns all plans configured for the user's company.
 
+**REST transport**
+
 ```mermaid
 sequenceDiagram
     participant C as Caller
     participant W as client.plan
-    participant API as Kentik API
+    participant API as Kentik REST API
 
     C->>W: list_plans()
     W->>API: GET /plans/v202501alpha1
     alt success
-        API-->>W: ListPlansResponse
+        API-->>W: ListPlansResponse (JSON)
         W-->>C: ListPlansResponse
-    else error status
+    else error
         API-->>W: error body
+        W-->>C: raise HTTPException
+    end
+```
+
+**gRPC transport**
+
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.plan
+    participant B as proto bridge
+    participant API as Kentik gRPC API
+
+    C->>W: list_plans()
+    W->>B: ParseDict(params, ListPlansRequest)
+    B->>API: list_plans (gRPC/TLS)
+    alt success
+        API-->>B: ListPlansResponse proto
+        B-->>W: MessageToDict(response)
+        W-->>C: ListPlansResponse
+    else gRPC error
+        API-->>B: gRPC status + details
+        B-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
