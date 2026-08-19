@@ -59,8 +59,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.list_cloud_exports()
 ```
@@ -108,8 +107,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.create_cloud_export(
     data=CreateCloudExportRequest(...),
@@ -159,8 +157,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.get_cloud_export(
     exportid="exportid-example",
@@ -211,8 +208,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.update_cloud_export(
     exportid="exportid-example",
@@ -263,8 +259,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.delete_cloud_export(
     exportid="exportid-example",

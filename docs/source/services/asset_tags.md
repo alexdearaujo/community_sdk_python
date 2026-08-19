@@ -66,8 +66,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.get_tag_values(
     assetType="assetType-example",
@@ -112,8 +111,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.list_tag_keys()
 ```
@@ -161,8 +159,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.create_tag_key(
     data=CreateTagKeyRequest(...),
@@ -212,8 +209,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.get_tag_key(
     id="id-example",
@@ -264,8 +260,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.update_tag_key(
     id="id-example",
@@ -316,8 +311,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.delete_tag_key(
     id="id-example",
@@ -368,8 +362,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.list_tag_values(
     tagId="tagId-example",
@@ -420,8 +413,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.set_tag_values(
     data=SetTagValuesRequest(...),
@@ -471,8 +463,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.asset_tags.delete_tag_values(
     data=DeleteTagValuesRequest(...),

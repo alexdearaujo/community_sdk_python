@@ -68,8 +68,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.audit.list_audit_events()
 ```
@@ -118,8 +117,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.audit.get_audit_event(
     id="id-example",
@@ -170,8 +168,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.audit.get_audit_event_2(
     id="id-example",

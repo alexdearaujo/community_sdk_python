@@ -37,16 +37,15 @@ commented out by default.
 
 ## Transport selection
 
-All examples default to REST. gRPC support is generated and the bridge
-code is in place, but two proto companion packages are not yet bundled
-(see [grpc_implementation_spec.md](../docs/source/grpc_implementation_spec.md)
-for the remaining steps). Until they are, every gRPC call raises
-`NotImplementedError`. Switch transports by changing the `protocol` arg:
+All examples use REST by default. gRPC is also fully supported.
+Switch transports by changing the `protocol` arg:
 
 ```python
-client = KentikAPI(protocol="rest")   # fully supported today
-client = KentikAPI(protocol="grpc")   # bridge ready; see grpc_usage.py
+client = KentikAPI(protocol="rest")  # REST transport (default)
+client = KentikAPI(protocol="grpc")  # gRPC transport (fully supported)
 ```
+
+See `grpc_usage.py` for a complete gRPC example.
 
 ## Authentication
 

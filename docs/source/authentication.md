@@ -17,20 +17,13 @@ KENTIK_API_TOKEN=your_api_token
 
 ## Transport selection
 
-Pass `protocol` to choose between REST and gRPC:
+Pass `protocol` to choose between REST and gRPC. Both transports return
+the same Pydantic response models.
 
 ```python
-# REST — fully supported
-client = KentikAPI(protocol="rest", region="us")
-
-# gRPC — bridge generated; proto companions not yet bundled
-# See docs/source/grpc_implementation_spec.md for remaining steps.
-client = KentikAPI(protocol="grpc", region="us")
+client = KentikAPI(protocol="rest", region="us")  # REST (default)
+client = KentikAPI(protocol="grpc", region="us")  # gRPC
 ```
-
-When gRPC proto companions are not installed, every call raises
-`NotImplementedError`. See `examples/grpc_usage.py` for the full
-story and error handling.
 
 ## How Credentials Are Resolved
 

@@ -59,8 +59,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.user.list_users()
 ```
@@ -108,8 +107,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.user.create_user(
     data=CreateUserRequest(...),
@@ -159,8 +157,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.user.get_user(
     id="id-example",
@@ -211,8 +208,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.user.update_user(
     id="id-example",
@@ -263,8 +259,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.user.delete_user(
     id="id-example",
@@ -314,8 +309,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.user.reset_active_sessions(
     id="id-example",
@@ -365,8 +359,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.user.reset_api_token(
     id="id-example",

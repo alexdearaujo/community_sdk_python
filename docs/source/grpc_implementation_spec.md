@@ -1,9 +1,9 @@
 # gRPC Transport Implementation Spec
 
-This document tracks the work to make the `GrpcTransport` path fully
-functional. REST is complete and production-ready.
+This document records the completed implementation of the `GrpcTransport`
+path. Both REST and gRPC are fully functional and production-ready.
 
-## Current state (after Phases 1 and 2)
+## Current state (all phases complete)
 
 | Artifact | Location | Status |
 | --- | --- | --- |
@@ -12,39 +12,24 @@ functional. REST is complete and production-ready.
 | `call_grpc()` shared runtime | `src/kentik_api/core/grpc_runtime.py` | Done |
 | Service wrapper (REST path) | `gen/<service>/services/<service>.py` | Done |
 | Service wrapper (gRPC path) | same file, each method | Done |
-| Proto companion bundles | `protoc-gen-openapiv2`, `kentik/core` | **Missing** |
+| Proto companion bundles | `gen/pb_companions/` | **Done** |
 
-Every generated wrapper method now has a real gRPC call path:
+The generator compiles `protoc-gen-openapiv2/options/*.proto` from the
+grpc-gateway vendor directory into `gen/pb_companions/` on every
+`make generate` run. The companion registry loads all shared proto
+descriptors in the correct order before each service pb2 is imported.
 
-```python
-# In gen/device/services/device.py (generated)
-if isinstance(self._transport, GrpcTransport):
-    if self._grpc_stub_1 is None:
-        raise NotImplementedError(
-            "gRPC proto dependencies not installed for device service"
-        )
-    _req = ParseDict({...}, self._grpc_pb2_1.ListDevicesRequest(),
-                    ignore_unknown_fields=True)
-    _resp = call_grpc(self._grpc_stub_1.ListDevices, _req)
-    return rest_models.ListDevicesResponse.model_validate(MessageToDict(_resp))
-```
-
-The stub is set to `None` when the pb2 import fails (proto companions
-missing), so the error message is clear rather than a crash.
-
-## Trying it now
+## Using gRPC
 
 ```python
 from kentik_api.client import KentikAPI
 
 client = KentikAPI(protocol="grpc")
-try:
-    response = client.device.list_devices()
-except NotImplementedError as exc:
-    print(exc)  # "gRPC proto dependencies not installed for device service"
+response = client.device.list_devices()
+print(f"{len(response.devices)} device(s) via gRPC")
 ```
 
-See `examples/grpc_usage.py` for a runnable demo with error handling.
+See `examples/grpc_usage.py` for a runnable demo.
 
 ## Why the conversion is tractable
 

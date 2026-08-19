@@ -59,8 +59,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.list_custom_dimensions()
 ```
@@ -108,8 +107,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.get_custom_dimension_info(
     customDimensionId="customDimensionId-example",
@@ -160,8 +158,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.update_custom_dimension(
     customDimensionId="customDimensionId-example",
@@ -211,8 +208,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.delete_custom_dimension(
     customDimensionId="customDimensionId-example",
@@ -263,8 +259,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.create_populator(
     customDimensionId="customDimensionId-example",
@@ -316,8 +311,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.get_populator(
     customDimensionId="customDimensionId-example",
@@ -370,8 +364,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.update_populator(
     customDimensionId="customDimensionId-example",
@@ -423,8 +416,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.delete_populator(
     customDimensionId="customDimensionId-example",
@@ -479,8 +471,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.get_populator_field(
     customDimensionId="customDimensionId-example",
@@ -532,8 +523,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-# Use protocol="grpc" to route through gRPC instead of REST.
-# See docs/source/grpc_implementation_spec.md for current gRPC status.
+# Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_dimension.create_custom_dimension()
 ```

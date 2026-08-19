@@ -28,22 +28,19 @@ classDiagram
 
 ```
 
-## gRPC status
+## gRPC
 
-`GrpcTransport` opens a real channel and each service wrapper now
-contains a full gRPC call path (`ParseDict` → `call_grpc` →
-`MessageToDict` → `model_validate`). Two proto companion packages are
-not yet bundled with the SDK:
+`GrpcTransport` opens a TLS channel to `grpc.api.kentik.com:443` and
+each service wrapper routes calls through the compiled proto stubs in
+`gen/<service>/pb/`. The `gen/pb_companions/` registry loads all shared
+proto descriptors before the stubs are imported. `call_grpc()` in
+`core/grpc_runtime.py` normalizes gRPC errors to the same exception
+hierarchy as REST.
 
-- `protoc-gen-openapiv2/options/annotations.proto` (from grpc-gateway)
-- `kentik/core/v202303/annotations.proto` (Kentik-internal)
-
-Until those are compiled and included, the stub load inside `__init__`
-fails silently and each method raises
-`NotImplementedError("gRPC proto dependencies not installed ...")`. No
-code change is needed once the companions are bundled. See
-[grpc_implementation_spec.md](../../../docs/source/grpc_implementation_spec.md)
-for the remaining phases.
+```python
+client = KentikAPI(protocol="grpc")
+response = client.device.list_devices()  # works the same as REST
+```
 
 ## Adding a transport
 
