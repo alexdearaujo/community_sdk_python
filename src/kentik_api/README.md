@@ -30,11 +30,11 @@ flowchart LR
     A["KentikAPI()"] --> B["auth/<br/>load .env credentials"]
     A --> C["transports/<br/>pick REST or gRPC transport"]
     A --> D["client_mixin.py<br/>mount service wrappers"]
-    D --> E["gen/&lt;service&gt;<br/>ServiceWrapper, e.g. client.device"]
+    D --> E["gen/{service}<br/>ServiceWrapper, e.g. client.device"]
     E --> F["core/rest_runtime.request_json<br/>shared REST call path"]
     F --> G["core/api_config.py<br/>APIConfig"]
     F -->|failure| H["errors/<br/>KentikError hierarchy"]
-    E -->|failure| I["gen/&lt;service&gt;/error/<br/>per-operation error classes"]
+    E -->|failure| I["gen/{service}/error/<br/>per-operation error classes"]
     I --> H
 
 ```
