@@ -19,5 +19,4 @@ bin/
 docs/build/
 
 # Generated Sphinx service stubs: rebuilt by make generate (which make docs also runs).
-docs/sphinx/services/*.md
-!docs/sphinx/services/README.md
+docs/sphinx/services/
