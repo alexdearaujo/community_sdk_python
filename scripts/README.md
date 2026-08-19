@@ -45,7 +45,7 @@ the full regeneration workflow.
 | `make services` | Alias for `make generate` |
 | `make docs` | Build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
 | `make test` | Full mocked test suite |
-| `make test-e2e` | Live API tests (opt-in, needs [`.env`](../.env)) |
+| `make test-e2e` | Live API tests (opt-in, needs `.env`) |
 | `make lint` | Ruff check + format |
 | `make clean` | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
 

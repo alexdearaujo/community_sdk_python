@@ -79,7 +79,7 @@ See [`docs/guides/grpc.md`](docs/guides/grpc.md) for the full gRPC guide.
 
 ## Authentication via .env
 
-Create [`.env`](.env) in the repository root:
+Create `.env` in the repository root:
 
 ```bash
 KENTIK_EMAIL=you@example.com
@@ -121,7 +121,7 @@ Runnable scripts are in [`examples/`](examples/README.md). Each service has
 a `rest.py` and a `grpc.py` side by side.
 
 ```bash
-uv run python -m examples.device.rest    # REST
+uv run python -m examples.device.rest   # REST
 uv run python -m examples.device.grpc   # gRPC
 ```
 
