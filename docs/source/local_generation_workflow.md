@@ -1,6 +1,8 @@
 # Local SDK Generation Workflow
 
-This project supports a **project-local generation workflow** so you can regenerate from updated `api-schema-public` without changing the upstream `openapi-python-generator` project.
+This project supports a **project-local generation workflow** so you can
+regenerate from updated `api-schema-public` without changing the upstream
+`openapi-python-generator` project.
 
 ## Why This Is Local-Only
 
@@ -10,9 +12,12 @@ Generation behavior is customized inside this repository:
 - Shared runtime logic lives in `src/kentik_api/core/rest_runtime.py`.
 - The generator entrypoint is `scripts/generate_sdk.py`.
 
-Because the customization is in this repo, upstream generator updates can still be consumed without maintaining a permanent fork.
+Because the customization is in this repo, upstream generator updates can
+still be consumed without maintaining a permanent fork.
 
-For a runtime-level dependency map that shows how the client, mixin, auth/core/errors, and generated services connect, see [SDK Runtime Architecture](sdk_runtime_architecture.md).
+For a runtime-level dependency map that shows how the client, mixin,
+auth/core/errors, and generated services connect, see
+[SDK Runtime Architecture](sdk_runtime_architecture.md).
 
 ## Default Regeneration (Local Schema Repo)
 
@@ -32,7 +37,8 @@ make generate LOCAL_REPO=/path/to/api-schema-public
 
 ## Optional: Test a Forked Generator Temporarily
 
-You can point generation to a fork **without editing code** by using environment variables.
+You can point generation to a fork **without editing code** by using
+environment variables.
 
 ```bash
 OPENAPI_GENERATOR_FROM="git+https://github.com/<org>/openapi-python-generator.git@<branch>" \
@@ -56,4 +62,5 @@ OPENAPI_GENERATOR_CMD="openapi-python-generator" make generate local
 
 - Running `make local` alone is only a marker and prints usage guidance.
 - If you need to adjust generated service shape, edit templates in `scripts/openapi_templates/`.
-- Keep business/runtime behavior centralized in `src/kentik_api/core/` and `src/kentik_api/transports/` instead of editing generated files directly.
+- Keep business/runtime behavior centralized in `src/kentik_api/core/` and
+  `src/kentik_api/transports/` instead of editing generated files directly.

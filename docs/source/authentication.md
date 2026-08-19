@@ -2,7 +2,9 @@
 
 The SDK supports loading Kentik API credentials from a project-level `.env` file.
 
-For a runtime-level dependency map that shows how credentials and transports connect to generated services, see [SDK Runtime Architecture](sdk_runtime_architecture.md).
+For a runtime-level dependency map that shows how credentials and transports
+connect to generated services, see
+[SDK Runtime Architecture](sdk_runtime_architecture.md).
 
 ## .env Setup
 
@@ -46,4 +48,5 @@ If both are provided, explicit constructor values are used.
 - `KENTIK_EMAIL`
 - `KENTIK_API_TOKEN`
 
-If neither explicit credentials nor environment values are available, client initialization raises an error.
+If neither explicit credentials nor environment values are available,
+client initialization raises an error.

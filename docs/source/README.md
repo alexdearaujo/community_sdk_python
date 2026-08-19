@@ -1,6 +1,7 @@
 # Documentation Source
 
-Sphinx source for the Kentik Community Python SDK. Build with `make docs`; output lands in `docs/build/html/`.
+Sphinx source for the Kentik Community Python SDK. Build with `make docs`;
+output lands in `docs/build/html/`.
 
 ## Structure
 
