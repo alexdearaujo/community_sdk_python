@@ -11,8 +11,8 @@ regenerate from updated `api-schema-public` without changing the upstream
 Generation behavior is customized inside this repository:
 
 - Custom templates live in [`scripts/openapi_templates/`](../../scripts/openapi_templates/README.md).
-- Shared runtime logic lives in `src/kentik_api/core/rest_runtime.py`.
-- The generator entrypoint is `scripts/generate_sdk.py`.
+- Shared runtime logic lives in [`src/kentik_api/core/rest_runtime.py`](../../src/kentik_api/core/rest_runtime.py).
+- The generator entrypoint is [`scripts/generate_sdk.py`](../../scripts/generate_sdk.py).
 
 Because the customization is in this repo, upstream generator updates can
 still be consumed without maintaining a permanent fork.

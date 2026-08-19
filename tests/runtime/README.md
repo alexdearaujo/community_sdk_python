@@ -33,5 +33,5 @@ Add a test when shared runtime behavior changes, such as:
    generated error-class dispatch)
 
 Run this suite first while editing shared request, auth, or error
-behavior in `src/kentik_api/core`, before running the broader
+behavior in [`src/kentik_api/core`](../../src/kentik_api/core/README.md), before running the broader
 `test-generated` suite.

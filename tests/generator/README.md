@@ -31,6 +31,6 @@ test builds its own minimal swagger fragment or fake generated-file
 fixture with `tmp_path`. None of them need a real or local schema
 checkout.
 
-Run this suite first while editing `scripts/generate_sdk.py`,
+Run this suite first while editing [`scripts/generate_sdk.py`](../../scripts/generate_sdk.py),
 [`scripts/generation/`](../../scripts/generation/README.md), or template behavior, before running
 [`make test-generated`](../../Makefile) to check the SDK the generator produces.

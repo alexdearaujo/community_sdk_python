@@ -3,7 +3,7 @@
 # Kentik Community Python SDK
 
 This SDK is a typed Python client for the Kentik API, built on
-Pydantic v2. `scripts/generate_sdk.py` generates it from Kentik's
+Pydantic v2. [`scripts/generate_sdk.py`](scripts/generate_sdk.py) generates it from Kentik's
 public OpenAPI v3 schema. This context covers the generated SDK's
 runtime shape and the generator that builds it.
 
@@ -33,7 +33,7 @@ in each family and skips older versions.
 One of the independently testable units in [`scripts/generation/`](scripts/generation/README.md)
 (`parity`, `error_package`, `wrapper_generation`, `docs_rendering`,
 `endpoint_docs`). Each phase module owns one concern of SDK
-generation; `scripts/generate_sdk.py`'s orchestration calls them in
+generation; [`scripts/generate_sdk.py`](scripts/generate_sdk.py)'s orchestration calls them in
 sequence.
 _Avoid_: generator step, stage
 

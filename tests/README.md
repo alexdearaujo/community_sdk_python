@@ -30,12 +30,12 @@ flowchart TD
 
 ```
 
-`tests/_discovery.py` lives at the `tests/` root, outside any one
+[`tests/_discovery.py`](_discovery.py) lives at the [`tests/`](.) root, outside any one
 layer. It holds the schema and wrapper discovery helpers that
 [`generated/`](generated/README.md) and [`e2e/`](e2e/README.md) both use. Sharing one file keeps the two
 layers from drifting apart.
 
-`tests/conftest.py` puts `tests/` on `sys.path`. This lets
+[`tests/conftest.py`](conftest.py) puts [`tests/`](.) on `sys.path`. This lets
 `import _discovery` resolve the same way from every layer. Neither
 file is itself a test file.
 
@@ -72,8 +72,8 @@ uv run pytest -m e2e tests/e2e/
 
 | Situation | Run this first |
 | --- | --- |
-| Editing `scripts/generate_sdk.py`, [`scripts/generation/`](../scripts/generation/README.md), or template behavior | [`make test-generator`](../Makefile) for fast feedback on the generator itself, then [`make test-generated`](../Makefile) to check the SDK it produces |
-| Editing shared request, auth, or error behavior in `src/kentik_api/core` | [`make test-runtime`](../Makefile) |
+| Editing [`scripts/generate_sdk.py`](../scripts/generate_sdk.py), [`scripts/generation/`](../scripts/generation/README.md), or template behavior | [`make test-generator`](../Makefile) for fast feedback on the generator itself, then [`make test-generated`](../Makefile) to check the SDK it produces |
+| Editing shared request, auth, or error behavior in [`src/kentik_api/core`](../src/kentik_api/core/README.md) | [`make test-runtime`](../Makefile) |
 | Opening a PR or merging | [`make test`](../Makefile) |
 | Trusting a schema sync, or a change to error or response handling, against production behavior | `make test-e2e` (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first) |
 
@@ -81,7 +81,7 @@ uv run pytest -m e2e tests/e2e/
 
 ### 1) Generated wrapper contract tests
 
-Primary file: `tests/generated/test_wrapper_contracts.py`
+Primary file: [`tests/generated/test_wrapper_contracts.py`](generated/test_wrapper_contracts.py)
 
 Add logic here only when the wrapper contract itself changes
 globally: for example, argument forwarding rules, transport
@@ -90,13 +90,13 @@ wrapper modules. You usually do not add per-service files by hand.
 
 Shared discovery helpers (wrapper and endpoint discovery, plus
 sample-value and sample-Pydantic-model builders) live in
-`tests/_discovery.py`. This file, the schema coverage suite below,
+[`tests/_discovery.py`](_discovery.py). This file, the schema coverage suite below,
 and the e2e suite all read the same helpers, so they stay in sync
 automatically.
 
 ### 1b) Endpoint and schema coverage tests
 
-Primary file: `tests/generated/test_endpoint_schema_coverage.py`
+Primary file: [`tests/generated/test_endpoint_schema_coverage.py`](generated/test_endpoint_schema_coverage.py)
 
 This suite discovers every operation through `_discovery.py`. It
 then exercises each operation against every response status code the
@@ -118,7 +118,7 @@ manual update: the next [`make generate`](../Makefile) picks it up automatically
 
 ### 2) Runtime tests
 
-Primary file: `tests/runtime/test_rest_runtime.py`
+Primary file: [`tests/runtime/test_rest_runtime.py`](runtime/test_rest_runtime.py)
 
 Add tests when shared runtime behavior changes, such as:
 
@@ -129,7 +129,7 @@ Add tests when shared runtime behavior changes, such as:
 
 ### 3) Smoke tests
 
-Primary file: `tests/smoke/test_client_mounts_and_calls.py`
+Primary file: [`tests/smoke/test_client_mounts_and_calls.py`](smoke/test_client_mounts_and_calls.py)
 
 Add small, high-value checks for overall wiring. Keep this suite
 small and fast.
@@ -138,9 +138,9 @@ small and fast.
 
 | File | Covers |
 | --- | --- |
-| `tests/generator/test_parity.py` | Swagger selection and generated/schema directory parity |
-| `tests/generator/test_error_package.py` | Error class naming, error-response extraction and merging, and the runtime error-dispatch injection seam |
-| `tests/generator/test_wrapper_generation.py` | Annotation qualification and end-to-end wrapper and client-mixin generation against a temp directory |
+| [`tests/generator/test_parity.py`](generator/test_parity.py) | Swagger selection and generated/schema directory parity |
+| [`tests/generator/test_error_package.py`](generator/test_error_package.py) | Error class naming, error-response extraction and merging, and the runtime error-dispatch injection seam |
+| [`tests/generator/test_wrapper_generation.py`](generator/test_wrapper_generation.py) | Annotation qualification and end-to-end wrapper and client-mixin generation against a temp directory |
 
 Add tests here when `scripts/generation/*.py` logic changes. These
 are unit tests against the generator itself, not the SDK it
@@ -152,14 +152,14 @@ instead.
 
 Primary files:
 
-- `tests/e2e/conftest.py`: the `real_client` fixture. It delegates
+- [`tests/e2e/conftest.py`](e2e/conftest.py): the `real_client` fixture. It delegates
   all credential loading to `KentikAPI()` (a project-root `.env`
   file, or `KENTIK_EMAIL`/`KENTIK_API_TOKEN`). The fixture skips the
   whole suite when no credentials are configured.
-- `tests/e2e/test_endpoints_e2e.py`
+- [`tests/e2e/test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)
 
 Like the other generated-style suites, endpoint discovery comes from
-`tests/_discovery.py`, not a hand-written list. Two things set this
+[`tests/_discovery.py`](_discovery.py), not a hand-written list. Two things set this
 suite apart from the mocked ones:
 
 - The suite calls only GET (read-only) operations automatically. A

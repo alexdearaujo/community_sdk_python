@@ -25,7 +25,7 @@ _GEN_ROOT_README = """\
 Fully generated. Every [`make generate`](../../../Makefile) run wipes and rebuilds every
 subdirectory here, and rewrites this file too. **Never hand-edit
 anything under this folder**, including this README. If output here is
-wrong, fix the generator (`scripts/generate_sdk.py`, a phase module in
+wrong, fix the generator ([`scripts/generate_sdk.py`](../../../scripts/generate_sdk.py), a phase module in
 [`scripts/generation/`](../../../scripts/generation/README.md)), or a
 template in
 [`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
@@ -96,7 +96,7 @@ def _generate_service_readmes():
             "",
             "For the full endpoint reference (parameters, responses, usage "
             "examples) and data model documentation, see the Sphinx docs: "
-            f"`docs/sphinx/services/{service_name}.md`.",
+            f"[`docs/sphinx/services/{service_name}.md`](../../../../docs/sphinx/services/{service_name}.md).",
         ]
 
         doc_content = "\n".join(lines) + "\n"

@@ -2,7 +2,7 @@
 
 # Generator Phase Modules
 
-`scripts/generate_sdk.py` builds the SDK from Kentik's OpenAPI schema.
+[`scripts/generate_sdk.py`](../generate_sdk.py) builds the SDK from Kentik's OpenAPI schema.
 It handles CLI parsing and orchestration only. Each module in this
 package owns one concern of SDK generation.
 
@@ -23,7 +23,7 @@ instead.
 
 ## Call order
 
-`generate_modular_sdk()` in `scripts/generate_sdk.py` calls the phase
+`generate_modular_sdk()` in [`scripts/generate_sdk.py`](../generate_sdk.py) calls the phase
 modules in this order:
 
 ```mermaid
@@ -46,7 +46,7 @@ flowchart TD
 
 ## Import rules
 
-`scripts/generate_sdk.py` runs as a direct script:
+[`scripts/generate_sdk.py`](../generate_sdk.py) runs as a direct script:
 `uv run python scripts/generate_sdk.py`. Python puts [`scripts/`](../README.md) on
 `sys.path` automatically for a direct script run. `generate_sdk.py`
 imports this package as `from generation import ...`.
@@ -69,7 +69,7 @@ inside this package breaks `generate_sdk.py`'s import path.
    module's steps run at different points in the orchestration.
 3. Import shared helpers from `._shared` with a relative import.
 4. Call the new module from `generate_modular_sdk()` in
-   `scripts/generate_sdk.py`.
+   [`scripts/generate_sdk.py`](../generate_sdk.py).
 5. Add tests under `tests/generator/test_<name>.py`.
 
 ## Run the tests
