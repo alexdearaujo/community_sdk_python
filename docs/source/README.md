@@ -20,11 +20,6 @@ graph LR
     src --> gen
     src --> svc
 
-    click idx "docs/source/index.md"
-    click auth "docs/source/authentication.md"
-    click arch "docs/source/sdk_runtime_architecture.md"
-    click gen "docs/source/local_generation_workflow.md"
-    click svc "docs/source/services/README.md"
 ```
 
 ## Pages

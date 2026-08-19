@@ -52,20 +52,6 @@ flowchart LR
     REST_Transport --> Transport_Base
     gRPC_Transport --> Auth_Credentials
     gRPC_Transport --> Transport_Base
-
-    click API_Config "src/kentik_api/core/api_config.py"
-    click Auth_Credentials "src/kentik_api/auth/credentials.py"
-    click Client_API "src/kentik_api/client.py"
-    click Client_Mixin "src/kentik_api/client_mixin.py"
-    click Error_Types "src/kentik_api/errors/__init__.py"
-    click Generated_Error_Classes "src/kentik_api/gen"
-    click Generated_Models "src/kentik_api/gen"
-    click Generated_REST_Services "src/kentik_api/gen"
-    click Generated_Service_Wrappers "src/kentik_api/gen"
-    click REST_Runtime "src/kentik_api/core/rest_runtime.py"
-    click REST_Transport "src/kentik_api/transports/rest_client.py"
-    click Transport_Base "src/kentik_api/transports/base.py"
-    click gRPC_Transport "src/kentik_api/transports/grpc_client.py"
 ```
 
 ## Reading The Graph

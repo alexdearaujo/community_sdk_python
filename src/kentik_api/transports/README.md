@@ -26,9 +26,6 @@ classDiagram
     BaseTransport <|-- RestTransport
     BaseTransport <|-- GrpcTransport
 
-    link BaseTransport "src/kentik_api/transports/base.py"
-    link RestTransport "src/kentik_api/transports/rest_client.py"
-    link GrpcTransport "src/kentik_api/transports/grpc_client.py"
 ```
 
 ## gRPC is a stub

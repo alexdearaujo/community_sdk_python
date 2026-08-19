@@ -33,7 +33,6 @@ flowchart TD
     B -->|POST / PUT / PATCH / DELETE| G["Skip automatically\n(@pytest.mark.skip)"]
     G --> H["Add a dedicated test with its own\nsetup/teardown against a disposable\nresource, if you need live coverage"]
 
-    click A "tests/e2e/test_endpoints_e2e.py"
 ```
 
 Only GET (read-only) operations run automatically. A read call

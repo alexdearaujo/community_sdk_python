@@ -20,13 +20,6 @@ flowchart LR
     REST --> M
     REST --> E
     RJ --> API
-
-    click KA "src/kentik_api/client.py"
-    click W "src/kentik_api/gen/custom_dimension/services/custom_dimension.py"
-    click REST "src/kentik_api/gen/custom_dimension/services"
-    click RJ "src/kentik_api/core/rest_runtime.py"
-    click M "src/kentik_api/gen/custom_dimension/models"
-    click E "src/kentik_api/gen/custom_dimension/error/__init__.py"
 ```
 
 ## Endpoints

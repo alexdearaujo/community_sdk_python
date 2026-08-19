@@ -647,13 +647,6 @@ def _render_service_overview(
         "    REST --> M",
         "    REST --> E",
         "    RJ --> API",
-        "",
-        '    click KA "src/kentik_api/client.py"',
-        f'    click W "src/kentik_api/gen/{service}/services/{service}.py"',
-        f'    click REST "src/kentik_api/gen/{service}/services"',
-        '    click RJ "src/kentik_api/core/rest_runtime.py"',
-        f'    click M "src/kentik_api/gen/{service}/models"',
-        f'    click E "src/kentik_api/gen/{service}/error/__init__.py"',
         MD_FENCE,
         "",
     ]

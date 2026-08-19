@@ -26,12 +26,6 @@ flowchart TD
     N[generator] -.mocked, no network.-> M
     E -.opt-in only.-> A["real Kentik API"]
 
-    click D "tests/_discovery.py"
-    click G "tests/generated/README.md"
-    click E "tests/e2e/README.md"
-    click R "tests/runtime/README.md"
-    click S "tests/smoke/README.md"
-    click N "tests/generator/README.md"
 ```
 
 `tests/_discovery.py` lives at the `tests/` root, outside any one

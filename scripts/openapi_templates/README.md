@@ -31,8 +31,6 @@ flowchart LR
     B -->|calls| C["request_json()"]
     C --> D[httpx.Client]
 
-    click A "scripts/openapi_templates/service.jinja2"
-    click C "src/kentik_api/core/rest_runtime.py"
 ```
 
 ## Editing a template

@@ -31,9 +31,6 @@ flowchart LR
     H --> RT[RestTransport]
     P --> GT[GrpcTransport]
 
-    click KC "src/kentik_api/auth/credentials.py"
-    click RT "src/kentik_api/transports/rest_client.py"
-    click GT "src/kentik_api/transports/grpc_client.py"
 ```
 
 ## Where credentials actually get read

@@ -50,15 +50,6 @@ flowchart TB
     class Client,Auth,Core,Errors,Transports handwritten
     class Mixin,Wrappers,Models,GenErrors generated
 
-    click Client "src/kentik_api/client.py"
-    click Auth "src/kentik_api/auth/"
-    click Core "src/kentik_api/core/"
-    click Errors "src/kentik_api/errors/"
-    click Transports "src/kentik_api/transports/"
-    click Mixin "src/kentik_api/client_mixin.py"
-    click Wrappers "src/kentik_api/gen/"
-    click Models "src/kentik_api/gen/"
-    click GenErrors "src/kentik_api/gen/"
 ```
 
 ## Prerequisites
