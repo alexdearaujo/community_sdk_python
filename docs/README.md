@@ -15,17 +15,31 @@ All documentation for the SDK is in or linked from this directory.
 ## Examples
 
 Runnable scripts live in [examples/](../examples/README.md). Each service has
-a REST and a gRPC variant side by side:
+a REST and a gRPC variant:
 
-```
+```bash
 examples/
-  device/   rest.py  grpc.py
-  user/     rest.py  grpc.py
-  label/    rest.py  grpc.py
-  site/     rest.py  grpc.py
-  alerting/ rest.py  grpc.py
-  synthetics/ rest.py  grpc.py
-  common/   utils.py  error_handling.py
+├── common/
+│   ├── utils.py
+│   └── error_handling.py
+├── device/
+│   ├── rest.py
+│   └── grpc.py
+├── user/
+│   ├── rest.py
+│   └── grpc.py
+├── label/
+│   ├── rest.py
+│   └── grpc.py
+├── site/
+│   ├── rest.py
+│   └── grpc.py
+├── alerting/
+│   ├── rest.py
+│   └── grpc.py
+└── synthetics/
+    ├── rest.py
+    └── grpc.py
 ```
 
 ## Sphinx HTML documentation
@@ -39,11 +53,13 @@ diagrams.
 
 Each package directory has a README that explains its role:
 
-- [src/kentik_api/](../src/kentik_api/README.md) — package overview and request flow
+- [src/kentik_api/](../src/kentik_api/README.md) — package overview and
+ request flow
 - [src/kentik_api/auth/](../src/kentik_api/auth/README.md) — credential loading
 - [src/kentik_api/core/](../src/kentik_api/core/README.md) — shared REST/gRPC runtime
 - [src/kentik_api/errors/](../src/kentik_api/errors/README.md) — exception hierarchy
-- [src/kentik_api/transports/](../src/kentik_api/transports/README.md) — transport layer
+- [src/kentik_api/transports/](../src/kentik_api/transports/README.md) —
+ transport layer
 - [src/kentik_api/gen/](../src/kentik_api/gen/README.md) — generated services
 - [scripts/](../scripts/README.md) — SDK generator and tooling
 - [tests/](../tests/README.md) — test suite structure

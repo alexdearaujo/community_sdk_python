@@ -54,5 +54,3 @@ sequence diagrams.
 - [docs/guides/rest.md](../docs/guides/rest.md)
 - [docs/guides/grpc.md](../docs/guides/grpc.md)
 - [docs/guides/error_handling.md](../docs/guides/error_handling.md)
-
-```

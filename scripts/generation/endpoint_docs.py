@@ -427,7 +427,7 @@ def _render_operation_sequence_diagram(
         f"    B->>API: {method_name} (gRPC/TLS)",
         "    alt success",
         f"        API-->>B: {success_model} proto",
-        f"        B-->>W: MessageToDict(response)",
+        "        B-->>W: MessageToDict(response)",
         f"        W-->>C: {success_model}",
         "    else gRPC error",
         "        API-->>B: gRPC status + details",
