@@ -69,6 +69,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.flow_tag.search_flow_tag()
 ```
@@ -116,6 +118,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.flow_tag.create_flow_tag(
     data=CreateFlowTagRequest(...),
@@ -165,6 +169,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.flow_tag.get_flow_tag(
     flowTagid="flowTagid-example",
@@ -215,6 +221,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.flow_tag.update_flow_tag(
     flowTagid="flowTagid-example",
@@ -265,6 +273,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.flow_tag.delete_flow_tag(
     flowTagid="flowTagid-example",

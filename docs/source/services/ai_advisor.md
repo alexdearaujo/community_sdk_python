@@ -65,6 +65,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.ai_advisor.create_chat_session(
     data=CreateChatSessionRequest(...),
@@ -114,6 +116,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.ai_advisor.update_chat_session(
     data=UpdateChatSessionRequest(...),
@@ -163,6 +167,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.ai_advisor.get_chat_session(
     id="id-example",

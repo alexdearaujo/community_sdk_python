@@ -28,12 +28,22 @@ classDiagram
 
 ```
 
-## gRPC is a stub
+## gRPC status
 
-`GrpcTransport` opens a real channel, but generated wrapper methods
-raise `NotImplementedError` for it. Only REST is fully wired end to
-end. Always pass `protocol="rest"` to `KentikAPI()` until gRPC
-support is added.
+`GrpcTransport` opens a real channel and each service wrapper now
+contains a full gRPC call path (`ParseDict` → `call_grpc` →
+`MessageToDict` → `model_validate`). Two proto companion packages are
+not yet bundled with the SDK:
+
+- `protoc-gen-openapiv2/options/annotations.proto` (from grpc-gateway)
+- `kentik/core/v202303/annotations.proto` (Kentik-internal)
+
+Until those are compiled and included, the stub load inside `__init__`
+fails silently and each method raises
+`NotImplementedError("gRPC proto dependencies not installed ...")`. No
+code change is needed once the companions are bundled. See
+[grpc_implementation_spec.md](../../../docs/source/grpc_implementation_spec.md)
+for the remaining phases.
 
 ## Adding a transport
 

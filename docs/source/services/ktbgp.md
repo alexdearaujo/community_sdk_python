@@ -63,6 +63,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.ktbgp.route_service__announce(
     data=RouteServiceAnnounceRequest(...),
@@ -110,6 +112,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.ktbgp.route_service__list(
     data=RouteServiceListRequest(...),
@@ -157,6 +161,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.ktbgp.route_service__withdraw(
     data=RouteServiceWithdrawRequest(...),

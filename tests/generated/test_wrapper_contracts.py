@@ -5,11 +5,6 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
-
-from kentik_api.auth.credentials import KentikCredentials
-from kentik_api.transports.grpc_client import GrpcTransport
-from kentik_api.transports.rest_client import RestTransport
-
 from _discovery import (
     WrapperCase,
     build_all_kwargs,
@@ -19,6 +14,10 @@ from _discovery import (
     print_case_result,
     print_case_start,
 )
+
+from kentik_api.auth.credentials import KentikCredentials
+from kentik_api.transports.grpc_client import GrpcTransport
+from kentik_api.transports.rest_client import RestTransport
 
 ALL_CASES = discover_cases()
 # Every discovered wrapper case is exercised for every test below, including

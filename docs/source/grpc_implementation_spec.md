@@ -1,33 +1,50 @@
 # gRPC Transport Implementation Spec
 
-This document specifies the work required to make the `GrpcTransport`
-path fully functional. All REST transport work is complete and
-production-ready. gRPC is the only remaining gap.
+This document tracks the work to make the `GrpcTransport` path fully
+functional. REST is complete and production-ready.
 
-## Current state
-
-The SDK generates three artifacts per service that are already in place:
+## Current state (after Phases 1 and 2)
 
 | Artifact | Location | Status |
 | --- | --- | --- |
 | Compiled proto stubs | `gen/<service>/pb/*_pb2.py`, `*_pb2_grpc.py` | Done |
 | gRPC channel setup | `src/kentik_api/transports/grpc_client.py` | Done |
+| `call_grpc()` shared runtime | `src/kentik_api/core/grpc_runtime.py` | Done |
 | Service wrapper (REST path) | `gen/<service>/services/<service>.py` | Done |
-| Service wrapper (gRPC path) | same file, each method | Not started |
+| Service wrapper (gRPC path) | same file, each method | Done |
+| Proto companion bundles | `protoc-gen-openapiv2`, `kentik/core` | **Missing** |
 
-The stub for every wrapper method currently reads:
-
-```python
-if isinstance(self._transport, GrpcTransport):
-    raise NotImplementedError("gRPC translation for X is not yet implemented.")
-```
-
-The `__init__` block reads:
+Every generated wrapper method now has a real gRPC call path:
 
 ```python
+# In gen/device/services/device.py (generated)
 if isinstance(self._transport, GrpcTransport):
-    pass  # TODO: Initialize gRPC stub here
+    if self._grpc_stub_1 is None:
+        raise NotImplementedError(
+            "gRPC proto dependencies not installed for device service"
+        )
+    _req = ParseDict({...}, self._grpc_pb2_1.ListDevicesRequest(),
+                    ignore_unknown_fields=True)
+    _resp = call_grpc(self._grpc_stub_1.ListDevices, _req)
+    return rest_models.ListDevicesResponse.model_validate(MessageToDict(_resp))
 ```
+
+The stub is set to `None` when the pb2 import fails (proto companions
+missing), so the error message is clear rather than a crash.
+
+## Trying it now
+
+```python
+from kentik_api.client import KentikAPI
+
+client = KentikAPI(protocol="grpc")
+try:
+    response = client.device.list_devices()
+except NotImplementedError as exc:
+    print(exc)  # "gRPC proto dependencies not installed for device service"
+```
+
+See `examples/grpc_usage.py` for a runnable demo with error handling.
 
 ## Why the conversion is tractable
 

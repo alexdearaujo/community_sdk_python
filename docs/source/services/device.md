@@ -66,6 +66,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.list_devices()
 ```
@@ -113,6 +115,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.create_device(
     data=CreateDeviceRequest(...),
@@ -162,6 +166,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.create_devices(
     data=CreateDevicesRequest(...),
@@ -211,6 +217,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.delete_devices(
     data=DeleteDevicesRequest(...),
@@ -260,6 +268,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.update_devices(
     data=UpdateDevicesRequest(...),
@@ -310,6 +320,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.get_device_by_name(
     deviceName="deviceName-example",
@@ -360,6 +372,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.get_device(
     deviceid="deviceid-example",
@@ -410,6 +424,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.update_device(
     deviceid="deviceid-example",
@@ -460,6 +476,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.delete_device(
     deviceid="deviceid-example",
@@ -510,6 +528,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.device.update_device_labels(
     id="id-example",

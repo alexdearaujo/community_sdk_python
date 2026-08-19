@@ -59,6 +59,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.capacity_plan.list_capacity_plans()
 ```
@@ -100,6 +102,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.capacity_plan.list_capacity_summaries()
 ```
@@ -147,6 +151,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.capacity_plan.get_capacity_plan(
     id="id-example",
@@ -196,6 +202,8 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
+# Use protocol="grpc" to route through gRPC instead of REST.
+# See docs/source/grpc_implementation_spec.md for current gRPC status.
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.capacity_plan.get_capacity_summary(
     id="id-example",

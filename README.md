@@ -77,6 +77,25 @@ browser.
     make install
     ```
 
+## Transport selection
+
+The SDK supports both REST and gRPC transports.
+
+```python
+from kentik_api.client import KentikAPI
+
+client = KentikAPI(protocol="rest")   # REST — fully supported
+client = KentikAPI(protocol="grpc")   # gRPC — bridge generated; see note below
+```
+
+**gRPC status**: The call bridge is generated for every service, but
+two proto companion packages (`protoc-gen-openapiv2` annotations and
+Kentik-internal `kentik/core` protos) are not yet bundled. Until they
+are included, gRPC calls raise `NotImplementedError`. No API code
+changes are needed once the companions are added. See
+`docs/source/grpc_implementation_spec.md` for the remaining phases and
+`examples/grpc_usage.py` for a runnable demo with error handling.
+
 ## Authentication via .env
 
 The SDK can load credentials automatically from a `.env` file at

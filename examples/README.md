@@ -33,14 +33,25 @@ commented out by default.
 | `synthetics/` | Synthetic tests and agents |
 | `error_handling.py` | Catching SDK errors |
 | `utils.py` | Shared helpers used by all scripts |
+| `grpc_usage.py` | gRPC transport demo and proto-dep explanation |
+
+## Transport selection
+
+All examples default to REST. gRPC support is generated and the bridge
+code is in place, but two proto companion packages are not yet bundled
+(see [grpc_implementation_spec.md](../docs/source/grpc_implementation_spec.md)
+for the remaining steps). Until they are, every gRPC call raises
+`NotImplementedError`. Switch transports by changing the `protocol` arg:
+
+```python
+client = KentikAPI(protocol="rest")   # fully supported today
+client = KentikAPI(protocol="grpc")   # bridge ready; see grpc_usage.py
+```
 
 ## Authentication
 
-`KentikAPI(protocol="rest")` loads `KENTIK_EMAIL` and
-`KENTIK_API_TOKEN` from the nearest `.env` file. Pass `protocol="rest"`
-explicitly: gRPC transport is not yet implemented and raises
-`NotImplementedError` for every operation.
-Pass credentials explicitly to override the `.env` file:
+`KentikAPI()` loads `KENTIK_EMAIL` and `KENTIK_API_TOKEN` from the
+nearest `.env` file. Pass credentials explicitly to override:
 
 ```python
 from kentik_api.client import KentikAPI

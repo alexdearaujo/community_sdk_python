@@ -15,6 +15,23 @@ KENTIK_EMAIL=you@example.com
 KENTIK_API_TOKEN=your_api_token
 ```
 
+## Transport selection
+
+Pass `protocol` to choose between REST and gRPC:
+
+```python
+# REST — fully supported
+client = KentikAPI(protocol="rest", region="us")
+
+# gRPC — bridge generated; proto companions not yet bundled
+# See docs/source/grpc_implementation_spec.md for remaining steps.
+client = KentikAPI(protocol="grpc", region="us")
+```
+
+When gRPC proto companions are not installed, every call raises
+`NotImplementedError`. See `examples/grpc_usage.py` for the full
+story and error handling.
+
 ## How Credentials Are Resolved
 
 When you initialize `KentikAPI`:
