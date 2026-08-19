@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
 from kentik_api.transports.base import BaseTransport

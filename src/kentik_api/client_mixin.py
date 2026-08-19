@@ -38,7 +38,9 @@ if TYPE_CHECKING:
     from kentik_api.transports.rest_client import RestTransport
 
 class KentikClientMixin:
-    """Auto-generated Mixin to wire up all service wrappers to the main client."""
+    """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_client_mixin().
+    Rebuilt on every `make generate`. Do not edit by hand.
+    """
 
     if TYPE_CHECKING:
         _transport: 'GrpcTransport | RestTransport'

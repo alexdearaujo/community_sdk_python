@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import os
 
 from dotenv import find_dotenv, load_dotenv

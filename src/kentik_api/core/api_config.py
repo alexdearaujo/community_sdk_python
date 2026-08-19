@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from typing import Optional
 
 from kentik_api.errors import HTTPException

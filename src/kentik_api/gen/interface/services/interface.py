@@ -10,7 +10,10 @@ from kentik_api.transports.rest_client import RestTransport
 
 
 class InterfaceServiceWrapper:
-    """Unified Service routing to either gRPC or REST."""
+    """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_service_wrappers().
+    Rebuilt on every `make generate`. Do not edit by hand.
+    Unified Service routing to either gRPC or REST.
+    """
 
     def __init__(self, transport: Union[GrpcTransport, RestTransport]):
         self._transport = transport

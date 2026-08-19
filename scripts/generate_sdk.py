@@ -1,3 +1,6 @@
+# HAND-WRITTEN: orchestrates `make generate`. Not itself generated.
+"""SDK generation entrypoint: downloads/validates the OpenAPI schema, runs every
+phase module in scripts/generation/, and writes src/kentik_api/gen/ plus docs."""
 import argparse
 import contextlib
 import json

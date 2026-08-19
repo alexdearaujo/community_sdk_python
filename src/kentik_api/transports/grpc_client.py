@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import grpc
 
 from kentik_api.auth.credentials import KentikCredentials

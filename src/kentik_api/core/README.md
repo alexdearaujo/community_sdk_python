@@ -7,7 +7,7 @@ this folder.
 
 ## `APIConfig`
 
-`APIConfig` (in `api_config.py`) is the shared config object passed to
+`APIConfig` (in [`api_config.py`](api_config.py)) is the shared config object passed to
 every generated call: base URL, auth email, auth token, and TLS
 `verify`. Generated wrapper methods build one from
 [`KentikCredentials`](../auth/credentials.py) and forward it as
@@ -15,7 +15,7 @@ every generated call: base URL, auth email, auth token, and TLS
 
 ## `request_json()`
 
-`request_json()` (in `rest_runtime.py`) is the **only** function that
+`request_json()` (in [`rest_runtime.py`](rest_runtime.py)) is the **only** function that
 calls `httpx` for REST traffic in this SDK. Every generated operation,
 in every one of the ~38 services under
 [`src/kentik_api/gen/`](../gen/), calls this same function through the

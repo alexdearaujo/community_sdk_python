@@ -9,8 +9,8 @@ hand-written-vs-generated architecture.
 
 | Path | Role |
 | --- | --- |
-| `client.py` | Hand-written. `KentikAPI`, the SDK's entrypoint: loads credentials, picks a transport, mounts every generated service. |
-| `client_mixin.py` | Generated. Mounts every service wrapper onto `KentikAPI` as a typed attribute (`client.device`, `client.user`, and so on). |
+| [`client.py`](client.py) | Hand-written. `KentikAPI`, the SDK's entrypoint: loads credentials, picks a transport, mounts every generated service. |
+| [`client_mixin.py`](client_mixin.py) | Generated. Mounts every service wrapper onto `KentikAPI` as a typed attribute (`client.device`, `client.user`, and so on). |
 | `auth/` | Hand-written. See [auth/README.md](auth/README.md). |
 | `core/` | Hand-written. The shared REST runtime every generated call routes through. See [core/README.md](core/README.md). |
 | `errors/` | Hand-written. The base exception hierarchy every generated error class builds on. See [errors/README.md](errors/README.md). |
@@ -38,7 +38,7 @@ flowchart LR
 ```
 
 Every generated operation, in every service, calls
-`core/rest_runtime.request_json` the same way. No service wrapper
+[`core/rest_runtime.py`](core/rest_runtime.py) the same way. No service wrapper
 implements its own HTTP, auth, or error-parsing logic.
 
 ## Using the client

@@ -265,6 +265,9 @@ def _generate_runtime_architecture_docs() -> None:
         mermaid_lines.append(f"    {src_id} -->{label} {dst_id}")
 
     architecture_md = [
+        "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_runtime_architecture_docs() -->",
+        "<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
+        "",
         "# SDK Runtime Architecture",
         "",
         "This page explains how core runtime modules and generated services connect at runtime.",
