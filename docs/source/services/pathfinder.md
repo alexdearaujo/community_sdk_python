@@ -21,12 +21,12 @@ flowchart LR
     REST --> E
     RJ --> API
 
-    click KA "../../../src/kentik_api/client.py"
-    click W "../../../src/kentik_api/gen/pathfinder/services/pathfinder.py"
-    click REST "../../../src/kentik_api/gen/pathfinder/services/"
-    click RJ "../../../src/kentik_api/core/rest_runtime.py"
-    click M "../../../src/kentik_api/gen/pathfinder/models/"
-    click E "../../../src/kentik_api/gen/pathfinder/error/__init__.py"
+    click KA "src/kentik_api/client.py"
+    click W "src/kentik_api/gen/pathfinder/services/pathfinder.py"
+    click REST "src/kentik_api/gen/pathfinder/services"
+    click RJ "src/kentik_api/core/rest_runtime.py"
+    click M "src/kentik_api/gen/pathfinder/models"
+    click E "src/kentik_api/gen/pathfinder/error/__init__.py"
 ```
 
 ## Endpoints

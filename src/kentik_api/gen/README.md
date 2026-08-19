@@ -32,7 +32,7 @@ flowchart TD
     S -->|calls| R["kentik_api.core.rest_runtime.request_json()"]
     S -->|on error status| E
 
-    click R "../../core/rest_runtime.py"
+    click R "src/kentik_api/core/rest_runtime.py"
 ```
 
 ## Where a call actually runs

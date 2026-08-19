@@ -34,14 +34,14 @@ flowchart TD
     F --> G["7. docs_rendering.generate()"]
     G --> H["8. endpoint_docs_collector.render()"]
 
-    click A "parity.py"
-    click B "../generate_sdk.py"
-    click C "error_package.py"
-    click D "parity.py"
-    click E "error_package.py"
-    click F "wrapper_generation.py"
-    click G "docs_rendering.py"
-    click H "endpoint_docs.py"
+    click A "scripts/generation/parity.py"
+    click B "scripts/generate_sdk.py"
+    click C "scripts/generation/error_package.py"
+    click D "scripts/generation/parity.py"
+    click E "scripts/generation/error_package.py"
+    click F "scripts/generation/wrapper_generation.py"
+    click G "scripts/generation/docs_rendering.py"
+    click H "scripts/generation/endpoint_docs.py"
 ```
 
 > [!WARNING]

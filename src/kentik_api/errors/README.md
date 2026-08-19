@@ -27,12 +27,12 @@ classDiagram
     KentikError <|-- HTTPException
     HTTPException <|-- GeneratedOperationError
 
-    link KentikError "__init__.py"
-    link ConfigurationError "__init__.py"
-    link AuthenticationError "__init__.py"
-    link TransportError "__init__.py"
-    link HTTPException "__init__.py"
-    link GeneratedOperationError "../gen/"
+    link KentikError "src/kentik_api/errors/__init__.py"
+    link ConfigurationError "src/kentik_api/errors/__init__.py"
+    link AuthenticationError "src/kentik_api/errors/__init__.py"
+    link TransportError "src/kentik_api/errors/__init__.py"
+    link HTTPException "src/kentik_api/errors/__init__.py"
+    link GeneratedOperationError "src/kentik_api/gen"
 ```
 
 `GeneratedOperationError` stands in for the per-operation classes each

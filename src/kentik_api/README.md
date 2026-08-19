@@ -35,15 +35,15 @@ flowchart LR
     E -->|failure| I["gen/&lt;service&gt;/error/<br/>per-operation error classes"]
     I --> H
 
-    click A "client.py"
-    click B "auth/"
-    click C "transports/"
-    click D "client_mixin.py"
-    click E "gen/"
-    click F "core/rest_runtime.py"
-    click G "core/api_config.py"
-    click H "errors/"
-    click I "gen/"
+    click A "src/kentik_api/client.py"
+    click B "src/kentik_api/auth"
+    click C "src/kentik_api/transports"
+    click D "src/kentik_api/client_mixin.py"
+    click E "src/kentik_api/gen"
+    click F "src/kentik_api/core/rest_runtime.py"
+    click G "src/kentik_api/core/api_config.py"
+    click H "src/kentik_api/errors"
+    click I "src/kentik_api/gen"
 ```
 
 Every generated operation, in every service, calls

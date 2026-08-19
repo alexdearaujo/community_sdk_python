@@ -21,12 +21,12 @@ flowchart LR
     REST --> E
     RJ --> API
 
-    click KA "../../../src/kentik_api/client.py"
-    click W "../../../src/kentik_api/gen/bgp_monitoring/services/bgp_monitoring.py"
-    click REST "../../../src/kentik_api/gen/bgp_monitoring/services/"
-    click RJ "../../../src/kentik_api/core/rest_runtime.py"
-    click M "../../../src/kentik_api/gen/bgp_monitoring/models/"
-    click E "../../../src/kentik_api/gen/bgp_monitoring/error/__init__.py"
+    click KA "src/kentik_api/client.py"
+    click W "src/kentik_api/gen/bgp_monitoring/services/bgp_monitoring.py"
+    click REST "src/kentik_api/gen/bgp_monitoring/services"
+    click RJ "src/kentik_api/core/rest_runtime.py"
+    click M "src/kentik_api/gen/bgp_monitoring/models"
+    click E "src/kentik_api/gen/bgp_monitoring/error/__init__.py"
 ```
 
 ## Endpoints

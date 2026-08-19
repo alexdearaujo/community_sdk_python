@@ -18,10 +18,10 @@ flowchart LR
     G -->|writes| SDK["src/kentik_api/gen/"]
     C["sample_consume_sdk.py"] -->|exercises| SDK
 
-    click G "generate_sdk.py"
-    click PH "generation/README.md"
-    click SDK "../src/kentik_api/gen/"
-    click C "sample_consume_sdk.py"
+    click G "scripts/generate_sdk.py"
+    click PH "scripts/generation/README.md"
+    click SDK "src/kentik_api/gen"
+    click C "scripts/sample_consume_sdk.py"
 ```
 
 ## Run the generator
