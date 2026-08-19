@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
 
 # Shared REST Runtime (`kentik_api.core`)
 
-Hand-written. Not touched by `make generate`. This is the most
+Hand-written. Not touched by [`make generate`](../../../Makefile). This is the most
 significant hand-written engineering in the SDK: every generated REST
 operation, across every service, routes through the one function in
 this folder.

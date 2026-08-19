@@ -1,14 +1,14 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../Makefile). Edit directly. -->
 
 # Generation Scripts
 
 This folder holds the SDK generator entrypoint and a sample consumer
-script. Both are hand-written and survive every `make generate` run.
+script. Both are hand-written and survive every [`make generate`](../Makefile) run.
 
 > [!NOTE]
-> **`make clean` removes `src/kentik_api/gen/`** (all generated service code)
+> **[`make clean`](../Makefile) removes `src/kentik_api/gen/`** (all generated service code)
 > and the Sphinx build output, but never touches `scripts/`, `examples/`,
-> or any other hand-written source. Re-run `make generate` (or just `make`)
+> or any other hand-written source. Re-run [`make generate`](../Makefile) (or just `make`)
 > to rebuild the generated code after a clean.
 
 ## Layout
@@ -38,7 +38,7 @@ uv run python scripts/generate_sdk.py
 uv run python scripts/generate_sdk.py --local-repo ../api-schema-public
 ```
 
-`make generate` and `make generate local` wrap these two invocations.
+[`make generate`](../Makefile) and `make generate local` wrap these two invocations.
 See [`docs/guides/generation.md`](../docs/guides/generation.md) for
 the full regeneration workflow.
 
@@ -47,15 +47,15 @@ the full regeneration workflow.
 | Command | Effect |
 | --- | --- |
 | `make` | Generate services and run tests (default) |
-| `make generate` | Regenerate from remote schema |
+| [`make generate`](../Makefile) | Regenerate from remote schema |
 | `make generate local` | Regenerate from `../api-schema-public/` |
 | `make generate LOCAL_REPO=/path` | Regenerate from an arbitrary path |
-| `make services` | Alias for `make generate` |
-| `make docs` | Build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
-| `make test` | Full mocked test suite |
+| [`make services`](../Makefile) | Alias for [`make generate`](../Makefile) |
+| [`make docs`](../Makefile) | Build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
+| [`make test`](../Makefile) | Full mocked test suite |
 | `make test-e2e` | Live API tests (opt-in, needs `.env`) |
-| `make lint` | Ruff check + format |
-| `make clean` | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
+| [`make lint`](../Makefile) | Ruff check + format |
+| [`make clean`](../Makefile) | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
 
 > [!NOTE]
 > Two environment variables let you test a forked

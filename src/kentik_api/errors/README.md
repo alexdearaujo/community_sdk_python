@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
 
 # Errors (`kentik_api.errors`)
 
-Hand-written. Not touched by `make generate`. This is the one shared
+Hand-written. Not touched by [`make generate`](../../../Makefile). This is the one shared
 exception hierarchy every generated per-service error class builds on.
 
 ## Hierarchy
@@ -57,4 +57,4 @@ mapping.
 Add it here, alongside the existing four, and export it from
 `__all__`. Never add a new error type inside a generated
 `gen/<service>/error/` file; that file is fully regenerated on every
-`make generate` run.
+[`make generate`](../../../Makefile) run.

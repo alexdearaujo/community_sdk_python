@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](Makefile). Edit directly. -->
 
 # Kentik Community Python SDK
 
@@ -14,7 +14,7 @@ The pipeline fixes common OpenAPI generator bugs, removes schema-version
 prefixes from class names, and generates architecture diagrams.
 
 The diagram below shows the key split: hand-written code that survives
-every regeneration, and generated code that `make generate` wipes and rebuilds.
+every regeneration, and generated code that [`make generate`](Makefile) wipes and rebuilds.
 
 ```mermaid
 flowchart TB
@@ -114,7 +114,7 @@ All documentation is in [`docs/`](docs/README.md):
 | [`docs/guides/error_handling.md`](docs/guides/error_handling.md) | Exception hierarchy |
 | [`docs/guides/generation.md`](docs/guides/generation.md) | SDK regeneration workflow |
 
-Run `make docs` to build the full Sphinx HTML reference from
+Run [`make docs`](Makefile) to build the full Sphinx HTML reference from
 [`docs/sphinx/`](docs/sphinx/README.md).
 
 ## Examples

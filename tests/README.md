@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../Makefile). Edit directly. -->
 
 # Test Suite Guide
 
@@ -15,7 +15,7 @@ confidence. You opt into that layer explicitly.
 | [`runtime`](runtime/README.md) | Focused tests for the shared runtime helpers that generated code calls. | Mocked |
 | [`smoke`](smoke/README.md) | Lightweight checks for client wiring and selected wrapper call paths. | Mocked |
 | [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules (`scripts/generation/`): error package generation, swagger selection and parity validation, wrapper generation. | Mocked |
-| [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API. Opt-in only, never part of `make test` or `make all`. See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
+| [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API. Opt-in only, never part of [`make test`](../Makefile) or [`make all`](../Makefile). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
 
 ```mermaid
 flowchart TD
@@ -45,11 +45,11 @@ Run these commands from the repository root.
 
 | Goal | Command |
 | --- | --- |
-| Run every mocked layer | `make test` |
-| Run generated wrapper contract tests only | `make test-generated` |
-| Run runtime tests only | `make test-runtime` |
-| Run smoke tests only | `make test-smoke` |
-| Run generator unit tests only | `make test-generator` |
+| Run every mocked layer | [`make test`](../Makefile) |
+| Run generated wrapper contract tests only | [`make test-generated`](../Makefile) |
+| Run runtime tests only | [`make test-runtime`](../Makefile) |
+| Run smoke tests only | [`make test-smoke`](../Makefile) |
+| Run generator unit tests only | [`make test-generator`](../Makefile) |
 | Run end-to-end tests against the real API (opt-in, needs a real `.env`) | `make test-e2e` |
 
 You can also call `pytest` directly:
@@ -65,16 +65,16 @@ uv run pytest -m e2e tests/e2e/
 
 `pyproject.toml` registers the `e2e` marker with
 `addopts = "-m 'not e2e'"`. Plain `pytest tests/` always deselects
-`tests/e2e/`. `make test` runs plain `pytest tests/`, so it deselects
+`tests/e2e/`. [`make test`](../Makefile) runs plain `pytest tests/`, so it deselects
 `tests/e2e/` too. Opt in explicitly with `-m e2e`.
 
 ## When to run which suite
 
 | Situation | Run this first |
 | --- | --- |
-| Editing `scripts/generate_sdk.py`, `scripts/generation/`, or template behavior | `make test-generator` for fast feedback on the generator itself, then `make test-generated` to check the SDK it produces |
-| Editing shared request, auth, or error behavior in `src/kentik_api/core` | `make test-runtime` |
-| Opening a PR or merging | `make test` |
+| Editing `scripts/generate_sdk.py`, `scripts/generation/`, or template behavior | [`make test-generator`](../Makefile) for fast feedback on the generator itself, then [`make test-generated`](../Makefile) to check the SDK it produces |
+| Editing shared request, auth, or error behavior in `src/kentik_api/core` | [`make test-runtime`](../Makefile) |
+| Opening a PR or merging | [`make test`](../Makefile) |
 | Trusting a schema sync, or a change to error or response handling, against production behavior | `make test-e2e` (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first) |
 
 ## How to add new tests
@@ -114,7 +114,7 @@ a model import that silently resolves to the wrong object.
 
 Add logic here only when the status or error coverage strategy
 itself changes. A new service, operation, or status code needs no
-manual update: the next `make generate` picks it up automatically.
+manual update: the next [`make generate`](../Makefile) picks it up automatically.
 
 ### 2) Runtime tests
 
@@ -194,4 +194,4 @@ contents.
   the rest of the pipeline.
 - If generation output changes, regenerate first: `make generate
   local`. Then run the relevant focused suite. Finally, run
-  `make test`.
+  [`make test`](../Makefile).

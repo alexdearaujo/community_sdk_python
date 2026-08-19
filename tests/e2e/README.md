@@ -1,9 +1,9 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
 
 # End-to-End Tests (Real API, Opt-In)
 
-Runs against the real Kentik API. Not part of `make test` or
-`make all`. See the layered strategy in
+Runs against the real Kentik API. Not part of [`make test`](../../Makefile) or
+[`make all`](../../Makefile). See the layered strategy in
 [../README.md](../README.md) for how this layer fits with the other
 four mocked ones.
 

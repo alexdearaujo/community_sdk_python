@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
 
 # OpenAPI Generator Templates
 
@@ -41,7 +41,7 @@ flowchart LR
 2. Regenerate: `uv run python scripts/generate_sdk.py --local-repo
    ../api-schema-public`.
 3. Diff a generated service module to confirm the new output shape.
-4. Run `make test-generated` to confirm generated calls still exercise
+4. Run [`make test-generated`](../../Makefile) to confirm generated calls still exercise
    `request_json` and every declared response status.
 
 > [!WARNING]

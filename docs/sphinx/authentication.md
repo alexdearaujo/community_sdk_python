@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
 
 # Authentication
 

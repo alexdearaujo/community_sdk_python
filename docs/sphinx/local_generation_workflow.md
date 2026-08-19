@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
 
 # Local SDK Generation Workflow
 
@@ -58,11 +58,11 @@ OPENAPI_GENERATOR_CMD="openapi-python-generator" make generate local
 1. Pull latest schema updates in your local `api-schema-public` clone.
 2. Run `make generate local`.
 3. Review generated changes in `src/kentik_api/gen/`.
-4. Run tests/lint as needed (`make test`, `make lint`).
+4. Run tests/lint as needed ([`make test`](../../Makefile), [`make lint`](../../Makefile)).
 
 ## Notes
 
-- Running `make local` alone is only a marker and prints usage guidance.
+- Running [`make local`](../../Makefile) alone is only a marker and prints usage guidance.
 - If you need to adjust generated service shape, edit templates in `scripts/openapi_templates/`.
 - Keep business/runtime behavior centralized in `src/kentik_api/core/` and
   `src/kentik_api/transports/` instead of editing generated files directly.

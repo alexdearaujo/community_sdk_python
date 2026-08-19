@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
 
 # Documentation Source
 
-Sphinx source for the Kentik Community Python SDK. Build with `make docs`;
+Sphinx source for the Kentik Community Python SDK. Build with [`make docs`](../../Makefile);
 output lands in `docs/build/html/`.
 
 ## Structure

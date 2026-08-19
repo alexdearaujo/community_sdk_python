@@ -1,8 +1,8 @@
 <!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_gen_root_readme() -->
-<!-- Rebuilt on every `make generate`. Do not edit by hand. -->
+<!-- Rebuilt on every [`make generate`](../../../Makefile). Do not edit by hand. -->
 # Generated Services (`kentik_api.gen`)
 
-Fully generated. Every `make generate` run wipes and rebuilds every
+Fully generated. Every [`make generate`](../../../Makefile) run wipes and rebuilds every
 subdirectory here, and rewrites this file too. **Never hand-edit
 anything under this folder**, including this README. If output here is
 wrong, fix the generator (`scripts/generate_sdk.py`, a phase module in

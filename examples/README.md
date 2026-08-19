@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../Makefile). Edit directly. -->
 
 # Quick-start examples for the Kentik Community Python SDK
 
@@ -7,7 +7,7 @@ Each script is self-contained and safe to run read-only.
 
 > [!NOTE]
 > The `examples/` directory is **hand-written** and is not generated or
-> removed by `make generate` or `make clean`. Edit these files directly
+> removed by [`make generate`](../Makefile) or [`make clean`](../Makefile). Edit these files directly
 > when adding new examples or updating existing ones.
 
 ## Setup

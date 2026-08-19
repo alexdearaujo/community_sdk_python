@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
 
 # Credentials (`kentik_api.auth`)
 
-Hand-written. Not touched by `make generate`.
+Hand-written. Not touched by [`make generate`](../../../Makefile).
 
 `KentikCredentials` is the one place that turns a Kentik email and API
 token into the two transport-specific auth shapes the SDK needs: REST

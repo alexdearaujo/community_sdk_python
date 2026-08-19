@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
 
 # SDK Generation Workflow
 
@@ -30,7 +30,7 @@ for the phase module documentation.
 
 ## What gets regenerated
 
-Every `make generate` run wipes and rebuilds:
+Every [`make generate`](../../Makefile) run wipes and rebuilds:
 
 - [`src/kentik_api/gen/`](../../src/kentik_api/gen/README.md) — all <!-- kentik-gen:service-count -->38<!-- /kentik-gen:service-count --> services
 - [`src/kentik_api/client_mixin.py`](../../src/kentik_api/client_mixin.py)
@@ -41,7 +41,7 @@ These files are **never hand-edited**.
 
 ## What survives regeneration
 
-Hand-written code that `make generate` never touches:
+Hand-written code that [`make generate`](../../Makefile) never touches:
 
 - [`src/kentik_api/client.py`](../../src/kentik_api/client.py)
 - [`src/kentik_api/auth/`](../../src/kentik_api/auth/README.md)

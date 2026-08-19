@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
 
 # Generator Tests
 
@@ -33,4 +33,4 @@ checkout.
 
 Run this suite first while editing `scripts/generate_sdk.py`,
 `scripts/generation/`, or template behavior, before running
-`make test-generated` to check the SDK the generator produces.
+[`make test-generated`](../../Makefile) to check the SDK the generator produces.

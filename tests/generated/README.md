@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
 
 # Generated Wrapper Tests
 
@@ -46,7 +46,7 @@ uv run pytest tests/generated/
   the real generated error classes through `respx`-mocked HTTP. Add
   logic here only when the status or error coverage strategy itself
   changes. A new service, operation, or status code needs no manual
-  update: the next `make generate` picks it up automatically.
+  update: the next [`make generate`](../../Makefile) picks it up automatically.
 
 > [!NOTE]
 > `test_endpoint_schema_coverage.py` is what CLAUDE.md's test
