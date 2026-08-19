@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Client mixin and dual-transport service wrapper generation."""
 
 import ast

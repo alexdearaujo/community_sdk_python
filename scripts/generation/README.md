@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Generator Phase Modules
 
 `scripts/generate_sdk.py` builds the SDK from Kentik's OpenAPI schema.

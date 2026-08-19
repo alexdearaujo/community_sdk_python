@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Shared helpers for SDK examples."""
 
 import json

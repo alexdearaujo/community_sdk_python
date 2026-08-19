@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # `kentik_api` Package
 
 The top-level package for the Kentik Community Python SDK. See the

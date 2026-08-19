@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .AuditEvent import AuditEvent as AuditEvent
 from .GenericEvent import GenericEvent as GenericEvent
 from .GetAuditEventResponse import GetAuditEventResponse as GetAuditEventResponse

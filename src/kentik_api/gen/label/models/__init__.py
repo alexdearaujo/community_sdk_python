@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .CreateLabelRequest import CreateLabelRequest as CreateLabelRequest
 from .CreateLabelResponse import CreateLabelResponse as CreateLabelResponse
 from .DeleteLabelResponse import DeleteLabelResponse as DeleteLabelResponse

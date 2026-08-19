@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Quick Start
 
 Install the SDK and make your first API call in under five minutes.

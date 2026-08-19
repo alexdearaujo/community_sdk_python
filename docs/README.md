@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Kentik Community Python SDK — Documentation
 
 All documentation for the SDK is in or linked from this directory.

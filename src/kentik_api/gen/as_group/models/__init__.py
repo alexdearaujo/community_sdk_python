@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .ASGroupConcise import ASGroupConcise as ASGroupConcise
 from .ASGroupDetailed import ASGroupDetailed as ASGroupDetailed
 from .ASGroupServiceUpdateASGroupBody import (

@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .GetJourneysNlqResponse import GetJourneysNlqResponse as GetJourneysNlqResponse
 from .protobufAny import protobufAny as protobufAny
 from .ResultFormat import ResultFormat as ResultFormat

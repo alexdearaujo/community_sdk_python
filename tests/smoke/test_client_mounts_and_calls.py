@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from __future__ import annotations
 
 from kentik_api.client import KentikAPI

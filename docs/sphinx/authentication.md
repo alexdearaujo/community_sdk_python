@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Authentication
 
 The SDK supports loading Kentik API credentials from a project-level `.env` file.

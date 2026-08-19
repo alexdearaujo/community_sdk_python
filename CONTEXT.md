@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Kentik Community Python SDK
 
 This SDK is a typed Python client for the Kentik API, built on

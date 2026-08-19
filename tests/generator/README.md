@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Generator Tests
 
 Mocked, no network. Unit tests for the SDK generator itself (see

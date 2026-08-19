@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Exhaustive endpoint x declared-response-status coverage.
 
 `test_wrapper_contracts.py` proves every wrapper method forwards its

@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Demonstrate SDK error handling — works identically for REST and gRPC."""
 
 from kentik_api.client import KentikAPI

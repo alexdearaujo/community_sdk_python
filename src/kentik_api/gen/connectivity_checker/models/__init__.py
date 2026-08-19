@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .CloudProvider import CloudProvider as CloudProvider
 from .CreateConnectivityReportRequest import (
     CreateConnectivityReportRequest as CreateConnectivityReportRequest,

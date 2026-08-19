@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .CloudSubnet import CloudSubnet as CloudSubnet
 from .CloudType import CloudType as CloudType
 from .GetNetworkClassResponse import GetNetworkClassResponse as GetNetworkClassResponse

@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_gen_root_readme() -->
+<!-- Rebuilt on every `make generate`. Do not edit by hand. -->
 # Generated Services (`kentik_api.gen`)
 
 Fully generated. Every `make generate` run wipes and rebuilds every

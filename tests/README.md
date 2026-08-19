@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Test Suite Guide
 
 This folder uses a layered testing strategy. Four layers run fully

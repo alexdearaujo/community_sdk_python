@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Transports (`kentik_api.transports`)
 
 Hand-written. Not touched by `make generate`. Thin transport-selection

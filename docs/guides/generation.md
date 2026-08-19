@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # SDK Generation Workflow
 
 The SDK is generated from Kentik's public OpenAPI v3 schema in

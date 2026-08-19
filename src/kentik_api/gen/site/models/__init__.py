@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .CreateSiteMarketRequest import CreateSiteMarketRequest as CreateSiteMarketRequest
 from .CreateSiteMarketResponse import (
     CreateSiteMarketResponse as CreateSiteMarketResponse,

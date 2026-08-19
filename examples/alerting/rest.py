@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """List active alerts.
 
 Uses the alert_list operation from the AlertService group.

@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Generation Scripts
 
 This folder holds the SDK generator entrypoint and a sample consumer

@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """List all device labels in the account."""
 
 from kentik_api.client import KentikAPI

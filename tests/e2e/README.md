@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # End-to-End Tests (Real API, Opt-In)
 
 Runs against the real Kentik API. Not part of `make test` or

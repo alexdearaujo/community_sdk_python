@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Smoke Tests
 
 Mocked, no network. See the layered strategy in

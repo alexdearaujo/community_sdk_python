@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Shared schema/wrapper discovery helpers for the tests/ tree.
 
 Every operation, parameter, and declared response status code exercised by

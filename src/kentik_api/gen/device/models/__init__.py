@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .CreateDeviceRequest import CreateDeviceRequest as CreateDeviceRequest
 from .CreateDeviceResponse import CreateDeviceResponse as CreateDeviceResponse
 from .CreateDevicesRequest import CreateDevicesRequest as CreateDevicesRequest

@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Quick-start examples for the Kentik Community Python SDK
 
 These scripts demonstrate the v6 SDK against the live Kentik API.

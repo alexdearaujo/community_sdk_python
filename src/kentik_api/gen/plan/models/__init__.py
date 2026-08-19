@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .DeviceSubtype import DeviceSubtype as DeviceSubtype
 from .ListPlansResponse import ListPlansResponse as ListPlansResponse
 from .Plan import Plan as Plan

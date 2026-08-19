@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Error Handling Guide
 
 The SDK uses a single exception hierarchy for both REST and gRPC transports.

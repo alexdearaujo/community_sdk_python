@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # gRPC Transport Guide
 
 The SDK supports both REST and gRPC transports. Both return the same Pydantic

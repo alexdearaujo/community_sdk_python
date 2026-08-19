@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_service_readmes() -->
+<!-- Rebuilt on every `make generate`. Do not edit by hand. -->
 # Dictionary Service
 
 This module was automatically generated from the Kentik OpenAPIv3 schema.

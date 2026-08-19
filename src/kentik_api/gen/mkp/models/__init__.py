@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .Activate import Activate as Activate
 from .Alert import Alert as Alert
 from .Asset import Asset as Asset

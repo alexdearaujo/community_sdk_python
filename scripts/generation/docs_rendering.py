@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Runtime architecture docs (inline Mermaid), the gen/ root README, and per-service READMEs.
 
 Also updates <!-- kentik-gen:MARKER --> blocks in docs/guides/ files so every
@@ -17,6 +18,8 @@ _GUIDES_DIR = PROJECT_ROOT / "docs" / "guides"
 # gen/ tree, so it is generated here rather than hand-written: `make clean`
 # (rm -rf gen/) would otherwise delete it with no way to regenerate it.
 _GEN_ROOT_README = """\
+<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_gen_root_readme() -->
+<!-- Rebuilt on every `make generate`. Do not edit by hand. -->
 # Generated Services (`kentik_api.gen`)
 
 Fully generated. Every `make generate` run wipes and rebuilds every
@@ -85,6 +88,8 @@ def _generate_service_readmes():
         service_name = service_dir.name
 
         lines = [
+            f"<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_service_readmes() -->",
+            f"<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
             f"# {service_name.replace('_', ' ').title()} Service",
             "",
             "This module was automatically generated from the Kentik OpenAPIv3 schema.",

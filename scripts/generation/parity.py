@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Swagger file selection and generated/schema service-directory parity validation."""
 
 from pathlib import Path

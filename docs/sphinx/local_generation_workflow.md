@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Local SDK Generation Workflow
 
 This project supports a **project-local generation workflow** so you can

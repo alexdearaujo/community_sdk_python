@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # OpenAPI Generator Templates
 
 Custom Jinja2 templates fed into `openapi-python-generator` via

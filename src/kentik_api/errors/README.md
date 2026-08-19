@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Errors (`kentik_api.errors`)
 
 Hand-written. Not touched by `make generate`. This is the one shared

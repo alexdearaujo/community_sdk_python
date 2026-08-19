@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .AggregationType import AggregationType as AggregationType
 from .Alert import Alert as Alert
 from .AlertAcknowledgement import AlertAcknowledgement as AlertAcknowledgement

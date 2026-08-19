@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """List sites and site markets in the account — gRPC transport."""
 
 from kentik_api.client import KentikAPI

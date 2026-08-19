@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Kentik Community SDK Documentation
 
 Welcome to the automated documentation for the Kentik Community SDK.

@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # CLAUDE.md
 
 Guidance for Claude Code when working in this repository.

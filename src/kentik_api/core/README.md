@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Shared REST Runtime (`kentik_api.core`)
 
 Hand-written. Not touched by `make generate`. This is the most

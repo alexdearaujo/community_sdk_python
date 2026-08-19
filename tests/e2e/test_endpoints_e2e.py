@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """End-to-end coverage against the real Kentik API.
 
 Every other suite under tests/generated/ proves the SDK is internally

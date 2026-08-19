@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .AddressInfo import AddressInfo as AddressInfo
 from .CreateFlowTagRequest import CreateFlowTagRequest as CreateFlowTagRequest
 from .CreateFlowTagResponse import CreateFlowTagResponse as CreateFlowTagResponse

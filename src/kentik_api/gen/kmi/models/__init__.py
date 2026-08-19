@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .ASNDetails import ASNDetails as ASNDetails
 from .CustomerProvider import CustomerProvider as CustomerProvider
 from .GetASNDetailsResponse import GetASNDetailsResponse as GetASNDetailsResponse

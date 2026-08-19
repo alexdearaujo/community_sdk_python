@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Credentials (`kentik_api.auth`)
 
 Hand-written. Not touched by `make generate`.

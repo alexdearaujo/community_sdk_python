@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # REST Transport Guide
 
 The REST transport is the default and fully supported transport.

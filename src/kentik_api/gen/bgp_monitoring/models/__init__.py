@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .BgpHealthSettings import BgpHealthSettings as BgpHealthSettings
 from .BgpMetric import BgpMetric as BgpMetric
 from .BgpMetricType import BgpMetricType as BgpMetricType

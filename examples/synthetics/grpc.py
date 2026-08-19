@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """List synthetic tests and agents — gRPC transport."""
 
 from kentik_api.client import KentikAPI

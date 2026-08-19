@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Service-local error class generation and runtime error-dispatch injection."""
 
 import json

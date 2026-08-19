@@ -705,7 +705,56 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
     run_cmd(["uvx", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)])
     run_cmd(["uvx", "ruff", "format", str(SDK_OUTPUT_DIR)])
 
+    # Run after ruff so it cannot reorder the header comments.
+    _inject_generated_headers(SDK_OUTPUT_DIR)
+
     print("\n✅ SDK and Documentation Generation Complete!")
+
+
+def _inject_generated_headers(output_dir: Path) -> None:
+    """Prepends AUTO-GENERATED file headers to every .py file in gen/."""
+    # Map a path segment to (source_file, function_name) for the annotation.
+    _SRC: dict[str, tuple[str, str]] = {
+        "models": ("openapi-python-generator", "model generation"),
+        "error": (
+            "scripts/generation/error_package.py",
+            "generate_service_error_package()",
+        ),
+        "pb": ("grpc_tools.protoc", "proto compilation"),
+    }
+
+    count = 0
+    for py_file in sorted(output_dir.rglob("*.py")):
+        content = py_file.read_text(encoding="utf-8")
+
+        # Skip files that already carry a file-level annotation.
+        if content.startswith("# AUTO-GENERATED") or content.startswith(
+            "# HAND-WRITTEN"
+        ):
+            continue
+        # Skip wrapper files annotated via the class docstring.
+        if '"""AUTO-GENERATED:' in content:
+            continue
+
+        rel_parts = py_file.relative_to(output_dir).parts
+
+        # pb_companions: compiled by _compile_proto_companions() with isort:skip_file.
+        if rel_parts[0] == "pb_companions":
+            source, func = "scripts/generate_sdk.py", "_compile_proto_companions()"
+        elif len(rel_parts) >= 2 and rel_parts[-2] in _SRC:
+            source, func = _SRC[rel_parts[-2]]
+        else:
+            source, func = "scripts/generate_sdk.py", "generate_modular_sdk()"
+
+        header = (
+            f"# AUTO-GENERATED: {source}, {func}\n"
+            "# Rebuilt on every `make generate`. Do not edit by hand.\n"
+            "\n"
+        )
+        py_file.write_text(header + content, encoding="utf-8")
+        count += 1
+
+    print(f"    ✅ AUTO-GENERATED headers injected into {count} gen/ files.")
 
 
 if __name__ == "__main__":

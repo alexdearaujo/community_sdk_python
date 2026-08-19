@@ -1,3 +1,6 @@
+# AUTO-GENERATED: scripts/generation/error_package.py, generate_service_error_package()
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from __future__ import annotations
 
 from typing import Any

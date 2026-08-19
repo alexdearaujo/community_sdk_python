@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .AclAction import AclAction as AclAction
 from .AclMode import AclMode as AclMode
 from .CommandAcl import CommandAcl as CommandAcl

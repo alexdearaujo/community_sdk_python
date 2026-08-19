@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Constants and helpers used by more than one generation phase module."""
 
 import re

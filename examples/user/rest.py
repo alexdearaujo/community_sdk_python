@@ -1,3 +1,4 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """List all users in the account."""
 
 from kentik_api.client import KentikAPI

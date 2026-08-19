@@ -1,3 +1,4 @@
+{# HAND-WRITTEN: not modified by `make generate`. Edit directly. #}
 {%  if async_client %}async {% endif %}def {{ operation_id }}(api_config_override : Optional[APIConfig] = None{% if params.strip() %}, *, {{ params.rstrip(', ') }}{% endif %}) -> {% if return_type.type is none or return_type.type.converted_type is none %}None{% else %}{{ return_type.type.converted_type}}{% endif %}:
     query_params : Dict[str,Any] = {
     {% if query_params|length > 0 %}

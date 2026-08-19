@@ -1,3 +1,5 @@
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+
 # Kentik Community Python SDK
 
 A type-safe Python client for the Kentik API v6, generated from

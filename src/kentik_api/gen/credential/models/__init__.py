@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .CredentialGroup import CredentialGroup as CredentialGroup
 from .GetCredentialGroupResponse import (
     GetCredentialGroupResponse as GetCredentialGroupResponse,

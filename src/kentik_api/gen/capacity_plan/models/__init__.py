@@ -1,3 +1,6 @@
+# AUTO-GENERATED: openapi-python-generator, model generation
+# Rebuilt on every `make generate`. Do not edit by hand.
+
 from .CapacityPlan import CapacityPlan as CapacityPlan
 from .CapacityPlanInterfaceDetail import (
     CapacityPlanInterfaceDetail as CapacityPlanInterfaceDetail,
