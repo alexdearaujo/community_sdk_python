@@ -3,6 +3,12 @@
 This folder holds the SDK generator entrypoint and a sample consumer
 script. Both are hand-written and survive every `make generate` run.
 
+> [!NOTE]
+> **`make clean` removes `src/kentik_api/gen/`** (all generated service code)
+> and the Sphinx build output, but never touches `scripts/`, `examples/`,
+> or any other hand-written source. Re-run `make generate` (or just `make`)
+> to rebuild the generated code after a clean.
+
 ## Layout
 
 | Path | Role |
