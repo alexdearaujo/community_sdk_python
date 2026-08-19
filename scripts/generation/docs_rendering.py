@@ -206,9 +206,47 @@ def _generate_runtime_architecture_docs() -> None:
                 key = (src_group, dst_group)
                 edge_counts[key] = edge_counts.get(key, 0) + 1
 
-    mermaid_lines = ["flowchart LR"]
+    # Layer assignments drive the subgraph layout. Any node not matched here
+    # falls through to an ungrouped declaration at the end.
+    _LAYERS: list[tuple[str, str, set[str]]] = [
+        ("client", "Client Layer", {"Client API", "Client Mixin"}),
+        (
+            "generated",
+            "Generated Layer",
+            {
+                "Generated Service Wrappers",
+                "Generated REST Services",
+                "Generated Models",
+                "Generated Error Classes",
+            },
+        ),
+        (
+            "transport",
+            "Transport Layer",
+            {"REST Transport", "gRPC Transport", "Transport Base"},
+        ),
+        (
+            "foundation",
+            "Shared Foundation",
+            {"REST Runtime", "API Config", "Error Types", "Auth Credentials"},
+        ),
+    ]
 
-    for node_name in sorted(nodes):
+    mermaid_lines = ["flowchart TB"]
+
+    placed: set[str] = set()
+    for sg_id, sg_label, members in _LAYERS:
+        in_layer = members & nodes
+        if not in_layer:
+            continue
+        mermaid_lines.append(f'    subgraph {sg_id}["{sg_label}"]')
+        for node_name in sorted(in_layer):
+            node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
+            mermaid_lines.append(f'        {node_id}["{node_name}"]')
+            placed.add(node_name)
+        mermaid_lines.append("    end")
+
+    for node_name in sorted(nodes - placed):
         node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
         mermaid_lines.append(f'    {node_id}["{node_name}"]')
 

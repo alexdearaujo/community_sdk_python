@@ -6,7 +6,7 @@ output lands in `docs/build/html/`.
 ## Structure
 
 ```mermaid
-graph LR
+graph TD
     src["docs/sphinx/"]
     idx["index.md"]
     auth["authentication.md"]
@@ -19,7 +19,6 @@ graph LR
     src --> arch
     src --> gen
     src --> svc
-
 ```
 
 ## Pages
@@ -35,7 +34,7 @@ graph LR
 ## Building
 
 ```bash
-make docs          # build Sphinx HTML → docs/build/html/
-make generate      # regenerate service .md pages from the OpenAPI schema
-make generate local  # use the local ../api-schema-public/ checkout
+make docs               # build Sphinx HTML → docs/build/html/
+make generate           # regenerate service .md pages from the OpenAPI schema
+make generate local     # use the local ../api-schema-public/ checkout
 ```

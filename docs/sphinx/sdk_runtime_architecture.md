@@ -15,20 +15,28 @@ This page explains how core runtime modules and generated services connect at ru
 ## Module Dependency Graph
 
 ```mermaid
-flowchart LR
-    API_Config["API Config"]
-    Auth_Credentials["Auth Credentials"]
-    Client_API["Client API"]
-    Client_Mixin["Client Mixin"]
-    Error_Types["Error Types"]
-    Generated_Error_Classes["Generated Error Classes"]
-    Generated_Models["Generated Models"]
-    Generated_REST_Services["Generated REST Services"]
-    Generated_Service_Wrappers["Generated Service Wrappers"]
-    REST_Runtime["REST Runtime"]
-    REST_Transport["REST Transport"]
-    Transport_Base["Transport Base"]
-    gRPC_Transport["gRPC Transport"]
+flowchart TB
+    subgraph client["Client Layer"]
+        Client_API["Client API"]
+        Client_Mixin["Client Mixin"]
+    end
+    subgraph generated["Generated Layer"]
+        Generated_Error_Classes["Generated Error Classes"]
+        Generated_Models["Generated Models"]
+        Generated_REST_Services["Generated REST Services"]
+        Generated_Service_Wrappers["Generated Service Wrappers"]
+    end
+    subgraph transport["Transport Layer"]
+        REST_Transport["REST Transport"]
+        Transport_Base["Transport Base"]
+        gRPC_Transport["gRPC Transport"]
+    end
+    subgraph foundation["Shared Foundation"]
+        API_Config["API Config"]
+        Auth_Credentials["Auth Credentials"]
+        Error_Types["Error Types"]
+        REST_Runtime["REST Runtime"]
+    end
 
     API_Config --> Error_Types
     Client_API --> Auth_Credentials
