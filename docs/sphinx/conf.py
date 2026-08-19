@@ -17,6 +17,14 @@ source_suffix = [".rst", ".md"]
 # Explicitly tell Sphinx the homepage is named "index" (so it stops looking for index.rst)
 root_doc = "index"
 
+# Exclude GitHub-browsable README files (not Sphinx pages) and build artifacts.
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**/README.md"]
+
+# Suppress cross-reference warnings for links to files outside the Sphinx source
+# tree. Those links are valid for GitHub markdown browsing; they are intentionally
+# not Sphinx cross-references.
+suppress_warnings = ["myst.xref_missing", "toc.not_included"]
+
 extensions = [
     "myst_parser",
     "sphinx.ext.autodoc",
