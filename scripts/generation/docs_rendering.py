@@ -1,10 +1,17 @@
-"""Runtime architecture docs (inline Mermaid), the gen/ root README, and per-service READMEs."""
+"""Runtime architecture docs (inline Mermaid), the gen/ root README, and per-service READMEs.
+
+Also updates <!-- kentik-gen:MARKER --> blocks in docs/guides/ files so every
+reference to generated service names, method names, and class names stays
+current without manual edits.
+"""
 
 import ast
 import re
 from pathlib import Path
 
 from ._shared import PROJECT_ROOT, SDK_OUTPUT_DIR
+
+_GUIDES_DIR = PROJECT_ROOT / "docs" / "guides"
 
 # Top-level README for src/kentik_api/gen/. This lives inside the fully-wiped
 # gen/ tree, so it is generated here rather than hand-written: `make clean`
@@ -302,8 +309,310 @@ def _generate_runtime_architecture_docs() -> None:
             index_path.write_text(index_text, encoding="utf-8")
 
 
+# ---------------------------------------------------------------------------
+# Guide snippet injection
+# ---------------------------------------------------------------------------
+
+
+def _method_to_pascal(name: str) -> str:
+    return "".join(word.capitalize() for word in name.split("_"))
+
+
+def _strip_optional(type_str: str) -> str:
+    m = re.match(r"^Optional\[(.+)\]$", type_str)
+    return m.group(1) if m else type_str
+
+
+def _discover_example_ops(
+    n_list: int = 3,
+) -> tuple[list[dict[str, str]], dict[str, str] | None]:
+    """Scans generated *ServiceWrapper files to find representative operations.
+
+    Returns (list_ops, body_op).
+    list_ops: up to n_list list_* operations, each {service, method, response_class}.
+    body_op: first operation with a data: parameter, {service, method, request_class}.
+    """
+    list_ops: list[dict[str, str]] = []
+    body_op: dict[str, str] | None = None
+
+    if not SDK_OUTPUT_DIR.exists():
+        return list_ops, body_op
+
+    for service_dir in sorted(SDK_OUTPUT_DIR.iterdir()):
+        if not service_dir.is_dir() or service_dir.name.startswith("_"):
+            continue
+        service_name = service_dir.name
+        services_folder = service_dir / "services"
+        if not services_folder.exists():
+            continue
+
+        for wrapper_file in sorted(services_folder.glob("*.py")):
+            if wrapper_file.name == "__init__.py":
+                continue
+            try:
+                tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+
+            for cls_node in ast.walk(tree):
+                if not (
+                    isinstance(cls_node, ast.ClassDef)
+                    and cls_node.name.endswith("ServiceWrapper")
+                ):
+                    continue
+
+                for method_node in cls_node.body:
+                    if not isinstance(method_node, ast.FunctionDef) or method_node.name.startswith("_"):
+                        continue
+
+                    args = [a for a in method_node.args.args if a.arg != "self"]
+                    # Keyword-only args (after *) are common in generated wrappers.
+                    args = args + list(method_node.args.kwonlyargs)
+                    method_name = method_node.name
+
+                    response_class = ""
+                    if method_node.returns is not None:
+                        try:
+                            raw = _strip_optional(ast.unparse(method_node.returns))
+                            # Strip module prefix (e.g. rest_models.Foo -> Foo)
+                            response_class = raw.rsplit(".", 1)[-1]
+                        except Exception:
+                            pass
+
+                    if (
+                        len(list_ops) < n_list
+                        and method_name.lower().startswith("list_")
+                        and response_class
+                    ):
+                        list_ops.append(
+                            {
+                                "service": service_name,
+                                "method": method_name,
+                                "response_class": response_class,
+                            }
+                        )
+
+                    if body_op is None:
+                        for arg in args:
+                            if arg.arg == "data" and arg.annotation is not None:
+                                try:
+                                    raw = _strip_optional(
+                                        ast.unparse(arg.annotation)
+                                    )
+                                    # Strip module prefix (e.g. rest_models.Foo -> Foo)
+                                    request_class = raw.rsplit(".", 1)[-1]
+                                    body_op = {
+                                        "service": service_name,
+                                        "method": method_name,
+                                        "request_class": request_class,
+                                    }
+                                except Exception:
+                                    pass
+                                break
+
+        if len(list_ops) >= n_list and body_op is not None:
+            break
+
+    return list_ops, body_op
+
+
+def _replace_marker(text: str, marker: str, new_content: str) -> str:
+    """Replaces content inside <!-- kentik-gen:MARKER --> / <!-- /kentik-gen:MARKER --> tags."""
+    pattern = re.compile(
+        r"<!-- kentik-gen:" + re.escape(marker) + r" -->"
+        r".*?"
+        r"<!-- /kentik-gen:" + re.escape(marker) + r" -->",
+        re.DOTALL,
+    )
+    replacement = (
+        f"<!-- kentik-gen:{marker} -->"
+        + new_content
+        + f"<!-- /kentik-gen:{marker} -->"
+    )
+    return pattern.sub(replacement, text)
+
+
+def _update_guide_snippets() -> None:
+    """Injects current generated operation names and counts into docs/guides/ marker blocks."""
+    if not SDK_OUTPUT_DIR.exists():
+        return
+
+    service_count = sum(
+        1
+        for d in SDK_OUTPUT_DIR.iterdir()
+        if d.is_dir() and not d.name.startswith("_")
+    )
+
+    list_ops, body_op = _discover_example_ops(n_list=3)
+    if not list_ops:
+        print("    ⚠️  No list operations found; skipping guide snippet updates.")
+        return
+
+    primary = list_ops[0]
+    pascal_method = _method_to_pascal(primary["method"])
+    request_proto = primary["response_class"].replace("Response", "Request")
+
+    # generation.md: inline service count (same marker used twice in the file)
+    gen_md = _GUIDES_DIR / "generation.md"
+    if gen_md.exists():
+        text = gen_md.read_text(encoding="utf-8")
+        text = _replace_marker(text, "service-count", str(service_count))
+        gen_md.write_text(text, encoding="utf-8")
+
+    # docs/sphinx/README.md: inline service count in the services/ row
+    sphinx_readme = PROJECT_ROOT / "docs" / "sphinx" / "README.md"
+    if sphinx_readme.exists():
+        text = sphinx_readme.read_text(encoding="utf-8")
+        text = _replace_marker(text, "service-count", str(service_count))
+        sphinx_readme.write_text(text, encoding="utf-8")
+
+    # quickstart.md: first-call-example, grpc-call-example
+    qs_md = _GUIDES_DIR / "quickstart.md"
+    if qs_md.exists():
+        text = qs_md.read_text(encoding="utf-8")
+        text = _replace_marker(
+            text,
+            "first-call-example",
+            f"""
+```python
+from kentik_api.client import KentikAPI
+
+client = KentikAPI(protocol="rest")
+response = client.{primary["service"]}.{primary["method"]}()
+print(response)  # {primary["response_class"]}
+```
+""",
+        )
+        text = _replace_marker(
+            text,
+            "grpc-call-example",
+            f"""
+```python
+client = KentikAPI(protocol="grpc")
+response = client.{primary["service"]}.{primary["method"]}()  # same API, same response models
+```
+""",
+        )
+        qs_md.write_text(text, encoding="utf-8")
+
+    # rest.md: list-methods-example, request-body-example
+    rest_md = _GUIDES_DIR / "rest.md"
+    if rest_md.exists():
+        text = rest_md.read_text(encoding="utf-8")
+        list_lines = "\n".join(
+            f"response = client.{op['service']}.{op['method']}()"
+            for op in list_ops
+        )
+        text = _replace_marker(
+            text,
+            "list-methods-example",
+            f"""
+```python
+{list_lines}
+```
+""",
+        )
+        if body_op:
+            text = _replace_marker(
+                text,
+                "request-body-example",
+                f"""
+```python
+from kentik_api.gen.{body_op["service"]}.models import {body_op["request_class"]}
+
+response = client.{body_op["service"]}.{body_op["method"]}(data={body_op["request_class"]}())
+```
+""",
+            )
+        rest_md.write_text(text, encoding="utf-8")
+
+    # grpc.md: grpc-usage-example, rest-callflow-diagram, grpc-callflow-diagram
+    grpc_md = _GUIDES_DIR / "grpc.md"
+    if grpc_md.exists():
+        text = grpc_md.read_text(encoding="utf-8")
+        text = _replace_marker(
+            text,
+            "grpc-usage-example",
+            f"""
+```python
+from kentik_api.client import KentikAPI
+
+client = KentikAPI(protocol="grpc")
+response = client.{primary["service"]}.{primary["method"]}()
+print(response)  # {primary["response_class"]}
+```
+""",
+        )
+        text = _replace_marker(
+            text,
+            "rest-callflow-diagram",
+            f"""
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as ServiceWrapper
+    participant RJ as request_json()
+    participant API as Kentik REST API
+
+    C->>W: {primary["method"]}()
+    W->>RJ: api_config, method, path, params
+    RJ->>API: HTTP request (HTTPS)
+    alt success
+        API-->>RJ: JSON response
+        RJ-->>W: parsed dict
+        W-->>C: {primary["response_class"]} (Pydantic)
+    else HTTP error
+        API-->>RJ: error JSON
+        RJ-->>W: raise HTTPException
+        W-->>C: raise HTTPException
+    end
+```
+""",
+        )
+        text = _replace_marker(
+            text,
+            "grpc-callflow-diagram",
+            f"""
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as ServiceWrapper
+    participant B as proto bridge
+    participant S as gRPC stub
+    participant API as Kentik gRPC API
+
+    C->>W: {primary["method"]}()
+    W->>B: ParseDict(params, {request_proto})
+    B->>S: {pascal_method} (gRPC/TLS)
+    S->>API: serialized proto request
+    alt success
+        API-->>S: serialized proto response
+        S-->>B: {primary["response_class"]} proto
+        B-->>W: MessageToDict(response)
+        W-->>C: {primary["response_class"]} (Pydantic)
+    else gRPC error (status code)
+        API-->>S: gRPC status + details
+        S-->>W: raise RpcError
+        W-->>C: raise HTTPException (normalized)
+    end
+```
+""",
+        )
+        grpc_md.write_text(text, encoding="utf-8")
+
+    body_label = (
+        f"{body_op['service']}.{body_op['method']}" if body_op else "none"
+    )
+    print(
+        f"    ✅ Guide snippets updated "
+        f"({service_count} services, list: {primary['service']}.{primary['method']}, "
+        f"body: {body_label})."
+    )
+
+
 def generate() -> None:
     """Generates the runtime architecture docs, the gen/ root README, and per-service READMEs."""
     _generate_runtime_architecture_docs()
     _generate_gen_root_readme()
     _generate_service_readmes()
+    _update_guide_snippets()

@@ -8,12 +8,12 @@ package owns one concern of SDK generation.
 
 | Module | Owns | Public interface |
 | --- | --- | --- |
-| `parity.py` | Swagger file selection and directory parity checks | `select_latest_swagger_files_by_service()`, `validate_generated_service_parity()` |
-| `error_package.py` | Error class generation and error dispatch | `generate_service_error_package()`, `inject_service_error_handling()` |
-| `wrapper_generation.py` | Service wrapper and client mixin generation | `generate()` |
-| `docs_rendering.py` | Architecture diagrams and service READMEs | `generate()` |
-| `endpoint_docs.py` | Per-endpoint Sphinx documentation | `EndpointDocsCollector` |
-| `_shared.py` | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `discover_service_model_classes()`, `service_to_pascal_case()` |
+| [`parity.py`](parity.py) | Swagger file selection and directory parity checks | `select_latest_swagger_files_by_service()`, `validate_generated_service_parity()` |
+| [`error_package.py`](error_package.py) | Error class generation and error dispatch | `generate_service_error_package()`, `inject_service_error_handling()` |
+| [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation | `generate()` |
+| [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams and service READMEs | `generate()` |
+| [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation | `EndpointDocsCollector` |
+| [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `discover_service_model_classes()`, `service_to_pascal_case()` |
 
 Keep a helper in `_shared.py` only when two or more phase modules call
 it. Put a single-consumer helper in the one module that calls it

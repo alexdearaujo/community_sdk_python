@@ -16,16 +16,13 @@ See [quickstart.md](quickstart.md) for credential setup.
 
 Every generated service is available as an attribute on the client:
 
+<!-- kentik-gen:list-methods-example -->
 ```python
-# Devices
-response = client.device.list_devices()
-
-# Users
-response = client.user.list_users()
-
-# Labels
-response = client.label.list_labels()
+response = client.alerting.list_comments()
+response = client.as_group.list_a_s_groups()
+response = client.asset_tags.list_tag_keys()
 ```
+<!-- /kentik-gen:list-methods-example -->
 
 All methods return Pydantic v2 models. Optional list fields use
 `Optional[List[Optional[Model]]]` to reflect the OpenAPI schema; filter
@@ -39,11 +36,13 @@ devices = [d for d in (response.devices or []) if d is not None]
 
 Methods that take a request body expect a Pydantic model:
 
+<!-- kentik-gen:request-body-example -->
 ```python
-from kentik_api.gen.alerting.models import AlertServiceListRequest
+from kentik_api.gen.ai_advisor.models import CreateChatSessionRequest
 
-response = client.alerting.alert_list(data=AlertServiceListRequest())
+response = client.ai_advisor.create_chat_session(data=CreateChatSessionRequest())
 ```
+<!-- /kentik-gen:request-body-example -->
 
 ## Regions
 

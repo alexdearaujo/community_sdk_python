@@ -8,8 +8,8 @@ path. Both REST and gRPC are fully functional and production-ready.
 | Artifact | Location | Status |
 | --- | --- | --- |
 | Compiled proto stubs | `gen/<service>/pb/*_pb2.py`, `*_pb2_grpc.py` | Done |
-| gRPC channel setup | `src/kentik_api/transports/grpc_client.py` | Done |
-| `call_grpc()` shared runtime | `src/kentik_api/core/grpc_runtime.py` | Done |
+| gRPC channel setup | [`src/kentik_api/transports/grpc_client.py`](../../src/kentik_api/transports/grpc_client.py) | Done |
+| `call_grpc()` shared runtime | [`src/kentik_api/core/grpc_runtime.py`](../../src/kentik_api/core/grpc_runtime.py) | Done |
 | Service wrapper (REST path) | `gen/<service>/services/<service>.py` | Done |
 | Service wrapper (gRPC path) | same file, each method | Done |
 | Proto companion bundles | `gen/pb_companions/` | **Done** |
@@ -29,7 +29,7 @@ response = client.device.list_devices()
 print(f"{len(response.devices)} device(s) via gRPC")
 ```
 
-See `examples/grpc_usage.py` for a runnable demo.
+See [`examples/device/grpc.py`](../../examples/device/grpc.py) for a runnable demo.
 
 ## Why the conversion is tractable
 

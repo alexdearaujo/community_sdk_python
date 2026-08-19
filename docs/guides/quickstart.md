@@ -42,25 +42,26 @@ client = KentikAPI(
 
 ## Make your first call
 
+<!-- kentik-gen:first-call-example -->
 ```python
 from kentik_api.client import KentikAPI
 
 client = KentikAPI(protocol="rest")
-response = client.device.list_devices()
-
-devices = [d for d in (response.devices or []) if d is not None]
-for device in devices[:5]:
-    print(f"{device.id}: {device.deviceName}")
+response = client.alerting.list_comments()
+print(response)  # AlertServiceListCommentsResponse
 ```
+<!-- /kentik-gen:first-call-example -->
 
 ## Switch to gRPC
 
 Change one argument:
 
+<!-- kentik-gen:grpc-call-example -->
 ```python
 client = KentikAPI(protocol="grpc")
-response = client.device.list_devices()  # same API, same response models
+response = client.alerting.list_comments()  # same API, same response models
 ```
+<!-- /kentik-gen:grpc-call-example -->
 
 See [grpc.md](grpc.md) for the full gRPC guide.
 

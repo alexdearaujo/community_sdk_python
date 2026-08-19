@@ -72,8 +72,7 @@ clean: ## Remove generated SDK and build artifacts
 	# - docs/sphinx/local_generation_workflow.md
 	rm -rf src/kentik_api/gen/
 	rm -rf docs/build/
-	find docs/sphinx/services -maxdepth 1 -type f -name '*.md' -delete
-# 	rm -rf bin/				# commented out only for testing (to speed up tests)
+	rm -rf docs/sphinx/services/
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 
 deep-clean: clean ## Remove virtual environment and lock files

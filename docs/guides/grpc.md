@@ -16,16 +16,21 @@ client = KentikAPI(protocol="grpc")
 
 Every service method call works the same as REST:
 
+<!-- kentik-gen:grpc-usage-example -->
 ```python
-response = client.device.list_devices()
-devices = [d for d in (response.devices or []) if d is not None]
-print(f"Found {len(devices)} device(s) via gRPC.")
+from kentik_api.client import KentikAPI
+
+client = KentikAPI(protocol="grpc")
+response = client.alerting.list_comments()
+print(response)  # AlertServiceListCommentsResponse
 ```
+<!-- /kentik-gen:grpc-usage-example -->
 
 ## REST vs gRPC: call flow comparison
 
 ### REST call flow
 
+<!-- kentik-gen:rest-callflow-diagram -->
 ```mermaid
 sequenceDiagram
     participant C as Caller
@@ -33,19 +38,20 @@ sequenceDiagram
     participant RJ as request_json()
     participant API as Kentik REST API
 
-    C->>W: list_devices()
+    C->>W: list_comments()
     W->>RJ: api_config, method, path, params
-    RJ->>API: GET /device/v202504beta2/device (HTTPS)
+    RJ->>API: HTTP request (HTTPS)
     alt success
-        API-->>RJ: JSON response body
+        API-->>RJ: JSON response
         RJ-->>W: parsed dict
-        W-->>C: ListDevicesResponse (Pydantic)
+        W-->>C: AlertServiceListCommentsResponse (Pydantic)
     else HTTP error
         API-->>RJ: error JSON
-        RJ-->>W: raise HTTPException(status_code, message)
+        RJ-->>W: raise HTTPException
         W-->>C: raise HTTPException
     end
 ```
+<!-- /kentik-gen:rest-callflow-diagram -->
 
 The REST path routes every call through
 [`request_json()`](../../src/kentik_api/core/rest_runtime.py) in
@@ -53,6 +59,7 @@ The REST path routes every call through
 
 ### gRPC call flow
 
+<!-- kentik-gen:grpc-callflow-diagram -->
 ```mermaid
 sequenceDiagram
     participant C as Caller
@@ -61,21 +68,22 @@ sequenceDiagram
     participant S as gRPC stub
     participant API as Kentik gRPC API
 
-    C->>W: list_devices()
-    W->>B: ParseDict(params, ListDevicesRequest)
-    B->>S: DeviceService/ListDevices (gRPC/TLS)
+    C->>W: list_comments()
+    W->>B: ParseDict(params, AlertServiceListCommentsRequest)
+    B->>S: ListComments (gRPC/TLS)
     S->>API: serialized proto request
     alt success
         API-->>S: serialized proto response
-        S-->>B: ListDevicesResponse proto
+        S-->>B: AlertServiceListCommentsResponse proto
         B-->>W: MessageToDict(response)
-        W-->>C: ListDevicesResponse (Pydantic)
+        W-->>C: AlertServiceListCommentsResponse (Pydantic)
     else gRPC error (status code)
         API-->>S: gRPC status + details
         S-->>W: raise RpcError
         W-->>C: raise HTTPException (normalized)
     end
 ```
+<!-- /kentik-gen:grpc-callflow-diagram -->
 
 The gRPC path uses:
 
