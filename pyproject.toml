@@ -24,6 +24,7 @@ keywords = ["kentik", "api", "sdk", "networking", "observability"]
 
 dependencies = [
     "python-dotenv>=1.1.1",
+    "googleapis-common-protos>=1.63.0",
     "grpcio>=1.78.0",
     "httpx>=0.28.1",
     "pydantic>=2.12.5",

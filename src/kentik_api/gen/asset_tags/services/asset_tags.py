@@ -1,6 +1,9 @@
 from typing import Union, cast
 
+from google.protobuf.json_format import MessageToDict, ParseDict
+
 import kentik_api.gen.asset_tags.services.AssetTagsService as RestAssetTagsModule1
+from kentik_api.core.grpc_runtime import call_grpc
 from kentik_api.gen.asset_tags import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -12,15 +15,37 @@ class AssetTagsServiceWrapper:
     def __init__(self, transport: Union[GrpcTransport, RestTransport]):
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
-            pass  # TODO: Initialize gRPC stub here
+            try:
+                import kentik_api.gen.asset_tags.pb.asset_tags_pb2 as _pb2_1_mod
+                import kentik_api.gen.asset_tags.pb.asset_tags_pb2_grpc as _pb2_grpc_1_mod
+
+                self._grpc_pb2_1 = _pb2_1_mod
+                self._grpc_stub_1 = _pb2_grpc_1_mod.AssetTagsServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_1 = None
+                self._grpc_stub_1 = None
 
     def get_tag_values(
         self, *, assetType: str, assetId: str
     ) -> rest_models.GetTagValuesResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for GetTagValues is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req = ParseDict(
+                {
+                    k: v
+                    for k, v in {"assetType": assetType, "assetId": assetId}.items()
+                    if v is not None
+                },
+                self._grpc_pb2_1.GetTagValuesRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.GetTagValues, _req)
+            return rest_models.GetTagValuesResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.GetTagValues(
@@ -37,9 +62,13 @@ class AssetTagsServiceWrapper:
         self,
     ) -> rest_models.ListTagKeysResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for ListTagKeys is not yet implemented."
-            )
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req = self._grpc_pb2_1.ListTagKeysRequest()
+            _resp = call_grpc(self._grpc_stub_1.ListTagKeys, _req)
+            return rest_models.ListTagKeysResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.ListTagKeys(
@@ -54,9 +83,17 @@ class AssetTagsServiceWrapper:
         self, *, data: rest_models.CreateTagKeyRequest
     ) -> rest_models.CreateTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CreateTagKey is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.CreateTagKeyRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.CreateTagKey, _req)
+            return rest_models.CreateTagKeyResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.CreateTagKey(
@@ -69,9 +106,17 @@ class AssetTagsServiceWrapper:
 
     def get_tag_key(self, *, id: str) -> rest_models.GetTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for GetTagKey is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req = ParseDict(
+                {k: v for k, v in {"id": id}.items() if v is not None},
+                self._grpc_pb2_1.GetTagKeyRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.GetTagKey, _req)
+            return rest_models.GetTagKeyResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.GetTagKey(
@@ -89,9 +134,19 @@ class AssetTagsServiceWrapper:
         data: rest_models.AssetTagsServiceUpdateTagKeyBody,
     ) -> rest_models.UpdateTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for UpdateTagKey is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
+            _req = ParseDict(
+                _req_dict,
+                self._grpc_pb2_1.UpdateTagKeyRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.UpdateTagKey, _req)
+            return rest_models.UpdateTagKeyResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.UpdateTagKey(
@@ -104,9 +159,17 @@ class AssetTagsServiceWrapper:
 
     def delete_tag_key(self, *, id: str) -> rest_models.DeleteTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for DeleteTagKey is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req = ParseDict(
+                {k: v for k, v in {"id": id}.items() if v is not None},
+                self._grpc_pb2_1.DeleteTagKeyRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.DeleteTagKey, _req)
+            return rest_models.DeleteTagKeyResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.DeleteTagKey(
@@ -121,8 +184,22 @@ class AssetTagsServiceWrapper:
         self, *, tagId: str, assetType: str
     ) -> rest_models.ListTagValuesResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for ListTagValues is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req = ParseDict(
+                {
+                    k: v
+                    for k, v in {"tagId": tagId, "assetType": assetType}.items()
+                    if v is not None
+                },
+                self._grpc_pb2_1.ListTagValuesRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.ListTagValues, _req)
+            return rest_models.ListTagValuesResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -140,9 +217,17 @@ class AssetTagsServiceWrapper:
         self, *, data: rest_models.SetTagValuesRequest
     ) -> rest_models.SetTagValuesResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for SetTagValues is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.SetTagValuesRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.SetTagValues, _req)
+            return rest_models.SetTagValuesResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.SetTagValues(
@@ -157,8 +242,18 @@ class AssetTagsServiceWrapper:
         self, *, data: rest_models.DeleteTagValuesRequest
     ) -> rest_models.DeleteTagValuesResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for DeleteTagValues is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for asset_tags service"
+                )
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.DeleteTagValuesRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.DeleteTagValues, _req)
+            return rest_models.DeleteTagValuesResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

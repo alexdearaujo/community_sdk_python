@@ -1,6 +1,9 @@
 from typing import List, Optional, Union, cast
 
+from google.protobuf.json_format import MessageToDict, ParseDict
+
 import kentik_api.gen.interface.services.InterfaceService as RestInterfaceModule1
+from kentik_api.core.grpc_runtime import call_grpc
 from kentik_api.gen.interface import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -12,7 +15,17 @@ class InterfaceServiceWrapper:
     def __init__(self, transport: Union[GrpcTransport, RestTransport]):
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
-            pass  # TODO: Initialize gRPC stub here
+            try:
+                import kentik_api.gen.interface.pb.interface_pb2 as _pb2_1_mod
+                import kentik_api.gen.interface.pb.interface_pb2_grpc as _pb2_grpc_1_mod
+
+                self._grpc_pb2_1 = _pb2_1_mod
+                self._grpc_stub_1 = _pb2_grpc_1_mod.InterfaceServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_1 = None
+                self._grpc_stub_1 = None
 
     def list_interface(
         self,
@@ -26,8 +39,30 @@ class InterfaceServiceWrapper:
         filtersipTypes: Optional[List[str]] = None,
     ) -> rest_models.ListInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for ListInterface is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for interface service"
+                )
+            _req = ParseDict(
+                {
+                    k: v
+                    for k, v in {
+                        "filterstext": filterstext,
+                        "filtersdeviceIds": filtersdeviceIds,
+                        "filtersconnectivityTypes": filtersconnectivityTypes,
+                        "filtersnetworkBoundaries": filtersnetworkBoundaries,
+                        "filtersproviders": filtersproviders,
+                        "filterssnmpSpeeds": filterssnmpSpeeds,
+                        "filtersipTypes": filtersipTypes,
+                    }.items()
+                    if v is not None
+                },
+                self._grpc_pb2_1.ListInterfaceRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.ListInterface, _req)
+            return rest_models.ListInterfaceResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -117,8 +152,18 @@ class InterfaceServiceWrapper:
         self, *, data: rest_models.ManualClassifyRequest
     ) -> rest_models.ManualClassifyResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for ManualClassify is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for interface service"
+                )
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.ManualClassifyRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.ManualClassify, _req)
+            return rest_models.ManualClassifyResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -1,6 +1,9 @@
 from typing import Union, cast
 
+from google.protobuf.json_format import MessageToDict, ParseDict
+
 import kentik_api.gen.cloud_export.services.CloudExportAdminService as RestCloudExportModule1
+from kentik_api.core.grpc_runtime import call_grpc
 from kentik_api.gen.cloud_export import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -12,14 +15,30 @@ class CloudExportServiceWrapper:
     def __init__(self, transport: Union[GrpcTransport, RestTransport]):
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
-            pass  # TODO: Initialize gRPC stub here
+            try:
+                import kentik_api.gen.cloud_export.pb.cloud_export_pb2 as _pb2_1_mod
+                import kentik_api.gen.cloud_export.pb.cloud_export_pb2_grpc as _pb2_grpc_1_mod
+
+                self._grpc_pb2_1 = _pb2_1_mod
+                self._grpc_stub_1 = _pb2_grpc_1_mod.CloudExportAdminServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_1 = None
+                self._grpc_stub_1 = None
 
     def list_cloud_exports(
         self,
     ) -> rest_models.ListCloudExportsResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for ListCloudExports is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for cloud_export service"
+                )
+            _req = self._grpc_pb2_1.ListCloudExportsRequest()
+            _resp = call_grpc(self._grpc_stub_1.ListCloudExports, _req)
+            return rest_models.ListCloudExportsResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -35,8 +54,18 @@ class CloudExportServiceWrapper:
         self, *, data: rest_models.CreateCloudExportRequest
     ) -> rest_models.CreateCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CreateCloudExport is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for cloud_export service"
+                )
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.CreateCloudExportRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.CreateCloudExport, _req)
+            return rest_models.CreateCloudExportResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -50,8 +79,18 @@ class CloudExportServiceWrapper:
 
     def get_cloud_export(self, *, exportid: str) -> rest_models.GetCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for GetCloudExport is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for cloud_export service"
+                )
+            _req = ParseDict(
+                {k: v for k, v in {"exportid": exportid}.items() if v is not None},
+                self._grpc_pb2_1.GetCloudExportRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.GetCloudExport, _req)
+            return rest_models.GetCloudExportResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -70,8 +109,22 @@ class CloudExportServiceWrapper:
         data: rest_models.CloudExportAdminServiceUpdateCloudExportBody,
     ) -> rest_models.UpdateCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for UpdateCloudExport is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for cloud_export service"
+                )
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update(
+                {k: v for k, v in {"exportid": exportid}.items() if v is not None}
+            )
+            _req = ParseDict(
+                _req_dict,
+                self._grpc_pb2_1.UpdateCloudExportRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.UpdateCloudExport, _req)
+            return rest_models.UpdateCloudExportResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -89,8 +142,18 @@ class CloudExportServiceWrapper:
         self, *, exportid: str
     ) -> rest_models.DeleteCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for DeleteCloudExport is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for cloud_export service"
+                )
+            _req = ParseDict(
+                {k: v for k, v in {"exportid": exportid}.items() if v is not None},
+                self._grpc_pb2_1.DeleteCloudExportRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.DeleteCloudExport, _req)
+            return rest_models.DeleteCloudExportResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

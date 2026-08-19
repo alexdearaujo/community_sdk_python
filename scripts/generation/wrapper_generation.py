@@ -1,6 +1,8 @@
 """Client mixin and dual-transport service wrapper generation."""
 
+import ast
 import re
+from pathlib import Path
 
 from ._shared import (
     PROJECT_ROOT,
@@ -8,6 +10,66 @@ from ._shared import (
     discover_service_model_classes,
     service_to_pascal_case,
 )
+
+
+def _discover_grpc_stubs(
+    service_dir: Path, service: str
+) -> tuple[list[tuple[str, str, str, str]], dict[str, tuple[int, str, str]]]:
+    """AST-parses pb2_grpc files to build a map from gRPC method name to stub info.
+
+    Returns:
+      stubs_info: list of (pb2_stem, pb2_grpc_stem, stub_class_name, str_idx)
+      method_map: method_name -> (stub_idx, req_class_name, resp_class_name)
+    """
+    pb_dir = service_dir / "pb"
+    if not pb_dir.exists():
+        return [], {}
+
+    stubs_info: list[tuple[str, str, str, str]] = []
+    method_map: dict[str, tuple[int, str, str]] = {}
+    idx = 1
+
+    for pb2_grpc_file in sorted(pb_dir.glob("*_pb2_grpc.py")):
+        pb2_grpc_stem = pb2_grpc_file.stem  # e.g. "device_pb2_grpc"
+        pb2_stem = pb2_grpc_stem[: -len("_grpc")]  # e.g. "device_pb2"
+        try:
+            tree = ast.parse(pb2_grpc_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+
+        for cls in ast.walk(tree):
+            if not (isinstance(cls, ast.ClassDef) and cls.name.endswith("Stub")):
+                continue
+            stub_class = cls.name
+            stubs_info.append((pb2_stem, pb2_grpc_stem, stub_class, str(idx)))
+
+            for fn in cls.body:
+                if not (isinstance(fn, ast.FunctionDef) and fn.name == "__init__"):
+                    continue
+                for stmt in fn.body:
+                    if not (
+                        isinstance(stmt, ast.Assign)
+                        and isinstance(stmt.targets[0], ast.Attribute)
+                        and isinstance(stmt.value, ast.Call)
+                    ):
+                        continue
+                    meth = stmt.targets[0].attr
+                    req_cls = resp_cls = None
+                    for kw in stmt.value.keywords:
+                        parts = ast.unparse(kw.value).split(".")
+                        if kw.arg == "request_serializer" and len(parts) >= 2:
+                            req_cls = parts[-2]
+                        if kw.arg == "response_deserializer" and len(parts) >= 2:
+                            resp_cls = parts[-2]
+                    if req_cls:
+                        method_map[meth] = (
+                            idx,
+                            req_cls,
+                            resp_cls or f"{meth}Response",
+                        )
+            idx += 1
+
+    return stubs_info, method_map
 
 
 def qualify_wrapper_annotation_types(text: str, model_classes: set[str]) -> str:
@@ -70,6 +132,9 @@ def _generate_service_wrappers():
 
         required_typing_symbols = {"Union", "cast"}
 
+        # Discover gRPC stubs before building wrapper code.
+        grpc_stubs_info, grpc_method_map = _discover_grpc_stubs(service_dir, service)
+
         wrapper_code = [
             "from typing import Union, cast",
             f"from kentik_api.gen.{service} import models as rest_models",
@@ -81,12 +146,39 @@ def _generate_service_wrappers():
             "    def __init__(self, transport: Union[GrpcTransport, RestTransport]):",
             "        self._transport = transport",
             "        if isinstance(self._transport, GrpcTransport):",
-            "            pass # TODO: Initialize gRPC stub here",
-            "",
         ]
+        if grpc_stubs_info:
+            for pb2_stem, pb2_grpc_stem, stub_class, sidx in grpc_stubs_info:
+                # try/except so missing proto deps (googleapis-common-protos,
+                # protoc-gen-openapiv2, kentik/core) degrade to NotImplementedError
+                # rather than crashing at import time.
+                wrapper_code.append("            try:")
+                wrapper_code.append(
+                    f"                import kentik_api.gen.{service}.pb.{pb2_stem} as _pb2_{sidx}_mod"
+                )
+                wrapper_code.append(
+                    f"                import kentik_api.gen.{service}.pb.{pb2_grpc_stem} as _pb2_grpc_{sidx}_mod"
+                )
+                wrapper_code.append(
+                    f"                self._grpc_pb2_{sidx} = _pb2_{sidx}_mod"
+                )
+                wrapper_code.append(
+                    f"                self._grpc_stub_{sidx} = _pb2_grpc_{sidx}_mod.{stub_class}(self._transport.channel)"
+                )
+                wrapper_code.append("            except (ImportError, TypeError):")
+                wrapper_code.append(
+                    f"                self._grpc_pb2_{sidx} = None"
+                )
+                wrapper_code.append(
+                    f"                self._grpc_stub_{sidx} = None"
+                )
+        else:
+            wrapper_code.append("            pass  # gRPC not yet implemented for this service")
+        wrapper_code.append("")
 
         emitted_method_names: set[str] = set()
 
+        # Insert REST module imports at the top of wrapper_code (before GrpcTransport).
         for idx, service_py in enumerate(rest_files, start=1):
             rest_module_name = service_py.stem  # e.g., 'DeviceService'
             module_alias = f"Rest{title}Module{idx}"
@@ -95,9 +187,27 @@ def _generate_service_wrappers():
                 f"import kentik_api.gen.{service}.{services_folder.name}.{rest_module_name} as {module_alias}",
             )
 
-            content = service_py.read_text(encoding="utf-8")
+        # After REST imports are inserted, inject gRPC imports if stubs were found.
+        if grpc_stubs_info:
+            rest_transport_line_idx = next(
+                i
+                for i, line in enumerate(wrapper_code)
+                if "from kentik_api.transports.rest_client import RestTransport" in line
+            )
+            grpc_import_lines = [
+                "from google.protobuf.json_format import MessageToDict, ParseDict",
+                "from kentik_api.core.grpc_runtime import call_grpc",
+            ]
+            # Only json_format helpers go at module level; pb2 modules are loaded
+            # lazily inside __init__ to avoid proto descriptor errors at import
+            # time when googleapis-common-protos is not installed.
+            for offset, imp_line in enumerate(grpc_import_lines):
+                wrapper_code.insert(rest_transport_line_idx + 1 + offset, imp_line)
 
-            # Regex to find all generated functions
+        for idx, service_py in enumerate(rest_files, start=1):
+            rest_module_name = service_py.stem
+            module_alias = f"Rest{title}Module{idx}"
+            content = service_py.read_text(encoding="utf-8")
             func_pattern = re.compile(
                 r"^def\s+([A-Z][a-zA-Z0-9_]*)\s*\((.*?)\)\s*->\s*([a-zA-Z0-9_\[\]\.]+):",
                 re.MULTILINE | re.DOTALL,
@@ -172,11 +282,72 @@ def _generate_service_wrappers():
                 if call_args_str:
                     call_args_str = ", " + call_args_str
 
+                # Build the gRPC branch: real call when a matching stub exists,
+                # otherwise keep the NotImplementedError placeholder.
+                non_data_args = [
+                    a for a in arg_names if a not in ("api_config_override", "data")
+                ]
+                if func_name_pascal in grpc_method_map:
+                    stub_idx, req_class, resp_class = grpc_method_map[func_name_pascal]
+                    is_none_return = return_type.strip() == "None"
+                    # Guard: if proto deps weren't available at init, fall back.
+                    stub_guard = [
+                        "        if isinstance(self._transport, GrpcTransport):",
+                        f"            if self._grpc_stub_{stub_idx} is None:",
+                        f'                raise NotImplementedError("gRPC proto dependencies not installed for {service} service")',
+                    ]
+                    if "data" in arg_names and non_data_args:
+                        # Body param + path/query params
+                        other_dict = ", ".join(
+                            f'"{a}": {a}' for a in non_data_args
+                        )
+                        grpc_lines = [
+                            *stub_guard,
+                            "            _req_dict = data.model_dump(by_alias=True, exclude_none=True)",
+                            f"            _req_dict.update({{k: v for k, v in {{{other_dict}}}.items() if v is not None}})",
+                            f"            _req = ParseDict(_req_dict, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
+                            f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
+                        ]
+                    elif "data" in arg_names:
+                        # Body param only
+                        grpc_lines = [
+                            *stub_guard,
+                            f"            _req = ParseDict(data.model_dump(by_alias=True, exclude_none=True), self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
+                            f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
+                        ]
+                    elif non_data_args:
+                        # Query/path params only
+                        kwarg_dict = ", ".join(
+                            f'"{a}": {a}' for a in non_data_args
+                        )
+                        grpc_lines = [
+                            *stub_guard,
+                            f"            _req = ParseDict({{k: v for k, v in {{{kwarg_dict}}}.items() if v is not None}}, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
+                            f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
+                        ]
+                    else:
+                        # No params
+                        grpc_lines = [
+                            *stub_guard,
+                            f"            _req = self._grpc_pb2_{stub_idx}.{req_class}()",
+                            f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
+                        ]
+                    if is_none_return:
+                        grpc_lines.append("            return None")
+                    else:
+                        grpc_lines.append(
+                            f"            return {return_type}.model_validate(MessageToDict(_resp))"
+                        )
+                else:
+                    grpc_lines = [
+                        "        if isinstance(self._transport, GrpcTransport):",
+                        f'            raise NotImplementedError("gRPC translation for {func_name_pascal} is not yet implemented.")',
+                    ]
+
                 wrapper_code.extend(
                     [
                         f"    def {unique_method_name}(self, {sig_args}) -> {return_type}:",
-                        "        if isinstance(self._transport, GrpcTransport):",
-                        f'            raise NotImplementedError("gRPC translation for {func_name_pascal} is not yet implemented.")',
+                        *grpc_lines,
                         "        elif isinstance(self._transport, RestTransport):",
                         "            rest_transport = cast(RestTransport, self._transport)",
                         f"            return {module_alias}.{func_name_pascal}(",

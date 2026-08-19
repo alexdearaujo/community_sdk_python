@@ -12,7 +12,17 @@ class KtbgpServiceWrapper:
     def __init__(self, transport: Union[GrpcTransport, RestTransport]):
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
-            pass  # TODO: Initialize gRPC stub here
+            try:
+                import kentik_api.gen.ktbgp.pb.route_service_pb2 as _pb2_1_mod
+                import kentik_api.gen.ktbgp.pb.route_service_pb2_grpc as _pb2_grpc_1_mod
+
+                self._grpc_pb2_1 = _pb2_1_mod
+                self._grpc_stub_1 = _pb2_grpc_1_mod.RouteServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_1 = None
+                self._grpc_stub_1 = None
 
     def route_service__announce(
         self,

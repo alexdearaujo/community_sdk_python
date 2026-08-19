@@ -14,7 +14,39 @@ class MkpServiceWrapper:
     def __init__(self, transport: Union[GrpcTransport, RestTransport]):
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
-            pass  # TODO: Initialize gRPC stub here
+            try:
+                import kentik_api.gen.mkp.pb.mkp_pb2 as _pb2_1_mod
+                import kentik_api.gen.mkp.pb.mkp_pb2_grpc as _pb2_grpc_1_mod
+
+                self._grpc_pb2_1 = _pb2_1_mod
+                self._grpc_stub_1 = _pb2_grpc_1_mod.PackageServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_1 = None
+                self._grpc_stub_1 = None
+            try:
+                import kentik_api.gen.mkp.pb.mkp_pb2 as _pb2_2_mod
+                import kentik_api.gen.mkp.pb.mkp_pb2_grpc as _pb2_grpc_2_mod
+
+                self._grpc_pb2_2 = _pb2_2_mod
+                self._grpc_stub_2 = _pb2_grpc_2_mod.TenantServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_2 = None
+                self._grpc_stub_2 = None
+            try:
+                import kentik_api.gen.mkp.pb.mkp_pb2 as _pb2_3_mod
+                import kentik_api.gen.mkp.pb.mkp_pb2_grpc as _pb2_grpc_3_mod
+
+                self._grpc_pb2_3 = _pb2_3_mod
+                self._grpc_stub_3 = _pb2_grpc_3_mod.TenantUserServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_3 = None
+                self._grpc_stub_3 = None
 
     def package_list(
         self,

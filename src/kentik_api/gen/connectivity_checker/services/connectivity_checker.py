@@ -1,6 +1,9 @@
 from typing import Union, cast
 
+from google.protobuf.json_format import MessageToDict, ParseDict
+
 import kentik_api.gen.connectivity_checker.services.ConnectivityCheckerAdminService as RestConnectivityCheckerModule1
+from kentik_api.core.grpc_runtime import call_grpc
 from kentik_api.gen.connectivity_checker import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -12,7 +15,17 @@ class ConnectivityCheckerServiceWrapper:
     def __init__(self, transport: Union[GrpcTransport, RestTransport]):
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
-            pass  # TODO: Initialize gRPC stub here
+            try:
+                import kentik_api.gen.connectivity_checker.pb.connectivity_checker_pb2 as _pb2_1_mod
+                import kentik_api.gen.connectivity_checker.pb.connectivity_checker_pb2_grpc as _pb2_grpc_1_mod
+
+                self._grpc_pb2_1 = _pb2_1_mod
+                self._grpc_stub_1 = _pb2_grpc_1_mod.ConnectivityCheckerAdminServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_1 = None
+                self._grpc_stub_1 = None
 
     def create_connectivity_report(
         self,
@@ -20,8 +33,18 @@ class ConnectivityCheckerServiceWrapper:
         data: rest_models.CreateConnectivityReportRequest,
     ) -> rest_models.CreateConnectivityReportResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CreateConnectivityReport is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for connectivity_checker service"
+                )
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.CreateConnectivityReportRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.CreateConnectivityReport, _req)
+            return rest_models.CreateConnectivityReportResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

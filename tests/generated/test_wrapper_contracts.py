@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 from typing import Any
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -129,19 +130,49 @@ def test_wrapper_forwards_all_declared_options(
     ALL_CASES,
     ids=[f"grpc:{case.wrapper_class}.{case.method_name}" for case in ALL_CASES],
 )
-def test_wrapper_raises_for_grpc_unimplemented(case: WrapperCase):
+def test_wrapper_raises_for_grpc_unimplemented(
+    case: WrapperCase, monkeypatch: pytest.MonkeyPatch
+):
+    """Verify gRPC wrappers either route through call_grpc (implemented) or raise
+    NotImplementedError (no stub yet). Uses a mock transport with a mock channel
+    so wrapper __init__ succeeds without a real gRPC server.
+    """
     print_case_start(case, mode="grpc-not-implemented")
     module = importlib.import_module(case.module_path)
     wrapper_cls = getattr(module, case.wrapper_class)
 
-    grpc_transport = GrpcTransport.__new__(GrpcTransport)
+    # MagicMock satisfies isinstance(x, GrpcTransport) checks and provides a
+    # mock .channel attribute so stub initialization in __init__ succeeds.
+    grpc_transport = MagicMock(spec=GrpcTransport)
     wrapper = wrapper_cls(grpc_transport)
     method = getattr(wrapper, case.method_name)
     kwargs = build_required_kwargs(method)
 
+    _grpc_was_called = False
+
+    def _mock_call_grpc(stub_method, request):
+        nonlocal _grpc_was_called
+        _grpc_was_called = True
+        return MagicMock()  # mock proto response
+
+    # Patch call_grpc so the gRPC branch runs without a real server.
+    if hasattr(module, "call_grpc"):
+        monkeypatch.setattr(module, "call_grpc", _mock_call_grpc)
+    # Return an empty dict from MessageToDict so model_validate gets {}.
+    monkeypatch.setattr(
+        "google.protobuf.json_format.MessageToDict",
+        lambda *a, **kw: {},
+        raising=False,
+    )
+
     try:
-        with pytest.raises(NotImplementedError):
-            method(**kwargs)
+        method(**kwargs)
+        # No exception: call_grpc must have been invoked.
+        assert _grpc_was_called, "Expected gRPC call to route through call_grpc"
+        print_case_result(case, mode="grpc-not-implemented", result="PASS")
+    except NotImplementedError:
+        # Acceptable: this operation has no gRPC stub yet.
+        assert not _grpc_was_called
         print_case_result(case, mode="grpc-not-implemented", result="PASS")
     except Exception:
         print_case_result(case, mode="grpc-not-implemented", result="FAIL")

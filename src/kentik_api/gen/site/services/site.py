@@ -1,6 +1,9 @@
 from typing import Union, cast
 
+from google.protobuf.json_format import MessageToDict, ParseDict
+
 import kentik_api.gen.site.services.SiteService as RestSiteModule1
+from kentik_api.core.grpc_runtime import call_grpc
 from kentik_api.gen.site import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -12,14 +15,30 @@ class SiteServiceWrapper:
     def __init__(self, transport: Union[GrpcTransport, RestTransport]):
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
-            pass  # TODO: Initialize gRPC stub here
+            try:
+                import kentik_api.gen.site.pb.site_pb2 as _pb2_1_mod
+                import kentik_api.gen.site.pb.site_pb2_grpc as _pb2_grpc_1_mod
+
+                self._grpc_pb2_1 = _pb2_1_mod
+                self._grpc_stub_1 = _pb2_grpc_1_mod.SiteServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_1 = None
+                self._grpc_stub_1 = None
 
     def list_site_markets(
         self,
     ) -> rest_models.ListSiteMarketsResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for ListSiteMarkets is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req = self._grpc_pb2_1.ListSiteMarketsRequest()
+            _resp = call_grpc(self._grpc_stub_1.ListSiteMarkets, _req)
+            return rest_models.ListSiteMarketsResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -35,8 +54,18 @@ class SiteServiceWrapper:
         self, *, data: rest_models.CreateSiteMarketRequest
     ) -> rest_models.CreateSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CreateSiteMarket is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.CreateSiteMarketRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.CreateSiteMarket, _req)
+            return rest_models.CreateSiteMarketResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -50,8 +79,18 @@ class SiteServiceWrapper:
 
     def get_site_market(self, *, id: str) -> rest_models.GetSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for GetSiteMarket is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req = ParseDict(
+                {k: v for k, v in {"id": id}.items() if v is not None},
+                self._grpc_pb2_1.GetSiteMarketRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.GetSiteMarket, _req)
+            return rest_models.GetSiteMarketResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -70,8 +109,20 @@ class SiteServiceWrapper:
         data: rest_models.SiteServiceUpdateSiteMarketBody,
     ) -> rest_models.UpdateSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for UpdateSiteMarket is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
+            _req = ParseDict(
+                _req_dict,
+                self._grpc_pb2_1.UpdateSiteMarketRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.UpdateSiteMarket, _req)
+            return rest_models.UpdateSiteMarketResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -85,8 +136,18 @@ class SiteServiceWrapper:
 
     def delete_site_market(self, *, id: str) -> rest_models.DeleteSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for DeleteSiteMarket is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req = ParseDict(
+                {k: v for k, v in {"id": id}.items() if v is not None},
+                self._grpc_pb2_1.DeleteSiteMarketRequest(),
+                ignore_unknown_fields=True,
+            )
+            _resp = call_grpc(self._grpc_stub_1.DeleteSiteMarket, _req)
+            return rest_models.DeleteSiteMarketResponse.model_validate(
+                MessageToDict(_resp)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -102,9 +163,13 @@ class SiteServiceWrapper:
         self,
     ) -> rest_models.ListSitesResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for ListSites is not yet implemented."
-            )
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req = self._grpc_pb2_1.ListSitesRequest()
+            _resp = call_grpc(self._grpc_stub_1.ListSites, _req)
+            return rest_models.ListSitesResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.ListSites(
@@ -119,9 +184,17 @@ class SiteServiceWrapper:
         self, *, data: rest_models.CreateSiteRequest
     ) -> rest_models.CreateSiteResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CreateSite is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.CreateSiteRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.CreateSite, _req)
+            return rest_models.CreateSiteResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.CreateSite(
@@ -134,9 +207,17 @@ class SiteServiceWrapper:
 
     def get_site(self, *, id: str) -> rest_models.GetSiteResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for GetSite is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req = ParseDict(
+                {k: v for k, v in {"id": id}.items() if v is not None},
+                self._grpc_pb2_1.GetSiteRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.GetSite, _req)
+            return rest_models.GetSiteResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.GetSite(
@@ -154,9 +235,19 @@ class SiteServiceWrapper:
         data: rest_models.SiteServiceUpdateSiteBody,
     ) -> rest_models.UpdateSiteResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for UpdateSite is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
+            _req = ParseDict(
+                _req_dict,
+                self._grpc_pb2_1.UpdateSiteRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.UpdateSite, _req)
+            return rest_models.UpdateSiteResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.UpdateSite(
@@ -169,9 +260,17 @@ class SiteServiceWrapper:
 
     def delete_site(self, *, id: str) -> rest_models.DeleteSiteResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for DeleteSite is not yet implemented."
+            if self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for site service"
+                )
+            _req = ParseDict(
+                {k: v for k, v in {"id": id}.items() if v is not None},
+                self._grpc_pb2_1.DeleteSiteRequest(),
+                ignore_unknown_fields=True,
             )
+            _resp = call_grpc(self._grpc_stub_1.DeleteSite, _req)
+            return rest_models.DeleteSiteResponse.model_validate(MessageToDict(_resp))
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.DeleteSite(
