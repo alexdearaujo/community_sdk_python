@@ -59,7 +59,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cost.list_cost_providers()
 ```
 
@@ -106,7 +106,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cost.list_cost_provider_summaries()
 ```
 
@@ -154,7 +154,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cost.get_cost_provider_summary(
     id="id-example",
 )

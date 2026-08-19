@@ -59,7 +59,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.list_cloud_exports()
 ```
 
@@ -106,7 +106,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.create_cloud_export(
     data=CreateCloudExportRequest(...),
 )
@@ -155,7 +155,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.get_cloud_export(
     exportid="exportid-example",
 )
@@ -205,7 +205,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.update_cloud_export(
     exportid="exportid-example",
     data=CloudExportAdminServiceUpdateCloudExportBody(...),
@@ -255,7 +255,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.cloud_export.delete_cloud_export(
     exportid="exportid-example",
 )

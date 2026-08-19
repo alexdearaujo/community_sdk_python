@@ -59,7 +59,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.label.list_labels()
 ```
 
@@ -106,7 +106,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.label.create_label(
     data=CreateLabelRequest(...),
 )
@@ -156,7 +156,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.label.update_label(
     id="id-example",
     data=LabelServiceUpdateLabelBody(...),
@@ -206,7 +206,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.label.delete_label(
     id="id-example",
 )

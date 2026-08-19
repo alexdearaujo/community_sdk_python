@@ -59,7 +59,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.notification_channel.list_notification_channels()
 ```
 
@@ -106,7 +106,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.notification_channel.search_notification_channels(
     data=SearchNotificationChannelsRequest(...),
 )
@@ -155,7 +155,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.notification_channel.get_notification_channel(
     id="id-example",
 )

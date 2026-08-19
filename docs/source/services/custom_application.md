@@ -59,7 +59,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_application.list_custom_applications()
 ```
 
@@ -106,7 +106,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_application.create_custom_application()
 ```
 
@@ -153,7 +153,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_application.get_custom_application(
     customApplicationId="customApplicationId-example",
 )
@@ -203,7 +203,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_application.update_custom_application(
     customApplicationId="customApplicationId-example",
 )
@@ -252,7 +252,7 @@ sequenceDiagram
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.custom_application.delete_custom_application(
     customApplicationId="customApplicationId-example",
 )

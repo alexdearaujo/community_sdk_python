@@ -9,7 +9,7 @@ from kentik_api.gen.alerting.models import AlertServiceListRequest
 
 
 def main() -> None:
-    client = KentikAPI()
+    client = KentikAPI(protocol="rest")
 
     # Fetch the first page of alerts with default filters.
     response = client.alerting.alert_list(data=AlertServiceListRequest())

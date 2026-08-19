@@ -32,8 +32,8 @@ classDiagram
 
 `GrpcTransport` opens a real channel, but generated wrapper methods
 raise `NotImplementedError` for it. Only REST is fully wired end to
-end. See the repository root [CLAUDE.md](../../../CLAUDE.md) for the
-current REST/gRPC status.
+end. Always pass `protocol="rest"` to `KentikAPI()` until gRPC
+support is added.
 
 ## Adding a transport
 

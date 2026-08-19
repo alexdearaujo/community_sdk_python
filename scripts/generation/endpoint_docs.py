@@ -353,7 +353,7 @@ def _render_example_snippet(
     lines = [
         "from kentik_api.client import KentikAPI",
         "",
-        "client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env",
+        "client = KentikAPI(protocol=\"rest\")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env",
     ]
     if required_params:
         lines.append(f"response = client.{service}.{method_name}(")

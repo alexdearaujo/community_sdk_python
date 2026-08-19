@@ -46,7 +46,7 @@ implements its own HTTP, auth, or error-parsing logic.
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI()  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 devices = client.device.list_devices()
 ```
 

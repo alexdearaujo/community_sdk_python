@@ -4,7 +4,7 @@ from kentik_api.client import KentikAPI
 
 
 def main() -> None:
-    client = KentikAPI()
+    client = KentikAPI(protocol="rest")
 
     sites_resp = client.site.list_sites()
     sites = [site for site in (sites_resp.sites or []) if site is not None]

@@ -36,12 +36,14 @@ commented out by default.
 
 ## Authentication
 
-`KentikAPI()` with no arguments loads `KENTIK_EMAIL` and
-`KENTIK_API_TOKEN` from the nearest `.env` file.
-Pass them explicitly to override:
+`KentikAPI(protocol="rest")` loads `KENTIK_EMAIL` and
+`KENTIK_API_TOKEN` from the nearest `.env` file. Pass `protocol="rest"`
+explicitly: gRPC transport is not yet implemented and raises
+`NotImplementedError` for every operation.
+Pass credentials explicitly to override the `.env` file:
 
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI(email="you@example.com", api_token="...")
+client = KentikAPI(protocol="rest", email="you@example.com", api_token="...")
 ```

@@ -4,7 +4,7 @@ from kentik_api.client import KentikAPI
 
 
 def main() -> None:
-    client = KentikAPI()
+    client = KentikAPI(protocol="rest")
 
     tests_resp = client.synthetics.list_tests()
     tests = [test for test in (tests_resp.tests or []) if test is not None]

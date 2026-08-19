@@ -13,7 +13,7 @@ class KentikAPI(KentikClientMixin):
         self,
         email: str | None = None,
         api_token: str | None = None,
-        protocol: str = "grpc",
+        protocol: str = "rest",
         region: str = "us",
     ):
         # Load from the nearest .env based on current working directory.
