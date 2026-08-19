@@ -181,6 +181,91 @@ def normalize_triple_quoted_docstrings(content: str) -> str:
     return pattern.sub(_rewrite, content)
 
 
+_PB_COMPANIONS_INIT = """\
+# isort: skip_file
+\"\"\"Proto companion registry: loads all shared vendor descriptors into the pool.
+
+The load order is critical for proto descriptor registration and must not be
+changed. The isort: skip_file directive prevents ruff from resorting these imports.
+\"\"\"
+
+# foundation: google/protobuf/descriptor.proto
+from google.protobuf import descriptor_pb2 as _descriptor_pb2  # noqa: F401
+
+# google/api/*.proto from googleapis-common-protos
+from google.api import annotations_pb2 as _ga_annotations  # noqa: F401
+from google.api import client_pb2 as _ga_client  # noqa: F401
+from google.api import field_behavior_pb2 as _ga_field_behavior  # noqa: F401
+from google.protobuf import duration_pb2 as _duration  # noqa: F401
+from google.protobuf import struct_pb2 as _struct  # noqa: F401
+from google.protobuf import timestamp_pb2 as _timestamp  # noqa: F401
+
+# protoc-gen-openapiv2/options/*.proto from grpc-gateway (must be before kentik/core)
+# openapiv2_pb2 must be before annotations_pb2 (annotations imports openapiv2)
+from .protoc_gen_openapiv2.options import openapiv2_pb2 as _oa_openapiv2  # noqa: F401
+from .protoc_gen_openapiv2.options import annotations_pb2 as _oa_annotations  # noqa: F401
+
+# kentik/core/v202303/*.proto (must be after protoc-gen-openapiv2 companions)
+import kentik_api.gen.core.pb.annotations_pb2 as _core_annotations  # noqa: F401, E402
+import kentik_api.gen.core.pb.user_info_pb2 as _core_user_info  # noqa: F401, E402
+"""
+
+
+def _compile_proto_companions(schema_root: Path) -> None:
+    """Compiles the protoc-gen-openapiv2 vendor protos into pb_companions/.
+
+    These are third-party proto definitions that Kentik's service protos depend
+    on via openapiv2 annotations. Compiling them here registers their
+    descriptors so the service pb2 imports succeed at runtime.
+    """
+    companions_dir = SDK_OUTPUT_DIR / "pb_companions"
+    vendor_path = (
+        schema_root
+        / "protovendor"
+        / "github.com"
+        / "grpc-ecosystem"
+        / "grpc-gateway"
+    )
+    if not vendor_path.exists():
+        print("    ⚠️  proto vendor path not found, skipping companion compilation.")
+        return
+
+    print("Compiling protoc-gen-openapiv2 proto companions...")
+
+    options_out = companions_dir / "protoc_gen_openapiv2" / "options"
+    options_out.mkdir(parents=True, exist_ok=True)
+    (companions_dir / "__init__.py").write_text(_PB_COMPANIONS_INIT, encoding="utf-8")
+    (companions_dir / "protoc_gen_openapiv2" / "__init__.py").write_text(
+        "", encoding="utf-8"
+    )
+    (options_out / "__init__.py").write_text("", encoding="utf-8")
+
+    proto_files = [
+        "protoc-gen-openapiv2/options/annotations.proto",
+        "protoc-gen-openapiv2/options/openapiv2.proto",
+    ]
+    cmd = [
+        "uv", "run", "--with", "grpcio-tools", "python", "-m", "grpc_tools.protoc",
+        f"-I{vendor_path}",
+        f"--python_out={companions_dir}",
+        *proto_files,
+    ]
+    try:
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        # Patch bare 'protoc_gen_openapiv2' imports to the full package path so
+        # the compiled pb2 files are importable from within this package.
+        for pb_file in options_out.glob("*_pb2.py"):
+            content = pb_file.read_text(encoding="utf-8")
+            content = content.replace(
+                "from protoc_gen_openapiv2.",
+                "from kentik_api.gen.pb_companions.protoc_gen_openapiv2.",
+            )
+            pb_file.write_text(content, encoding="utf-8")
+        print("    ✅ Proto companions compiled successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"    ❌ Proto companion compilation failed: {e.stderr or e.stdout}")
+
+
 def generate_modular_sdk(repo_source=DEFAULT_REPO):
     # Setup directories
     SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -192,6 +277,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
             shutil.rmtree(item)
 
     with get_schema_root(repo_source) as schema_root:
+        _compile_proto_companions(schema_root)
         # Define base paths using the yielded root
         openapi_base = schema_root / "gen" / "openapiv3" / "kentik"
         proto_base = schema_root / "proto"

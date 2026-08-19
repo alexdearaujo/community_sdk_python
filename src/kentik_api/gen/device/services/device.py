@@ -16,6 +16,7 @@ class DeviceServiceWrapper:
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.device.pb.device_pb2 as _pb2_1_mod
                 import kentik_api.gen.device.pb.device_pb2_grpc as _pb2_grpc_1_mod
 

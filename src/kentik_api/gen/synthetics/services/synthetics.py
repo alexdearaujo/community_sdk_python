@@ -17,6 +17,7 @@ class SyntheticsServiceWrapper:
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.synthetics.pb.synthetics_pb2 as _pb2_1_mod
                 import kentik_api.gen.synthetics.pb.synthetics_pb2_grpc as _pb2_grpc_1_mod
 
@@ -28,6 +29,7 @@ class SyntheticsServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.synthetics.pb.synthetics_pb2 as _pb2_2_mod
                 import kentik_api.gen.synthetics.pb.synthetics_pb2_grpc as _pb2_grpc_2_mod
 

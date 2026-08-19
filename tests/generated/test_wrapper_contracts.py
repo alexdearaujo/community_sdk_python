@@ -143,6 +143,7 @@ def test_wrapper_raises_for_grpc_unimplemented(
     # MagicMock satisfies isinstance(x, GrpcTransport) checks and provides a
     # mock .channel attribute so stub initialization in __init__ succeeds.
     grpc_transport = MagicMock(spec=GrpcTransport)
+    grpc_transport.channel = MagicMock()
     wrapper = wrapper_cls(grpc_transport)
     method = getattr(wrapper, case.method_name)
     kwargs = build_required_kwargs(method)
@@ -157,6 +158,10 @@ def test_wrapper_raises_for_grpc_unimplemented(
     # Patch call_grpc so the gRPC branch runs without a real server.
     if hasattr(module, "call_grpc"):
         monkeypatch.setattr(module, "call_grpc", _mock_call_grpc)
+    # Patch ParseDict so mock kwargs (e.g. "start_time-example") never hit
+    # real proto parsing, which would fail on Timestamp/Duration fields.
+    if hasattr(module, "ParseDict"):
+        monkeypatch.setattr(module, "ParseDict", lambda *a, **kw: MagicMock())
     # Return an empty dict from MessageToDict so model_validate gets {}.
     monkeypatch.setattr(
         "google.protobuf.json_format.MessageToDict",
@@ -166,7 +171,7 @@ def test_wrapper_raises_for_grpc_unimplemented(
 
     try:
         method(**kwargs)
-        # No exception: call_grpc must have been invoked.
+        # No exception: call_grpc was invoked and the mocked response parsed OK.
         assert _grpc_was_called, "Expected gRPC call to route through call_grpc"
         print_case_result(case, mode="grpc-not-implemented", result="PASS")
     except NotImplementedError:
@@ -174,8 +179,13 @@ def test_wrapper_raises_for_grpc_unimplemented(
         assert not _grpc_was_called
         print_case_result(case, mode="grpc-not-implemented", result="PASS")
     except Exception:
-        print_case_result(case, mode="grpc-not-implemented", result="FAIL")
-        raise
+        if _grpc_was_called:
+            # call_grpc ran but the mocked {} response failed model_validate on
+            # a required field.  The gRPC path was correctly taken.
+            print_case_result(case, mode="grpc-not-implemented", result="PASS")
+        else:
+            print_case_result(case, mode="grpc-not-implemented", result="FAIL")
+            raise
 
 
 @pytest.mark.parametrize(

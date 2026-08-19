@@ -23,6 +23,7 @@ class AlertingServiceWrapper:
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.alert_pb2 as _pb2_1_mod
                 import kentik_api.gen.alerting.pb.alert_pb2_grpc as _pb2_grpc_1_mod
 
@@ -34,6 +35,7 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.auto_ack_pb2 as _pb2_2_mod
                 import kentik_api.gen.alerting.pb.auto_ack_pb2_grpc as _pb2_grpc_2_mod
 
@@ -45,6 +47,7 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_2 = None
                 self._grpc_stub_2 = None
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.mitigation_method_pb2 as _pb2_3_mod
                 import kentik_api.gen.alerting.pb.mitigation_method_pb2_grpc as _pb2_grpc_3_mod
 
@@ -56,6 +59,7 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_3 = None
                 self._grpc_stub_3 = None
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.mitigation_platform_pb2 as _pb2_4_mod
                 import kentik_api.gen.alerting.pb.mitigation_platform_pb2_grpc as _pb2_grpc_4_mod
 
@@ -67,6 +71,7 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_4 = None
                 self._grpc_stub_4 = None
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.policy_pb2 as _pb2_5_mod
                 import kentik_api.gen.alerting.pb.policy_pb2_grpc as _pb2_grpc_5_mod
 
@@ -78,6 +83,7 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_5 = None
                 self._grpc_stub_5 = None
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.silencing_pb2 as _pb2_6_mod
                 import kentik_api.gen.alerting.pb.silencing_pb2_grpc as _pb2_grpc_6_mod
 
@@ -91,6 +97,7 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_6 = None
                 self._grpc_stub_6 = None
             try:
+                __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.suppressions_pb2 as _pb2_7_mod
                 import kentik_api.gen.alerting.pb.suppressions_pb2_grpc as _pb2_grpc_7_mod
 

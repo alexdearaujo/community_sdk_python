@@ -73,7 +73,7 @@ def validate_generated_service_parity(
     generated_services = {
         p.name
         for p in generated_root.iterdir()
-        if p.is_dir() and p.name != "__pycache__"
+        if p.is_dir() and p.name not in ("__pycache__", "pb_companions")
     }
 
     missing = sorted(source_services - generated_services)

@@ -35,6 +35,7 @@ net
 network_class
 notification_channel
 pathfinder
+pb_companions
 plan
 saved_filter
 site

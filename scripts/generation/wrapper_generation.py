@@ -149,10 +149,14 @@ def _generate_service_wrappers():
         ]
         if grpc_stubs_info:
             for pb2_stem, pb2_grpc_stem, stub_class, sidx in grpc_stubs_info:
-                # try/except so missing proto deps (googleapis-common-protos,
-                # protoc-gen-openapiv2, kentik/core) degrade to NotImplementedError
+                # try/except so missing proto deps degrade gracefully to NotImplementedError
                 # rather than crashing at import time.
                 wrapper_code.append("            try:")
+                # __import__() instead of import statement: isort won't reorder it,
+                # so this always runs before the service pb2 imports that depend on it.
+                wrapper_code.append(
+                    "                __import__(\"kentik_api.gen.pb_companions\")"
+                )
                 wrapper_code.append(
                     f"                import kentik_api.gen.{service}.pb.{pb2_stem} as _pb2_{sidx}_mod"
                 )

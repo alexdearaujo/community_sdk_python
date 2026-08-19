@@ -5,6 +5,8 @@ from kentik_api.transports.base import BaseTransport
 
 
 class GrpcTransport(BaseTransport):
+    channel: grpc.Channel  # set by __init__; declared here so mock spec includes it
+
     def __init__(
         self, credentials: KentikCredentials, target: str = "grpc.api.kentik.com:443"
     ):
