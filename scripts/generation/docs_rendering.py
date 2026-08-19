@@ -88,8 +88,8 @@ def _generate_service_readmes():
         service_name = service_dir.name
 
         lines = [
-            f"<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_service_readmes() -->",
-            f"<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
+            "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_service_readmes() -->",
+            "<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
             f"# {service_name.replace('_', ' ').title()} Service",
             "",
             "This module was automatically generated from the Kentik OpenAPIv3 schema.",

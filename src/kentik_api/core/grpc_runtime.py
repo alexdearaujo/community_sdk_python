@@ -32,7 +32,7 @@ def call_grpc(stub_method, proto_request):
         http_status = _GRPC_STATUS_TO_HTTP.get(code, 500)
         raise HTTPException(
             status_code=http_status,
-            message=exc.details(),
+            message=exc.details() or "",
             method="gRPC",
             path=getattr(stub_method, "_method", b"unknown").decode(
                 "utf-8", errors="replace"
