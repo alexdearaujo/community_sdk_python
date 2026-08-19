@@ -14,7 +14,7 @@ confidence. You opt into that layer explicitly.
 | [`generated`](generated/README.md) | Contract tests for every generated snake_case service wrapper, plus exhaustive per-endpoint, per-status-code schema coverage. | Mocked |
 | [`runtime`](runtime/README.md) | Focused tests for the shared runtime helpers that generated code calls. | Mocked |
 | [`smoke`](smoke/README.md) | Lightweight checks for client wiring and selected wrapper call paths. | Mocked |
-| [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules (`scripts/generation/`): error package generation, swagger selection and parity validation, wrapper generation. | Mocked |
+| [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules ([`scripts/generation/`](../scripts/generation/README.md)): error package generation, swagger selection and parity validation, wrapper generation. | Mocked |
 | [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API. Opt-in only, never part of [`make test`](../Makefile) or [`make all`](../Makefile). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
 
 ```mermaid
@@ -32,7 +32,7 @@ flowchart TD
 
 `tests/_discovery.py` lives at the `tests/` root, outside any one
 layer. It holds the schema and wrapper discovery helpers that
-`generated/` and `e2e/` both use. Sharing one file keeps the two
+[`generated/`](generated/README.md) and [`e2e/`](e2e/README.md) both use. Sharing one file keeps the two
 layers from drifting apart.
 
 `tests/conftest.py` puts `tests/` on `sys.path`. This lets
@@ -65,14 +65,14 @@ uv run pytest -m e2e tests/e2e/
 
 `pyproject.toml` registers the `e2e` marker with
 `addopts = "-m 'not e2e'"`. Plain `pytest tests/` always deselects
-`tests/e2e/`. [`make test`](../Makefile) runs plain `pytest tests/`, so it deselects
-`tests/e2e/` too. Opt in explicitly with `-m e2e`.
+[`tests/e2e/`](e2e/README.md). [`make test`](../Makefile) runs plain `pytest tests/`, so it deselects
+[`tests/e2e/`](e2e/README.md) too. Opt in explicitly with `-m e2e`.
 
 ## When to run which suite
 
 | Situation | Run this first |
 | --- | --- |
-| Editing `scripts/generate_sdk.py`, `scripts/generation/`, or template behavior | [`make test-generator`](../Makefile) for fast feedback on the generator itself, then [`make test-generated`](../Makefile) to check the SDK it produces |
+| Editing `scripts/generate_sdk.py`, [`scripts/generation/`](../scripts/generation/README.md), or template behavior | [`make test-generator`](../Makefile) for fast feedback on the generator itself, then [`make test-generated`](../Makefile) to check the SDK it produces |
 | Editing shared request, auth, or error behavior in `src/kentik_api/core` | [`make test-runtime`](../Makefile) |
 | Opening a PR or merging | [`make test`](../Makefile) |
 | Trusting a schema sync, or a change to error or response handling, against production behavior | `make test-e2e` (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first) |

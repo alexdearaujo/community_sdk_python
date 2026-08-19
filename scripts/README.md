@@ -6,8 +6,8 @@ This folder holds the SDK generator entrypoint and a sample consumer
 script. Both are hand-written and survive every [`make generate`](../Makefile) run.
 
 > [!NOTE]
-> **[`make clean`](../Makefile) removes `src/kentik_api/gen/`** (all generated service code)
-> and the Sphinx build output, but never touches `scripts/`, `examples/`,
+> **[`make clean`](../Makefile) removes [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md)** (all generated service code)
+> and the Sphinx build output, but never touches [`scripts/`](README.md), [`examples/`](../examples/README.md),
 > or any other hand-written source. Re-run [`make generate`](../Makefile) (or just `make`)
 > to rebuild the generated code after a clean.
 
@@ -17,8 +17,8 @@ script. Both are hand-written and survive every [`make generate`](../Makefile) r
 | --- | --- |
 | `generate_sdk.py` | Entrypoint. Orchestrates schema download, per-file generation, and every phase module. |
 | `sample_consume_sdk.py` | Standalone demo of the generated SDK, in mock mode and real mode. |
-| `generation/` | The generator's phase modules. See [generation/README.md](generation/README.md). |
-| `openapi_templates/` | Custom Jinja2 templates fed into the OpenAPI generator. See [openapi_templates/README.md](openapi_templates/README.md). |
+| [`generation/`](generation/README.md) | The generator's phase modules. See [generation/README.md](generation/README.md). |
+| [`openapi_templates/`](openapi_templates/README.md) | Custom Jinja2 templates fed into the OpenAPI generator. See [openapi_templates/README.md](openapi_templates/README.md). |
 
 ```mermaid
 flowchart LR

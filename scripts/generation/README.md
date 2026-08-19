@@ -47,7 +47,7 @@ flowchart TD
 ## Import rules
 
 `scripts/generate_sdk.py` runs as a direct script:
-`uv run python scripts/generate_sdk.py`. Python puts `scripts/` on
+`uv run python scripts/generate_sdk.py`. Python puts [`scripts/`](../README.md) on
 `sys.path` automatically for a direct script run. `generate_sdk.py`
 imports this package as `from generation import ...`.
 
@@ -78,7 +78,7 @@ inside this package breaks `generate_sdk.py`'s import path.
 make test-generator
 ```
 
-This command runs only the tests in `tests/generator/`. Each test
+This command runs only the tests in [`tests/generator/`](../../tests/generator/README.md). Each test
 builds its own temporary swagger fragment or fake generated-file
 fixture with `tmp_path`. No test in this suite needs a real or local
 schema checkout.

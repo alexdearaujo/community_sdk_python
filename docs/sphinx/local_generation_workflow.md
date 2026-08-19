@@ -10,7 +10,7 @@ regenerate from updated `api-schema-public` without changing the upstream
 
 Generation behavior is customized inside this repository:
 
-- Custom templates live in `scripts/openapi_templates/`.
+- Custom templates live in [`scripts/openapi_templates/`](../../scripts/openapi_templates/README.md).
 - Shared runtime logic lives in `src/kentik_api/core/rest_runtime.py`.
 - The generator entrypoint is `scripts/generate_sdk.py`.
 
@@ -57,12 +57,12 @@ OPENAPI_GENERATOR_CMD="openapi-python-generator" make generate local
 
 1. Pull latest schema updates in your local `api-schema-public` clone.
 2. Run `make generate local`.
-3. Review generated changes in `src/kentik_api/gen/`.
+3. Review generated changes in [`src/kentik_api/gen/`](../../src/kentik_api/gen/README.md).
 4. Run tests/lint as needed ([`make test`](../../Makefile), [`make lint`](../../Makefile)).
 
 ## Notes
 
 - Running [`make local`](../../Makefile) alone is only a marker and prints usage guidance.
-- If you need to adjust generated service shape, edit templates in `scripts/openapi_templates/`.
-- Keep business/runtime behavior centralized in `src/kentik_api/core/` and
-  `src/kentik_api/transports/` instead of editing generated files directly.
+- If you need to adjust generated service shape, edit templates in [`scripts/openapi_templates/`](../../scripts/openapi_templates/README.md).
+- Keep business/runtime behavior centralized in [`src/kentik_api/core/`](../../src/kentik_api/core/README.md) and
+  [`src/kentik_api/transports/`](../../src/kentik_api/transports/README.md) instead of editing generated files directly.

@@ -6,7 +6,7 @@ These scripts demonstrate the v6 SDK against the live Kentik API.
 Each script is self-contained and safe to run read-only.
 
 > [!NOTE]
-> The `examples/` directory is **hand-written** and is not generated or
+> The [`examples/`](README.md) directory is **hand-written** and is not generated or
 > removed by [`make generate`](../Makefile) or [`make clean`](../Makefile). Edit these files directly
 > when adding new examples or updating existing ones.
 

@@ -12,7 +12,7 @@ runtime shape and the generator that builds it.
 **Service**:
 A top-level grouping of the Kentik API, for example `device`,
 `alerting`, or `synthetics`. Each service maps to one directory
-under `src/kentik_api/gen/` and one attribute on `KentikAPI`, for
+under [`src/kentik_api/gen/`](src/kentik_api/gen/README.md) and one attribute on `KentikAPI`, for
 example `client.device`.
 _Avoid_: module, package
 
@@ -30,7 +30,7 @@ swagger files exist. The generator generates only the newest version
 in each family and skips older versions.
 
 **Phase module**:
-One of the independently testable units in `scripts/generation/`
+One of the independently testable units in [`scripts/generation/`](scripts/generation/README.md)
 (`parity`, `error_package`, `wrapper_generation`, `docs_rendering`,
 `endpoint_docs`). Each phase module owns one concern of SDK
 generation; `scripts/generate_sdk.py`'s orchestration calls them in

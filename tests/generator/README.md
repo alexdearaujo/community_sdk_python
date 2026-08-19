@@ -32,5 +32,5 @@ fixture with `tmp_path`. None of them need a real or local schema
 checkout.
 
 Run this suite first while editing `scripts/generate_sdk.py`,
-`scripts/generation/`, or template behavior, before running
+[`scripts/generation/`](../../scripts/generation/README.md), or template behavior, before running
 [`make test-generated`](../../Makefile) to check the SDK the generator produces.

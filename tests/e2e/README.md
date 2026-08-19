@@ -20,7 +20,7 @@ four mocked ones.
 
 Endpoint discovery comes from
 [`tests/_discovery.py`](../_discovery.py), the same helper
-`tests/generated/` uses, not a hand-written list.
+[`tests/generated/`](../generated/README.md) uses, not a hand-written list.
 
 ## How read and mutating operations differ
 

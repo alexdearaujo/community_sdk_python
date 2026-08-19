@@ -13,11 +13,11 @@ hand-written-vs-generated architecture.
 | --- | --- |
 | [`client.py`](client.py) | Hand-written. `KentikAPI`, the SDK's entrypoint: loads credentials, picks a transport, mounts every generated service. |
 | [`client_mixin.py`](client_mixin.py) | Generated. Mounts every service wrapper onto `KentikAPI` as a typed attribute (`client.device`, `client.user`, and so on). |
-| `auth/` | Hand-written. See [auth/README.md](auth/README.md). |
-| `core/` | Hand-written. The shared REST runtime every generated call routes through. See [core/README.md](core/README.md). |
-| `errors/` | Hand-written. The base exception hierarchy every generated error class builds on. See [errors/README.md](errors/README.md). |
-| `transports/` | Hand-written. REST/gRPC transport selection. See [transports/README.md](transports/README.md). |
-| `gen/` | Fully generated, one directory per Kentik API service. See [gen/README.md](gen/README.md). |
+| [`auth/`](auth/README.md) | Hand-written. See [auth/README.md](auth/README.md). |
+| [`core/`](core/README.md) | Hand-written. The shared REST runtime every generated call routes through. See [core/README.md](core/README.md). |
+| [`errors/`](errors/README.md) | Hand-written. The base exception hierarchy every generated error class builds on. See [errors/README.md](errors/README.md). |
+| [`transports/`](transports/README.md) | Hand-written. REST/gRPC transport selection. See [transports/README.md](transports/README.md). |
+| [`gen/`](gen/README.md) | Fully generated, one directory per Kentik API service. See [gen/README.md](gen/README.md). |
 
 ## Request flow
 
@@ -53,6 +53,6 @@ devices = client.device.list_devices()
 ```
 
 `KentikAPI` never implements per-service logic itself. It wires
-together the hand-written pieces above with whatever `gen/` produces,
+together the hand-written pieces above with whatever [`gen/`](gen/README.md) produces,
 so extending SDK behavior always means changing one of those pieces,
 never `client.py` itself.
