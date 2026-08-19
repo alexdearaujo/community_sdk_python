@@ -129,15 +129,17 @@ place.
 
 Two additions to the code-generation loop:
 
-**2a. Stub initialization in `__init__`**
+#### 2a. Stub initialization in `__init__`
 
 Replace:
+
 ```python
 "        if isinstance(self._transport, GrpcTransport):",
 "            pass # TODO: Initialize gRPC stub here",
 ```
 
 With generated code that imports and instantiates the correct stub:
+
 ```python
 f"from kentik_api.gen.{service}.pb import {service}_pb2_grpc as grpc_stubs",
 ...
@@ -148,7 +150,7 @@ f"            self._grpc_stub = grpc_stubs.{title}ServiceStub(self._transport.ch
 The stub class name follows the pattern `{PascalService}ServiceStub`
 (confirmed from `DeviceServiceStub` in `device_pb2_grpc.py`).
 
-**2b. gRPC call body for each method**
+#### 2b. gRPC call body for each method
 
 The generator already has `func_name_pascal` (e.g., `ListDevices`) and
 the REST return type. It needs to:
@@ -160,12 +162,14 @@ the REST return type. It needs to:
 3. Convert the proto response back to the Pydantic type.
 
 Replace:
+
 ```python
 "        if isinstance(self._transport, GrpcTransport):",
 f'            raise NotImplementedError("gRPC translation for {func_name_pascal} is not yet implemented.")',
 ```
 
 With:
+
 ```python
 "        if isinstance(self._transport, GrpcTransport):",
 f"            _req = ParseDict(_grpc_request_dict, pb2.{func_name_pascal}Request())",
@@ -184,6 +188,7 @@ arguments assembled into a dict for query-parameter-only operations.
 Unit test for the gRPC wrapper generation, following the pattern of
 `test_wrapper_generation.py`. Provides minimal swagger + fake pb2
 module and asserts:
+
 - The `__init__` block initializes the stub.
 - Each operation's gRPC branch calls `call_grpc`.
 - The return line uses `model_validate(MessageToDict(...))`.
@@ -194,6 +199,7 @@ module and asserts:
 
 Mirrors `test_rest_runtime.py`. Uses `unittest.mock.patch` on the stub
 method to:
+
 - Verify `call_grpc` normalizes each `grpc.StatusCode` to the correct
   SDK exception.
 - Verify `TransportError` is raised for non-RPC exceptions.

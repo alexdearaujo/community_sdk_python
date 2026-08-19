@@ -7,7 +7,7 @@ output lands in `docs/build/html/`.
 
 ```mermaid
 graph LR
-    src["docs/source/"]
+    src["docs/sphinx/"]
     idx["index.md"]
     auth["authentication.md"]
     arch["sdk_runtime_architecture.md"]

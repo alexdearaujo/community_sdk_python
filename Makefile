@@ -39,7 +39,7 @@ local: ## Marker target for `make generate local`
 	fi
 
 docs: ## Build the HTML documentation
-	$(SPHINX) -b html docs/source docs/build/html
+	$(SPHINX) -b html docs/sphinx docs/build/html
 
 tests: test ## Run the full test suite (alias)
 
@@ -69,10 +69,10 @@ clean: ## Remove generated SDK and build artifacts
 	# Keep project-local customization code (do not remove):
 	# - scripts/openapi_templates/
 	# - src/kentik_api/core/
-	# - docs/source/local_generation_workflow.md
+	# - docs/sphinx/local_generation_workflow.md
 	rm -rf src/kentik_api/gen/
 	rm -rf docs/build/
-	find docs/source/services -maxdepth 1 -type f -name '*.md' ! -name 'README.md' -delete
+	find docs/sphinx/services -maxdepth 1 -type f -name '*.md' ! -name 'README.md' -delete
 # 	rm -rf bin/				# commented out only for testing (to speed up tests)
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 

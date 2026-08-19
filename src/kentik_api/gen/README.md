@@ -45,5 +45,5 @@ intentionally a stub: generated wrapper methods raise
 ## Full reference
 
 For endpoint parameters, response shapes, and usage examples per
-service, see `docs/source/services/<service>.md`, or the built
+service, see `docs/sphinx/services/<service>.md`, or the built
 Sphinx docs.

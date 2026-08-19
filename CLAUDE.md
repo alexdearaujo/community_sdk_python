@@ -42,7 +42,7 @@ repo.
   `<Service>ServiceWrapper`), `error/`, `pb/` (gRPC stubs), and a
   `README.md`
 - `src/kentik_api/gen/README.md` — the `gen/` root README
-- `docs/source/sdk_runtime_architecture.md` — the runtime
+- `docs/sphinx/sdk_runtime_architecture.md` — the runtime
   architecture page, with an inline Mermaid dependency graph
 
 **Rule: never hand-edit generated files.** If output is wrong, fix
@@ -174,12 +174,12 @@ structurally, not just by convention or discipline.
   `wrapper_generation.generate()` calls `mixin_file.write_text(...)`
   — a full overwrite, on every run. The next `make generate` silently
   overwrites any manual edits here.
-- **`docs/source/sdk_runtime_architecture.md`** and
+- **`docs/sphinx/sdk_runtime_architecture.md`** and
   **`src/kentik_api/gen/README.md`** — `docs_rendering.generate()`
   fully rewrites these every run. The architecture page embeds its
   dependency graph as an inline Mermaid fence, so there are no
   separate diagram artifacts to track. By contrast,
-  `docs/source/index.md` is genuinely hand-written. The generator
+  `docs/sphinx/index.md` is genuinely hand-written. The generator
   only *inserts* a toctree line into it if missing — a
   non-destructive append, not an overwrite.
 
@@ -203,17 +203,17 @@ with any such rename.
   `https://github.com/kentik/api-schema-public.git`.
 - The generator uses only the newest version per swagger family (see
   CONTEXT.md) when multiple versioned swagger files exist.
-- See `docs/source/local_generation_workflow.md` for full details,
+- See `docs/sphinx/local_generation_workflow.md` for full details,
   including how to test a forked `openapi-python-generator` via env
   vars without editing code.
-- See `docs/source/sdk_runtime_architecture.md` for the runtime
+- See `docs/sphinx/sdk_runtime_architecture.md` for the runtime
   architecture: the module dependency graph and the
   generated-vs-hand-written boundary.
 
 ### Per-service API docs: real MyST text, not rendered diagram images
 
 `endpoint_docs.EndpointDocsCollector.render()` generates
-`docs/source/services/<service>.md` as real Sphinx/MyST text, not
+`docs/sphinx/services/<service>.md` as real Sphinx/MyST text, not
 rendered diagram images. This is deliberate. A rendered "API table"
 and model-class-diagram image become unreadable and uncopyable once
 a service has more than a handful of operations or models. For
@@ -262,7 +262,7 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   `../api-schema-public/` checkout
 - `make generate LOCAL_REPO=/path/to/api-schema-public` —
   regenerate from an arbitrary local schema path
-- `make docs` — build Sphinx docs (`docs/source` → `docs/build/html`)
+- `make docs` — build Sphinx docs (`docs/sphinx` → `docs/build/html`)
 - `make test` / `make tests` — full pytest run (mocked layers only —
   never wires in `tests/e2e/`)
 - `make test-generated` / `make test-runtime` / `make test-smoke` /
@@ -272,9 +272,9 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   appear in `make test` or `make all`.
 - `make lint` — `ruff check --fix` + `ruff format`
 - `make clean` — removes `src/kentik_api/gen/`, `docs/build/`,
-  generated `docs/source/services/*.md` (preserves
+  generated `docs/sphinx/services/*.md` (preserves
   `scripts/openapi_templates/`, `src/kentik_api/core/`,
-  `docs/source/local_generation_workflow.md`)
+  `docs/sphinx/local_generation_workflow.md`)
 - `make deep-clean` — `clean` plus `.venv`, `uv.lock`,
   `.pytest_cache/`, `.ruff_cache/`
 

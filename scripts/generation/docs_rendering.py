@@ -57,7 +57,7 @@ intentionally a stub: generated wrapper methods raise
 ## Full reference
 
 For endpoint parameters, response shapes, and usage examples per
-service, see `docs/source/services/<service>.md`, or the built
+service, see `docs/sphinx/services/<service>.md`, or the built
 Sphinx docs.
 """
 
@@ -84,7 +84,7 @@ def _generate_service_readmes():
             "",
             "For the full endpoint reference (parameters, responses, usage "
             "examples) and data model documentation, see the Sphinx docs: "
-            f"`docs/source/services/{service_name}.md`.",
+            f"`docs/sphinx/services/{service_name}.md`.",
         ]
 
         doc_content = "\n".join(lines) + "\n"
@@ -150,7 +150,7 @@ def _module_group(module_name: str, source_file: Path | None = None) -> str | No
 def _generate_runtime_architecture_docs() -> None:
     """Generates a high-level runtime architecture page with an inline dependency graph."""
     package_root = PROJECT_ROOT / "src" / "kentik_api"
-    docs_root = PROJECT_ROOT / "docs" / "source"
+    docs_root = PROJECT_ROOT / "docs" / "sphinx"
 
     scan_paths: list[Path] = []
     scan_paths.extend([package_root / "client.py", package_root / "client_mixin.py"])

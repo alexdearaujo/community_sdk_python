@@ -35,7 +35,7 @@ myst_fence_as_directive = ["mermaid"]
 html_theme = "sphinx_book_theme"
 
 # Skip copying every source page into build/html/_sources/. Those copies are
-# byte-identical to docs/source/**, and this repo already tracks the
+# byte-identical to docs/sphinx/**, and this repo already tracks the
 # rendered HTML in git, so the copies were pure duplication.
 html_copy_source = False
 html_show_sourcelink = False

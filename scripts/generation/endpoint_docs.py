@@ -665,7 +665,7 @@ def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
     """
     print("Generating Sphinx documentation stubs...")
 
-    DOCS_SERVICES_DIR = PROJECT_ROOT / "docs" / "source" / "services"
+    DOCS_SERVICES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "services"
     DOCS_SERVICES_DIR.mkdir(parents=True, exist_ok=True)
 
     index_entries: list[str] = []

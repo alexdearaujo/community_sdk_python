@@ -32,7 +32,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/alexdearaujo/community_sdk_python"
-Documentation = "https://github.com/alexdearaujo/community_sdk_python/tree/FA-2-Update-the-python-SDK-from-V5-to-V6/docs/source"
+Documentation = "https://github.com/alexdearaujo/community_sdk_python/tree/FA-2-Update-the-python-SDK-from-V5-to-V6/docs/sphinx"
 Repository = "https://github.com/alexdearaujo/community_sdk_python"
 "Issue Tracker" = "https://github.com/kentik/community_sdk_python/issues"
 "Changelog" = "https://github.com/alexdearaujo/community_sdk_python/releases"
