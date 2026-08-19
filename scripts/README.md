@@ -31,8 +31,23 @@ uv run python scripts/generate_sdk.py --local-repo ../api-schema-public
 ```
 
 `make generate` and `make generate local` wrap these two invocations.
-See the repository root [README.md](../README.md) for the full command
-list.
+See [`docs/guides/generation.md`](../docs/guides/generation.md) for
+the full regeneration workflow.
+
+## Makefile commands
+
+| Command | Effect |
+| --- | --- |
+| `make` | Generate services and run tests (default) |
+| `make generate` | Regenerate from remote schema |
+| `make generate local` | Regenerate from `../api-schema-public/` |
+| `make generate LOCAL_REPO=/path` | Regenerate from an arbitrary path |
+| `make services` | Alias for `make generate` |
+| `make docs` | Build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
+| `make test` | Full mocked test suite |
+| `make test-e2e` | Live API tests (opt-in, needs [`.env`](../.env)) |
+| `make lint` | Ruff check + format |
+| `make clean` | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
 
 > [!NOTE]
 > Two environment variables let you test a forked
@@ -56,3 +71,18 @@ uv run python scripts/sample_consume_sdk.py --real
 credentials. `run_real_call()` tries `device.list_devices()` first,
 then falls back to `user.list_users()`, so the script still succeeds
 against an account that lacks one of those permissions.
+
+## Generator patches (internal)
+
+If you modify [`generate_sdk.py`](generate_sdk.py), these post-processing
+patches in the generation loop are the most likely areas to break:
+
+| Patch | What it does |
+| --- | --- |
+| Flattened structure | Removes version subdirectories; keeps only the latest version of each service |
+| Wildcard patching | Replaces `from .models import *` with explicit re-exports (`import X as X`) |
+| Ghost data fix | Removes `json=data.dict()` calls in functions where no payload arg was generated |
+| Pydantic v2 | Injects `.model_construct()` for empty API responses to prevent validation crashes |
+
+See [`generation/README.md`](generation/README.md) for the phase module
+breakdown and call order.
