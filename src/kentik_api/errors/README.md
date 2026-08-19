@@ -26,6 +26,13 @@ classDiagram
     KentikError <|-- TransportError
     KentikError <|-- HTTPException
     HTTPException <|-- GeneratedOperationError
+
+    link KentikError "__init__.py"
+    link ConfigurationError "__init__.py"
+    link AuthenticationError "__init__.py"
+    link TransportError "__init__.py"
+    link HTTPException "__init__.py"
+    link GeneratedOperationError "../gen/"
 ```
 
 `GeneratedOperationError` stands in for the per-operation classes each

@@ -22,6 +22,12 @@ flowchart LR
     DISC --> WC["test_wrapper_contracts.py"]
     DISC --> SC["test_endpoint_schema_coverage.py"]
     SC --> RJ["request_json() via respx mock"]
+
+    click SVC "../../src/kentik_api/gen/"
+    click DISC "../_discovery.py"
+    click WC "test_wrapper_contracts.py"
+    click SC "test_endpoint_schema_coverage.py"
+    click RJ "../../src/kentik_api/core/rest_runtime.py"
 ```
 
 ## Run

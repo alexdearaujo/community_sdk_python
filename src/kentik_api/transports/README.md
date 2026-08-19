@@ -25,6 +25,10 @@ classDiagram
     }
     BaseTransport <|-- RestTransport
     BaseTransport <|-- GrpcTransport
+
+    link BaseTransport "base.py"
+    link RestTransport "rest_client.py"
+    link GrpcTransport "grpc_client.py"
 ```
 
 ## gRPC is a stub

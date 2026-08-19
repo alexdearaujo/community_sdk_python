@@ -72,7 +72,7 @@ clean: ## Remove generated SDK and build artifacts
 	# - docs/source/local_generation_workflow.md
 	rm -rf src/kentik_api/gen/
 	rm -rf docs/build/
-	find docs/source/services -maxdepth 1 -type f -name '*.md' -delete
+	find docs/source/services -maxdepth 1 -type f -name '*.md' ! -name 'README.md' -delete
 # 	rm -rf bin/				# commented out only for testing (to speed up tests)
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 

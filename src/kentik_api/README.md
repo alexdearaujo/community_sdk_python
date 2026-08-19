@@ -34,6 +34,16 @@ flowchart LR
     F -->|failure| H["errors/<br/>KentikError hierarchy"]
     E -->|failure| I["gen/&lt;service&gt;/error/<br/>per-operation error classes"]
     I --> H
+
+    click A "client.py"
+    click B "auth/"
+    click C "transports/"
+    click D "client_mixin.py"
+    click E "gen/"
+    click F "core/rest_runtime.py"
+    click G "core/api_config.py"
+    click H "errors/"
+    click I "gen/"
 ```
 
 Every generated operation, in every service, calls

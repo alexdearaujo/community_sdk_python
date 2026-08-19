@@ -43,6 +43,8 @@ flowchart TD
     G --> P[pb/]
     S -->|calls| R["kentik_api.core.rest_runtime.request_json()"]
     S -->|on error status| E
+
+    click R "../../core/rest_runtime.py"
 ```
 
 ## Where a call actually runs
@@ -213,11 +215,33 @@ def _generate_runtime_architecture_docs() -> None:
         mermaid_lines.append(f'    {node_id}["{node_name}"]')
 
     mermaid_lines.append("")
+    _NODE_URLS = {
+        "Client API": "../../src/kentik_api/client.py",
+        "Client Mixin": "../../src/kentik_api/client_mixin.py",
+        "Auth Credentials": "../../src/kentik_api/auth/credentials.py",
+        "API Config": "../../src/kentik_api/core/api_config.py",
+        "REST Runtime": "../../src/kentik_api/core/rest_runtime.py",
+        "Error Types": "../../src/kentik_api/errors/__init__.py",
+        "Transport Base": "../../src/kentik_api/transports/base.py",
+        "REST Transport": "../../src/kentik_api/transports/rest_client.py",
+        "gRPC Transport": "../../src/kentik_api/transports/grpc_client.py",
+        "Generated Error Classes": "../../src/kentik_api/gen/",
+        "Generated Models": "../../src/kentik_api/gen/",
+        "Generated REST Services": "../../src/kentik_api/gen/",
+        "Generated Service Wrappers": "../../src/kentik_api/gen/",
+    }
+
     for (src, dst), count in sorted(edge_counts.items()):
         src_id = re.sub(r"[^A-Za-z0-9_]", "_", src)
         dst_id = re.sub(r"[^A-Za-z0-9_]", "_", dst)
         label = f'|"x{count}"|' if count > 1 else ""
         mermaid_lines.append(f"    {src_id} -->{label} {dst_id}")
+
+    mermaid_lines.append("")
+    for node_name in sorted(nodes):
+        if node_name in _NODE_URLS:
+            node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
+            mermaid_lines.append(f'    click {node_id} "{_NODE_URLS[node_name]}"')
 
     architecture_md = [
         "# SDK Runtime Architecture",

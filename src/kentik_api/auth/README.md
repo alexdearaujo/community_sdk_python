@@ -30,6 +30,10 @@ flowchart LR
     KC -->|get_grpc_plugin| P["grpc.AuthMetadataPlugin"]
     H --> RT[RestTransport]
     P --> GT[GrpcTransport]
+
+    click KC "credentials.py"
+    click RT "../transports/rest_client.py"
+    click GT "../transports/grpc_client.py"
 ```
 
 ## Where credentials actually get read
