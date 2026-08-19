@@ -816,8 +816,11 @@ def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
         docs = service_endpoint_docs.get(service, [])
         # Use the first endpoint summary as a short service description.
         blurb = next((d.summary for d in docs if d.summary), "")
+        # Use space-content-space for filled cells; single space for empty ones so
+        # markdownlint doesn't flag the double-space |  | pattern.
+        desc_cell = f" {blurb} " if blurb else " "
         readme_rows.append(
-            f"| {title} | [{service}.md]({service}.md) | {blurb} |"
+            f"| {title} | [{service}.md]({service}.md) |{desc_cell}|"
         )
 
     readme_content = "\n".join(
