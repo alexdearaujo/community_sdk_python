@@ -4,14 +4,13 @@ from __future__ import annotations
 import argparse
 from typing import Any
 
+import kentik_api.gen.asset_tags.services.AssetTagsService as _asset_tags_rest
 from kentik_api.client import KentikAPI
 from kentik_api.errors import HTTPException
 
 
 def run_mock_demo(region: str = "us") -> None:
     """Runs a network-free SDK usage demo by patching one generated REST call."""
-    import kentik_api.gen.asset_tags.services.asset_tags as asset_tags_wrapper
-
     client = KentikAPI(
         email="demo@example.com",
         api_token="demo-token",
@@ -19,13 +18,13 @@ def run_mock_demo(region: str = "us") -> None:
         region=region,
     )
 
-    original = asset_tags_wrapper.RestAssetTagsModule1.ListTagKeys
+    original = _asset_tags_rest.ListTagKeys
 
-    def _fake_list_tag_keys(*, api_config_override: Any):
+    def _fake_list_tag_keys(*, api_config_override: Any = None) -> dict:  # type: ignore[return]
         return {"tagKeys": [{"id": "tag-1", "name": "env"}]}
 
     try:
-        asset_tags_wrapper.RestAssetTagsModule1.ListTagKeys = _fake_list_tag_keys
+        _asset_tags_rest.ListTagKeys = _fake_list_tag_keys  # type: ignore[assignment]
         result = client.asset_tags.list_tag_keys()
         if not isinstance(result, dict) or "tagKeys" not in result:
             raise RuntimeError("Unexpected SDK result shape in mock mode")
@@ -33,7 +32,7 @@ def run_mock_demo(region: str = "us") -> None:
         print("SDK sample succeeded (mock mode).")
         print(result)
     finally:
-        asset_tags_wrapper.RestAssetTagsModule1.ListTagKeys = original
+        _asset_tags_rest.ListTagKeys = original
         client.close()
 
 
