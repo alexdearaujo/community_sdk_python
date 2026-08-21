@@ -263,11 +263,11 @@ def _generate_runtime_architecture_docs() -> None:
     mermaid_lines = ["flowchart TB"]
 
     placed: set[str] = set()
-    for sg_id, sg_label, members in _LAYERS:
+    for layer_key, layer_label, members in _LAYERS:
         in_layer = members & nodes
         if not in_layer:
             continue
-        mermaid_lines.append(f'    subgraph {sg_id}["{sg_label}"]')
+        mermaid_lines.append(f'    subgraph {layer_key}["{layer_label}"]')
         for node_name in sorted(in_layer):
             node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
             mermaid_lines.append(f'        {node_id}["{node_name}"]')
@@ -279,11 +279,11 @@ def _generate_runtime_architecture_docs() -> None:
         mermaid_lines.append(f'    {node_id}["{node_name}"]')
 
     mermaid_lines.append("")
-    for (src, dst), count in sorted(edge_counts.items()):
-        src_id = re.sub(r"[^A-Za-z0-9_]", "_", src)
-        dst_id = re.sub(r"[^A-Za-z0-9_]", "_", dst)
+    for (source_group, dest_group), count in sorted(edge_counts.items()):
+        source_group_id = re.sub(r"[^A-Za-z0-9_]", "_", source_group)
+        dest_group_id = re.sub(r"[^A-Za-z0-9_]", "_", dest_group)
         label = f'|"x{count}"|' if count > 1 else ""
-        mermaid_lines.append(f"    {src_id} -->{label} {dst_id}")
+        mermaid_lines.append(f"    {source_group_id} -->{label} {dest_group_id}")
 
     architecture_md = [
         "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_runtime_architecture_docs() -->",
@@ -343,17 +343,17 @@ def _method_to_pascal(name: str) -> str:
 
 
 def _strip_optional(type_str: str) -> str:
-    m = re.match(r"^Optional\[(.+)\]$", type_str)
-    return m.group(1) if m else type_str
+    optional_match = re.match(r"^Optional\[(.+)\]$", type_str)
+    return optional_match.group(1) if optional_match else type_str
 
 
 def _discover_example_ops(
-    n_list: int = 3,
+    max_list_ops: int = 3,
 ) -> tuple[list[dict[str, str]], dict[str, str] | None]:
     """Scans generated *ServiceWrapper files to find representative operations.
 
     Returns (list_ops, body_op).
-    list_ops: up to n_list list_* operations, each {service, method, response_class}.
+    list_ops: up to max_list_ops list_* operations, each {service, method, response_class}.
     body_op: first operation with a data: parameter, {service, method, request_class}.
     """
     list_ops: list[dict[str, str]] = []
@@ -376,7 +376,7 @@ def _discover_example_ops(
 
             for method in parse_wrapper_methods(wrapper_file):
                 if (
-                    len(list_ops) < n_list
+                    len(list_ops) < max_list_ops
                     and method.name.lower().startswith("list_")
                     and method.return_type
                 ):
@@ -403,7 +403,7 @@ def _discover_example_ops(
                             }
                             break
 
-        if len(list_ops) >= n_list and body_op is not None:
+        if len(list_ops) >= max_list_ops and body_op is not None:
             break
 
     return list_ops, body_op
@@ -432,7 +432,7 @@ def _update_guide_snippets() -> None:
         1 for d in SDK_OUTPUT_DIR.iterdir() if d.is_dir() and not d.name.startswith("_")
     )
 
-    list_ops, body_op = _discover_example_ops(n_list=3)
+    list_ops, body_op = _discover_example_ops(max_list_ops=3)
     if not list_ops:
         print("    ⚠️  No list operations found; skipping guide snippet updates.")
         return

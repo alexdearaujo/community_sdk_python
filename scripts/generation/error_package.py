@@ -91,9 +91,9 @@ def collect_operation_error_responses(
                         if isinstance(content, dict):
                             json_content = content.get("application/json", {})
                             if isinstance(json_content, dict):
-                                schema = json_content.get("schema", {})
-                                if isinstance(schema, dict):
-                                    schema_ref_raw = schema.get("$ref")
+                                field_schema = json_content.get("schema", {})
+                                if isinstance(field_schema, dict):
+                                    schema_ref_raw = field_schema.get("$ref")
                                     if isinstance(schema_ref_raw, str):
                                         schema_ref = schema_ref_raw
 

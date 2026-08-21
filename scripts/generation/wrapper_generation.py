@@ -39,16 +39,21 @@ def _discover_grpc_stubs(
         except Exception:
             continue
 
-        for cls in ast.walk(tree):
-            if not (isinstance(cls, ast.ClassDef) and cls.name.endswith("Stub")):
+        for ast_node in ast.walk(tree):
+            if not (
+                isinstance(ast_node, ast.ClassDef) and ast_node.name.endswith("Stub")
+            ):
                 continue
-            stub_class = cls.name
+            stub_class = ast_node.name
             stubs_info.append((pb2_stem, pb2_grpc_stem, stub_class, str(idx)))
 
-            for fn in cls.body:
-                if not (isinstance(fn, ast.FunctionDef) and fn.name == "__init__"):
+            for body_node in ast_node.body:
+                if not (
+                    isinstance(body_node, ast.FunctionDef)
+                    and body_node.name == "__init__"
+                ):
                     continue
-                for stmt in fn.body:
+                for stmt in body_node.body:
                     if not (
                         isinstance(stmt, ast.Assign)
                         and isinstance(stmt.targets[0], ast.Attribute)
@@ -153,7 +158,7 @@ def _generate_service_wrappers():
             "        if isinstance(self._transport, GrpcTransport):",
         ]
         if grpc_stubs_info:
-            for pb2_stem, pb2_grpc_stem, stub_class, sidx in grpc_stubs_info:
+            for pb2_stem, pb2_grpc_stem, stub_class, stub_index_str in grpc_stubs_info:
                 # try/except so missing proto deps degrade gracefully to NotImplementedError
                 # rather than crashing at import time.
                 wrapper_code.append("            try:")
@@ -163,20 +168,24 @@ def _generate_service_wrappers():
                     '                __import__("kentik_api.gen.pb_companions")'
                 )
                 wrapper_code.append(
-                    f"                import kentik_api.gen.{service}.pb.{pb2_stem} as _pb2_{sidx}_mod"
+                    f"                import kentik_api.gen.{service}.pb.{pb2_stem} as _pb2_{stub_index_str}_mod"
                 )
                 wrapper_code.append(
-                    f"                import kentik_api.gen.{service}.pb.{pb2_grpc_stem} as _pb2_grpc_{sidx}_mod"
+                    f"                import kentik_api.gen.{service}.pb.{pb2_grpc_stem} as _pb2_grpc_{stub_index_str}_mod"
                 )
                 wrapper_code.append(
-                    f"                self._grpc_pb2_{sidx} = _pb2_{sidx}_mod"
+                    f"                self._grpc_pb2_{stub_index_str} = _pb2_{stub_index_str}_mod"
                 )
                 wrapper_code.append(
-                    f"                self._grpc_stub_{sidx} = _pb2_grpc_{sidx}_mod.{stub_class}(self._transport.channel)"
+                    f"                self._grpc_stub_{stub_index_str} = _pb2_grpc_{stub_index_str}_mod.{stub_class}(self._transport.channel)"
                 )
                 wrapper_code.append("            except (ImportError, TypeError):")
-                wrapper_code.append(f"                self._grpc_pb2_{sidx} = None")
-                wrapper_code.append(f"                self._grpc_stub_{sidx} = None")
+                wrapper_code.append(
+                    f"                self._grpc_pb2_{stub_index_str} = None"
+                )
+                wrapper_code.append(
+                    f"                self._grpc_stub_{stub_index_str} = None"
+                )
         else:
             wrapper_code.append(
                 "            pass  # gRPC not yet implemented for this service"
@@ -246,21 +255,29 @@ def _generate_service_wrappers():
 
                 # Build the wrapper signature: all params except api_config_override,
                 # preserving * keyword-only separator, with model types qualified.
-                def _q(ann: str) -> str:
+                def _qualify_annotation(annotation: str) -> str:
                     return re.sub(
                         r"\bTypingList\b",
                         "List",
-                        qualify_wrapper_annotation_types(ann, model_classes),
+                        qualify_wrapper_annotation_types(annotation, model_classes),
                     )
 
                 pos_parts = [
-                    f"{n}: {_q(ann)}" if req else f"{n}: {_q(ann)} = None"
-                    for n, ann, req in op.params[: op.kwonly_start]
-                    if n != "api_config_override"
+                    f"{param_name}: {_qualify_annotation(annotation)}"
+                    if is_required
+                    else f"{param_name}: {_qualify_annotation(annotation)} = None"
+                    for param_name, annotation, is_required in op.params[
+                        : op.kwonly_start
+                    ]
+                    if param_name != "api_config_override"
                 ]
                 kw_parts = [
-                    f"{n}: {_q(ann)}" if req else f"{n}: {_q(ann)} = None"
-                    for n, ann, req in op.params[op.kwonly_start :]
+                    f"{param_name}: {_qualify_annotation(annotation)}"
+                    if is_required
+                    else f"{param_name}: {_qualify_annotation(annotation)} = None"
+                    for param_name, annotation, is_required in op.params[
+                        op.kwonly_start :
+                    ]
                 ]
                 sig_args = ", ".join(pos_parts + (["*"] + kw_parts if kw_parts else []))
 
@@ -280,7 +297,7 @@ def _generate_service_wrappers():
                         required_typing_symbols.add(typing_symbol)
 
                 # Build the call_args from all param names (api_config_override excluded)
-                arg_names = [n for n, _, _ in op.params]
+                arg_names = [param_name for param_name, _, _ in op.params]
                 call_args = [
                     f"{arg}={arg}" for arg in arg_names if arg != "api_config_override"
                 ]
@@ -292,7 +309,9 @@ def _generate_service_wrappers():
                 # Build the gRPC branch: real call when a matching stub exists,
                 # otherwise keep the NotImplementedError placeholder.
                 non_data_args = [
-                    a for a in arg_names if a not in ("api_config_override", "data")
+                    arg_name
+                    for arg_name in arg_names
+                    if arg_name not in ("api_config_override", "data")
                 ]
                 if func_name_pascal in grpc_method_map:
                     stub_idx, req_class, resp_class = grpc_method_map[func_name_pascal]

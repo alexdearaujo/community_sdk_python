@@ -187,11 +187,11 @@ _SCHEMA_ROOT = Path(__file__).resolve().parents[3] / "api-schema-public"
 _GEN_ROOT = Path(__file__).resolve().parents[2] / "src" / "kentik_api" / "gen"
 
 
-def _resolve_request_body(schema: dict, rb: dict) -> Optional[dict]:
+def _resolve_request_body(schema: dict, request_body: dict) -> Optional[dict]:
     """Dereferences a requestBody $ref from components.requestBodies, if present."""
-    if "$ref" not in rb:
-        return rb
-    rb_name = rb["$ref"].rsplit("/", 1)[-1]
+    if "$ref" not in request_body:
+        return request_body
+    rb_name = request_body["$ref"].rsplit("/", 1)[-1]
     return schema.get("components", {}).get("requestBodies", {}).get(rb_name)
 
 

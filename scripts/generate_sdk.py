@@ -117,8 +117,8 @@ def clean_schema_names(schema: dict, version: str) -> dict:
             if "$ref" in node and isinstance(node["$ref"], str):
                 if f"/{version}" in node["$ref"]:
                     node["$ref"] = node["$ref"].replace(f"/{version}", "/")
-            for v in node.values():
-                _clean_refs(v)
+            for child_value in node.values():
+                _clean_refs(child_value)
         elif isinstance(node, list):
             for item in node:
                 _clean_refs(item)
@@ -126,7 +126,7 @@ def clean_schema_names(schema: dict, version: str) -> dict:
     _clean_refs(schema)
 
     for section in _definition_sections(schema):
-        for old_key in [k for k in section if k.startswith(version)]:
+        for old_key in [key for key in section if key.startswith(version)]:
             new_key = old_key[len(version) :]
             if new_key:
                 section[new_key] = section.pop(old_key)
@@ -150,9 +150,9 @@ def inline_request_body_refs(schema: dict) -> dict:
         for op in path_item.values():
             if not isinstance(op, dict):
                 continue
-            rb = op.get("requestBody", {})
-            if isinstance(rb, dict) and "$ref" in rb:
-                rb_name = rb["$ref"].rsplit("/", 1)[-1]
+            request_body = op.get("requestBody", {})
+            if isinstance(request_body, dict) and "$ref" in request_body:
+                rb_name = request_body["$ref"].rsplit("/", 1)[-1]
                 if rb_name in request_bodies:
                     op["requestBody"] = copy.deepcopy(request_bodies[rb_name])
     return schema
@@ -521,14 +521,20 @@ def _inject_generated_headers(output_dir: Path) -> None:
 
         # pb_companions: compiled by _compile_proto_companions() with isort:skip_file.
         if rel_parts[0] == "pb_companions":
-            source, func = "scripts/generate_sdk.py", "_compile_proto_companions()"
+            source, generator_func_name = (
+                "scripts/generate_sdk.py",
+                "_compile_proto_companions()",
+            )
         elif len(rel_parts) >= 2 and rel_parts[-2] in _SRC:
-            source, func = _SRC[rel_parts[-2]]
+            source, generator_func_name = _SRC[rel_parts[-2]]
         else:
-            source, func = "scripts/generate_sdk.py", "generate_modular_sdk()"
+            source, generator_func_name = (
+                "scripts/generate_sdk.py",
+                "generate_modular_sdk()",
+            )
 
         header = (
-            f"# AUTO-GENERATED: {source}, {func}\n"
+            f"# AUTO-GENERATED: {source}, {generator_func_name}\n"
             "# Rebuilt on every `make generate`. Do not edit by hand.\n"
             "\n"
         )

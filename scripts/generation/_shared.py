@@ -27,9 +27,11 @@ def discover_service_model_classes(service_dir: Path) -> set[str]:
     if (service_dir / "models.py").exists():
         files_to_scan.append(service_dir / "models.py")
 
-    for f in files_to_scan:
+    for model_file in files_to_scan:
         model_classes.update(
-            re.findall(r"^class ([A-Za-z0-9_]+)[\(:]", f.read_text(), re.MULTILINE)
+            re.findall(
+                r"^class ([A-Za-z0-9_]+)[\(:]", model_file.read_text(), re.MULTILINE
+            )
         )
 
     return model_classes

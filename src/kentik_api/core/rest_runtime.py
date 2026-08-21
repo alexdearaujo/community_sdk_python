@@ -5,7 +5,6 @@ import json
 from typing import Any, Dict, Optional
 
 import httpx
-
 from kentik_api.core.api_config import APIConfig
 from kentik_api.errors import HTTPException, TransportError
 
@@ -32,7 +31,13 @@ def request_json(
         "X-CH-Auth-API-Token": api_config.auth_token,
     }
     if header_params:
-        headers.update({k: v for (k, v) in header_params.items() if v is not None})
+        headers.update(
+            {
+                header_name: header_value
+                for (header_name, header_value) in header_params.items()
+                if header_value is not None
+            }
+        )
 
     clean_query_params = {
         key: value for (key, value) in (query_params or {}).items() if value is not None
