@@ -24,6 +24,14 @@ in every one of the ~38 services under
 `service.jinja2` template. See
 [`../../scripts/openapi_templates/README.md`](../../../scripts/openapi_templates/README.md).
 
+## `map_grpc_error()` and `call_grpc()`
+
+`map_grpc_error()` (in [`grpc_runtime.py`](grpc_runtime.py)) is a pure function:
+no I/O, no side effects, testable without a gRPC channel. It maps a
+`grpc.RpcError` status code to the SDK exception hierarchy (`AuthenticationError`
+or `HTTPException`). `call_grpc()` is the thin caller that invokes the gRPC stub
+and delegates all error mapping to `map_grpc_error()`.
+
 ```mermaid
 sequenceDiagram
     participant Op as Generated operation

@@ -1,6 +1,6 @@
-> **TEMPORARY — delete this file before merging to `kentik/community_sdk_python:main`.**
-
 # Architecture Refactoring Spec
+
+> **TEMPORARY — delete this file before merging to `kentik/community_sdk_python:main`.**
 
 Three independent refactors, in implementation order. Each deepens a shallow
 module by establishing a real seam. None depends on the others; they can be

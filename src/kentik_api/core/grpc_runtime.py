@@ -21,18 +21,38 @@ _GRPC_STATUS_TO_HTTP: dict[grpc.StatusCode, int] = {
 }
 
 
+def map_grpc_error(
+    exc: grpc.RpcError,
+    *,
+    method: str = "gRPC",
+    path: str = "unknown",
+) -> HTTPException:
+    """Maps a gRPC RpcError to the SDK exception hierarchy.
+
+    Pure function: no I/O, no side effects. Testable without a gRPC channel.
+    """
+    code = exc.code()
+    details = exc.details() or ""
+
+    if code == grpc.StatusCode.UNAUTHENTICATED:
+        return AuthenticationError(details)
+
+    http_status = _GRPC_STATUS_TO_HTTP.get(code, 500)
+    return HTTPException(
+        status_code=http_status,
+        message=details,
+        method=method,
+        path=path,
+    )
+
+
 def call_grpc(stub_method, proto_request):
     """Calls one unary gRPC method and normalizes errors to the SDK exception hierarchy."""
     try:
         return stub_method(proto_request)
     except grpc.RpcError as exc:
-        code = exc.code()
-        if code == grpc.StatusCode.UNAUTHENTICATED:
-            raise AuthenticationError(exc.details()) from exc
-        http_status = _GRPC_STATUS_TO_HTTP.get(code, 500)
-        raise HTTPException(
-            status_code=http_status,
-            message=exc.details() or "",
+        raise map_grpc_error(
+            exc,
             method="gRPC",
             path=getattr(stub_method, "_method", b"unknown").decode(
                 "utf-8", errors="replace"

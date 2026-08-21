@@ -112,7 +112,11 @@ model field. No remapping is needed.
 The same exception types are raised for both transports. See
 [error_handling.md](error_handling.md) for the full hierarchy. gRPC status
 codes are mapped to HTTP-equivalent status codes inside
-[`call_grpc()`](../../src/kentik_api/core/grpc_runtime.py):
+[`map_grpc_error()`](../../src/kentik_api/core/grpc_runtime.py), a pure
+function isolated from the gRPC call itself. This means the mapping table
+can be tested without a live gRPC channel. [`call_grpc()`](../../src/kentik_api/core/grpc_runtime.py)
+is the thin wrapper that invokes the stub and delegates all error mapping
+to `map_grpc_error()`.
 
 | gRPC status | HTTP equivalent | SDK exception |
 | --- | --- | --- |

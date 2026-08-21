@@ -142,6 +142,12 @@ code confirms it directly:
   - JSON error-body parsing
   - dispatch into per-operation error classes via
     `error_cls.from_response`
+- `src/kentik_api/core/grpc_runtime.py` — `call_grpc()` is the gRPC
+  analogue of `request_json()`. It routes every generated gRPC wrapper
+  call through one place. `map_grpc_error()` is extracted as a pure
+  function (no I/O, no side effects) that maps a `grpc.RpcError` status
+  code to `AuthenticationError` or `HTTPException`. Testable without a
+  gRPC channel.
 - `src/kentik_api/core/api_config.py` — `APIConfig` is the one
   shared config object (base URL, auth email/token, TLS verify) used
   in every call.

@@ -118,7 +118,10 @@ manual update: the next [`make generate`](../Makefile) picks it up automatically
 
 ### 2) Runtime tests
 
-Primary file: [`tests/runtime/test_rest_runtime.py`](runtime/test_rest_runtime.py)
+Primary files:
+
+- [`tests/runtime/test_rest_runtime.py`](runtime/test_rest_runtime.py)
+- [`tests/runtime/test_grpc_runtime.py`](runtime/test_grpc_runtime.py)
 
 Add tests when shared runtime behavior changes, such as:
 

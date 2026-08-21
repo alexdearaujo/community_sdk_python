@@ -14,6 +14,11 @@ function every generated REST operation calls. It monkeypatches
 `httpx.Client.request` and asserts on the captured method, URL,
 headers, params, and body.
 
+`test_grpc_runtime.py` tests
+[`map_grpc_error()`](../../src/kentik_api/core/grpc_runtime.py), the
+pure function that maps `grpc.RpcError` status codes to SDK exceptions.
+It uses a minimal `FakeRpcError` stub and requires no live gRPC channel.
+
 ## Run
 
 ```bash
