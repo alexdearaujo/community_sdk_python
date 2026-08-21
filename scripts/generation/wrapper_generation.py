@@ -144,8 +144,8 @@ def _generate_service_wrappers():
             "",
             f"class {title}ServiceWrapper:",
             '    """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_service_wrappers().',
-            '    Rebuilt on every `make generate`. Do not edit by hand.',
-            '    Unified Service routing to either gRPC or REST.',
+            "    Rebuilt on every `make generate`. Do not edit by hand.",
+            "    Unified Service routing to either gRPC or REST.",
             '    """',
             "    def __init__(self, transport: Union[GrpcTransport, RestTransport]):",
             "        self._transport = transport",
@@ -159,7 +159,7 @@ def _generate_service_wrappers():
                 # __import__() instead of import statement: isort won't reorder it,
                 # so this always runs before the service pb2 imports that depend on it.
                 wrapper_code.append(
-                    "                __import__(\"kentik_api.gen.pb_companions\")"
+                    '                __import__("kentik_api.gen.pb_companions")'
                 )
                 wrapper_code.append(
                     f"                import kentik_api.gen.{service}.pb.{pb2_stem} as _pb2_{sidx}_mod"
@@ -174,14 +174,12 @@ def _generate_service_wrappers():
                     f"                self._grpc_stub_{sidx} = _pb2_grpc_{sidx}_mod.{stub_class}(self._transport.channel)"
                 )
                 wrapper_code.append("            except (ImportError, TypeError):")
-                wrapper_code.append(
-                    f"                self._grpc_pb2_{sidx} = None"
-                )
-                wrapper_code.append(
-                    f"                self._grpc_stub_{sidx} = None"
-                )
+                wrapper_code.append(f"                self._grpc_pb2_{sidx} = None")
+                wrapper_code.append(f"                self._grpc_stub_{sidx} = None")
         else:
-            wrapper_code.append("            pass  # gRPC not yet implemented for this service")
+            wrapper_code.append(
+                "            pass  # gRPC not yet implemented for this service"
+            )
         wrapper_code.append("")
 
         emitted_method_names: set[str] = set()
@@ -306,9 +304,7 @@ def _generate_service_wrappers():
                     ]
                     if "data" in arg_names and non_data_args:
                         # Body param + path/query params
-                        other_dict = ", ".join(
-                            f'"{a}": {a}' for a in non_data_args
-                        )
+                        other_dict = ", ".join(f'"{a}": {a}' for a in non_data_args)
                         grpc_lines = [
                             *stub_guard,
                             "            _req_dict = data.model_dump(by_alias=True, exclude_none=True)",
@@ -325,9 +321,7 @@ def _generate_service_wrappers():
                         ]
                     elif non_data_args:
                         # Query/path params only
-                        kwarg_dict = ", ".join(
-                            f'"{a}": {a}' for a in non_data_args
-                        )
+                        kwarg_dict = ", ".join(f'"{a}": {a}' for a in non_data_args)
                         grpc_lines = [
                             *stub_guard,
                             f"            _req = ParseDict({{k: v for k, v in {{{kwarg_dict}}}.items() if v is not None}}, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
@@ -442,7 +436,7 @@ def _generate_client_mixin():
         "",
         "class KentikClientMixin:",
         '    """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_client_mixin().',
-        '    Rebuilt on every `make generate`. Do not edit by hand.',
+        "    Rebuilt on every `make generate`. Do not edit by hand.",
         '    """',
         "",
         "    if TYPE_CHECKING:",

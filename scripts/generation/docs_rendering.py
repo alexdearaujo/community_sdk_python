@@ -370,7 +370,9 @@ def _discover_example_ops(
                     continue
 
                 for method_node in cls_node.body:
-                    if not isinstance(method_node, ast.FunctionDef) or method_node.name.startswith("_"):
+                    if not isinstance(
+                        method_node, ast.FunctionDef
+                    ) or method_node.name.startswith("_"):
                         continue
 
                     args = [a for a in method_node.args.args if a.arg != "self"]
@@ -404,9 +406,7 @@ def _discover_example_ops(
                         for arg in args:
                             if arg.arg == "data" and arg.annotation is not None:
                                 try:
-                                    raw = _strip_optional(
-                                        ast.unparse(arg.annotation)
-                                    )
+                                    raw = _strip_optional(ast.unparse(arg.annotation))
                                     # Strip module prefix (e.g. rest_models.Foo -> Foo)
                                     request_class = raw.rsplit(".", 1)[-1]
                                     body_op = {
@@ -433,9 +433,7 @@ def _replace_marker(text: str, marker: str, new_content: str) -> str:
         re.DOTALL,
     )
     replacement = (
-        f"<!-- kentik-gen:{marker} -->"
-        + new_content
-        + f"<!-- /kentik-gen:{marker} -->"
+        f"<!-- kentik-gen:{marker} -->" + new_content + f"<!-- /kentik-gen:{marker} -->"
     )
     return pattern.sub(replacement, text)
 
@@ -446,9 +444,7 @@ def _update_guide_snippets() -> None:
         return
 
     service_count = sum(
-        1
-        for d in SDK_OUTPUT_DIR.iterdir()
-        if d.is_dir() and not d.name.startswith("_")
+        1 for d in SDK_OUTPUT_DIR.iterdir() if d.is_dir() and not d.name.startswith("_")
     )
 
     list_ops, body_op = _discover_example_ops(n_list=3)
@@ -508,8 +504,7 @@ response = client.{primary["service"]}.{primary["method"]}()  # same API, same r
     if rest_md.exists():
         text = rest_md.read_text(encoding="utf-8")
         list_lines = "\n".join(
-            f"response = client.{op['service']}.{op['method']}()"
-            for op in list_ops
+            f"response = client.{op['service']}.{op['method']}()" for op in list_ops
         )
         text = _replace_marker(
             text,
@@ -608,9 +603,7 @@ sequenceDiagram
         )
         grpc_md.write_text(text, encoding="utf-8")
 
-    body_label = (
-        f"{body_op['service']}.{body_op['method']}" if body_op else "none"
-    )
+    body_label = f"{body_op['service']}.{body_op['method']}" if body_op else "none"
     print(
         f"    ✅ Guide snippets updated "
         f"({service_count} services, list: {primary['service']}.{primary['method']}, "

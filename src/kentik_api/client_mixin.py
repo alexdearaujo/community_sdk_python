@@ -5,14 +5,24 @@ from kentik_api.gen.alerting.services.alerting import AlertingServiceWrapper
 from kentik_api.gen.as_group.services.as_group import AsGroupServiceWrapper
 from kentik_api.gen.asset_tags.services.asset_tags import AssetTagsServiceWrapper
 from kentik_api.gen.audit.services.audit import AuditServiceWrapper
-from kentik_api.gen.bgp_monitoring.services.bgp_monitoring import BgpMonitoringServiceWrapper
-from kentik_api.gen.capacity_plan.services.capacity_plan import CapacityPlanServiceWrapper
+from kentik_api.gen.bgp_monitoring.services.bgp_monitoring import (
+    BgpMonitoringServiceWrapper,
+)
+from kentik_api.gen.capacity_plan.services.capacity_plan import (
+    CapacityPlanServiceWrapper,
+)
 from kentik_api.gen.cloud_export.services.cloud_export import CloudExportServiceWrapper
-from kentik_api.gen.connectivity_checker.services.connectivity_checker import ConnectivityCheckerServiceWrapper
+from kentik_api.gen.connectivity_checker.services.connectivity_checker import (
+    ConnectivityCheckerServiceWrapper,
+)
 from kentik_api.gen.cost.services.cost import CostServiceWrapper
 from kentik_api.gen.credential.services.credential import CredentialServiceWrapper
-from kentik_api.gen.custom_application.services.custom_application import CustomApplicationServiceWrapper
-from kentik_api.gen.custom_dimension.services.custom_dimension import CustomDimensionServiceWrapper
+from kentik_api.gen.custom_application.services.custom_application import (
+    CustomApplicationServiceWrapper,
+)
+from kentik_api.gen.custom_dimension.services.custom_dimension import (
+    CustomDimensionServiceWrapper,
+)
 from kentik_api.gen.device.services.device import DeviceServiceWrapper
 from kentik_api.gen.dictionary.services.dictionary import DictionaryServiceWrapper
 from kentik_api.gen.enrichments.services.enrichments import EnrichmentsServiceWrapper
@@ -23,8 +33,12 @@ from kentik_api.gen.kmi.services.kmi import KmiServiceWrapper
 from kentik_api.gen.ktbgp.services.ktbgp import KtbgpServiceWrapper
 from kentik_api.gen.label.services.label import LabelServiceWrapper
 from kentik_api.gen.mkp.services.mkp import MkpServiceWrapper
-from kentik_api.gen.network_class.services.network_class import NetworkClassServiceWrapper
-from kentik_api.gen.notification_channel.services.notification_channel import NotificationChannelServiceWrapper
+from kentik_api.gen.network_class.services.network_class import (
+    NetworkClassServiceWrapper,
+)
+from kentik_api.gen.notification_channel.services.notification_channel import (
+    NotificationChannelServiceWrapper,
+)
 from kentik_api.gen.pathfinder.services.pathfinder import PathfinderServiceWrapper
 from kentik_api.gen.plan.services.plan import PlanServiceWrapper
 from kentik_api.gen.saved_filter.services.saved_filter import SavedFilterServiceWrapper
@@ -37,45 +51,46 @@ if TYPE_CHECKING:
     from kentik_api.transports.grpc_client import GrpcTransport
     from kentik_api.transports.rest_client import RestTransport
 
+
 class KentikClientMixin:
     """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_client_mixin().
     Rebuilt on every `make generate`. Do not edit by hand.
     """
 
     if TYPE_CHECKING:
-        _transport: 'GrpcTransport | RestTransport'
-        ai_advisor: 'AiAdvisorServiceWrapper'
-        alerting: 'AlertingServiceWrapper'
-        as_group: 'AsGroupServiceWrapper'
-        asset_tags: 'AssetTagsServiceWrapper'
-        audit: 'AuditServiceWrapper'
-        bgp_monitoring: 'BgpMonitoringServiceWrapper'
-        capacity_plan: 'CapacityPlanServiceWrapper'
-        cloud_export: 'CloudExportServiceWrapper'
-        connectivity_checker: 'ConnectivityCheckerServiceWrapper'
-        cost: 'CostServiceWrapper'
-        credential: 'CredentialServiceWrapper'
-        custom_application: 'CustomApplicationServiceWrapper'
-        custom_dimension: 'CustomDimensionServiceWrapper'
-        device: 'DeviceServiceWrapper'
-        dictionary: 'DictionaryServiceWrapper'
-        enrichments: 'EnrichmentsServiceWrapper'
-        flow_tag: 'FlowTagServiceWrapper'
-        interface: 'InterfaceServiceWrapper'
-        journeys: 'JourneysServiceWrapper'
-        kmi: 'KmiServiceWrapper'
-        ktbgp: 'KtbgpServiceWrapper'
-        label: 'LabelServiceWrapper'
-        mkp: 'MkpServiceWrapper'
-        network_class: 'NetworkClassServiceWrapper'
-        notification_channel: 'NotificationChannelServiceWrapper'
-        pathfinder: 'PathfinderServiceWrapper'
-        plan: 'PlanServiceWrapper'
-        saved_filter: 'SavedFilterServiceWrapper'
-        site: 'SiteServiceWrapper'
-        synthetics: 'SyntheticsServiceWrapper'
-        user: 'UserServiceWrapper'
-        vault: 'VaultServiceWrapper'
+        _transport: "GrpcTransport | RestTransport"
+        ai_advisor: "AiAdvisorServiceWrapper"
+        alerting: "AlertingServiceWrapper"
+        as_group: "AsGroupServiceWrapper"
+        asset_tags: "AssetTagsServiceWrapper"
+        audit: "AuditServiceWrapper"
+        bgp_monitoring: "BgpMonitoringServiceWrapper"
+        capacity_plan: "CapacityPlanServiceWrapper"
+        cloud_export: "CloudExportServiceWrapper"
+        connectivity_checker: "ConnectivityCheckerServiceWrapper"
+        cost: "CostServiceWrapper"
+        credential: "CredentialServiceWrapper"
+        custom_application: "CustomApplicationServiceWrapper"
+        custom_dimension: "CustomDimensionServiceWrapper"
+        device: "DeviceServiceWrapper"
+        dictionary: "DictionaryServiceWrapper"
+        enrichments: "EnrichmentsServiceWrapper"
+        flow_tag: "FlowTagServiceWrapper"
+        interface: "InterfaceServiceWrapper"
+        journeys: "JourneysServiceWrapper"
+        kmi: "KmiServiceWrapper"
+        ktbgp: "KtbgpServiceWrapper"
+        label: "LabelServiceWrapper"
+        mkp: "MkpServiceWrapper"
+        network_class: "NetworkClassServiceWrapper"
+        notification_channel: "NotificationChannelServiceWrapper"
+        pathfinder: "PathfinderServiceWrapper"
+        plan: "PlanServiceWrapper"
+        saved_filter: "SavedFilterServiceWrapper"
+        site: "SiteServiceWrapper"
+        synthetics: "SyntheticsServiceWrapper"
+        user: "UserServiceWrapper"
+        vault: "VaultServiceWrapper"
 
     def _mount_generated_services(self) -> None:
         """Mounts all generated service wrappers using the active transport."""

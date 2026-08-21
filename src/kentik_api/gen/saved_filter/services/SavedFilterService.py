@@ -35,7 +35,7 @@ from ..models import (  # noqa: F401
 
 
 def CreateSavedFilter(
-    api_config_override: Optional[APIConfig] = None,
+    api_config_override: Optional[APIConfig] = None, *, data: SavedFilter
 ) -> CreateSavedFilterResponse:
     query_params: Dict[str, Any] = {}
 
@@ -46,6 +46,7 @@ def CreateSavedFilter(
         path="/saved-filter/v202501alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
+        json_body=data.model_dump(),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateSavedFilter",
@@ -85,7 +86,7 @@ def GetSavedFilter(
 
 
 def UpdateSavedFilter(
-    api_config_override: Optional[APIConfig] = None, *, id: str
+    api_config_override: Optional[APIConfig] = None, *, id: str, data: SavedFilter
 ) -> UpdateSavedFilterResponse:
     query_params: Dict[str, Any] = {}
 
@@ -96,6 +97,7 @@ def UpdateSavedFilter(
         path=f"/saved-filter/v202501alpha1/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
+        json_body=data.model_dump(),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateSavedFilter",

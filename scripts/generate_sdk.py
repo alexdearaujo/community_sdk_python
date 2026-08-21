@@ -1,6 +1,7 @@
 # HAND-WRITTEN: orchestrates `make generate`. Not itself generated.
 """SDK generation entrypoint: downloads/validates the OpenAPI schema, runs every
 phase module in scripts/generation/, and writes src/kentik_api/gen/ plus docs."""
+
 import argparse
 import contextlib
 import json
@@ -111,6 +112,22 @@ def patch_schema_for_clean_names(swagger_path: Path, version: str):
             if new_key:
                 section[new_key] = section.pop(old_key)
 
+    # openapi-python-generator only processes inline requestBody objects; it
+    # silently ignores requestBody entries that are a bare $ref to
+    # components/requestBodies. Inline them here so the generator sees the
+    # content and emits a `data` parameter.
+    request_bodies = schema.get("components", {}).get("requestBodies", {})
+    if request_bodies:
+        for _path_item in schema.get("paths", {}).values():
+            for _op in _path_item.values():
+                if not isinstance(_op, dict):
+                    continue
+                rb = _op.get("requestBody", {})
+                if isinstance(rb, dict) and "$ref" in rb:
+                    rb_name = rb["$ref"].rsplit("/", 1)[-1]
+                    if rb_name in request_bodies:
+                        _op["requestBody"] = request_bodies[rb_name]
+
     with open(swagger_path, "w", encoding="utf-8") as f:
         json.dump(schema, f)
 
@@ -154,11 +171,7 @@ def _compile_proto_companions(schema_root: Path) -> None:
     """
     companions_dir = SDK_OUTPUT_DIR / "pb_companions"
     vendor_path = (
-        schema_root
-        / "protovendor"
-        / "github.com"
-        / "grpc-ecosystem"
-        / "grpc-gateway"
+        schema_root / "protovendor" / "github.com" / "grpc-ecosystem" / "grpc-gateway"
     )
     if not vendor_path.exists():
         print("    ⚠️  proto vendor path not found, skipping companion compilation.")
@@ -179,7 +192,13 @@ def _compile_proto_companions(schema_root: Path) -> None:
         "protoc-gen-openapiv2/options/openapiv2.proto",
     ]
     cmd = [
-        "uv", "run", "--with", "grpcio-tools", "python", "-m", "grpc_tools.protoc",
+        "uv",
+        "run",
+        "--with",
+        "grpcio-tools",
+        "python",
+        "-m",
+        "grpc_tools.protoc",
         f"-I{vendor_path}",
         f"--python_out={companions_dir}",
         *proto_files,

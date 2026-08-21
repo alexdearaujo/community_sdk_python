@@ -32,14 +32,18 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1 = None
 
     def create_saved_filter(
-        self,
+        self, *, data: rest_models.SavedFilter
     ) -> rest_models.CreateSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
-            _req = self._grpc_pb2_1.CreateSavedFilterRequest()
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.CreateSavedFilterRequest(),
+                ignore_unknown_fields=True,
+            )
             _resp = call_grpc(self._grpc_stub_1.CreateSavedFilter, _req)
             return rest_models.CreateSavedFilterResponse.model_validate(
                 MessageToDict(_resp)
@@ -47,7 +51,7 @@ class SavedFilterServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSavedFilterModule1.CreateSavedFilter(
-                api_config_override=rest_transport.api_config
+                api_config_override=rest_transport.api_config, data=data
             )
         else:
             raise TypeError(
@@ -79,14 +83,18 @@ class SavedFilterServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_saved_filter(self, *, id: str) -> rest_models.UpdateSavedFilterResponse:
+    def update_saved_filter(
+        self, *, id: str, data: rest_models.SavedFilter
+    ) -> rest_models.UpdateSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
             _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
+                _req_dict,
                 self._grpc_pb2_1.UpdateSavedFilterRequest(),
                 ignore_unknown_fields=True,
             )
@@ -97,7 +105,7 @@ class SavedFilterServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSavedFilterModule1.UpdateSavedFilter(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=rest_transport.api_config, id=id, data=data
             )
         else:
             raise TypeError(

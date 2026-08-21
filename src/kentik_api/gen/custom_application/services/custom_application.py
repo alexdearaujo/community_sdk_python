@@ -55,14 +55,18 @@ class CustomApplicationServiceWrapper:
             )
 
     def create_custom_application(
-        self,
+        self, *, data: rest_models.CustomApplication
     ) -> rest_models.CreateCustomApplicationResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_application service"
                 )
-            _req = self._grpc_pb2_1.CreateCustomApplicationRequest()
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.CreateCustomApplicationRequest(),
+                ignore_unknown_fields=True,
+            )
             _resp = call_grpc(self._grpc_stub_1.CreateCustomApplication, _req)
             return rest_models.CreateCustomApplicationResponse.model_validate(
                 MessageToDict(_resp)
@@ -70,7 +74,7 @@ class CustomApplicationServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCustomApplicationModule1.CreateCustomApplication(
-                api_config_override=rest_transport.api_config
+                api_config_override=rest_transport.api_config, data=data
             )
         else:
             raise TypeError(
@@ -110,19 +114,26 @@ class CustomApplicationServiceWrapper:
             )
 
     def update_custom_application(
-        self, *, customApplicationId: str
+        self,
+        *,
+        customApplicationId: str,
+        data: rest_models.CustomApplication,
     ) -> rest_models.UpdateCustomApplicationResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_application service"
                 )
-            _req = ParseDict(
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update(
                 {
                     k: v
                     for k, v in {"customApplicationId": customApplicationId}.items()
                     if v is not None
-                },
+                }
+            )
+            _req = ParseDict(
+                _req_dict,
                 self._grpc_pb2_1.UpdateCustomApplicationRequest(),
                 ignore_unknown_fields=True,
             )
@@ -135,6 +146,7 @@ class CustomApplicationServiceWrapper:
             return RestCustomApplicationModule1.UpdateCustomApplication(
                 api_config_override=rest_transport.api_config,
                 customApplicationId=customApplicationId,
+                data=data,
             )
         else:
             raise TypeError(

@@ -283,15 +283,32 @@ def parse_rest_call_metadata(
             error_cls_name = None
             operation_name = None
             for kw in sub.keywords:
-                if kw.arg == "method" and isinstance(kw.value, ast.Constant):
+                if (
+                    kw.arg == "method"
+                    and isinstance(kw.value, ast.Constant)
+                    and isinstance(kw.value.value, str)
+                ):
                     method = kw.value.value
-                if kw.arg == "expected_status" and isinstance(kw.value, ast.Constant):
+                if (
+                    kw.arg == "expected_status"
+                    and isinstance(kw.value, ast.Constant)
+                    and isinstance(kw.value.value, int)
+                ):
                     expected_status = kw.value.value
                 if kw.arg == "error_cls" and isinstance(kw.value, ast.Name):
                     error_cls_name = kw.value.id
-                if kw.arg == "operation_name" and isinstance(kw.value, ast.Constant):
+                if (
+                    kw.arg == "operation_name"
+                    and isinstance(kw.value, ast.Constant)
+                    and isinstance(kw.value.value, str)
+                ):
                     operation_name = kw.value.value
-            if None not in (method, expected_status, error_cls_name, operation_name):
+            if (
+                method is not None
+                and expected_status is not None
+                and error_cls_name is not None
+                and operation_name is not None
+            ):
                 return RestCallMetadata(
                     method=method,
                     expected_status=expected_status,

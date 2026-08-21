@@ -7,8 +7,6 @@ All tests use tmp_path — no schema download or full generation run required.
 import textwrap
 from pathlib import Path
 
-import pytest
-
 from scripts.generation.fixup import (
     _dedupe_top_level_function_names,
     _fix_wildcard_exports,
@@ -17,7 +15,6 @@ from scripts.generation.fixup import (
     _rebuild_models_init,
     fix_generated_service,
 )
-
 
 # ---------------------------------------------------------------------------
 # _rebuild_models_init
@@ -122,10 +119,7 @@ def test_patch_auth_header(tmp_path):
 def test_patch_import_alias(tmp_path):
     svc = _make_service_dir(tmp_path)
     f = svc / "DeviceService.py"
-    f.write_text(
-        "from ..api_config import APIConfig, HTTPException\n"
-        "def foo(): pass\n"
-    )
+    f.write_text("from ..api_config import APIConfig, HTTPException\ndef foo(): pass\n")
 
     _patch_service_files(tmp_path, set())
 
@@ -178,10 +172,16 @@ def test_normalize_docstrings_flattens_indentation():
     result = _normalize_triple_quoted_docstrings(content)
 
     # Both lines should end up at the same indent — the extra-deep line is flattened
-    lines = [l for l in result.splitlines() if l.strip() in ("Deeply indented.", "More deeply.")]
+    lines = [
+        ln
+        for ln in result.splitlines()
+        if ln.strip() in ("Deeply indented.", "More deeply.")
+    ]
     assert len(lines) == 2
     assert lines[0].startswith(" " * 8)  # class body (4) + inner (4)
-    assert lines[0].rstrip() == lines[1].rstrip().replace("More deeply.", "Deeply indented.")
+    assert lines[0].rstrip() == lines[1].rstrip().replace(
+        "More deeply.", "Deeply indented."
+    )
 
 
 def test_normalize_docstrings_leaves_single_line_untouched():
@@ -225,6 +225,7 @@ def test_fix_generated_service_smoke(tmp_path):
     fix_generated_service(tmp_path)
 
     assert "Device as Device" in (models / "__init__.py").read_text()
-    assert "from kentik_api.core.api_config import APIConfig" in (
-        services / "DeviceService.py"
-    ).read_text()
+    assert (
+        "from kentik_api.core.api_config import APIConfig"
+        in (services / "DeviceService.py").read_text()
+    )

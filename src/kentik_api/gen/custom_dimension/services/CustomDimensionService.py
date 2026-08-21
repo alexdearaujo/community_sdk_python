@@ -88,7 +88,10 @@ def GetCustomDimensionInfo(
 
 
 def UpdateCustomDimension(
-    api_config_override: Optional[APIConfig] = None, *, customDimensionId: str
+    api_config_override: Optional[APIConfig] = None,
+    *,
+    customDimensionId: str,
+    data: CustomDimension,
 ) -> UpdateCustomDimensionResponse:
     query_params: Dict[str, Any] = {}
 
@@ -99,6 +102,7 @@ def UpdateCustomDimension(
         path=f"/custom_dimensions/v202411alpha1/{customDimensionId}",
         api_config_override=api_config_override,
         query_params=query_params,
+        json_body=data.model_dump(),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateCustomDimension",
@@ -138,7 +142,10 @@ def DeleteCustomDimension(
 
 
 def CreatePopulator(
-    api_config_override: Optional[APIConfig] = None, *, customDimensionId: str
+    api_config_override: Optional[APIConfig] = None,
+    *,
+    customDimensionId: str,
+    data: Populator,
 ) -> CreatePopulatorResponse:
     query_params: Dict[str, Any] = {}
 
@@ -149,6 +156,7 @@ def CreatePopulator(
         path=f"/custom_dimensions/v202411alpha1/{customDimensionId}/populator",
         api_config_override=api_config_override,
         query_params=query_params,
+        json_body=data.model_dump(),
         header_params=header_params,
         expected_status=200,
         operation_name="CreatePopulator",
@@ -196,6 +204,7 @@ def UpdatePopulator(
     *,
     customDimensionId: str,
     populatorId: str,
+    data: Populator,
 ) -> UpdatePopulatorResponse:
     query_params: Dict[str, Any] = {}
 
@@ -206,6 +215,7 @@ def UpdatePopulator(
         path=f"/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
         api_config_override=api_config_override,
         query_params=query_params,
+        json_body=data.model_dump(),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdatePopulator",
@@ -279,7 +289,7 @@ def GetPopulatorField(
 
 
 def CreateCustomDimension(
-    api_config_override: Optional[APIConfig] = None,
+    api_config_override: Optional[APIConfig] = None, *, data: CustomDimension
 ) -> CreateCustomDimensionResponse:
     query_params: Dict[str, Any] = {}
 
@@ -290,6 +300,7 @@ def CreateCustomDimension(
         path="/v1/customdimension",
         api_config_override=api_config_override,
         query_params=query_params,
+        json_body=data.model_dump(),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateCustomDimension",

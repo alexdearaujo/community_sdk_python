@@ -354,8 +354,8 @@ def _render_example_snippet(
     lines = [
         "from kentik_api.client import KentikAPI",
         "",
-        "# Both transports work: protocol=\"rest\" (default) or protocol=\"grpc\".",
-        "client = KentikAPI(protocol=\"rest\")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env",
+        '# Both transports work: protocol="rest" (default) or protocol="grpc".',
+        'client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env',
     ]
     if required_params:
         lines.append(f"response = client.{service}.{method_name}(")
@@ -389,7 +389,9 @@ def _render_operation_sequence_diagram(
 
     # gRPC request class follows the convention {OperationId}Request where OperationId
     # comes from the HTTP method + path, so we derive it from the swagger operationId.
-    grpc_req_class = f"{doc.operation_id}Request" if doc.operation_id != "-" else "Request"
+    grpc_req_class = (
+        f"{doc.operation_id}Request" if doc.operation_id != "-" else "Request"
+    )
 
     rest_diagram = [
         "**REST transport**",
@@ -828,9 +830,7 @@ def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
         # Use space-content-space for filled cells; single space for empty ones so
         # markdownlint doesn't flag the double-space |  | pattern.
         desc_cell = f" {blurb} " if blurb else " "
-        readme_rows.append(
-            f"| {title} | [{service}.md]({service}.md) |{desc_cell}|"
-        )
+        readme_rows.append(f"| {title} | [{service}.md]({service}.md) |{desc_cell}|")
 
     readme_content = "\n".join(
         [

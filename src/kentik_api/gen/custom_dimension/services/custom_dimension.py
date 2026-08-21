@@ -87,19 +87,26 @@ class CustomDimensionServiceWrapper:
             )
 
     def update_custom_dimension(
-        self, *, customDimensionId: str
+        self,
+        *,
+        customDimensionId: str,
+        data: rest_models.CustomDimension,
     ) -> rest_models.UpdateCustomDimensionResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update(
                 {
                     k: v
                     for k, v in {"customDimensionId": customDimensionId}.items()
                     if v is not None
-                },
+                }
+            )
+            _req = ParseDict(
+                _req_dict,
                 self._grpc_pb2_1.UpdateCustomDimensionRequest(),
                 ignore_unknown_fields=True,
             )
@@ -112,6 +119,7 @@ class CustomDimensionServiceWrapper:
             return RestCustomDimensionModule1.UpdateCustomDimension(
                 api_config_override=rest_transport.api_config,
                 customDimensionId=customDimensionId,
+                data=data,
             )
         else:
             raise TypeError(
@@ -151,19 +159,26 @@ class CustomDimensionServiceWrapper:
             )
 
     def create_populator(
-        self, *, customDimensionId: str
+        self,
+        *,
+        customDimensionId: str,
+        data: rest_models.Populator,
     ) -> rest_models.CreatePopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update(
                 {
                     k: v
                     for k, v in {"customDimensionId": customDimensionId}.items()
                     if v is not None
-                },
+                }
+            )
+            _req = ParseDict(
+                _req_dict,
                 self._grpc_pb2_1.CreatePopulatorRequest(),
                 ignore_unknown_fields=True,
             )
@@ -176,6 +191,7 @@ class CustomDimensionServiceWrapper:
             return RestCustomDimensionModule1.CreatePopulator(
                 api_config_override=rest_transport.api_config,
                 customDimensionId=customDimensionId,
+                data=data,
             )
         else:
             raise TypeError(
@@ -227,13 +243,15 @@ class CustomDimensionServiceWrapper:
         *,
         customDimensionId: str,
         populatorId: str,
+        data: rest_models.Populator,
     ) -> rest_models.UpdatePopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
+            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict.update(
                 {
                     k: v
                     for k, v in {
@@ -241,7 +259,10 @@ class CustomDimensionServiceWrapper:
                         "populatorId": populatorId,
                     }.items()
                     if v is not None
-                },
+                }
+            )
+            _req = ParseDict(
+                _req_dict,
                 self._grpc_pb2_1.UpdatePopulatorRequest(),
                 ignore_unknown_fields=True,
             )
@@ -255,6 +276,7 @@ class CustomDimensionServiceWrapper:
                 api_config_override=rest_transport.api_config,
                 customDimensionId=customDimensionId,
                 populatorId=populatorId,
+                data=data,
             )
         else:
             raise TypeError(
@@ -349,14 +371,18 @@ class CustomDimensionServiceWrapper:
             )
 
     def create_custom_dimension(
-        self,
+        self, *, data: rest_models.CustomDimension
     ) -> rest_models.CreateCustomDimensionResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = self._grpc_pb2_1.CreateCustomDimensionRequest()
+            _req = ParseDict(
+                data.model_dump(by_alias=True, exclude_none=True),
+                self._grpc_pb2_1.CreateCustomDimensionRequest(),
+                ignore_unknown_fields=True,
+            )
             _resp = call_grpc(self._grpc_stub_1.CreateCustomDimension, _req)
             return rest_models.CreateCustomDimensionResponse.model_validate(
                 MessageToDict(_resp)
@@ -364,7 +390,7 @@ class CustomDimensionServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCustomDimensionModule1.CreateCustomDimension(
-                api_config_override=rest_transport.api_config
+                api_config_override=rest_transport.api_config, data=data
             )
         else:
             raise TypeError(

@@ -51,7 +51,7 @@ def ListCustomApplications(
 
 
 def CreateCustomApplication(
-    api_config_override: Optional[APIConfig] = None,
+    api_config_override: Optional[APIConfig] = None, *, data: CustomApplication
 ) -> CreateCustomApplicationResponse:
     query_params: Dict[str, Any] = {}
 
@@ -62,6 +62,7 @@ def CreateCustomApplication(
         path="/custom_application/v202501alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
+        json_body=data.model_dump(),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateCustomApplication",
@@ -101,7 +102,10 @@ def GetCustomApplication(
 
 
 def UpdateCustomApplication(
-    api_config_override: Optional[APIConfig] = None, *, customApplicationId: str
+    api_config_override: Optional[APIConfig] = None,
+    *,
+    customApplicationId: str,
+    data: CustomApplication,
 ) -> UpdateCustomApplicationResponse:
     query_params: Dict[str, Any] = {}
 
@@ -112,6 +116,7 @@ def UpdateCustomApplication(
         path=f"/custom_application/v202501alpha1/{customApplicationId}",
         api_config_override=api_config_override,
         query_params=query_params,
+        json_body=data.model_dump(),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateCustomApplication",

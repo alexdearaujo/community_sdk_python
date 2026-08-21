@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from scripts.generation.error_package import (
+    OperationErrorMetadata,
     collect_operation_error_responses,
     generate_service_error_package,
     inject_service_error_handling,
@@ -79,14 +80,14 @@ def test_collect_operation_error_responses_skips_operations_without_errors(
 
 
 def test_merge_operation_error_responses_combines_responses_across_files():
-    first = {
+    first: dict[str, OperationErrorMetadata] = {
         "ListDevices": {
             "path": "/devices",
             "method": "GET",
             "responses": {"404": {"description": "not found", "schema_ref": None}},
         }
     }
-    second = {
+    second: dict[str, OperationErrorMetadata] = {
         "ListDevices": {
             "path": "/devices",
             "method": "GET",
