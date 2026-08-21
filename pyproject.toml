@@ -1,10 +1,10 @@
 [project]
 name = "kentik-api"
-version = "2.0.0"
+dynamic = ["version"]
 description = "The modern Python SDK for the Kentik API v6"
 readme = "README.md"
 requires-python = ">=3.12"
-license = "MIT"
+license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [
     { name = "Alex DeAraujo", email = "adearaujo@kentik.com" }
@@ -38,8 +38,14 @@ Repository = "https://github.com/kentik/community_sdk_python"
 "Changelog" = "https://github.com/kentik/community_sdk_python/releases"
 
 [build-system]
-requires = ["uv_build>=0.10.9,<0.13.0"]
-build-backend = "uv_build"
+requires = ["hatchling>=1.20.0", "hatch-vcs>=0.4.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kentik_api"]
 
 [dependency-groups]
 dev = [

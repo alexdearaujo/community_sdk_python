@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # hatch-vcs needs full history to read the tag
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
@@ -27,9 +29,6 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-latest
-    environment: pypi
-    permissions:
-      id-token: write  # required for OIDC Trusted Publishing
     steps:
       - name: Download dist artifacts
         uses: actions/download-artifact@v4
@@ -39,3 +38,5 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
