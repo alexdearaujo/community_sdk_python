@@ -32,10 +32,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1 = None
 
     def list_devices(
-        self,
-        *,
-        querynoCustomColumns: Optional[bool] = None,
-        view: Optional[str] = None,
+        self, *, querynoCustomColumns: Optional[bool] = None, view: Optional[str] = None
     ) -> rest_models.ListDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -175,10 +172,7 @@ class DeviceServiceWrapper:
             )
 
     def get_device_by_name(
-        self,
-        *,
-        deviceName: str,
-        querynoCustomColumns: Optional[bool] = None,
+        self, *, deviceName: str, querynoCustomColumns: Optional[bool] = None
     ) -> rest_models.GetDeviceByNameResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -214,10 +208,7 @@ class DeviceServiceWrapper:
             )
 
     def get_device(
-        self,
-        *,
-        deviceid: str,
-        querynoCustomColumns: Optional[bool] = None,
+        self, *, deviceid: str, querynoCustomColumns: Optional[bool] = None
     ) -> rest_models.GetDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -251,10 +242,7 @@ class DeviceServiceWrapper:
             )
 
     def update_device(
-        self,
-        *,
-        deviceid: str,
-        data: rest_models.DeviceServiceUpdateDeviceBody,
+        self, *, deviceid: str, data: rest_models.DeviceServiceUpdateDeviceBody
     ) -> rest_models.UpdateDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -308,10 +296,7 @@ class DeviceServiceWrapper:
             )
 
     def update_device_labels(
-        self,
-        *,
-        id: str,
-        data: rest_models.DeviceServiceUpdateDeviceLabelsBody,
+        self, *, id: str, data: rest_models.DeviceServiceUpdateDeviceLabelsBody
     ) -> rest_models.UpdateDeviceLabelsResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

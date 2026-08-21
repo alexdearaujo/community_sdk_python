@@ -87,10 +87,7 @@ class CustomDimensionServiceWrapper:
             )
 
     def update_custom_dimension(
-        self,
-        *,
-        customDimensionId: str,
-        data: rest_models.CustomDimension,
+        self, *, customDimensionId: str, data: rest_models.CustomDimension
     ) -> rest_models.UpdateCustomDimensionResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -159,10 +156,7 @@ class CustomDimensionServiceWrapper:
             )
 
     def create_populator(
-        self,
-        *,
-        customDimensionId: str,
-        data: rest_models.Populator,
+        self, *, customDimensionId: str, data: rest_models.Populator
     ) -> rest_models.CreatePopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -239,11 +233,7 @@ class CustomDimensionServiceWrapper:
             )
 
     def update_populator(
-        self,
-        *,
-        customDimensionId: str,
-        populatorId: str,
-        data: rest_models.Populator,
+        self, *, customDimensionId: str, populatorId: str, data: rest_models.Populator
     ) -> rest_models.UpdatePopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -284,10 +274,7 @@ class CustomDimensionServiceWrapper:
             )
 
     def delete_populator(
-        self,
-        *,
-        customDimensionId: str,
-        populatorId: str,
+        self, *, customDimensionId: str, populatorId: str
     ) -> rest_models.DeletePopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

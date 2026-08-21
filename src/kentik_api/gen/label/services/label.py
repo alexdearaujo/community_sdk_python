@@ -78,10 +78,7 @@ class LabelServiceWrapper:
             )
 
     def update_label(
-        self,
-        *,
-        id: str,
-        data: rest_models.LabelServiceUpdateLabelBody,
+        self, *, id: str, data: rest_models.LabelServiceUpdateLabelBody
     ) -> rest_models.UpdateLabelResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

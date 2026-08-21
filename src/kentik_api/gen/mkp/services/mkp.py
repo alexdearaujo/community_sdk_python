@@ -104,10 +104,7 @@ class MkpServiceWrapper:
             )
 
     def package_update(
-        self,
-        *,
-        id: str,
-        data: rest_models.PackageServiceUpdatePackageBody,
+        self, *, id: str, data: rest_models.PackageServiceUpdatePackageBody
     ) -> rest_models.UpdatePackageResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -188,10 +185,7 @@ class MkpServiceWrapper:
             )
 
     def tenant_update(
-        self,
-        *,
-        id: str,
-        data: rest_models.TenantServiceUpdateTenantBody,
+        self, *, id: str, data: rest_models.TenantServiceUpdateTenantBody
     ) -> rest_models.UpdateTenantResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -238,10 +232,7 @@ class MkpServiceWrapper:
             )
 
     def tenant_user_create(
-        self,
-        *,
-        tenantId: str,
-        data: rest_models.TenantUserServiceCreateTenantUserBody,
+        self, *, tenantId: str, data: rest_models.TenantUserServiceCreateTenantUserBody
     ) -> rest_models.CreateTenantUserResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(

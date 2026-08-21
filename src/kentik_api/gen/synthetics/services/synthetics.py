@@ -45,9 +45,7 @@ class SyntheticsServiceWrapper:
                 self._grpc_stub_2 = None
 
     def list_agent_alerts(
-        self,
-        *,
-        agentIds: Optional[List[str]] = None,
+        self, *, agentIds: Optional[List[str]] = None
     ) -> rest_models.ListAgentAlertsResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_2 is None:
@@ -126,10 +124,7 @@ class SyntheticsServiceWrapper:
             )
 
     def update_agent_alert(
-        self,
-        *,
-        id: str,
-        data: rest_models.SyntheticsAdminServiceUpdateAgentAlertBody,
+        self, *, id: str, data: rest_models.SyntheticsAdminServiceUpdateAgentAlertBody
     ) -> rest_models.UpdateAgentAlertResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_2 is None:
@@ -227,10 +222,7 @@ class SyntheticsServiceWrapper:
             )
 
     def update_agent(
-        self,
-        *,
-        agentid: str,
-        data: rest_models.SyntheticsAdminServiceUpdateAgentBody,
+        self, *, agentid: str, data: rest_models.SyntheticsAdminServiceUpdateAgentBody
     ) -> rest_models.UpdateAgentResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_2 is None:
@@ -353,10 +345,7 @@ class SyntheticsServiceWrapper:
             )
 
     def update_test(
-        self,
-        *,
-        id: str,
-        data: rest_models.SyntheticsAdminServiceUpdateTestBody,
+        self, *, id: str, data: rest_models.SyntheticsAdminServiceUpdateTestBody
     ) -> rest_models.UpdateTestResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_2 is None:
@@ -406,10 +395,7 @@ class SyntheticsServiceWrapper:
             )
 
     def set_test_status(
-        self,
-        *,
-        id: str,
-        data: rest_models.SyntheticsAdminServiceSetTestStatusBody,
+        self, *, id: str, data: rest_models.SyntheticsAdminServiceSetTestStatusBody
     ) -> rest_models.SetTestStatusResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_2 is None:
@@ -465,9 +451,7 @@ class SyntheticsServiceWrapper:
             )
 
     def get_results_for_tests_csv(
-        self,
-        *,
-        data: rest_models.GetResultsForTestsCsvRequest,
+        self, *, data: rest_models.GetResultsForTestsCsvRequest
     ) -> rest_models.GetResultsForTestsCsvResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

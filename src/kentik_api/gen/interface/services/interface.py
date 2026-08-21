@@ -118,10 +118,7 @@ class InterfaceServiceWrapper:
             )
 
     def interface_update(
-        self,
-        *,
-        id: str,
-        data: rest_models.InterfaceServiceUpdateInterfaceBody,
+        self, *, id: str, data: rest_models.InterfaceServiceUpdateInterfaceBody
     ) -> rest_models.UpdateInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(

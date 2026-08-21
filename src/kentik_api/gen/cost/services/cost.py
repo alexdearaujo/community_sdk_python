@@ -82,10 +82,7 @@ class CostServiceWrapper:
             )
 
     def get_cost_provider_summary(
-        self,
-        *,
-        id: str,
-        date: Optional[str] = None,
+        self, *, id: str, date: Optional[str] = None
     ) -> rest_models.GetCostProviderSummaryResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

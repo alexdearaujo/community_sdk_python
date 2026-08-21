@@ -116,10 +116,7 @@ class BgpMonitoringServiceWrapper:
             )
 
     def update_monitor(
-        self,
-        *,
-        id: str,
-        data: rest_models.BgpMonitoringAdminServiceUpdateMonitorBody,
+        self, *, id: str, data: rest_models.BgpMonitoringAdminServiceUpdateMonitorBody
     ) -> rest_models.UpdateMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

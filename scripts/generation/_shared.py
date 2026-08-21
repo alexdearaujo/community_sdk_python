@@ -122,7 +122,11 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
                             elif isinstance(part, ast.FormattedValue):
                                 parts.append(f"{{{ast.unparse(part.value)}}}")
                         path_val = "".join(parts)
-                elif kw.arg == "expected_status" and isinstance(kw.value, ast.Constant) and isinstance(kw.value.value, int):
+                elif (
+                    kw.arg == "expected_status"
+                    and isinstance(kw.value, ast.Constant)
+                    and isinstance(kw.value.value, int)
+                ):
                     expected_status = kw.value.value
                 elif kw.arg == "error_cls" and isinstance(kw.value, ast.Name):
                     error_cls_name = kw.value.id

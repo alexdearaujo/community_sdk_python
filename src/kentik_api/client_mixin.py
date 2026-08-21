@@ -29,6 +29,7 @@ from kentik_api.gen.enrichments.services.enrichments import EnrichmentsServiceWr
 from kentik_api.gen.flow_tag.services.flow_tag import FlowTagServiceWrapper
 from kentik_api.gen.interface.services.interface import InterfaceServiceWrapper
 from kentik_api.gen.journeys.services.journeys import JourneysServiceWrapper
+from kentik_api.gen.kagent.services.kagent import KagentServiceWrapper
 from kentik_api.gen.kmi.services.kmi import KmiServiceWrapper
 from kentik_api.gen.ktbgp.services.ktbgp import KtbgpServiceWrapper
 from kentik_api.gen.label.services.label import LabelServiceWrapper
@@ -78,6 +79,7 @@ class KentikClientMixin:
         flow_tag: "FlowTagServiceWrapper"
         interface: "InterfaceServiceWrapper"
         journeys: "JourneysServiceWrapper"
+        kagent: "KagentServiceWrapper"
         kmi: "KmiServiceWrapper"
         ktbgp: "KtbgpServiceWrapper"
         label: "LabelServiceWrapper"
@@ -113,6 +115,7 @@ class KentikClientMixin:
         self.flow_tag = FlowTagServiceWrapper(self._transport)
         self.interface = InterfaceServiceWrapper(self._transport)
         self.journeys = JourneysServiceWrapper(self._transport)
+        self.kagent = KagentServiceWrapper(self._transport)
         self.kmi = KmiServiceWrapper(self._transport)
         self.ktbgp = KtbgpServiceWrapper(self._transport)
         self.label = LabelServiceWrapper(self._transport)

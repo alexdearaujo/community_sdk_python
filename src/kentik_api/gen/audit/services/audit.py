@@ -77,10 +77,7 @@ class AuditServiceWrapper:
             )
 
     def get_audit_event(
-        self,
-        *,
-        id: str,
-        ctime: Optional[str] = None,
+        self, *, id: str, ctime: Optional[str] = None
     ) -> rest_models.GetAuditEventResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

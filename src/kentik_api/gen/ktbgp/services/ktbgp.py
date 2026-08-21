@@ -29,9 +29,7 @@ class KtbgpServiceWrapper:
                 self._grpc_stub_1 = None
 
     def route_service__announce(
-        self,
-        *,
-        data: rest_models.RouteServiceAnnounceRequest,
+        self, *, data: rest_models.RouteServiceAnnounceRequest
     ) -> rest_models.RouteServiceAnnounceResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -65,9 +63,7 @@ class KtbgpServiceWrapper:
             )
 
     def route_service__withdraw(
-        self,
-        *,
-        data: rest_models.RouteServiceWithdrawRequest,
+        self, *, data: rest_models.RouteServiceWithdrawRequest
     ) -> rest_models.RouteServiceWithdrawResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(

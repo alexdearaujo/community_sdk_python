@@ -107,10 +107,7 @@ class SiteServiceWrapper:
             )
 
     def update_site_market(
-        self,
-        *,
-        id: str,
-        data: rest_models.SiteServiceUpdateSiteMarketBody,
+        self, *, id: str, data: rest_models.SiteServiceUpdateSiteMarketBody
     ) -> rest_models.UpdateSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -233,10 +230,7 @@ class SiteServiceWrapper:
             )
 
     def update_site(
-        self,
-        *,
-        id: str,
-        data: rest_models.SiteServiceUpdateSiteBody,
+        self, *, id: str, data: rest_models.SiteServiceUpdateSiteBody
     ) -> rest_models.UpdateSiteResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

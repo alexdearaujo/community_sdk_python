@@ -113,9 +113,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_7 = None
 
     def create(
-        self,
-        *,
-        data: rest_models.AlertAutoAckServiceCreateRequest,
+        self, *, data: rest_models.AlertAutoAckServiceCreateRequest
     ) -> rest_models.AlertAutoAckServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -142,9 +140,7 @@ class AlertingServiceWrapper:
             )
 
     def list(
-        self,
-        *,
-        data: rest_models.AlertAutoAckServiceListRequest,
+        self, *, data: rest_models.AlertAutoAckServiceListRequest
     ) -> rest_models.AlertAutoAckServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -223,10 +219,7 @@ class AlertingServiceWrapper:
             )
 
     def replace(
-        self,
-        *,
-        autoAckid: str,
-        data: rest_models.AlertAutoAckServiceReplaceBody,
+        self, *, autoAckid: str, data: rest_models.AlertAutoAckServiceReplaceBody
     ) -> rest_models.AlertAutoAckServiceReplaceResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -340,10 +333,7 @@ class AlertingServiceWrapper:
             )
 
     def add_comment(
-        self,
-        *,
-        alertId: str,
-        data: rest_models.AlertServiceAddCommentBody,
+        self, *, alertId: str, data: rest_models.AlertServiceAddCommentBody
     ) -> rest_models.AlertServiceAddCommentResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -376,10 +366,7 @@ class AlertingServiceWrapper:
             )
 
     def set_external_context(
-        self,
-        *,
-        alertId: str,
-        data: rest_models.AlertServiceSetExternalContextBody,
+        self, *, alertId: str, data: rest_models.AlertServiceSetExternalContextBody
     ) -> rest_models.AlertServiceSetExternalContextResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -437,10 +424,7 @@ class AlertingServiceWrapper:
             )
 
     def ack(
-        self,
-        *,
-        id: str,
-        data: rest_models.AlertServiceAckBody,
+        self, *, id: str, data: rest_models.AlertServiceAckBody
     ) -> rest_models.AlertServiceAckResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -469,10 +453,7 @@ class AlertingServiceWrapper:
             )
 
     def un_ack(
-        self,
-        *,
-        id: str,
-        data: rest_models.AlertServiceUnAckBody,
+        self, *, id: str, data: rest_models.AlertServiceUnAckBody
     ) -> rest_models.AlertServiceUnAckResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -501,9 +482,7 @@ class AlertingServiceWrapper:
             )
 
     def alert_silence_notifications_create(
-        self,
-        *,
-        data: rest_models.AlertSilenceNotificationsServiceCreateRequest,
+        self, *, data: rest_models.AlertSilenceNotificationsServiceCreateRequest
     ) -> rest_models.AlertSilenceNotificationsServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -530,9 +509,7 @@ class AlertingServiceWrapper:
             )
 
     def alert_silence_notifications_list(
-        self,
-        *,
-        data: rest_models.AlertSilenceNotificationsServiceListRequest,
+        self, *, data: rest_models.AlertSilenceNotificationsServiceListRequest
     ) -> rest_models.AlertSilenceNotificationsServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -617,10 +594,7 @@ class AlertingServiceWrapper:
             )
 
     def alert_silence_notifications_replace(
-        self,
-        *,
-        id: str,
-        data: rest_models.AlertSilenceNotificationsServiceReplaceBody,
+        self, *, id: str, data: rest_models.AlertSilenceNotificationsServiceReplaceBody
     ) -> rest_models.AlertSilenceNotificationsServiceReplaceResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -895,9 +869,7 @@ class AlertingServiceWrapper:
             )
 
     def mitigations_create(
-        self,
-        *,
-        data: rest_models.MitigationsServiceCreateRequest,
+        self, *, data: rest_models.MitigationsServiceCreateRequest
     ) -> rest_models.MitigationsServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -968,10 +940,7 @@ class AlertingServiceWrapper:
             )
 
     def act(
-        self,
-        *,
-        action: str,
-        data: rest_models.MitigationsServiceActBody,
+        self, *, action: str, data: rest_models.MitigationsServiceActBody
     ) -> rest_models.MitigationsServiceActResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -1065,11 +1034,7 @@ class AlertingServiceWrapper:
             )
 
     def disable(
-        self,
-        *,
-        policyType: str,
-        id: str,
-        data: rest_models.PolicyServiceDisableBody,
+        self, *, policyType: str, id: str, data: rest_models.PolicyServiceDisableBody
     ) -> rest_models.PolicyServiceDisableResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_5 is None:
@@ -1107,11 +1072,7 @@ class AlertingServiceWrapper:
             )
 
     def enable(
-        self,
-        *,
-        policyType: str,
-        id: str,
-        data: rest_models.PolicyServiceEnableBody,
+        self, *, policyType: str, id: str, data: rest_models.PolicyServiceEnableBody
     ) -> rest_models.PolicyServiceEnableResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_5 is None:
@@ -1149,9 +1110,7 @@ class AlertingServiceWrapper:
             )
 
     def suppression_create(
-        self,
-        *,
-        data: rest_models.SuppressionServiceCreateRequest,
+        self, *, data: rest_models.SuppressionServiceCreateRequest
     ) -> rest_models.SuppressionServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -1178,9 +1137,7 @@ class AlertingServiceWrapper:
             )
 
     def suppression_list(
-        self,
-        *,
-        data: rest_models.SuppressionServiceListRequest,
+        self, *, data: rest_models.SuppressionServiceListRequest
     ) -> rest_models.SuppressionServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:
@@ -1259,10 +1216,7 @@ class AlertingServiceWrapper:
             )
 
     def suppression_replace(
-        self,
-        *,
-        id: str,
-        data: rest_models.SuppressionServiceReplaceBody,
+        self, *, id: str, data: rest_models.SuppressionServiceReplaceBody
     ) -> rest_models.SuppressionServiceReplaceResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_7 is None:

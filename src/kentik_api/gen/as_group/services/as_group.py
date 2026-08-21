@@ -103,10 +103,7 @@ class AsGroupServiceWrapper:
             )
 
     def update_a_s_group(
-        self,
-        *,
-        asGroupid: str,
-        data: rest_models.ASGroupServiceUpdateASGroupBody,
+        self, *, asGroupid: str, data: rest_models.ASGroupServiceUpdateASGroupBody
     ) -> rest_models.UpdateASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

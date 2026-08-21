@@ -132,10 +132,7 @@ class AssetTagsServiceWrapper:
             )
 
     def update_tag_key(
-        self,
-        *,
-        id: str,
-        data: rest_models.AssetTagsServiceUpdateTagKeyBody,
+        self, *, id: str, data: rest_models.AssetTagsServiceUpdateTagKeyBody
     ) -> rest_models.UpdateTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

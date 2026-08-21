@@ -101,10 +101,7 @@ class UserServiceWrapper:
             )
 
     def update_user(
-        self,
-        *,
-        id: str,
-        data: rest_models.UserServiceUpdateUserBody,
+        self, *, id: str, data: rest_models.UserServiceUpdateUserBody
     ) -> rest_models.UpdateUserResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

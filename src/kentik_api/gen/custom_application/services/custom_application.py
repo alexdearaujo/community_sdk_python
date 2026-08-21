@@ -114,10 +114,7 @@ class CustomApplicationServiceWrapper:
             )
 
     def update_custom_application(
-        self,
-        *,
-        customApplicationId: str,
-        data: rest_models.CustomApplication,
+        self, *, customApplicationId: str, data: rest_models.CustomApplication
     ) -> rest_models.UpdateCustomApplicationResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

@@ -55,9 +55,7 @@ class NotificationChannelServiceWrapper:
             )
 
     def search_notification_channels(
-        self,
-        *,
-        data: rest_models.SearchNotificationChannelsRequest,
+        self, *, data: rest_models.SearchNotificationChannelsRequest
     ) -> rest_models.SearchNotificationChannelsResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

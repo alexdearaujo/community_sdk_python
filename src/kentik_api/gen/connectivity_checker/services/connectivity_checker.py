@@ -32,9 +32,7 @@ class ConnectivityCheckerServiceWrapper:
                 self._grpc_stub_1 = None
 
     def create_connectivity_report(
-        self,
-        *,
-        data: rest_models.CreateConnectivityReportRequest,
+        self, *, data: rest_models.CreateConnectivityReportRequest
     ) -> rest_models.CreateConnectivityReportResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:

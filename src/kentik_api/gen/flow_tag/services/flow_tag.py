@@ -130,10 +130,7 @@ class FlowTagServiceWrapper:
             )
 
     def update_flow_tag(
-        self,
-        *,
-        flowTagid: str,
-        data: rest_models.FlowTagServiceUpdateFlowTagBody,
+        self, *, flowTagid: str, data: rest_models.FlowTagServiceUpdateFlowTagBody
     ) -> rest_models.UpdateFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
