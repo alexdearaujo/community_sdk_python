@@ -26,13 +26,13 @@ def map_grpc_error(
     *,
     method: str = "gRPC",
     path: str = "unknown",
-) -> HTTPException:
+) -> AuthenticationError | HTTPException:
     """Maps a gRPC RpcError to the SDK exception hierarchy.
 
     Pure function: no I/O, no side effects. Testable without a gRPC channel.
     """
-    code = exc.code()
-    details = exc.details() or ""
+    code = exc.code()  # ty: ignore[unresolved-attribute]  -- grpcio ships no stubs
+    details = exc.details() or ""  # ty: ignore[unresolved-attribute]
 
     if code == grpc.StatusCode.UNAUTHENTICATED:
         return AuthenticationError(details)

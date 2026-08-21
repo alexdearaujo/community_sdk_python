@@ -1,4 +1,4 @@
-.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e lint clean deep-clean
+.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e lint typecheck clean deep-clean
 
 .DEFAULT_GOAL := all
 
@@ -64,6 +64,11 @@ test-e2e: ## Run end-to-end tests against the REAL Kentik API (opt-in, needs .en
 lint: ## Run linter and formatter (Ruff)
 	$(RUFF) check --fix .
 	$(RUFF) format .
+
+typecheck: ## Type-check hand-written source with ty
+	uv run ty check src/kentik_api/core src/kentik_api/auth src/kentik_api/errors \
+		src/kentik_api/transports src/kentik_api/client.py \
+		scripts/generation scripts/generate_sdk.py
 
 clean: ## Remove generated SDK and build artifacts
 	# Keep project-local customization code (do not remove):

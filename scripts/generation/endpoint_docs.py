@@ -274,8 +274,8 @@ def _parse_wrapper_method_signatures(
         if not isinstance(node, ast.FunctionDef) or node.name == "__init__":
             continue
 
-        alias = None
-        operation_id = None
+        rest_alias: str | None = None
+        operation_id: str | None = None
         for sub in ast.walk(node):
             if (
                 isinstance(sub, ast.Return)
@@ -284,13 +284,13 @@ def _parse_wrapper_method_signatures(
                 and isinstance(sub.value.func.value, ast.Name)
                 and sub.value.func.value.id.startswith("Rest")
             ):
-                alias = sub.value.func.value.id
+                rest_alias = sub.value.func.value.id
                 operation_id = sub.value.func.attr
                 break
-        if alias is None or operation_id is None:
+        if rest_alias is None or operation_id is None:
             continue
 
-        rest_file = module_alias_to_file.get(alias)
+        rest_file = module_alias_to_file.get(rest_alias)
         if rest_file is None:
             continue
         metadata = _rest_function_path_and_method(rest_file, operation_id)

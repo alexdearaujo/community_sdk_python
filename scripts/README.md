@@ -55,6 +55,7 @@ the full regeneration workflow.
 | [`make test`](../Makefile) | Full mocked test suite |
 | `make test-e2e` | Live API tests (opt-in, needs `.env`) |
 | [`make lint`](../Makefile) | Ruff check + format |
+| `make typecheck` | ty type-check on hand-written source |
 | [`make clean`](../Makefile) | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
 
 > [!NOTE]

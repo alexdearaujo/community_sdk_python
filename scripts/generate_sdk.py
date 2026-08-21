@@ -383,8 +383,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
     # -----------------------------------------------------------------
     # 3. POST-PROCESSING (Rest & Models Cleanup)
     # -----------------------------------------------------------------
-    print("
-Patching generated code...")
+    print("\nPatching generated code...")
     for service_dir in SDK_OUTPUT_DIR.iterdir():
         if service_dir.is_dir() and service_dir.name != "__pycache__":
             fixup.fix_generated_service(service_dir)

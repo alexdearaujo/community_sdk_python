@@ -52,6 +52,7 @@ dev = [
     {include-group = "test"},
     {include-group = "docs"},
     "grpcio-tools>=1.78.0",
+    "ty>=0.0.73",
 ]
 
 test = [
@@ -79,3 +80,7 @@ markers = [
     "e2e: end-to-end tests against the real Kentik API. Opt-in only -- excluded by default, run with `-m e2e` or `make test-e2e`. Requires real KENTIK_EMAIL/KENTIK_API_TOKEN in a project-root .env.",
 ]
 addopts = "-m 'not e2e'"
+
+[tool.ty.environment]
+# scripts/ is on sys.path when generate_sdk.py runs as a direct script
+extra-paths = ["scripts"]
