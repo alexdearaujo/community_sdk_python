@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from kentik_api.client import KentikAPI, _REGION_ENDPOINTS
+from kentik_api.client import _REGION_ENDPOINTS, KentikAPI
 
 
 def test_region_endpoints_us_urls():
@@ -49,16 +49,12 @@ def test_smoke_wrapper_call_through_client(monkeypatch):
     try:
         sentinel = object()
 
-        import kentik_api.gen.asset_tags.services.asset_tags as wrapper_module
+        import kentik_api.gen.asset_tags.services.AssetTagsService as asset_tags_rest
 
         def _fake_list_tag_keys(**kwargs):
             return sentinel
 
-        monkeypatch.setattr(
-            wrapper_module.RestAssetTagsModule1,
-            "ListTagKeys",
-            _fake_list_tag_keys,
-        )
+        monkeypatch.setattr(asset_tags_rest, "ListTagKeys", _fake_list_tag_keys)
 
         result = client.asset_tags.list_tag_keys()
         assert result is sentinel
