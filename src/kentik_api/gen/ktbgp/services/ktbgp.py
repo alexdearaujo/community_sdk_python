@@ -1,7 +1,6 @@
 from typing import Union, cast
-
-import kentik_api.gen.ktbgp.services.RouteService as RestKtbgpModule1
 from kentik_api.gen.ktbgp import models as rest_models
+import kentik_api.gen.ktbgp.services.RouteService as RestKtbgpModule1
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 

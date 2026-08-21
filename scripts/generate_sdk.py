@@ -455,8 +455,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
             fixup.fix_generated_service(service_dir)
 
     print("\nFormatting...")
-    run_cmd(["uvx", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)])
-    run_cmd(["uvx", "ruff", "format", str(SDK_OUTPUT_DIR)])
+    run_cmd(
+        ["uv", "run", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)]
+    )
+    run_cmd(["uv", "run", "ruff", "format", str(SDK_OUTPUT_DIR)])
 
     print("\nGenerating Wrappers & Documentation...")
     wrapper_generation.generate()
@@ -464,8 +466,20 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
     endpoint_docs_collector.render()
 
     print("\nFinal formatting pass for generated code...")
-    run_cmd(["uvx", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)])
-    run_cmd(["uvx", "ruff", "format", str(SDK_OUTPUT_DIR)])
+    run_cmd(
+        ["uv", "run", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)]
+    )
+    run_cmd(["uv", "run", "ruff", "format", str(SDK_OUTPUT_DIR)])
+    # client_mixin.py lives outside gen/ but is also fully generated.
+    run_cmd(
+        [
+            "uv",
+            "run",
+            "ruff",
+            "format",
+            str(PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py"),
+        ]
+    )
 
     # Run after ruff so it cannot reorder the header comments.
     _inject_generated_headers(SDK_OUTPUT_DIR)

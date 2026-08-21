@@ -1,12 +1,10 @@
 from typing import Union, cast
-
-from google.protobuf.json_format import MessageToDict, ParseDict
-
-import kentik_api.gen.pathfinder.services.PathfinderAdminService as RestPathfinderModule1
-from kentik_api.core.grpc_runtime import call_grpc
 from kentik_api.gen.pathfinder import models as rest_models
+import kentik_api.gen.pathfinder.services.PathfinderAdminService as RestPathfinderModule1
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
+from google.protobuf.json_format import MessageToDict, ParseDict
+from kentik_api.core.grpc_runtime import call_grpc
 
 
 class PathfinderServiceWrapper:

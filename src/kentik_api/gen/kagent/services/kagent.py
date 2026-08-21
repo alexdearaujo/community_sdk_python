@@ -1,17 +1,15 @@
-from typing import Any, Dict, List, Optional, Union, cast
-
-from google.protobuf.json_format import MessageToDict, ParseDict
-
+from typing import Union, cast, Any, Optional, Dict, List
+from kentik_api.gen.kagent import models as rest_models
 import kentik_api.gen.kagent.services.AgentCapabilityService as RestKagentModule1
 import kentik_api.gen.kagent.services.AgentService as RestKagentModule2
 import kentik_api.gen.kagent.services.CapabilityAdminService as RestKagentModule3
 import kentik_api.gen.kagent.services.CapabilityReleaseService as RestKagentModule4
 import kentik_api.gen.kagent.services.ConfigService as RestKagentModule5
 import kentik_api.gen.kagent.services.ProvisioningTokenService as RestKagentModule6
-from kentik_api.core.grpc_runtime import call_grpc
-from kentik_api.gen.kagent import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
+from google.protobuf.json_format import MessageToDict, ParseDict
+from kentik_api.core.grpc_runtime import call_grpc
 
 
 class KagentServiceWrapper:

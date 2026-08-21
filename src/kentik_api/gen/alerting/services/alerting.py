@@ -1,7 +1,5 @@
-from typing import List, Optional, Union, cast
-
-from google.protobuf.json_format import MessageToDict, ParseDict
-
+from typing import Union, cast, Optional, List
+from kentik_api.gen.alerting import models as rest_models
 import kentik_api.gen.alerting.services.AlertAutoAckService as RestAlertingModule1
 import kentik_api.gen.alerting.services.AlertService as RestAlertingModule2
 import kentik_api.gen.alerting.services.AlertSilenceNotificationsService as RestAlertingModule3
@@ -10,10 +8,10 @@ import kentik_api.gen.alerting.services.MitigationPlatformsService as RestAlerti
 import kentik_api.gen.alerting.services.MitigationsService as RestAlertingModule6
 import kentik_api.gen.alerting.services.PolicyService as RestAlertingModule7
 import kentik_api.gen.alerting.services.SuppressionService as RestAlertingModule8
-from kentik_api.core.grpc_runtime import call_grpc
-from kentik_api.gen.alerting import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
+from google.protobuf.json_format import MessageToDict, ParseDict
+from kentik_api.core.grpc_runtime import call_grpc
 
 
 class AlertingServiceWrapper:
