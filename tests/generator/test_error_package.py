@@ -4,6 +4,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.generation.error_package import (
     collect_operation_error_responses,
     generate_service_error_package,
@@ -147,3 +149,42 @@ def test_inject_service_error_handling_is_noop_without_operation_name():
     content = "def NotAnOperation():\n    return 1\n"
 
     assert inject_service_error_handling(content) == content
+
+
+def test_inject_raises_when_anchor_missing():
+    # operation_id present but the rest_runtime import anchor is absent
+    content = (
+        "def Foo(api_config_override=None):\n"
+        "    return some_other_function(\n"
+        "        operation_name='Foo',\n"
+        "        expected_status=200,\n"
+        "    )\n"
+    )
+
+    with pytest.raises(ValueError, match="rest_runtime"):
+        inject_service_error_handling(content)
+
+
+def test_inject_silent_when_no_operations_and_no_anchor():
+    # no operation_name references and no anchor: guard must not fire
+    content = "def helper():\n    return 42\n"
+
+    assert inject_service_error_handling(content) == content
+
+
+def test_inject_succeeds_when_import_already_present():
+    # error import already injected: anchor is irrelevant, no double-injection
+    content = (
+        "from ..error import FooError\n"
+        "\n"
+        "def Foo(api_config_override=None):\n"
+        "    return request_json(\n"
+        "        operation_name='Foo',\n"
+        "        error_cls=FooError,\n"
+        "        expected_status=200,\n"
+        "    )\n"
+    )
+
+    result = inject_service_error_handling(content)
+
+    assert result.count("from ..error import FooError") == 1

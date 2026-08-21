@@ -336,6 +336,14 @@ def inject_service_error_handling(content: str) -> str:
                 + "\n",
                 1,
             )
+        else:
+            # Anchor missing means rest_runtime was renamed/moved; fail loudly
+            # rather than silently skipping injection and breaking error dispatch.
+            raise ValueError(
+                "inject_service_error_handling: expected runtime import anchor "
+                "'from kentik_api.core.rest_runtime import request_json' not found. "
+                "If rest_runtime was moved or renamed, update this anchor."
+            )
 
     def _inject_into_block(match: re.Match[str]) -> str:
         block = match.group(0)

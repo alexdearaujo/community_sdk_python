@@ -193,7 +193,7 @@ structurally, not just by convention or discipline.
   only *inserts* a toctree line into it if missing — a
   non-destructive append, not an overwrite.
 
-### A fragile coupling worth knowing about
+### A guarded coupling worth knowing about
 
 `error_package.inject_service_error_handling()` wires each freshly
 generated per-service REST module to the shared runtime. It does
@@ -201,8 +201,9 @@ this by string-matching the line `from kentik_api.core.rest_runtime
 import request_json` in the generated file content. It then inserts
 the corresponding `from ..error import ...` line right after it. If
 `request_json` is ever renamed or relocated, or if that exact import
-line's text changes, this injection silently stops firing for every
-service. Update `scripts/generation/error_package.py` in lockstep
+line's text changes, the function now raises `ValueError` immediately
+(when there are operations to inject), rather than silently skipping
+injection. Update `scripts/generation/error_package.py` in lockstep
 with any such rename.
 
 ## Generation pipeline
