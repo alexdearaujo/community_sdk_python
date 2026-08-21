@@ -14,7 +14,9 @@ class RestTransport(BaseTransport):
         credentials: KentikCredentials,
         base_url: str = "https://grpc.api.kentik.com",
     ):
-        self._client = httpx.Client(base_url=base_url, verify=True)
+        self._client = httpx.Client(
+            base_url=base_url, verify=True, timeout=httpx.Timeout(60.0)
+        )
         self.api_config = APIConfig(
             base_path=base_url,
             auth_email=credentials.email,
