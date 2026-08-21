@@ -10,7 +10,7 @@ import ast
 import re
 from pathlib import Path
 
-from ._shared import PROJECT_ROOT, SDK_OUTPUT_DIR
+from ._shared import PROJECT_ROOT, SDK_OUTPUT_DIR, parse_wrapper_methods
 
 _GUIDES_DIR = PROJECT_ROOT / "docs" / "guides"
 
@@ -123,6 +123,33 @@ def _resolve_import_from(current_module: str, level: int, module: str | None) ->
     return ".".join(parts + suffix)
 
 
+# Single source of truth for group labels and their layer assignments.
+# _module_group() returns keys from this dict; _generate_runtime_architecture_docs()
+# derives _LAYERS from it. Adding a new group = one entry here.
+_GROUP_CONFIG: dict[str, str] = {
+    "Client API": "client",
+    "Client Mixin": "client",
+    "Auth Credentials": "foundation",
+    "API Config": "foundation",
+    "REST Runtime": "foundation",
+    "Error Types": "foundation",
+    "Transport Base": "transport",
+    "REST Transport": "transport",
+    "gRPC Transport": "transport",
+    "Generated Service Wrappers": "generated",
+    "Generated REST Services": "generated",
+    "Generated Models": "generated",
+    "Generated Error Classes": "generated",
+}
+
+_LAYER_NAMES: dict[str, str] = {
+    "client": "Client Layer",
+    "generated": "Generated Layer",
+    "transport": "Transport Layer",
+    "foundation": "Shared Foundation",
+}
+
+
 def _module_group(module_name: str, source_file: Path | None = None) -> str | None:
     if module_name == "kentik_api.client":
         return "Client API"
@@ -218,30 +245,19 @@ def _generate_runtime_architecture_docs() -> None:
                 key = (src_group, dst_group)
                 edge_counts[key] = edge_counts.get(key, 0) + 1
 
-    # Layer assignments drive the subgraph layout. Any node not matched here
-    # falls through to an ungrouped declaration at the end.
+    # Layer assignments derived from _GROUP_CONFIG and _LAYER_NAMES.
+    # Any label returned by _module_group that is not in _GROUP_CONFIG will
+    # appear as an ungrouped node — the test_docs_rendering.py coverage check
+    # catches this before it silently breaks the generated diagram.
+    from collections import defaultdict
+
+    layer_members: dict[str, set[str]] = defaultdict(set)
+    for label, layer_key in _GROUP_CONFIG.items():
+        layer_members[layer_key].add(label)
     _LAYERS: list[tuple[str, str, set[str]]] = [
-        ("client", "Client Layer", {"Client API", "Client Mixin"}),
-        (
-            "generated",
-            "Generated Layer",
-            {
-                "Generated Service Wrappers",
-                "Generated REST Services",
-                "Generated Models",
-                "Generated Error Classes",
-            },
-        ),
-        (
-            "transport",
-            "Transport Layer",
-            {"REST Transport", "gRPC Transport", "Transport Base"},
-        ),
-        (
-            "foundation",
-            "Shared Foundation",
-            {"REST Runtime", "API Config", "Error Types", "Auth Credentials"},
-        ),
+        (key, _LAYER_NAMES[key], layer_members[key])
+        for key in _LAYER_NAMES
+        if layer_members[key]
     ]
 
     mermaid_lines = ["flowchart TB"]
@@ -357,66 +373,35 @@ def _discover_example_ops(
         for wrapper_file in sorted(services_folder.glob("*.py")):
             if wrapper_file.name == "__init__.py":
                 continue
-            try:
-                tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
-            except Exception:
-                continue
 
-            for cls_node in ast.walk(tree):
-                if not (
-                    isinstance(cls_node, ast.ClassDef)
-                    and cls_node.name.endswith("ServiceWrapper")
+            for method in parse_wrapper_methods(wrapper_file):
+                if (
+                    len(list_ops) < n_list
+                    and method.name.lower().startswith("list_")
+                    and method.return_type
                 ):
-                    continue
-
-                for method_node in cls_node.body:
-                    if not isinstance(
-                        method_node, ast.FunctionDef
-                    ) or method_node.name.startswith("_"):
-                        continue
-
-                    args = [a for a in method_node.args.args if a.arg != "self"]
-                    # Keyword-only args (after *) are common in generated wrappers.
-                    args = args + list(method_node.args.kwonlyargs)
-                    method_name = method_node.name
-
-                    response_class = ""
-                    if method_node.returns is not None:
-                        try:
-                            raw = _strip_optional(ast.unparse(method_node.returns))
-                            # Strip module prefix (e.g. rest_models.Foo -> Foo)
-                            response_class = raw.rsplit(".", 1)[-1]
-                        except Exception:
-                            pass
-
-                    if (
-                        len(list_ops) < n_list
-                        and method_name.lower().startswith("list_")
-                        and response_class
-                    ):
+                    raw = _strip_optional(method.return_type)
+                    response_class = raw.rsplit(".", 1)[-1]
+                    if response_class:
                         list_ops.append(
                             {
                                 "service": service_name,
-                                "method": method_name,
+                                "method": method.name,
                                 "response_class": response_class,
                             }
                         )
 
-                    if body_op is None:
-                        for arg in args:
-                            if arg.arg == "data" and arg.annotation is not None:
-                                try:
-                                    raw = _strip_optional(ast.unparse(arg.annotation))
-                                    # Strip module prefix (e.g. rest_models.Foo -> Foo)
-                                    request_class = raw.rsplit(".", 1)[-1]
-                                    body_op = {
-                                        "service": service_name,
-                                        "method": method_name,
-                                        "request_class": request_class,
-                                    }
-                                except Exception:
-                                    pass
-                                break
+                if body_op is None and method.has_data_param:
+                    for param_name, annotation, _ in method.params:
+                        if param_name == "data" and annotation:
+                            raw = _strip_optional(annotation)
+                            request_class = raw.rsplit(".", 1)[-1]
+                            body_op = {
+                                "service": service_name,
+                                "method": method.name,
+                                "request_class": request_class,
+                            }
+                            break
 
         if len(list_ops) >= n_list and body_op is not None:
             break

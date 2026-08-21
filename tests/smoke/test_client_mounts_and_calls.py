@@ -1,7 +1,26 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from __future__ import annotations
 
-from kentik_api.client import KentikAPI
+import pytest
+
+from kentik_api.client import KentikAPI, _REGION_ENDPOINTS
+
+
+def test_region_endpoints_us_urls():
+    grpc_target, rest_url = _REGION_ENDPOINTS["us"]
+    assert grpc_target == "grpc.api.kentik.com:443"
+    assert rest_url == "https://grpc.api.kentik.com"
+
+
+def test_region_endpoints_eu_urls():
+    grpc_target, rest_url = _REGION_ENDPOINTS["eu"]
+    assert grpc_target == "grpc.api.kentik.eu:443"
+    assert rest_url == "https://grpc.api.kentik.eu"
+
+
+def test_invalid_region_raises_valueerror():
+    with pytest.raises(ValueError, match="region"):
+        KentikAPI(email="a@b.com", api_token="t", region="apac")
 
 
 def test_client_mounts_selected_services():

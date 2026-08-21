@@ -8,6 +8,12 @@ from kentik_api.client_mixin import KentikClientMixin
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 
+# (grpc_target, rest_base_url) per region name.
+_REGION_ENDPOINTS: dict[str, tuple[str, str]] = {
+    "us": ("grpc.api.kentik.com:443", "https://grpc.api.kentik.com"),
+    "eu": ("grpc.api.kentik.eu:443", "https://grpc.api.kentik.eu"),
+}
+
 
 class KentikAPI(KentikClientMixin):
     def __init__(
@@ -33,15 +39,13 @@ class KentikAPI(KentikClientMixin):
 
         self.credentials = KentikCredentials(email, api_token)
 
-        region = region.lower()
-        if region == "us":
-            grpc_target = "grpc.api.kentik.com:443"
-            rest_base_url = "https://grpc.api.kentik.com"
-        elif region == "eu":
-            grpc_target = "grpc.api.kentik.eu:443"
-            rest_base_url = "https://grpc.api.kentik.eu"
-        else:
-            raise ValueError(f"Invalid region '{region}'. Must be 'us' or 'eu'.")
+        try:
+            grpc_target, rest_base_url = _REGION_ENDPOINTS[region.lower()]
+        except KeyError:
+            valid = ", ".join(f"'{r}'" for r in _REGION_ENDPOINTS)
+            raise ValueError(
+                f"Invalid region '{region}'. Must be one of: {valid}."
+            ) from None
 
         if protocol.lower() == "grpc":
             self._transport = GrpcTransport(self.credentials, target=grpc_target)

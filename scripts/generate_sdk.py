@@ -79,8 +79,35 @@ def get_schema_root(repo_source: str):
         yield local_path
 
 
+def _rewrite_grpc_imports(content: str) -> str:
+    """Rewrites package-style pb2 imports to local relative imports.
+
+    grpc_tools.protoc can emit any of three import styles depending on version
+    and input layout. All three must become `from . import` so the compiled
+    files are importable from within the flattened pb/ directory.
+    """
+    # bare: `import foo_pb2`
+    content = re.sub(
+        r"^import (\w+_pb2)", r"from . import \1", content, flags=re.MULTILINE
+    )
+    # parenthesised from-import: `from pkg import (foo_pb2 as alias,)`
+    content = re.sub(
+        r"^from [\w\.]+ import \(\s*(\w+_pb2) as ([\w_]+),\s*\)$",
+        r"from . import \1 as \2",
+        content,
+        flags=re.MULTILINE,
+    )
+    # unparenthesised from-import: `from pkg import foo_pb2 as alias`
+    content = re.sub(
+        r"^from [\w\.]+ import (\w+_pb2) as ([\w_]+)$",
+        r"from . import \1 as \2",
+        content,
+        flags=re.MULTILINE,
+    )
+    return content
+
+
 def clean_schema_names(schema: dict, version: str) -> dict:
-    """Returns a copy of schema with version prefixes stripped from $refs and definition keys."""
     import copy
 
     schema = copy.deepcopy(schema)
@@ -395,29 +422,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
 
                                 for pb_file in pb_dir.rglob("*_grpc.py"):
                                     content = pb_file.read_text(encoding="utf-8")
-                                    # grpc_tools can emit either local-style imports:
-                                    #   import foo_pb2
-                                    # or package-style imports:
-                                    #   from kentik.service.version import (foo_pb2 as alias,)
-                                    # We flatten generated files into pb/, so both must become local imports.
-                                    content = re.sub(
-                                        r"^import (\w+_pb2)",
-                                        r"from . import \1",
-                                        content,
-                                        flags=re.MULTILINE,
-                                    )
-                                    content = re.sub(
-                                        r"^from [\w\.]+ import \(\s*(\w+_pb2) as ([\w_]+),\s*\)$",
-                                        r"from . import \1 as \2",
-                                        content,
-                                        flags=re.MULTILINE,
-                                    )
-                                    content = re.sub(
-                                        r"^from [\w\.]+ import (\w+_pb2) as ([\w_]+)$",
-                                        r"from . import \1 as \2",
-                                        content,
-                                        flags=re.MULTILINE,
-                                    )
+                                    content = _rewrite_grpc_imports(content)
                                     pb_file.write_text(content, encoding="utf-8")
 
                             except subprocess.CalledProcessError as e:

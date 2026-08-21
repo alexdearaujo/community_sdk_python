@@ -24,11 +24,41 @@ if str(_scripts_dir) not in sys.path:
     sys.path.insert(0, str(_scripts_dir))
 
 from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
+    _rewrite_grpc_imports,
     clean_schema_names,
     inline_request_body_refs,
     patch_schema_for_clean_names,
     patched_swagger,
 )
+
+# ---------------------------------------------------------------------------
+# _rewrite_grpc_imports: three protoc output styles
+# ---------------------------------------------------------------------------
+
+
+def test_rewrite_bare_import():
+    result = _rewrite_grpc_imports("import device_pb2\n")
+    assert result == "from . import device_pb2\n"
+
+
+def test_rewrite_parenthesised_from_import():
+    result = _rewrite_grpc_imports(
+        "from kentik.device.v202308 import (\n    device_pb2 as _device,\n)\n"
+    )
+    assert "from . import device_pb2 as _device" in result
+
+
+def test_rewrite_unparenthesised_from_import():
+    result = _rewrite_grpc_imports(
+        "from kentik.device.v202308 import device_pb2 as _device\n"
+    )
+    assert result == "from . import device_pb2 as _device\n"
+
+
+def test_rewrite_leaves_non_pb2_imports_unchanged():
+    content = "from kentik_api.core.api_config import APIConfig\n"
+    assert _rewrite_grpc_imports(content) == content
+
 
 # ---------------------------------------------------------------------------
 # patch_schema_for_clean_names: requestBody $ref inlining

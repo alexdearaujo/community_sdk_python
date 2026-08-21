@@ -39,16 +39,27 @@ def request_json(
     }
 
     try:
-        with httpx.Client(
-            base_url=api_config.base_path, verify=api_config.verify
-        ) as client:
-            response = client.request(
+        # Use a shared client from the transport when available for connection pooling;
+        # fall back to create-and-close for bare APIConfig usage (e.g. in tests).
+        if api_config.http_client is not None:
+            response = api_config.http_client.request(
                 method.lower(),
-                httpx.URL(path),
+                httpx.URL(api_config.base_path + path),
                 headers=headers,
                 params=clean_query_params,
                 json=json_body,
             )
+        else:
+            with httpx.Client(
+                base_url=api_config.base_path, verify=api_config.verify
+            ) as client:
+                response = client.request(
+                    method.lower(),
+                    httpx.URL(path),
+                    headers=headers,
+                    params=clean_query_params,
+                    json=json_body,
+                )
     except httpx.RequestError as exc:
         raise TransportError(
             f"{operation_name} transport failed: {exc}",

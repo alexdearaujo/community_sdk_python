@@ -152,3 +152,81 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
         )
 
     return ops
+
+
+@dataclass(frozen=True)
+class WrapperMethod:
+    """Parsed representation of one method from a generated *ServiceWrapper class.
+
+    Consumers:
+    - generation/docs_rendering.py: uses name, params, return_type, has_data_param
+    - generation/endpoint_docs.py: uses name, params, kwonly_start for required flags
+    """
+
+    name: str
+    params: tuple[
+        tuple[str, str, bool], ...
+    ]  # (name, annotation, is_required) positional then kwonly
+    kwonly_start: int
+    return_type: str
+    has_data_param: bool  # True if any kwonly param is named "data"
+
+
+def parse_wrapper_methods(path: Path) -> list[WrapperMethod]:
+    """AST-parses a *ServiceWrapper file and returns one WrapperMethod per public method.
+
+    Skips __init__ and any method starting with '_'. Symmetric with
+    parse_generated_rest_module for REST service files.
+    """
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    wrapper_class: ast.ClassDef | None = None
+    for node in tree.body:
+        if isinstance(node, ast.ClassDef) and node.name.endswith("ServiceWrapper"):
+            wrapper_class = node
+            break
+    if wrapper_class is None:
+        return []
+
+    methods: list[WrapperMethod] = []
+    for node in wrapper_class.body:
+        if not isinstance(node, ast.FunctionDef) or node.name.startswith("_"):
+            continue
+
+        return_type = ast.unparse(node.returns) if node.returns else ""
+
+        defaults_start = len(node.args.args) - len(node.args.defaults)
+        positional: list[tuple[str, str, bool]] = [
+            (
+                arg.arg,
+                ast.unparse(arg.annotation) if arg.annotation else "Any",
+                i < defaults_start,
+            )
+            for i, arg in enumerate(node.args.args)
+            if arg.arg != "self"
+        ]
+        kwonly: list[tuple[str, str, bool]] = [
+            (
+                arg.arg,
+                ast.unparse(arg.annotation) if arg.annotation else "Any",
+                default is None,
+            )
+            for arg, default in zip(node.args.kwonlyargs, node.args.kw_defaults)
+        ]
+        all_params = tuple(positional + kwonly)
+        has_data = any(name == "data" for name, _, _ in all_params)
+
+        methods.append(
+            WrapperMethod(
+                name=node.name,
+                params=all_params,
+                kwonly_start=len(positional),
+                return_type=return_type,
+                has_data_param=has_data,
+            )
+        )
+
+    return methods

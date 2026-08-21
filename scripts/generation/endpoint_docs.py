@@ -13,7 +13,12 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from ._shared import PROJECT_ROOT, SDK_OUTPUT_DIR, discover_service_model_classes
+from ._shared import (
+    PROJECT_ROOT,
+    SDK_OUTPUT_DIR,
+    discover_service_model_classes,
+    parse_wrapper_methods,
+)
 
 MD_FENCE = "`" * 3
 
@@ -221,7 +226,18 @@ def parse_wrapper_method_signatures(
     parameter names like `pagination.limit` -> `paginationlimit` that only
     exist post-generation.
     """
-    tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
+    # params come from the shared parser; only the REST-alias resolution is specific here.
+    method_params = {
+        m.name: list(m.params) for m in parse_wrapper_methods(wrapper_file)
+    }
+    if not method_params:
+        return {}
+
+    try:
+        tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
     services_folder = wrapper_file.parent
 
     module_alias_to_file: dict[str, Path] = {}
@@ -247,6 +263,10 @@ def parse_wrapper_method_signatures(
         if not isinstance(node, ast.FunctionDef) or node.name == "__init__":
             continue
 
+        params = method_params.get(node.name)
+        if params is None:
+            continue
+
         rest_alias: str | None = None
         operation_id: str | None = None
         for sub in ast.walk(node):
@@ -270,18 +290,6 @@ def parse_wrapper_method_signatures(
         if metadata is None:
             continue
         http_method, path_template = metadata
-
-        params: list[tuple[str, str, bool]] = []
-        args = node.args
-        defaults_start = len(args.args) - len(args.defaults)
-        for idx, arg in enumerate(args.args):
-            if arg.arg == "self":
-                continue
-            annotation_text = ast.unparse(arg.annotation) if arg.annotation else "Any"
-            params.append((arg.arg, annotation_text, idx < defaults_start))
-        for arg, default in zip(args.kwonlyargs, args.kw_defaults):
-            annotation_text = ast.unparse(arg.annotation) if arg.annotation else "Any"
-            params.append((arg.arg, annotation_text, default is None))
 
         mapping[(http_method, _normalize_path_for_matching(path_template))] = (
             node.name,
