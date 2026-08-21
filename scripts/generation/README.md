@@ -12,6 +12,7 @@ package owns one concern of SDK generation.
 | --- | --- | --- |
 | [`parity.py`](parity.py) | Swagger file selection and directory parity checks | `select_latest_swagger_files_by_service()`, `validate_generated_service_parity()` |
 | [`error_package.py`](error_package.py) | Error class generation and error dispatch | `generate_service_error_package()`, `inject_service_error_handling()` |
+| [`fixup.py`](fixup.py) | Generated-code post-processing: import patching, model init rebuild, file cleanup | `fix_generated_service()` |
 | [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation | `generate()` |
 | [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams and service READMEs | `generate()` |
 | [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation | `EndpointDocsCollector` |
@@ -31,7 +32,7 @@ flowchart TD
     A["1. parity.select_latest_swagger_files_by_service()"] --> B["2. Generate REST code per swagger file<br/>(endpoint_docs_collector.extract() runs here)"]
     B --> C["3. error_package.generate_service_error_package()<br/>(once per service)"]
     C --> D["4. parity.validate_generated_service_parity()"]
-    D --> E["5. Patch generated code<br/>(error_package.inject_service_error_handling() runs here)"]
+    D --> E["5. fixup.fix_generated_service()<br/>(once per service — import patching, model init, file cleanup)"]
     E --> F["6. wrapper_generation.generate()"]
     F --> G["7. docs_rendering.generate()"]
     G --> H["8. endpoint_docs_collector.render()"]

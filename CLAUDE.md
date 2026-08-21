@@ -75,6 +75,14 @@ subpackage of independently testable phase modules (see
   (`generate_service_error_package()`) and the error-dispatch
   injection (`inject_service_error_handling()`; see the
   fragile-coupling note below).
+- `fixup.py` — generated-code post-processing, called once per
+  service directory after the schema availability window closes.
+  Single public entrypoint: `fix_generated_service(service_dir)`.
+  Internally: rebuilds `models/__init__.py` from a full directory
+  scan, replaces wildcard exports with explicit named imports, and
+  applies all file-level content patches (import aliases, auth
+  headers, path parameter sanitization, docstring normalization,
+  duplicate function renaming, and error-handling injection).
 - `wrapper_generation.py` — generates service wrappers and the
   client mixin, collapsed into a single `generate()` entrypoint
   (wrappers first, then the mixin that imports them).

@@ -14,6 +14,7 @@ four.
 | --- | --- |
 | `test_parity.py` | Swagger selection and generated/schema directory parity. |
 | `test_error_package.py` | Error class naming, error-response extraction and merging, and the runtime error-dispatch injection seam. |
+| `test_fixup.py` | Post-generation fixups: `models/__init__.py` rebuild, wildcard-export replacement, file-level content patches, function deduplication, and docstring normalization. |
 | `test_wrapper_generation.py` | Annotation qualification and end-to-end wrapper and client-mixin generation against a temp directory. |
 
 ## Run

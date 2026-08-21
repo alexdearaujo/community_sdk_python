@@ -8,15 +8,13 @@ import os
 import re
 import shutil
 import subprocess
-import textwrap
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from generation import docs_rendering, error_package, parity, wrapper_generation
+from generation import docs_rendering, error_package, fixup, parity, wrapper_generation
 from generation._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
-    discover_service_model_classes,
 )
 from generation.endpoint_docs import EndpointDocsCollector
 
@@ -63,38 +61,6 @@ def openapi_generator_cmd(swagger_path: Path, out_dir: Path) -> list[str]:
         cmd.extend(["--custom-template-path", str(CUSTOM_OPENAPI_TEMPLATE_PATH)])
 
     return cmd
-
-
-def dedupe_top_level_function_names(content: str) -> str:
-    """Renames duplicate top-level def names to avoid collisions (F811).
-
-    Example: GetAuditEvent, GetAuditEvent -> GetAuditEvent, GetAuditEvent_2
-    """
-    func_name_pattern = re.compile(
-        r"^def\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(", re.MULTILINE
-    )
-
-    seen: dict[str, int] = {}
-    out: list[str] = []
-    cursor = 0
-
-    for match in func_name_pattern.finditer(content):
-        func_name = match.group(1)
-        seen[func_name] = seen.get(func_name, 0) + 1
-
-        if seen[func_name] == 1:
-            continue
-
-        new_name = f"{func_name}_{seen[func_name]}"
-        out.append(content[cursor : match.start(1)])
-        out.append(new_name)
-        cursor = match.end(1)
-
-    if not out:
-        return content
-
-    out.append(content[cursor:])
-    return "".join(out)
 
 
 @contextlib.contextmanager
@@ -147,41 +113,6 @@ def patch_schema_for_clean_names(swagger_path: Path, version: str):
 
     with open(swagger_path, "w", encoding="utf-8") as f:
         json.dump(schema, f)
-
-
-def normalize_triple_quoted_docstrings(content: str) -> str:
-    """Normalizes indentation/spacing of triple-quoted docstrings.
-
-    Generated model docstrings can contain inconsistent indentation that docutils
-    interprets as malformed block quotes during Sphinx autodoc rendering.
-    """
-
-    pattern = re.compile(r"(^[ \t]*)(\"\"\"|''')([\s\S]*?)(\2)", re.MULTILINE)
-
-    def _rewrite(match: re.Match[str]) -> str:
-        indent = match.group(1)
-        quote = match.group(2)
-        body = match.group(3)
-
-        if "\n" not in body:
-            return match.group(0)
-
-        dedented = textwrap.dedent(body).replace("\r\n", "\n").strip("\n")
-        if not dedented:
-            return f"{indent}{quote}{quote}"
-
-        lines = dedented.split("\n")
-        inner_indent = indent + ("    " if indent else "")
-        # Flatten each line to the same indent. Generated docstrings are free
-        # prose (schema title + description), so uneven per-line leading
-        # whitespace only makes docutils misread the deeper lines as block
-        # quotes. Stripping both sides puts every line at inner_indent.
-        formatted_lines = [
-            (f"{inner_indent}{line.strip()}" if line.strip() else "") for line in lines
-        ]
-        return f"{indent}{quote}\n" + "\n".join(formatted_lines) + f"\n{indent}{quote}"
-
-    return pattern.sub(_rewrite, content)
 
 
 _PB_COMPANIONS_INIT = """\
@@ -452,245 +383,11 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
     # -----------------------------------------------------------------
     # 3. POST-PROCESSING (Rest & Models Cleanup)
     # -----------------------------------------------------------------
-    print("\nPatching generated code...")
+    print("
+Patching generated code...")
     for service_dir in SDK_OUTPUT_DIR.iterdir():
-        if not service_dir.is_dir() or service_dir.name == "__pycache__":
-            continue
-
-        # Discover models for explicit mapping
-        model_classes = discover_service_model_classes(service_dir)
-
-        explicit_models_import = (
-            f"from ..models import {', '.join(sorted(model_classes))}"
-            if model_classes
-            else ""
-        )
-        explicit_models_local = (
-            f"from .models import {', '.join(sorted(model_classes))}"
-            if model_classes
-            else ""
-        )
-
-        # Rebuild models/__init__.py from every model file on disk.
-        #
-        # openapi-python-generator is invoked once per swagger file for
-        # multi-schema services (e.g. alerting, saved_filter, plan), and each
-        # invocation overwrites models/__init__.py with only *its own*
-        # models. Left alone, only the last-processed swagger file's models
-        # stay exported; `from ..models import X` for anything else silently
-        # resolves to the `models/X.py` submodule instead of raising
-        # ImportError, since Python falls back to submodule lookup for names
-        # a package's __init__.py doesn't bind. That surfaces later as
-        # `TypeError: 'module' object is not callable` wherever X(...) is
-        # instantiated. Rebuilding from a full directory scan keeps every
-        # class explicitly bound in the package namespace regardless of how
-        # many swagger files contributed to this service.
-        models_dir = service_dir / "models"
-        if models_dir.exists():
-            init_lines = []
-            for model_file in sorted(models_dir.glob("*.py")):
-                if model_file.name == "__init__.py":
-                    continue
-                classes = re.findall(
-                    r"^class\s+([A-Za-z0-9_]+)",
-                    model_file.read_text(encoding="utf-8"),
-                    re.MULTILINE,
-                )
-                if not classes:
-                    continue
-                exports = ", ".join(f"{c} as {c}" for c in classes)
-                init_lines.append(f"from .{model_file.stem} import {exports}")
-            (models_dir / "__init__.py").write_text(
-                "\n".join(init_lines) + ("\n" if init_lines else ""),
-                encoding="utf-8",
-            )
-
-        # Fix explicit imports in __init__.py files by reading the referenced modules
-        for init_file in service_dir.rglob("__init__.py"):
-            if "error" in init_file.parts:
-                continue
-            content = init_file.read_text(encoding="utf-8")
-            new_lines = []
-            for line in content.splitlines():
-                # Look for: from .filename import *
-                match = re.match(r"^from \.([a-zA-Z0-9_]+) import \*$", line)
-                if match:
-                    module_name = match.group(1)
-                    target_py = init_file.parent / f"{module_name}.py"
-
-                    if target_py.exists():
-                        target_content = target_py.read_text(encoding="utf-8")
-                        classes = re.findall(
-                            r"^class\s+([A-Za-z0-9_]+)",
-                            target_content,
-                            flags=re.MULTILINE,
-                        )
-                        if classes:
-                            # Use explicit re-export style to satisfy the most pedantic linters
-                            explicit_imports = ", ".join(
-                                [f"{c} as {c}" for c in classes]
-                            )
-                            new_lines.append(
-                                f"from .{module_name} import {explicit_imports}"
-                            )
-                            continue
-                new_lines.append(line)
-            init_file.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
-
-        # General content patches for all .py files in the service directory
-        for py_file in service_dir.rglob("*.py"):
-            # CRITICAL: Skip the 'pb' directory entirely so we don't corrupt the gRPC stubs!
-            if "pb" in py_file.parts or "error" in py_file.parts:
-                continue
-
-            if py_file.name.startswith("async_") or py_file.name == "api_config.py":
-                py_file.unlink()
-                continue
-
-            # De-duplicate filenames (DeviceService_service.py -> DeviceService.py)
-            if "Service_service" in py_file.name or "_service" in py_file.name.lower():
-                clean_name = (
-                    py_file.name.replace("Service_service", "Service")
-                    .replace("_service_service", "Service")
-                    .replace("_service", "Service")
-                )
-                # Ensure it starts with a capital letter (deviceService -> DeviceService)
-                clean_name = clean_name[:1].upper() + clean_name[1:]
-
-                new_path = py_file.with_name(clean_name)
-                py_file.rename(new_path)
-                py_file = new_path
-
-            content = py_file.read_text(encoding="utf-8")
-
-            content = re.sub(
-                r"from \.*api_config import APIConfig, HTTPException",
-                "from kentik_api.core.api_config import APIConfig\nfrom kentik_api.errors import HTTPException",
-                content,
-            )
-
-            content = re.sub(
-                r"from \.*api_config import APIConfig as APIConfig",
-                "from kentik_api.core.api_config import APIConfig",
-                content,
-            )
-            content = re.sub(
-                r"from \.*api_config import HTTPException as HTTPException",
-                "from kentik_api.errors import HTTPException",
-                content,
-            )
-
-            content = re.sub(
-                r"return ([A-Za-z0-9_]+)\(\*\*body\) if body.*? else \1\(\)",
-                r"return \1(**body) if body is not None else \1.model_construct()",
-                content,
-            )
-
-            # Path parameter sanitization ({device.id} -> {id})
-            content = re.sub(
-                r"path\s*=\s*f[\"'].*?[\"']",
-                lambda m: re.sub(
-                    r"\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\}", r"{\1\2}", m.group(0)
-                ),
-                content,
-            )
-
-            content = re.sub(
-                r'["\']Authorization["\']:\s*f["\']Bearer\s*\{[^}]+\}["\'],?',
-                r'"X-CH-Auth-Email": api_config.auth_email,\n        "X-CH-Auth-API-Token": api_config.auth_token,',
-                content,
-            )
-
-            if py_file.name == "api_config.py":
-                content = content.replace(
-                    "access_token: Optional[str] = None",
-                    "auth_email: Optional[str] = None\n    auth_token: Optional[str] = None",
-                )
-                content = content.replace("def get_access_token", "def get_auth_token")
-                content = content.replace("self.access_token", "self.auth_token")
-
-            functions = re.split(r"^(?=async def |def )", content, flags=re.MULTILINE)
-            fixed_funcs = []
-
-            for func in functions:
-                if not func.strip():
-                    fixed_funcs.append(func)
-                    continue
-
-                sig_part = func.split("->")[0] if "->" in func else func.split(":\n")[0]
-                has_data_param = "data:" in sig_part or "data :" in sig_part
-                has_json_kwarg = "json=" in func
-                has_json_body_kwarg = "json_body=" in func
-
-                if has_data_param and not (has_json_kwarg or has_json_body_kwarg):
-                    if "request_json(" in func:
-                        func = re.sub(
-                            r"(query_params=query_params)(,?)(\s*)",
-                            r"\1,\n                json_body=data.model_dump()\3",
-                            func,
-                            count=1,
-                        )
-                    else:
-                        func = re.sub(
-                            r"(params=query_params)(,?)(\s*\))",
-                            r"\1, json=data.model_dump()\3",
-                            func,
-                        )
-
-                # Pydantic v2 compatibility: normalize any legacy `.dict()` payloads.
-                func = re.sub(r"\bdata\.dict\(\)", "data.model_dump()", func)
-
-                if not has_data_param and has_json_kwarg:
-                    func = re.sub(r",\s*json=data\.model_dump\(\)", "", func)
-                    func = re.sub(r"json=data\.model_dump\(\)", "", func)
-
-                if not has_data_param and has_json_body_kwarg:
-                    func = re.sub(r",\s*json_body\s*=\s*data\.model_dump\(\)", "", func)
-                    func = re.sub(
-                        r"json_body\s*=\s*data\.model_dump\(\)\s*,?", "", func
-                    )
-
-                fixed_funcs.append(func)
-
-            content = "".join(fixed_funcs)
-
-            if py_file.parent.name in ("services", "service") and py_file.name not in (
-                "__init__.py",
-            ):
-                content = error_package.inject_service_error_handling(content)
-
-            # Keep generated docstrings parseable by docutils/Sphinx autodoc.
-            content = normalize_triple_quoted_docstrings(content)
-
-            # Wildcard Imports (Typing & Models)
-            if "from typing import *" in content:
-                content = content.replace(
-                    "from typing import *",
-                    "from typing import Any, Callable, Dict, Generic, List, Optional, Set, Tuple, Type, TypeVar, Union",
-                )
-
-            # Some generated services expose an operation literally named `List`.
-            # That clashes with `from typing import List` (F811), so alias typing List.
-            if re.search(r"^def\s+List\s*\(", content, flags=re.MULTILINE):
-                content = re.sub(
-                    r"from typing import ([^\n]*)\bList\b([^\n]*)",
-                    lambda m: f"from typing import {m.group(1)}List as TypingList{m.group(2)}",
-                    content,
-                    count=1,
-                )
-                content = re.sub(r"\bList\[", "TypingList[", content)
-
-            if explicit_models_import:
-                content = content.replace(
-                    "from ..models import *", explicit_models_import + "  # noqa: F401"
-                )
-                content = content.replace(
-                    "from .models import *", explicit_models_local + "  # noqa: F401"
-                )
-
-            content = dedupe_top_level_function_names(content)
-
-            py_file.write_text(content, encoding="utf-8")
+        if service_dir.is_dir() and service_dir.name != "__pycache__":
+            fixup.fix_generated_service(service_dir)
 
     print("\nFormatting...")
     run_cmd(["uvx", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)])

@@ -387,7 +387,6 @@ wheels = [
 
 [[package]]
 name = "kentik-api"
-version = "2.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "googleapis-common-protos" },
