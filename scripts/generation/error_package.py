@@ -314,69 +314,45 @@ def generate_service_error_package(
 
 
 def inject_service_error_handling(content: str) -> str:
-    """Adds per-operation service error classes to generated REST modules."""
+    """Adds the per-operation error import line to generated REST modules.
+
+    Replaces the # __ERROR_IMPORTS_PLACEHOLDER__ sentinel that service.jinja2
+    emits. Falls back to the legacy request_json import anchor for files
+    generated before the sentinel was added.
+    """
+    _PLACEHOLDER = "# __ERROR_IMPORTS_PLACEHOLDER__"
+
     operation_ids = sorted(
         set(re.findall(r"operation_name=['\"]([A-Za-z0-9_]+)['\"]", content))
     )
+
     if not operation_ids:
-        return content
+        # Nothing to import; clean up the placeholder if present.
+        return content.replace("\n" + _PLACEHOLDER, "")
 
     error_class_names = [
         service_error_class_name(operation_id) for operation_id in operation_ids
     ]
+    import_line = "from ..error import " + ", ".join(error_class_names)
 
-    if "from ..error import" not in content:
-        runtime_import = "from kentik_api.core.rest_runtime import request_json\n"
-        if runtime_import in content:
-            content = content.replace(
-                runtime_import,
-                runtime_import
-                + "\nfrom ..error import "
-                + ", ".join(error_class_names)
-                + "\n",
-                1,
-            )
-        else:
-            # Anchor missing means rest_runtime was renamed/moved; fail loudly
-            # rather than silently skipping injection and breaking error dispatch.
-            raise ValueError(
-                "inject_service_error_handling: expected runtime import anchor "
-                "'from kentik_api.core.rest_runtime import request_json' not found. "
-                "If rest_runtime was moved or renamed, update this anchor."
-            )
+    if "from ..error import" in content:
+        # Already injected (e.g. multi-pass or manually edited); just remove sentinel.
+        return content.replace("\n" + _PLACEHOLDER, "")
 
-    def _inject_into_block(match: re.Match[str]) -> str:
-        block = match.group(0)
-        if "request_json(" not in block or "error_cls=" in block:
-            return block
+    if _PLACEHOLDER in content:
+        return content.replace(_PLACEHOLDER, import_line)
 
-        operation_match = re.search(
-            r"operation_name\s*=\s*['\"]([A-Za-z0-9_]+)['\"]", block
-        )
-        if not operation_match:
-            return block
-
-        error_class_name = service_error_class_name(operation_match.group(1))
-
-        def _replace_operation_line(op_match: re.Match[str]) -> str:
-            line = op_match.group(0)
-            indent_match = re.match(r"^(\s*)", line)
-            indent = indent_match.group(1) if indent_match else ""
-            if "error_cls=" in block:
-                return line
-            return line + f"\n{indent}error_cls={error_class_name},"
-
-        return re.sub(
-            r"operation_name\s*=\s*['\"][^'\"]+['\"],",
-            _replace_operation_line,
-            block,
-            count=1,
+    # Fallback: legacy anchor for files generated before service.jinja2 had the sentinel.
+    runtime_import = "from kentik_api.core.rest_runtime import request_json\n"
+    if runtime_import in content:
+        return content.replace(
+            runtime_import,
+            runtime_import + "\n" + import_line + "\n",
+            1,
         )
 
-    content = re.sub(
-        r"^def\s+[A-Za-z_][A-Za-z0-9_]*\s*\(.*?(?=^def\s+[A-Za-z_]|\Z)",
-        _inject_into_block,
-        content,
-        flags=re.MULTILINE | re.DOTALL,
+    raise ValueError(
+        "inject_service_error_handling: expected either '# __ERROR_IMPORTS_PLACEHOLDER__' "
+        "or 'from kentik_api.core.rest_runtime import request_json' anchor. "
+        "If rest_runtime was moved or renamed, update this function."
     )
-    return content

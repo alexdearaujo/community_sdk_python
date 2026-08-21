@@ -23,8 +23,11 @@ _scripts_dir = Path(__file__).resolve().parents[2] / "scripts"
 if str(_scripts_dir) not in sys.path:
     sys.path.insert(0, str(_scripts_dir))
 
-from generate_sdk import (
-    patch_schema_for_clean_names,  # noqa: E402  # type: ignore[import-not-found]
+from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
+    clean_schema_names,
+    inline_request_body_refs,
+    patch_schema_for_clean_names,
+    patched_swagger,
 )
 
 # ---------------------------------------------------------------------------
@@ -272,3 +275,97 @@ def test_schema_request_body_coverage():
             f"{len(failures)} operation(s) missing body parameter:\n"
             + "\n".join(f"  {f}" for f in failures)
         )
+
+
+# ---------------------------------------------------------------------------
+# clean_schema_names and inline_request_body_refs: pure in-memory transforms
+# ---------------------------------------------------------------------------
+
+
+def test_clean_schema_names_strips_version_prefix_from_definitions():
+    schema = {
+        "definitions": {
+            "v202404beta1Thing": {"type": "object"},
+        }
+    }
+    result = clean_schema_names(schema, "v202404beta1")
+    assert "Thing" in result["definitions"]
+    assert "v202404beta1Thing" not in result["definitions"]
+
+
+def test_clean_schema_names_rewrites_refs():
+    schema = {
+        "paths": {
+            "/thing": {
+                "get": {
+                    "responses": {
+                        "200": {"schema": {"$ref": "#/definitions/v202404beta1Thing"}}
+                    }
+                }
+            }
+        },
+        "definitions": {},
+    }
+    result = clean_schema_names(schema, "v202404beta1")
+    ref = result["paths"]["/thing"]["get"]["responses"]["200"]["schema"]["$ref"]
+    assert "v202404beta1" not in ref
+
+
+def test_clean_schema_names_does_not_mutate_input():
+    schema = {"definitions": {"v202404beta1Thing": {"type": "object"}}}
+    original_keys = set(schema["definitions"].keys())
+    clean_schema_names(schema, "v202404beta1")
+    assert set(schema["definitions"].keys()) == original_keys
+
+
+def test_inline_request_body_refs_resolves_ref():
+    schema = {
+        "paths": {
+            "/things": {
+                "post": {"requestBody": {"$ref": "#/components/requestBodies/Thing"}}
+            }
+        },
+        "components": {
+            "requestBodies": {
+                "Thing": {"content": {"application/json": {}}, "required": True}
+            }
+        },
+    }
+    result = inline_request_body_refs(schema)
+    rb = result["paths"]["/things"]["post"]["requestBody"]
+    assert "content" in rb
+    assert "$ref" not in rb
+
+
+def test_inline_request_body_refs_does_not_mutate_input():
+    schema = {
+        "paths": {
+            "/things": {
+                "post": {"requestBody": {"$ref": "#/components/requestBodies/Thing"}}
+            }
+        },
+        "components": {"requestBodies": {"Thing": {"content": {}}}},
+    }
+    post = schema["paths"]["/things"]["post"]
+    inline_request_body_refs(schema)
+    assert "$ref" in post["requestBody"]
+
+
+def test_patched_swagger_does_not_modify_original(tmp_path: Path):
+    schema = {
+        "paths": {},
+        "components": {"schemas": {"v202404beta1Thing": {"type": "object"}}},
+    }
+    swagger_path = tmp_path / "things.swagger.json"
+    swagger_path.write_text(json.dumps(schema), encoding="utf-8")
+    original_text = swagger_path.read_text()
+
+    with patched_swagger(swagger_path, "v202404beta1") as tmp_path_arg:
+        # The temp file should contain the patched schema
+        patched = json.loads(Path(tmp_path_arg).read_text())
+        assert "Thing" in patched["components"]["schemas"]
+
+    # The original file must be unchanged
+    assert swagger_path.read_text() == original_text
+    # The temp file must be cleaned up
+    assert not tmp_path_arg.exists()

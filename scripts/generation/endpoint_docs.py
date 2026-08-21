@@ -192,43 +192,16 @@ def _normalize_path_for_matching(path: str) -> str:
 def _rest_function_path_and_method(
     rest_file: Path, function_name: str
 ) -> tuple[str, str] | None:
-    """Extracts method/path literals from a generated REST function's
-    request_json(...) call, via AST (no import/execution)."""
-    try:
-        tree = ast.parse(rest_file.read_text(encoding="utf-8"))
-    except Exception:
-        return None
+    """Returns (HTTP_METHOD_UPPER, path) for a named function in a generated REST module."""
+    from ._shared import parse_generated_rest_module
 
-    for node in tree.body:
-        if not (isinstance(node, ast.FunctionDef) and node.name == function_name):
-            continue
-        for call_node in ast.walk(node):
-            if not (
-                isinstance(call_node, ast.Call)
-                and isinstance(call_node.func, ast.Name)
-                and call_node.func.id == "request_json"
-            ):
-                continue
-            http_method = None
-            path_parts: list[str] = []
-            for kw in call_node.keywords:
-                if kw.arg == "method" and isinstance(kw.value, ast.Constant):
-                    http_method = str(kw.value.value).upper()
-                if kw.arg == "path":
-                    if isinstance(kw.value, ast.Constant):
-                        path_parts = [str(kw.value.value)]
-                    elif isinstance(kw.value, ast.JoinedStr):
-                        for part in kw.value.values:
-                            if isinstance(part, ast.Constant):
-                                path_parts.append(str(part.value))
-                            elif isinstance(part, ast.FormattedValue):
-                                path_parts.append(f"{{{ast.unparse(part.value)}}}")
-            if http_method and path_parts:
-                return http_method, "".join(path_parts)
+    for op in parse_generated_rest_module(rest_file):
+        if op.name == function_name:
+            return op.http_method.upper(), op.path
     return None
 
 
-def _parse_wrapper_method_signatures(
+def parse_wrapper_method_signatures(
     wrapper_file: Path,
 ) -> dict[tuple[str, str], tuple[str, list[tuple[str, str, bool]]]]:
     """Maps (http_method, normalized_path) -> (wrapper_method_name, params).
@@ -690,7 +663,7 @@ def _render_service_overview(
     ]
 
 
-def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
+def render_endpoint_docs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
     """Generates Sphinx MyST stubs with real per-endpoint text and model docs.
 
     Replaces an image-rendered "API table" (unreadable once summaries/
@@ -725,7 +698,7 @@ def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
             services_folder / f"{service}.py" if services_folder.exists() else None
         )
         wrapper_signatures = (
-            _parse_wrapper_method_signatures(wrapper_file)
+            parse_wrapper_method_signatures(wrapper_file)
             if wrapper_file and wrapper_file.exists()
             else {}
         )
@@ -872,11 +845,12 @@ def _render_sphinx_stubs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
 
 
 class EndpointDocsCollector:
-    """Accumulates per-endpoint docs while swagger files are available, then
-    renders them once real wrapper method signatures exist on disk.
+    """Thin stateful wrapper around extract_endpoint_docs / render_endpoint_docs.
 
-    extract() must be called once per swagger file during the schema-availability
-    window; render() must run after service wrapper generation.
+    Prefer calling those functions directly with a plain dict; this class exists
+    for callers that need to accumulate across a schema-availability loop.
+    The ordering constraint (render() after wrapper generation) remains the
+    caller's responsibility.
     """
 
     def __init__(self) -> None:
@@ -891,4 +865,4 @@ class EndpointDocsCollector:
             print(f"⚠️ Endpoint doc extraction failed for {service}: {e}")
 
     def render(self) -> None:
-        _render_sphinx_stubs(self._docs)
+        render_endpoint_docs(self._docs)

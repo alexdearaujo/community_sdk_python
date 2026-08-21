@@ -23,6 +23,7 @@
         header_params=header_params,
         expected_status={{ return_type.status_code }},
         operation_name='{{ operation_id }}',
+        error_cls={{ operation_id }}Error,
     )
 
 {% if return_type.type is none or return_type.type.converted_type is none %}

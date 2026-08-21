@@ -79,57 +79,105 @@ def get_schema_root(repo_source: str):
         yield local_path
 
 
-def patch_schema_for_clean_names(swagger_path: Path, version: str):
-    """Scrubs version prefixes from models to ensure clean class names."""
-    with open(swagger_path, "r", encoding="utf-8") as f:
-        schema = json.load(f)
+def clean_schema_names(schema: dict, version: str) -> dict:
+    """Returns a copy of schema with version prefixes stripped from $refs and definition keys."""
+    import copy
 
-    def clean_refs(node):
+    schema = copy.deepcopy(schema)
+
+    def _clean_refs(node: object) -> None:
         if isinstance(node, dict):
             if "$ref" in node and isinstance(node["$ref"], str):
                 if f"/{version}" in node["$ref"]:
                     node["$ref"] = node["$ref"].replace(f"/{version}", "/")
             for v in node.values():
-                clean_refs(v)
+                _clean_refs(v)
         elif isinstance(node, list):
             for item in node:
-                clean_refs(item)
+                _clean_refs(item)
 
-    clean_refs(schema)
+    _clean_refs(schema)
 
-    sections = []
+    for section in _definition_sections(schema):
+        for old_key in [k for k in section if k.startswith(version)]:
+            new_key = old_key[len(version) :]
+            if new_key:
+                section[new_key] = section.pop(old_key)
+
+    return schema
+
+
+def inline_request_body_refs(schema: dict) -> dict:
+    """Returns a copy of schema with requestBody $refs inlined from components/requestBodies.
+
+    openapi-python-generator silently ignores requestBody entries that are bare
+    $refs; inlining them ensures the generator emits a `data` parameter.
+    """
+    import copy
+
+    schema = copy.deepcopy(schema)
+    request_bodies = schema.get("components", {}).get("requestBodies", {})
+    if not request_bodies:
+        return schema
+    for path_item in schema.get("paths", {}).values():
+        for op in path_item.values():
+            if not isinstance(op, dict):
+                continue
+            rb = op.get("requestBody", {})
+            if isinstance(rb, dict) and "$ref" in rb:
+                rb_name = rb["$ref"].rsplit("/", 1)[-1]
+                if rb_name in request_bodies:
+                    op["requestBody"] = copy.deepcopy(request_bodies[rb_name])
+    return schema
+
+
+def _definition_sections(schema: dict) -> list[dict]:
+    sections: list[dict] = []
     if "definitions" in schema:
         sections.append(schema["definitions"])
     if "components" in schema:
         for c in ["schemas", "parameters", "responses", "requestBodies"]:
             if c in schema["components"]:
                 sections.append(schema["components"][c])
+    return sections
 
-    for section in sections:
-        keys_to_rename = [k for k in section.keys() if k.startswith(version)]
-        for old_key in keys_to_rename:
-            new_key = old_key[len(version) :]
-            if new_key:
-                section[new_key] = section.pop(old_key)
 
-    # openapi-python-generator only processes inline requestBody objects; it
-    # silently ignores requestBody entries that are a bare $ref to
-    # components/requestBodies. Inline them here so the generator sees the
-    # content and emits a `data` parameter.
-    request_bodies = schema.get("components", {}).get("requestBodies", {})
-    if request_bodies:
-        for _path_item in schema.get("paths", {}).values():
-            for _op in _path_item.values():
-                if not isinstance(_op, dict):
-                    continue
-                rb = _op.get("requestBody", {})
-                if isinstance(rb, dict) and "$ref" in rb:
-                    rb_name = rb["$ref"].rsplit("/", 1)[-1]
-                    if rb_name in request_bodies:
-                        _op["requestBody"] = request_bodies[rb_name]
+@contextlib.contextmanager
+def patched_swagger(swagger_path: Path, version: str):
+    """Yields a temp-file path containing the schema with clean names and inlined request bodies.
 
-    with open(swagger_path, "w", encoding="utf-8") as f:
-        json.dump(schema, f)
+    The original swagger_path is never modified, so local schema checkouts stay clean.
+    """
+    from tempfile import NamedTemporaryFile
+
+    schema = json.loads(swagger_path.read_text(encoding="utf-8"))
+    schema = clean_schema_names(schema, version)
+    schema = inline_request_body_refs(schema)
+    with NamedTemporaryFile(
+        mode="w",
+        suffix=".json",
+        delete=False,
+        encoding="utf-8",
+        dir=swagger_path.parent,
+    ) as tmp:
+        json.dump(schema, tmp)
+        tmp_path = Path(tmp.name)
+    try:
+        yield tmp_path
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+
+def patch_schema_for_clean_names(swagger_path: Path, version: str) -> None:
+    """Scrubs version prefixes from models and inlines requestBody $refs.
+
+    Modifies swagger_path in place. Prefer patched_swagger() for new call sites
+    to avoid mutating the schema checkout.
+    """
+    schema = json.loads(swagger_path.read_text(encoding="utf-8"))
+    schema = clean_schema_names(schema, version)
+    schema = inline_request_body_refs(schema)
+    swagger_path.write_text(json.dumps(schema), encoding="utf-8")
 
 
 _PB_COMPANIONS_INIT = """\
@@ -278,9 +326,8 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                 # -----------------------------------------------------------------
                 # 1. GENERATE OPENAPI (REST)
                 # -----------------------------------------------------------------
-                patch_schema_for_clean_names(swagger_path, version)
-
-                run_cmd(openapi_generator_cmd(swagger_path, out_dir))
+                with patched_swagger(swagger_path, version) as tmp_swagger:
+                    run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
 
                 # Extract per-operation documentation now, while the swagger
                 # file is still available -- rendered as real Sphinx text

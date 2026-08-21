@@ -258,63 +258,18 @@ class RestCallMetadata:
 def parse_rest_call_metadata(
     rest_module: Any, function_name: str
 ) -> Optional[RestCallMetadata]:
-    """Reads the `request_json(...)` call inside a generated REST function.
+    """Reads the `request_json(...)` call inside a generated REST function."""
+    from scripts.generation._shared import parse_generated_rest_module
 
-    `scripts/generate_sdk.py` writes `method`, `expected_status`, `error_cls`,
-    and `operation_name` as literal keyword arguments into every generated
-    operation, so they can be read back via AST instead of re-deriving them
-    from the schema.
-    """
     file_path = Path(inspect.getfile(rest_module))
-    tree = ast.parse(file_path.read_text(encoding="utf-8"))
-
-    for node in tree.body:
-        if not (isinstance(node, ast.FunctionDef) and node.name == function_name):
-            continue
-        for sub in ast.walk(node):
-            if not (
-                isinstance(sub, ast.Call)
-                and isinstance(sub.func, ast.Name)
-                and sub.func.id == "request_json"
-            ):
-                continue
-            method = None
-            expected_status = None
-            error_cls_name = None
-            operation_name = None
-            for kw in sub.keywords:
-                if (
-                    kw.arg == "method"
-                    and isinstance(kw.value, ast.Constant)
-                    and isinstance(kw.value.value, str)
-                ):
-                    method = kw.value.value
-                if (
-                    kw.arg == "expected_status"
-                    and isinstance(kw.value, ast.Constant)
-                    and isinstance(kw.value.value, int)
-                ):
-                    expected_status = kw.value.value
-                if kw.arg == "error_cls" and isinstance(kw.value, ast.Name):
-                    error_cls_name = kw.value.id
-                if (
-                    kw.arg == "operation_name"
-                    and isinstance(kw.value, ast.Constant)
-                    and isinstance(kw.value.value, str)
-                ):
-                    operation_name = kw.value.value
-            if (
-                method is not None
-                and expected_status is not None
-                and error_cls_name is not None
-                and operation_name is not None
-            ):
-                return RestCallMetadata(
-                    method=method,
-                    expected_status=expected_status,
-                    error_cls_name=error_cls_name,
-                    operation_name=operation_name,
-                )
+    for op in parse_generated_rest_module(file_path):
+        if op.name == function_name:
+            return RestCallMetadata(
+                method=op.http_method,
+                expected_status=op.expected_status,
+                error_cls_name=op.error_cls_name,
+                operation_name=op.operation_name,
+            )
     return None
 
 

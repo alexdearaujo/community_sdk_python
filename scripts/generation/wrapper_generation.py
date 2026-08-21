@@ -9,6 +9,7 @@ from ._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
     discover_service_model_classes,
+    parse_generated_rest_module,
     service_to_pascal_case,
 )
 
@@ -213,16 +214,13 @@ def _generate_service_wrappers():
         for idx, service_py in enumerate(rest_files, start=1):
             rest_module_name = service_py.stem
             module_alias = f"Rest{title}Module{idx}"
-            content = service_py.read_text(encoding="utf-8")
-            func_pattern = re.compile(
-                r"^def\s+([A-Z][a-zA-Z0-9_]*)\s*\((.*?)\)\s*->\s*([a-zA-Z0-9_\[\]\.]+):",
-                re.MULTILINE | re.DOTALL,
-            )
 
-            for match in func_pattern.finditer(content):
-                func_name_pascal = match.group(1)
-                func_args_raw = match.group(2)
-                return_type = match.group(3)
+            for op in parse_generated_rest_module(service_py):
+                func_name_pascal = op.name
+                return_type = qualify_wrapper_annotation_types(
+                    op.return_type, model_classes
+                )
+                return_type = re.sub(r"\bTypingList\b", "List", return_type)
 
                 # Convert PascalCase to snake_case (ListDevices -> list_devices)
                 func_name_snake = _to_snake_case(func_name_pascal)
@@ -246,22 +244,25 @@ def _generate_service_wrappers():
                 emitted_method_names.add(func_name_snake)
                 emitted_method_names.add(unique_method_name)
 
-                # Clean up the signature for the wrapper (remove the api_config_override)
-                sig_args = re.sub(
-                    r"api_config_override:\s*Optional\[APIConfig\]\s*=\s*None,?\s*",
-                    "",
-                    func_args_raw,
-                )
-                sig_args = qualify_wrapper_annotation_types(sig_args, model_classes)
-                return_type = qualify_wrapper_annotation_types(
-                    return_type, model_classes
-                )
+                # Build the wrapper signature: all params except api_config_override,
+                # preserving * keyword-only separator, with model types qualified.
+                def _q(ann: str) -> str:
+                    return re.sub(
+                        r"\bTypingList\b",
+                        "List",
+                        qualify_wrapper_annotation_types(ann, model_classes),
+                    )
 
-                # Service modules may alias typing.List to TypingList to avoid
-                # collisions with functions named `List`; wrappers should expose
-                # standard List annotations.
-                sig_args = re.sub(r"\bTypingList\b", "List", sig_args)
-                return_type = re.sub(r"\bTypingList\b", "List", return_type)
+                pos_parts = [
+                    f"{n}: {_q(ann)}" if req else f"{n}: {_q(ann)} = None"
+                    for n, ann, req in op.params[: op.kwonly_start]
+                    if n != "api_config_override"
+                ]
+                kw_parts = [
+                    f"{n}: {_q(ann)}" if req else f"{n}: {_q(ann)} = None"
+                    for n, ann, req in op.params[op.kwonly_start :]
+                ]
+                sig_args = ", ".join(pos_parts + (["*"] + kw_parts if kw_parts else []))
 
                 for typing_symbol in (
                     "Any",
@@ -278,8 +279,8 @@ def _generate_service_wrappers():
                     ):
                         required_typing_symbols.add(typing_symbol)
 
-                # Extract variable names to pass into the REST function call
-                arg_names = re.findall(r"([a-zA-Z0-9_]+)\s*:", func_args_raw)
+                # Build the call_args from all param names (api_config_override excluded)
+                arg_names = [n for n, _, _ in op.params]
                 call_args = [
                     f"{arg}={arg}" for arg in arg_names if arg != "api_config_override"
                 ]

@@ -127,7 +127,28 @@ def test_generate_service_error_package_writes_operation_and_leaf_classes(
     assert '"ListDevices": ListDevicesError,' in content
 
 
-def test_inject_service_error_handling_adds_import_and_error_cls():
+def test_inject_service_error_handling_adds_import_via_sentinel():
+    content = (
+        "from kentik_api.core.rest_runtime import request_json\n"
+        "# __ERROR_IMPORTS_PLACEHOLDER__\n"
+        "\n"
+        "def ListDevices(api_config_override=None):\n"
+        "    return request_json(\n"
+        "        method='get',\n"
+        "        path='/devices',\n"
+        "        operation_name='ListDevices',\n"
+        "        error_cls=ListDevicesError,\n"
+        "        expected_status=200,\n"
+        "    )\n"
+    )
+
+    result = inject_service_error_handling(content)
+
+    assert "from ..error import ListDevicesError" in result
+    assert "# __ERROR_IMPORTS_PLACEHOLDER__" not in result
+
+
+def test_inject_service_error_handling_adds_import_via_legacy_anchor():
     content = (
         "from kentik_api.core.rest_runtime import request_json\n"
         "\n"
@@ -136,6 +157,7 @@ def test_inject_service_error_handling_adds_import_and_error_cls():
         "        method='get',\n"
         "        path='/devices',\n"
         "        operation_name='ListDevices',\n"
+        "        error_cls=ListDevicesError,\n"
         "        expected_status=200,\n"
         "    )\n"
     )
@@ -143,7 +165,6 @@ def test_inject_service_error_handling_adds_import_and_error_cls():
     result = inject_service_error_handling(content)
 
     assert "from ..error import ListDevicesError" in result
-    assert "error_cls=ListDevicesError," in result
 
 
 def test_inject_service_error_handling_is_noop_without_operation_name():
@@ -152,8 +173,22 @@ def test_inject_service_error_handling_is_noop_without_operation_name():
     assert inject_service_error_handling(content) == content
 
 
+def test_inject_service_error_handling_removes_placeholder_when_no_operations():
+    content = (
+        "from kentik_api.core.rest_runtime import request_json\n"
+        "# __ERROR_IMPORTS_PLACEHOLDER__\n"
+        "\n"
+        "def helper():\n"
+        "    return 1\n"
+    )
+
+    result = inject_service_error_handling(content)
+
+    assert "# __ERROR_IMPORTS_PLACEHOLDER__" not in result
+
+
 def test_inject_raises_when_anchor_missing():
-    # operation_id present but the rest_runtime import anchor is absent
+    # operation_id present but neither sentinel nor legacy anchor is present
     content = (
         "def Foo(api_config_override=None):\n"
         "    return some_other_function(\n"
@@ -162,7 +197,7 @@ def test_inject_raises_when_anchor_missing():
         "    )\n"
     )
 
-    with pytest.raises(ValueError, match="rest_runtime"):
+    with pytest.raises(ValueError, match="rest_runtime|PLACEHOLDER"):
         inject_service_error_handling(content)
 
 

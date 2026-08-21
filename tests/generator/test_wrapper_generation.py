@@ -43,8 +43,16 @@ def test_generate_writes_wrapper_and_mounts_it_in_client_mixin(
     services_dir = sdk_output_dir / "device" / "services"
     services_dir.mkdir(parents=True)
     (services_dir / "DeviceService.py").write_text(
-        "def ListDevices(api_config_override: Optional[APIConfig] = None) -> str:\n"
-        "    return request_json()\n",
+        "from typing import Optional\n"
+        "from kentik_api.core.api_config import APIConfig\n"
+        "from kentik_api.core.rest_runtime import request_json\n"
+        "from ..error import ListDevicesError\n\n"
+        "def ListDevices(api_config_override=None) -> str:\n"
+        "    return request_json(\n"
+        "        method='get', path='/device/v1/device',\n"
+        "        expected_status=200, operation_name='ListDevices',\n"
+        "        error_cls=ListDevicesError,\n"
+        "    )\n",
         encoding="utf-8",
     )
     (project_root / "src" / "kentik_api").mkdir(parents=True)

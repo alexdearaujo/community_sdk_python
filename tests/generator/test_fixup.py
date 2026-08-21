@@ -8,8 +8,17 @@ import textwrap
 from pathlib import Path
 
 from scripts.generation.fixup import (
+    _cleanup_service_files,
     _dedupe_top_level_function_names,
+    _fix_auth_header,
+    _fix_import_aliases,
+    _fix_list_collision,
+    _fix_path_parameters,
+    _fix_pydantic_construct,
+    _fix_typing_wildcard,
     _fix_wildcard_exports,
+    _inject_data_body,
+    _make_models_import_transform,
     _normalize_triple_quoted_docstrings,
     _patch_service_files,
     _rebuild_models_init,
@@ -229,3 +238,123 @@ def test_fix_generated_service_smoke(tmp_path):
         "from kentik_api.core.api_config import APIConfig"
         in (services / "DeviceService.py").read_text()
     )
+
+
+# ---------------------------------------------------------------------------
+# Individual transform functions
+# ---------------------------------------------------------------------------
+
+
+def test_fix_import_aliases_combined():
+    content = "from ..api_config import APIConfig, HTTPException\ndef foo(): pass\n"
+    result = _fix_import_aliases(content)
+    assert "from kentik_api.core.api_config import APIConfig" in result
+    assert "from kentik_api.errors import HTTPException" in result
+
+
+def test_fix_import_aliases_as_alias():
+    result = _fix_import_aliases("from ..api_config import APIConfig as APIConfig\n")
+    assert result == "from kentik_api.core.api_config import APIConfig\n"
+
+
+def test_fix_pydantic_construct_rewrites_model_instantiation():
+    content = "return Foo(**body) if body else Foo()\n"
+    result = _fix_pydantic_construct(content)
+    assert "model_construct" in result
+    assert "body is not None" in result
+
+
+def test_fix_path_parameters_strips_dot_notation():
+    result = _fix_path_parameters("path=f'/v1/device/{device.id}'")
+    assert "{deviceid}" in result
+    assert "{device.id}" not in result
+
+
+def test_fix_auth_header_replaces_bearer():
+    content = '"Authorization": f"Bearer {api_config.access_token}",'
+    result = _fix_auth_header(content)
+    assert "X-CH-Auth-Email" in result
+    assert "X-CH-Auth-API-Token" in result
+    assert "Authorization" not in result
+
+
+def test_fix_typing_wildcard_replaces_star():
+    result = _fix_typing_wildcard("from typing import *\nx = 1\n")
+    assert "from typing import *" not in result
+    assert "Optional" in result
+
+
+def test_fix_typing_wildcard_noop_without_star():
+    content = "from typing import Optional\n"
+    assert _fix_typing_wildcard(content) == content
+
+
+def test_fix_list_collision_aliases_list():
+    content = (
+        "from typing import Optional, List\n\ndef List(x: str) -> str:\n    pass\n"
+    )
+    result = _fix_list_collision(content)
+    assert "TypingList" in result
+    assert "List as TypingList" in result
+
+
+def test_fix_list_collision_noop_without_list_function():
+    content = "from typing import List\n\ndef Foo() -> List[str]:\n    pass\n"
+    assert _fix_list_collision(content) == content
+
+
+def test_make_models_import_transform_replaces_wildcard():
+    transform = _make_models_import_transform({"DeviceResponse", "DeviceRequest"})
+    content = "from ..models import *\n"
+    result = transform(content)
+    assert "DeviceRequest" in result
+    assert "DeviceResponse" in result
+    assert "import *" not in result
+
+
+def test_make_models_import_transform_noop_when_empty():
+    transform = _make_models_import_transform(set())
+    content = "from ..models import *\n"
+    assert transform(content) == content
+
+
+def test_cleanup_service_files_deletes_async_files(tmp_path):
+    svc = tmp_path / "services"
+    svc.mkdir()
+    async_file = svc / "async_DeviceService.py"
+    async_file.write_text("# async")
+    keep = svc / "DeviceService.py"
+    keep.write_text("# keep")
+
+    _cleanup_service_files(tmp_path)
+
+    assert not async_file.exists()
+    assert keep.exists()
+
+
+def test_cleanup_service_files_renames_service_service(tmp_path):
+    svc = tmp_path / "services"
+    svc.mkdir()
+    bad = svc / "DeviceService_service.py"
+    bad.write_text("# service")
+
+    _cleanup_service_files(tmp_path)
+
+    assert not bad.exists()
+    assert (svc / "DeviceService.py").exists()
+
+
+def test_inject_data_body_adds_json_body_param():
+    content = textwrap.dedent("""\
+        def CreateDevice(api_config_override=None, *, data: CreateDeviceRequest) -> CreateDeviceResponse:
+            query_params = {}
+            body = request_json(
+                method="post",
+                path="/device",
+                api_config_override=api_config_override,
+                query_params=query_params,
+                expected_status=201,
+            )
+        """)
+    result = _inject_data_body(content)
+    assert "json_body=data.model_dump()" in result

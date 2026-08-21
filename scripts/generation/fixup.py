@@ -8,6 +8,7 @@ files for the service have been generated, outside the schema availability windo
 import re
 import textwrap
 from pathlib import Path
+from typing import Callable
 
 from ._shared import discover_service_model_classes
 from .error_package import inject_service_error_handling
@@ -86,28 +87,43 @@ def _fix_wildcard_exports(service_dir: Path) -> None:
 
 
 def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
-    """Applies all content patches to generated .py files in a service directory."""
-    explicit_models_import = (
-        f"from ..models import {', '.join(sorted(model_classes))}"
-        if model_classes
-        else ""
-    )
-    explicit_models_local = (
-        f"from .models import {', '.join(sorted(model_classes))}"
-        if model_classes
-        else ""
-    )
+    """Two passes: (1) filesystem cleanup, (2) ordered content transforms."""
+    _cleanup_service_files(service_dir)
+
+    transforms: list[Callable[[str], str]] = [
+        _fix_import_aliases,
+        _fix_pydantic_construct,
+        _fix_path_parameters,
+        _fix_auth_header,
+        _inject_data_body,
+        _fix_typing_wildcard,
+        _fix_list_collision,
+        _make_models_import_transform(model_classes),
+        _dedupe_top_level_function_names,
+        _normalize_triple_quoted_docstrings,
+    ]
 
     for py_file in service_dir.rglob("*.py"):
-        # Skip pb/ (gRPC stubs must not be corrupted) and error/ (already generated correctly)
         if "pb" in py_file.parts or "error" in py_file.parts:
             continue
+        content = py_file.read_text(encoding="utf-8")
+        for transform in transforms:
+            content = transform(content)
+        if py_file.parent.name in ("services", "service") and py_file.name not in (
+            "__init__.py",
+        ):
+            content = inject_service_error_handling(content)
+        py_file.write_text(content, encoding="utf-8")
 
+
+def _cleanup_service_files(service_dir: Path) -> None:
+    """Deletes unwanted generated files and renames mangled service file names."""
+    for py_file in list(service_dir.rglob("*.py")):
+        if "pb" in py_file.parts or "error" in py_file.parts:
+            continue
         if py_file.name.startswith("async_") or py_file.name == "api_config.py":
             py_file.unlink()
             continue
-
-        # De-duplicate filenames (DeviceService_service.py -> DeviceService.py)
         if "Service_service" in py_file.name or "_service" in py_file.name.lower():
             clean_name = (
                 py_file.name.replace("Service_service", "Service")
@@ -115,122 +131,136 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
                 .replace("_service", "Service")
             )
             clean_name = clean_name[:1].upper() + clean_name[1:]
-            new_path = py_file.with_name(clean_name)
-            py_file.rename(new_path)
-            py_file = new_path
+            py_file.rename(py_file.with_name(clean_name))
 
-        content = py_file.read_text(encoding="utf-8")
 
-        content = re.sub(
-            r"from \.*api_config import APIConfig, HTTPException",
-            "from kentik_api.core.api_config import APIConfig\nfrom kentik_api.errors import HTTPException",
-            content,
-        )
-        content = re.sub(
-            r"from \.*api_config import APIConfig as APIConfig",
-            "from kentik_api.core.api_config import APIConfig",
-            content,
-        )
-        content = re.sub(
-            r"from \.*api_config import HTTPException as HTTPException",
-            "from kentik_api.errors import HTTPException",
-            content,
-        )
-        content = re.sub(
-            r"return ([A-Za-z0-9_]+)\(\*\*body\) if body.*? else \1\(\)",
-            r"return \1(**body) if body is not None else \1.model_construct()",
-            content,
-        )
-        # Path parameter sanitization: {device.id} -> {deviceid}
-        content = re.sub(
-            r"path\s*=\s*f[\"'].*?[\"']",
-            lambda m: re.sub(
-                r"\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\}", r"{\1\2}", m.group(0)
-            ),
-            content,
-        )
-        content = re.sub(
-            r'["\']Authorization["\']:\s*f["\']Bearer\s*\{[^}]+\}["\'],?',
-            r'"X-CH-Auth-Email": api_config.auth_email,\n        "X-CH-Auth-API-Token": api_config.auth_token,',
-            content,
-        )
+def _fix_import_aliases(content: str) -> str:
+    """Rewrites generated api_config imports to the hand-written package paths."""
+    content = re.sub(
+        r"from \.*api_config import APIConfig, HTTPException",
+        "from kentik_api.core.api_config import APIConfig\nfrom kentik_api.errors import HTTPException",
+        content,
+    )
+    content = re.sub(
+        r"from \.*api_config import APIConfig as APIConfig",
+        "from kentik_api.core.api_config import APIConfig",
+        content,
+    )
+    content = re.sub(
+        r"from \.*api_config import HTTPException as HTTPException",
+        "from kentik_api.errors import HTTPException",
+        content,
+    )
+    return content
 
-        if py_file.name == "api_config.py":
-            content = content.replace(
-                "access_token: Optional[str] = None",
-                "auth_email: Optional[str] = None\n    auth_token: Optional[str] = None",
-            )
-            content = content.replace("def get_access_token", "def get_auth_token")
-            content = content.replace("self.access_token", "self.auth_token")
 
-        functions = re.split(r"^(?=async def |def )", content, flags=re.MULTILINE)
-        fixed_funcs = []
-        for func in functions:
-            if not func.strip():
-                fixed_funcs.append(func)
-                continue
-            sig_part = func.split("->")[0] if "->" in func else func.split(":\n")[0]
-            has_data_param = "data:" in sig_part or "data :" in sig_part
-            has_json_kwarg = "json=" in func
-            has_json_body_kwarg = "json_body=" in func
+def _fix_pydantic_construct(content: str) -> str:
+    """Upgrades v1-style `Model(**body)` instantiation to Pydantic v2 `model_construct`."""
+    return re.sub(
+        r"return ([A-Za-z0-9_]+)\(\*\*body\) if body.*? else \1\(\)",
+        r"return \1(**body) if body is not None else \1.model_construct()",
+        content,
+    )
 
-            if has_data_param and not (has_json_kwarg or has_json_body_kwarg):
-                if "request_json(" in func:
-                    func = re.sub(
-                        r"(query_params=query_params)(,?)(\s*)",
-                        r"\1,\n                json_body=data.model_dump()\3",
-                        func,
-                        count=1,
-                    )
-                else:
-                    func = re.sub(
-                        r"(params=query_params)(,?)(\s*\))",
-                        r"\1, json=data.model_dump()\3",
-                        func,
-                    )
-            func = re.sub(r"\bdata\.dict\(\)", "data.model_dump()", func)
-            if not has_data_param and has_json_kwarg:
-                func = re.sub(r",\s*json=data\.model_dump\(\)", "", func)
-                func = re.sub(r"json=data\.model_dump\(\)", "", func)
-            if not has_data_param and has_json_body_kwarg:
-                func = re.sub(r",\s*json_body\s*=\s*data\.model_dump\(\)", "", func)
-                func = re.sub(r"json_body\s*=\s*data\.model_dump\(\)\s*,?", "", func)
+
+def _fix_path_parameters(content: str) -> str:
+    """Sanitizes path parameter expressions like {device.id} -> {deviceid}."""
+    return re.sub(
+        r"path\s*=\s*f[\"'].*?[\"']",
+        lambda m: re.sub(
+            r"\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\}", r"{\1\2}", m.group(0)
+        ),
+        content,
+    )
+
+
+def _fix_auth_header(content: str) -> str:
+    """Replaces Bearer token auth with Kentik's email/token header scheme."""
+    return re.sub(
+        r'["\']Authorization["\']:\s*f["\']Bearer\s*\{[^}]+\}["\'],?',
+        r'"X-CH-Auth-Email": api_config.auth_email,\n        "X-CH-Auth-API-Token": api_config.auth_token,',
+        content,
+    )
+
+
+def _inject_data_body(content: str) -> str:
+    """Injects json_body=data.model_dump() into request_json() calls that have a data param."""
+    functions = re.split(r"^(?=async def |def )", content, flags=re.MULTILINE)
+    fixed_funcs = []
+    for func in functions:
+        if not func.strip():
             fixed_funcs.append(func)
+            continue
+        sig_part = func.split("->")[0] if "->" in func else func.split(":\n")[0]
+        has_data_param = "data:" in sig_part or "data :" in sig_part
+        has_json_kwarg = "json=" in func
+        has_json_body_kwarg = "json_body=" in func
 
-        content = "".join(fixed_funcs)
+        if has_data_param and not (has_json_kwarg or has_json_body_kwarg):
+            if "request_json(" in func:
+                func = re.sub(
+                    r"(query_params=query_params)(,?)(\s*)",
+                    r"\1,\n                json_body=data.model_dump()\3",
+                    func,
+                    count=1,
+                )
+            else:
+                func = re.sub(
+                    r"(params=query_params)(,?)(\s*\))",
+                    r"\1, json=data.model_dump()\3",
+                    func,
+                )
+        func = re.sub(r"\bdata\.dict\(\)", "data.model_dump()", func)
+        if not has_data_param and has_json_kwarg:
+            func = re.sub(r",\s*json=data\.model_dump\(\)", "", func)
+            func = re.sub(r"json=data\.model_dump\(\)", "", func)
+        if not has_data_param and has_json_body_kwarg:
+            func = re.sub(r",\s*json_body\s*=\s*data\.model_dump\(\)", "", func)
+            func = re.sub(r"json_body\s*=\s*data\.model_dump\(\)\s*,?", "", func)
+        fixed_funcs.append(func)
+    return "".join(fixed_funcs)
 
-        if py_file.parent.name in ("services", "service") and py_file.name not in (
-            "__init__.py",
-        ):
-            content = inject_service_error_handling(content)
 
-        content = _normalize_triple_quoted_docstrings(content)
+def _fix_typing_wildcard(content: str) -> str:
+    """Replaces `from typing import *` with an explicit import list."""
+    if "from typing import *" not in content:
+        return content
+    return content.replace(
+        "from typing import *",
+        "from typing import Any, Callable, Dict, Generic, List, Optional, Set, Tuple, Type, TypeVar, Union",
+    )
 
-        if "from typing import *" in content:
-            content = content.replace(
-                "from typing import *",
-                "from typing import Any, Callable, Dict, Generic, List, Optional, Set, Tuple, Type, TypeVar, Union",
-            )
-        # Some services expose an operation named `List`, clashing with typing.List (F811).
-        if re.search(r"^def\s+List\s*\(", content, flags=re.MULTILINE):
-            content = re.sub(
-                r"from typing import ([^\n]*)\bList\b([^\n]*)",
-                lambda m: f"from typing import {m.group(1)}List as TypingList{m.group(2)}",
-                content,
-                count=1,
-            )
-            content = re.sub(r"\bList\[", "TypingList[", content)
 
-        if explicit_models_import:
-            content = content.replace(
-                "from ..models import *", explicit_models_import + "  # noqa: F401"
-            )
-            content = content.replace(
-                "from .models import *", explicit_models_local + "  # noqa: F401"
-            )
+def _fix_list_collision(content: str) -> str:
+    """Aliases typing.List as TypingList when the service has an operation named `List`."""
+    if not re.search(r"^def\s+List\s*\(", content, flags=re.MULTILINE):
+        return content
+    content = re.sub(
+        r"from typing import ([^\n]*)\bList\b([^\n]*)",
+        lambda m: f"from typing import {m.group(1)}List as TypingList{m.group(2)}",
+        content,
+        count=1,
+    )
+    return re.sub(r"\bList\[", "TypingList[", content)
 
-        content = _dedupe_top_level_function_names(content)
-        py_file.write_text(content, encoding="utf-8")
+
+def _make_models_import_transform(model_classes: set[str]) -> Callable[[str], str]:
+    """Returns a transform that replaces wildcard model imports with explicit ones."""
+    if not model_classes:
+        return lambda content: content
+    explicit_dotdot = f"from ..models import {', '.join(sorted(model_classes))}"
+    explicit_local = f"from .models import {', '.join(sorted(model_classes))}"
+
+    def _transform(content: str) -> str:
+        content = content.replace(
+            "from ..models import *", explicit_dotdot + "  # noqa: F401"
+        )
+        content = content.replace(
+            "from .models import *", explicit_local + "  # noqa: F401"
+        )
+        return content
+
+    return _transform
 
 
 def _dedupe_top_level_function_names(content: str) -> str:
