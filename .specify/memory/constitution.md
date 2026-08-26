@@ -1,19 +1,22 @@
 <!--
 Sync Impact Report
-Version change: (none) → 1.0.0
-Rationale: Initial ratification — first constitution for this repository, adopted
-alongside Spec Kit. Values below are transcribed from already-in-force conventions
-in CLAUDE.md, AGENTS.md (symlink to CLAUDE.md), and CONTEXT.md, not invented.
-Modified principles: n/a (initial adoption)
-Added sections:
-  - Core Principles (I-VII)
-  - Architecture & Generation Pipeline
-  - Development Workflow & Quality Gates
-  - Governance
+Version change: 1.0.0 → 1.1.0
+Rationale: Materially expanded guidance under "Development Workflow & Quality
+Gates" — a new guardrail bullet on verifying local schema-checkout integrity
+before trusting `make generate local`, learned first-hand while fixing the
+acronym-splitting bug (fix/acronym-splitting-in-generated-names, 2026-08-26):
+a locally corrupted `../api-schema-public/` checkout silently dropped the
+`kagent` and `monitoring` services because the parity check compares
+generated output only against that same (corrupted) checkout. No core
+principle changed — the acronym fix itself was a clean demonstration of
+Principles I and III already working as intended, not a gap in them.
+Modified principles: none
+Added sections: none (bullet added to existing "Development Workflow &
+  Quality Gates" section)
 Removed sections: n/a
-Deferred TODOs: none. One factual drift was found while transcribing this
-  document and is called out explicitly under "Architecture & Generation
-  Pipeline" instead of being silently resolved one way or the other.
+Deferred TODOs: the gRPC stub-vs-implemented doc drift flagged at v1.0.0 in
+  "Architecture & Generation Pipeline" remains open and unrelated to this
+  amendment.
 -->
 
 # Kentik Community Python SDK Constitution
@@ -126,6 +129,14 @@ tracked and reduced over time, not silently ignored.
   check` on hand-written code) MUST stay clean.
 - `make test` MUST stay mocked-only and fast enough to run anywhere; `make
   test-e2e` MUST stay a separate, explicit, opt-in target (see Principle V).
+- `make generate local` trusts the local `../api-schema-public/` checkout as
+  found. The parity check only compares generated output against whatever
+  that checkout currently contains, so a corrupted or stale local checkout
+  (e.g. locally modified or truncated swagger files) can silently drop
+  entire services without failing any check. Before relying on `make
+  generate local` output, verify the checkout is clean (`git -C
+  ../api-schema-public status`), or regenerate from a clean canonical clone
+  with `make generate` (no `local`) instead.
 
 ## Governance
 
@@ -146,4 +157,4 @@ and `/speckit-analyze` MUST treat this constitution as authoritative context;
 complexity or deviation from it MUST be justified explicitly in the relevant
 plan, not silently introduced.
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-08-25
+**Version**: 1.1.0 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-08-26
