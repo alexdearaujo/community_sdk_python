@@ -399,3 +399,43 @@ def test_patched_swagger_does_not_modify_original(tmp_path: Path):
     assert swagger_path.read_text() == original_text
     # The temp file must be cleaned up
     assert not tmp_path_arg.exists()
+
+
+# ---------------------------------------------------------------------------
+# generate_modular_sdk: schema validation must run before any output is wiped
+# ---------------------------------------------------------------------------
+
+
+def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir():
+    """The corrupted-checkout gate must run before SDK_OUTPUT_DIR is touched.
+
+    Regression test: an earlier version of this gate ran *after* the
+    "Cleaning old modules" step, so a validation failure still left
+    src/kentik_api/gen/ wiped out -- discovered by manually reproducing the
+    2026-08-26 incident end-to-end rather than trusting fixture tests alone.
+    Runs as a static/AST check (not a full generation) since
+    generate_modular_sdk() shells out to git/protoc/uvx and isn't otherwise
+    unit-tested in isolation.
+    """
+    source = (_scripts_dir / "generate_sdk.py").read_text(encoding="utf-8")
+    func_node = _function_by_name(source, "generate_modular_sdk")
+    assert func_node is not None, "generate_modular_sdk() not found"
+
+    validate_lines: list[int] = []
+    rmtree_lines: list[int] = []
+    for node in ast.walk(func_node):
+        if not isinstance(node, ast.Call):
+            continue
+        call_repr = ast.unparse(node.func)
+        if call_repr.endswith("validate_schema_files_or_raise"):
+            validate_lines.append(node.lineno)
+        elif call_repr.endswith("rmtree"):
+            rmtree_lines.append(node.lineno)
+
+    assert validate_lines, "validate_schema_files_or_raise(...) call not found"
+    assert rmtree_lines, "shutil.rmtree(...) call not found"
+    assert max(validate_lines) < min(rmtree_lines), (
+        "validate_schema_files_or_raise() must run before shutil.rmtree() "
+        "cleans SDK_OUTPUT_DIR, so a validation failure never leaves "
+        "generated output partially wiped"
+    )

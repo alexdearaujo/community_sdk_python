@@ -295,17 +295,7 @@ def _compile_proto_companions(schema_root: Path) -> None:
 
 
 def generate_modular_sdk(repo_source=DEFAULT_REPO):
-    # Setup directories
-    SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    (SDK_OUTPUT_DIR / "__init__.py").touch(exist_ok=True)
-
-    print("Cleaning old modules...")
-    for item in SDK_OUTPUT_DIR.iterdir():
-        if item.is_dir() and item.name != "__pycache__":
-            shutil.rmtree(item)
-
     with get_schema_root(repo_source) as schema_root:
-        _compile_proto_companions(schema_root)
         # Define base paths using the yielded root
         openapi_base = schema_root / "gen" / "openapiv3" / "kentik"
         proto_base = schema_root / "proto"
@@ -322,6 +312,32 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
             f"Discovered {selected_count} latest swagger files across "
             f"{len(selected_swagger_files)} services (ignored {ignored_count} older file versions)."
         )
+
+        # Fail loudly on a corrupted/truncated schema checkout instead of
+        # silently generating an incomplete SDK from it (2026-08-26 incident).
+        # This MUST run before anything below touches SDK_OUTPUT_DIR: an
+        # earlier version of this check ran after the "clean old modules"
+        # step, so a validation failure still left src/kentik_api/gen/
+        # wiped out -- discovered by manually reproducing the incident
+        # end-to-end rather than trusting fixture tests alone.
+        parity.validate_schema_files_or_raise(
+            [
+                Path(metadata["path"])
+                for service_files in selected_swagger_files.values()
+                for metadata in service_files
+            ]
+        )
+
+        # Setup directories (only now, once the schema checkout is known-good)
+        SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+        (SDK_OUTPUT_DIR / "__init__.py").touch(exist_ok=True)
+
+        print("Cleaning old modules...")
+        for item in SDK_OUTPUT_DIR.iterdir():
+            if item.is_dir() and item.name != "__pycache__":
+                shutil.rmtree(item)
+
+        _compile_proto_companions(schema_root)
 
         service_swagger_paths: dict[str, list[Path]] = {}
         endpoint_docs_collector = EndpointDocsCollector()
