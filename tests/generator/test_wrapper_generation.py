@@ -6,7 +6,25 @@ from pathlib import Path
 import pytest
 
 from scripts.generation import wrapper_generation
-from scripts.generation.wrapper_generation import qualify_wrapper_annotation_types
+from scripts.generation.wrapper_generation import (
+    _to_snake_case,
+    qualify_wrapper_annotation_types,
+)
+
+
+@pytest.mark.parametrize(
+    ("pascal_name", "expected_snake_name"),
+    [
+        ("ListDevices", "list_devices"),
+        ("ListASGroups", "list_as_groups"),
+        ("CreateASGroup", "create_as_group"),
+        ("GetASNInsights", "get_asn_insights"),
+        ("GetASNDetails", "get_asn_details"),
+        ("ASGroup", "as_group"),
+    ],
+)
+def test_to_snake_case_keeps_acronyms_as_one_word(pascal_name, expected_snake_name):
+    assert _to_snake_case(pascal_name) == expected_snake_name
 
 
 def test_qualify_wrapper_annotation_types_qualifies_known_model_names():

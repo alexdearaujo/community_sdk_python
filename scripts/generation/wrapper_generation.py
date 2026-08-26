@@ -94,12 +94,21 @@ def qualify_wrapper_annotation_types(text: str, model_classes: set[str]) -> str:
     return qualified
 
 
+def _to_snake_case(name: str) -> str:
+    """Converts PascalCase/camelCase to snake_case.
+
+    Acronym-aware: a run of capitals (AS, ASN, IP, ...) stays one word instead
+    of splitting per letter (ListASGroups -> list_as_groups, not
+    list_a_s_groups). Standard two-pass camel/Pascal -> snake conversion.
+    """
+    step1 = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", name)
+    step2 = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", step1)
+    return step2.lower()
+
+
 def _generate_service_wrappers():
     """Auto-generates the dual-transport wrapper classes for every service."""
     print("Generating unified service wrappers...")
-
-    def _to_snake_case(name: str) -> str:
-        return re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower()
 
     for service_dir in SDK_OUTPUT_DIR.iterdir():
         if not service_dir.is_dir() or service_dir.name in (

@@ -1,6 +1,7 @@
 from typing import Union, cast
-from kentik_api.gen.network_class import models as rest_models
+
 import kentik_api.gen.network_class.services.NetworkClassService as RestNetworkClassModule1
+from kentik_api.gen.network_class import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 

@@ -1,11 +1,13 @@
 from typing import Union, cast
-from kentik_api.gen.bgp_monitoring import models as rest_models
+
+from google.protobuf.json_format import MessageToDict, ParseDict
+
 import kentik_api.gen.bgp_monitoring.services.BgpMonitoringAdminService as RestBgpMonitoringModule1
 import kentik_api.gen.bgp_monitoring.services.BgpMonitoringDataService as RestBgpMonitoringModule2
+from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.gen.bgp_monitoring import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
-from google.protobuf.json_format import MessageToDict, ParseDict
-from kentik_api.core.grpc_runtime import call_grpc
 
 
 class BgpMonitoringServiceWrapper:

@@ -1,8 +1,9 @@
 from typing import Union, cast
-from kentik_api.gen.mkp import models as rest_models
+
 import kentik_api.gen.mkp.services.PackageService as RestMkpModule1
 import kentik_api.gen.mkp.services.TenantService as RestMkpModule2
 import kentik_api.gen.mkp.services.TenantUserService as RestMkpModule3
+from kentik_api.gen.mkp import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 

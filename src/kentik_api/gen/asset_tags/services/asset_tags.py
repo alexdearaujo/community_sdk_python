@@ -1,10 +1,12 @@
 from typing import Union, cast
-from kentik_api.gen.asset_tags import models as rest_models
+
+from google.protobuf.json_format import MessageToDict, ParseDict
+
 import kentik_api.gen.asset_tags.services.AssetTagsService as RestAssetTagsModule1
+from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.gen.asset_tags import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
-from google.protobuf.json_format import MessageToDict, ParseDict
-from kentik_api.core.grpc_runtime import call_grpc
 
 
 class AssetTagsServiceWrapper:

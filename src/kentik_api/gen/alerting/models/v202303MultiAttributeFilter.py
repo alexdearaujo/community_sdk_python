@@ -20,3 +20,5 @@ class v202303MultiAttributeFilter(BaseModel):
     filters: Optional[List[Optional[v202303KeyValueFilter]]] = Field(
         validation_alias="filters", default=None
     )
+
+    strict: Optional[bool] = Field(validation_alias="strict", default=None)

@@ -1,10 +1,12 @@
 from typing import Union, cast
-from kentik_api.gen.as_group import models as rest_models
+
+from google.protobuf.json_format import MessageToDict, ParseDict
+
 import kentik_api.gen.as_group.services.ASGroupService as RestAsGroupModule1
+from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.gen.as_group import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
-from google.protobuf.json_format import MessageToDict, ParseDict
-from kentik_api.core.grpc_runtime import call_grpc
 
 
 class AsGroupServiceWrapper:
@@ -29,7 +31,7 @@ class AsGroupServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def list_a_s_groups(
+    def list_as_groups(
         self,
     ) -> rest_models.ListASGroupsResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -50,7 +52,7 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_a_s_group(
+    def create_as_group(
         self, *, data: rest_models.CreateASGroupRequest
     ) -> rest_models.CreateASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -77,7 +79,7 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_a_s_group(self, *, asGroupid: str) -> rest_models.GetASGroupResponse:
+    def get_as_group(self, *, asGroupid: str) -> rest_models.GetASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -100,7 +102,7 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_a_s_group(
+    def update_as_group(
         self, *, asGroupid: str, data: rest_models.ASGroupServiceUpdateASGroupBody
     ) -> rest_models.UpdateASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -133,7 +135,7 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_a_s_group(self, *, asGroupid: str) -> rest_models.DeleteASGroupResponse:
+    def delete_as_group(self, *, asGroupid: str) -> rest_models.DeleteASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(

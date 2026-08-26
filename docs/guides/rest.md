@@ -21,7 +21,7 @@ Every generated service is available as an attribute on the client:
 <!-- kentik-gen:list-methods-example -->
 ```python
 response = client.alerting.list_comments()
-response = client.as_group.list_a_s_groups()
+response = client.as_group.list_as_groups()
 response = client.asset_tags.list_tag_keys()
 ```
 <!-- /kentik-gen:list-methods-example -->
