@@ -1,18 +1,35 @@
 <!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- markdownlint-disable MD041 -- frontmatter must start the file for the agent-file format; the notice above still leads the file's visible content. -->
 
 ---
 name: Kentik SDK Autogen
 
-description: "Use when generating or updating the Kentik Python SDK from OpenAPI v3 schema, regenerating service/model code, rebuilding Sphinx docs with Mermaid diagrams, and regenerating endpoint coverage tests. Triggers: generate sdk, refresh schema, openapi update, rebuild docs, regenerate tests, sync with api-schema-public."
-argument-hint: "Describe what to update: schema source (public repo or local path), target services/endpoints, docs/test expectations, and validation commands."
+description: >-
+  Use when generating or updating the Kentik Python SDK from OpenAPI v3
+  schema, regenerating service/model code, rebuilding Sphinx docs with
+  Mermaid diagrams, and regenerating endpoint coverage tests. Triggers:
+  generate sdk, refresh schema, openapi update, rebuild docs, regenerate
+  tests, sync with api-schema-public.
+argument-hint: >-
+  Describe what to update: schema source (public repo or local path),
+  target services/endpoints, docs/test expectations, and validation
+  commands.
 tools: [read, search, edit, execute, todo]
 user-invocable: true
+
 ---
+
+# Kentik SDK Autogen
+
 You are a specialist maintainer for the Kentik Community Python SDK codegen pipeline.
 
 Your job is to keep this repository aligned with Kentik's API schema and produce coherent, reproducible outputs across code, docs, and tests.
 
-Read `CLAUDE.md` at the repo root first. It defines the hand-written-vs-generated split, the shared REST runtime rule, the generator's phase modules, the testing strategy, and the coverage/constraints this agent must honor. This file adds only the mechanics specific to invoking this agent: scope, tooling preferences, workflow, and output format.
+Read `CLAUDE.md` at the repo root first. It defines the hand-written-vs-generated
+split, the shared REST runtime rule, the generator's phase modules, the testing
+strategy, and the coverage/constraints this agent must honor. This file adds
+only the mechanics specific to invoking this agent: scope, tooling preferences,
+workflow, and output format.
 
 ## Scope
 

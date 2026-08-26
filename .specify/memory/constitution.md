@@ -21,6 +21,7 @@ Deferred TODOs: none
 ## Core Principles
 
 ### I. Generated Code Is Never Hand-Edited
+
 `src/kentik_api/gen/`, `client_mixin.py`, and the generated docs pages under
 `docs/sphinx/services/` and `docs/sphinx/sdk_runtime_architecture.md` are wiped
 and rebuilt by `make generate` on every run. MUST NOT hand-edit any generated
@@ -32,6 +33,7 @@ when generated service directories don't match the schema's service
 directories; partial or manual patches do not survive it.
 
 ### II. One Shared Runtime for Every Endpoint
+
 Every REST call MUST go through `request_json()` in
 `src/kentik_api/core/rest_runtime.py`; every gRPC call MUST go through
 `call_grpc()` in `src/kentik_api/core/grpc_runtime.py`. These centralize auth
@@ -42,6 +44,7 @@ request logic into individual service wrappers. Extend `request_json`,
 `call_grpc`, or `APIConfig` instead.
 
 ### III. Generator Phase Modules Stay Independently Testable
+
 `scripts/generation/` is split into single-concern phase modules (`parity`,
 `error_package`, `fixup`, `wrapper_generation`, `docs_rendering`,
 `endpoint_docs`), each independently unit-tested under `tests/generator/`.
@@ -52,6 +55,7 @@ form. A helper used by only one phase module stays local to that module rather
 than moving into `_shared.py` "for consistency."
 
 ### IV. Test Coverage Must Be Exhaustive, Not Representative
+
 Generated and contract tests MUST exercise every endpoint and every option
 discoverable from the OpenAPI schemas: every operationId (path × method),
 every declared request parameter and body field, and every declared response
@@ -61,6 +65,7 @@ Incomplete endpoint or option coverage is a bug in the test suite or the
 generator, not an acceptable gap.
 
 ### V. End-to-End Tests Are Opt-In and Safe-by-Default
+
 `tests/e2e/` runs against the real Kentik API and MUST NOT run as part of
 `make test`, `make all`, or default CI. It MUST stay gated behind an explicit
 opt-in (`make test-e2e`, a `-m e2e` marker, or both). Coverage MUST default to
@@ -71,6 +76,7 @@ and adding such coverage MUST be called out explicitly rather than added as a
 side effect of other work.
 
 ### VI. Credentials Never Enter Code, Logs, or Prompts
+
 Credentials load only from the project-root `.env` (`KENTIK_EMAIL`,
 `KENTIK_API_TOKEN`) via `find_dotenv`/`load_dotenv`, with explicit constructor
 args to `KentikAPI(...)` overriding env values. MUST NOT hardcode credentials
@@ -78,6 +84,7 @@ in tests or examples, and MUST NOT read or print `.env` contents in code,
 tests, or agent output.
 
 ### VII. Compatibility and Scope Discipline
+
 MUST NOT introduce breaking API surface changes without calling them out
 explicitly. Changes MUST stay focused; unrelated refactors belong in a
 separate change. Known generator warnings are non-blocking but MUST be

@@ -19,6 +19,7 @@ together and raises `RuntimeError` — reusing means no new error-handling
 convention to invent.
 
 **Alternatives considered**:
+
 - A new `scripts/generation/schema_validation.py` module. Rejected: the
   constitution (Principle III) lists `parity.py` as an existing
   single-concern phase module; splitting one small, closely-related check
@@ -49,6 +50,7 @@ validation, which the spec's Assumptions section explicitly scopes out as
 unnecessary for this incident.
 
 **Alternatives considered**:
+
 - Full JSON Schema / OpenAPI v2 spec validation (e.g. via a schema
   validation library). Rejected as disproportionate: adds a new dependency
   for a problem that structural key-presence checking already solves, and
@@ -87,6 +89,7 @@ in `tests/generator/test_generate_sdk.py`) asserts this ordering via AST
 line numbers, so it can't silently regress again.
 
 **Alternatives considered**:
+
 - Validating inside the per-service loop, right before
   `patched_swagger()`. Rejected: this would only fail after some services
   had already been fully generated (partial output), and would report only

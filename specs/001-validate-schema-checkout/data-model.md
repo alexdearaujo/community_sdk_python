@@ -8,7 +8,7 @@ persisted.
 One swagger file that failed structural validation.
 
 | Field | Type | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `path` | `Path` | Absolute path to the offending swagger file. |
 | `reason` | `str` | Human-readable reason: `"could not read file: ..."`, `"file is empty"`, `"invalid JSON: ..."`, `"top-level JSON value is not an object"`, or `"missing required key(s): ..."`. |
 

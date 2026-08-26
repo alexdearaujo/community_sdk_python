@@ -58,7 +58,7 @@ single-purpose addition, not a validation framework
 Checked against `.specify/memory/constitution.md` v1.1.0:
 
 | Principle / Section | Assessment |
-|---|---|
+| --- | --- |
 | I. Generated Code Is Never Hand-Edited | PASS — only hand-written files change (`scripts/generation/parity.py`, `scripts/generate_sdk.py`); nothing under `gen/` is touched. |
 | II. One Shared Runtime for Every Endpoint | N/A — this feature is generator tooling, not request/runtime code. |
 | III. Generator Phase Modules Stay Independently Testable | PASS — validation logic is added to `parity.py` (an existing phase module) as plain functions, unit-tested in `tests/generator/test_parity.py` with no real schema checkout required. |
@@ -116,4 +116,3 @@ related check.
 ## Complexity Tracking
 
 *No violations — table intentionally omitted.*
-
