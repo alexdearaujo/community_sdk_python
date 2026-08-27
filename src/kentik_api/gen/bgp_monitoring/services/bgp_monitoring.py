@@ -54,7 +54,9 @@ class BgpMonitoringServiceWrapper:
                 )
             _req = self._grpc_pb2_1.ListMonitorsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListMonitors, _req)
-            return rest_models.ListMonitorsResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListMonitorsResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule1.ListMonitors(
@@ -80,7 +82,7 @@ class BgpMonitoringServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateMonitor, _req)
             return rest_models.CreateMonitorResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -104,7 +106,9 @@ class BgpMonitoringServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetMonitor, _req)
-            return rest_models.GetMonitorResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetMonitorResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule1.GetMonitor(
@@ -132,7 +136,7 @@ class BgpMonitoringServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateMonitor, _req)
             return rest_models.UpdateMonitorResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -157,7 +161,7 @@ class BgpMonitoringServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteMonitor, _req)
             return rest_models.DeleteMonitorResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -189,7 +193,7 @@ class BgpMonitoringServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.SetMonitorStatus, _req)
             return rest_models.SetMonitorStatusResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -216,7 +220,7 @@ class BgpMonitoringServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.GetMetricsForTarget, _req)
             return rest_models.GetMetricsForTargetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -243,7 +247,7 @@ class BgpMonitoringServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.GetRoutesForTarget, _req)
             return rest_models.GetRoutesForTargetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

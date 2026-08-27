@@ -366,8 +366,12 @@ def _generate_service_wrappers():
                     if is_none_return:
                         grpc_lines.append("            return None")
                     else:
+                        # always_print_fields_with_no_presence: without it, MessageToDict
+                        # omits scalar fields left at their zero value (empty string, 0,
+                        # false), which then fails model_validate() against a Pydantic
+                        # model where the schema marks that field required.
                         grpc_lines.append(
-                            f"            return {return_type}.model_validate(MessageToDict(_resp))"
+                            f"            return {return_type}.model_validate(MessageToDict(_resp, always_print_fields_with_no_presence=True))"
                         )
                 else:
                     grpc_lines = [

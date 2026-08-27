@@ -42,7 +42,7 @@ class NotificationChannelServiceWrapper:
             _req = self._grpc_pb2_1.ListNotificationChannelsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListNotificationChannels, _req)
             return rest_models.ListNotificationChannelsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -69,7 +69,7 @@ class NotificationChannelServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.SearchNotificationChannels, _req)
             return rest_models.SearchNotificationChannelsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -96,7 +96,7 @@ class NotificationChannelServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetNotificationChannel, _req)
             return rest_models.GetNotificationChannelResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

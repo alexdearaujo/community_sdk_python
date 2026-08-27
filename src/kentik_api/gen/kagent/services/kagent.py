@@ -111,7 +111,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.ListAgentCapabilities, _req)
             return rest_models.ListAgentCapabilitiesResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -145,7 +145,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetAgentCapability, _req)
             return rest_models.GetAgentCapabilityResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -181,7 +181,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteAgentCapability, _req)
             return rest_models.DeleteAgentCapabilityResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -227,7 +227,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpsertAgentCapability, _req)
             return rest_models.UpsertAgentCapabilityResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -271,7 +271,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.ListAgents, _req)
-            return rest_models.ListAgentsResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListAgentsResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule2.ListAgents(
@@ -300,7 +302,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.CreateAgent, _req)
-            return rest_models.CreateAgentResponse.model_validate(MessageToDict(_resp))
+            return rest_models.CreateAgentResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule2.CreateAgent(
@@ -323,7 +327,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.Authorize, _req)
-            return rest_models.AuthorizeResponse.model_validate(MessageToDict(_resp))
+            return rest_models.AuthorizeResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule2.Authorize(
@@ -349,7 +355,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.GenerateInstallCommands, _req)
             return rest_models.GenerateInstallCommandsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -382,7 +388,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.GetAgent, _req)
-            return rest_models.GetAgentResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetAgentResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule2.GetAgent(
@@ -416,7 +424,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.DeleteAgent, _req)
-            return rest_models.DeleteAgentResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteAgentResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule2.DeleteAgent(
@@ -451,7 +461,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.UpdateAgent, _req)
-            return rest_models.UpdateAgentResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateAgentResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule2.UpdateAgent(
@@ -647,7 +659,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_5.CreateConfig, _req)
-            return rest_models.CreateConfigResponse.model_validate(MessageToDict(_resp))
+            return rest_models.CreateConfigResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule5.CreateConfig(
@@ -670,7 +684,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_5.GetConfig, _req)
-            return rest_models.GetConfigResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetConfigResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule5.GetConfig(
@@ -693,7 +709,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_5.DeleteConfig, _req)
-            return rest_models.DeleteConfigResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteConfigResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule5.DeleteConfig(
@@ -722,7 +740,9 @@ class KagentServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_5.UpdateConfig, _req)
-            return rest_models.UpdateConfigResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateConfigResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKagentModule5.UpdateConfig(
@@ -746,7 +766,7 @@ class KagentServiceWrapper:
             _req = self._grpc_pb2_6.ListProvisioningTokensRequest()
             _resp = call_grpc(self._grpc_stub_6.ListProvisioningTokens, _req)
             return rest_models.ListProvisioningTokensResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -773,7 +793,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_6.CreateProvisioningToken, _req)
             return rest_models.CreateProvisioningTokenResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -800,7 +820,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_6.GetProvisioningToken, _req)
             return rest_models.GetProvisioningTokenResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -827,7 +847,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_6.ListAgentsByProvisioningToken, _req)
             return rest_models.ListAgentsByProvisioningTokenResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -861,7 +881,7 @@ class KagentServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_6.RevokeProvisioningToken, _req)
             return rest_models.RevokeProvisioningTokenResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

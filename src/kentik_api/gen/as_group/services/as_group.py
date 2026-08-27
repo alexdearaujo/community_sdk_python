@@ -41,7 +41,9 @@ class AsGroupServiceWrapper:
                 )
             _req = self._grpc_pb2_1.ListASGroupsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListASGroups, _req)
-            return rest_models.ListASGroupsResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListASGroupsResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAsGroupModule1.ListASGroups(
@@ -67,7 +69,7 @@ class AsGroupServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateASGroup, _req)
             return rest_models.CreateASGroupResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -91,7 +93,9 @@ class AsGroupServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetASGroup, _req)
-            return rest_models.GetASGroupResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetASGroupResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAsGroupModule1.GetASGroup(
@@ -121,7 +125,7 @@ class AsGroupServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateASGroup, _req)
             return rest_models.UpdateASGroupResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -148,7 +152,7 @@ class AsGroupServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteASGroup, _req)
             return rest_models.DeleteASGroupResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -42,7 +42,7 @@ class SiteServiceWrapper:
             _req = self._grpc_pb2_1.ListSiteMarketsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListSiteMarkets, _req)
             return rest_models.ListSiteMarketsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -69,7 +69,7 @@ class SiteServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateSiteMarket, _req)
             return rest_models.CreateSiteMarketResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -94,7 +94,7 @@ class SiteServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetSiteMarket, _req)
             return rest_models.GetSiteMarketResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -123,7 +123,7 @@ class SiteServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateSiteMarket, _req)
             return rest_models.UpdateSiteMarketResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -148,7 +148,7 @@ class SiteServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteSiteMarket, _req)
             return rest_models.DeleteSiteMarketResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -170,7 +170,9 @@ class SiteServiceWrapper:
                 )
             _req = self._grpc_pb2_1.ListSitesRequest()
             _resp = call_grpc(self._grpc_stub_1.ListSites, _req)
-            return rest_models.ListSitesResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListSitesResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.ListSites(
@@ -195,7 +197,9 @@ class SiteServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.CreateSite, _req)
-            return rest_models.CreateSiteResponse.model_validate(MessageToDict(_resp))
+            return rest_models.CreateSiteResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.CreateSite(
@@ -218,7 +222,9 @@ class SiteServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetSite, _req)
-            return rest_models.GetSiteResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetSiteResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.GetSite(
@@ -245,7 +251,9 @@ class SiteServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateSite, _req)
-            return rest_models.UpdateSiteResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateSiteResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.UpdateSite(
@@ -268,7 +276,9 @@ class SiteServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteSite, _req)
-            return rest_models.DeleteSiteResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteSiteResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSiteModule1.DeleteSite(

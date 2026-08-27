@@ -46,7 +46,7 @@ class SavedFilterServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateSavedFilter, _req)
             return rest_models.CreateSavedFilterResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -71,7 +71,7 @@ class SavedFilterServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetSavedFilter, _req)
             return rest_models.GetSavedFilterResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -100,7 +100,7 @@ class SavedFilterServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateSavedFilter, _req)
             return rest_models.UpdateSavedFilterResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -125,7 +125,7 @@ class SavedFilterServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteSavedFilter, _req)
             return rest_models.DeleteSavedFilterResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -148,7 +148,7 @@ class SavedFilterServiceWrapper:
             _req = self._grpc_pb2_1.ListSavedFiltersRequest()
             _resp = call_grpc(self._grpc_stub_1.ListSavedFilters, _req)
             return rest_models.ListSavedFiltersResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -171,7 +171,7 @@ class SavedFilterServiceWrapper:
             _req = self._grpc_pb2_1.ListSavedFiltersAllRequest()
             _resp = call_grpc(self._grpc_stub_1.ListSavedFiltersAll, _req)
             return rest_models.ListSavedFiltersAllResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -46,7 +46,7 @@ class ConnectivityCheckerServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateConnectivityReport, _req)
             return rest_models.CreateConnectivityReportResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

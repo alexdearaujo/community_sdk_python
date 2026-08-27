@@ -41,7 +41,9 @@ class LabelServiceWrapper:
                 )
             _req = self._grpc_pb2_1.ListLabelsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListLabels, _req)
-            return rest_models.ListLabelsResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListLabelsResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestLabelModule1.ListLabels(
@@ -66,7 +68,9 @@ class LabelServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.CreateLabel, _req)
-            return rest_models.CreateLabelResponse.model_validate(MessageToDict(_resp))
+            return rest_models.CreateLabelResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestLabelModule1.CreateLabel(
@@ -93,7 +97,9 @@ class LabelServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateLabel, _req)
-            return rest_models.UpdateLabelResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateLabelResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestLabelModule1.UpdateLabel(
@@ -116,7 +122,9 @@ class LabelServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteLabel, _req)
-            return rest_models.DeleteLabelResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteLabelResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestLabelModule1.DeleteLabel(

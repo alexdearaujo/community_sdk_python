@@ -42,7 +42,7 @@ class CapacityPlanServiceWrapper:
             _req = self._grpc_pb2_1.ListCapacityPlansRequest()
             _resp = call_grpc(self._grpc_stub_1.ListCapacityPlans, _req)
             return rest_models.ListCapacityPlansResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -65,7 +65,7 @@ class CapacityPlanServiceWrapper:
             _req = self._grpc_pb2_1.ListCapacitySummariesRequest()
             _resp = call_grpc(self._grpc_stub_1.ListCapacitySummaries, _req)
             return rest_models.ListCapacitySummariesResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -90,7 +90,7 @@ class CapacityPlanServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetCapacityPlan, _req)
             return rest_models.GetCapacityPlanResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -117,7 +117,7 @@ class CapacityPlanServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetCapacitySummary, _req)
             return rest_models.GetCapacitySummaryResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -46,7 +46,7 @@ class AiAdvisorServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateChatSession, _req)
             return rest_models.CreateChatSessionResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -73,7 +73,7 @@ class AiAdvisorServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateChatSession, _req)
             return rest_models.UpdateChatSessionResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -98,7 +98,7 @@ class AiAdvisorServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetChatSession, _req)
             return rest_models.GetChatSessionResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

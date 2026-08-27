@@ -127,7 +127,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Create, _req)
             return rest_models.AlertAutoAckServiceCreateResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -154,7 +154,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.List, _req)
             return rest_models.AlertAutoAckServiceListResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -179,7 +179,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Get, _req)
             return rest_models.AlertAutoAckServiceGetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -206,7 +206,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Delete, _req)
             return rest_models.AlertAutoAckServiceDeleteResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -237,7 +237,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Replace, _req)
             return rest_models.AlertAutoAckServiceReplaceResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -266,7 +266,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.List, _req)
             return rest_models.AlertServiceListResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -293,7 +293,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.Clear, _req)
             return rest_models.AlertServiceClearResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -320,7 +320,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.ListComments, _req)
             return rest_models.AlertServiceListCommentsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -351,7 +351,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.AddComment, _req)
             return rest_models.AlertServiceAddCommentResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -384,7 +384,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.SetExternalContext, _req)
             return rest_models.AlertServiceSetExternalContextResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -411,7 +411,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Get, _req)
             return rest_models.AlertServiceGetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -440,7 +440,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.Ack, _req)
             return rest_models.AlertServiceAckResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -469,7 +469,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UnAck, _req)
             return rest_models.AlertServiceUnAckResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -496,7 +496,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Create, _req)
             return rest_models.AlertSilenceNotificationsServiceCreateResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -524,7 +524,7 @@ class AlertingServiceWrapper:
             _resp = call_grpc(self._grpc_stub_7.List, _req)
             return (
                 rest_models.AlertSilenceNotificationsServiceListResponse.model_validate(
-                    MessageToDict(_resp)
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
                 )
             )
         elif isinstance(self._transport, RestTransport):
@@ -553,7 +553,7 @@ class AlertingServiceWrapper:
             _resp = call_grpc(self._grpc_stub_7.Get, _req)
             return (
                 rest_models.AlertSilenceNotificationsServiceGetResponse.model_validate(
-                    MessageToDict(_resp)
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
                 )
             )
         elif isinstance(self._transport, RestTransport):
@@ -581,7 +581,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Delete, _req)
             return rest_models.AlertSilenceNotificationsServiceDeleteResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -610,7 +610,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Replace, _req)
             return rest_models.AlertSilenceNotificationsServiceReplaceResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -661,7 +661,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.List, _req)
             return rest_models.MitigationMethodsServiceListResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -697,7 +697,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Get, _req)
             return rest_models.MitigationMethodsServiceGetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -748,7 +748,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.List, _req)
             return rest_models.MitigationPlatformsServiceListResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -784,7 +784,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Get, _req)
             return rest_models.MitigationPlatformsServiceGetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -843,7 +843,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.List, _req)
             return rest_models.MitigationsServiceListResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -883,7 +883,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Create, _req)
             return rest_models.MitigationsServiceCreateResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -927,7 +927,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Get, _req)
             return rest_models.MitigationsServiceGetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -988,7 +988,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.List, _req)
             return rest_models.PolicyServiceListResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1019,7 +1019,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Get, _req)
             return rest_models.PolicyServiceGetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1056,7 +1056,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_5.Disable, _req)
             return rest_models.PolicyServiceDisableResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1094,7 +1094,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_5.Enable, _req)
             return rest_models.PolicyServiceEnableResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1124,7 +1124,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Create, _req)
             return rest_models.SuppressionServiceCreateResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1151,7 +1151,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.List, _req)
             return rest_models.SuppressionServiceListResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1176,7 +1176,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Get, _req)
             return rest_models.SuppressionServiceGetResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1203,7 +1203,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Delete, _req)
             return rest_models.SuppressionServiceDeleteResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1232,7 +1232,7 @@ class AlertingServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_7.Replace, _req)
             return rest_models.SuppressionServiceReplaceResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

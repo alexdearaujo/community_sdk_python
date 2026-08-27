@@ -59,7 +59,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.ListAgentAlerts, _req)
             return rest_models.ListAgentAlertsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -86,7 +86,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.CreateAgentAlert, _req)
             return rest_models.CreateAgentAlertResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -111,7 +111,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.GetAgentAlert, _req)
             return rest_models.GetAgentAlertResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -140,7 +140,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.UpdateAgentAlert, _req)
             return rest_models.UpdateAgentAlertResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -165,7 +165,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.DeleteAgentAlert, _req)
             return rest_models.DeleteAgentAlertResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -187,7 +187,9 @@ class SyntheticsServiceWrapper:
                 )
             _req = self._grpc_pb2_2.ListAgentsRequest()
             _resp = call_grpc(self._grpc_stub_2.ListAgents, _req)
-            return rest_models.ListAgentsResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListAgentsResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.ListAgents(
@@ -210,7 +212,9 @@ class SyntheticsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.GetAgent, _req)
-            return rest_models.GetAgentResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetAgentResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.GetAgent(
@@ -239,7 +243,9 @@ class SyntheticsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.UpdateAgent, _req)
-            return rest_models.UpdateAgentResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateAgentResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.UpdateAgent(
@@ -264,7 +270,9 @@ class SyntheticsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.DeleteAgent, _req)
-            return rest_models.DeleteAgentResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteAgentResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.DeleteAgent(
@@ -285,7 +293,9 @@ class SyntheticsServiceWrapper:
                 )
             _req = self._grpc_pb2_2.ListTestsRequest()
             _resp = call_grpc(self._grpc_stub_2.ListTests, _req)
-            return rest_models.ListTestsResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListTestsResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.ListTests(
@@ -310,7 +320,9 @@ class SyntheticsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.CreateTest, _req)
-            return rest_models.CreateTestResponse.model_validate(MessageToDict(_resp))
+            return rest_models.CreateTestResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.CreateTest(
@@ -333,7 +345,9 @@ class SyntheticsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.GetTest, _req)
-            return rest_models.GetTestResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetTestResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.GetTest(
@@ -360,7 +374,9 @@ class SyntheticsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.UpdateTest, _req)
-            return rest_models.UpdateTestResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateTestResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.UpdateTest(
@@ -383,7 +399,9 @@ class SyntheticsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_2.DeleteTest, _req)
-            return rest_models.DeleteTestResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteTestResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSyntheticsModule1.DeleteTest(
@@ -411,7 +429,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_2.SetTestStatus, _req)
             return rest_models.SetTestStatusResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -438,7 +456,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetResultsForTests, _req)
             return rest_models.GetResultsForTestsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -465,7 +483,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetResultsForTestsCsv, _req)
             return rest_models.GetResultsForTestsCsvResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -492,7 +510,7 @@ class SyntheticsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetTraceForTest, _req)
             return rest_models.GetTraceForTestResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -42,7 +42,7 @@ class CredentialServiceWrapper:
             _req = self._grpc_pb2_1.ListCredentialGroupRequest()
             _resp = call_grpc(self._grpc_stub_1.ListCredentialGroup, _req)
             return rest_models.ListCredentialGroupResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -69,7 +69,7 @@ class CredentialServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetCredentialGroup, _req)
             return rest_models.GetCredentialGroupResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

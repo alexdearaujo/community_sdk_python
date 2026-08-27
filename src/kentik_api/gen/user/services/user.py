@@ -41,7 +41,9 @@ class UserServiceWrapper:
                 )
             _req = self._grpc_pb2_1.ListUsersRequest()
             _resp = call_grpc(self._grpc_stub_1.ListUsers, _req)
-            return rest_models.ListUsersResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListUsersResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestUserModule1.ListUsers(
@@ -66,7 +68,9 @@ class UserServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.CreateUser, _req)
-            return rest_models.CreateUserResponse.model_validate(MessageToDict(_resp))
+            return rest_models.CreateUserResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestUserModule1.CreateUser(
@@ -89,7 +93,9 @@ class UserServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetUser, _req)
-            return rest_models.GetUserResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetUserResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestUserModule1.GetUser(
@@ -116,7 +122,9 @@ class UserServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateUser, _req)
-            return rest_models.UpdateUserResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateUserResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestUserModule1.UpdateUser(
@@ -139,7 +147,9 @@ class UserServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteUser, _req)
-            return rest_models.DeleteUserResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteUserResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestUserModule1.DeleteUser(
@@ -165,7 +175,7 @@ class UserServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.ResetActiveSessions, _req)
             return rest_models.ResetActiveSessionsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -190,7 +200,7 @@ class UserServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.ResetApiToken, _req)
             return rest_models.ResetApiTokenResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

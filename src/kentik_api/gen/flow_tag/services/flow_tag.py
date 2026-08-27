@@ -62,7 +62,7 @@ class FlowTagServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.SearchFlowTag, _req)
             return rest_models.SearchFlowTagResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -94,7 +94,7 @@ class FlowTagServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateFlowTag, _req)
             return rest_models.CreateFlowTagResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -118,7 +118,9 @@ class FlowTagServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetFlowTag, _req)
-            return rest_models.GetFlowTagResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetFlowTagResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestFlowTagModule1.GetFlowTag(
@@ -148,7 +150,7 @@ class FlowTagServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateFlowTag, _req)
             return rest_models.UpdateFlowTagResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -175,7 +177,7 @@ class FlowTagServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteFlowTag, _req)
             return rest_models.DeleteFlowTagResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

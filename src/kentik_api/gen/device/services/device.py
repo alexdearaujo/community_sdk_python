@@ -52,7 +52,9 @@ class DeviceServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.ListDevices, _req)
-            return rest_models.ListDevicesResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListDevicesResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.ListDevices(
@@ -79,7 +81,9 @@ class DeviceServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.CreateDevice, _req)
-            return rest_models.CreateDeviceResponse.model_validate(MessageToDict(_resp))
+            return rest_models.CreateDeviceResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.CreateDevice(
@@ -105,7 +109,7 @@ class DeviceServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateDevices, _req)
             return rest_models.CreateDevicesResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -132,7 +136,7 @@ class DeviceServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteDevices, _req)
             return rest_models.DeleteDevicesResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -159,7 +163,7 @@ class DeviceServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateDevices, _req)
             return rest_models.UpdateDevicesResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -193,7 +197,7 @@ class DeviceServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetDeviceByName, _req)
             return rest_models.GetDeviceByNameResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -228,7 +232,9 @@ class DeviceServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetDevice, _req)
-            return rest_models.GetDeviceResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetDeviceResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.GetDevice(
@@ -259,7 +265,9 @@ class DeviceServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateDevice, _req)
-            return rest_models.UpdateDeviceResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateDeviceResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.UpdateDevice(
@@ -284,7 +292,9 @@ class DeviceServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteDevice, _req)
-            return rest_models.DeleteDeviceResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteDeviceResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.DeleteDevice(
@@ -312,7 +322,7 @@ class DeviceServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateDeviceLabels, _req)
             return rest_models.UpdateDeviceLabelsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

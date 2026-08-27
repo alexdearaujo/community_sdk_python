@@ -42,7 +42,7 @@ class CloudExportServiceWrapper:
             _req = self._grpc_pb2_1.ListCloudExportsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListCloudExports, _req)
             return rest_models.ListCloudExportsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -69,7 +69,7 @@ class CloudExportServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateCloudExport, _req)
             return rest_models.CreateCloudExportResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -94,7 +94,7 @@ class CloudExportServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetCloudExport, _req)
             return rest_models.GetCloudExportResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -128,7 +128,7 @@ class CloudExportServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateCloudExport, _req)
             return rest_models.UpdateCloudExportResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -157,7 +157,7 @@ class CloudExportServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteCloudExport, _req)
             return rest_models.DeleteCloudExportResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

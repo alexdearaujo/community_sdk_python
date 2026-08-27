@@ -64,7 +64,7 @@ class KmiServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetGlobalInsights, _req)
             return rest_models.GetGlobalInsightsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -117,7 +117,7 @@ class KmiServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetASNInsights, _req)
             return rest_models.GetASNInsightsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -164,7 +164,7 @@ class KmiServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetASNDetails, _req)
             return rest_models.GetASNDetailsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -211,7 +211,9 @@ class KmiServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetRankings, _req)
-            return rest_models.GetRankingsResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetRankingsResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKmiModule1.GetRankings(
@@ -236,7 +238,9 @@ class KmiServiceWrapper:
                 )
             _req = self._grpc_pb2_1.ListMarketsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListMarkets, _req)
-            return rest_models.ListMarketsResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListMarketsResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKmiModule1.ListMarkets(

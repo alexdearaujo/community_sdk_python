@@ -42,7 +42,7 @@ class CustomApplicationServiceWrapper:
             _req = self._grpc_pb2_1.ListCustomApplicationsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListCustomApplications, _req)
             return rest_models.ListCustomApplicationsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -69,7 +69,7 @@ class CustomApplicationServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateCustomApplication, _req)
             return rest_models.CreateCustomApplicationResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -100,7 +100,7 @@ class CustomApplicationServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetCustomApplication, _req)
             return rest_models.GetCustomApplicationResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -136,7 +136,7 @@ class CustomApplicationServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateCustomApplication, _req)
             return rest_models.UpdateCustomApplicationResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -169,7 +169,7 @@ class CustomApplicationServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteCustomApplication, _req)
             return rest_models.DeleteCustomApplicationResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

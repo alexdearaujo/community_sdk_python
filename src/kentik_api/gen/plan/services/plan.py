@@ -41,7 +41,9 @@ class PlanServiceWrapper:
                 )
             _req = self._grpc_pb2_1.ListPlansRequest()
             _resp = call_grpc(self._grpc_stub_1.ListPlans, _req)
-            return rest_models.ListPlansResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListPlansResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestPlanModule1.ListPlans(

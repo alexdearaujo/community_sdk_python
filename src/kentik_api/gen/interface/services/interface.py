@@ -66,7 +66,7 @@ class InterfaceServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.ListInterface, _req)
             return rest_models.ListInterfaceResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -164,7 +164,7 @@ class InterfaceServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.ManualClassify, _req)
             return rest_models.ManualClassifyResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -42,7 +42,7 @@ class CustomDimensionServiceWrapper:
             _req = self._grpc_pb2_1.ListCustomDimensionsRequest()
             _resp = call_grpc(self._grpc_stub_1.ListCustomDimensions, _req)
             return rest_models.ListCustomDimensionsResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -73,7 +73,7 @@ class CustomDimensionServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetCustomDimensionInfo, _req)
             return rest_models.GetCustomDimensionInfoResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -109,7 +109,7 @@ class CustomDimensionServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateCustomDimension, _req)
             return rest_models.UpdateCustomDimensionResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -142,7 +142,7 @@ class CustomDimensionServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteCustomDimension, _req)
             return rest_models.DeleteCustomDimensionResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -178,7 +178,7 @@ class CustomDimensionServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreatePopulator, _req)
             return rest_models.CreatePopulatorResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -218,7 +218,9 @@ class CustomDimensionServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetPopulator, _req)
-            return rest_models.GetPopulatorResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetPopulatorResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCustomDimensionModule1.GetPopulator(
@@ -258,7 +260,7 @@ class CustomDimensionServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.UpdatePopulator, _req)
             return rest_models.UpdatePopulatorResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -295,7 +297,7 @@ class CustomDimensionServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeletePopulator, _req)
             return rest_models.DeletePopulatorResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -340,7 +342,7 @@ class CustomDimensionServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.GetPopulatorField, _req)
             return rest_models.GetPopulatorFieldResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -372,7 +374,7 @@ class CustomDimensionServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.CreateCustomDimension, _req)
             return rest_models.CreateCustomDimensionResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

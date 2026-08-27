@@ -43,7 +43,9 @@ class VaultServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.ListSecret, _req)
-            return rest_models.ListSecretResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListSecretResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestVaultModule1.ListSecret(
@@ -66,7 +68,9 @@ class VaultServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetSecret, _req)
-            return rest_models.GetSecretResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetSecretResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestVaultModule1.GetSecret(

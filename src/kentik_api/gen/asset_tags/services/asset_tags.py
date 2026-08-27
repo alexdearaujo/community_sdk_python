@@ -49,7 +49,9 @@ class AssetTagsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetTagValues, _req)
-            return rest_models.GetTagValuesResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetTagValuesResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.GetTagValues(
@@ -72,7 +74,9 @@ class AssetTagsServiceWrapper:
                 )
             _req = self._grpc_pb2_1.ListTagKeysRequest()
             _resp = call_grpc(self._grpc_stub_1.ListTagKeys, _req)
-            return rest_models.ListTagKeysResponse.model_validate(MessageToDict(_resp))
+            return rest_models.ListTagKeysResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.ListTagKeys(
@@ -97,7 +101,9 @@ class AssetTagsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.CreateTagKey, _req)
-            return rest_models.CreateTagKeyResponse.model_validate(MessageToDict(_resp))
+            return rest_models.CreateTagKeyResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.CreateTagKey(
@@ -120,7 +126,9 @@ class AssetTagsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.GetTagKey, _req)
-            return rest_models.GetTagKeyResponse.model_validate(MessageToDict(_resp))
+            return rest_models.GetTagKeyResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.GetTagKey(
@@ -147,7 +155,9 @@ class AssetTagsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.UpdateTagKey, _req)
-            return rest_models.UpdateTagKeyResponse.model_validate(MessageToDict(_resp))
+            return rest_models.UpdateTagKeyResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.UpdateTagKey(
@@ -170,7 +180,9 @@ class AssetTagsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteTagKey, _req)
-            return rest_models.DeleteTagKeyResponse.model_validate(MessageToDict(_resp))
+            return rest_models.DeleteTagKeyResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.DeleteTagKey(
@@ -200,7 +212,7 @@ class AssetTagsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.ListTagValues, _req)
             return rest_models.ListTagValuesResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -228,7 +240,9 @@ class AssetTagsServiceWrapper:
                 ignore_unknown_fields=True,
             )
             _resp = call_grpc(self._grpc_stub_1.SetTagValues, _req)
-            return rest_models.SetTagValuesResponse.model_validate(MessageToDict(_resp))
+            return rest_models.SetTagValuesResponse.model_validate(
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAssetTagsModule1.SetTagValues(
@@ -254,7 +268,7 @@ class AssetTagsServiceWrapper:
             )
             _resp = call_grpc(self._grpc_stub_1.DeleteTagValues, _req)
             return rest_models.DeleteTagValuesResponse.model_validate(
-                MessageToDict(_resp)
+                MessageToDict(_resp, always_print_fields_with_no_presence=True)
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
