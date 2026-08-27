@@ -1,16 +1,18 @@
 <!--
 Sync Impact Report
-Version change: 1.1.0 → 1.2.0
-Rationale: Materially expanded guidance under "Development Workflow & Quality
-Gates" — the v1.1.0 guardrail described a manual check (`git status` on the
-local schema checkout); this amendment records that
-feat/validate-schema-checkout (specs/001-validate-schema-checkout/) turned
-the file-content half of that guardrail into an automatic, enforced check
-(`parity.validate_schema_files_or_raise()`, called before any generated
-output is touched). The manual-check guidance is kept for what the
-automatic check does not cover: a whole service directory silently absent
-from the schema tree, as opposed to a discovered file being corrupted.
-Modified principles: none
+Version change: 1.2.0 → 1.2.1
+Rationale: Resolved the "Known drift" TODO the v1.1.0/v1.2.0 text had left
+under "Architecture & Generation Pipeline": verified current code and
+rewrote the gRPC bullet with the actual, fully-implemented behavior (two
+distinct NotImplementedError cases — missing proto companions vs. no
+matching gRPC method name — not one), replacing the stale "intentionally a
+stub" claim this constitution had flagged for correction. CLAUDE.md and
+src/kentik_api/gen/README.md's generator template
+(scripts/generation/docs_rendering.py) corrected in lockstep, plus a new
+tests/e2e/test_endpoints_e2e_grpc.py (`make test-e2e-grpc`) added as the
+gRPC transport's end-to-end coverage layer.
+Modified principles: none (Architecture & Generation Pipeline bullet
+reworded for accuracy, not the dual-protocol requirement itself)
 Added sections: none (existing bullet reworded, not replaced)
 Removed sections: n/a
 Deferred TODOs: none
@@ -102,15 +104,17 @@ tracked and reduced over time, not silently ignored.
   (`protocol="grpc"`) both route through the same generated
   `*ServiceWrapper`, bridging via `ParseDict` → `call_grpc()` →
   `MessageToDict` → `model_validate()`, and both MUST return the same
-  Pydantic models. **Known drift, resolve when next touching this area**:
-  `CLAUDE.md` currently describes gRPC as "intentionally a stub" with
-  wrapper methods "raising `NotImplementedError` for `GrpcTransport`," but
-  the generated wrappers (e.g. `gen/device/services/device.py`) show
-  `call_grpc()` fully wired against compiled proto companions
-  (`gen/pb_companions/`), with `NotImplementedError` reserved for the
-  fallback case where proto dependencies fail to import for one service.
-  Verify current status in code before restating either claim, and correct
-  whichever side is stale.
+  Pydantic models for every operation gRPC covers. gRPC coverage is
+  per-operation, not per-service or all-or-nothing: a wrapper method
+  raises `NotImplementedError` for `GrpcTransport` either when that
+  service's proto companions failed to import (`gen/pb_companions/`) at
+  wrapper `__init__` time, or when the generator found no gRPC method
+  matching that REST operation's name. Neither case is a bug by itself —
+  `tests/e2e/test_endpoints_e2e_grpc.py` (`make test-e2e-grpc`) treats
+  `NotImplementedError` as an expected, passing outcome for exactly this
+  reason. (This bullet previously flagged a drift against CLAUDE.md's
+  stale "intentionally a stub" claim; resolved 2026-08-26 — both now
+  agree.)
 - Two files look hand-written but are fully regenerated every run and MUST
   NOT be hand-edited: `src/kentik_api/client_mixin.py` and
   `docs/sphinx/sdk_runtime_architecture.md` (plus
@@ -165,4 +169,4 @@ and `/speckit-analyze` MUST treat this constitution as authoritative context;
 complexity or deviation from it MUST be justified explicitly in the relevant
 plan, not silently introduced.
 
-**Version**: 1.2.0 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-08-26
+**Version**: 1.2.1 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-08-26

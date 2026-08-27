@@ -22,7 +22,7 @@ Every service directory has the same shape:
 | `models/` | Pydantic v2 request/response models |
 | `services/` | Raw REST operation functions, plus a unified `<Service>ServiceWrapper` class |
 | `error/` | Per-operation error classes, dispatched from each declared response status code |
-| `pb/` | gRPC stubs (`*_pb2.py`, `*_pb2_grpc.py`); transport is a stub today, see below |
+| `pb/` | gRPC stubs (`*_pb2.py`, `*_pb2_grpc.py`) used by the gRPC transport, see below |
 | `README.md` | One-paragraph pointer to the full Sphinx reference for that service |
 
 ```mermaid
@@ -40,9 +40,13 @@ flowchart TD
 Every generated REST operation, across every service, routes through
 one shared function: `request_json()` in
 [`kentik_api.core`](../core/README.md). No service directory here
-implements its own HTTP, auth, or retry logic. gRPC transport is
-intentionally a stub: generated wrapper methods raise
-`NotImplementedError` for `GrpcTransport`. Only REST is fully wired.
+implements its own HTTP, auth, or retry logic. The gRPC transport is
+fully implemented too: a wrapper method routes through `call_grpc()`
+in [`kentik_api.core`](../core/README.md) whenever the generator
+found a gRPC method matching that REST operation's name. A wrapper
+method raises `NotImplementedError` for `GrpcTransport` only when
+that service's proto companions failed to import, or when no
+matching gRPC method name was found for that operation.
 
 ## Full reference
 

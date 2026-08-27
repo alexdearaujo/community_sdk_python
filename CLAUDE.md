@@ -55,9 +55,19 @@ generation run when generated service directories don't exactly
 match the schema's service directories. Partial or manual patches
 don't survive this check.
 
-gRPC transport is intentionally a stub today. Generated wrapper
-methods raise `NotImplementedError` for `GrpcTransport`. Only REST
-is fully wired.
+gRPC transport is fully implemented, not a stub. Every generated
+wrapper method routes a `GrpcTransport` call through `call_grpc()`
+when the generator found a gRPC method matching that REST
+operation's name, bridging via `ParseDict` → `call_grpc()` →
+`MessageToDict` → `model_validate()` against proto companions
+compiled into `gen/pb_companions/`. A wrapper method raises
+`NotImplementedError` for `GrpcTransport` in exactly two cases: the
+service's proto companions failed to import at wrapper `__init__`
+time ("gRPC proto dependencies not installed for `<service>`
+service"), or no matching gRPC method name was found for that REST
+operation ("gRPC translation for `<Operation>` is not yet
+implemented"). Both REST and gRPC return identical Pydantic models
+for every operation gRPC covers.
 
 ### The generator's phase modules
 
@@ -284,8 +294,9 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   never wires in `tests/e2e/`)
 - `make test-generated` / `make test-runtime` / `make test-smoke` /
   `make test-generator` — one mocked test layer at a time
-- `make test-e2e` (required addition, see Testing strategy) —
-  opt-in end-to-end suite against the real Kentik API. Must never
+- `make test-e2e` / `make test-e2e-grpc` (required addition, see
+  Testing strategy) — opt-in end-to-end suites against the real
+  Kentik API, REST and gRPC transports respectively. Must never
   appear in `make test` or `make all`.
 - `make lint` — `ruff check --fix` + `ruff format`
 - `make clean` — removes `src/kentik_api/gen/`, `docs/build/`,
@@ -340,6 +351,11 @@ Live layer (real network, opt-in only, **not** part of `make test`):
 - `tests/e2e/` — end-to-end tests against the real Kentik API. See
   the requirement below. This directory and target are a required
   addition, not optional polish.
+- `tests/e2e/test_endpoints_e2e_grpc.py` (`make test-e2e-grpc`, `-m
+  e2e_grpc`) — the gRPC-transport variant of the same read-only
+  coverage. A `NotImplementedError` counts as a passing outcome here
+  (see "gRPC transport is fully implemented" above): it means this
+  particular operation has no gRPC translation yet, not a bug.
 
 ### Test coverage requirement
 
@@ -378,10 +394,10 @@ task.
 - **Opt-in only — never part of the default pipeline.** `.env`
   holds real credentials against a real account. e2e tests must not
   run automatically via `make test`, `make all`, or CI, without
-  explicit opt-in. Gate them behind a dedicated `make test-e2e`
-  target, a pytest marker (for example `-m e2e`) excluded by
-  default, or both. `make test` and `make all` must keep passing
-  without ever touching this layer.
+  explicit opt-in. Gate them behind a dedicated `make test-e2e` /
+  `make test-e2e-grpc` target, a pytest marker (for example `-m
+  e2e`/`-m e2e_grpc`) excluded by default, or both. `make test` and
+  `make all` must keep passing without ever touching this layer.
 - **Default to safe, non-mutating operations** (List- and Get-style
   reads). Create, Update, and Delete calls against a real account
   are hard to reverse, and they can corrupt real data. Only cover
