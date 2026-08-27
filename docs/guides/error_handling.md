@@ -15,9 +15,7 @@ classDiagram
     }
     class ConfigurationError
     class AuthenticationError
-    class TransportError {
-        +str message
-    }
+    class TransportError
     class HTTPException {
         +int status_code
         +str message
@@ -33,8 +31,8 @@ classDiagram
 
 | Exception | When raised |
 | --- | --- |
-| `ConfigurationError` | Invalid `APIConfig` value (missing credentials, bad region) |
-| `AuthenticationError` | 401 from the API — credentials rejected |
+| `ConfigurationError` | Reserved for an invalid `APIConfig` value; defined for callers to catch, but not currently raised anywhere in the SDK |
+| `AuthenticationError` | gRPC `UNAUTHENTICATED` status only. A REST 401 raises a generated `HTTPException` subclass instead, not `AuthenticationError` |
 | `TransportError` | Network failure before any response arrives |
 | `HTTPException` | Any non-success HTTP or gRPC status code |
 
@@ -68,7 +66,8 @@ except KentikError as exc:
 
 ## gRPC status codes
 
-gRPC errors are normalized to `HTTPException` by
+gRPC errors are normalized to the SDK exception hierarchy
+(`AuthenticationError`, `HTTPException`, or `TransportError`) by
 [`call_grpc()`](../../src/kentik_api/core/grpc_runtime.py) before they
 reach the caller. The mapping is:
 
@@ -78,7 +77,9 @@ reach the caller. The mapping is:
 | `PERMISSION_DENIED` | 403 | `HTTPException(403)` |
 | `NOT_FOUND` | 404 | `HTTPException(404)` |
 | `INVALID_ARGUMENT` | 400 | `HTTPException(400)` |
+| `ALREADY_EXISTS` | 409 | `HTTPException(409)` |
 | `RESOURCE_EXHAUSTED` | 429 | `HTTPException(429)` |
+| `UNIMPLEMENTED` | 501 | `HTTPException(501)` |
 | `UNAVAILABLE` | 503 | `HTTPException(503)` |
 | Network failure | — | `TransportError` |
 

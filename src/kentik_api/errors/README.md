@@ -18,10 +18,10 @@ classDiagram
         +str method
         +str path
         +dict details
-        +from_response()
     }
     class GeneratedOperationError {
         <<generated>>
+        +from_response()
     }
     KentikError <|-- ConfigurationError
     KentikError <|-- AuthenticationError
@@ -37,9 +37,9 @@ service generates under `gen/<service>/error/`.
 | Class | Raised when |
 | --- | --- |
 | `KentikError` | Base class for every SDK-specific error. Catch this to handle any SDK failure. |
-| `ConfigurationError` | An `APIConfig` value is invalid. |
-| `AuthenticationError` | Authentication or authorization fails. |
-| `TransportError` | The transport layer fails before a response arrives (raised by [`request_json()`](../core/rest_runtime.py) on an `httpx.RequestError`). |
+| `ConfigurationError` | Reserved for an invalid `APIConfig` value; defined for callers to catch, but not currently raised anywhere in the SDK. |
+| `AuthenticationError` | gRPC only: `map_grpc_error()` raises this for a gRPC `UNAUTHENTICATED` status. A REST 401 raises a generated `HTTPException` subclass instead (see below), not `AuthenticationError`. |
+| `TransportError` | The transport layer fails before a response arrives (raised by [`request_json()`](../core/rest_runtime.py) on an `httpx.RequestError`, or by `call_grpc()` on a non-`RpcError` exception). |
 | `HTTPException` | An HTTP response doesn't match the operation's expected status. Carries `status_code`, `message`, `method`, `path`, and a `details` dict (parsed from the response body when possible). |
 
 ## Generated per-operation error classes

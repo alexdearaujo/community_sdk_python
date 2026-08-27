@@ -9,7 +9,9 @@ four.
 ## Purpose
 
 `test_client_mounts_and_calls.py` holds lightweight checks for
-overall wiring: that `KentikAPI` mounts the expected service
+overall wiring: multi-region endpoint configuration
+(`_REGION_ENDPOINTS` for `us`/`eu`, and the `ValueError` raised for an
+unrecognized region), that `KentikAPI` mounts the expected service
 attributes, and that a call through one mounted wrapper reaches the
 generated REST module.
 

@@ -18,7 +18,7 @@ creds = KentikCredentials(email="you@example.com", api_token="...")
 
 | Method | Returns | Used by |
 | --- | --- | --- |
-| `get_rest_headers()` | A `dict` with `X-CH-Auth-Email`, `X-CH-Auth-API-Token`, and `Content-Type`. | [`RestTransport`](../transports/rest_client.py) |
+| `get_rest_headers()` | A `dict` with `X-CH-Auth-Email`, `X-CH-Auth-API-Token`, and `Content-Type`. | Not currently called anywhere in the SDK — [`RestTransport`](../transports/rest_client.py) reads `.email`/`.api_token` off `KentikCredentials` directly, and [`request_json()`](../core/rest_runtime.py) rebuilds the header dict inline. |
 | `get_grpc_plugin()` | A `grpc.AuthMetadataPlugin` that injects the same two headers as gRPC call metadata. | [`GrpcTransport`](../transports/grpc_client.py) |
 
 ## Shape
@@ -28,9 +28,8 @@ One credential pair becomes the two transport-specific auth shapes:
 ```mermaid
 flowchart LR
     In["email + api_token"] --> KC[KentikCredentials]
-    KC -->|get_rest_headers| H["X-CH-Auth-Email / X-CH-Auth-API-Token headers"]
+    KC -->|.email / .api_token| RT[RestTransport]
     KC -->|get_grpc_plugin| P["grpc.AuthMetadataPlugin"]
-    H --> RT[RestTransport]
     P --> GT[GrpcTransport]
 
 ```

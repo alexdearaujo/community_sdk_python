@@ -49,8 +49,8 @@ client = KentikAPI(
 from kentik_api.client import KentikAPI
 
 client = KentikAPI(protocol="rest")
-response = client.alerting.list_comments()
-print(response)  # AlertServiceListCommentsResponse
+response = client.as_group.list_as_groups()
+print(response)  # ListASGroupsResponse
 ```
 <!-- /kentik-gen:first-call-example -->
 
@@ -61,7 +61,7 @@ Change one argument:
 <!-- kentik-gen:grpc-call-example -->
 ```python
 client = KentikAPI(protocol="grpc")
-response = client.alerting.list_comments()  # same API, same response models
+response = client.as_group.list_as_groups()  # same API, same response models
 ```
 <!-- /kentik-gen:grpc-call-example -->
 

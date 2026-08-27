@@ -23,7 +23,7 @@ classDiagram
         +APIConfig api_config
     }
     class GrpcTransport {
-        +secure_channel
+        +channel: grpc.Channel
     }
     BaseTransport <|-- RestTransport
     BaseTransport <|-- GrpcTransport
@@ -32,10 +32,12 @@ classDiagram
 
 ## gRPC
 
-`GrpcTransport` opens a TLS channel to `grpc.api.kentik.com:443` and
-each service wrapper routes calls through the compiled proto stubs in
-`gen/<service>/pb/`. The `gen/pb_companions/` registry loads all shared
-proto descriptors before the stubs are imported. `call_grpc()` in
+`GrpcTransport` opens a TLS channel to a per-region gRPC endpoint
+(`grpc.api.kentik.com:443` for `region="us"`, the default;
+`grpc.api.kentik.eu:443` for `region="eu"`), and each service wrapper
+routes calls through the compiled proto stubs in `gen/<service>/pb/`.
+The `gen/pb_companions/` registry loads all shared proto descriptors
+before the stubs are imported. `call_grpc()` in
 [`core/grpc_runtime.py`](../core/grpc_runtime.py) normalizes gRPC errors to the same exception
 hierarchy as REST.
 

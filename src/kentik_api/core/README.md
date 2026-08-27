@@ -11,18 +11,19 @@ this folder.
 
 `APIConfig` (in [`api_config.py`](api_config.py)) is the shared config object passed to
 every generated call: base URL, auth email, auth token, and TLS
-`verify`. Generated wrapper methods build one from
-[`KentikCredentials`](../auth/credentials.py) and forward it as
-`api_config_override`.
+`verify`. [`RestTransport`](../transports/rest_client.py) builds one
+from [`KentikCredentials`](../auth/credentials.py) once, in `__init__`.
+Generated wrapper methods read `api_config` off the transport and
+forward it as `api_config_override`.
 
 ## `request_json()`
 
 `request_json()` (in [`rest_runtime.py`](rest_runtime.py)) is the **only** function that
 calls `httpx` for REST traffic in this SDK. Every generated operation,
-in every one of the ~38 services under
+in every one of the ~39 services under
 [`src/kentik_api/gen/`](../gen/), calls this same function through the
 `service.jinja2` template. See
-[`../../scripts/openapi_templates/README.md`](../../../scripts/openapi_templates/README.md).
+[`../../../scripts/openapi_templates/README.md`](../../../scripts/openapi_templates/README.md).
 
 ## `map_grpc_error()` and `call_grpc()`
 

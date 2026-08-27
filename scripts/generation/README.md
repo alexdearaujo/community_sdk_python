@@ -10,13 +10,13 @@ package owns one concern of SDK generation.
 
 | Module | Owns | Public interface |
 | --- | --- | --- |
-| [`parity.py`](parity.py) | Swagger file selection and directory parity checks | `select_latest_swagger_files_by_service()`, `validate_generated_service_parity()` |
+| [`parity.py`](parity.py) | Swagger file selection, schema structural validation, and directory parity checks | `select_latest_swagger_files_by_service()`, `validate_schema_files_or_raise()`, `validate_generated_service_parity()` |
 | [`error_package.py`](error_package.py) | Error class generation and error dispatch | `generate_service_error_package()`, `inject_service_error_handling()` |
 | [`fixup.py`](fixup.py) | Generated-code post-processing: import patching, model init rebuild, file cleanup | `fix_generated_service()` |
 | [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation | `generate()` |
-| [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams and service READMEs | `generate()` |
+| [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams, service READMEs, and generated-example snippets injected into `docs/guides/*.md` | `generate()` |
 | [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation | `EndpointDocsCollector` |
-| [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `discover_service_model_classes()`, `service_to_pascal_case()` |
+| [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `discover_service_model_classes()`, `service_to_pascal_case()`, `RestOperation`, `parse_generated_rest_module()`, `WrapperMethod`, `parse_wrapper_methods()` |
 
 Keep a helper in `_shared.py` only when two or more phase modules call
 it. Put a single-consumer helper in the one module that calls it
@@ -29,13 +29,14 @@ modules in this order:
 
 ```mermaid
 flowchart TD
-    A["1. parity.select_latest_swagger_files_by_service()"] --> B["2. Generate REST code per swagger file<br/>(endpoint_docs_collector.extract() runs here)"]
-    B --> C["3. error_package.generate_service_error_package()<br/>(once per service)"]
-    C --> D["4. parity.validate_generated_service_parity()"]
-    D --> E["5. fixup.fix_generated_service()<br/>(once per service — import patching, model init, file cleanup)"]
-    E --> F["6. wrapper_generation.generate()"]
-    F --> G["7. docs_rendering.generate()"]
-    G --> H["8. endpoint_docs_collector.render()"]
+    A["1. parity.select_latest_swagger_files_by_service()"] --> A2["2. parity.validate_schema_files_or_raise()"]
+    A2 --> B["3. Generate REST code per swagger file<br/>(endpoint_docs_collector.extract() runs here)"]
+    B --> C["4. error_package.generate_service_error_package()<br/>(once per service)"]
+    C --> D["5. parity.validate_generated_service_parity()"]
+    D --> E["6. fixup.fix_generated_service()<br/>(once per service — import patching, model init, file cleanup)"]
+    E --> F["7. wrapper_generation.generate()"]
+    F --> G["8. docs_rendering.generate()"]
+    G --> H["9. endpoint_docs_collector.render()"]
 
 ```
 
@@ -79,7 +80,9 @@ inside this package breaks `generate_sdk.py`'s import path.
 make test-generator
 ```
 
-This command runs only the tests in [`tests/generator/`](../../tests/generator/README.md). Each test
-builds its own temporary swagger fragment or fake generated-file
-fixture with `tmp_path`. No test in this suite needs a real or local
-schema checkout.
+This command runs only the tests in [`tests/generator/`](../../tests/generator/README.md). Most tests
+build their own temporary swagger fragment or fake generated-file
+fixture with `tmp_path` and need no schema checkout. One exception:
+`test_schema_request_body_coverage` in `test_generate_sdk.py`
+cross-checks generated code against the real local `../api-schema-public`
+checkout and is skipped automatically when that checkout is absent.

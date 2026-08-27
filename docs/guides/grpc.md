@@ -23,8 +23,8 @@ Every service method call works the same as REST:
 from kentik_api.client import KentikAPI
 
 client = KentikAPI(protocol="grpc")
-response = client.alerting.list_comments()
-print(response)  # AlertServiceListCommentsResponse
+response = client.as_group.list_as_groups()
+print(response)  # ListASGroupsResponse
 ```
 <!-- /kentik-gen:grpc-usage-example -->
 
@@ -40,13 +40,13 @@ sequenceDiagram
     participant RJ as request_json()
     participant API as Kentik REST API
 
-    C->>W: list_comments()
+    C->>W: list_as_groups()
     W->>RJ: api_config, method, path, params
     RJ->>API: HTTP request (HTTPS)
     alt success
         API-->>RJ: JSON response
         RJ-->>W: parsed dict
-        W-->>C: AlertServiceListCommentsResponse (Pydantic)
+        W-->>C: ListASGroupsResponse (Pydantic)
     else HTTP error
         API-->>RJ: error JSON
         RJ-->>W: raise HTTPException
@@ -70,15 +70,15 @@ sequenceDiagram
     participant S as gRPC stub
     participant API as Kentik gRPC API
 
-    C->>W: list_comments()
-    W->>B: ParseDict(params, AlertServiceListCommentsRequest)
-    B->>S: ListComments (gRPC/TLS)
+    C->>W: list_as_groups()
+    W->>B: ParseDict(params, ListASGroupsRequest)
+    B->>S: ListAsGroups (gRPC/TLS)
     S->>API: serialized proto request
     alt success
         API-->>S: serialized proto response
-        S-->>B: AlertServiceListCommentsResponse proto
+        S-->>B: ListASGroupsResponse proto
         B-->>W: MessageToDict(response)
-        W-->>C: AlertServiceListCommentsResponse (Pydantic)
+        W-->>C: ListASGroupsResponse (Pydantic)
     else gRPC error (status code)
         API-->>S: gRPC status + details
         S-->>W: raise RpcError
@@ -124,6 +124,9 @@ to `map_grpc_error()`.
 | `PERMISSION_DENIED` | 403 | `HTTPException(403)` |
 | `NOT_FOUND` | 404 | `HTTPException(404)` |
 | `INVALID_ARGUMENT` | 400 | `HTTPException(400)` |
+| `ALREADY_EXISTS` | 409 | `HTTPException(409)` |
+| `RESOURCE_EXHAUSTED` | 429 | `HTTPException(429)` |
+| `UNIMPLEMENTED` | 501 | `HTTPException(501)` |
 | `UNAVAILABLE` | 503 | `HTTPException(503)` |
 | Network failure | — | `TransportError` |
 

@@ -20,8 +20,8 @@ four mocked ones.
 | `test_endpoints_e2e_grpc.py` | The same coverage over the gRPC transport. Additionally treats `NotImplementedError` as a passing outcome, since gRPC translation is only implemented for a subset of operations (see CLAUDE.md's "gRPC transport is fully implemented" section). |
 
 Endpoint discovery comes from
-[`tests/_discovery.py`](../_discovery.py) (`discover_endpoint_cases()`), the same helper
-[`tests/generated/`](../generated/README.md) uses, not a hand-written list. Both files above
+[`tests/_discovery.py`](../_discovery.py) (`discover_endpoint_cases()`), which builds on
+the same `discover_cases()`/`WrapperCase` discovery [`tests/generated/`](../generated/README.md) uses, not a hand-written list. Both files above
 share the identical discovered cases and GET-vs-mutating split.
 
 ## How read and mutating operations differ

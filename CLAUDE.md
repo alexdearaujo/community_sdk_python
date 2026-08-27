@@ -6,14 +6,15 @@ Guidance for Claude Code when working in this repository.
 
 ## What this project is
 
-`kentik-api` (v2.0.0) is the Kentik Community Python SDK: a
+`kentik-api` is the Kentik Community Python SDK: a
 type-safe client for the Kentik API v6, built on Pydantic v2 and
 HTTPX. This SDK is **not hand-written**. `scripts/generate_sdk.py`
 generates it end-to-end from Kentik's public OpenAPI v3 schema
 (`kentik/api-schema-public`). It orchestrates the phase modules in
 `scripts/generation/` (see "The generator's phase modules" below).
-This project uses `uv` to manage the environment (build backend
-`uv_build`, lockfile `uv.lock`).
+This project uses `uv` to manage the environment and dependencies
+(lockfile `uv.lock`); the build backend is `hatchling` with
+`hatch-vcs` for dynamic versioning from git tags.
 
 ## Architecture: hand-written vs. generated
 
@@ -134,7 +135,7 @@ script's own direct-execution import path.
 
 The **shared REST runtime** is the single most significant piece of
 hand-written engineering in this repo. It routes every generated
-endpoint, across all ~38 services, through one connection path
+endpoint, across all ~39 services, through one connection path
 instead of generating or hand-writing bespoke per-endpoint HTTP
 code. This is not just a convention. It's structural. The source
 code confirms it directly:

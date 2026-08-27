@@ -351,6 +351,34 @@ def _strip_optional(type_str: str) -> str:
     return optional_match.group(1) if optional_match else type_str
 
 
+def _model_has_only_optional_fields(model_file: Path) -> bool:
+    """True if every field on the model class has a Field(..., default=...).
+
+    Lets _discover_example_ops() pick a request model that RequestClass()
+    alone can construct, so the generated example snippet actually runs.
+    """
+    try:
+        tree = ast.parse(model_file.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+
+    model_class = next(
+        (node for node in tree.body if isinstance(node, ast.ClassDef)), None
+    )
+    if model_class is None:
+        return False
+
+    for node in model_class.body:
+        if not isinstance(node, ast.AnnAssign):
+            continue
+        if not isinstance(node.value, ast.Call):
+            return False  # a field with no Field(...) call has no default
+        if not any(kw.arg == "default" for kw in node.value.keywords):
+            return False
+
+    return True
+
+
 def _discover_example_ops(
     max_list_ops: int = 3,
 ) -> tuple[list[dict[str, str]], dict[str, str] | None]:
@@ -359,6 +387,12 @@ def _discover_example_ops(
     Returns (list_ops, body_op).
     list_ops: up to max_list_ops list_* operations, each {service, method, response_class}.
     body_op: first operation with a data: parameter, {service, method, request_class}.
+
+    Both are chosen to be directly callable with no arguments, so the
+    generated example snippets actually run: list_ops only includes list_*
+    methods with zero required parameters, and body_op only includes a
+    data-param operation whose request model has zero required fields
+    (RequestClass() alone constructs successfully).
     """
     list_ops: list[dict[str, str]] = []
     body_op: dict[str, str] | None = None
@@ -383,6 +417,7 @@ def _discover_example_ops(
                     len(list_ops) < max_list_ops
                     and method.name.lower().startswith("list_")
                     and method.return_type
+                    and all(not is_required for _, _, is_required in method.params)
                 ):
                     raw = _strip_optional(method.return_type)
                     response_class = raw.rsplit(".", 1)[-1]
@@ -400,11 +435,15 @@ def _discover_example_ops(
                         if param_name == "data" and annotation:
                             raw = _strip_optional(annotation)
                             request_class = raw.rsplit(".", 1)[-1]
-                            body_op = {
-                                "service": service_name,
-                                "method": method.name,
-                                "request_class": request_class,
-                            }
+                            model_file = service_dir / "models" / f"{request_class}.py"
+                            if model_file.exists() and _model_has_only_optional_fields(
+                                model_file
+                            ):
+                                body_op = {
+                                    "service": service_name,
+                                    "method": method.name,
+                                    "request_class": request_class,
+                                }
                             break
 
         if len(list_ops) >= max_list_ops and body_op is not None:
@@ -433,7 +472,9 @@ def _update_guide_snippets() -> None:
         return
 
     service_count = sum(
-        1 for d in SDK_OUTPUT_DIR.iterdir() if d.is_dir() and not d.name.startswith("_")
+        1
+        for d in SDK_OUTPUT_DIR.iterdir()
+        if d.is_dir() and not d.name.startswith("_") and d.name != "pb_companions"
     )
 
     list_ops, body_op = _discover_example_ops(max_list_ops=3)

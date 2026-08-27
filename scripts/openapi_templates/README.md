@@ -13,15 +13,15 @@ hand-rolled HTTP code.
 
 | Template | Replaces | Purpose |
 | --- | --- | --- |
-| `httpx.jinja2` | Per-service module header | Imports `request_json` and the wildcard model/`typing` imports every generated operation needs. |
-| `service.jinja2` | Per-operation function body | Builds `query_params`/`header_params`, calls `request_json(...)`, and converts the raw JSON body into the declared Pydantic model or list. |
+| `httpx.jinja2` | Per-operation function body | Builds `query_params`/`header_params`, calls `request_json(...)`, and converts the raw JSON body into the declared Pydantic model or list. |
+| `service.jinja2` | Per-service module header | Imports `request_json` and the wildcard model/`typing` imports every generated operation needs. |
 
 ## Why these exist
 
 Without a custom template, `openapi-python-generator` emits a direct
 `httpx` call per operation. That duplicates auth headers, error
-handling, and status checks across every one of the ~38 generated
-services. `service.jinja2` instead calls
+handling, and status checks across every one of the ~39 generated
+services. `httpx.jinja2` instead calls
 [`request_json()`](../../src/kentik_api/core/rest_runtime.py), the
 single shared function that owns all of that. See the "shared
 connection handler" section of the repository root
@@ -29,7 +29,7 @@ connection handler" section of the repository root
 
 ```mermaid
 flowchart LR
-    A[service.jinja2] -->|renders| B["def operation(...)"]
+    A[httpx.jinja2] -->|renders| B["def operation(...)"]
     B -->|calls| C["request_json()"]
     C --> D[httpx.Client]
 
@@ -45,9 +45,11 @@ flowchart LR
    `request_json` and every declared response status.
 
 > [!WARNING]
-> `service.jinja2` must keep calling `request_json` by that exact
-> name and import path. `error_package.inject_service_error_handling()`
-> string-matches the line
-> `from kentik_api.core.rest_runtime import request_json` to wire in
-> per-service error classes. Renaming or relocating it here silently
-> breaks that injection for every service.
+> `service.jinja2` must keep emitting both the
+> `from kentik_api.core.rest_runtime import request_json` import line and
+> the `# __ERROR_IMPORTS_PLACEHOLDER__` sentinel right after it.
+> `error_package.inject_service_error_handling()` replaces that sentinel to
+> wire in per-service error classes, falling back to string-matching the
+> `request_json` import line only for legacy files generated before the
+> sentinel existed. Renaming or relocating either anchor silently breaks
+> that injection for every service.

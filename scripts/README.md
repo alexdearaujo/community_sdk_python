@@ -51,7 +51,7 @@ the full regeneration workflow.
 | `make generate local` | Regenerate from `../api-schema-public/` |
 | `make generate LOCAL_REPO=/path` | Regenerate from an arbitrary path |
 | [`make services`](../Makefile) | Alias for [`make generate`](../Makefile) |
-| [`make docs`](../Makefile) | Build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
+| [`make docs`](../Makefile) | Regenerate the SDK, then build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
 | [`make test`](../Makefile) | Full mocked test suite |
 | `make test-e2e` | Live API tests (opt-in, needs `.env`) |
 | [`make lint`](../Makefile) | Ruff check + format |
@@ -83,15 +83,16 @@ against an account that lacks one of those permissions.
 
 ## Generator patches (internal)
 
-If you modify [`generate_sdk.py`](generate_sdk.py), these post-processing
-patches in the generation loop are the most likely areas to break:
+If you modify [`scripts/generation/fixup.py`](generation/fixup.py), these
+post-processing patches are the most likely areas to break:
 
 | Patch | What it does |
 | --- | --- |
-| Flattened structure | Removes version subdirectories; keeps only the latest version of each service |
-| Wildcard patching | Replaces `from .models import *` with explicit re-exports (`import X as X`) |
-| Ghost data fix | Removes `json=data.dict()` calls in functions where no payload arg was generated |
-| Pydantic v2 | Injects `.model_construct()` for empty API responses to prevent validation crashes |
+| Wildcard patching | Replaces `from .MODULE import *` with explicit named imports |
+| Ghost data fix | Removes `json=data.model_dump()` / `json_body=data.model_dump()` calls in functions where no `data` param was generated |
+| Pydantic v2 construct | Injects `.model_construct()` for empty API responses to prevent validation crashes |
 
-See [`generation/README.md`](generation/README.md) for the phase module
+Swagger version selection (keeping only the latest version per service)
+happens earlier, in `parity.select_latest_swagger_files_by_service()`,
+before any code is generated. See [`generation/README.md`](generation/README.md) for the phase module
 breakdown and call order.

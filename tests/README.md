@@ -15,7 +15,7 @@ that layer explicitly.
 | [`generated`](generated/README.md) | Contract tests for every generated snake_case service wrapper, plus exhaustive per-endpoint, per-status-code schema coverage. | Mocked |
 | [`runtime`](runtime/README.md) | Focused tests for the shared runtime helpers that generated code calls. | Mocked |
 | [`smoke`](smoke/README.md) | Lightweight checks for client wiring and selected wrapper call paths. | Mocked |
-| [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules ([`scripts/generation/`](../scripts/generation/README.md)): error package generation, swagger selection and parity validation, wrapper generation, and generated-code post-processing fixups. | Mocked |
+| [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules ([`scripts/generation/`](../scripts/generation/README.md)): error package generation, swagger selection and parity validation, wrapper generation, generated-code post-processing fixups, docs/endpoint-docs rendering, and `scripts/generate_sdk.py`'s own schema-patching helpers. | Mocked |
 | [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API, REST ([`test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)) and gRPC ([`test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py)) transports. Opt-in only, never part of [`make test`](../Makefile) or [`make all`](../Makefile). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
 
 ```mermaid
@@ -148,12 +148,19 @@ small and fast.
 | [`tests/generator/test_error_package.py`](generator/test_error_package.py) | Error class naming, error-response extraction and merging, and the runtime error-dispatch injection seam (including the `ValueError` guard when the anchor is absent) |
 | [`tests/generator/test_fixup.py`](generator/test_fixup.py) | Post-generation fixups: `models/__init__.py` rebuild, wildcard-export replacement, file-level content patches, function deduplication, and docstring normalization |
 | [`tests/generator/test_wrapper_generation.py`](generator/test_wrapper_generation.py) | Annotation qualification and end-to-end wrapper and client-mixin generation against a temp directory |
+| [`tests/generator/test_rest_module_parser.py`](generator/test_rest_module_parser.py) | `scripts/generation/_shared.py`'s `parse_generated_rest_module()`, the shared REST-operation parser `tests/_discovery.py` also uses |
+| [`tests/generator/test_endpoint_docs.py`](generator/test_endpoint_docs.py) | `parse_wrapper_methods()`/wrapper-signature parsing in `scripts/generation/endpoint_docs.py` and `_shared.py` |
+| [`tests/generator/test_docs_rendering.py`](generator/test_docs_rendering.py) | `scripts/generation/docs_rendering.py`'s `_GROUP_CONFIG`/`_module_group`/`_LAYER_NAMES` consistency (architecture-diagram module grouping) |
+| [`tests/generator/test_generate_sdk.py`](generator/test_generate_sdk.py) | `scripts/generate_sdk.py`'s top-level helpers: schema-name cleanup, request-body `$ref` inlining, generated gRPC import rewriting, and the validate-before-clean ordering guard |
 
 Add tests here when `scripts/generation/*.py` logic changes. These
 are unit tests against the generator itself, not the SDK it
-produces. They need no real or local schema checkout. Build minimal
+produces. Most need no real or local schema checkout — build minimal
 swagger fragments or fake generated-file fixtures with `tmp_path`
-instead.
+instead. One exception: `test_schema_request_body_coverage` in
+`test_generate_sdk.py` cross-checks generated code against the real
+local `../api-schema-public` checkout and is skipped automatically
+when that checkout is absent.
 
 ### 5) End-to-end tests (real API, opt-in)
 
