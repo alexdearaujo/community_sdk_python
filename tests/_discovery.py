@@ -134,15 +134,24 @@ def discover_cases() -> list[WrapperCase]:
     return cases
 
 
+_NUMERIC_ID_NAMES = frozenset(
+    {"id", "tagid", "deviceid", "customdimensionid", "populatorid"}
+)
+_NUMERIC_COUNT_NAMES = frozenset({"offset", "limit", "page", "size"})
+_SAMPLE_TIMESTAMP = "2024-01-01T00:00:00Z"
+
+
 def sample_value_by_name(name: str) -> Any:
     lowered = name.lower()
-    if lowered in {"id", "tagid", "deviceid", "customdimensionid", "populatorid"}:
-        return "id-1"
+    if lowered in _NUMERIC_ID_NAMES:
+        return "1"
+    if lowered.endswith("time"):
+        return _SAMPLE_TIMESTAMP
     if lowered.endswith("name"):
         return "name"
     if lowered.startswith("is") or lowered.startswith("has"):
         return True
-    if lowered in {"offset", "limit", "page", "size"}:
+    if lowered in _NUMERIC_COUNT_NAMES:
         return 1
     return object()
 
@@ -196,6 +205,15 @@ def _sample_value_for_type(annotation: Any, name: str, seen: frozenset) -> Any:
         return next(iter(annotation))
 
     if annotation is str:
+        # id/offset/limit/...-like and *time-suffixed names get values a real
+        # ParseDict() call accepts: numeric strings for int64 proto fields,
+        # RFC3339 for Timestamp fields. REST accepts either as a plain string
+        # (discovered via tests/e2e/test_endpoints_e2e_grpc.py).
+        lowered = name.lower()
+        if lowered in _NUMERIC_ID_NAMES or lowered in _NUMERIC_COUNT_NAMES:
+            return "1"
+        if lowered.endswith("time"):
+            return _SAMPLE_TIMESTAMP
         return f"{name}_value"
     if annotation is int:
         return 1
@@ -278,3 +296,43 @@ def error_module_for(rest_module: Any):
     parts = rest_module.__name__.split(".")
     service_pkg = ".".join(parts[:-2])
     return importlib.import_module(f"{service_pkg}.error")
+
+
+@dataclass(frozen=True)
+class EndpointCase:
+    wrapper: WrapperCase
+    operation_name: str
+    method: str
+
+
+def discover_endpoint_cases() -> list[EndpointCase]:
+    """Pairs every discovered wrapper case with its REST method/operation name.
+
+    Shared by tests/e2e/test_endpoints_e2e.py and
+    tests/e2e/test_endpoints_e2e_grpc.py: gRPC coverage rides on the same
+    underlying REST operations, so both suites need the identical
+    GET-vs-mutating classification rather than deriving it twice.
+    """
+    cases: list[EndpointCase] = []
+    for wrapper_case in discover_cases():
+        module = importlib.import_module(wrapper_case.module_path)
+        rest_module = getattr(module, wrapper_case.rest_module_alias)
+        metadata = parse_rest_call_metadata(
+            rest_module, wrapper_case.rest_function_name
+        )
+        if metadata is None:
+            continue
+        cases.append(
+            EndpointCase(
+                wrapper=wrapper_case,
+                operation_name=metadata.operation_name,
+                method=metadata.method.lower(),
+            )
+        )
+    return cases
+
+
+def service_attr(case: EndpointCase) -> str:
+    # module_path is "kentik_api.gen.<service>.<services|service>.<service>";
+    # KentikClientMixin mounts wrappers as self.<service> using that same name.
+    return case.wrapper.module_path.split(".")[2]

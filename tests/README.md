@@ -5,7 +5,8 @@
 This folder uses a layered testing strategy. Four layers run fully
 mocked, with no network access, for fast feedback. A fifth layer,
 `e2e`, runs against the real Kentik API for full end-to-end
-confidence. You opt into that layer explicitly.
+confidence, over both the REST and gRPC transports. You opt into
+that layer explicitly.
 
 ## Test layout
 
@@ -15,7 +16,7 @@ confidence. You opt into that layer explicitly.
 | [`runtime`](runtime/README.md) | Focused tests for the shared runtime helpers that generated code calls. | Mocked |
 | [`smoke`](smoke/README.md) | Lightweight checks for client wiring and selected wrapper call paths. | Mocked |
 | [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules ([`scripts/generation/`](../scripts/generation/README.md)): error package generation, swagger selection and parity validation, wrapper generation, and generated-code post-processing fixups. | Mocked |
-| [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API. Opt-in only, never part of [`make test`](../Makefile) or [`make all`](../Makefile). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
+| [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API, REST ([`test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)) and gRPC ([`test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py)) transports. Opt-in only, never part of [`make test`](../Makefile) or [`make all`](../Makefile). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
 
 ```mermaid
 flowchart TD
@@ -51,6 +52,7 @@ Run these commands from the repository root.
 | Run smoke tests only | [`make test-smoke`](../Makefile) |
 | Run generator unit tests only | [`make test-generator`](../Makefile) |
 | Run end-to-end tests against the real API (opt-in, needs a real `.env`) | `make test-e2e` |
+| Run end-to-end gRPC-transport tests against the real API (opt-in, needs a real `.env`) | `make test-e2e-grpc` |
 
 You can also call `pytest` directly:
 
@@ -61,12 +63,13 @@ uv run pytest tests/runtime/
 uv run pytest tests/smoke/
 uv run pytest tests/generator/
 uv run pytest -m e2e tests/e2e/
+uv run pytest -m e2e_grpc tests/e2e/
 ```
 
-`pyproject.toml` registers the `e2e` marker with
-`addopts = "-m 'not e2e'"`. Plain `pytest tests/` always deselects
-[`tests/e2e/`](e2e/README.md). [`make test`](../Makefile) runs plain `pytest tests/`, so it deselects
-[`tests/e2e/`](e2e/README.md) too. Opt in explicitly with `-m e2e`.
+`pyproject.toml` registers the `e2e` and `e2e_grpc` markers with
+`addopts = "-m 'not e2e and not e2e_grpc'"`. Plain `pytest tests/`
+always deselects [`tests/e2e/`](e2e/README.md). [`make test`](../Makefile) runs plain `pytest tests/`, so it
+deselects [`tests/e2e/`](e2e/README.md) too. Opt in explicitly with `-m e2e` or `-m e2e_grpc`.
 
 ## When to run which suite
 
@@ -75,7 +78,7 @@ uv run pytest -m e2e tests/e2e/
 | Editing [`scripts/generate_sdk.py`](../scripts/generate_sdk.py), [`scripts/generation/`](../scripts/generation/README.md), or template behavior | [`make test-generator`](../Makefile) for fast feedback on the generator itself, then [`make test-generated`](../Makefile) to check the SDK it produces |
 | Editing shared request, auth, or error behavior in [`src/kentik_api/core`](../src/kentik_api/core/README.md) | [`make test-runtime`](../Makefile) |
 | Opening a PR or merging | [`make test`](../Makefile) |
-| Trusting a schema sync, or a change to error or response handling, against production behavior | `make test-e2e` (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first) |
+| Trusting a schema sync, or a change to error or response handling, against production behavior | `make test-e2e` (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first); add `make test-e2e-grpc` too if the change touches gRPC translation |
 
 ## How to add new tests
 
@@ -156,15 +159,19 @@ instead.
 
 Primary files:
 
-- [`tests/e2e/conftest.py`](e2e/conftest.py): the `real_client` fixture. It delegates
-  all credential loading to `KentikAPI()` (a project-root `.env`
-  file, or `KENTIK_EMAIL`/`KENTIK_API_TOKEN`). The fixture skips the
-  whole suite when no credentials are configured.
-- [`tests/e2e/test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)
+- [`tests/e2e/conftest.py`](e2e/conftest.py): the `real_client` and `grpc_real_client`
+  fixtures. Both delegate all credential loading to `KentikAPI()` (a
+  project-root `.env` file, or `KENTIK_EMAIL`/`KENTIK_API_TOKEN`),
+  differing only in `protocol="rest"` vs `protocol="grpc"`. Either
+  fixture skips the whole suite when no credentials are configured.
+- [`tests/e2e/test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py) (REST)
+- [`tests/e2e/test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py) (gRPC)
 
 Like the other generated-style suites, endpoint discovery comes from
-[`tests/_discovery.py`](_discovery.py), not a hand-written list. Two things set this
-suite apart from the mocked ones:
+[`tests/_discovery.py`](_discovery.py) (`discover_endpoint_cases()`), not a hand-written
+list -- both the REST and gRPC suites share the same discovered
+cases and GET-vs-mutating split. Three things set this suite apart
+from the mocked ones:
 
 - The suite calls only GET (read-only) operations automatically. A
   read call passes when it returns a correctly-typed response, or
@@ -173,8 +180,13 @@ suite apart from the mocked ones:
   what the schema declares. Only a genuinely unexpected exception
   counts as a failure, since the test cannot control what data
   exists in the real account.
+- The gRPC variant additionally treats `NotImplementedError` as a
+  passing outcome: gRPC coverage is per-operation (see CLAUDE.md's
+  "gRPC transport is fully implemented" section), so an operation
+  with no gRPC translation yet is expected to raise it, not a bug.
 - Create, Update, and Delete operations are deliberately not
-  auto-called. `test_mutating_endpoint_excluded_from_e2e` carries a
+  auto-called, in either transport. `test_mutating_endpoint_excluded_from_e2e`
+  and `test_mutating_endpoint_excluded_from_e2e_grpc` carry a
   `@pytest.mark.skip` marker on purpose, because a mutating call
   against a real account is hard to reverse. To add live coverage
   for one mutating endpoint, write a dedicated test with its own
@@ -182,9 +194,9 @@ suite apart from the mocked ones:
   into the auto-discovered path.
 
 This suite never runs by accident. `addopts` in `pyproject.toml`
-excludes it by default; only `make test-e2e` or `-m e2e` runs it.
-Never hardcode credentials in test code. Never read or print `.env`
-contents.
+excludes both by default; only `make test-e2e`/`-m e2e` (REST) or
+`make test-e2e-grpc`/`-m e2e_grpc` (gRPC) runs them. Never hardcode
+credentials in test code. Never read or print `.env` contents.
 
 ## Guidelines
 

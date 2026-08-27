@@ -32,63 +32,22 @@ whole module if no real credentials are configured.
 
 from __future__ import annotations
 
-import importlib
-from dataclasses import dataclass
-
 import pytest
 from _discovery import (
-    WrapperCase,
+    EndpointCase,
     build_all_kwargs,
     case_label,
-    discover_cases,
-    parse_rest_call_metadata,
+    discover_endpoint_cases,
+    service_attr,
 )
 
 from kentik_api.errors import KentikError
 
 pytestmark = pytest.mark.e2e
 
-
-@dataclass(frozen=True)
-class EndpointCase:
-    wrapper: WrapperCase
-    operation_name: str
-    method: str
-
-
-def _rest_module(case: WrapperCase):
-    module = importlib.import_module(case.module_path)
-    return getattr(module, case.rest_module_alias)
-
-
-def _discover_endpoint_cases() -> list[EndpointCase]:
-    cases: list[EndpointCase] = []
-    for wrapper_case in discover_cases():
-        rest_module = _rest_module(wrapper_case)
-        metadata = parse_rest_call_metadata(
-            rest_module, wrapper_case.rest_function_name
-        )
-        if metadata is None:
-            continue
-        cases.append(
-            EndpointCase(
-                wrapper=wrapper_case,
-                operation_name=metadata.operation_name,
-                method=metadata.method.lower(),
-            )
-        )
-    return cases
-
-
-_ALL_ENDPOINT_CASES = _discover_endpoint_cases()
+_ALL_ENDPOINT_CASES = discover_endpoint_cases()
 READ_CASES = [c for c in _ALL_ENDPOINT_CASES if c.method == "get"]
 MUTATING_CASES = [c for c in _ALL_ENDPOINT_CASES if c.method != "get"]
-
-
-def _service_attr(case: EndpointCase) -> str:
-    # module_path is "kentik_api.gen.<service>.<services|service>.<service>";
-    # KentikClientMixin mounts wrappers as self.<service> using that same name.
-    return case.wrapper.module_path.split(".")[2]
 
 
 @pytest.mark.parametrize(
@@ -97,7 +56,7 @@ def _service_attr(case: EndpointCase) -> str:
     ids=[f"{c.wrapper.wrapper_class}.{c.wrapper.method_name}" for c in READ_CASES],
 )
 def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
-    service_client = getattr(real_client, _service_attr(case))
+    service_client = getattr(real_client, service_attr(case))
     method = getattr(service_client, case.wrapper.method_name)
     kwargs = build_all_kwargs(method)
 

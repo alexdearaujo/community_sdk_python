@@ -1,4 +1,4 @@
-.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e lint typecheck clean deep-clean
+.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck clean deep-clean
 
 .DEFAULT_GOAL := all
 
@@ -60,6 +60,9 @@ test-generator: ## Run generator (scripts/generation/) unit tests only
 
 test-e2e: ## Run end-to-end tests against the REAL Kentik API (opt-in, needs .env)
 	$(PYTEST) -m e2e tests/e2e/
+
+test-e2e-grpc: ## Run end-to-end gRPC-transport tests against the REAL Kentik API (opt-in, needs .env)
+	$(PYTEST) -m e2e_grpc tests/e2e/
 
 lint: ## Run linter and formatter (Ruff)
 	$(RUFF) check --fix .

@@ -15,12 +15,14 @@ four mocked ones.
 
 | File | Role |
 | --- | --- |
-| `conftest.py` | The `real_client` fixture. It delegates all credential loading to `KentikAPI()` (a project-root `.env` file, or `KENTIK_EMAIL`/`KENTIK_API_TOKEN`). It skips the whole suite when no credentials are configured. |
-| `test_endpoints_e2e.py` | The end-to-end operation tests. |
+| `conftest.py` | The `real_client` (REST) and `grpc_real_client` (gRPC) fixtures. Both delegate all credential loading to `KentikAPI()` (a project-root `.env` file, or `KENTIK_EMAIL`/`KENTIK_API_TOKEN`). Either fixture skips the whole suite when no credentials are configured. |
+| `test_endpoints_e2e.py` | The end-to-end operation tests, REST transport. |
+| `test_endpoints_e2e_grpc.py` | The same coverage over the gRPC transport. Additionally treats `NotImplementedError` as a passing outcome, since gRPC translation is only implemented for a subset of operations (see CLAUDE.md's "gRPC transport is fully implemented" section). |
 
 Endpoint discovery comes from
-[`tests/_discovery.py`](../_discovery.py), the same helper
-[`tests/generated/`](../generated/README.md) uses, not a hand-written list.
+[`tests/_discovery.py`](../_discovery.py) (`discover_endpoint_cases()`), the same helper
+[`tests/generated/`](../generated/README.md) uses, not a hand-written list. Both files above
+share the identical discovered cases and GET-vs-mutating split.
 
 ## How read and mutating operations differ
 
@@ -55,11 +57,13 @@ auto-discovered path.
 ## Run
 
 ```bash
-make test-e2e
+make test-e2e       # REST transport
+make test-e2e-grpc  # gRPC transport
 ```
 
-This suite never runs by accident. `addopts` in `pyproject.toml`
-excludes it by default; only `make test-e2e` or `-m e2e` runs it.
+Neither suite runs by accident. `addopts` in `pyproject.toml`
+excludes both by default; only `make test-e2e`/`-m e2e` (REST) or
+`make test-e2e-grpc`/`-m e2e_grpc` (gRPC) runs them.
 
 ## Credentials
 
