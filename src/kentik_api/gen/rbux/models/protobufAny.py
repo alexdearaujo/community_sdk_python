@@ -5,16 +5,12 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .Revision import Revision
 
-
-class DeleteDeviceConfigurationResponse(BaseModel):
+class protobufAny(BaseModel):
     """
-    DeleteDeviceConfigurationResponse model
+    protobufAny model
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    orphanedRevision: Optional[Revision] = Field(
-        validation_alias="orphanedRevision", default=None
-    )
+    type: Optional[str] = Field(validation_alias="@type", default=None)

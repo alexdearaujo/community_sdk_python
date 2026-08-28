@@ -5,16 +5,14 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .Revision import Revision
 
-
-class DeleteDeviceConfigurationResponse(BaseModel):
+class v202501alpha1SavedFilterFilterId(BaseModel):
     """
-    DeleteDeviceConfigurationResponse model
+    v202501alpha1SavedFilterFilterId model
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    orphanedRevision: Optional[Revision] = Field(
-        validation_alias="orphanedRevision", default=None
-    )
+    filterId: Optional[str] = Field(validation_alias="filterId", default=None)
+
+    isNot: Optional[bool] = Field(validation_alias="isNot", default=None)

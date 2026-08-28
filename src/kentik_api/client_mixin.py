@@ -42,6 +42,7 @@ from kentik_api.gen.notification_channel.services.notification_channel import (
 )
 from kentik_api.gen.pathfinder.services.pathfinder import PathfinderServiceWrapper
 from kentik_api.gen.plan.services.plan import PlanServiceWrapper
+from kentik_api.gen.rbux.services.rbux import RbuxServiceWrapper
 from kentik_api.gen.saved_filter.services.saved_filter import SavedFilterServiceWrapper
 from kentik_api.gen.site.services.site import SiteServiceWrapper
 from kentik_api.gen.synthetics.services.synthetics import SyntheticsServiceWrapper
@@ -88,6 +89,7 @@ class KentikClientMixin:
         notification_channel: "NotificationChannelServiceWrapper"
         pathfinder: "PathfinderServiceWrapper"
         plan: "PlanServiceWrapper"
+        rbux: "RbuxServiceWrapper"
         saved_filter: "SavedFilterServiceWrapper"
         site: "SiteServiceWrapper"
         synthetics: "SyntheticsServiceWrapper"
@@ -124,6 +126,7 @@ class KentikClientMixin:
         self.notification_channel = NotificationChannelServiceWrapper(self._transport)
         self.pathfinder = PathfinderServiceWrapper(self._transport)
         self.plan = PlanServiceWrapper(self._transport)
+        self.rbux = RbuxServiceWrapper(self._transport)
         self.saved_filter = SavedFilterServiceWrapper(self._transport)
         self.site = SiteServiceWrapper(self._transport)
         self.synthetics = SyntheticsServiceWrapper(self._transport)

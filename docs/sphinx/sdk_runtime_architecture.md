@@ -49,17 +49,17 @@ flowchart TB
     Client_API --> Client_Mixin
     Client_API --> REST_Transport
     Client_API --> gRPC_Transport
-    Client_Mixin -->|"x33"| Generated_Service_Wrappers
+    Client_Mixin -->|"x34"| Generated_Service_Wrappers
     Client_Mixin --> REST_Transport
     Client_Mixin --> gRPC_Transport
-    Generated_REST_Services -->|"x49"| API_Config
-    Generated_REST_Services -->|"x49"| Generated_Error_Classes
-    Generated_REST_Services -->|"x49"| Generated_Models
-    Generated_REST_Services -->|"x49"| REST_Runtime
-    Generated_Service_Wrappers -->|"x49"| Generated_REST_Services
-    Generated_Service_Wrappers -->|"x33"| REST_Transport
-    Generated_Service_Wrappers -->|"x30"| gRPC_Runtime
-    Generated_Service_Wrappers -->|"x33"| gRPC_Transport
+    Generated_REST_Services -->|"x50"| API_Config
+    Generated_REST_Services -->|"x50"| Generated_Error_Classes
+    Generated_REST_Services -->|"x50"| Generated_Models
+    Generated_REST_Services -->|"x50"| REST_Runtime
+    Generated_Service_Wrappers -->|"x50"| Generated_REST_Services
+    Generated_Service_Wrappers -->|"x34"| REST_Transport
+    Generated_Service_Wrappers -->|"x34"| gRPC_Runtime
+    Generated_Service_Wrappers -->|"x34"| gRPC_Transport
     REST_Runtime --> API_Config
     REST_Runtime --> Error_Types
     REST_Transport --> API_Config

@@ -5,16 +5,14 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .Revision import Revision
+from .Scope import Scope
 
 
-class DeleteDeviceConfigurationResponse(BaseModel):
+class UpdateScopeResponse(BaseModel):
     """
-    DeleteDeviceConfigurationResponse model
+    UpdateScopeResponse model
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    orphanedRevision: Optional[Revision] = Field(
-        validation_alias="orphanedRevision", default=None
-    )
+    scope: Optional[Scope] = Field(validation_alias="scope", default=None)
