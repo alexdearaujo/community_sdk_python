@@ -9,7 +9,7 @@ four.
 ## Purpose
 
 `test_rest_runtime.py` tests
-[`request_json()`](../../src/kentik_api/core/README.md), the one
+[`request_json()`](../../src/kentik_api/core/rest_runtime.py), the one
 function every generated REST operation calls. It monkeypatches
 `httpx.Client.request` and asserts on the captured method, URL,
 headers, params, and body.
@@ -39,4 +39,4 @@ Add a test when shared runtime behavior changes, such as:
 
 Run this suite first while editing shared request, auth, or error
 behavior in [`src/kentik_api/core`](../../src/kentik_api/core/README.md), before running the broader
-`test-generated` suite.
+[`make test-generated`](../../Makefile) suite.

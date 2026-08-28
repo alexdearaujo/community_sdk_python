@@ -29,7 +29,7 @@ From the project root:
 make generate local
 ```
 
-This uses the default local schema path configured in `Makefile` (`DEFAULT_LOCAL_REPO`).
+This uses the default local schema path configured in [`Makefile`](../../Makefile) (`DEFAULT_LOCAL_REPO`).
 
 ## Override Schema Location
 

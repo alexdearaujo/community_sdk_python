@@ -12,7 +12,9 @@ This page explains how core runtime modules and generated services connect at ru
 3. Wrapper classes in `kentik_api.gen.<service>.services.<service>` delegate
    to generated REST functions.
 4. Generated REST services use `kentik_api.core.api_config` and `kentik_api.core.rest_runtime`.
-5. Runtime failures are normalized into `kentik_api.errors` and generated
+5. Generated wrappers on a gRPC transport call `kentik_api.core.grpc_runtime`
+   instead, against the compiled proto stubs in `kentik_api.gen.<service>.pb`.
+6. Runtime failures are normalized into `kentik_api.errors` and generated
    service-local error classes.
 
 ## Module Dependency Graph
@@ -39,6 +41,7 @@ flowchart TB
         Auth_Credentials["Auth Credentials"]
         Error_Types["Error Types"]
         REST_Runtime["REST Runtime"]
+        gRPC_Runtime["gRPC Runtime"]
     end
 
     API_Config --> Error_Types
@@ -55,12 +58,14 @@ flowchart TB
     Generated_REST_Services -->|"x49"| REST_Runtime
     Generated_Service_Wrappers -->|"x49"| Generated_REST_Services
     Generated_Service_Wrappers -->|"x33"| REST_Transport
+    Generated_Service_Wrappers -->|"x30"| gRPC_Runtime
     Generated_Service_Wrappers -->|"x33"| gRPC_Transport
     REST_Runtime --> API_Config
     REST_Runtime --> Error_Types
     REST_Transport --> API_Config
     REST_Transport --> Auth_Credentials
     REST_Transport --> Transport_Base
+    gRPC_Runtime --> Error_Types
     gRPC_Transport --> Auth_Credentials
     gRPC_Transport --> Transport_Base
 ```
@@ -70,4 +75,4 @@ flowchart TB
 - `Client API` and `Client Mixin` are the orchestration entrypoints.
 - `Generated Service Wrappers` are transport-aware facades exposed as `client.<service>`.
 - `Generated REST Services` host operation functions generated from OpenAPI schemas.
-- `API Config`, `REST Runtime`, and `Error Types` form the shared runtime foundation.
+- `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.

@@ -21,7 +21,7 @@ flowchart TB
     subgraph HW["Hand-written (survives every regeneration)"]
         Client["client.py<br/>KentikAPI entrypoint"]
         Auth["auth/<br/>Credentials"]
-        Core["core/<br/>APIConfig + rest_runtime"]
+        Core["core/<br/>APIConfig + rest_runtime + grpc_runtime"]
         Errors["errors/<br/>Base exception hierarchy"]
         Transports["transports/<br/>REST / gRPC transport base"]
     end
@@ -31,6 +31,8 @@ flowchart TB
         Wrappers["gen/{service}/services/<br/>ServiceWrapper classes"]
         Models["gen/{service}/models/"]
         GenErrors["gen/{service}/error/"]
+        Pb["gen/{service}/pb/<br/>compiled gRPC stubs"]
+        Companions["gen/pb_companions/<br/>shared proto descriptors"]
     end
 
     Client --> Mixin
@@ -40,13 +42,15 @@ flowchart TB
     Wrappers --> Models
     Wrappers --> Core
     Wrappers --> GenErrors
+    Wrappers --> Pb
+    Pb --> Companions
     Core --> Errors
     Transports --> Auth
 
     classDef handwritten fill:#d7ecff,stroke:#1c6fb0,color:#0b3554
     classDef generated fill:#fde9c8,stroke:#c8791a,color:#5a3506
     class Client,Auth,Core,Errors,Transports handwritten
-    class Mixin,Wrappers,Models,GenErrors generated
+    class Mixin,Wrappers,Models,GenErrors,Pb,Companions generated
 ```
 
 ## Installation
@@ -140,8 +144,9 @@ See [`scripts/README.md`](scripts/README.md) for generator internals and
 ### Testing
 
 ```bash
-make test          # full mocked suite
-make test-e2e      # opt-in live tests (needs .env)
+make test           # full mocked suite
+make test-e2e       # opt-in live tests, REST transport (needs .env)
+make test-e2e-grpc  # opt-in live tests, gRPC transport (needs .env)
 ```
 
 See [`tests/README.md`](tests/README.md) for the full test-layer breakdown.
@@ -164,7 +169,7 @@ This SDK is built on the following open-source libraries:
 | [httpx](https://www.python-httpx.org) | BSD-3-Clause | Tom Christie / encode |
 | [pydantic](https://docs.pydantic.dev) | MIT | Samuel Colvin et al. |
 
-The generated code in `src/kentik_api/gen/` is produced by:
+The generated code in [`src/kentik_api/gen/`](src/kentik_api/gen/README.md) is produced by:
 
 | Tool | License | Author |
 | --- | --- | --- |

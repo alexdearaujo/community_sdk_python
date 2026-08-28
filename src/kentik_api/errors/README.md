@@ -46,7 +46,7 @@ service generates under `gen/<service>/error/`.
 
 Each service's generated `error/__init__.py` declares one `HTTPException`
 subclass per operation, plus a `response_error_map` from status code to
-class. `request_json()` calls `error_cls.from_response(...)` to build
+class. [`request_json()`](../core/rest_runtime.py) calls `error_cls.from_response(...)` to build
 the right one. See
 [`tests/generated/test_endpoint_schema_coverage.py`](../../../tests/generated/test_endpoint_schema_coverage.py)
 for how every declared status code gets exercised against this

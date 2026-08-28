@@ -29,7 +29,9 @@ connection handler" section of the repository root
 
 ```mermaid
 flowchart LR
-    A[httpx.jinja2] -->|renders| B["def operation(...)"]
+    A[httpx.jinja2] -->|renders per operation| B["def operation(...)"]
+    SV[service.jinja2] -->|renders module header| H["import request_json<br/># __ERROR_IMPORTS_PLACEHOLDER__"]
+    H -->|"sentinel replaced by<br/>inject_service_error_handling"| EI["from ..error import ..."]
     B -->|calls| C["request_json()"]
     C --> D[httpx.Client]
 

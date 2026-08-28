@@ -1,11 +1,12 @@
 <!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
 
-# Shared REST Runtime (`kentik_api.core`)
+# Shared Runtime (`kentik_api.core`)
 
 Hand-written. Not touched by [`make generate`](../../../Makefile). This is the most
-significant hand-written engineering in the SDK: every generated REST
-operation, across every service, routes through the one function in
-this folder.
+significant hand-written engineering in the SDK: every generated
+operation, across every service, routes through one function in this
+folder: [`request_json()`](rest_runtime.py) for REST, and
+[`call_grpc()`](grpc_runtime.py) for gRPC.
 
 ## `APIConfig`
 
@@ -21,17 +22,9 @@ forward it as `api_config_override`.
 `request_json()` (in [`rest_runtime.py`](rest_runtime.py)) is the **only** function that
 calls `httpx` for REST traffic in this SDK. Every generated operation,
 in every one of the ~39 services under
-[`src/kentik_api/gen/`](../gen/), calls this same function through the
-`service.jinja2` template. See
-[`../../../scripts/openapi_templates/README.md`](../../../scripts/openapi_templates/README.md).
-
-## `map_grpc_error()` and `call_grpc()`
-
-`map_grpc_error()` (in [`grpc_runtime.py`](grpc_runtime.py)) is a pure function:
-no I/O, no side effects, testable without a gRPC channel. It maps a
-`grpc.RpcError` status code to the SDK exception hierarchy (`AuthenticationError`
-or `HTTPException`). `call_grpc()` is the thin caller that invokes the gRPC stub
-and delegates all error mapping to `map_grpc_error()`.
+[`src/kentik_api/gen/`](../gen/README.md), calls this same function through the
+`httpx.jinja2` template. See
+[`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
 
 ```mermaid
 sequenceDiagram
@@ -55,6 +48,36 @@ sequenceDiagram
         else status mismatch
             RJ-->>Op: raise error_cls.from_response(...)
         end
+    end
+```
+
+## `map_grpc_error()` and `call_grpc()`
+
+`map_grpc_error()` (in [`grpc_runtime.py`](grpc_runtime.py)) is a pure function:
+no I/O, no side effects, testable without a gRPC channel. It maps a
+`grpc.RpcError` status code to the SDK exception hierarchy (`AuthenticationError`
+or `HTTPException`). `call_grpc()` is the thin caller that invokes the gRPC stub
+and delegates all error mapping to `map_grpc_error()`.
+
+```mermaid
+sequenceDiagram
+    participant W as Generated wrapper
+    participant CG as call_grpc
+    participant MG as map_grpc_error
+    participant S as gRPC stub
+    W->>CG: stub_method, proto_request
+    CG->>S: invoke
+    alt success
+        S-->>CG: proto response
+        CG-->>W: proto response
+    else grpc.RpcError
+        S-->>CG: RpcError
+        CG->>MG: exc, method, path
+        MG-->>CG: AuthenticationError (UNAUTHENTICATED)<br/>or HTTPException
+        CG-->>W: raise
+    else other exception
+        S-->>CG: Exception
+        CG-->>W: raise TransportError
     end
 ```
 

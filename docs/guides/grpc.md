@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
 
 # gRPC Transport Guide
 
@@ -66,23 +66,25 @@ The REST path routes every call through
 sequenceDiagram
     participant C as Caller
     participant W as ServiceWrapper
-    participant B as proto bridge
+    participant CG as call_grpc()
     participant S as gRPC stub
     participant API as Kentik gRPC API
 
     C->>W: list_as_groups()
-    W->>B: ParseDict(params, ListASGroupsRequest)
-    B->>S: ListAsGroups (gRPC/TLS)
+    W->>W: build ListASGroupsRequest proto<br/>(ParseDict for operations with a body)
+    W->>CG: stub method + proto request
+    CG->>S: ListASGroups (gRPC/TLS)
     S->>API: serialized proto request
     alt success
         API-->>S: serialized proto response
-        S-->>B: ListASGroupsResponse proto
-        B-->>W: MessageToDict(response)
-        W-->>C: ListASGroupsResponse (Pydantic)
+        S-->>CG: ListASGroupsResponse proto
+        CG-->>W: proto response
+        W-->>C: ListASGroupsResponse (Pydantic)<br/>via MessageToDict + model_validate
     else gRPC error (status code)
         API-->>S: gRPC status + details
-        S-->>W: raise RpcError
-        W-->>C: raise HTTPException (normalized)
+        S-->>CG: raise RpcError
+        CG-->>W: map_grpc_error() -> AuthenticationError<br/>or HTTPException
+        W-->>C: raise
     end
 ```
 <!-- /kentik-gen:grpc-callflow-diagram -->

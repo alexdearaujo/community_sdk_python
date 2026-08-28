@@ -51,4 +51,5 @@ response = client.device.list_devices()  # works the same as REST
 Add a new `BaseTransport` subclass here, and wire its selection logic
 into [`KentikAPI`](../client.py). Keep per-endpoint request logic out
 of this folder; that belongs in
-[`kentik_api.core.rest_runtime`](../core/README.md).
+[`core/rest_runtime.py`](../core/rest_runtime.py) and
+[`core/grpc_runtime.py`](../core/grpc_runtime.py).

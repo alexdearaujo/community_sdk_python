@@ -29,13 +29,16 @@ share the identical discovered cases and GET-vs-mutating split.
 ```mermaid
 flowchart TD
     A[Discovered operation] --> B{HTTP method}
-    B -->|GET| C[Call automatically]
+    B -->|GET| T{Transport}
+    T -->|"REST<br/>test_endpoints_e2e.py"| C[Call automatically]
+    T -->|"gRPC<br/>test_endpoints_e2e_grpc.py"| C
     C --> D{Result}
     D -->|Correctly-typed response| E[Pass]
     D -->|Generated KentikError subclass| E
+    D -->|"NotImplementedError<br/>(gRPC suite only)"| E
     D -->|Any other exception| F[Fail]
-    B -->|POST / PUT / PATCH / DELETE| G["Skip automatically\n(@pytest.mark.skip)"]
-    G --> H["Add a dedicated test with its own\nsetup/teardown against a disposable\nresource, if you need live coverage"]
+    B -->|POST / PUT / PATCH / DELETE| G["Skip automatically<br/>(@pytest.mark.skip,<br/>both transports)"]
+    G --> H["Add a dedicated test with its own<br/>setup/teardown against a disposable<br/>resource, if you need live coverage"]
 
 ```
 
@@ -47,7 +50,8 @@ declares. Only a genuinely unexpected exception counts as a failure,
 since the test cannot control what data exists in the real account.
 
 Create, Update, and Delete operations are deliberately not
-auto-called. `test_mutating_endpoint_excluded_from_e2e` carries a
+auto-called. `test_mutating_endpoint_excluded_from_e2e` and its gRPC
+twin `test_mutating_endpoint_excluded_from_e2e_grpc` each carry a
 `@pytest.mark.skip` marker on purpose, because a mutating call
 against a real account is hard to reverse. To add live coverage for
 one mutating endpoint, write a dedicated test with its own setup and

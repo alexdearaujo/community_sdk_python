@@ -136,6 +136,7 @@ _GROUP_CONFIG: dict[str, str] = {
     "Auth Credentials": "foundation",
     "API Config": "foundation",
     "REST Runtime": "foundation",
+    "gRPC Runtime": "foundation",
     "Error Types": "foundation",
     "Transport Base": "transport",
     "REST Transport": "transport",
@@ -165,6 +166,8 @@ def _module_group(module_name: str, source_file: Path | None = None) -> str | No
         return "API Config"
     if module_name.startswith("kentik_api.core.rest_runtime"):
         return "REST Runtime"
+    if module_name.startswith("kentik_api.core.grpc_runtime"):
+        return "gRPC Runtime"
     if module_name.startswith("kentik_api.errors"):
         return "Error Types"
     if module_name.startswith("kentik_api.transports.base"):
@@ -303,7 +306,8 @@ def _generate_runtime_architecture_docs() -> None:
         "2. `kentik_api.client_mixin.KentikClientMixin` mounts generated service wrappers.",
         "3. Wrapper classes in `kentik_api.gen.<service>.services.<service>` delegate\n   to generated REST functions.",
         "4. Generated REST services use `kentik_api.core.api_config` and `kentik_api.core.rest_runtime`.",
-        "5. Runtime failures are normalized into `kentik_api.errors` and generated\n   service-local error classes.",
+        "5. Generated wrappers on a gRPC transport call `kentik_api.core.grpc_runtime`\n   instead, against the compiled proto stubs in `kentik_api.gen.<service>.pb`.",
+        "6. Runtime failures are normalized into `kentik_api.errors` and generated\n   service-local error classes.",
         "",
         "## Module Dependency Graph",
         "",
@@ -316,7 +320,7 @@ def _generate_runtime_architecture_docs() -> None:
         "- `Client API` and `Client Mixin` are the orchestration entrypoints.",
         "- `Generated Service Wrappers` are transport-aware facades exposed as `client.<service>`.",
         "- `Generated REST Services` host operation functions generated from OpenAPI schemas.",
-        "- `API Config`, `REST Runtime`, and `Error Types` form the shared runtime foundation.",
+        "- `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.",
         "",
     ]
     (docs_root / "sdk_runtime_architecture.md").write_text(
@@ -342,8 +346,31 @@ def _generate_runtime_architecture_docs() -> None:
 # ---------------------------------------------------------------------------
 
 
-def _method_to_pascal(name: str) -> str:
-    return "".join(word.capitalize() for word in name.split("_"))
+def _grpc_stub_method_name(wrapper_file: Path, method_name: str) -> str | None:
+    """Reads the real gRPC stub method a wrapper method calls, e.g. "ListASGroups".
+
+    Parsed off the generated `call_grpc(self._grpc_stub_N.<Name>, _req)` call
+    rather than re-derived from the snake_case method name: re-deriving loses
+    acronym casing (`list_as_groups` -> `ListAsGroups`, not `ListASGroups`).
+    """
+    try:
+        tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.FunctionDef) or node.name != method_name:
+            continue
+        for sub in ast.walk(node):
+            if (
+                isinstance(sub, ast.Call)
+                and isinstance(sub.func, ast.Name)
+                and sub.func.id == "call_grpc"
+                and sub.args
+                and isinstance(sub.args[0], ast.Attribute)
+            ):
+                return sub.args[0].attr
+    return None
 
 
 def _strip_optional(type_str: str) -> str:
@@ -427,6 +454,7 @@ def _discover_example_ops(
                                 "service": service_name,
                                 "method": method.name,
                                 "response_class": response_class,
+                                "wrapper_file": str(wrapper_file),
                             }
                         )
 
@@ -483,7 +511,10 @@ def _update_guide_snippets() -> None:
         return
 
     primary = list_ops[0]
-    pascal_method = _method_to_pascal(primary["method"])
+    stub_method = (
+        _grpc_stub_method_name(Path(primary["wrapper_file"]), primary["method"])
+        or primary["method"]
+    )
     request_proto = primary["response_class"].replace("Response", "Request")
 
     # generation.md: inline service count (same marker used twice in the file)
@@ -610,23 +641,25 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as ServiceWrapper
-    participant B as proto bridge
+    participant CG as call_grpc()
     participant S as gRPC stub
     participant API as Kentik gRPC API
 
     C->>W: {primary["method"]}()
-    W->>B: ParseDict(params, {request_proto})
-    B->>S: {pascal_method} (gRPC/TLS)
+    W->>W: build {request_proto} proto<br/>(ParseDict for operations with a body)
+    W->>CG: stub method + proto request
+    CG->>S: {stub_method} (gRPC/TLS)
     S->>API: serialized proto request
     alt success
         API-->>S: serialized proto response
-        S-->>B: {primary["response_class"]} proto
-        B-->>W: MessageToDict(response)
-        W-->>C: {primary["response_class"]} (Pydantic)
+        S-->>CG: {primary["response_class"]} proto
+        CG-->>W: proto response
+        W-->>C: {primary["response_class"]} (Pydantic)<br/>via MessageToDict + model_validate
     else gRPC error (status code)
         API-->>S: gRPC status + details
-        S-->>W: raise RpcError
-        W-->>C: raise HTTPException (normalized)
+        S-->>CG: raise RpcError
+        CG-->>W: map_grpc_error() -> AuthenticationError<br/>or HTTPException
+        W-->>C: raise
     end
 ```
 """,

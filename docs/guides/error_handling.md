@@ -23,10 +23,16 @@ classDiagram
         +str path
         +dict details
     }
+    class GeneratedOperationError {
+        <<generated>>
+        +from_response()
+        +response_error_map
+    }
     KentikError <|-- ConfigurationError
     KentikError <|-- AuthenticationError
     KentikError <|-- TransportError
     KentikError <|-- HTTPException
+    HTTPException <|-- GeneratedOperationError
 ```
 
 | Exception | When raised |

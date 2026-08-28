@@ -25,16 +25,16 @@ repo.
 
 - `src/kentik_api/client.py` — `KentikAPI`, the main entrypoint
 - `src/kentik_api/auth/` — credentials
-- `src/kentik_api/core/` — `api_config.py`, `rest_runtime.py`
-  (shared runtime logic)
+- `src/kentik_api/core/` — `api_config.py`, `rest_runtime.py`,
+  `grpc_runtime.py` (shared runtime logic)
 - `src/kentik_api/errors/` — base exception types
 - `src/kentik_api/transports/` — REST/gRPC transport base classes
 - `scripts/openapi_templates/` — custom Jinja2 templates fed into
   the generator
 - `scripts/generation/` — the generator's phase modules
-  (`parity.py`, `error_package.py`, `wrapper_generation.py`,
-  `docs_rendering.py`, `endpoint_docs.py`, `_shared.py`),
-  orchestrated by `scripts/generate_sdk.py`
+  (`parity.py`, `error_package.py`, `fixup.py`,
+  `wrapper_generation.py`, `docs_rendering.py`, `endpoint_docs.py`,
+  `_shared.py`), orchestrated by `scripts/generate_sdk.py`
 
 **Fully generated, wiped and rebuilt on every `make generate` run:**
 
@@ -47,6 +47,13 @@ repo.
 - `src/kentik_api/gen/README.md` — the `gen/` root README
 - `docs/sphinx/sdk_runtime_architecture.md` — the runtime
   architecture page, with an inline Mermaid dependency graph
+- `docs/sphinx/services/<service>.md` — one reference page per
+  service, written by `endpoint_docs.EndpointDocsCollector.render()`
+- the `<!-- kentik-gen:... -->` marker blocks inside
+  `docs/guides/{quickstart,rest,grpc,generation}.md` and
+  `docs/sphinx/README.md` — rewritten by
+  `docs_rendering._update_guide_snippets()`. The surrounding prose in
+  those files is hand-written; only the marker blocks are generated.
 
 **Rule: never hand-edit generated files.** If output is wrong, fix
 the generator, a phase module in `scripts/generation/`, or a

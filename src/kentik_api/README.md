@@ -31,17 +31,21 @@ flowchart LR
     A --> C["transports/<br/>pick REST or gRPC transport"]
     A --> D["client_mixin.py<br/>mount service wrappers"]
     D --> E["gen/{service}<br/>ServiceWrapper, e.g. client.device"]
-    E --> F["core/rest_runtime.request_json<br/>shared REST call path"]
+    E -->|RestTransport| F["core/rest_runtime.request_json<br/>shared REST call path"]
+    E -->|GrpcTransport| J["core/grpc_runtime.call_grpc<br/>shared gRPC call path"]
     F --> G["core/api_config.py<br/>APIConfig"]
+    J --> K["gen/{service}/pb<br/>compiled gRPC stubs"]
     F -->|failure| H["errors/<br/>KentikError hierarchy"]
+    J -->|failure| H
     E -->|failure| I["gen/{service}/error/<br/>per-operation error classes"]
     I --> H
 
 ```
 
-Every generated operation, in every service, calls
-[`core/rest_runtime.py`](core/rest_runtime.py) the same way. No service wrapper
-implements its own HTTP, auth, or error-parsing logic.
+Every generated REST operation, in every service, calls
+[`core/rest_runtime.py`](core/rest_runtime.py) the same way, and every gRPC
+operation calls [`core/grpc_runtime.py`](core/grpc_runtime.py) the same way. No
+service wrapper implements its own HTTP, auth, or error-parsing logic.
 
 ## Using the client
 

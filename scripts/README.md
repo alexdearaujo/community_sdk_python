@@ -22,6 +22,7 @@ script. Both are hand-written and survive every [`make generate`](../Makefile) r
 
 ```mermaid
 flowchart LR
+    T["openapi_templates/<br/>custom Jinja2 templates"] -->|--custom-template-path| G
     G["generate_sdk.py"] -->|orchestrates| PH["generation/ phase modules"]
     G -->|writes| SDK["src/kentik_api/gen/"]
     C["sample_consume_sdk.py"] -->|exercises| SDK
@@ -53,9 +54,10 @@ the full regeneration workflow.
 | [`make services`](../Makefile) | Alias for [`make generate`](../Makefile) |
 | [`make docs`](../Makefile) | Regenerate the SDK, then build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
 | [`make test`](../Makefile) | Full mocked test suite |
-| `make test-e2e` | Live API tests (opt-in, needs `.env`) |
+| [`make test-e2e`](../Makefile) | Live API tests, REST transport (opt-in, needs `.env`) |
+| [`make test-e2e-grpc`](../Makefile) | Live API tests, gRPC transport (opt-in, needs `.env`) |
 | [`make lint`](../Makefile) | Ruff check + format |
-| `make typecheck` | ty type-check on hand-written source |
+| [`make typecheck`](../Makefile) | ty type-check on hand-written source |
 | [`make clean`](../Makefile) | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
 
 > [!NOTE]
@@ -93,6 +95,6 @@ post-processing patches are the most likely areas to break:
 | Pydantic v2 construct | Injects `.model_construct()` for empty API responses to prevent validation crashes |
 
 Swagger version selection (keeping only the latest version per service)
-happens earlier, in `parity.select_latest_swagger_files_by_service()`,
+happens earlier, in [`parity.select_latest_swagger_files_by_service()`](generation/parity.py),
 before any code is generated. See [`generation/README.md`](generation/README.md) for the phase module
 breakdown and call order.

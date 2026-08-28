@@ -15,19 +15,21 @@ that layer explicitly.
 | [`generated`](generated/README.md) | Contract tests for every generated snake_case service wrapper, plus exhaustive per-endpoint, per-status-code schema coverage. | Mocked |
 | [`runtime`](runtime/README.md) | Focused tests for the shared runtime helpers that generated code calls. | Mocked |
 | [`smoke`](smoke/README.md) | Lightweight checks for client wiring and selected wrapper call paths. | Mocked |
-| [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules ([`scripts/generation/`](../scripts/generation/README.md)): error package generation, swagger selection and parity validation, wrapper generation, generated-code post-processing fixups, docs/endpoint-docs rendering, and `scripts/generate_sdk.py`'s own schema-patching helpers. | Mocked |
+| [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules ([`scripts/generation/`](../scripts/generation/README.md)): error package generation, swagger selection and parity validation, wrapper generation, generated-code post-processing fixups, docs/endpoint-docs rendering, and [`scripts/generate_sdk.py`](../scripts/generate_sdk.py)'s own schema-patching helpers. | Mocked |
 | [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API, REST ([`test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)) and gRPC ([`test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py)) transports. Opt-in only, never part of [`make test`](../Makefile) or [`make all`](../Makefile). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
 
 ```mermaid
 flowchart TD
     D["tests/_discovery.py<br/>shared discovery helpers"]
     D --> G[generated]
-    D --> E[e2e]
+    D --> E1["e2e (REST)<br/>test_endpoints_e2e.py"]
+    D --> E2["e2e (gRPC)<br/>test_endpoints_e2e_grpc.py"]
     G -.mocked, no network.-> M["respx / monkeypatch"]
     R[runtime] -.mocked, no network.-> M
     S[smoke] -.mocked, no network.-> M
     N[generator] -.mocked, no network.-> M
-    E -.opt-in only.-> A["real Kentik API"]
+    E1 -."opt-in only, -m e2e".-> A["real Kentik API"]
+    E2 -."opt-in only, -m e2e_grpc".-> A
 
 ```
 
@@ -51,8 +53,8 @@ Run these commands from the repository root.
 | Run runtime tests only | [`make test-runtime`](../Makefile) |
 | Run smoke tests only | [`make test-smoke`](../Makefile) |
 | Run generator unit tests only | [`make test-generator`](../Makefile) |
-| Run end-to-end tests against the real API (opt-in, needs a real `.env`) | `make test-e2e` |
-| Run end-to-end gRPC-transport tests against the real API (opt-in, needs a real `.env`) | `make test-e2e-grpc` |
+| Run end-to-end tests against the real API (opt-in, needs a real `.env`) | [`make test-e2e`](../Makefile) |
+| Run end-to-end gRPC-transport tests against the real API (opt-in, needs a real `.env`) | [`make test-e2e-grpc`](../Makefile) |
 
 You can also call `pytest` directly:
 
@@ -78,7 +80,7 @@ deselects [`tests/e2e/`](e2e/README.md) too. Opt in explicitly with `-m e2e` or 
 | Editing [`scripts/generate_sdk.py`](../scripts/generate_sdk.py), [`scripts/generation/`](../scripts/generation/README.md), or template behavior | [`make test-generator`](../Makefile) for fast feedback on the generator itself, then [`make test-generated`](../Makefile) to check the SDK it produces |
 | Editing shared request, auth, or error behavior in [`src/kentik_api/core`](../src/kentik_api/core/README.md) | [`make test-runtime`](../Makefile) |
 | Opening a PR or merging | [`make test`](../Makefile) |
-| Trusting a schema sync, or a change to error or response handling, against production behavior | `make test-e2e` (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first); add `make test-e2e-grpc` too if the change touches gRPC translation |
+| Trusting a schema sync, or a change to error or response handling, against production behavior | [`make test-e2e`](../Makefile) (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first); add [`make test-e2e-grpc`](../Makefile) too if the change touches gRPC translation |
 
 ## How to add new tests
 
@@ -148,10 +150,10 @@ small and fast.
 | [`tests/generator/test_error_package.py`](generator/test_error_package.py) | Error class naming, error-response extraction and merging, and the runtime error-dispatch injection seam (including the `ValueError` guard when the anchor is absent) |
 | [`tests/generator/test_fixup.py`](generator/test_fixup.py) | Post-generation fixups: `models/__init__.py` rebuild, wildcard-export replacement, file-level content patches, function deduplication, and docstring normalization |
 | [`tests/generator/test_wrapper_generation.py`](generator/test_wrapper_generation.py) | Annotation qualification and end-to-end wrapper and client-mixin generation against a temp directory |
-| [`tests/generator/test_rest_module_parser.py`](generator/test_rest_module_parser.py) | `scripts/generation/_shared.py`'s `parse_generated_rest_module()`, the shared REST-operation parser `tests/_discovery.py` also uses |
-| [`tests/generator/test_endpoint_docs.py`](generator/test_endpoint_docs.py) | `parse_wrapper_methods()`/wrapper-signature parsing in `scripts/generation/endpoint_docs.py` and `_shared.py` |
-| [`tests/generator/test_docs_rendering.py`](generator/test_docs_rendering.py) | `scripts/generation/docs_rendering.py`'s `_GROUP_CONFIG`/`_module_group`/`_LAYER_NAMES` consistency (architecture-diagram module grouping) |
-| [`tests/generator/test_generate_sdk.py`](generator/test_generate_sdk.py) | `scripts/generate_sdk.py`'s top-level helpers: schema-name cleanup, request-body `$ref` inlining, generated gRPC import rewriting, and the validate-before-clean ordering guard |
+| [`tests/generator/test_rest_module_parser.py`](generator/test_rest_module_parser.py) | [`scripts/generation/_shared.py`](../scripts/generation/_shared.py)'s `parse_generated_rest_module()`, the shared REST-operation parser [`tests/_discovery.py`](_discovery.py) also uses |
+| [`tests/generator/test_endpoint_docs.py`](generator/test_endpoint_docs.py) | `parse_wrapper_methods()`/wrapper-signature parsing in [`scripts/generation/endpoint_docs.py`](../scripts/generation/endpoint_docs.py) and [`_shared.py`](../scripts/generation/_shared.py) |
+| [`tests/generator/test_docs_rendering.py`](generator/test_docs_rendering.py) | [`scripts/generation/docs_rendering.py`](../scripts/generation/docs_rendering.py)'s `_GROUP_CONFIG`/`_module_group`/`_LAYER_NAMES` consistency (architecture-diagram module grouping) |
+| [`tests/generator/test_generate_sdk.py`](generator/test_generate_sdk.py) | [`scripts/generate_sdk.py`](../scripts/generate_sdk.py)'s top-level helpers: schema-name cleanup, request-body `$ref` inlining, generated gRPC import rewriting, and the validate-before-clean ordering guard |
 
 Add tests here when `scripts/generation/*.py` logic changes. These
 are unit tests against the generator itself, not the SDK it
