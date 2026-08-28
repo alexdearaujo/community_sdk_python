@@ -18,6 +18,3 @@ bin/
 
 # Sphinx build output: regenerate locally with `make docs`, do not commit.
 docs/build/
-
-# Generated Sphinx service stubs: rebuilt by make generate (which make docs also runs).
-docs/sphinx/services/
