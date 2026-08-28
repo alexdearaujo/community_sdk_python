@@ -53,6 +53,44 @@ flowchart TB
     class Mixin,Wrappers,Models,GenErrors,Pb,Companions generated
 ```
 
+## Staying current with the Kentik API
+
+Kentik evolves its API continuously. Because this SDK is generated
+rather than hand-written, adopting a schema change is one command:
+
+```bash
+make generate   # regenerate from the latest published schema
+```
+
+One run propagates a change through every layer at once: models, REST
+functions, per-operation error classes, gRPC stubs, the typed client
+attribute, the reference docs, and the test suite. No endpoint is
+maintained by hand, so none is silently missed or left half-wired.
+
+The arrival of the RBUX Focus Scope API shows the shape of a typical
+run. It required one command and no hand-written code:
+
+| Layer | Produced by the run |
+| --- | --- |
+| Models and services | 26 files under `gen/rbux/`, covering all five declared operations |
+| Client surface | `client.rbux` mounted on `KentikAPI`, fully typed and autocompleting |
+| Transports | Both REST and gRPC paths for every operation |
+| Errors | Per-operation error classes for each status code the schema declares |
+| Docs | A service reference page, plus service counts refreshed repo-wide |
+| Tests | 40 cases, auto-discovered rather than written (1855 to 1894 passing) |
+
+That last row matters most. The generated and end-to-end suites derive
+their cases from the generated code itself
+([`tests/_discovery.py`](tests/_discovery.py)), so a new endpoint arrives
+already covered, exercised against every response status the schema
+declares. Coverage cannot drift behind the API.
+
+The same run also picked up a new optional field on an existing
+`deviceconf` response model, which is the quieter half of the benefit:
+additive changes land without a migration, and a breaking one would
+surface immediately as a failing test rather than a runtime surprise in
+production.
+
 ## Installation
 
 ```bash
