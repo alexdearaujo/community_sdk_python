@@ -27,7 +27,6 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _rewrite_grpc_imports,
     clean_schema_names,
     inline_request_body_refs,
-    patch_schema_for_clean_names,
     patched_swagger,
 )
 
@@ -61,7 +60,10 @@ def test_rewrite_leaves_non_pb2_imports_unchanged():
 
 
 # ---------------------------------------------------------------------------
-# patch_schema_for_clean_names: requestBody $ref inlining
+# patched_swagger: requestBody $ref inlining
+#
+# These drive patched_swagger rather than any in-place helper: it is the path
+# `make generate` runs, so a break there fails these tests.
 # ---------------------------------------------------------------------------
 
 _MINIMAL_SCHEMA_WITH_REF_BODY = {
@@ -108,11 +110,12 @@ _MINIMAL_SCHEMA_WITH_REF_BODY = {
 
 def test_patch_schema_inlines_request_body_ref(tmp_path: Path):
     swagger_path = tmp_path / "things.swagger.json"
-    swagger_path.write_text(json.dumps(_MINIMAL_SCHEMA_WITH_REF_BODY))
+    original = json.dumps(_MINIMAL_SCHEMA_WITH_REF_BODY)
+    swagger_path.write_text(original)
 
-    patch_schema_for_clean_names(swagger_path, version="v202411alpha1")
+    with patched_swagger(swagger_path, version="v202411alpha1") as patched_path:
+        result = json.loads(Path(patched_path).read_text())
 
-    result = json.loads(swagger_path.read_text())
     post_rb = result["paths"]["/things"]["post"]["requestBody"]
     put_rb = result["paths"]["/things/{id}"]["put"]["requestBody"]
 
@@ -122,6 +125,10 @@ def test_patch_schema_inlines_request_body_ref(tmp_path: Path):
 
     assert "$ref" not in put_rb, "PUT requestBody $ref should be inlined"
     assert "content" in put_rb
+
+    assert swagger_path.read_text() == original, (
+        "patched_swagger must not modify the schema checkout"
+    )
 
 
 def test_patch_schema_leaves_inline_request_body_unchanged(tmp_path: Path):
@@ -144,14 +151,16 @@ def test_patch_schema_leaves_inline_request_body_unchanged(tmp_path: Path):
         "components": {"schemas": {"Thing": {"type": "object"}}},
     }
     swagger_path = tmp_path / "things.swagger.json"
-    swagger_path.write_text(json.dumps(schema))
+    original = json.dumps(schema)
+    swagger_path.write_text(original)
 
-    patch_schema_for_clean_names(swagger_path, version="v202411alpha1")
+    with patched_swagger(swagger_path, version="v202411alpha1") as patched_path:
+        result = json.loads(Path(patched_path).read_text())
 
-    result = json.loads(swagger_path.read_text())
     rb = result["paths"]["/things"]["post"]["requestBody"]
     assert "content" in rb
     assert "$ref" not in rb
+    assert swagger_path.read_text() == original
 
 
 def test_patch_schema_leaves_operations_without_request_body_unchanged(tmp_path: Path):
@@ -168,13 +177,15 @@ def test_patch_schema_leaves_operations_without_request_body_unchanged(tmp_path:
         "components": {},
     }
     swagger_path = tmp_path / "things.swagger.json"
-    swagger_path.write_text(json.dumps(schema))
+    original = json.dumps(schema)
+    swagger_path.write_text(original)
 
-    patch_schema_for_clean_names(swagger_path, version="v202411alpha1")
+    with patched_swagger(swagger_path, version="v202411alpha1") as patched_path:
+        result = json.loads(Path(patched_path).read_text())
 
-    result = json.loads(swagger_path.read_text())
     assert "requestBody" not in result["paths"]["/things/{id}"]["get"]
     assert "requestBody" not in result["paths"]["/things/{id}"]["delete"]
+    assert swagger_path.read_text() == original
 
 
 # ---------------------------------------------------------------------------

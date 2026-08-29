@@ -195,18 +195,6 @@ def patched_swagger(swagger_path: Path, version: str):
         tmp_path.unlink(missing_ok=True)
 
 
-def patch_schema_for_clean_names(swagger_path: Path, version: str) -> None:
-    """Scrubs version prefixes from models and inlines requestBody $refs.
-
-    Modifies swagger_path in place. Prefer patched_swagger() for new call sites
-    to avoid mutating the schema checkout.
-    """
-    schema = json.loads(swagger_path.read_text(encoding="utf-8"))
-    schema = clean_schema_names(schema, version)
-    schema = inline_request_body_refs(schema)
-    swagger_path.write_text(json.dumps(schema), encoding="utf-8")
-
-
 _PB_COMPANIONS_INIT = """\
 # isort: skip_file
 \"\"\"Proto companion registry: loads all shared vendor descriptors into the pool.
