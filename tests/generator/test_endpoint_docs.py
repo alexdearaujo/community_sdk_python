@@ -4,7 +4,11 @@
 from pathlib import Path
 
 from scripts.generation._shared import parse_wrapper_methods
-from scripts.generation.endpoint_docs import parse_wrapper_method_signatures
+from scripts.generation.endpoint_docs import (
+    _provenance,
+    parse_wrapper_method_signatures,
+    render_endpoint_docs,
+)
 
 # ---------------------------------------------------------------------------
 # Fixture helpers
@@ -179,3 +183,40 @@ def test_parse_wrapper_methods_empty_without_class(tmp_path: Path) -> None:
     f = tmp_path / "empty.py"
     f.write_text("# nothing\n", encoding="utf-8")
     assert parse_wrapper_methods(f) == []
+
+
+# ---------------------------------------------------------------------------
+# _provenance: the AUTO-GENERATED header must name code that actually exists
+# ---------------------------------------------------------------------------
+
+
+def test_provenance_names_a_function_that_resolves():
+    """Guards the defect where 42 pages named a function that did not exist.
+
+    Asserts resolvability rather than a fixed string, so renaming the writer
+    cannot leave the header stale without this failing.
+    """
+    header = _provenance(render_endpoint_docs)
+
+    assert header.startswith("<!-- AUTO-GENERATED: ")
+    inner = header.removeprefix("<!-- AUTO-GENERATED: ").removesuffix(" -->")
+    module_rel, func_part = (part.strip() for part in inner.split(",", 1))
+    func_name = func_part.removesuffix("()")
+
+    project_root = Path(__file__).resolve().parents[2]
+    module_file = project_root / module_rel
+    assert module_file.exists(), f"provenance names a missing module: {module_rel}"
+
+    source = module_file.read_text(encoding="utf-8")
+    assert f"def {func_name}(" in source, (
+        f"provenance names {func_name}(), which does not exist in {module_rel}"
+    )
+
+
+def test_provenance_tracks_a_rename():
+    """A differently-named writer must produce a differently-named header."""
+
+    def some_other_writer() -> None:  # pragma: no cover - name only
+        pass
+
+    assert "some_other_writer()" in _provenance(some_other_writer)

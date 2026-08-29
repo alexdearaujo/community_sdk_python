@@ -10,6 +10,8 @@ wrapper generation -- is visible in the interface, not just in caller discipline
 import ast
 import json
 import re
+import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -21,6 +23,20 @@ from ._shared import (
 )
 
 MD_FENCE = "`" * 3
+
+
+def _provenance(writer: Callable[..., object]) -> str:
+    """Builds the AUTO-GENERATED header naming the code that wrote the file.
+
+    Derived from the writer rather than typed out, so renaming it cannot leave
+    the header pointing at a function that no longer exists.
+    """
+    module_path = Path(sys.modules[writer.__module__].__file__ or "").resolve()
+    try:
+        rel = module_path.relative_to(PROJECT_ROOT)
+    except ValueError:
+        rel = Path(module_path.name)
+    return f"<!-- AUTO-GENERATED: {rel.as_posix()}, {writer.__name__}() -->"
 
 
 @dataclass(frozen=True)
@@ -711,7 +727,7 @@ def render_endpoint_docs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
         )
 
         lines = [
-            "<!-- AUTO-GENERATED: scripts/generation/endpoint_docs.py, _render_sphinx_stubs() -->",
+            _provenance(render_endpoint_docs),
             "<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
             "",
             f"# {title} Service",
@@ -788,7 +804,7 @@ def render_endpoint_docs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
         index_entries.append(service)
 
     index_content = (
-        "<!-- AUTO-GENERATED: scripts/generation/endpoint_docs.py, _render_sphinx_stubs() -->\n"
+        _provenance(render_endpoint_docs) + "\n"
         "<!-- Rebuilt on every `make generate`. Do not edit by hand. -->\n\n"
         "# API Services\n\n"
         "For a runtime-level map of how the SDK client, mixin, auth/core/errors, "
@@ -814,7 +830,7 @@ def render_endpoint_docs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
 
     readme_content = "\n".join(
         [
-            "<!-- AUTO-GENERATED: scripts/generation/endpoint_docs.py, _render_sphinx_stubs() -->",
+            _provenance(render_endpoint_docs),
             "<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
             "",
             "# API Service Pages",
