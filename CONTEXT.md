@@ -13,7 +13,12 @@ runtime shape and the generator that builds it.
 A top-level grouping of the Kentik API, for example `device`,
 `alerting`, or `synthetics`. Each service maps to one directory
 under [`src/kentik_api/gen/`](src/kentik_api/gen/README.md) and one attribute on `KentikAPI`, for
-example `client.device`.
+example `client.device`. Not every directory there is a Service: the
+generator also writes internal directories for itself, currently
+`pb_companions` (the shared proto descriptor registry). `iter_service_dirs()`
+in [`scripts/generation/_shared.py`](scripts/generation/_shared.py) is the one
+place that decides which is which. A Service with no operations is still a
+Service.
 _Avoid_: module, package
 
 **Operation**:

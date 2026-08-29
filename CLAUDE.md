@@ -118,9 +118,14 @@ subpackage of independently testable phase modules (see
   generated wrapper method signatures off disk. The two-method
   interface makes this ordering constraint visible instead of
   relying on caller discipline.
-- `_shared.py` — `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, and the two
-  helpers that more than one phase module genuinely uses
-  (`discover_service_model_classes`, `service_to_pascal_case`).
+- `_shared.py` — `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, and the helpers
+  that more than one phase module genuinely uses:
+  `iter_service_dirs()` and `INTERNAL_GEN_DIRS` (the single answer to
+  "is this directory a Service"), `discover_service_model_classes`,
+  `service_to_pascal_case`, and the generated-source parsers
+  `parse_generated_rest_module` / `RestOperation` and
+  `parse_wrapper_methods` / `WrapperMethod`. Keep this list in step
+  with `scripts/generation/README.md`.
   Everything else stays local to the one phase module (or
   `generate_sdk.py` itself) that calls it. Resist the urge to move a
   single-consumer helper here "for consistency."

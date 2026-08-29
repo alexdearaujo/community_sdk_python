@@ -16,7 +16,7 @@ package owns one concern of SDK generation.
 | [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation | `generate()` |
 | [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams, service READMEs, and generated-example snippets injected into `docs/guides/*.md` | `generate()` |
 | [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation | `EndpointDocsCollector` |
-| [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `discover_service_model_classes()`, `service_to_pascal_case()`, `RestOperation`, `parse_generated_rest_module()`, `WrapperMethod`, `parse_wrapper_methods()` |
+| [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `INTERNAL_GEN_DIRS`, `iter_service_dirs()`, `discover_service_model_classes()`, `service_to_pascal_case()`, `RestOperation`, `parse_generated_rest_module()`, `WrapperMethod`, `parse_wrapper_methods()` |
 
 Keep a helper in `_shared.py` only when two or more phase modules call
 it. Put a single-consumer helper in the one module that calls it
