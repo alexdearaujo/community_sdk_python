@@ -118,6 +118,12 @@ tests/
     ├── test_generate_sdk.py        # retarget 3 tests onto patched_swagger
     ├── test_parity.py              # cover the shared rule
     └── test_endpoint_docs.py       # cover provenance + failure surfacing
+
+# Hand-written docs asserting facts this feature changes (FR-012, FR-013)
+CONTEXT.md                          # sharpen the Service definition
+CLAUDE.md                           # _shared.py export list (already stale)
+scripts/generation/README.md        # _shared.py public-interface row
+tests/generator/README.md           # rows for any test files added
 ```
 
 **Structure Decision**: No new modules or directories. The shared rule goes in
@@ -125,3 +131,24 @@ the existing `scripts/generation/_shared.py`, which the constitution designates
 for helpers used by two or more phase modules. This keeps the change to files
 that already exist, matching the spec's Assumption that introducing a dedicated
 module for the Service concept is deferred to a follow-up feature.
+
+## Documentation Impact
+
+This feature changes facts that hand-written documents currently assert, so
+those documents are in scope (FR-012, FR-013). All follow the repo's existing
+conventions: markdownlint-clean, cross-directory references hyperlinked,
+steady-state phrasing rather than change narration.
+
+| Document | Why it must change |
+| --- | --- |
+| `CONTEXT.md` | The `Service` entry says each Service "maps to one directory under `src/kentik_api/gen/`", which reads as though every directory is a Service. That ambiguity is what let an internal directory be documented as one. It must state the exception. |
+| `CLAUDE.md` | Describes `_shared.py` as holding "the two helpers" and names two. This is **already wrong** — the module exports eight — and it already contradicts `scripts/generation/README.md`, which lists all eight. Adding a ninth makes it worse. |
+| `scripts/generation/README.md` | Its `_shared.py` row lists the module's public interface and needs the new rule added. |
+| `tests/generator/README.md` | Its Files table documents every test module; rows are needed for whatever this feature adds. |
+
+Two of these are pre-existing defects rather than consequences of this feature.
+The `CLAUDE.md` versus `scripts/generation/README.md` disagreement about
+`_shared.py` was introduced by an earlier documentation pass that corrected the
+README row without correcting the matching claim in `CLAUDE.md`. It is fixed
+here because this feature touches the same module and would otherwise widen the
+gap.

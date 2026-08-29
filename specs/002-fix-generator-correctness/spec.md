@@ -160,6 +160,12 @@ the run surfaces it rather than completing quietly.
   match what it actually enforces.
 - **FR-011**: Generated SDK behaviour MUST be unchanged by this feature. Only
   documentation output, provenance notes, failure reporting, and tests change.
+- **FR-012**: Hand-written documentation that states any fact this feature
+  changes MUST be updated in the same change, so no document is left asserting
+  something the code no longer does.
+- **FR-013**: The project's domain glossary MUST state precisely which
+  directories are Services, so the ambiguity that allowed an internal directory
+  to be documented as a Service cannot recur through the glossary.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -169,6 +175,9 @@ the run surfaces it rather than completing quietly.
   generation but is not a Service, and therefore must not be documented as one.
 - **Provenance note**: The comment in a generated file naming the code that
   wrote it.
+- **Domain glossary**: The project's record of what each domain term means,
+  including `Service`. Its precision is what keeps the classification rule from
+  drifting back apart.
 
 ## Success Criteria *(mandatory)*
 
@@ -190,6 +199,9 @@ the run surfaces it rather than completing quietly.
   non-zero-exit failure rather than a silently empty page.
 - **SC-008**: The full mocked test suite and the opt-in end-to-end suites pass
   unchanged.
+- **SC-009**: No hand-written document contradicts another, or the code, about
+  what this feature changes. Two such contradictions exist today and are fixed
+  as part of this work.
 
 ## Assumptions
 
