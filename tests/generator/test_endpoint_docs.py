@@ -3,8 +3,11 @@
 
 from pathlib import Path
 
+import pytest
+
 from scripts.generation._shared import parse_wrapper_methods
 from scripts.generation.endpoint_docs import (
+    EndpointDocsCollector,
     _provenance,
     parse_wrapper_method_signatures,
     render_endpoint_docs,
@@ -220,3 +223,23 @@ def test_provenance_tracks_a_rename():
         pass
 
     assert "some_other_writer()" in _provenance(some_other_writer)
+
+
+# ---------------------------------------------------------------------------
+# EndpointDocsCollector.extract: failures must surface, not be swallowed
+# ---------------------------------------------------------------------------
+
+
+def test_extract_propagates_failure_instead_of_swallowing_it(tmp_path: Path):
+    """A swallowed failure yields a silently empty page while the run succeeds.
+
+    Same shape as the None-return that erased the gRPC runtime from the
+    architecture diagram with no error anywhere.
+    """
+    unparseable = tmp_path / "broken.swagger.json"
+    unparseable.write_text("{ this is not json", encoding="utf-8")
+
+    collector = EndpointDocsCollector()
+
+    with pytest.raises(Exception):
+        collector.extract("broken_service", unparseable)

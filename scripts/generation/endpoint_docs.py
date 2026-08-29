@@ -2,18 +2,19 @@
 """Per-endpoint documentation: extracted from swagger while the schema is available,
 rendered as Sphinx MyST stubs later, once wrapper method signatures exist.
 
-Exposed as EndpointDocsCollector so the two-phase ordering constraint --
-render() reads real wrapper signatures off disk, so it must run after service
-wrapper generation -- is visible in the interface, not just in caller discipline.
+EndpointDocsCollector accumulates the extract() results across the
+schema-availability loop. It does not enforce the two-phase ordering:
+render() reads wrapper signatures off disk, so it must run after service
+wrapper generation, and that remains the caller's responsibility.
 """
 
 import ast
 import json
 import re
 import sys
-from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
+from types import FunctionType
 
 from ._shared import (
     PROJECT_ROOT,
@@ -25,7 +26,7 @@ from ._shared import (
 MD_FENCE = "`" * 3
 
 
-def _provenance(writer: Callable[..., object]) -> str:
+def _provenance(writer: FunctionType) -> str:
     """Builds the AUTO-GENERATED header naming the code that wrote the file.
 
     Derived from the writer rather than typed out, so renaming it cannot leave
@@ -868,24 +869,22 @@ def render_endpoint_docs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
 
 
 class EndpointDocsCollector:
-    """Thin stateful wrapper around extract_endpoint_docs / render_endpoint_docs.
+    """Accumulates extract_endpoint_docs results, then renders them.
 
-    Prefer calling those functions directly with a plain dict; this class exists
-    for callers that need to accumulate across a schema-availability loop.
-    The ordering constraint (render() after wrapper generation) remains the
-    caller's responsibility.
+    Exists for callers that accumulate across a schema-availability loop;
+    calling extract_endpoint_docs / render_endpoint_docs directly with a plain
+    dict is equivalent. The ordering constraint (render() after wrapper
+    generation) is the caller's responsibility, matching the module docstring.
+
+    extract() deliberately does not catch exceptions: a swallowed failure
+    publishes a silently empty page while the run reports success.
     """
 
     def __init__(self) -> None:
         self._docs: dict[str, list[EndpointDoc]] = {}
 
     def extract(self, service: str, swagger_path: Path) -> None:
-        try:
-            self._docs.setdefault(service, []).extend(
-                extract_endpoint_docs(swagger_path)
-            )
-        except Exception as e:
-            print(f"⚠️ Endpoint doc extraction failed for {service}: {e}")
+        self._docs.setdefault(service, []).extend(extract_endpoint_docs(swagger_path))
 
     def render(self) -> None:
         render_endpoint_docs(self._docs)
