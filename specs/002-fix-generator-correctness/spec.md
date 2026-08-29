@@ -66,8 +66,9 @@ real service must be present.
    service.
 2. **Given** the SDK has been generated, **When** a reader browses the service
    documentation, **Then** every real generated service has a reference page.
-3. **Given** the SDK has been generated, **When** the documented service count
-   is compared against the real service count, **Then** the two agree.
+3. **Given** the SDK has been generated, **When** the set of documented
+   services is compared against the set of real services, **Then** the two sets
+   are identical, with no extra and no missing member.
 
 ---
 
@@ -128,8 +129,11 @@ the run surfaces it rather than completing quietly.
   so a new internal directory does not have to be excluded in several places
   independently.
 - What happens to the published service count when the classification is
-  corrected? It changes. That is the fix, and it must appear as a deliberate
-  regeneration diff rather than an incidental one.
+  corrected? It stays the same. There is one directory wrongly documented and
+  one real service wrongly omitted, so the two errors cancel and the count is
+  already correct for the wrong reason. Only the membership changes. This is
+  precisely why the defect survived every count-based check, and it is why the
+  acceptance criteria compare sets rather than totals.
 - What happens if a provenance note is derived automatically and the writing
   function is private? The note must still resolve to a real function.
 
@@ -145,8 +149,10 @@ the run surfaces it rather than completing quietly.
   generator implementation rather than API services.
 - **FR-004**: Generated documentation MUST include a reference page for every
   real generated service.
-- **FR-005**: Any published count of services MUST equal the number of real
-  services.
+- **FR-005**: Any published count of services MUST continue to equal the number
+  of real services. This currently holds and MUST NOT regress; because the count
+  alone cannot distinguish a correct set from an offsetting pair of errors, it is
+  a guard rather than a fix.
 - **FR-006**: The rule distinguishing an internal directory from a service MUST
   be stated once and reused, rather than restated independently at each place
   that needs it.
@@ -166,6 +172,9 @@ the run surfaces it rather than completing quietly.
 - **FR-013**: The project's domain glossary MUST state precisely which
   directories are Services, so the ambiguity that allowed an internal directory
   to be documented as a Service cannot recur through the glossary.
+- **FR-014**: A helper defined in the generator MUST NOT be defined a second
+  time in the test suite. A duplicate definition can drift from the original
+  without any test noticing.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -185,8 +194,10 @@ the run surfaces it rather than completing quietly.
 
 - **SC-001**: Zero generated files carry a provenance note naming a function
   that does not exist. The current count is 42.
-- **SC-002**: The number of documented services equals the number of real
-  services. These currently differ.
+- **SC-002**: The set of documented services is identical to the set of real
+  services: no internal directory documented, no real service missing. The two
+  sets currently differ by one member on each side, even though their totals
+  already match.
 - **SC-003**: No internal directory is documented as a service, and no real
   service is missing a reference page. Both faults are present today.
 - **SC-004**: Every assertion about schema patching exercises the path a real

@@ -109,8 +109,9 @@ just a count.
       Service directories sorted by name. Depends on T009–T010.
 - [ ] T012 [US2] In `scripts/generation/parity.py`, replace the inline exclusion
       in `validate_generated_service_parity()` (line 83) with
-      `iter_service_dirs()`. This site is already correct, so its generated
-      output must not change — it is the reference behaviour. Depends on T011.
+      `iter_service_dirs()`. This site's rule is already correct, so its
+      validation behaviour must not change — it is the reference the other eight
+      sites are being brought into line with. Depends on T011.
 - [ ] T013 [P] [US2] In `scripts/generation/docs_rendering.py`, replace the three
       divergent filters in `_generate_service_readmes()`, `_discover_example_ops()`,
       and `_update_guide_snippets()` with `iter_service_dirs()`. Depends on T011.
@@ -119,28 +120,44 @@ just a count.
       hardcoded `"core"` and `"docs"` literals that suppress a real Service.
       Depends on T011.
 - [ ] T015 [P] [US2] In `scripts/generation/wrapper_generation.py`, replace the
-      filters in `_generate_service_wrappers()` and `_generate_client_mixin()`
-      with `iter_service_dirs()`. These must still skip directories with no
-      wrapper, so keep that as a separate explicit condition rather than folding
-      it into the Service rule. Depends on T011.
+      filters in `_generate_service_wrappers()` (line 115) and
+      `_generate_client_mixin()` (line 429) with `iter_service_dirs()`. Both
+      currently exclude `{__pycache__, docs, core, pb}`; the shared rule excludes
+      only `{__pycache__, pb_companions}`, so `core` becomes visible to both
+      functions for the first time. `core/services/` exists but contains only
+      `__init__.py`, so it must fall through the existing no-wrapper check and
+      produce no wrapper and no mount. Keep that no-wrapper check as a separate
+      explicit condition rather than folding it into the Service rule.
+      **Verify directly**: after this task, `git diff -- src/kentik_api/client_mixin.py`
+      must be empty. Depends on T011.
 - [ ] T016 [P] [US2] In `scripts/generate_sdk.py`, replace the three loop filters
       with `iter_service_dirs()`. Depends on T011.
 - [ ] T017 [P] [US2] In `tests/_discovery.py`, adopt `iter_service_dirs()` in
-      `discover_cases()` (which currently excludes nothing) and delete the
-      duplicate local `service_to_pascal_case` at line 53 in favour of the
-      `_shared` import the file already has. Depends on T011.
+      `discover_cases()`, which currently excludes nothing. Separately, delete
+      the duplicate local `service_to_pascal_case` at line 53 in favour of the
+      `_shared` import the file already has (FR-014); the two definitions are
+      byte-identical today and nothing would catch them drifting apart.
+      Depends on T011.
 - [ ] T018 [US2] Run `make test` and confirm no regression, then run
       `make generate local` (or `make generate` per T001) and confirm the
       documentation diff is exactly: `core.md` added, `pb_companions.md`
       removed, `index.md` toctree updated, and `pb_companions/README.md` no
       longer titled as a Service. Depends on T012–T017.
-- [ ] T019 [US2] Assert the FR-011 guarantee explicitly:
-      `git diff --stat -- 'src/kentik_api/gen/**/*.py'` must be empty after
-      regeneration. Any change here means a filter was applied where it changes
-      emitted SDK code. Depends on T018.
+- [ ] T019 [US2] Assert the FR-011 guarantee across **both** generated code
+      locations, not just one:
+      `git diff --stat -- 'src/kentik_api/gen/**/*.py' src/kentik_api/client_mixin.py`
+      must be empty after regeneration. `client_mixin.py` is generated but lives
+      outside `gen/`, so a check scoped to `gen/` alone would miss the single
+      most likely FR-011 violation, which T015 is the task most able to cause.
+      Depends on T018.
+- [ ] T019a [US2] Confirm the corrected membership as a **set**, per SC-002 and
+      US2's third acceptance scenario, rather than by comparing totals: the
+      documented service names and the real service names must match exactly.
+      Totals already agree today, so a count comparison would pass without
+      proving anything. Depends on T018.
 
 **Checkpoint**: Documented Services match real Services as a set (FR-003–FR-006,
-SC-002, SC-003).
+FR-014, SC-002, SC-003).
 
 ## Phase 5: User Story 3 - Provenance traces to real code (Priority: P2)
 
@@ -217,6 +234,11 @@ SC-007).
       the test modules this feature changes.
 - [ ] T030 Run `npx --yes markdownlint-cli2 "**/*.md"` and confirm zero issues
       across every edited document. Depends on T026–T029.
+- [ ] T030a Verify SC-009 directly, which T030 cannot: markdownlint checks
+      formatting and cannot detect a contradiction. Confirm `CLAUDE.md` and
+      `scripts/generation/README.md` now agree on the `_shared.py` public
+      interface, and that `CONTEXT.md`'s `Service` entry agrees with
+      `INTERNAL_GEN_DIRS` in the code. Depends on T026–T028.
 - [ ] T031 Run `make lint` and `make typecheck`; both must be clean.
 - [ ] T032 Run `make test` and confirm no regression against the T002 baseline
       other than tests added or retargeted by this feature.
@@ -238,9 +260,10 @@ SC-007).
 - Within US1: T003–T005 (tests green on the live path) strictly precede T006
   (deletion), so coverage never lapses.
 - Within US2: T009–T010 precede T011 (the rule), which precedes T012–T017 (the
-  call sites), which precede T018–T019 (regeneration checks).
+  call sites), which precede T018 and then T019/T019a (the regeneration checks).
 - Within US3 and US4: the test precedes the implementation.
-- Phase 7 runs last. T030 depends on T026–T029; T035 depends on everything.
+- Phase 7 runs last. T030 depends on T026–T029; T030a depends on T026–T028;
+  T035 depends on everything.
 
 ## Parallel Execution Example
 

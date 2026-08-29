@@ -86,19 +86,27 @@ git status --short
 | `docs/sphinx/services/*.md` | provenance header corrected (42 files) |
 | `src/kentik_api/gen/pb_companions/README.md` | no longer calls itself a Service |
 | `src/kentik_api/gen/**/*.py` | **no change at all** |
+| `src/kentik_api/client_mixin.py` | **no change at all** |
 
-Confirm the last row explicitly, since it is the FR-011 guarantee:
+Confirm the last two rows explicitly, since together they are the FR-011
+guarantee. `client_mixin.py` is generated but lives outside `gen/`, so a check
+scoped to `gen/` alone would miss it:
 
 ```bash
-git diff --stat -- 'src/kentik_api/gen/**/*.py'   # expect empty output
+git diff --stat -- 'src/kentik_api/gen/**/*.py' src/kentik_api/client_mixin.py
+# expect empty output
 ```
 
-Then confirm the corrected set and count:
+Then confirm the corrected **set**, not just the total:
 
 ```bash
-# SC-002: documented Services equal real Services. Both should print 40.
-ls -d src/kentik_api/gen/*/ | grep -vE '__pycache__|pb_companions' | wc -l
-ls docs/sphinx/services/*.md | grep -vE 'README|index' | wc -l
+# SC-002: compare membership, since the totals already match today.
+diff \
+  <(ls -d src/kentik_api/gen/*/ | xargs -n1 basename \
+      | grep -vE '^(__pycache__|pb_companions)$' | sort) \
+  <(ls docs/sphinx/services/*.md | xargs -n1 basename \
+      | sed 's/\.md$//' | grep -vE '^(README|index)$' | sort)
+# expect no output: the sets are identical
 
 # SC-001: zero pages naming a missing function. Expect 0.
 grep -l '_render_sphinx_stubs' docs/sphinx/services/*.md | wc -l
