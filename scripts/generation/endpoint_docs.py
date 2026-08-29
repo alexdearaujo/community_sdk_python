@@ -15,8 +15,8 @@ from pathlib import Path
 
 from ._shared import (
     PROJECT_ROOT,
-    SDK_OUTPUT_DIR,
     discover_service_model_classes,
+    iter_service_dirs,
     parse_wrapper_methods,
 )
 
@@ -686,16 +686,15 @@ def render_endpoint_docs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
     DOCS_SERVICES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "services"
     DOCS_SERVICES_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Every .md here is generated, so clear them first. Writing without clearing
+    # leaves a page behind for any service that stops existing, which is how a
+    # page for a non-Service directory survived earlier regenerations.
+    for stale in DOCS_SERVICES_DIR.glob("*.md"):
+        stale.unlink()
+
     index_entries: list[str] = []
 
-    for service_dir in sorted(SDK_OUTPUT_DIR.iterdir(), key=lambda p: p.name):
-        if not service_dir.is_dir() or service_dir.name in (
-            "__pycache__",
-            "docs",
-            "core",
-        ):
-            continue
-
+    for service_dir in iter_service_dirs():
         service = service_dir.name
         title = service.replace("_", " ").title()
 

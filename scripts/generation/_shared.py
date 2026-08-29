@@ -9,6 +9,31 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 SDK_OUTPUT_DIR = PROJECT_ROOT / "src" / "kentik_api" / "gen"
 
+# Directories under gen/ that the generator creates for itself rather than
+# deriving from a schema Service. pb_companions is written by
+# _compile_proto_companions(); it holds shared proto descriptors, not an API.
+INTERNAL_GEN_DIRS = frozenset({"__pycache__", "pb_companions"})
+
+
+def iter_service_dirs(root: Path | None = None) -> list[Path]:
+    """Returns every generated Service directory under root, sorted by name.
+
+    The one place that answers "is this directory a Service". A Service with no
+    operations still counts: six exist today with models but no wrapper, and
+    five of them are documented, so absence of a wrapper must not reclassify one
+    as internal. Callers needing a wrapper should check for it separately.
+
+    root resolves at call time, not at import time, so a caller that overrides
+    its own SDK_OUTPUT_DIR (as the generator tests do) is honoured.
+    """
+    root = SDK_OUTPUT_DIR if root is None else root
+    if not root.exists():
+        return []
+    return sorted(
+        (p for p in root.iterdir() if p.is_dir() and p.name not in INTERNAL_GEN_DIRS),
+        key=lambda p: p.name,
+    )
+
 
 def service_to_pascal_case(service: str) -> str:
     """Converts a snake_case service name to PascalCase."""

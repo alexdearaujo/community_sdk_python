@@ -10,7 +10,12 @@ import ast
 import re
 from pathlib import Path
 
-from ._shared import PROJECT_ROOT, SDK_OUTPUT_DIR, parse_wrapper_methods
+from ._shared import (
+    PROJECT_ROOT,
+    SDK_OUTPUT_DIR,
+    iter_service_dirs,
+    parse_wrapper_methods,
+)
 
 _GUIDES_DIR = PROJECT_ROOT / "docs" / "guides"
 
@@ -85,10 +90,7 @@ def _generate_gen_root_readme() -> None:
 def _generate_service_readmes():
     """Generates README.md files inside each service directory."""
     print("Generating module READMEs...")
-    for service_dir in sorted(SDK_OUTPUT_DIR.iterdir(), key=lambda p: p.name):
-        if not service_dir.is_dir() or service_dir.name == "__pycache__":
-            continue
-
+    for service_dir in iter_service_dirs():
         service_name = service_dir.name
 
         lines = [
@@ -427,9 +429,7 @@ def _discover_example_ops(
     if not SDK_OUTPUT_DIR.exists():
         return list_ops, body_op
 
-    for service_dir in sorted(SDK_OUTPUT_DIR.iterdir()):
-        if not service_dir.is_dir() or service_dir.name.startswith("_"):
-            continue
+    for service_dir in iter_service_dirs():
         service_name = service_dir.name
         services_folder = service_dir / "services"
         if not services_folder.exists():
@@ -499,11 +499,7 @@ def _update_guide_snippets() -> None:
     if not SDK_OUTPUT_DIR.exists():
         return
 
-    service_count = sum(
-        1
-        for d in SDK_OUTPUT_DIR.iterdir()
-        if d.is_dir() and not d.name.startswith("_") and d.name != "pb_companions"
-    )
+    service_count = len(iter_service_dirs())
 
     list_ops, body_op = _discover_example_ops(max_list_ops=3)
     if not list_ops:

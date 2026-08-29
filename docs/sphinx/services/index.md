@@ -17,6 +17,7 @@ bgp_monitoring
 capacity_plan
 cloud_export
 connectivity_checker
+core
 cost
 credential
 custom_application
@@ -40,7 +41,6 @@ net
 network_class
 notification_channel
 pathfinder
-pb_companions
 plan
 rbux
 saved_filter

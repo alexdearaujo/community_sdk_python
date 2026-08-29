@@ -37,6 +37,7 @@ flowchart LR
 | Capacity Plan | [capacity_plan.md](capacity_plan.md) | List all capacity plans. |
 | Cloud Export | [cloud_export.md](cloud_export.md) | List cloud exports. |
 | Connectivity Checker | [connectivity_checker.md](connectivity_checker.md) | Create a Connectivity Checker Report. |
+| Core | [core.md](core.md) | |
 | Cost | [cost.md](cost.md) | List all cost providers. |
 | Credential | [credential.md](credential.md) | List credential groups. |
 | Custom Application | [custom_application.md](custom_application.md) | List Custom Applications |
@@ -60,7 +61,6 @@ flowchart LR
 | Network Class | [network_class.md](network_class.md) | Get a network classification. |
 | Notification Channel | [notification_channel.md](notification_channel.md) | List available notification channels |
 | Pathfinder | [pathfinder.md](pathfinder.md) | Create a Pathfinder Report. |
-| Pb Companions | [pb_companions.md](pb_companions.md) | |
 | Plan | [plan.md](plan.md) | List Plans |
 | Rbux | [rbux.md](rbux.md) | List Focus Scopes |
 | Saved Filter | [saved_filter.md](saved_filter.md) | Create Saved Filter |

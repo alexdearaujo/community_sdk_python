@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.generation._shared import INTERNAL_GEN_DIRS, iter_service_dirs
 from scripts.generation.parity import (
     select_latest_swagger_files_by_service,
     validate_generated_service_parity,
@@ -158,3 +159,63 @@ def test_validate_schema_files_catches_truncated_file_like_2026_08_26_incident(
 
     assert len(failures) == 1
     assert "invalid JSON" in failures[0]["reason"]
+
+
+# ---------------------------------------------------------------------------
+# iter_service_dirs / INTERNAL_GEN_DIRS: the single Service-classification rule
+# ---------------------------------------------------------------------------
+
+
+def _make_gen_tree(root: Path, names: list[str]) -> None:
+    """Builds a gen/-shaped tree: each name a directory holding models/."""
+    for name in names:
+        (root / name / "models").mkdir(parents=True, exist_ok=True)
+
+
+def test_iter_service_dirs_excludes_every_internal_dir(tmp_path: Path):
+    _make_gen_tree(tmp_path, ["device", "alerting", *INTERNAL_GEN_DIRS])
+
+    names = [d.name for d in iter_service_dirs(tmp_path)]
+
+    assert names == ["alerting", "device"], "sorted, internal dirs excluded"
+    for internal in INTERNAL_GEN_DIRS:
+        assert internal not in names
+
+
+def test_iter_service_dirs_includes_operationless_service(tmp_path: Path):
+    # A Service with models/ but no wrapper is still a Service: six exist today
+    # (core, deviceconf, diagnostic, kptr, monitoring, net) and five are already
+    # documented. Absence of a wrapper must not reclassify it as internal.
+    _make_gen_tree(tmp_path, ["device"])
+    (tmp_path / "operationless" / "models").mkdir(parents=True)
+    (tmp_path / "operationless" / "services").mkdir()
+    (tmp_path / "operationless" / "services" / "__init__.py").write_text("")
+
+    names = [d.name for d in iter_service_dirs(tmp_path)]
+
+    assert names == ["device", "operationless"]
+
+
+def test_iter_service_dirs_skips_files_and_returns_sorted(tmp_path: Path):
+    _make_gen_tree(tmp_path, ["zeta", "alpha"])
+    (tmp_path / "README.md").write_text("not a service", encoding="utf-8")
+
+    names = [d.name for d in iter_service_dirs(tmp_path)]
+
+    assert names == ["alpha", "zeta"]
+
+
+def test_iter_service_dirs_regression_pb_companions_excluded_core_included(
+    tmp_path: Path,
+):
+    # Names the real defect: pb_companions (the proto descriptor registry,
+    # created by _compile_proto_companions()) was documented as a Service,
+    # while core -- a real generated Service -- was suppressed by a hardcoded
+    # "core" literal. Their counts cancelled, so every count check passed.
+    _make_gen_tree(tmp_path, ["core", "device", "pb_companions"])
+
+    names = [d.name for d in iter_service_dirs(tmp_path)]
+
+    assert "core" in names, "core is a real Service and must not be excluded"
+    assert "pb_companions" not in names, "pb_companions is generator-internal"
+    assert len(names) == 2

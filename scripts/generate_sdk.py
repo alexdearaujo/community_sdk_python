@@ -321,6 +321,8 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
         (SDK_OUTPUT_DIR / "__init__.py").touch(exist_ok=True)
 
         print("Cleaning old modules...")
+        # Deliberately broader than iter_service_dirs(): pb_companions must be
+        # wiped too, since _compile_proto_companions() regenerates it below.
         for item in SDK_OUTPUT_DIR.iterdir():
             if item.is_dir() and item.name != "__pycache__":
                 shutil.rmtree(item)
@@ -459,6 +461,8 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
     # 3. POST-PROCESSING (Rest & Models Cleanup)
     # -----------------------------------------------------------------
     print("\nPatching generated code...")
+    # Deliberately broader than iter_service_dirs(), like the cleanup loop
+    # above: fixup normalises every generated file, pb_companions included.
     for service_dir in SDK_OUTPUT_DIR.iterdir():
         if service_dir.is_dir() and service_dir.name != "__pycache__":
             fixup.fix_generated_service(service_dir)

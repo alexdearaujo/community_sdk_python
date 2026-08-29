@@ -24,6 +24,8 @@ from typing import Any, Optional, Union, get_args, get_origin
 
 from pydantic import BaseModel
 
+from scripts.generation._shared import iter_service_dirs, service_to_pascal_case
+
 
 @dataclass(frozen=True)
 class WrapperCase:
@@ -48,10 +50,6 @@ def print_case_start(case: WrapperCase, mode: str) -> None:
 
 def print_case_result(case: WrapperCase, mode: str, result: str) -> None:
     print(f'Testing against "{case_label(case)}". Mode={mode}. RESULT={result}')
-
-
-def service_to_pascal_case(service: str) -> str:
-    return "".join(part.capitalize() for part in service.split("_") if part)
 
 
 def generated_root() -> Path:
@@ -98,12 +96,8 @@ def _parse_wrapper_calls(file_path: Path) -> dict[str, tuple[str, str]]:
 
 def discover_cases() -> list[WrapperCase]:
     cases: list[WrapperCase] = []
-    root = generated_root()
 
-    for service_dir in sorted(root.iterdir()):
-        if not service_dir.is_dir():
-            continue
-
+    for service_dir in iter_service_dirs(generated_root()):
         service = service_dir.name
         services_dir = service_dir / "services"
         if not services_dir.exists():

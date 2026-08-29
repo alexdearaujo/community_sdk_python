@@ -9,6 +9,7 @@ from ._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
     discover_service_model_classes,
+    iter_service_dirs,
     parse_generated_rest_module,
     service_to_pascal_case,
 )
@@ -110,15 +111,7 @@ def _generate_service_wrappers():
     """Auto-generates the dual-transport wrapper classes for every service."""
     print("Generating unified service wrappers...")
 
-    for service_dir in SDK_OUTPUT_DIR.iterdir():
-        if not service_dir.is_dir() or service_dir.name in (
-            "__pycache__",
-            "docs",
-            "core",
-            "pb",
-        ):
-            continue
-
+    for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
         service = service_dir.name
         title = service_to_pascal_case(service)
         model_classes = discover_service_model_classes(service_dir)
@@ -424,15 +417,7 @@ def _generate_client_mixin():
     type_hints = []
     mounts = []
 
-    for service_dir in sorted(SDK_OUTPUT_DIR.iterdir()):
-        if not service_dir.is_dir() or service_dir.name in (
-            "__pycache__",
-            "docs",
-            "core",
-            "pb",
-        ):
-            continue
-
+    for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
         service = service_dir.name
         services_folder = service_dir / "services"
         if not services_folder.exists():
