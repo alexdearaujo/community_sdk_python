@@ -20,12 +20,12 @@ below is chosen so the cheapest, highest-certainty change lands first.
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirm the local schema checkout is clean before any regeneration,
+- [x] T001 Confirm the local schema checkout is clean before any regeneration,
       per the constitution's schema-checkout guardrail: run
       `git -C ../api-schema-public status --short` and expect no output. If it
       is dirty, use plain `make generate` (fresh clone) for every later
       regeneration task instead of `make generate local`.
-- [ ] T002 Capture the "before" baseline so the fixes are provable, recording
+- [x] T002 Capture the "before" baseline so the fixes are provable, recording
       each value: pages naming a missing function
       (`grep -l '_render_sphinx_stubs' docs/sphinx/services/*.md | wc -l`,
       expect 42); real Services vs pages (expect 40 and 40); presence of
@@ -51,27 +51,27 @@ test fails.
 
 ### Tests for User Story 1
 
-- [ ] T003 [US1] In `tests/generator/test_generate_sdk.py`, rewrite the three
+- [x] T003 [US1] In `tests/generator/test_generate_sdk.py`, rewrite the three
       tests at the `patch_schema_for_clean_names` call sites (currently lines
       113, 149, 173) to drive `patched_swagger` instead, asserting the same
       requestBody `$ref` inlining behaviour by reading the yielded temp file.
-- [ ] T004 [US1] In `tests/generator/test_generate_sdk.py`, confirm the existing
+- [x] T004 [US1] In `tests/generator/test_generate_sdk.py`, confirm the existing
       `test_patched_swagger_does_not_modify_original` still asserts the
       no-mutation property, and extend it if the rewritten tests do not already
       cover the original file staying byte-identical.
-- [ ] T005 [US1] Run `uv run pytest tests/generator/test_generate_sdk.py -v` and
+- [x] T005 [US1] Run `uv run pytest tests/generator/test_generate_sdk.py -v` and
       confirm the rewritten tests pass **before** deleting the function, proving
       they stand on their own rather than passing incidentally.
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Delete `patch_schema_for_clean_names` from
+- [x] T006 [US1] Delete `patch_schema_for_clean_names` from
       `scripts/generate_sdk.py` (line 198) and remove its now-unused import from
       `tests/generator/test_generate_sdk.py` (line 30). Depends on T003–T005.
-- [ ] T007 [US1] Verify no reference survives:
+- [x] T007 [US1] Verify no reference survives:
       `grep -rn 'patch_schema_for_clean_names' --include='*.py' scripts/ tests/`
       must return nothing. Depends on T006.
-- [ ] T008 [US1] Red-test the new coverage: temporarily break
+- [x] T008 [US1] Red-test the new coverage: temporarily break
       `patched_swagger`'s inlining, confirm at least one test fails, then
       restore. This proves the retargeted tests would catch a real regression.
 
@@ -92,34 +92,34 @@ just a count.
 
 ### Tests for User Story 2
 
-- [ ] T009 [US2] In `tests/generator/test_parity.py`, add a test that
+- [x] T009 [US2] In `tests/generator/test_parity.py`, add a test that
       `iter_service_dirs()` excludes every name in `INTERNAL_GEN_DIRS` and
       includes an operationless Service directory, using `tmp_path` fixtures
       that mimic the real tree shape (a dir with `models/` but no wrapper).
-- [ ] T010 [US2] In `tests/generator/test_parity.py`, add a regression test
+- [x] T010 [US2] In `tests/generator/test_parity.py`, add a regression test
       naming this defect: a fixture tree containing `pb_companions` must not
       yield it as a Service, and a fixture `core`-like directory must be
       yielded. Depends on T009.
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] In `scripts/generation/_shared.py`, add `INTERNAL_GEN_DIRS`
+- [x] T011 [US2] In `scripts/generation/_shared.py`, add `INTERNAL_GEN_DIRS`
       (`frozenset({"__pycache__", "pb_companions"})`) and
       `iter_service_dirs(root=SDK_OUTPUT_DIR)` per data-model.md, yielding
       Service directories sorted by name. Depends on T009–T010.
-- [ ] T012 [US2] In `scripts/generation/parity.py`, replace the inline exclusion
+- [x] T012 [US2] In `scripts/generation/parity.py`, replace the inline exclusion
       in `validate_generated_service_parity()` (line 83) with
       `iter_service_dirs()`. This site's rule is already correct, so its
       validation behaviour must not change — it is the reference the other eight
       sites are being brought into line with. Depends on T011.
-- [ ] T013 [P] [US2] In `scripts/generation/docs_rendering.py`, replace the three
+- [x] T013 [P] [US2] In `scripts/generation/docs_rendering.py`, replace the three
       divergent filters in `_generate_service_readmes()`, `_discover_example_ops()`,
       and `_update_guide_snippets()` with `iter_service_dirs()`. Depends on T011.
-- [ ] T014 [P] [US2] In `scripts/generation/endpoint_docs.py`, replace the filter
+- [x] T014 [P] [US2] In `scripts/generation/endpoint_docs.py`, replace the filter
       in `render_endpoint_docs()` with `iter_service_dirs()`, removing the
       hardcoded `"core"` and `"docs"` literals that suppress a real Service.
       Depends on T011.
-- [ ] T015 [P] [US2] In `scripts/generation/wrapper_generation.py`, replace the
+- [x] T015 [P] [US2] In `scripts/generation/wrapper_generation.py`, replace the
       filters in `_generate_service_wrappers()` (line 115) and
       `_generate_client_mixin()` (line 429) with `iter_service_dirs()`. Both
       currently exclude `{__pycache__, docs, core, pb}`; the shared rule excludes
@@ -130,27 +130,27 @@ just a count.
       explicit condition rather than folding it into the Service rule.
       **Verify directly**: after this task, `git diff -- src/kentik_api/client_mixin.py`
       must be empty. Depends on T011.
-- [ ] T016 [P] [US2] In `scripts/generate_sdk.py`, replace the three loop filters
+- [x] T016 [P] [US2] In `scripts/generate_sdk.py`, replace the three loop filters
       with `iter_service_dirs()`. Depends on T011.
-- [ ] T017 [P] [US2] In `tests/_discovery.py`, adopt `iter_service_dirs()` in
+- [x] T017 [P] [US2] In `tests/_discovery.py`, adopt `iter_service_dirs()` in
       `discover_cases()`, which currently excludes nothing. Separately, delete
       the duplicate local `service_to_pascal_case` at line 53 in favour of the
       `_shared` import the file already has (FR-014); the two definitions are
       byte-identical today and nothing would catch them drifting apart.
       Depends on T011.
-- [ ] T018 [US2] Run `make test` and confirm no regression, then run
+- [x] T018 [US2] Run `make test` and confirm no regression, then run
       `make generate local` (or `make generate` per T001) and confirm the
       documentation diff is exactly: `core.md` added, `pb_companions.md`
       removed, `index.md` toctree updated, and `pb_companions/README.md` no
       longer titled as a Service. Depends on T012–T017.
-- [ ] T019 [US2] Assert the FR-011 guarantee across **both** generated code
+- [x] T019 [US2] Assert the FR-011 guarantee across **both** generated code
       locations, not just one:
       `git diff --stat -- 'src/kentik_api/gen/**/*.py' src/kentik_api/client_mixin.py`
       must be empty after regeneration. `client_mixin.py` is generated but lives
       outside `gen/`, so a check scoped to `gen/` alone would miss the single
       most likely FR-011 violation, which T015 is the task most able to cause.
       Depends on T018.
-- [ ] T019a [US2] Confirm the corrected membership as a **set**, per SC-002 and
+- [x] T019a [US2] Confirm the corrected membership as a **set**, per SC-002 and
       US2's third acceptance scenario, rather than by comparing totals: the
       documented service names and the real service names must match exactly.
       Totals already agree today, so a count comparison would pass without
@@ -169,18 +169,18 @@ not exist.
 
 ### Tests for User Story 3
 
-- [ ] T020 [US3] In `tests/generator/test_endpoint_docs.py`, add a test
+- [x] T020 [US3] In `tests/generator/test_endpoint_docs.py`, add a test
       asserting the provenance header names a function that resolves in the
       module it names, rather than asserting a hardcoded string. The test must
       fail if the writer is renamed without the header following.
 
 ### Implementation for User Story 3
 
-- [ ] T021 [US3] In `scripts/generation/endpoint_docs.py`, replace the two
+- [x] T021 [US3] In `scripts/generation/endpoint_docs.py`, replace the two
       hardcoded `_render_sphinx_stubs()` strings (lines 715 and 792) with a
       header derived from the writing function's `__name__` and its module path,
       per data-model.md. Depends on T020.
-- [ ] T022 [US3] Regenerate and confirm
+- [x] T022 [US3] Regenerate and confirm
       `grep -l '_render_sphinx_stubs' docs/sphinx/services/*.md | wc -l` returns
       0, down from the 42 captured in T002. Depends on T021.
 
@@ -197,16 +197,16 @@ the run exits non-zero rather than emitting an empty page.
 
 ### Tests for User Story 4
 
-- [ ] T023 [US4] In `tests/generator/test_endpoint_docs.py`, add a test that a
+- [x] T023 [US4] In `tests/generator/test_endpoint_docs.py`, add a test that a
       failing extraction propagates rather than being swallowed, using a fixture
       swagger file that cannot be parsed.
 
 ### Implementation for User Story 4
 
-- [ ] T024 [US4] In `scripts/generation/endpoint_docs.py`, remove the blanket
+- [x] T024 [US4] In `scripts/generation/endpoint_docs.py`, remove the blanket
       `except Exception` in `EndpointDocsCollector.extract()` (lines 867–873) so
       failures propagate, per research Decision 3. Depends on T023.
-- [ ] T025 [US4] Resolve the contradictory docstrings in the same file: the
+- [x] T025 [US4] Resolve the contradictory docstrings in the same file: the
       module docstring claims the ordering constraint "is visible in the
       interface" while the class docstring says it "remains the caller's
       responsibility". Make both state what the code actually guarantees
@@ -218,36 +218,36 @@ SC-007).
 
 ## Phase 7: Polish, Documentation & Validation
 
-- [ ] T026 [P] In `CONTEXT.md`, sharpen the `Service` entry so it states that a
+- [x] T026 [P] In `CONTEXT.md`, sharpen the `Service` entry so it states that a
       Service maps to a directory under `src/kentik_api/gen/` **except** the
       generator-internal directories, naming `pb_companions` as the current
       example (FR-013). This closes the glossary ambiguity that allowed the
       defect.
-- [ ] T027 [P] In `CLAUDE.md`, fix the `_shared.py` description, which says "the
+- [x] T027 [P] In `CLAUDE.md`, fix the `_shared.py` description, which says "the
       two helpers" and names two while the module exports eight. Update it to
       match `scripts/generation/README.md` and include the new Service rule
       (FR-012). Note this is a pre-existing contradiction between the two
       documents, not one introduced here.
-- [ ] T028 [P] In `scripts/generation/README.md`, add the new Service rule to the
+- [x] T028 [P] In `scripts/generation/README.md`, add the new Service rule to the
       `_shared.py` public-interface row.
-- [ ] T029 [P] In `tests/generator/README.md`, add or update Files-table rows for
+- [x] T029 [P] In `tests/generator/README.md`, add or update Files-table rows for
       the test modules this feature changes.
-- [ ] T030 Run `npx --yes markdownlint-cli2 "**/*.md"` and confirm zero issues
+- [x] T030 Run `npx --yes markdownlint-cli2 "**/*.md"` and confirm zero issues
       across every edited document. Depends on T026–T029.
-- [ ] T030a Verify SC-009 directly, which T030 cannot: markdownlint checks
+- [x] T030a Verify SC-009 directly, which T030 cannot: markdownlint checks
       formatting and cannot detect a contradiction. Confirm `CLAUDE.md` and
       `scripts/generation/README.md` now agree on the `_shared.py` public
       interface, and that `CONTEXT.md`'s `Service` entry agrees with
       `INTERNAL_GEN_DIRS` in the code. Depends on T026–T028.
-- [ ] T031 Run `make lint` and `make typecheck`; both must be clean.
-- [ ] T032 Run `make test` and confirm no regression against the T002 baseline
+- [x] T031 Run `make lint` and `make typecheck`; both must be clean.
+- [x] T032 Run `make test` and confirm no regression against the T002 baseline
       other than tests added or retargeted by this feature.
-- [ ] T033 Run `make docs` and confirm Sphinx builds with no missing-page or
+- [x] T033 Run `make docs` and confirm Sphinx builds with no missing-page or
       orphaned-page warnings, proving `core.md` is in the toctree and
       `pb_companions.md` is gone from it.
-- [ ] T034 Run the opt-in live suites `make test-e2e` and `make test-e2e-grpc`;
+- [x] T034 Run the opt-in live suites `make test-e2e` and `make test-e2e-grpc`;
       both must pass unchanged (SC-008).
-- [ ] T035 Walk `quickstart.md` end to end and confirm every stated expectation
+- [x] T035 Walk `quickstart.md` end to end and confirm every stated expectation
       holds, including that the Service count is still 40 with the corrected
       membership. Depends on T018–T034.
 
