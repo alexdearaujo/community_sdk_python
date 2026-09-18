@@ -10,7 +10,7 @@ from . import (
     mitigation_platform_pb2 as kentik_dot_alerting_dot_public_dot_v202505_dot_mitigation__platform__pb2,
 )
 
-GRPC_GENERATED_VERSION = "1.81.1"
+GRPC_GENERATED_VERSION = "1.84.0"
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

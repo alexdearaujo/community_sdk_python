@@ -25,7 +25,10 @@ keywords = ["kentik", "api", "sdk", "networking", "observability"]
 dependencies = [
     "python-dotenv>=1.1.1",
     "googleapis-common-protos>=1.63.0",
-    "grpcio>=1.78.0",
+    # Floors below must stay >= the versions stamped into the generated stubs in
+    # src/kentik_api/gen/*/pb/. tests/generator/test_toolchain_versions.py enforces this.
+    "grpcio>=1.84.0",
+    "protobuf>=7.35.1,<8",
     "httpx>=0.28.1",
     "pydantic>=2.12.5",
 ]
@@ -51,7 +54,9 @@ packages = ["src/kentik_api"]
 dev = [
     {include-group = "test"},
     {include-group = "docs"},
-    "grpcio-tools>=1.78.0",
+    # Pinned exactly: protoc stamps its own version into 150 committed stubs, so an
+    # open floor makes `make generate` output depend on resolution date. Bump deliberately.
+    "grpcio-tools==1.84.0",
     "ty>=0.0.73",
 ]
 

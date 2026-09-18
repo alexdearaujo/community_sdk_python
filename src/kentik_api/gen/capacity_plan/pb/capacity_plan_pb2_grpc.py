@@ -10,7 +10,7 @@ from . import (
     capacity_plan_pb2 as kentik_dot_capacity__plan_dot_v202212_dot_capacity__plan__pb2,
 )
 
-GRPC_GENERATED_VERSION = "1.81.1"
+GRPC_GENERATED_VERSION = "1.84.0"
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
