@@ -31,6 +31,7 @@ flow_tag
 interface
 journeys
 kagent
+kmeta
 kmi
 kptr
 ktbgp

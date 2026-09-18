@@ -4,6 +4,9 @@
 from .GetNetworkRangeAssignmentsResponse import (
     GetNetworkRangeAssignmentsResponse as GetNetworkRangeAssignmentsResponse,
 )
+from .ListResolvedAddressesResponse import (
+    ListResolvedAddressesResponse as ListResolvedAddressesResponse,
+)
 from .protobufAny import protobufAny as protobufAny
 from .PtrResult import PtrResult as PtrResult
 from .ResolveAddressesResponse import (
