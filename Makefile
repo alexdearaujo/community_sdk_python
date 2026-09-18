@@ -68,6 +68,9 @@ lint: ## Run linter and formatter (Ruff)
 	$(RUFF) check --fix .
 	$(RUFF) format .
 
+release-notes: ## Render release notes from api_surface.json (SINCE=<ref>, default: latest tag)
+	uv run python scripts/release_notes.py $(if $(SINCE),--since $(SINCE),) $(if $(OUT),-o $(OUT),)
+
 typecheck: ## Type-check hand-written source with ty
 	uv run ty check src/kentik_api/core src/kentik_api/auth src/kentik_api/errors \
 		src/kentik_api/transports src/kentik_api/client.py \

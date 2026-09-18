@@ -12,7 +12,14 @@ import subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from generation import docs_rendering, error_package, fixup, parity, wrapper_generation
+from generation import (
+    api_surface,
+    docs_rendering,
+    error_package,
+    fixup,
+    parity,
+    wrapper_generation,
+)
 from generation._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
@@ -496,6 +503,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
 
     # Run after ruff so it cannot reorder the header comments.
     _inject_generated_headers(SDK_OUTPUT_DIR)
+
+    # Last: the surface record must reflect the final formatted output.
+    surface_path = api_surface.generate()
+    print(f"\nRecorded API surface in {surface_path.name}")
 
     print("\n✅ SDK and Documentation Generation Complete!")
 
