@@ -53,8 +53,6 @@ dev = [
     {include-group = "test"},
     {include-group = "docs"},
     "grpcio-tools==1.84.0",
-    # protobuf ships no py.typed, so well-known types referenced by the generated
-    # .pyi stubs are unresolvable without these.
     "types-protobuf>=6.30.0",
     "ty>=0.0.73",
 ]
@@ -74,6 +72,11 @@ docs = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
+# protoc emits dependency imports that look unused but register those protos in
+# the descriptor pool. Deleting them breaks AddSerializedFile at import time.
+# They also sit below module-level statements, which is protoc's layout, not ours.
+"src/kentik_api/gen/*/pb/*.py" = ["F401", "E402"]
+"src/kentik_api/gen/pb_companions/**/*.py" = ["F401", "E402"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
@@ -87,8 +90,6 @@ addopts = "-m 'not e2e and not e2e_grpc'"
 # scripts/ is on sys.path when generate_sdk.py runs as a direct script
 extra-paths = ["scripts"]
 
-# protoc's own --pyi_out emits `class X(int, metaclass=EnumTypeWrapper)` for every
-# proto enum, which no type checker accepts. Not our code and not fixable here.
 [[tool.ty.overrides]]
 include = ["src/kentik_api/gen/**/*.pyi"]
 

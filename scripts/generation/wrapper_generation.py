@@ -300,6 +300,16 @@ def _generate_service_wrappers():
 
                 # Build the call_args from all param names (api_config_override excluded)
                 arg_names = [param_name for param_name, _, _ in op.params]
+                # A free-form request body is annotated Dict[str, Any], which has
+                # no model_dump. Only Pydantic-model bodies get dumped.
+                data_annotation = next(
+                    (ann for name, ann, _ in op.params if name == "data"), ""
+                )
+                body_expr = (
+                    "dict(data)"
+                    if data_annotation.lstrip().lower().startswith("dict[")
+                    else "data.model_dump(by_alias=True, exclude_none=True)"
+                )
                 call_args = [
                     f"{arg}={arg}" for arg in arg_names if arg != "api_config_override"
                 ]
@@ -329,7 +339,7 @@ def _generate_service_wrappers():
                         other_dict = ", ".join(f'"{a}": {a}' for a in non_data_args)
                         grpc_lines = [
                             *stub_guard,
-                            "            _req_dict = data.model_dump(by_alias=True, exclude_none=True)",
+                            f"            _req_dict = {body_expr}",
                             f"            _req_dict.update({{k: v for k, v in {{{other_dict}}}.items() if v is not None}})",
                             f"            _req = ParseDict(_req_dict, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
                             f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
@@ -338,7 +348,7 @@ def _generate_service_wrappers():
                         # Body param only
                         grpc_lines = [
                             *stub_guard,
-                            f"            _req = ParseDict(data.model_dump(by_alias=True, exclude_none=True), self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
+                            f"            _req = ParseDict({body_expr}, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
                             f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
                         ]
                     elif non_data_args:

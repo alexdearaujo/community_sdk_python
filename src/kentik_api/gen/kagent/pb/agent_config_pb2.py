@@ -27,6 +27,20 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
+from google.api import client_pb2 as google_dot_api_dot_client__pb2
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
+from google.protobuf import duration_pb2 as google_dot_protobuf_dot_duration__pb2
+from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
+
+from kentik_api.gen.core.pb import (
+    annotations_pb2 as kentik_dot_core_dot_v202303_dot_annotations__pb2,
+)
+from kentik_api.gen.pb_companions.protoc_gen_openapiv2.options import (
+    annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2,
+)
+
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
     b'\n(kentik/kagent/v202401/agent_config.proto\x12\x15kentik.kagent.v202401\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a google/protobuf/field_mask.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a%kentik/core/v202303/annotations.proto"\x81\x04\n\x0b\x41gentConfig\x12H\n\x07\x63reated\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x1b\x92\x41\x15\x32\x13\x43reation timestamp.\xe0\x41\x03\x12P\n\x06\x65\x64ited\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampB$\x92\x41\x1e\x32\x1cLast-modification timestamp.\xe0\x41\x03\x12>\n\x07site_id\x18\x04 \x01(\tB-\x92\x41*2(ID of the site the agent is assigned to.\x12\x33\n\x04name\x18\x05 \x01(\tB%\x92\x41"2 User-friendly name of the agent.\x12\x33\n\x0b\x64\x65scription\x18\x06 \x01(\tB\x1e\x92\x41\x1b\x32\x19\x44\x65scription of the agent.\x12T\n\x0frelease_channel\x18\x07 \x01(\tB;\x92\x41\x38\x32\x36Release channel the agent takes software updates from.\x12V\n\x0fos_distribution\x18\x08 \x01(\tB=\x92\x41:28Override of the OS distribution discovered by the agent."\xa6\x02\n\x0fTelemetryConfig\x12=\n\rlogs_endpoint\x18\x01 \x01(\tB&\x92\x41#2!Endpoint the agent sends logs to.\x12\x43\n\x10metrics_endpoint\x18\x02 \x01(\tB)\x92\x41&2$Endpoint the agent sends metrics to.\x12\x45\n\x11kmetrics_endpoint\x18\x03 \x01(\tB*\x92\x41\'2%Endpoint the agent sends kmetrics to.\x12H\n\x0fsentry_endpoint\x18\x04 \x01(\tB/\x92\x41,2*Endpoint the agent sends crash reports to.BIZGgithub.com/kentik/api-schema-public/gen/go/kentik/kagent/v202401;kagentb\x06proto3'
 )

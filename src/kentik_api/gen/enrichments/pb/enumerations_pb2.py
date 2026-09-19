@@ -27,6 +27,17 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
+from google.api import client_pb2 as google_dot_api_dot_client__pb2
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
+
+from kentik_api.gen.core.pb import (
+    annotations_pb2 as kentik_dot_core_dot_v202303_dot_annotations__pb2,
+)
+from kentik_api.gen.pb_companions.protoc_gen_openapiv2.options import (
+    annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2,
+)
+
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
     b'\n@kentik/enrichments/enumerations/v202601alpha1/enumerations.proto\x12-kentik.enrichments.enumerations.v202601alpha1\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a%kentik/core/v202303/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto"y\n\x17\x46\x65tchValuesByIdsRequest\x12^\n\x03ids\x18\x01 \x03(\tBQ\x92\x41K2IEnumeration lookup IDs to resolve, as decimal strings. Must be non-empty.\xe0\x41\x02"\xf0\x02\n\x18\x46\x65tchValuesByIdsResponse\x12\xa4\x02\n\x06values\x18\x01 \x03(\x0b\x32S.kentik.enrichments.enumerations.v202601alpha1.FetchValuesByIdsResponse.ValuesEntryB\xbe\x01\x92\x41\xba\x01\x32\xb7\x01Mapping from lookup ID (decimal string) to the corresponding string value. IDs that did not resolve for the caller\'s company are absent from the map; callers must handle missing keys.\x1a-\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x32\xa0\x04\n\x18\x45numerationsAdminService\x12\xd1\x03\n\x10\x46\x65tchValuesByIds\x12\x46.kentik.enrichments.enumerations.v202601alpha1.FetchValuesByIdsRequest\x1aG.kentik.enrichments.enumerations.v202601alpha1.FetchValuesByIdsResponse"\xab\x02\x92\x41\xc6\x01\x12"Resolve enumeration IDs to values.\x1a\x8d\x01Return the string values for the supplied enumeration lookup IDs within the authenticated company. Unknown IDs are omitted from the response.*\x10\x46\x65tchValuesByIds\xf2\xd7\x02\x17\x61\x64min.enumerations:read\x82\xd3\xe4\x93\x02@";/enrichments/enumerations/v202601alpha1/values:fetch_by_ids:\x01*\x1a\x30\xca\x41\x13grpc.api.kentik.com\xea\xd7\x02\x12\x61\x64min.enumerations\x90\xd8\x02\x03\x42\x90\x06Zegithub.com/kentik/api-schema-public/gen/go/kentik/enrichments/enumerations/v202601alpha1;enumerations\x92\x41\xa5\x05\x12\xbe\x03\n\x1e\x45numerations Public Lookup API\x12\xc5\x02# Overview\nResolve enumeration lookup IDs to their string values for the authenticated company.\nEnumerations map populator/tag string values to compact uint32 lookup IDs; this API\nperforms the reverse mapping so callers (ie: ktranslate) holding lookup IDs (for \nexample, from query results) can recover the original strings.\n"E\n\x16Kentik API Engineering\x12+https://github.com/kentik/api-schema-public2\rv202601alpha1*\x01\x02\x32\x10\x61pplication/json:\x10\x61pplication/jsonZD\n\x1e\n\x05\x65mail\x12\x15\x08\x02\x1a\x0fX-CH-Auth-Email \x02\n"\n\x05token\x12\x19\x08\x02\x1a\x13X-CH-Auth-API-Token \x02\x62\x16\n\t\n\x05\x65mail\x12\x00\n\t\n\x05token\x12\x00r]\n%General information about Kentik APIs\x12\x34https://kb.kentik.com/v0/Ab09.htm#Ab09-APIs_Overviewb\x06proto3'
 )

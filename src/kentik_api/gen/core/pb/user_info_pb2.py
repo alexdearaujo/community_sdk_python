@@ -22,6 +22,12 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
+
+from kentik_api.gen.pb_companions.protoc_gen_openapiv2.options import (
+    annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2,
+)
+
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
     b'\n#kentik/core/v202303/user_info.proto\x12\x13kentik.core.v202303\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto"\x9f\x01\n\x08UserInfo\x12.\n\x02id\x18\x01 \x01(\tB"\x92\x41\x1c\x32\x1aUnique system generated ID\xe0\x41\x03\x12\x31\n\x05\x65mail\x18\x02 \x01(\tB"\x92\x41\x1c\x32\x1a\x45-mail address of the user\xe0\x41\x03\x12\x30\n\tfull_name\x18\x03 \x01(\tB\x1d\x92\x41\x17\x32\x15\x46ull name of the user\xe0\x41\x03\x42LZJgithub.com/kentik/api-schema-public/gen/go/kentik/core/v202303;kentik_coreb\x06proto3'
 )

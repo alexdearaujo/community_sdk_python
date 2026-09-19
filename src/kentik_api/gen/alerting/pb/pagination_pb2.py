@@ -27,6 +27,8 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
+
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
     b'\n.kentik/alerting/types/v202506/pagination.proto\x12\x1dkentik.alerting.types.v202506\x1a\x1fgoogle/protobuf/timestamp.proto"N\n\x10PaginationConfig\x12\r\n\x05limit\x18\x01 \x01(\x04\x12\x0e\n\x06offset\x18\x02 \x01(\x04\x12\x1b\n\x13include_total_count\x18\x03 \x01(\x08"K\n\x0ePaginationInfo\x12\x15\n\x0btotal_count\x18\x01 \x01(\x04H\x00\x12\x1a\n\x10has_more_results\x18\x02 \x01(\x08H\x00\x42\x06\n\x04infoBJZHgithub.com/kentik/api-schema-public/gen/go/kentik/alerting/types/v202506b\x06proto3'
 )

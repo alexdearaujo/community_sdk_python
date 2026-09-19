@@ -208,7 +208,7 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict = dict(data)
             _req_dict.update(
                 {
                     k: v
@@ -447,7 +447,7 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict = dict(data)
             _req_dict.update(
                 {
                     k: v

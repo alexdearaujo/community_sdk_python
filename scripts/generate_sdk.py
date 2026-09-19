@@ -133,6 +133,53 @@ def _rewrite_pyi_imports(content: str, local_modules: set[str]) -> str:
     )
 
 
+def _relink_pb2_dependency_imports(output_dir: Path) -> int:
+    """Repoints protoc's dependency imports at the flattened gen/<service>/pb/ layout.
+
+    protoc writes these against the original proto package tree (`from
+    kentik.core.v202303 import annotations_pb2`), which does not exist here. They
+    look unused, but importing them is what registers each dependency in the
+    descriptor pool, so an unresolved one makes AddSerializedFile raise TypeError
+    at import and silently disables the whole service's gRPC transport.
+    """
+    pattern = re.compile(
+        r"^from ([\w\.]+) import (\w+_pb2) as ([\w_]+)$", flags=re.MULTILINE
+    )
+    rewritten = 0
+
+    for pb_dir in sorted(output_dir.glob("*/pb")):
+        siblings = {path.stem for path in pb_dir.glob("*_pb2.py")}
+
+        def _replace(match: re.Match, siblings=siblings) -> str:
+            package, module, alias = match.groups()
+            if package.startswith("google."):
+                return match.group(0)  # resolved by googleapis-common-protos
+            if package.split(".")[0] == "protoc_gen_openapiv2":
+                return (
+                    f"from kentik_api.gen.pb_companions.{package} "
+                    f"import {module} as {alias}"
+                )
+            if module in siblings:
+                return f"from . import {module} as {alias}"
+            parts = package.split(".")
+            if parts[0] == "kentik" and len(parts) > 1:
+                target = output_dir / parts[1] / "pb" / f"{module}.py"
+                if target.exists():
+                    return (
+                        f"from kentik_api.gen.{parts[1]}.pb import {module} as {alias}"
+                    )
+            return match.group(0)
+
+        for pb_file in sorted(pb_dir.glob("*_pb2.py")):
+            content = pb_file.read_text(encoding="utf-8")
+            patched = pattern.sub(_replace, content)
+            if patched != content:
+                pb_file.write_text(patched, encoding="utf-8")
+                rewritten += 1
+
+    return rewritten
+
+
 def clean_schema_names(schema: dict, version: str) -> dict:
     import copy
 
@@ -505,6 +552,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
     for service_dir in SDK_OUTPUT_DIR.iterdir():
         if service_dir.is_dir() and service_dir.name != "__pycache__":
             fixup.fix_generated_service(service_dir)
+
+    # Runs once every pb/ directory exists, so cross-service targets resolve.
+    relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR)
+    print(f"    ✅ Relinked descriptor dependency imports in {relinked} pb2 modules.")
 
     print("\nFormatting...")
     run_cmd(

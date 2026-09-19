@@ -22,6 +22,12 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
+
+from kentik_api.gen.pb_companions.protoc_gen_openapiv2.options import (
+    annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2,
+)
+
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
     b'\n"kentik/net/v202303/bgp_types.proto\x12\x12kentik.net.v202303\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc-gen-openapiv2/options/annotations.proto"\xab\x02\n\x0cVantagePoint\x12\x37\n\x07\x64\x61taset\x18\x01 \x01(\tB&\x92\x41 2\x1eName of the collector data set\xe0\x41\x03\x12\x30\n\tcollector\x18\x02 \x01(\tB\x1d\x92\x41\x17\x32\x15Name of the collector\xe0\x41\x03\x12T\n\x08peer_asn\x18\x03 \x01(\rBB\x92\x41<2:ASN of the peer from which the collector receives BGP data\xe0\x41\x03\x12Z\n\x07peer_ip\x18\x04 \x01(\tBI\x92\x41\x43\x32\x41IP address of the peer from which the collector receives BGP data\xe0\x41\x03*4\n\x03\x41\x66i\x12\x13\n\x0f\x41\x46I_UNSPECIFIED\x10\x00\x12\x0b\n\x07\x41\x46I_IP4\x10\x01\x12\x0b\n\x07\x41\x46I_IP6\x10\x02*N\n\x04Safi\x12\x14\n\x10SAFI_UNSPECIFIED\x10\x00\x12\x10\n\x0cSAFI_UNICAST\x10\x01\x12\r\n\tSAFI_MPLS\x10\x04\x12\x0f\n\nSAFI_L3VPN\x10\x80\x01*\xcd\x01\n\nRpkiStatus\x12\x1b\n\x17RPKI_STATUS_UNSPECIFIED\x10\x00\x12\x19\n\x15RPKI_STATUS_NOT_FOUND\x10\x01\x12 \n\x1cRPKI_STATUS_EXPLICIT_INVALID\x10\x02\x12\x1e\n\x1aRPKI_STATUS_INVALID_PREFIX\x10\x03\x12\x17\n\x13RPKI_STATUS_INVALID\x10\x04\x12\x15\n\x11RPKI_STATUS_VALID\x10\x05\x12\x15\n\x11RPKI_STATUS_ERROR\x10\x08\x42JZHgithub.com/kentik/api-schema-public/gen/go/kentik/net/v202303;kentik_netb\x06proto3'
 )

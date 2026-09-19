@@ -27,6 +27,12 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from google.api import client_pb2 as google_dot_api_dot_client__pb2
+
+from kentik_api.gen.core.pb import (
+    annotations_pb2 as kentik_dot_core_dot_v202303_dot_annotations__pb2,
+)
+
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
     b'\n*kentik/diagnostic/v202501/diagnostic.proto\x12\x19kentik.diagnostic.v202501\x1a\x17google/api/client.proto\x1a%kentik/core/v202303/annotations.proto"\x1e\n\x0b\x45\x63hoRequest\x12\x0f\n\x07message\x18\x01 \x01(\t"\x1f\n\x0c\x45\x63hoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t"\xaa\x01\n\x0b\x43hatRequest\x12\x12\n\nmessage_id\x18\x01 \x01(\t\x12>\n\x0c\x65\x63ho_request\x18\x02 \x01(\x0b\x32&.kentik.diagnostic.v202501.EchoRequestH\x00\x12@\n\recho_response\x18\x03 \x01(\x0b\x32\'.kentik.diagnostic.v202501.EchoResponseH\x00\x42\x05\n\x03msg"\xab\x01\n\x0c\x43hatResponse\x12\x12\n\nmessage_id\x18\x01 \x01(\t\x12>\n\x0c\x65\x63ho_request\x18\x02 \x01(\x0b\x32&.kentik.diagnostic.v202501.EchoRequestH\x00\x12@\n\recho_response\x18\x03 \x01(\x0b\x32\'.kentik.diagnostic.v202501.EchoResponseH\x00\x42\x05\n\x03msg2\xfd\x01\n\x11\x44iagnosticService\x12\x63\n\x04\x45\x63ho\x12&.kentik.diagnostic.v202501.EchoRequest\x1a\'.kentik.diagnostic.v202501.EchoResponse"\n\xf2\xd7\x02\x06PUBLIC\x12g\n\x04\x43hat\x12&.kentik.diagnostic.v202501.ChatRequest\x1a\'.kentik.diagnostic.v202501.ChatResponse"\n\xf2\xd7\x02\x06PUBLIC(\x01\x30\x01\x1a\x1a\xca\x41\x13grpc.api.kentik.com\x90\xd8\x02\x04\x42QZOgithub.com/kentik/api-schema-public/gen/go/kentik/diagnostic/v202501;diagnosticb\x06proto3'
 )

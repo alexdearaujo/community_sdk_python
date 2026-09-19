@@ -27,6 +27,12 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from kentik_api.gen.ktbgp.pb import (
+    route_service_pb2 as kentik_dot_ktbgp_dot_v202501_dot_route__service__pb2,
+)
+
+from . import types_pb2 as kentik_dot_alerting_dot_types_dot_v202303_dot_types__pb2
+
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
     b"\n.kentik/alerting/types/v202506/mitigation.proto\x12\x1dkentik.alerting.types.v202506\x1a)kentik/alerting/types/v202303/types.proto\x1a(kentik/ktbgp/v202501/route_service.proto\"\xae\x01\n\x10MitigationTarget\x12\x11\n\x07ip_cidr\x18\x01 \x01(\tH\x00\x12\x37\n\x08\x66lowspec\x18\x02 \x01(\x0b\x32#.kentik.ktbgp.v202501.FlowspecMatchH\x00\x12\x44\n\x11\x61\x64\x61ptive_flowspec\x18\x03 \x01(\x0b\x32'.kentik.alerting.types.v202303.KeyValueH\x00\x42\x08\n\x06targetBJZHgithub.com/kentik/api-schema-public/gen/go/kentik/alerting/types/v202506b\x06proto3"
 )
