@@ -114,33 +114,15 @@ def _rewrite_grpc_imports(content: str) -> str:
     return content
 
 
-def _rewrite_pyi_imports(content: str, local_modules: set[str]) -> str:
-    """Relativises pb2 imports in a .pyi stub, but only for siblings in the same pb/ dir.
-
-    Unlike the _grpc modules, stubs also import well-known types such as
-    `google.protobuf.timestamp_pb2`. Rewriting those to `from . import` points them
-    at a module that does not exist locally.
-    """
-    return re.sub(
-        r"^from [\w\.]+ import (\w+_pb2) as ([\w_]+)$",
-        lambda m: (
-            f"from . import {m.group(1)} as {m.group(2)}"
-            if m.group(1) in local_modules
-            else m.group(0)
-        ),
-        content,
-        flags=re.MULTILINE,
-    )
-
-
 def _relink_pb2_dependency_imports(output_dir: Path) -> int:
     """Repoints protoc's dependency imports at the flattened gen/<service>/pb/ layout.
 
     protoc writes these against the original proto package tree (`from
-    kentik.core.v202303 import annotations_pb2`), which does not exist here. They
-    look unused, but importing them is what registers each dependency in the
-    descriptor pool, so an unresolved one makes AddSerializedFile raise TypeError
-    at import and silently disables the whole service's gRPC transport.
+    kentik.core.v202303 import annotations_pb2`), which does not exist here. In a
+    _pb2 module they look unused, but importing them is what registers each
+    dependency in the descriptor pool, so an unresolved one makes
+    AddSerializedFile raise TypeError at import and silently disables the whole
+    service's gRPC transport. In a .pyi stub the same imports carry the types.
     """
     pattern = re.compile(
         r"^from ([\w\.]+) import (\w+_pb2) as ([\w_]+)$", flags=re.MULTILINE
@@ -170,7 +152,9 @@ def _relink_pb2_dependency_imports(output_dir: Path) -> int:
                     )
             return match.group(0)
 
-        for pb_file in sorted(pb_dir.glob("*_pb2.py")):
+        for pb_file in sorted(
+            [*pb_dir.glob("*_pb2.py"), *pb_dir.glob("*.pyi")]
+        ):
             content = pb_file.read_text(encoding="utf-8")
             patched = pattern.sub(_replace, content)
             if patched != content:
@@ -508,14 +492,6 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                     content = pb_file.read_text(encoding="utf-8")
                                     content = _rewrite_grpc_imports(content)
                                     pb_file.write_text(content, encoding="utf-8")
-
-                                local_pb2 = {
-                                    path.stem for path in pb_dir.glob("*_pb2.py")
-                                }
-                                for stub in pb_dir.rglob("*.pyi"):
-                                    content = stub.read_text(encoding="utf-8")
-                                    content = _rewrite_pyi_imports(content, local_pb2)
-                                    stub.write_text(content, encoding="utf-8")
 
                             except subprocess.CalledProcessError as e:
                                 print(

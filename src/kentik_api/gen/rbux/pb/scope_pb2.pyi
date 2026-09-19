@@ -9,7 +9,8 @@ from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf.internal import containers as _containers
-from kentik.saved_filter.v202501alpha1 import (
+
+from kentik_api.gen.saved_filter.pb import (
     saved_filter_message_pb2 as _saved_filter_message_pb2,
 )
 

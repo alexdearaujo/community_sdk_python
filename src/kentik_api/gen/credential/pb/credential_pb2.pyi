@@ -9,8 +9,9 @@ from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf.internal import containers as _containers
-from kentik.user.v202211 import user_pb2 as _user_pb2
-from kentik.vault.v202312alpha1 import vault_pb2 as _vault_pb2
+
+from kentik_api.gen.user.pb import user_pb2 as _user_pb2
+from kentik_api.gen.vault.pb import vault_pb2 as _vault_pb2
 
 DESCRIPTOR: _descriptor.FileDescriptor
 

@@ -5,7 +5,8 @@ from typing import Union as _Union
 
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from kentik.ktbgp.v202501 import route_service_pb2 as _route_service_pb2
+
+from kentik_api.gen.ktbgp.pb import route_service_pb2 as _route_service_pb2
 
 from . import types_pb2 as _types_pb2
 
