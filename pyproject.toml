@@ -53,6 +53,9 @@ dev = [
     {include-group = "test"},
     {include-group = "docs"},
     "grpcio-tools==1.84.0",
+    # protobuf ships no py.typed, so well-known types referenced by the generated
+    # .pyi stubs are unresolvable without these.
+    "types-protobuf>=6.30.0",
     "ty>=0.0.73",
 ]
 
@@ -83,3 +86,11 @@ addopts = "-m 'not e2e and not e2e_grpc'"
 [tool.ty.environment]
 # scripts/ is on sys.path when generate_sdk.py runs as a direct script
 extra-paths = ["scripts"]
+
+# protoc's own --pyi_out emits `class X(int, metaclass=EnumTypeWrapper)` for every
+# proto enum, which no type checker accepts. Not our code and not fixable here.
+[[tool.ty.overrides]]
+include = ["src/kentik_api/gen/**/*.pyi"]
+
+[tool.ty.overrides.rules]
+conflicting-metaclass = "ignore"

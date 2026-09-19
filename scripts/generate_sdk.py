@@ -114,6 +114,25 @@ def _rewrite_grpc_imports(content: str) -> str:
     return content
 
 
+def _rewrite_pyi_imports(content: str, local_modules: set[str]) -> str:
+    """Relativises pb2 imports in a .pyi stub, but only for siblings in the same pb/ dir.
+
+    Unlike the _grpc modules, stubs also import well-known types such as
+    `google.protobuf.timestamp_pb2`. Rewriting those to `from . import` points them
+    at a module that does not exist locally.
+    """
+    return re.sub(
+        r"^from [\w\.]+ import (\w+_pb2) as ([\w_]+)$",
+        lambda m: (
+            f"from . import {m.group(1)} as {m.group(2)}"
+            if m.group(1) in local_modules
+            else m.group(0)
+        ),
+        content,
+        flags=re.MULTILINE,
+    )
+
+
 def clean_schema_names(schema: dict, version: str) -> dict:
     import copy
 
@@ -417,6 +436,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                 f"-I{grpc_gateway_path}",
                                 f"--python_out={tmp_pb_path}",
                                 f"--grpc_python_out={tmp_pb_path}",
+                                f"--pyi_out={tmp_pb_path}",
                             ]
                             cmd.extend(rel_proto_files)
 
@@ -425,7 +445,11 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                     cmd, check=True, capture_output=True, text=True
                                 )
 
-                                generated_files = list(tmp_pb_path.rglob("*.py"))
+                                generated_files = [
+                                    path
+                                    for suffix in ("*.py", "*.pyi")
+                                    for path in tmp_pb_path.rglob(suffix)
+                                ]
                                 print(
                                     f"    ✅ Protoc successfully generated {len(generated_files)} files."
                                 )
@@ -437,6 +461,14 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                     content = pb_file.read_text(encoding="utf-8")
                                     content = _rewrite_grpc_imports(content)
                                     pb_file.write_text(content, encoding="utf-8")
+
+                                local_pb2 = {
+                                    path.stem for path in pb_dir.glob("*_pb2.py")
+                                }
+                                for stub in pb_dir.rglob("*.pyi"):
+                                    content = stub.read_text(encoding="utf-8")
+                                    content = _rewrite_pyi_imports(content, local_pb2)
+                                    stub.write_text(content, encoding="utf-8")
 
                             except subprocess.CalledProcessError as e:
                                 print(
