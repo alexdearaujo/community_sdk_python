@@ -76,3 +76,18 @@ flowchart TB
 - `Generated Service Wrappers` are transport-aware facades exposed as `client.<service>`.
 - `Generated REST Services` host operation functions generated from OpenAPI schemas.
 - `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.
+
+## Services Without A Wrapper
+
+Wrapper generation is driven by REST paths in the OpenAPI schema. A Service
+whose schema declares no paths produces models and proto stubs but no
+wrapper, so it is not mounted on the client. That is intentional: REST
+operations are this SDK's contract, and proto-driven wrapper generation is
+deliberately out of scope.
+
+6 Services are in that state today: `core`, `deviceconf`, `diagnostic`, `kptr`, `monitoring`, `net`.
+
+Some of these declare gRPC RPCs upstream but carry no `google.api.http`
+annotation, which is why no path reaches the schema. Those cases are an
+upstream schema gap, not an SDK limitation, and they resolve here
+automatically once the annotation is added.

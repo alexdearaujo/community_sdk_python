@@ -14,6 +14,7 @@ from ._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
     iter_service_dirs,
+    parse_generated_rest_module,
     parse_wrapper_methods,
 )
 
@@ -79,6 +80,44 @@ For endpoint parameters, response shapes, and usage examples per
 service, see `docs/sphinx/services/<service>.md`, or the built
 Sphinx docs.
 """
+
+
+def _services_without_wrappers_section() -> list[str]:
+    """Explains why some generated Services are absent from the client.
+
+    Generated rather than hand-written prose so the service list cannot go stale:
+    the gap closes on its own if upstream adds the missing HTTP bindings.
+    """
+    unmounted = [
+        service_dir.name
+        for service_dir in iter_service_dirs()
+        if not any(
+            parse_generated_rest_module(module)
+            for module in (service_dir / "services").glob("*.py")
+        )
+    ]
+    if not unmounted:
+        return []
+
+    return [
+        "## Services Without A Wrapper",
+        "",
+        "Wrapper generation is driven by REST paths in the OpenAPI schema. A Service",
+        "whose schema declares no paths produces models and proto stubs but no",
+        "wrapper, so it is not mounted on the client. That is intentional: REST",
+        "operations are this SDK's contract, and proto-driven wrapper generation is",
+        "deliberately out of scope.",
+        "",
+        f"{len(unmounted)} Services are in that state today: "
+        + ", ".join(f"`{name}`" for name in unmounted)
+        + ".",
+        "",
+        "Some of these declare gRPC RPCs upstream but carry no `google.api.http`",
+        "annotation, which is why no path reaches the schema. Those cases are an",
+        "upstream schema gap, not an SDK limitation, and they resolve here",
+        "automatically once the annotation is added.",
+        "",
+    ]
 
 
 def _generate_gen_root_readme() -> None:
@@ -324,6 +363,7 @@ def _generate_runtime_architecture_docs() -> None:
         "- `Generated REST Services` host operation functions generated from OpenAPI schemas.",
         "- `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.",
         "",
+        *_services_without_wrappers_section(),
     ]
     (docs_root / "sdk_runtime_architecture.md").write_text(
         "\n".join(architecture_md), encoding="utf-8"
