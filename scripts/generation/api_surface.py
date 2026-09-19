@@ -276,6 +276,42 @@ def render_markdown(delta: dict[str, Any], *, since: str) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def render_summary(surface: dict[str, Any]) -> str:
+    """Renders the whole surface, for the first release where no baseline exists yet."""
+    services = surface.get("services", {})
+    mounted = {name: s for name, s in services.items() if s["mounted"]}
+    operations = sum(len(s["operations"]) for s in services.values())
+    models = sum(len(s["models"]) for s in services.values())
+
+    lines = [
+        "### API surface",
+        "",
+        f"- {len(services)} services ({len(mounted)} mounted on the client)",
+        f"- {operations} REST operations",
+        f"- {models} models",
+        "",
+        "<details>",
+        "<summary>Services</summary>",
+        "",
+    ]
+    for name, service in services.items():
+        count = len(service["operations"])
+        detail = (
+            f"`client.{name}`, {count} operation{'s' if count != 1 else ''}"
+            if service["mounted"]
+            else "types only, not mounted on the client"
+        )
+        lines.append(f"- **{name}**: {detail}")
+    lines += ["", "</details>", ""]
+
+    if surface.get("requirements"):
+        lines += ["### Requires", ""]
+        lines += [f"- `{spec}`" for spec in surface["requirements"].values()]
+        lines.append("")
+
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def generate() -> Path:
     """Phase entrypoint: records the current surface. Called once per generation run."""
     return write(capture())

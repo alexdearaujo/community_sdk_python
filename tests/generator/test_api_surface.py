@@ -170,3 +170,35 @@ def test_write_then_read_round_trips(tmp_path: Path):
     api_surface.write(surface, path)
 
     assert api_surface.read(path) == surface
+
+
+def test_summary_covers_mounted_and_types_only_services():
+    """Rendered when no tagged release carries a surface record yet."""
+    surface = _surface(
+        {
+            "device": _service(["GET /device", "POST /device"], ["Device"]),
+            "kptr": _service([], ["PtrResult"], mounted=False),
+            "plan": _service(["GET /plan"], []),
+        },
+        requirements={"protobuf": "protobuf>=7.35.1,<8"},
+    )
+
+    markdown = api_surface.render_summary(surface)
+
+    assert "3 services (2 mounted on the client)" in markdown
+    assert "3 REST operations" in markdown
+    assert "**device**: `client.device`, 2 operations" in markdown
+    assert "**plan**: `client.plan`, 1 operation" in markdown  # singular
+    assert "**kptr**: types only, not mounted on the client" in markdown
+    assert "`protobuf>=7.35.1,<8`" in markdown
+
+
+def test_single_new_model_is_singular():
+    before = _surface({"kptr": _service([], [])})
+    after = _surface({"kptr": _service([], ["ListResolvedAddressesResponse"])})
+
+    markdown = api_surface.render_markdown(
+        api_surface.diff(before, after), since="v1.0.7"
+    )
+
+    assert "1 new model: `ListResolvedAddressesResponse`" in markdown
