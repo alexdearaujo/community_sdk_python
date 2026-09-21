@@ -1,0 +1,381 @@
+---
+
+description: "Task list for feature 003: harden the shared runtime, retire dead code, enforce CI"
+---
+
+# Tasks: Harden the Shared Runtime, Retire Dead Code, Enforce CI
+
+**Input**: Design documents from `/specs/003-harden-runtime-and-ci/`
+
+**Prerequisites**: [plan.md](plan.md), [spec.md](spec.md), [research.md](research.md), [data-model.md](data-model.md), [contracts/runtime-api.md](contracts/runtime-api.md), [quickstart.md](quickstart.md)
+
+**Tests are required**, not optional. The spec devotes an entire requirement
+block to them (FR-033 through FR-040) and Constitution Principle IV makes
+exhaustive coverage a standing rule.
+
+## Story order deviates from priority order, deliberately
+
+Phases follow [plan.md](plan.md)'s implementation sequence, not the numeric
+order of user stories. Two dependencies drive it:
+
+- **US2 runs before US1.** Adding a deadline before fixing the status mapping
+  would make the *expected* timeout path report a fabricated HTTP 500, because
+  `DEADLINE_EXCEEDED` currently falls through to it.
+- **US7 runs before US8.** Both touch response handling in `request_json()`, and
+  US8's capture point sits inside the client US7 introduces.
+
+## Conventions
+
+- `[P]` marks tasks that touch different files and have no incomplete
+  dependency, so they can run in parallel.
+- `[USn]` maps the task to its user story. Setup, Foundational, and Polish
+  phases carry no story label.
+- Every runtime change lands in `src/kentik_api/core/`, `errors/`,
+  `transports/`, or `auth/`. Constitution Principle II forbids per-endpoint
+  connection, auth, retry, or timeout code.
+- **Only Phase 13 (US10) may change a file under `src/kentik_api/gen/`.** Every
+  other phase ends with a zero-line `make generate local` diff.
+
+---
+
+## Phase 1: Setup and baseline capture
+
+**Purpose**: record the "before" numbers the success criteria are measured
+against. Doing this after the fact makes SC-004, SC-006, and SC-012
+unverifiable.
+
+- [ ] T001 Confirm the baseline is green by running `make test`, `make typecheck`, `uv run ruff check .`, and `make generate local && git diff --exit-code`, recording each result in the pull request description
+- [ ] T002 [P] Capture before-coverage for `src/kentik_api/core`, `src/kentik_api/auth`, and `src/kentik_api/transports` with `uv run --with pytest-cov pytest -q --cov=src/kentik_api/core --cov=src/kentik_api/auth --cov=src/kentik_api/transports --cov-report=term-missing` and record the per-file percentages (expected: grpc_runtime 65%, credentials 44%, grpc_client 50%)
+- [ ] T003 [P] Capture before-coverage for `scripts/generation` with `uv run --with pytest-cov pytest tests/generator/ -q --cov=scripts/generation --cov-report=term-missing` (expected: docs_rendering 18%, endpoint_docs 26%, wrapper_generation 54%)
+- [ ] T004 [P] Agree and record the per-module coverage threshold for `scripts/generation` that FR-043 requires, in `specs/003-harden-runtime-and-ci/plan.md` under Implementation Phases
+
+**Checkpoint**: baseline recorded; no source changed.
+
+---
+
+## Phase 2: Foundational (blocks US1, US2, US7, US8)
+
+**Purpose**: extend the shared configuration and error objects that later
+stories build on. Nothing here changes behaviour on its own.
+
+- [ ] T005 Add `timeout: float = 60.0`, `rest_timeout: httpx.Timeout | float | None = None`, and `grpc_deadline: float | None = None` to `APIConfig.__init__` in `src/kentik_api/core/api_config.py`, with the latter two deriving from `timeout` when `None` (FR-002, FR-015, FR-016)
+- [ ] T006 Add construction-time validation to `src/kentik_api/core/api_config.py` rejecting any non-positive phase bound or deadline with `ConfigurationError` naming the offending field and value (FR-017)
+- [ ] T007 [P] Add a `rate_limit: RateLimit | None = None` attribute to `KentikError` in `src/kentik_api/errors/__init__.py` so every subclass carries it (FR-029)
+- [ ] T008 [P] Add a `grpc_status_code: str | None = None` keyword argument to `HTTPException.__init__` in `src/kentik_api/errors/__init__.py` (FR-010)
+- [ ] T009 Add unit tests for timeout derivation, phase-bound handling, and non-positive rejection in `tests/runtime/test_api_config.py`
+- [ ] T010 Run `make generate local && git diff --exit-code` and confirm no generated file changed
+
+**Checkpoint**: `make test` and `make typecheck` green; generated tree untouched.
+
+---
+
+## Phase 3: US2 - The same failure raises the same exception type on both transports (P1)
+
+**Goal**: a caller's `except` clauses survive flipping `protocol` between
+`"rest"` and `"grpc"`.
+
+**Independent test**: drive the same failure over both transports and assert the
+same exception type. Run `uv run python learn/ex04_errors.py` and confirm it
+reports `same exception type on both transports? True`.
+
+- [ ] T011 [US2] Replace `_GRPC_STATUS_TO_HTTP` with an exhaustive classification of all 16 non-OK gRPC codes in `src/kentik_api/core/grpc_runtime.py`, following the table in `specs/003-harden-runtime-and-ci/contracts/runtime-api.md` section 3 (FR-006, FR-009)
+- [ ] T012 [US2] Route `CANCELLED`, `DEADLINE_EXCEEDED`, and `UNAVAILABLE` to `TransportError` in `src/kentik_api/core/grpc_runtime.py`, with no fabricated HTTP status, matching what REST already does for the same conditions (FR-008)
+- [ ] T013 [US2] Set `grpc_status_code` on every `HTTPException` raised from `src/kentik_api/core/grpc_runtime.py`, so the verbatim gRPC code survives the canonical HTTP mapping (FR-010)
+- [ ] T014 [US2] Add an explicit unrecognized-code fallback in `src/kentik_api/core/grpc_runtime.py` raising `TransportError` that names the code, never claiming an HTTP status the server did not send (FR-009)
+- [ ] T015 [US2] Raise `AuthenticationError` for HTTP 401 in `request_json()` in `src/kentik_api/core/rest_runtime.py`, before dispatch to the generated `error_cls`, leaving generated error packages untouched (FR-007, FR-011)
+- [ ] T016 [P] [US2] Add cross-transport symmetry tests in `tests/runtime/test_transport_symmetry.py` covering auth rejection, client-side timeout, and unreachable host over both transports (FR-040)
+- [ ] T017 [US2] Update the 401 expectation for **every** discovered endpoint in `tests/generated/test_endpoint_schema_coverage.py`, without narrowing, skipping, or making the suite status-agnostic (FR-041)
+- [ ] T018 [US2] Temporarily revert T015, confirm `tests/generated/test_endpoint_schema_coverage.py` **fails**, restore T015, and record the outcome in the pull request (FR-042, Constitution Principle IV)
+- [ ] T019 [P] [US2] Remove the "works identically for REST and gRPC" claim from `examples/common/error_handling.py`, unless T016 demonstrably covers every `except` branch it declares on both transports (FR-012)
+- [ ] T020 [US2] Run `make generate local && git diff --exit-code` and confirm no generated file changed (FR-005)
+
+**Checkpoint**: the three measured asymmetries are gone; `make test` green.
+
+---
+
+## Phase 4: US1 - A gRPC call never hangs forever (P1)
+
+**Goal**: an unresponsive endpoint fails within a bounded time instead of
+blocking the calling thread for ever.
+
+**Independent test**: `uv run python learn/ex06_timeouts.py` now terminates at
+the deadline rather than reporting "STILL BLOCKED after 3s".
+
+- [ ] T021 [US1] Add a `UnaryUnaryClientInterceptor` in `src/kentik_api/transports/grpc_client.py` that fills in `timeout` from `APIConfig.grpc_deadline` only when the call did not set one (FR-001, FR-002, research D1a)
+- [ ] T022 [US1] Wrap the channel with `grpc.intercept_channel` in `GrpcTransport.__init__` in `src/kentik_api/transports/grpc_client.py`, so every stub inherits the deadline with no generated call site changing (FR-005, research D1a)
+- [ ] T023 [US1] Give `GrpcTransport.__init__` access to the `APIConfig` in `src/kentik_api/transports/grpc_client.py` and `src/kentik_api/client.py`, so the deadline is per-client rather than global
+- [ ] T024 [US1] Narrow the `except Exception` fallback in `call_grpc()` in `src/kentik_api/core/grpc_runtime.py` so a non-transport error raised by the stub is not reported as `TransportError` (FR-003)
+- [ ] T025 [US1] Move the `_method` label lookup out of the `except grpc.RpcError` body in `src/kentik_api/core/grpc_runtime.py`, so an unreadable label cannot destroy the original `RpcError` (FR-004)
+- [ ] T026 [P] [US1] Add tests in `tests/runtime/test_grpc_runtime.py` for deadline application, a non-`RpcError` stub failure, and `__cause__` preservation when the label cannot be read
+- [ ] T027 [US1] Run `make generate local && git diff --exit-code` and confirm no generated file changed (FR-005)
+
+**Checkpoint**: no gRPC call can block indefinitely; generated tree untouched.
+
+---
+
+## Phase 5: US3 - The gRPC transport is covered by tests (P1)
+
+**Goal**: the mocked suite fails when the gRPC call path breaks.
+
+**Independent test**: coverage reaches 100% on all three modules, and breaking
+the auth metadata tuple makes a test fail.
+
+- [ ] T028 [P] [US3] Add tests exercising `call_grpc()` end to end with a mock stub in `tests/runtime/test_grpc_runtime.py`, with no live network call (FR-033)
+- [ ] T029 [P] [US3] Add a test asserting the exact gRPC auth metadata keys and values emitted by `KentikCredentials.get_grpc_plugin()` in `tests/runtime/test_credentials.py` (FR-034)
+- [ ] T030 [P] [US3] Add tests covering `GrpcTransport.__init__` and `close()` in `tests/runtime/test_grpc_transport.py`, without opening a real channel (FR-033)
+- [ ] T031 [US3] Extend `tests/runtime/test_grpc_runtime.py` to assert the resulting SDK exception for each of the 16 non-OK gRPC status codes plus the unrecognized-code fallback (FR-035)
+- [ ] T032 [US3] Verify 100% line coverage of `src/kentik_api/core/grpc_runtime.py`, `src/kentik_api/auth/credentials.py`, and `src/kentik_api/transports/grpc_client.py`, comparing against the T002 baseline (SC-004)
+- [ ] T033 [US3] Prove the new tests bite: change one character in the `x-ch-auth-email` metadata key in `src/kentik_api/auth/credentials.py`, confirm a test fails, restore, and record the outcome
+
+**Checkpoint**: SC-004 met; no test needs network, credentials, or a schema checkout.
+
+---
+
+## Phase 6: US4 - CI enforces the properties that only hold by luck (P1)
+
+**Goal**: every later phase is protected by determinism, lint, and docs gates.
+
+**Independent test**: a formatting violation, a generator change, and a Sphinx
+warning each fail CI on a throwaway branch.
+
+- [ ] T034 [US4] Fix the existing formatting violation by running `uv run ruff format scripts/generate_sdk.py` (FR-041 baseline, SC-006)
+- [ ] T035 [P] [US4] Add a lint job running `ruff check` and `ruff format --check` to `.github/workflows/tests.yml` (FR-046)
+- [ ] T036 [P] [US4] Add a generation-determinism job to `.github/workflows/tests.yml` running `make generate` then `git diff --exit-code`, reporting the differing paths on failure and relying on the generator's existing clone fallback for the schema (FR-047, research D7)
+- [ ] T037 [P] [US4] Add a docs job to `.github/workflows/tests.yml` running Sphinx with `-W` (FR-048)
+- [ ] T038 [US4] Replace the hardcoded feature-branch name in `push.branches` in `.github/workflows/tests.yml` and `.github/workflows/build.yml` (FR-049)
+- [ ] T039 [US4] Confirm no CI job runs any `e2e` or `e2e_grpc` test by inspecting `.github/workflows/` (FR-050)
+- [ ] T040 [US4] Name the determinism job in `.github/workflows/tests.yml` so an upstream schema change is distinguishable from a generator regression in its failure output (research D7)
+- [ ] T041 [US4] Verify each gate in `.github/workflows/tests.yml` fails as intended, by pushing a formatting violation, a generator output change, and a broken Sphinx reference on separate throwaway branches (SC-005, SC-006)
+
+**Checkpoint**: CI protects determinism, formatting, and docs.
+
+---
+
+## Phase 7: US5 - A caller who catches `KentikError` catches every SDK error (P2)
+
+**Goal**: one exception hierarchy, with no configuration failure escaping it.
+
+**Independent test**: constructing `KentikAPI` with no credentials and with a bad
+region both raise something catchable as `KentikError`.
+
+- [ ] T042 [US5] Replace both `ValueError` raises with `ConfigurationError` in `KentikAPI.__init__` in `src/kentik_api/client.py`, keeping each message naming the missing or invalid value (FR-026)
+- [ ] T043 [US5] Confirm `ConfigurationError` in `src/kentik_api/errors/__init__.py` remains a plain `KentikError` subclass, with no `ValueError` base and no deprecation shim (FR-027)
+- [ ] T044 [P] [US5] Add tests for both configuration failures in `tests/smoke/test_client_mounts_and_calls.py`, asserting they are catchable as `KentikError`
+- [ ] T045 [P] [US5] Update `src/kentik_api/errors/README.md` and `docs/guides/error_handling.md` so `ConfigurationError` is no longer described as never raised (FR-057)
+
+**Checkpoint**: `except KentikError:` is a complete net.
+
+---
+
+## Phase 8: US6 - The auth header scheme exists in exactly one place (P2)
+
+**Goal**: one definition of the Kentik auth headers, and it is the tested one.
+
+**Independent test**: grepping the header names outside `gen/` returns exactly
+one construction site.
+
+- [ ] T046 [US6] Make `request_json()` in `src/kentik_api/core/rest_runtime.py` call `KentikCredentials.get_rest_headers()` instead of rebuilding the header dict inline, or delete the unused method, so only one definition survives (FR-028)
+- [ ] T047 [US6] Confirm the surviving definition is exercised by the existing REST auth assertions in `tests/runtime/test_rest_runtime.py`
+- [ ] T048 [P] [US6] Update `src/kentik_api/auth/README.md`, which currently documents `get_rest_headers()` as unused (FR-057)
+
+**Checkpoint**: `grep -rn "X-CH-Auth-Email" src/ | grep -v "/gen/"` returns one line.
+
+---
+
+## Phase 9: US7 - Repeat calls reuse one connection (P2)
+
+**Goal**: N calls on one client open one connection instead of N.
+
+**Independent test**: several calls share one `httpx.Client`, and `close()`
+releases it.
+
+- [ ] T049 [US7] Add a lazily-created, reused `client` property to `APIConfig` in `src/kentik_api/core/api_config.py`, honouring `rest_timeout` and `verify` (FR-013, research D2)
+- [ ] T050 [US7] Replace the per-request `with httpx.Client(...)` block in `request_json()` in `src/kentik_api/core/rest_runtime.py` with the shared client from `APIConfig` (FR-013)
+- [ ] T051 [US7] Add `close()` to `APIConfig` in `src/kentik_api/core/api_config.py`, idempotent and safe to call twice
+- [ ] T052 [US7] Make `RestTransport.close()` in `src/kentik_api/transports/rest_client.py` delegate to `APIConfig.close()` instead of being a no-op (FR-014)
+- [ ] T053 [US7] Raise `ConfigurationError` naming `close()` as the cause when a closed client is reused, in `src/kentik_api/core/rest_runtime.py` (research D2)
+- [ ] T054 [P] [US7] Add tests in `tests/runtime/test_rest_runtime.py` for client reuse across N calls, resource release on close, timeout honouring, and use-after-close
+- [ ] T055 [P] [US7] Document the concurrency cap of 1 for non-query APIs in `src/kentik_api/core/README.md`, since sharing a client across threads is limited by the API and not by httpx (FR-036, research D2)
+- [ ] T056 [US7] Run `make generate local && git diff --exit-code` and confirm no generated file changed
+
+**Checkpoint**: SC-009 met; `RestTransport.close()` does something.
+
+---
+
+## Phase 10: US8 - Rate-limit information is surfaced (P2)
+
+**Goal**: a caller reads remaining quota without parsing raw headers.
+
+**Independent test**: quota is readable off a result and off an error, on both
+transports, and two endpoints report separate budgets.
+
+- [ ] T057 [US8] Create the frozen `RateLimit` value object in `src/kentik_api/core/rate_limit.py` with `limit`, `remaining`, `reset_seconds`, `window_seconds`, and `raw` (FR-029, data-model.md)
+- [ ] T058 [US8] Add `RateLimit.from_headers()` and `RateLimit.from_metadata()` in `src/kentik_api/core/rate_limit.py`, tolerating `w=60` and `window=60`, multiple windows, and returning `None` for absent or malformed input rather than raising (FR-030)
+- [ ] T059 [P] [US8] Add parser tests in `tests/runtime/test_rate_limit.py` covering `60, 60;w=60`, `100;window=60`, multiple windows, absent header, and malformed header
+- [ ] T060 [US8] Capture quota from REST response headers in `request_json()` in `src/kentik_api/core/rest_runtime.py` (FR-030)
+- [ ] T061 [US8] Capture quota from gRPC **initial** metadata in `call_grpc()` in `src/kentik_api/core/grpc_runtime.py`, noting trailing metadata was measured empty (FR-030)
+- [ ] T062 [US8] Track quota per endpoint in a `rate_limits` mapping on both transports in `src/kentik_api/transports/rest_client.py` and `src/kentik_api/transports/grpc_client.py` (FR-031)
+- [ ] T063 [US8] Attach quota to the returned model via `object.__setattr__` and expose a `rate_limit_of(result)` accessor from `src/kentik_api/__init__.py` (FR-029, research D5a)
+- [ ] T064 [US8] Populate `rate_limit` on every SDK error raised from `src/kentik_api/core/rest_runtime.py` and `src/kentik_api/core/grpc_runtime.py` (FR-029)
+- [ ] T065 [P] [US8] Add tests in `tests/runtime/test_rate_limit.py` asserting `model_dump()` keys and model equality are unaffected by attachment (research D5a)
+- [ ] T066 [US8] Enable connection-establishment retries with `httpx.HTTPTransport(retries=N)` in `src/kentik_api/core/api_config.py`, which never replay a request the server received (FR-032)
+- [ ] T067 [US8] Confirm no automatic retry of a completed request and none for mutating operations exists anywhere in `src/kentik_api/core/` (FR-032, FR-033)
+- [ ] T068 [P] [US8] Document the three limits no header reveals, the per-endpoint granularity, and the documented-versus-measured conflict in `docs/guides/rate_limiting.md` (FR-034, FR-035, FR-036)
+- [ ] T069 [US8] Confirm the default in `src/kentik_api/core/api_config.py` still tolerates the documented 1.5s soft-limit response delay, with a test in `tests/runtime/test_rest_runtime.py` proving a delayed response is not converted into a `TransportError` (FR-037)
+- [ ] T070 [US8] Run `make generate local && git diff --exit-code` and confirm no generated file changed
+
+**Checkpoint**: SC-014 met; quota readable three ways.
+
+---
+
+## Phase 11: US9 - The REST vs gRPC guide (P2)
+
+**Goal**: a reader can choose a transport and name the trade-offs.
+
+**Independent test**: someone unfamiliar with gRPC reads the guide once and can
+state which transport suits their workload and why.
+
+**Depends on Phase 3**, because the guide documents the corrected error
+behaviour.
+
+- [ ] T071 [US9] Work through `learn/ex01_same_call.py` through `learn/ex07_rate_limits.py` and complete `learn/findings.md`, marking each line measured, confirmed-in-source, or assumed (FR-051, FR-052)
+- [ ] T072 [US9] Write `docs/guides/rest-vs-grpc.md` covering mechanism, when to choose each, and trade-offs, grounding every claim in a recorded finding (FR-053, FR-054)
+- [ ] T073 [US9] State the measured coverage limits in `docs/guides/rest-vs-grpc.md`: 35 services with a wrapper, 6 without, 198 of 233 operations with a gRPC translation, plus the two distinct `NotImplementedError` cases (FR-054)
+- [ ] T074 [US9] State in `docs/guides/rest-vs-grpc.md` that Kentik's REST API is an Envoy transcoding layer over the same gRPC services, evidenced by `grpc-status`, `grpc-message`, and `server: envoy` on REST responses, and that both draw on one shared per-endpoint quota (FR-055)
+- [ ] T075 [US9] Add `docs/guides/rest-vs-grpc.md` to the documentation navigation and confirm `make docs` builds clean under `-W` (FR-056)
+- [ ] T076 [P] [US9] Update `docs/guides/rest.md` and `docs/guides/grpc.md` for the corrected error behaviour (FR-057)
+- [ ] T077 [US9] Confirm `git status` reports nothing under `learn/` (SC-016, FR-052)
+
+**Checkpoint**: SC-015 met; docs build clean.
+
+---
+
+## Phase 12: US11 - The generator's own phase modules are tested (P3)
+
+**Goal**: generator unit tests catch a defect the determinism gate cannot.
+
+**Independent test**: coverage of `scripts/generation/` from `tests/generator/`
+alone clears the T004 threshold.
+
+- [ ] T078 [P] [US11] Raise coverage of `scripts/generation/docs_rendering.py` with `tmp_path` fixtures in `tests/generator/test_docs_rendering.py` (FR-043)
+- [ ] T079 [P] [US11] Raise coverage of `scripts/generation/endpoint_docs.py` with `tmp_path` fixtures in `tests/generator/test_endpoint_docs.py` (FR-043)
+- [ ] T080 [P] [US11] Raise coverage of `scripts/generation/wrapper_generation.py` with `tmp_path` fixtures in `tests/generator/test_wrapper_generation.py` (FR-043)
+- [ ] T081 [US11] Confirm each module under `scripts/generation/` meets the T004 threshold by running `uv run --with pytest-cov pytest tests/generator/ -q --cov=scripts/generation --cov-report=term-missing`, and that no new test needs a schema checkout or network (FR-040, FR-043, SC-012)
+- [ ] T082 [US11] Prove the new tests bite by introducing a deliberate defect in one covered phase module, confirming `make test-generator` fails, and restoring
+
+**Checkpoint**: SC-012 met.
+
+---
+
+## Phase 13: US10 - A caller can override client-wide defaults for one call (P3)
+
+**Goal**: one slow operation gets a longer timeout without a second client.
+
+**This is the only phase that changes generated output.** It lands in its own
+commit with a regenerated `api_surface.json`.
+
+**Independent test**: one call with an overridden timeout and another without,
+on the same client, each use their own value.
+
+- [ ] T083 [US10] Add a `with_timeout()` derivation helper to `APIConfig` in `src/kentik_api/core/api_config.py` that can vary only timeout-related fields and cannot change `base_path`, `auth_email`, `auth_token`, or `verify` (FR-022, research D6)
+- [ ] T084 [US10] Raise `ConfigurationError` before sending when an override carries no credentials, in `src/kentik_api/core/rest_runtime.py` (FR-023)
+- [ ] T085 [US10] Stop stripping `api_config_override` from wrapper method signatures in `scripts/generation/wrapper_generation.py` (FR-018)
+- [ ] T086 [US10] Thread the override into the gRPC branch in `scripts/generation/wrapper_generation.py` so the deadline applies there too, taking precedence over the D1a interceptor default (FR-019)
+- [ ] T087 [US10] Regenerate with `make generate local` and review the diff, confirming it contains only the signature change and its call-site plumbing (FR-022)
+- [ ] T088 [US10] Update `tests/generated/test_wrapper_contracts.py` to account for the new parameter rather than being weakened to ignore it (FR-025)
+- [ ] T089 [P] [US10] Add tests in `tests/runtime/test_api_config.py` asserting `with_timeout()` cannot alter the four security-relevant fields, and that no fixture sets `verify=False` (FR-024)
+- [ ] T090 [US10] Commit the generated diff together with a regenerated `api_surface.json`, separate from any hand-written change (FR-022)
+
+**Checkpoint**: SC-010 met; generated diff reviewed on its own.
+
+---
+
+## Phase 14: US12 - Examples cannot silently rot (P3)
+
+**Goal**: a regeneration that renames a wrapper method breaks a test, not a user.
+
+**Independent test**: every example module imports with no network and no
+credentials, and renaming a referenced wrapper method causes a failure.
+
+- [ ] T091 [P] [US12] Add `tests/smoke/test_examples_import.py` importing every module under `examples/` with no network call and no credentials (FR-039)
+- [ ] T092 [US12] Either make `pretty_print` in `examples/common/utils.py` genuinely used by an example, or delete it (SC-011)
+- [ ] T093 [US12] Correct `examples/README.md`, which describes `examples/common/` as "Shared helpers" although `error_handling.py` is a standalone runnable example and `pretty_print` is imported by nothing (FR-057)
+- [ ] T094 [US12] Prove the suite bites by renaming a wrapper method that `examples/device/rest.py` calls, confirming `tests/smoke/test_examples_import.py` fails, and restoring
+
+**Checkpoint**: SC-013 met.
+
+---
+
+## Phase 15: Polish and cross-cutting concerns
+
+- [ ] T095 Run `uvx vulture --min-confidence 60 scripts/ src/kentik_api/core src/kentik_api/errors src/kentik_api/transports src/kentik_api/auth src/kentik_api/client.py examples/` and confirm no unused function remains (SC-011)
+- [ ] T096 [P] Write release notes via `scripts/release_notes.py` naming every caller-visible change: `ConfigurationError` replacing `ValueError`, REST raising `AuthenticationError`, gRPC timeouts becoming `TransportError`, connection reuse, timeouts, and the per-call override (FR-058)
+- [ ] T097 [P] Update `CLAUDE.md` for the shared-runtime changes, so it does not drift from the constitution (FR-057)
+- [ ] T098 Run the full definition of done from `specs/003-harden-runtime-and-ci/quickstart.md`: `make test`, `make typecheck`, `make lint`, `make docs`, and `make generate local && git diff --exit-code`
+- [ ] T099 Confirm `make test` still needs no network and no credentials, and that no `e2e` or `e2e_grpc` test runs in CI (FR-040, FR-050)
+- [ ] T100 Send `reports/upstream-ratelimit-scope-undocumented.html` to the Kentik API team and record the response, particularly the answer to the per-customer versus per-endpoint question
+
+---
+
+## Dependencies
+
+```mermaid
+graph TD
+    P1[Phase 1: Baseline] --> P2[Phase 2: Foundational]
+    P2 --> P3[Phase 3: US2 error symmetry]
+    P3 --> P4[Phase 4: US1 deadline]
+    P4 --> P5[Phase 5: US3 gRPC tests]
+    P2 --> P6[Phase 6: US4 CI]
+    P5 --> P7[Phase 7: US5 ConfigurationError]
+    P6 --> P7
+    P7 --> P8[Phase 8: US6 auth headers]
+    P8 --> P9[Phase 9: US7 connection reuse]
+    P9 --> P10[Phase 10: US8 rate limits]
+    P3 --> P11[Phase 11: US9 guide]
+    P10 --> P11
+    P2 --> P12[Phase 12: US11 generator coverage]
+    P9 --> P13[Phase 13: US10 per-call override]
+    P2 --> P14[Phase 14: US12 examples]
+    P11 --> P15[Phase 15: Polish]
+    P12 --> P15
+    P13 --> P15
+    P14 --> P15
+```
+
+**Hard orderings**, everything else is a preference:
+
+| Before | After | Why |
+| --- | --- | --- |
+| US2 | US1 | A deadline added first would report `DEADLINE_EXCEEDED` as a fabricated HTTP 500 |
+| US7 | US8 | US8's capture point sits inside the client US7 introduces |
+| US7 | US10 | The override is only useful once `APIConfig` owns the client and timeouts |
+| Phase 2 | US1, US2, US7, US8 | All four need the extended `APIConfig` and error attributes |
+| Phase 1 | everything | Baseline numbers cannot be captured after the fact |
+
+## Parallel opportunities
+
+- **Phase 1**: T002, T003, T004 together
+- **Phase 2**: T007 and T008 together (both in `errors/__init__.py`, but distinct edits; serialize if they conflict)
+- **Phase 3**: T016 and T019 alongside T011 through T015
+- **Phase 5**: T028, T029, T030 together, three separate test files
+- **Phase 6**: T035, T036, T037 together, three independent CI jobs
+- **Phase 12**: T078, T079, T080 together, three separate test files
+- **Phase 6 runs alongside Phases 3 to 5**, since CI wiring touches no runtime file
+
+## Implementation strategy
+
+**MVP is Phases 1 to 6** (the four P1 stories plus baseline and foundations).
+That delivers the two real defects fixed, the untested path covered, and CI
+protecting all of it. Everything after is correctness and polish on a system
+that already works.
+
+**Ship in four increments**, each leaving the tree green:
+
+1. **Phases 1 to 2** foundations, no behaviour change
+2. **Phases 3 to 5** correctness and coverage (the reviewable core)
+3. **Phase 6** CI enforcement
+4. **Phases 7 to 15** runtime polish, docs, and the generated-output change last
+
+**Note on Phase 13**: its generated diff must be committed alone. Mixing it with
+a hand-written change makes the diff unreviewable, which is the whole reason it
+is sequenced last.

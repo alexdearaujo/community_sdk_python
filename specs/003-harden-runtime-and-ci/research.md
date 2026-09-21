@@ -61,6 +61,48 @@ per `KentikAPI` already serves every call.
 
 ---
 
+## D1a. How the deadline reaches a gRPC call without touching generated code
+
+**Decision**: apply the deadline with a `grpc.UnaryUnaryClientInterceptor`
+installed on the channel in `GrpcTransport.__init__`, via
+`grpc.intercept_channel`. The interceptor fills in `timeout` only when the call
+did not set one.
+
+**The problem it solves**: generated wrappers call `call_grpc(stub_method,
+proto_request)`. There is no parameter through which a deadline could arrive,
+and adding one would change all 198 gRPC call sites, breaking FR-005 (User
+Story 1 must not change any generated file). This tension surfaced while writing
+tasks, not while writing the plan.
+
+**Why the interceptor works**: every stub in a wrapper is constructed from
+`self._transport.channel`. If that channel is already intercepted, every stub
+inherits the deadline with no call-site change at all. The transport owns the
+`APIConfig`, so the deadline is per-client, not global.
+
+**Verified**, against a local black-hole socket that accepts connections and
+never replies:
+
+```
+WITHOUT interceptor:  still blocked after 3s
+WITH interceptor:     DEADLINE_EXCEEDED after 2.0s
+```
+
+**Alternatives rejected**:
+
+- *Add a parameter to `call_grpc`*: changes 198 generated call sites in the
+  story that FR-005 says must change none. This becomes available anyway in
+  User Story 10, where a generated diff is expected and reviewed.
+- *Module-level default deadline*: global mutable state, wrong the moment two
+  `KentikAPI` instances want different timeouts.
+- *Construct a default `APIConfig()` inside `call_grpc`*: ignores whatever the
+  caller configured, which defeats FR-002.
+
+**Interaction with User Story 10**: the interceptor only fills a deadline when
+the call did not specify one, so a per-call override set later takes precedence
+without any further change here.
+
+---
+
 ## D2. Where the persistent HTTP client lives
 
 **Decision**: `APIConfig` lazily creates and owns one `httpx.Client`.
