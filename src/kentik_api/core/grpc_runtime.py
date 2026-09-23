@@ -71,17 +71,27 @@ def map_grpc_error(
     )
 
 
+def _method_label(stub_method) -> str:
+    # Best effort: `_method` is a grpcio implementation detail, and failing to
+    # read it must never cost the caller the RpcError it was meant to describe.
+    try:
+        label = stub_method._method
+    except Exception:
+        return "unknown"
+    if isinstance(label, bytes):
+        return label.decode("utf-8", errors="replace")
+    return str(label)
+
+
 def call_grpc(stub_method, proto_request):
-    """Calls one unary gRPC method and normalizes errors to the SDK exception hierarchy."""
+    """Calls one unary gRPC method and normalizes errors to the SDK exception hierarchy.
+
+    Only grpc.RpcError is a transport outcome. Anything else the stub raises,
+    such as a malformed request, propagates unchanged rather than being
+    misreported as a network failure.
+    """
+    path = _method_label(stub_method)
     try:
         return stub_method(proto_request)
     except grpc.RpcError as exc:
-        raise map_grpc_error(
-            exc,
-            method="gRPC",
-            path=getattr(stub_method, "_method", b"unknown").decode(
-                "utf-8", errors="replace"
-            ),
-        ) from exc
-    except Exception as exc:
-        raise TransportError(str(exc)) from exc
+        raise map_grpc_error(exc, method="gRPC", path=path) from exc

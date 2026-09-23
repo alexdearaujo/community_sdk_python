@@ -4,7 +4,7 @@ from __future__ import annotations
 import grpc
 import pytest
 
-from kentik_api.core.grpc_runtime import map_grpc_error
+from kentik_api.core.grpc_runtime import call_grpc, map_grpc_error
 from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 
 # The table in contracts/runtime-api.md section 3, restated so a change to the
@@ -82,3 +82,35 @@ def test_details_none_guard(rpc_error):
 
     assert isinstance(result, HTTPException)
     assert result.status_code == 404
+
+
+def test_non_rpc_error_from_the_stub_is_not_reported_as_transport_failure():
+    def _stub(_request):
+        raise TypeError("bad request message")
+
+    with pytest.raises(TypeError, match="bad request message"):
+        call_grpc(_stub, object())
+
+
+class _UnreadableLabelStub:
+    """A stub whose method label cannot be read, raising a real RpcError."""
+
+    def __init__(self, error: grpc.RpcError) -> None:
+        self._error = error
+
+    @property
+    def _method(self):
+        raise RuntimeError("label unavailable")
+
+    def __call__(self, _request):
+        raise self._error
+
+
+def test_rpc_error_stays_the_cause_when_the_label_cannot_be_read(rpc_error):
+    original = rpc_error(grpc.StatusCode.NOT_FOUND, "missing")
+    stub = _UnreadableLabelStub(original)
+
+    with pytest.raises(HTTPException) as exc_info:
+        call_grpc(stub, object())
+
+    assert exc_info.value.__cause__ is original

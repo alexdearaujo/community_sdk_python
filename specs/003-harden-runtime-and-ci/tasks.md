@@ -110,13 +110,15 @@ blocking the calling thread for ever.
 **Independent test**: `uv run python learn/ex06_timeouts.py` now terminates at
 the deadline rather than reporting "STILL BLOCKED after 3s".
 
-- [ ] T021 [US1] Add a `UnaryUnaryClientInterceptor` in `src/kentik_api/transports/grpc_client.py` that fills in `timeout` from `APIConfig.grpc_deadline` only when the call did not set one (FR-001, FR-002, research D1a)
-- [ ] T022 [US1] Wrap the channel with `grpc.intercept_channel` in `GrpcTransport.__init__` in `src/kentik_api/transports/grpc_client.py`, so every stub inherits the deadline with no generated call site changing (FR-005, research D1a)
-- [ ] T023 [US1] Give `GrpcTransport.__init__` access to the `APIConfig` in `src/kentik_api/transports/grpc_client.py` and `src/kentik_api/client.py`, so the deadline is per-client rather than global
-- [ ] T024 [US1] Narrow the `except Exception` fallback in `call_grpc()` in `src/kentik_api/core/grpc_runtime.py` so a non-transport error raised by the stub is not reported as `TransportError` (FR-003)
-- [ ] T025 [US1] Move the `_method` label lookup out of the `except grpc.RpcError` body in `src/kentik_api/core/grpc_runtime.py`, so an unreadable label cannot destroy the original `RpcError` (FR-004)
-- [ ] T026 [P] [US1] Add tests in `tests/runtime/test_grpc_runtime.py` for deadline application, a non-`RpcError` stub failure, and `__cause__` preservation when the label cannot be read (SC-001)
-- [ ] T027 [US1] Run `make generate local && git diff --exit-code` and confirm no generated file changed (FR-005)
+- [x] T021 [US1] Add a `UnaryUnaryClientInterceptor` in `src/kentik_api/transports/grpc_client.py` that fills in `timeout` from `APIConfig.grpc_deadline` only when the call did not set one (FR-001, FR-002, research D1a)
+- [x] T022 [US1] Wrap the channel with `grpc.intercept_channel` in `GrpcTransport.__init__` in `src/kentik_api/transports/grpc_client.py`, so every stub inherits the deadline with no generated call site changing (FR-005, research D1a)
+- [x] T023 [US1] Give `GrpcTransport.__init__` access to the `APIConfig` in `src/kentik_api/transports/grpc_client.py` and `src/kentik_api/client.py`, so the deadline is per-client rather than global
+  - `client.py` needed no change: `GrpcTransport` builds its own `APIConfig` from the credentials, as `RestTransport` does, and accepts one via `api_config=`.
+- [x] T024 [US1] Narrow the `except Exception` fallback in `call_grpc()` in `src/kentik_api/core/grpc_runtime.py` so a non-transport error raised by the stub is not reported as `TransportError` (FR-003)
+- [x] T025 [US1] Move the `_method` label lookup out of the `except grpc.RpcError` body in `src/kentik_api/core/grpc_runtime.py`, so an unreadable label cannot destroy the original `RpcError` (FR-004)
+- [x] T026 [P] [US1] Add tests in `tests/runtime/test_grpc_runtime.py` for deadline application, a non-`RpcError` stub failure, and `__cause__` preservation when the label cannot be read (SC-001)
+  - Verified against a real `GrpcTransport` and a local black-hole socket in `tests/runtime/test_grpc_transport.py`. `learn/ex06_timeouts.py` step 3 cannot show the fix: it builds its own raw channel, not the SDK transport.
+- [x] T027 [US1] Run `make generate local && git diff --exit-code` and confirm no generated file changed (FR-005)
 
 **Checkpoint**: no gRPC call can block indefinitely; generated tree untouched.
 

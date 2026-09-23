@@ -67,6 +67,7 @@ flowchart TB
     REST_Transport --> Auth_Credentials
     REST_Transport --> Transport_Base
     gRPC_Runtime --> Error_Types
+    gRPC_Transport --> API_Config
     gRPC_Transport --> Auth_Credentials
     gRPC_Transport --> Transport_Base
 ```
