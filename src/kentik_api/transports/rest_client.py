@@ -21,4 +21,4 @@ class RestTransport(BaseTransport):
         )
 
     def close(self):
-        pass
+        self.api_config.close()

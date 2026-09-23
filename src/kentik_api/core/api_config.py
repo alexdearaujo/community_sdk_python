@@ -1,4 +1,5 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
+import threading
 from typing import Optional
 
 import httpx
@@ -61,3 +62,35 @@ class APIConfig:
             grpc_deadline = timeout
         _require_positive("grpc_deadline", grpc_deadline)
         self.grpc_deadline: float = grpc_deadline
+
+        self._client: httpx.Client | None = None
+        self._closed = False
+        self._client_lock = threading.Lock()
+
+    @property
+    def client(self) -> httpx.Client:
+        """The one HTTP client every REST call on this config shares.
+
+        Created on first use so a gRPC-only client never opens one. Reusing it
+        keeps one pooled connection per host instead of a TLS handshake per call.
+        """
+        with self._client_lock:
+            if self._closed:
+                raise ConfigurationError(
+                    "This client was closed with close(); create a new KentikAPI to make more calls."
+                )
+            if self._client is None:
+                self._client = httpx.Client(
+                    base_url=self.base_path,
+                    verify=self.verify,
+                    timeout=self.rest_timeout,
+                )
+            return self._client
+
+    def close(self) -> None:
+        """Releases the HTTP client. Safe to call more than once."""
+        with self._client_lock:
+            if self._client is not None:
+                self._client.close()
+                self._client = None
+            self._closed = True

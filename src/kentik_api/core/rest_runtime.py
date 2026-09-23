@@ -23,6 +23,8 @@ def request_json(
     error_cls: type[HTTPException] = HTTPException,
 ) -> Any:
     """Shared REST request execution for generated service methods."""
+    # A config made here is used for one call only, so this call must close it.
+    owns_config = not api_config_override
     api_config = api_config_override if api_config_override else APIConfig()
 
     headers: Dict[str, Any] = {
@@ -44,22 +46,20 @@ def request_json(
     }
 
     try:
-        with httpx.Client(
-            base_url=api_config.base_path,
-            verify=api_config.verify,
-            timeout=api_config.rest_timeout,
-        ) as client:
-            response = client.request(
-                method.lower(),
-                httpx.URL(path),
-                headers=headers,
-                params=clean_query_params,
-                json=json_body,
-            )
+        response = api_config.client.request(
+            method.lower(),
+            httpx.URL(path),
+            headers=headers,
+            params=clean_query_params,
+            json=json_body,
+        )
     except httpx.RequestError as exc:
         raise TransportError(
             f"{operation_name} transport failed: {exc}",
         ) from exc
+    finally:
+        if owns_config:
+            api_config.close()
 
     def _raise_http_error(message: str, *, details: dict[str, Any]) -> None:
         error_factory = getattr(error_cls, "from_response", None)

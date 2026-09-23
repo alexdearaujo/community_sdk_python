@@ -215,14 +215,16 @@ one construction site.
 **Independent test**: several calls share one `httpx.Client`, and `close()`
 releases it.
 
-- [ ] T049 [US7] Add a lazily-created, reused `client` property to `APIConfig` in `src/kentik_api/core/api_config.py`, honouring `rest_timeout` and `verify` (FR-013, research D2)
-- [ ] T050 [US7] Replace the per-request `with httpx.Client(...)` block in `request_json()` in `src/kentik_api/core/rest_runtime.py` with the shared client from `APIConfig` (FR-013)
-- [ ] T051 [US7] Add `close()` to `APIConfig` in `src/kentik_api/core/api_config.py`, idempotent and safe to call twice
-- [ ] T052 [US7] Make `RestTransport.close()` in `src/kentik_api/transports/rest_client.py` delegate to `APIConfig.close()` instead of being a no-op (FR-014)
-- [ ] T053 [US7] Raise `ConfigurationError` naming `close()` as the cause when a closed client is reused, in `src/kentik_api/core/rest_runtime.py` (research D2)
-- [ ] T054 [P] [US7] Add tests in `tests/runtime/test_rest_runtime.py` for client reuse across N calls, resource release on close, timeout honouring, and use-after-close
-- [ ] T055 [P] [US7] Document the concurrency cap of 1 for non-query APIs in `src/kentik_api/core/README.md`, since sharing a client across threads is limited by the API and not by httpx (FR-036, research D2)
-- [ ] T056 [US7] Run `make generate local && git diff --exit-code` and confirm no generated file changed
+- [x] T049 [US7] Add a lazily-created, reused `client` property to `APIConfig` in `src/kentik_api/core/api_config.py`, honouring `rest_timeout` and `verify` (FR-013, research D2)
+- [x] T050 [US7] Replace the per-request `with httpx.Client(...)` block in `request_json()` in `src/kentik_api/core/rest_runtime.py` with the shared client from `APIConfig` (FR-013)
+  - `request_json()`'s fallback `APIConfig()` (no override passed) now closes the client it creates after its one call, including on failure; otherwise each such call would leak a connection pool.
+- [x] T051 [US7] Add `close()` to `APIConfig` in `src/kentik_api/core/api_config.py`, idempotent and safe to call twice
+- [x] T052 [US7] Make `RestTransport.close()` in `src/kentik_api/transports/rest_client.py` delegate to `APIConfig.close()` instead of being a no-op (FR-014)
+- [x] T053 [US7] Raise `ConfigurationError` naming `close()` as the cause when a closed client is reused, in `src/kentik_api/core/rest_runtime.py` (research D2)
+  - Raised from the `APIConfig.client` property rather than `rest_runtime.py`, so every path to the closed client gets the same error.
+- [x] T054 [P] [US7] Add tests in `tests/runtime/test_rest_runtime.py` for client reuse across N calls, resource release on close, timeout honouring, and use-after-close
+- [x] T055 [P] [US7] Document the concurrency cap of 1 for non-query APIs in `src/kentik_api/core/README.md`, since sharing a client across threads is limited by the API and not by httpx (FR-036, research D2)
+- [x] T056 [US7] Run `make generate local && git diff --exit-code` and confirm no generated file changed
 
 **Checkpoint**: SC-009 met; `RestTransport.close()` does something.
 
