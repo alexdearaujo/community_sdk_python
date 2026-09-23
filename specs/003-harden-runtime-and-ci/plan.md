@@ -162,6 +162,46 @@ Sequenced so each phase leaves the tree green and independently reviewable.
 | **D. Documentation** | US9 exercise and guide | Needs Phase A complete, because the guide documents the corrected error behavior. |
 | **E. Deferred** | US10 per-call override, US11 generator coverage, US12 examples | US10 last: the only generated-output change, committed on its own with a regenerated `api_surface.json`. |
 
+### Baseline (captured 2026-09-22, before any source change)
+
+The success criteria are measured against these figures (T001 to T003).
+
+| Check | Result |
+| --- | --- |
+| `make test` | 2016 passed, 43 skipped, 466 deselected |
+| `make typecheck` | clean |
+| `ruff check .` | clean |
+| `ruff format --check .` | 7 files would be reformatted: `scripts/generate_sdk.py` (T034) and 6 files under `.specify/` added by the Spec Kit upgrade |
+| `make generate local && git diff --exit-code` | no generated file changed |
+
+Runtime line coverage (SC-004 raises the first three to 100%):
+
+| Module | Coverage |
+| --- | --- |
+| `core/grpc_runtime.py` | 65% |
+| `auth/credentials.py` | 44% |
+| `transports/grpc_client.py` | 50% |
+| `core/rest_runtime.py` | 79% |
+| `core/api_config.py` | 100% |
+| `transports/base.py` | 80% |
+| `transports/rest_client.py` | 100% |
+
+Generator line coverage from `tests/generator/` alone:
+
+| Module | Coverage | FR-043 floor |
+| --- | --- | --- |
+| `docs_rendering.py` | 18% | 85% |
+| `endpoint_docs.py` | 26% | 85% |
+| `wrapper_generation.py` | 54% | 85% |
+| `parity.py` | 91% | 91% (no regression) |
+| `error_package.py` | 94% | 94% (no regression) |
+| `_shared.py` | 95% | 95% (no regression) |
+| `fixup.py` | 95% | 95% (no regression) |
+| `api_surface.py` | 97% | 97% (no regression) |
+
+The per-module threshold is 85% (FR-043). A module already above it keeps its
+current figure as its floor, so the bar is never met by letting it fall.
+
 ## Complexity Tracking
 
 > No Constitution Check violations. Table intentionally empty.

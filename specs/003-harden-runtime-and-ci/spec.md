@@ -369,7 +369,7 @@ disagree on one of them**.
 | 2 | Does it return retry or quota information? | **Partly.** `x-ratelimit-limit`, `x-ratelimit-remaining`, `x-ratelimit-reset` on every response. **No** `Retry-After`. The headers advertise only the minute window; the hourly limit is invisible. | Measured |
 | 3 | What are the limits, and at what granularity? | **Contested.** Docs say per **customer**; headers behave per **endpoint**. See below. | Both, conflicting |
 | 4 | Do REST and gRPC share a budget? | **Yes**, the same budget the headers report. | Measured |
-| 5 | Which operations are safe to retry? | **Still open.** A design question about idempotency, not an observable property. | Open |
+| 5 | Which operations are safe to retry? | **Answered, derived.** RFC 9110 idempotent verbs only: 161 of 233 operations are GET, PUT, or DELETE; the other 72 are POST or PATCH. See FR-032a. | Derived from the schema |
 
 **What the documentation publishes** (framed around V5 Query vs V5 Admin APIs,
 though V5 was discontinued in January 2025):
@@ -704,6 +704,10 @@ disappears.
 
 - **FR-018**: Every mounted wrapper method MUST accept a per-call configuration
   override.
+- **FR-018a**: The SDK MUST expose the client's `APIConfig` through a public
+  accessor. Obtaining an override MUST NOT require reading a private attribute
+  such as `client._transport.api_config`, because a documented feature reached
+  only through an undocumented door is not actually supported.
 - **FR-019**: The override MUST work on both transports.
 - **FR-020**: Omitting the override MUST leave behavior unchanged from the
   client-wide defaults.
@@ -712,7 +716,11 @@ disappears.
   override that inherited credentials while the caller changed `base_path` would
   send live credentials to a host the caller never authenticated against.
 - **FR-022**: `APIConfig` MUST offer a derivation helper that produces a copy
-  differing only in timeout-related fields. That helper MUST NOT be able to
+  differing only in timeout-related fields. The helper MUST accept a scalar as
+  shorthand for all four REST phases and MUST also accept each phase bound and
+  the gRPC deadline independently, so a caller can set a custom timeout on any
+  call at the same granularity FR-016 gives the client-wide default. That
+  helper MUST NOT be able to
   change `base_path`, `auth_email`, `auth_token`, or `verify`. Changing any of
   those four MUST require constructing an `APIConfig` explicitly, so that
   redirecting credentials to a different host or disabling TLS verification is
@@ -752,11 +760,18 @@ disappears.
   be the only thing offered, since it would report one endpoint's budget while a
   caller reasons about another.
 - **FR-032**: The SDK MUST NOT automatically retry any request that reached the
-  server, pending an answer to question 5 in User Story 8.
-  Connection-establishment retries, which never replay a request the server
-  received, are permitted.
+  server within this feature. Connection-establishment retries, which never
+  replay a request the server received, are permitted.
+- **FR-032a**: Retry eligibility MUST be derived from the operation's HTTP
+  verb, not from a hand-maintained list. Only RFC 9110 idempotent verbs are
+  eligible: GET, PUT, and DELETE, which are 161 of the 233 wrapper operations.
+  POST and PATCH, the remaining 72, MUST NOT be retried. This answers question 5
+  in User Story 8 statically, with no probing of the live API. The rule MUST be
+  recorded even though this feature implements no post-response retry, so a
+  later feature does not have to re-litigate it.
 - **FR-033**: The SDK MUST NOT retry a mutating operation under any
-  circumstances introduced by this feature.
+  circumstances introduced by this feature. FR-032a's verb rule is what makes
+  this testable rather than aspirational.
 - **FR-034**: Any throttling guidance the SDK documents MUST reflect that quota
   is per endpoint. It MUST NOT tell callers to back off globally when one
   endpoint is exhausted.
@@ -795,8 +810,9 @@ disappears.
   401 path MUST cause `test_endpoint_schema_coverage.py` to fail. A suite that
   stays green either way has been narrowed and does not satisfy FR-041. This
   check MUST be performed and its result recorded, not assumed.
-- **FR-043**: Each phase module in `scripts/generation/` MUST meet an agreed
-  coverage threshold from `tests/generator/` alone.
+- **FR-043**: Each phase module in `scripts/generation/` MUST reach at least
+  85% line coverage from `tests/generator/` alone. The six modules already at
+  91% to 97% MUST NOT regress below their current figure to meet a lower bar.
 - **FR-044**: A mocked test MUST import every module under `examples/`.
 - **FR-045**: No new test may require network access, real credentials, or a
   schema checkout. None may run under the default `make test` if it does.
@@ -807,6 +823,12 @@ disappears.
 - **FR-047**: CI MUST regenerate the SDK and fail if the result differs from
   committed output, reporting the differing paths.
 - **FR-048**: CI MUST build the documentation and fail on any Sphinx warning.
+- **FR-048a**: The docs gate MUST NOT be weakened by suppression.
+  `suppress_warnings` in `docs/sphinx/conf.py` MUST be empty, and every warning
+  it currently masks MUST be fixed at the source. Today it hides
+  `myst.xref_missing` and `toc.not_included`, which are the two categories a
+  broken documentation link actually produces, so the gate as specified would
+  pass on exactly the defect it exists to catch.
 - **FR-049**: CI workflow triggers MUST NOT hardcode a feature branch name.
 - **FR-050**: CI MUST NOT run any `e2e` or `e2e_grpc` test.
 
@@ -832,6 +854,12 @@ disappears.
   place, and that they draw on one shared 60-per-minute per-endpoint quota.
 - **FR-056**: The guide MUST be reachable from the documentation navigation and
   MUST build clean under `-W`.
+- **FR-056a**: The repository MUST have one documentation tree, not two. Every
+  guide under `docs/guides/` MUST move inside the Sphinx source tree so that it
+  is published. Today the five guides a user most needs, including the
+  quickstart and both transport guides, are absent from the built site, so a
+  new guide placed beside them would be equally invisible and FR-056 would be
+  unsatisfiable where the plan puts it.
 - **FR-057**: `auth/README.md`, `errors/README.md`,
   `docs/guides/error_handling.md`, `docs/guides/rest.md`, `docs/guides/grpc.md`,
   and `examples/README.md` MUST be updated in lockstep with the code changes
@@ -844,7 +872,8 @@ disappears.
 **Out of scope**
 
 - **FR-059**: Automatic retry of requests that reached the server stays out of
-  scope for this feature, gated on question 5 in User Story 8.
+  scope for this feature. FR-032a records the eligibility rule a later feature
+  would implement against.
 - **FR-060**: Proto-driven wrapper generation for the six wrapper-less services
   stays out of scope, per the existing decision recorded in CLAUDE.md. The guide
   documents the gap; it does not close it.
@@ -927,10 +956,12 @@ disappears.
   per-operation error dispatch, keeping generated error packages unchanged. If
   planning finds this is not workable, the alternative is a generator change,
   which would move the work into a story of its own alongside User Story 10.
-- The coverage threshold for generator phase modules is agreed during planning.
-  This spec deliberately does not fix a number, because the right target depends
-  on how much of `docs_rendering.py` is string templating that a test would only
-  restate.
+- The coverage threshold for generator phase modules is 85% per module, fixed
+  in FR-043 after measuring the current figures. Six of the nine modules are
+  already at 91% to 97%; the three that are not, `docs_rendering.py` at 18%,
+  `endpoint_docs.py` at 26%, and `wrapper_generation.py` at 54%, are the ones
+  this raises. 85% rather than 91% because part of `docs_rendering.py` is string
+  templating a test would only restate.
 - CI obtains the schema for the determinism gate by the generator's existing
   clone fallback. No new credential or submodule is introduced.
 - The rate-limit investigation may use the opt-in e2e credentials for read-only
