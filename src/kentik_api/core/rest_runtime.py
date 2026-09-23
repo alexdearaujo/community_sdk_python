@@ -47,7 +47,7 @@ def request_json(
         with httpx.Client(
             base_url=api_config.base_path,
             verify=api_config.verify,
-            timeout=httpx.Timeout(60.0),
+            timeout=api_config.rest_timeout,
         ) as client:
             response = client.request(
                 method.lower(),

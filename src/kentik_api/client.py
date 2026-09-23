@@ -1,9 +1,11 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import os
 
+import httpx
 from dotenv import find_dotenv, load_dotenv
 
 from kentik_api.auth.credentials import KentikCredentials
+from kentik_api.core.api_config import APIConfig
 from kentik_api.client_mixin import KentikClientMixin
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -22,7 +24,17 @@ class KentikAPI(KentikClientMixin):
         api_token: str | None = None,
         protocol: str = "rest",
         region: str = "us",
+        *,
+        timeout: float = 60.0,
+        rest_timeout: httpx.Timeout | float | None = None,
+        grpc_deadline: float | None = None,
     ):
+        """Connect to the Kentik API over REST or gRPC.
+
+        `timeout` bounds every call on either transport. `rest_timeout` (a
+        scalar or per-phase `httpx.Timeout`) and `grpc_deadline` override it
+        for one transport; see `APIConfig`.
+        """
         # Load from the nearest .env based on current working directory.
         dotenv_path = find_dotenv(filename=".env", usecwd=True)
         if dotenv_path:
@@ -47,10 +59,23 @@ class KentikAPI(KentikClientMixin):
                 f"Invalid region '{region}'. Must be one of: {valid}."
             ) from None
 
+        api_config = APIConfig(
+            base_path=rest_base_url,
+            auth_email=email,
+            auth_token=api_token,
+            timeout=timeout,
+            rest_timeout=rest_timeout,
+            grpc_deadline=grpc_deadline,
+        )
+
         if protocol.lower() == "grpc":
-            self._transport = GrpcTransport(self.credentials, target=grpc_target)
+            self._transport = GrpcTransport(
+                self.credentials, target=grpc_target, api_config=api_config
+            )
         elif protocol.lower() == "rest":
-            self._transport = RestTransport(self.credentials, base_url=rest_base_url)
+            self._transport = RestTransport(
+                self.credentials, base_url=rest_base_url, api_config=api_config
+            )
         else:
             raise ValueError("Protocol must be 'grpc' or 'rest'")
 

@@ -46,6 +46,7 @@ flowchart TB
     end
 
     API_Config --> Error_Types
+    Client_API --> API_Config
     Client_API --> Auth_Credentials
     Client_API --> Client_Mixin
     Client_API --> REST_Transport

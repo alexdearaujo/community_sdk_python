@@ -77,3 +77,30 @@ def test_request_json_raises_http_exception_on_unexpected_status(
 
     assert exc.value.status_code == 500
     assert "FailingOp failed with status code: 500" in str(exc.value)
+
+
+def test_request_json_applies_the_configured_rest_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    captured = {}
+    real_init = httpx.Client.__init__
+
+    def _spy_init(self, *args, **kwargs):
+        captured["timeout"] = kwargs.get("timeout")
+        real_init(self, *args, **kwargs)
+
+    monkeypatch.setattr(httpx.Client, "__init__", _spy_init)
+    monkeypatch.setattr(
+        httpx.Client, "request", lambda self, *a, **k: httpx.Response(200, json={})
+    )
+    phases = httpx.Timeout(connect=2.0, read=300.0, write=10.0, pool=5.0)
+
+    request_json(
+        "GET",
+        "/v1/test",
+        api_config_override=APIConfig(
+            base_path="https://api.example.com", rest_timeout=phases
+        ),
+    )
+
+    assert captured["timeout"] is phases

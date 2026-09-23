@@ -49,6 +49,27 @@ unreachable host."
 **Breaking**: none. All three are new keyword arguments, and `timeout` defaults
 to the previously hardcoded value.
 
+### 1a. `KentikAPI` (FR-015a)
+
+```python
+class KentikAPI:
+    def __init__(
+        self,
+        email: str | None = None,
+        api_token: str | None = None,
+        protocol: str = "rest",
+        region: str = "us",
+        *,
+        timeout: float = 60.0,                              # NEW
+        rest_timeout: httpx.Timeout | float | None = None,  # NEW
+        grpc_deadline: float | None = None,                 # NEW
+    ) -> None: ...
+```
+
+The client builds one `APIConfig` from these and passes it to whichever
+transport it constructs, so the guarantees in section 1 apply unchanged. The
+arguments are keyword-only, so no existing positional call changes meaning.
+
 ---
 
 ## 2. Exception hierarchy

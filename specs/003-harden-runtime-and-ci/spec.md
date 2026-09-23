@@ -691,6 +691,11 @@ disappears.
 - **FR-014**: `RestTransport.close()` MUST release the underlying HTTP resource.
 - **FR-015**: The REST timeout MUST be caller-configurable, replacing the
   hardcoded 60-second value.
+- **FR-015a**: `KentikAPI` MUST accept `timeout`, `rest_timeout`, and
+  `grpc_deadline` as keyword-only arguments with the same meaning and
+  validation as the `APIConfig` fields, and MUST apply them to whichever
+  transport it constructs. A timeout that can only be set by building a
+  transport by hand is not caller-configurable in any practical sense.
 - **FR-016**: The REST timeout MUST support distinct connect, read, write, and
   pool bounds, not one scalar applied to all four. A slow paginating read and an
   unreachable host are different failures, and a caller who raises the read
