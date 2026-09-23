@@ -70,6 +70,10 @@ docs = [
     "sphinxcontrib-mermaid>=1.0.0",
 ]
 
+[tool.ruff]
+# Spec Kit owns these scripts and rewrites them on every upgrade.
+extend-exclude = [".specify"]
+
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
 # protoc emits dependency imports that look unused but register those protos in
