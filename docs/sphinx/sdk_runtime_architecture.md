@@ -49,6 +49,7 @@ flowchart TB
     Client_API --> API_Config
     Client_API --> Auth_Credentials
     Client_API --> Client_Mixin
+    Client_API --> Error_Types
     Client_API --> REST_Transport
     Client_API --> gRPC_Transport
     Client_Mixin -->|"x35"| Generated_Service_Wrappers

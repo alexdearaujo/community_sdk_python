@@ -22,6 +22,7 @@ classDiagram
         +str method
         +str path
         +dict details
+        +str grpc_status_code
     }
     class GeneratedOperationError {
         <<generated>>
@@ -37,10 +38,13 @@ classDiagram
 
 | Exception | When raised |
 | --- | --- |
-| `ConfigurationError` | Reserved for an invalid `APIConfig` value; defined for callers to catch, but not currently raised anywhere in the SDK |
-| `AuthenticationError` | gRPC `UNAUTHENTICATED` status only. A REST 401 raises a generated `HTTPException` subclass instead, not `AuthenticationError` |
-| `TransportError` | Network failure before any response arrives |
-| `HTTPException` | Any non-success HTTP or gRPC status code |
+| `ConfigurationError` | `KentikAPI(...)` gets missing credentials, an unknown region or protocol, or a non-positive timeout |
+| `AuthenticationError` | Credentials are rejected: a REST 401 or a gRPC `UNAUTHENTICATED` status |
+| `TransportError` | No response arrived: connection failure, timeout, or a gRPC `CANCELLED`, `DEADLINE_EXCEEDED`, or `UNAVAILABLE` status |
+| `HTTPException` | The API responded with a fault. REST raises the operation's generated subclass; gRPC raises `HTTPException` with `grpc_status_code` set |
+
+Every exception carries a `rate_limit` attribute, `None` until quota reporting
+lands. `except KentikError:` catches everything the SDK raises.
 
 All classes are in [`src/kentik_api/errors/__init__.py`](../../../src/kentik_api/errors/__init__.py).
 
@@ -55,7 +59,7 @@ from kentik_api.errors import (
     TransportError,
 )
 
-client = KentikAPI(protocol="rest")  # or protocol="grpc" — same exceptions
+client = KentikAPI(protocol="rest")  # or protocol="grpc": same exceptions
 
 try:
     response = client.device.list_devices()
@@ -72,22 +76,28 @@ except KentikError as exc:
 
 ## gRPC status codes
 
-gRPC errors are normalized to the SDK exception hierarchy
-(`AuthenticationError`, `HTTPException`, or `TransportError`) by
-[`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) before they
-reach the caller. The mapping is:
+[`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) classifies every
+non-OK gRPC status explicitly. Where the API returned a status, the exception
+keeps it verbatim in `grpc_status_code` alongside the equivalent HTTP status.
+Where no response arrived, no HTTP status is invented.
 
-| gRPC status | HTTP status | Exception |
+| gRPC status | Exception | `status_code` |
 | --- | --- | --- |
-| `UNAUTHENTICATED` | 401 | `AuthenticationError` |
-| `PERMISSION_DENIED` | 403 | `HTTPException(403)` |
-| `NOT_FOUND` | 404 | `HTTPException(404)` |
-| `INVALID_ARGUMENT` | 400 | `HTTPException(400)` |
-| `ALREADY_EXISTS` | 409 | `HTTPException(409)` |
-| `RESOURCE_EXHAUSTED` | 429 | `HTTPException(429)` |
-| `UNIMPLEMENTED` | 501 | `HTTPException(501)` |
-| `UNAVAILABLE` | 503 | `HTTPException(503)` |
-| Network failure | — | `TransportError` |
+| `UNAUTHENTICATED` | `AuthenticationError` | none |
+| `INVALID_ARGUMENT`, `FAILED_PRECONDITION`, `OUT_OF_RANGE` | `HTTPException` | 400 |
+| `PERMISSION_DENIED` | `HTTPException` | 403 |
+| `NOT_FOUND` | `HTTPException` | 404 |
+| `ALREADY_EXISTS`, `ABORTED` | `HTTPException` | 409 |
+| `RESOURCE_EXHAUSTED` | `HTTPException` | 429 |
+| `UNKNOWN`, `INTERNAL`, `DATA_LOSS` | `HTTPException` | 500 |
+| `UNIMPLEMENTED` | `HTTPException` | 501 |
+| `CANCELLED`, `DEADLINE_EXCEEDED`, `UNAVAILABLE` | `TransportError` | none |
+| any code the SDK does not recognize | `TransportError`, naming the code | none |
+
+Every gRPC call is bounded by a deadline (60 seconds unless `KentikAPI` is given
+`timeout` or `grpc_deadline`), so an unresponsive server raises `TransportError`
+instead of blocking forever. An exception the stub raises that is not a gRPC
+error, such as a malformed request message, propagates unchanged.
 
 ## Runnable example
 

@@ -166,6 +166,7 @@ warning each fail CI on a throwaway branch.
 - [x] T040 [US4] Name the determinism job in `.github/workflows/tests.yml` so an upstream schema change is distinguishable from a generator regression in its failure output (research D7)
   - Job is named `generated-output-matches-schema-head`; the generator now logs `Schema commit: <sha>` when it clones, and the failure message names both causes.
 - [ ] T041 [US4] Verify each gate in `.github/workflows/tests.yml` fails as intended, by opening throwaway pull requests carrying a formatting violation, a generator output change, and a broken Sphinx reference (SC-005, SC-006)
+  - Local stand-in, 2026-09-22 (no push per maintainer): a formatting violation fails `ruff format --check` (exit 1); a stale committed generated file makes regeneration dirty the tree; a broken link fails `sphinx-build -W` (exit 1). Still open: confirm the same on a real CI run.
 - [x] T041a [US4] Add `make check-specs` to `.github/workflows/tests.yml`, so a stale or orphaned requirement reference fails CI rather than surviving to implementation, as twelve of them did in this file
 
 **Checkpoint**: CI protects determinism, formatting, and docs.
@@ -179,10 +180,12 @@ warning each fail CI on a throwaway branch.
 **Independent test**: constructing `KentikAPI` with no credentials and with a bad
 region both raise something catchable as `KentikError`.
 
-- [ ] T042 [US5] Replace both `ValueError` raises with `ConfigurationError` in `KentikAPI.__init__` in `src/kentik_api/client.py`, keeping each message naming the missing or invalid value (FR-026)
-- [ ] T043 [US5] Confirm `ConfigurationError` in `src/kentik_api/errors/__init__.py` remains a plain `KentikError` subclass, with no `ValueError` base and no deprecation shim (FR-027)
-- [ ] T044 [P] [US5] Add tests for both configuration failures in `tests/smoke/test_client_mounts_and_calls.py`, asserting they are catchable as `KentikError`
-- [ ] T045 [P] [US5] Update `src/kentik_api/errors/README.md` and `docs/sphinx/guides/error_handling.md` so `ConfigurationError` is no longer described as never raised (FR-057)
+- [x] T042 [US5] Replace both `ValueError` raises with `ConfigurationError` in `KentikAPI.__init__` in `src/kentik_api/client.py`, keeping each message naming the missing or invalid value (FR-026)
+  - There were three, not two: an unknown `protocol` also raised `ValueError`, and its message did not name the value. All three now raise `ConfigurationError` naming what was wrong.
+- [x] T043 [US5] Confirm `ConfigurationError` in `src/kentik_api/errors/__init__.py` remains a plain `KentikError` subclass, with no `ValueError` base and no deprecation shim (FR-027)
+- [x] T044 [P] [US5] Add tests for both configuration failures in `tests/smoke/test_client_mounts_and_calls.py`, asserting they are catchable as `KentikError`
+- [x] T045 [P] [US5] Update `src/kentik_api/errors/README.md` and `docs/sphinx/guides/error_handling.md` so `ConfigurationError` is no longer described as never raised (FR-057)
+  - Both docs also still described the error behaviour from before Phases 3 and 4 (REST 401, the gRPC status table, `TransportError` sources); updated in the same change.
 
 **Checkpoint**: `except KentikError:` is a complete net.
 

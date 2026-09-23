@@ -5,7 +5,7 @@ import httpx
 import pytest
 
 from kentik_api.client import _REGION_ENDPOINTS, KentikAPI
-from kentik_api.errors import ConfigurationError
+from kentik_api.errors import ConfigurationError, KentikError
 
 
 def test_region_endpoints_us_urls():
@@ -20,9 +20,29 @@ def test_region_endpoints_eu_urls():
     assert rest_url == "https://grpc.api.kentik.eu"
 
 
-def test_invalid_region_raises_valueerror():
-    with pytest.raises(ValueError, match="region"):
+def test_invalid_region_raises_configuration_error_naming_it():
+    with pytest.raises(ConfigurationError, match="apac") as exc_info:
         KentikAPI(email="a@b.com", api_token="t", region="apac")
+
+    assert isinstance(exc_info.value, KentikError)
+    assert not isinstance(exc_info.value, ValueError)
+
+
+def test_invalid_protocol_raises_configuration_error_naming_it():
+    with pytest.raises(ConfigurationError, match="carrier-pigeon"):
+        KentikAPI(email="a@b.com", api_token="t", protocol="carrier-pigeon")
+
+
+def test_missing_credentials_raise_configuration_error(monkeypatch, tmp_path):
+    # Run from a directory with no .env above it, so the real one is never loaded.
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("KENTIK_EMAIL", raising=False)
+    monkeypatch.delenv("KENTIK_API_TOKEN", raising=False)
+
+    with pytest.raises(KentikError, match="KENTIK_EMAIL") as exc_info:
+        KentikAPI()
+
+    assert type(exc_info.value) is ConfigurationError
 
 
 def test_client_mounts_selected_services():
