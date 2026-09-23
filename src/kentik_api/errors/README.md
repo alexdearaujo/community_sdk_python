@@ -43,8 +43,9 @@ service generates under `gen/<service>/error/`.
 | `TransportError` | No response arrived: `request_json()` on an `httpx.RequestError`, or `map_grpc_error()` for `CANCELLED`, `DEADLINE_EXCEEDED`, `UNAVAILABLE`, or an unrecognized code. |
 | `HTTPException` | The API responded with a fault. Carries `status_code`, `message`, `method`, `path`, a `details` dict (parsed from the response body when possible), and on gRPC the verbatim `grpc_status_code`. |
 
-Every class inherits a `rate_limit` attribute from `KentikError`, `None` until
-the runtime populates it.
+Every class inherits a `rate_limit` attribute from `KentikError`. The shared
+runtimes set it to the quota the API reported on the failing call, or leave it
+`None` when no response arrived.
 
 ## Generated per-operation error classes
 

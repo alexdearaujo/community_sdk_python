@@ -46,6 +46,7 @@ flowchart TB
     end
 
     API_Config --> Error_Types
+    API_Config --> Rate_Limit
     Client_API --> API_Config
     Client_API --> Auth_Credentials
     Client_API --> Client_Mixin
@@ -66,12 +67,16 @@ flowchart TB
     REST_Runtime --> API_Config
     REST_Runtime --> Auth_Credentials
     REST_Runtime --> Error_Types
+    REST_Runtime --> Rate_Limit
     REST_Transport --> API_Config
     REST_Transport --> Auth_Credentials
+    REST_Transport --> Rate_Limit
     REST_Transport --> Transport_Base
     gRPC_Runtime --> Error_Types
+    gRPC_Runtime --> Rate_Limit
     gRPC_Transport --> API_Config
     gRPC_Transport --> Auth_Credentials
+    gRPC_Transport --> Rate_Limit
     gRPC_Transport --> Transport_Base
 ```
 

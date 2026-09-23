@@ -104,3 +104,45 @@ def test_request_json_applies_the_configured_rest_timeout(
     )
 
     assert captured["timeout"] is phases
+
+
+# Kentik slows responses by 1.5s past the per-minute soft limit rather than
+# failing them (FR-037). Measured healthy latency is about 0.6s.
+SOFT_LIMIT_DELAY_SECONDS = 1.5
+
+
+def test_default_timeout_absorbs_the_soft_limit_delay():
+    import threading
+    import time
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    class _ThrottledHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            time.sleep(SOFT_LIMIT_DELAY_SECONDS + 0.1)
+            body = b'{"ok": true}'
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *args):
+            pass
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), _ThrottledHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    config = APIConfig(
+        base_path=f"http://127.0.0.1:{server.server_address[1]}",
+        auth_email="dev@example.com",
+        auth_token="token",
+    )
+    try:
+        # A throttled call is slow, not failed; it must not surface as TransportError.
+        assert request_json("GET", "/v1/test", api_config_override=config) == {
+            "ok": True
+        }
+    finally:
+        config.close()
+        server.shutdown()
+        server.server_close()

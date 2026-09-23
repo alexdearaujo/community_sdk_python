@@ -1,6 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import RateLimit
 from kentik_api.transports.base import BaseTransport
 
 
@@ -19,6 +20,11 @@ class RestTransport(BaseTransport):
             auth_token=credentials.api_token,
             verify=True,
         )
+
+    @property
+    def rate_limits(self) -> dict[str, RateLimit]:
+        """Quota per REST path, as of the last call to each."""
+        return self.api_config.rate_limits
 
     def close(self):
         self.api_config.close()

@@ -7,6 +7,7 @@ handling, status-code mapping, and transport failures stay in one place.
 
 import grpc
 
+from kentik_api.core.rate_limit import rate_limit_of_rpc
 from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 
 # Every non-OK code is classified explicitly, so none reaches a silent default.
@@ -94,4 +95,6 @@ def call_grpc(stub_method, proto_request):
     try:
         return stub_method(proto_request)
     except grpc.RpcError as exc:
-        raise map_grpc_error(exc, method="gRPC", path=path) from exc
+        error = map_grpc_error(exc, method="gRPC", path=path)
+        error.rate_limit = rate_limit_of_rpc(exc)
+        raise error from exc

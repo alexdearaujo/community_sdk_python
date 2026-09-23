@@ -43,8 +43,9 @@ classDiagram
 | `TransportError` | No response arrived: connection failure, timeout, or a gRPC `CANCELLED`, `DEADLINE_EXCEEDED`, or `UNAVAILABLE` status |
 | `HTTPException` | The API responded with a fault. REST raises the operation's generated subclass; gRPC raises `HTTPException` with `grpc_status_code` set |
 
-Every exception carries a `rate_limit` attribute, `None` until quota reporting
-lands. `except KentikError:` catches everything the SDK raises.
+Every exception carries a `rate_limit` attribute with the quota the API
+reported on the failing call, or `None` when no response arrived. See the
+[rate limiting guide](rate_limiting.md). `except KentikError:` catches everything the SDK raises.
 
 All classes are in [`src/kentik_api/errors/__init__.py`](../../../src/kentik_api/errors/__init__.py).
 

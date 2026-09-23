@@ -4,9 +4,14 @@ from typing import Optional
 
 import httpx
 
+from kentik_api.core.rate_limit import RateLimit
 from kentik_api.errors import ConfigurationError, HTTPException
 
 __all__ = ["APIConfig", "HTTPException"]
+
+# Retries only a failed connection attempt, which never reached the server, so
+# no request can be replayed (FR-032). A response of any status is never retried.
+_CONNECT_RETRIES = 2
 
 
 def _require_positive(field: str, value: float) -> None:
@@ -63,6 +68,10 @@ class APIConfig:
         _require_positive("grpc_deadline", grpc_deadline)
         self.grpc_deadline: float = grpc_deadline
 
+        # Keyed by endpoint (REST path or gRPC method), the granularity Kentik
+        # enforces quota at; one client-wide value would mix budgets.
+        self.rate_limits: dict[str, RateLimit] = {}
+
         self._client: httpx.Client | None = None
         self._closed = False
         self._client_lock = threading.Lock()
@@ -82,8 +91,11 @@ class APIConfig:
             if self._client is None:
                 self._client = httpx.Client(
                     base_url=self.base_path,
-                    verify=self.verify,
                     timeout=self.rest_timeout,
+                    # verify belongs on the transport: a Client given one ignores its own.
+                    transport=httpx.HTTPTransport(
+                        verify=self.verify, retries=_CONNECT_RETRIES
+                    ),
                 )
             return self._client
 

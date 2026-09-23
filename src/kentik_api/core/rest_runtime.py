@@ -7,7 +7,13 @@ from typing import Any, Dict, Optional
 import httpx
 from kentik_api.auth.credentials import auth_headers
 from kentik_api.core.api_config import APIConfig
-from kentik_api.errors import AuthenticationError, HTTPException, TransportError
+from kentik_api.core.rate_limit import RateLimit
+from kentik_api.errors import (
+    AuthenticationError,
+    HTTPException,
+    KentikError,
+    TransportError,
+)
 
 
 def request_json(
@@ -61,6 +67,33 @@ def request_json(
         if owns_config:
             api_config.close()
 
+    rate_limit = RateLimit.from_headers(response.headers)
+    if rate_limit is not None:
+        api_config.rate_limits[path] = rate_limit
+
+    try:
+        return _handle_response(
+            response,
+            method=method,
+            path=path,
+            expected_status=expected_status,
+            operation_name=operation_name,
+            error_cls=error_cls,
+        )
+    except KentikError as exc:
+        exc.rate_limit = rate_limit
+        raise
+
+
+def _handle_response(
+    response: httpx.Response,
+    *,
+    method: str,
+    path: str,
+    expected_status: int,
+    operation_name: str,
+    error_cls: type[HTTPException],
+) -> Any:
     def _raise_http_error(message: str, *, details: dict[str, Any]) -> None:
         error_factory = getattr(error_cls, "from_response", None)
         if callable(error_factory):

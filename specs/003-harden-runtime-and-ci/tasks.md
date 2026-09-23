@@ -238,20 +238,27 @@ releases it.
 transports, and two endpoints report separate budgets.
 
 - [x] T057 [US8] Create the frozen `RateLimit` value object in `src/kentik_api/core/rate_limit.py` with `limit`, `remaining`, `reset_seconds`, `window_seconds`, and `raw` (FR-029, data-model.md)
-- [ ] T058 [US8] Add `RateLimit.from_headers()` and `RateLimit.from_metadata()` in `src/kentik_api/core/rate_limit.py`, tolerating `w=60` and `window=60`, multiple windows, and returning `None` for absent or malformed input rather than raising (FR-030)
-- [ ] T059 [P] [US8] Add parser tests in `tests/runtime/test_rate_limit.py` covering `60, 60;w=60`, `100;window=60`, multiple windows, absent header, and malformed header
-- [ ] T060 [US8] Capture quota from REST response headers in `request_json()` in `src/kentik_api/core/rest_runtime.py` (FR-030)
-- [ ] T061 [US8] Capture quota from gRPC **initial** metadata in `call_grpc()` in `src/kentik_api/core/grpc_runtime.py`, noting trailing metadata was measured empty (FR-030)
-- [ ] T062 [US8] Track quota per endpoint in a `rate_limits` mapping on both transports in `src/kentik_api/transports/rest_client.py` and `src/kentik_api/transports/grpc_client.py` (FR-031)
+- [x] T058 [US8] Add `RateLimit.from_headers()` and `RateLimit.from_metadata()` in `src/kentik_api/core/rate_limit.py`, tolerating `w=60` and `window=60`, multiple windows, and returning `None` for absent or malformed input rather than raising (FR-030)
+- [x] T059 [P] [US8] Add parser tests in `tests/runtime/test_rate_limit.py` covering `60, 60;w=60`, `100;window=60`, multiple windows, absent header, and malformed header
+- [x] T060 [US8] Capture quota from REST response headers in `request_json()` in `src/kentik_api/core/rest_runtime.py` (FR-030)
+- [x] T061 [US8] Capture quota from gRPC **initial** metadata in `call_grpc()` in `src/kentik_api/core/grpc_runtime.py`, noting trailing metadata was measured empty (FR-030)
+  - Captured in two places, both outside generated code: `GrpcTransport`'s interceptor records quota per method from every call's initial metadata (a failed outcome's `RpcError` carries it), and `call_grpc()` reads it off the `RpcError` for `error.rate_limit`.
+- [x] T062 [US8] Track quota per endpoint in a `rate_limits` mapping on both transports in `src/kentik_api/transports/rest_client.py` and `src/kentik_api/transports/grpc_client.py` (FR-031)
+  - The mapping lives on `APIConfig.rate_limits`, which `request_json()` and the gRPC interceptor both reach; each transport exposes it as a `rate_limits` property. Keys are REST paths as sent, or gRPC method names.
 - [ ] T063 [US8] Attach quota to the returned model via `object.__setattr__` and expose a `rate_limit_of(result)` accessor from `src/kentik_api/__init__.py` (FR-029, research D5a)
-- [ ] T064 [US8] Populate `rate_limit` on every SDK error raised from `src/kentik_api/core/rest_runtime.py` and `src/kentik_api/core/grpc_runtime.py` (FR-029)
+  - **Deferred to Phase 13.** The returned model is built in generated code (`<Model>(**body)` in each REST function, `model_validate(...)` in each gRPC wrapper branch); the shared runtime only ever sees a dict or proto. Attaching quota to the result therefore needs a generated-code change, which only Phase 13 may make. Quota is already readable on every error and per endpoint.
+- [x] T064 [US8] Populate `rate_limit` on every SDK error raised from `src/kentik_api/core/rest_runtime.py` and `src/kentik_api/core/grpc_runtime.py` (FR-029)
 - [ ] T065 [P] [US8] Add tests in `tests/runtime/test_rate_limit.py` asserting `model_dump()` keys and model equality are unaffected by attachment (research D5a)
-- [ ] T066 [US8] Enable connection-establishment retries with `httpx.HTTPTransport(retries=N)` in `src/kentik_api/core/api_config.py`, which never replay a request the server received (FR-032)
-- [ ] T067 [US8] Confirm no automatic retry of a completed request and none for mutating operations exists anywhere in `src/kentik_api/core/` (FR-032, FR-033)
-- [ ] T067a [P] [US8] Record the retry-eligibility rule in `tests/generated/test_retry_eligibility.py`: derive each discovered operation's eligibility from its HTTP verb via `tests/_discovery.py`, never from a hand-kept list, and assert GET, PUT, and DELETE are eligible (161 operations) while POST and PATCH are not (72). State the rule in `docs/sphinx/guides/rate_limiting.md` (FR-032a)
-- [ ] T068 [P] [US8] Document the three limits no header reveals, the per-endpoint granularity, and the documented-versus-measured conflict in `docs/sphinx/guides/rate_limiting.md` (FR-034, FR-035, FR-036)
-- [ ] T069 [US8] Confirm the default in `src/kentik_api/core/api_config.py` still tolerates the documented 1.5s soft-limit response delay, with a test in `tests/runtime/test_rest_runtime.py` proving a delayed response is not converted into a `TransportError` (FR-037)
-- [ ] T070 [US8] Run `make generate local && git diff --exit-code` and confirm no generated file changed
+  - **Deferred to Phase 13** with T063, which it tests.
+- [x] T066 [US8] Enable connection-establishment retries with `httpx.HTTPTransport(retries=N)` in `src/kentik_api/core/api_config.py`, which never replay a request the server received (FR-032)
+  - `httpx.HTTPTransport(retries=2)`; `verify` moved onto the transport, since a `Client` given a transport ignores its own `verify`.
+- [x] T067 [US8] Confirm no automatic retry of a completed request and none for mutating operations exists anywhere in `src/kentik_api/core/` (FR-032, FR-033)
+  - Recorded 2026-09-22: the only retry in `core/` and `transports/` is `_CONNECT_RETRIES` for connection establishment.
+- [x] T067a [P] [US8] Record the retry-eligibility rule in `tests/generated/test_retry_eligibility.py`: derive each discovered operation's eligibility from its HTTP verb via `tests/_discovery.py`, never from a hand-kept list, and assert GET, PUT, and DELETE are eligible (161 operations) while POST and PATCH are not (72). State the rule in `docs/sphinx/guides/rate_limiting.md` (FR-032a)
+- [x] T068 [P] [US8] Document the three limits no header reveals, the per-endpoint granularity, and the documented-versus-measured conflict in `docs/sphinx/guides/rate_limiting.md` (FR-034, FR-035, FR-036)
+- [x] T069 [US8] Confirm the default in `src/kentik_api/core/api_config.py` still tolerates the documented 1.5s soft-limit response delay, with a test in `tests/runtime/test_rest_runtime.py` proving a delayed response is not converted into a `TransportError` (FR-037)
+  - Real local HTTP server delaying 1.6s; the call returns normally under the default. Surfaced that a config with no credentials sends `None` header values and httpx raises a raw `TypeError`; that is T084's case.
+- [x] T070 [US8] Run `make generate local && git diff --exit-code` and confirm no generated file changed
 
 **Checkpoint**: SC-014 met; quota readable three ways.
 
@@ -309,6 +316,7 @@ on the same client, each use their own value.
 - [ ] T083 [US10] Add a `with_timeout()` derivation helper to `APIConfig` in `src/kentik_api/core/api_config.py` that can vary only timeout-related fields and cannot change `base_path`, `auth_email`, `auth_token`, or `verify` (FR-022, research D6)
 - [ ] T083a [US10] Expose the client's `APIConfig` through a public, read-only `KentikAPI.api_config` property in `src/kentik_api/client.py`, so building an override never needs `client._transport.api_config`, and cover it in `tests/smoke/test_client_mounts_and_calls.py` (FR-018a)
 - [ ] T084 [US10] Raise `ConfigurationError` before sending when an override carries no credentials, in `src/kentik_api/core/rest_runtime.py` (FR-023)
+  - Today that case escapes as a raw httpx `TypeError` (header value `None`), found while writing T069.
 - [ ] T085 [US10] Stop stripping `api_config_override` from wrapper method signatures in `scripts/generation/wrapper_generation.py` (FR-018)
 - [ ] T086 [US10] Thread the override into the gRPC branch in `scripts/generation/wrapper_generation.py` so the deadline applies there too, taking precedence over the D1a interceptor default (FR-019)
 - [ ] T087 [US10] Regenerate with `make generate local` and review the diff, confirming it contains only the signature change and its call-site plumbing (FR-025)

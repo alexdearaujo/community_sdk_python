@@ -111,3 +111,29 @@ def test_one_off_config_is_closed_even_when_the_call_fails(monkeypatch):
         _call(None)
 
     assert created and created[0].is_closed
+
+
+def test_shared_client_retries_failed_connection_attempts_only():
+    config = APIConfig(base_path="https://api.example.com")
+    try:
+        transport = config.client._transport
+        assert isinstance(transport, httpx.HTTPTransport)
+        # httpcore retries connection establishment only; a sent request is never replayed.
+        assert transport._pool._retries == 2
+    finally:
+        config.close()
+
+
+def test_transports_expose_quota_per_endpoint_from_their_config():
+    from kentik_api.transports.grpc_client import GrpcTransport
+
+    rest = RestTransport(KentikCredentials("dev@example.com", "t"))
+    grpc_transport = GrpcTransport(
+        KentikCredentials("dev@example.com", "t"), target="127.0.0.1:1"
+    )
+    try:
+        assert rest.rate_limits is rest.api_config.rate_limits
+        assert grpc_transport.rate_limits is grpc_transport.api_config.rate_limits
+    finally:
+        rest.close()
+        grpc_transport.close()

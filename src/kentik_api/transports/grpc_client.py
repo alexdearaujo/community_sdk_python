@@ -5,6 +5,7 @@ import grpc
 
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
 from kentik_api.transports.base import BaseTransport
 
 
@@ -47,7 +48,21 @@ class _DefaultDeadlineInterceptor(grpc.UnaryUnaryClientInterceptor):
                 wait_for_ready=client_call_details.wait_for_ready,
                 compression=client_call_details.compression,
             )
-        return continuation(client_call_details, request)
+        outcome = continuation(client_call_details, request)
+        self._record_rate_limit(client_call_details.method, outcome)
+        return outcome
+
+    def _record_rate_limit(self, method, outcome) -> None:
+        # A failed outcome reports no metadata itself; the RpcError it holds does.
+        failure = outcome.exception() if hasattr(outcome, "exception") else None
+        rate_limit = rate_limit_of_rpc(failure if failure is not None else outcome)
+        if rate_limit is not None:
+            key = (
+                method.decode("utf-8", errors="replace")
+                if isinstance(method, bytes)
+                else str(method)
+            )
+            self._api_config.rate_limits[key] = rate_limit
 
 
 class GrpcTransport(BaseTransport):
@@ -74,6 +89,11 @@ class GrpcTransport(BaseTransport):
             grpc.secure_channel(target, composite_creds),
             _DefaultDeadlineInterceptor(self.api_config),
         )
+
+    @property
+    def rate_limits(self) -> dict[str, RateLimit]:
+        """Quota per gRPC method, as of the last call to each."""
+        return self.api_config.rate_limits
 
     def close(self):
         self.channel.close()
