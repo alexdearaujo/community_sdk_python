@@ -17,6 +17,7 @@ from _discovery import (
 )
 
 from kentik_api.auth.credentials import KentikCredentials
+from kentik_api.core.api_config import APIConfig
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 
@@ -65,7 +66,8 @@ def test_wrapper_forwards_to_rest_module(
         result = method(**kwargs)
 
         assert result is sentinel
-        assert "api_config_override" in captured
+        # Override omitted: the client's own config, unchanged (FR-020).
+        assert captured["api_config_override"] is transport.api_config
         for key, value in kwargs.items():
             assert key in captured
             assert captured[key] is value
@@ -115,7 +117,9 @@ def test_wrapper_forwards_all_declared_options(
         result = method(**kwargs)
 
         assert result is sentinel
-        assert "api_config_override" in captured
+        # Override supplied: it replaces the client's config wholesale (FR-021).
+        assert isinstance(kwargs["api_config_override"], APIConfig)
+        assert captured["api_config_override"] is kwargs["api_config_override"]
         for key, value in kwargs.items():
             assert key in captured
             assert captured[key] is value
@@ -150,11 +154,16 @@ def test_wrapper_raises_for_grpc_unimplemented(
     kwargs = build_required_kwargs(method)
 
     _grpc_was_called = False
+    override = APIConfig(auth_email="o@example.com", auth_token="t", grpc_deadline=7.0)
+    kwargs["api_config_override"] = override
 
-    def _mock_call_grpc(stub_method, request):
+    received_configs: list[Any] = []
+
+    def _mock_call_grpc(stub_method, request, *, api_config=None):
         nonlocal _grpc_was_called
         _grpc_was_called = True
-        return MagicMock()  # mock proto response
+        received_configs.append(api_config)
+        return MagicMock(), None  # mock proto response, no quota
 
     # Patch call_grpc so the gRPC branch runs without a real server.
     if hasattr(module, "call_grpc"):
@@ -197,6 +206,11 @@ def test_wrapper_raises_for_grpc_unimplemented(
         else:
             print_case_result(case, mode="grpc-not-implemented", result="FAIL")
             raise
+
+    # Checked here, not in the mock: the broad except above would swallow it.
+    # The override must reach call_grpc, where it sets this call's deadline (FR-019).
+    if _grpc_was_called:
+        assert received_configs == [override]
 
 
 @pytest.mark.parametrize(

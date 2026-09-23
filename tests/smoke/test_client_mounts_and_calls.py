@@ -117,3 +117,55 @@ def test_client_accepts_per_transport_refinements():
 def test_client_rejects_a_non_positive_timeout():
     with pytest.raises(ConfigurationError, match="timeout"):
         KentikAPI(email="a@b.com", api_token="t", timeout=0)
+
+
+# --- per-call override and quota, through the real client (US10, US8) ---------
+
+
+def test_client_exposes_its_config_read_only():
+    with KentikAPI(email="a@b.com", api_token="t", timeout=30.0) as client:
+        assert client.api_config is client._transport.api_config
+        assert client.api_config.grpc_deadline == 30.0
+        with pytest.raises(AttributeError):
+            client.api_config = None  # type: ignore[misc]
+
+
+def test_one_call_can_override_the_timeout_without_affecting_the_next(monkeypatch):
+    sent = []
+
+    def _capture(self, *args, timeout=None, **kwargs):
+        sent.append((self, timeout))
+        return httpx.Response(200, json={"devices": []})
+
+    monkeypatch.setattr(httpx.Client, "request", _capture)
+
+    with KentikAPI(email="a@b.com", api_token="t") as client:
+        client.device.list_devices(
+            api_config_override=client.api_config.with_timeout(300)
+        )
+        client.device.list_devices()
+
+    (slow_client, slow_timeout), (normal_client, normal_timeout) = sent
+    assert slow_timeout == httpx.Timeout(300)
+    assert normal_timeout == httpx.Timeout(60.0)
+    # Both went over the one connection the client owns.
+    assert slow_client is normal_client
+
+
+def test_result_carries_the_quota_of_the_call_that_produced_it(monkeypatch):
+    from kentik_api import rate_limit_of
+
+    headers = {"x-ratelimit-limit": "60, 60;w=60", "x-ratelimit-remaining": "17"}
+    monkeypatch.setattr(
+        httpx.Client,
+        "request",
+        lambda self, *a, **k: httpx.Response(
+            200, json={"devices": []}, headers=headers
+        ),
+    )
+
+    with KentikAPI(email="a@b.com", api_token="t") as client:
+        result = client.device.list_devices()
+
+    assert rate_limit_of(result).remaining == 17
+    assert "_kentik_rate_limit" not in result.model_dump()
