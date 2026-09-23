@@ -3,9 +3,14 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
+from kentik_api.core.rate_limit import RateLimit
+
 
 class KentikError(Exception):
     """Base exception for all SDK-specific errors."""
+
+    # Quota as of the failing call, so a caller can back off without a second request.
+    rate_limit: RateLimit | None = None
 
 
 class ConfigurationError(KentikError):
@@ -31,8 +36,11 @@ class HTTPException(KentikError):
         method: Optional[str] = None,
         path: Optional[str] = None,
         details: Optional[dict[str, Any]] = None,
+        grpc_status_code: Optional[str] = None,
     ):
         self.status_code = status_code
+        # The verbatim gRPC code, since several codes share one HTTP status.
+        self.grpc_status_code = grpc_status_code
         self.message = message
         self.method = method
         self.path = path

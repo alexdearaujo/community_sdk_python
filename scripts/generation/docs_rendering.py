@@ -178,6 +178,7 @@ _GROUP_CONFIG: dict[str, str] = {
     "API Config": "foundation",
     "REST Runtime": "foundation",
     "gRPC Runtime": "foundation",
+    "Rate Limit": "foundation",
     "Error Types": "foundation",
     "Transport Base": "transport",
     "REST Transport": "transport",
@@ -209,6 +210,8 @@ def _module_group(module_name: str, source_file: Path | None = None) -> str | No
         return "REST Runtime"
     if module_name.startswith("kentik_api.core.grpc_runtime"):
         return "gRPC Runtime"
+    if module_name.startswith("kentik_api.core.rate_limit"):
+        return "Rate Limit"
     if module_name.startswith("kentik_api.errors"):
         return "Error Types"
     if module_name.startswith("kentik_api.transports.base"):

@@ -66,12 +66,12 @@ unverifiable.
 **Purpose**: extend the shared configuration and error objects that later
 stories build on. Nothing here changes behaviour on its own.
 
-- [ ] T005 Add `timeout: float = 60.0`, `rest_timeout: httpx.Timeout | float | None = None`, and `grpc_deadline: float | None = None` to `APIConfig.__init__` in `src/kentik_api/core/api_config.py`, with the latter two deriving from `timeout` when `None` (FR-002, FR-015, FR-016)
-- [ ] T006 Add construction-time validation to `src/kentik_api/core/api_config.py` rejecting any non-positive phase bound or deadline with `ConfigurationError` naming the offending field and value (FR-017)
-- [ ] T007 [P] Add a `rate_limit: RateLimit | None = None` attribute to `KentikError` in `src/kentik_api/errors/__init__.py` so every subclass carries it (FR-029)
-- [ ] T008 [P] Add a `grpc_status_code: str | None = None` keyword argument to `HTTPException.__init__` in `src/kentik_api/errors/__init__.py` (FR-010)
-- [ ] T009 Add unit tests for timeout derivation, phase-bound handling, and non-positive rejection in `tests/runtime/test_api_config.py`
-- [ ] T010 Run `make generate local && git diff --exit-code` and confirm no generated file changed
+- [x] T005 Add `timeout: float = 60.0`, `rest_timeout: httpx.Timeout | float | None = None`, and `grpc_deadline: float | None = None` to `APIConfig.__init__` in `src/kentik_api/core/api_config.py`, with the latter two deriving from `timeout` when `None` (FR-002, FR-015, FR-016)
+- [x] T006 Add construction-time validation to `src/kentik_api/core/api_config.py` rejecting any non-positive phase bound or deadline with `ConfigurationError` naming the offending field and value (FR-017)
+- [x] T007 [P] Add a `rate_limit: RateLimit | None = None` attribute to `KentikError` in `src/kentik_api/errors/__init__.py` so every subclass carries it (FR-029)
+- [x] T008 [P] Add a `grpc_status_code: str | None = None` keyword argument to `HTTPException.__init__` in `src/kentik_api/errors/__init__.py` (FR-010)
+- [x] T009 Add unit tests for timeout derivation, phase-bound handling, and non-positive rejection in `tests/runtime/test_api_config.py`
+- [x] T010 Run `make generate local && git diff --exit-code` and confirm no generated file changed
 
 **Checkpoint**: `make test` and `make typecheck` green; generated tree untouched.
 
@@ -220,7 +220,7 @@ releases it.
 **Independent test**: quota is readable off a result and off an error, on both
 transports, and two endpoints report separate budgets.
 
-- [ ] T057 [US8] Create the frozen `RateLimit` value object in `src/kentik_api/core/rate_limit.py` with `limit`, `remaining`, `reset_seconds`, `window_seconds`, and `raw` (FR-029, data-model.md)
+- [x] T057 [US8] Create the frozen `RateLimit` value object in `src/kentik_api/core/rate_limit.py` with `limit`, `remaining`, `reset_seconds`, `window_seconds`, and `raw` (FR-029, data-model.md)
 - [ ] T058 [US8] Add `RateLimit.from_headers()` and `RateLimit.from_metadata()` in `src/kentik_api/core/rate_limit.py`, tolerating `w=60` and `window=60`, multiple windows, and returning `None` for absent or malformed input rather than raising (FR-030)
 - [ ] T059 [P] [US8] Add parser tests in `tests/runtime/test_rate_limit.py` covering `60, 60;w=60`, `100;window=60`, multiple windows, absent header, and malformed header
 - [ ] T060 [US8] Capture quota from REST response headers in `request_json()` in `src/kentik_api/core/rest_runtime.py` (FR-030)

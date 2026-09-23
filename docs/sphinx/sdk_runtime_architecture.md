@@ -41,6 +41,7 @@ flowchart TB
         Auth_Credentials["Auth Credentials"]
         Error_Types["Error Types"]
         REST_Runtime["REST Runtime"]
+        Rate_Limit["Rate Limit"]
         gRPC_Runtime["gRPC Runtime"]
     end
 
