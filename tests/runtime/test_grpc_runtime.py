@@ -114,3 +114,49 @@ def test_rpc_error_stays_the_cause_when_the_label_cannot_be_read(rpc_error):
         call_grpc(stub, object())
 
     assert exc_info.value.__cause__ is original
+
+
+class _Stub:
+    """Mimics a grpcio multicallable: callable, with a `_method` label."""
+
+    def __init__(self, label, outcome) -> None:
+        self._method = label
+        self._outcome = outcome
+
+    def __call__(self, request):
+        if isinstance(self._outcome, BaseException):
+            raise self._outcome
+        return self._outcome(request)
+
+
+def test_call_grpc_returns_the_stub_response_unchanged():
+    request = object()
+
+    assert call_grpc(_Stub(b"/svc.Service/Op", lambda r: ("reply", r)), request) == (
+        "reply",
+        request,
+    )
+
+
+@pytest.mark.parametrize(
+    "label", [b"/svc.Service/Op", "/svc.Service/Op"], ids=["bytes", "str"]
+)
+def test_call_grpc_labels_the_error_with_the_method_path(rpc_error, label):
+    original = rpc_error(grpc.StatusCode.NOT_FOUND, "missing")
+
+    with pytest.raises(HTTPException) as exc_info:
+        call_grpc(_Stub(label, original), object())
+
+    assert exc_info.value.path == "/svc.Service/Op"
+    assert exc_info.value.method == "gRPC"
+    assert exc_info.value.__cause__ is original
+
+
+def test_call_grpc_labels_unknown_when_the_stub_has_no_label(rpc_error):
+    def _stub(_request):
+        raise rpc_error(grpc.StatusCode.NOT_FOUND, "missing")
+
+    with pytest.raises(HTTPException) as exc_info:
+        call_grpc(_stub, object())
+
+    assert exc_info.value.path == "unknown"

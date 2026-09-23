@@ -131,12 +131,14 @@ the deadline rather than reporting "STILL BLOCKED after 3s".
 **Independent test**: coverage reaches 100% on all three modules, and breaking
 the auth metadata tuple makes a test fail.
 
-- [ ] T028 [P] [US3] Add tests exercising `call_grpc()` end to end with a mock stub in `tests/runtime/test_grpc_runtime.py`, with no live network call (FR-038)
-- [ ] T029 [P] [US3] Add a test asserting the exact gRPC auth metadata keys and values emitted by `KentikCredentials.get_grpc_plugin()` in `tests/runtime/test_credentials.py` (FR-039)
-- [ ] T030 [P] [US3] Add tests covering `GrpcTransport.__init__` and `close()` in `tests/runtime/test_grpc_transport.py`, without opening a real channel (FR-038)
+- [x] T028 [P] [US3] Add tests exercising `call_grpc()` end to end with a mock stub in `tests/runtime/test_grpc_runtime.py`, with no live network call (FR-038)
+- [x] T029 [P] [US3] Add a test asserting the exact gRPC auth metadata keys and values emitted by `KentikCredentials.get_grpc_plugin()` in `tests/runtime/test_credentials.py` (FR-039)
+- [x] T030 [P] [US3] Add tests covering `GrpcTransport.__init__` and `close()` in `tests/runtime/test_grpc_transport.py`, without opening a real channel (FR-038)
 - [x] T031 [US3] Extend `tests/runtime/test_grpc_runtime.py` to assert the resulting SDK exception for each of the 16 non-OK gRPC status codes plus the unrecognized-code fallback (FR-040, SC-003)
-- [ ] T032 [US3] Verify 100% line coverage of `src/kentik_api/core/grpc_runtime.py`, `src/kentik_api/auth/credentials.py`, and `src/kentik_api/transports/grpc_client.py`, comparing against the T002 baseline (SC-004)
-- [ ] T033 [US3] Prove the new tests bite: change one character in the `x-ch-auth-email` metadata key in `src/kentik_api/auth/credentials.py`, confirm a test fails, restore, and record the outcome
+- [x] T032 [US3] Verify 100% line coverage of `src/kentik_api/core/grpc_runtime.py`, `src/kentik_api/auth/credentials.py`, and `src/kentik_api/transports/grpc_client.py`, comparing against the T002 baseline (SC-004)
+  - Recorded 2026-09-22: grpc_runtime 65% to 100%, credentials 44% to 100%, grpc_client 50% to 100%, from `tests/runtime/` alone.
+- [x] T033 [US3] Prove the new tests bite: change one character in the `x-ch-auth-email` metadata key in `src/kentik_api/auth/credentials.py`, confirm a test fails, restore, and record the outcome
+  - Recorded 2026-09-22: `x-ch-auth-email` changed to `x-ch-auth-emai1`: 1 failed (`test_grpc_plugin_emits_exact_auth_metadata`); restored, 2310 passed.
 
 **Checkpoint**: SC-004 met; no test needs network, credentials, or a schema checkout.
 

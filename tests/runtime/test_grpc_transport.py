@@ -8,6 +8,7 @@ import threading
 import time
 from types import SimpleNamespace
 
+import grpc
 import pytest
 
 from kentik_api.auth.credentials import KentikCredentials
@@ -123,3 +124,43 @@ def test_unresponsive_server_fails_at_the_deadline_instead_of_hanging(
         assert time.monotonic() - started < 5.0
     finally:
         transport.close()
+
+
+def test_init_wires_credentials_and_deadline_into_the_channel_and_close_releases_it(
+    monkeypatch,
+):
+    calls = {}
+
+    class _FakeChannel:
+        closed = False
+
+        def close(self):
+            self.closed = True
+
+    raw, intercepted = object(), _FakeChannel()
+
+    def fake_secure_channel(target, creds):
+        calls["target"] = target
+        return raw
+
+    def fake_intercept_channel(channel, interceptor):
+        calls["inner"] = channel
+        calls["interceptor"] = interceptor
+        return intercepted
+
+    monkeypatch.setattr(grpc, "secure_channel", fake_secure_channel)
+    monkeypatch.setattr(grpc, "intercept_channel", fake_intercept_channel)
+
+    config = APIConfig(grpc_deadline=4.0)
+    transport = GrpcTransport(
+        CREDENTIALS, target="grpc.example.com:443", api_config=config
+    )
+
+    assert calls["target"] == "grpc.example.com:443"
+    assert calls["inner"] is raw
+    assert isinstance(calls["interceptor"], _DefaultDeadlineInterceptor)
+    assert calls["interceptor"]._api_config is config
+    assert transport.channel is intercepted
+
+    transport.close()
+    assert intercepted.closed
