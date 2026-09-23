@@ -468,10 +468,14 @@ task.
 
 ## Auth/config
 
-The SDK loads credentials from a project-root `.env` file
-(`KENTIK_EMAIL`, `KENTIK_API_TOKEN`) via `find_dotenv` and
-`load_dotenv`. Explicit constructor args to `KentikAPI(...)` override
-env values. Never read or print `.env` contents — it holds real
+`KentikAPI` resolves credentials in this order: explicit
+`email`/`api_token` args, then the `KENTIK_EMAIL`/`KENTIK_API_TOKEN`
+environment variables, then the `env_file` arg (`.env` by default,
+searched upward from the cwd; `None` disables it). The file is read
+with `dotenv_values` into a dict, and only when a value is still
+missing. Never switch this back to `load_dotenv`: writing the file
+into `os.environ` leaks secrets into every subprocess, which breaks
+callers that keep credentials encrypted (sops, age). Never read or print `.env` contents — it holds real
 credentials.
 
 ## Constraints

@@ -2,7 +2,7 @@
 import os
 
 import httpx
-from dotenv import find_dotenv, load_dotenv
+from dotenv import dotenv_values, find_dotenv
 
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
@@ -18,6 +18,34 @@ _REGION_ENDPOINTS: dict[str, tuple[str, str]] = {
 }
 
 
+def _resolve_credentials(
+    email: str | None,
+    api_token: str | None,
+    env_file: str | os.PathLike[str] | None,
+) -> tuple[str, str]:
+    # The file is read into a dict, never into os.environ: callers that keep
+    # secrets out of the environment (so subprocesses cannot inherit them)
+    # stay that way, and the file is not opened when nothing is missing.
+    email = email or os.getenv("KENTIK_EMAIL")
+    api_token = api_token or os.getenv("KENTIK_API_TOKEN")
+
+    if (not email or not api_token) and env_file is not None:
+        # find_dotenv also accepts a FIFO, such as the one `sops exec-file` makes.
+        path = find_dotenv(filename=os.fspath(env_file), usecwd=True)
+        if path:
+            values = dotenv_values(path)
+            email = email or values.get("KENTIK_EMAIL")
+            api_token = api_token or values.get("KENTIK_API_TOKEN")
+
+    if not email or not api_token:
+        source = "" if env_file is None else f", or in {os.fspath(env_file)!r}"
+        raise ConfigurationError(
+            "Missing Kentik credentials. Pass email and api_token, or set "
+            f"KENTIK_EMAIL and KENTIK_API_TOKEN in the environment{source}."
+        )
+    return email, api_token
+
+
 class KentikAPI(KentikClientMixin):
     def __init__(
         self,
@@ -29,26 +57,20 @@ class KentikAPI(KentikClientMixin):
         timeout: float = 60.0,
         rest_timeout: httpx.Timeout | float | None = None,
         grpc_deadline: float | None = None,
+        env_file: str | os.PathLike[str] | None = ".env",
     ):
         """Connect to the Kentik API over REST or gRPC.
+
+        Credentials come from `email`/`api_token` first, then the
+        `KENTIK_EMAIL`/`KENTIK_API_TOKEN` environment variables, then
+        `env_file`, searched for from the working directory upward. Pass
+        `env_file=None` to never read a file.
 
         `timeout` bounds every call on either transport. `rest_timeout` (a
         scalar or per-phase `httpx.Timeout`) and `grpc_deadline` override it
         for one transport; see `APIConfig`.
         """
-        # Load from the nearest .env based on current working directory.
-        dotenv_path = find_dotenv(filename=".env", usecwd=True)
-        if dotenv_path:
-            load_dotenv(dotenv_path=dotenv_path, override=False)
-
-        email = email or os.getenv("KENTIK_EMAIL")
-        api_token = api_token or os.getenv("KENTIK_API_TOKEN")
-
-        if not email or not api_token:
-            raise ConfigurationError(
-                "Missing Kentik credentials. Provide email/api_token explicitly or set "
-                "KENTIK_EMAIL and KENTIK_API_TOKEN in a .env file at the project root."
-            )
+        email, api_token = _resolve_credentials(email, api_token, env_file)
 
         self.credentials = KentikCredentials(email, api_token)
 

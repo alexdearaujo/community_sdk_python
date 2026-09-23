@@ -29,9 +29,14 @@ Each change below can stop an existing `except` clause or call from working.
 | `call_grpc()` returned the response | It returns `(response, rate_limit)` | Unpack the tuple |
 | `KentikCredentials.get_rest_headers()` existed | It is removed | Use `kentik_api.auth.credentials.auth_headers(email, api_token)` |
 | An `APIConfig` with no credentials failed inside httpx with `TypeError` | It raises `ConfigurationError` before the SDK sends a request | Give the config `auth_email` and `auth_token` |
+| `KentikAPI(...)` loaded every key of the nearest `.env` into `os.environ`, even when you passed credentials | It reads only `KENTIK_EMAIL` and `KENTIK_API_TOKEN`, into memory, and only when an argument or environment variable is missing | Load other `.env` keys yourself, for example with `dotenv.load_dotenv()` |
 
 ### Added
 
+- **`env_file` argument.** `KentikAPI(env_file=path)` reads credentials from
+  that file. `env_file=None` turns off file lookup. See
+  [Authentication](docs/sphinx/authentication.md) for use with encrypted
+  secrets such as sops.
 - **Timeouts.** `KentikAPI` and `APIConfig` accept `timeout` (both transports),
   `rest_timeout` (a number or a per-phase `httpx.Timeout`), and
   `grpc_deadline`. A zero or negative value raises `ConfigurationError`.

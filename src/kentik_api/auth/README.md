@@ -38,9 +38,10 @@ flowchart LR
 
 ## Where credentials actually get read
 
-`KentikCredentials` only holds and formats values passed to it. Loading
-`KENTIK_EMAIL` / `KENTIK_API_TOKEN` from a project-root `.env` file
-happens in [`KentikAPI`](../client.py), the SDK's public entrypoint, not
-here. See "Auth/config" in the repository root
-[CLAUDE.md](../../../CLAUDE.md) for the full precedence rules (explicit
-constructor args win over `.env`).
+`KentikCredentials` only holds and formats values passed to it.
+[`KentikAPI`](../client.py), the SDK's public entrypoint, resolves them:
+explicit constructor arguments first, then the `KENTIK_EMAIL` /
+`KENTIK_API_TOKEN` environment variables, then the `env_file` argument
+(`.env` by default, `None` to skip). The file is read into memory, never
+into `os.environ`. See
+[Authentication](../../../docs/sphinx/authentication.md) for the full rules.

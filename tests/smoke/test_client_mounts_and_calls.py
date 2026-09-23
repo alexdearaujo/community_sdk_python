@@ -1,6 +1,8 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from __future__ import annotations
 
+import os
+
 import httpx
 import pytest
 
@@ -43,6 +45,88 @@ def test_missing_credentials_raise_configuration_error(monkeypatch, tmp_path):
         KentikAPI()
 
     assert type(exc_info.value) is ConfigurationError
+
+
+@pytest.fixture
+def no_env_credentials(monkeypatch, tmp_path):
+    """A working directory with no .env above it and no credential env vars."""
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("KENTIK_EMAIL", raising=False)
+    monkeypatch.delenv("KENTIK_API_TOKEN", raising=False)
+    return tmp_path
+
+
+def _credentials(client: KentikAPI) -> tuple[str, str]:
+    return client.credentials.email, client.credentials.api_token
+
+
+def test_env_file_is_read_without_touching_os_environ(no_env_credentials):
+    (no_env_credentials / ".env").write_text(
+        "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN=file-token\nOTHER=x\n"
+    )
+
+    with KentikAPI() as client:
+        assert _credentials(client) == ("file@example.com", "file-token")
+
+    # Secrets in os.environ would leak into every subprocess the caller starts.
+    assert "KENTIK_EMAIL" not in os.environ
+    assert "KENTIK_API_TOKEN" not in os.environ
+    assert "OTHER" not in os.environ
+
+
+def test_env_file_is_found_in_a_parent_directory(no_env_credentials, monkeypatch):
+    (no_env_credentials / ".env").write_text(
+        "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN=file-token\n"
+    )
+    child = no_env_credentials / "a" / "b"
+    child.mkdir(parents=True)
+    monkeypatch.chdir(child)
+
+    with KentikAPI() as client:
+        assert _credentials(client) == ("file@example.com", "file-token")
+
+
+def test_explicit_credentials_never_read_env_file(no_env_credentials, monkeypatch):
+    (no_env_credentials / ".env").write_text("KENTIK_EMAIL=file@example.com\n")
+    read = []
+    monkeypatch.setattr(
+        "kentik_api.client.dotenv_values", lambda path: read.append(path) or {}
+    )
+
+    with KentikAPI(email="arg@example.com", api_token="arg-token") as client:
+        assert _credentials(client) == ("arg@example.com", "arg-token")
+    assert read == []
+
+
+def test_explicit_env_file_path_is_used(no_env_credentials):
+    secrets = no_env_credentials / "elsewhere" / "kentik.env"
+    secrets.parent.mkdir()
+    secrets.write_text("KENTIK_EMAIL=path@example.com\nKENTIK_API_TOKEN=path-token\n")
+
+    with KentikAPI(env_file=secrets) as client:
+        assert _credentials(client) == ("path@example.com", "path-token")
+
+
+def test_env_file_none_disables_file_lookup(no_env_credentials):
+    (no_env_credentials / ".env").write_text(
+        "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN=file-token\n"
+    )
+
+    with pytest.raises(ConfigurationError, match="KENTIK_EMAIL") as exc_info:
+        KentikAPI(env_file=None)
+    assert ".env" not in str(exc_info.value)
+
+
+def test_environment_beats_env_file_and_args_beat_both(no_env_credentials, monkeypatch):
+    (no_env_credentials / ".env").write_text(
+        "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN=file-token\n"
+    )
+    monkeypatch.setenv("KENTIK_EMAIL", "env@example.com")
+
+    with KentikAPI() as client:
+        assert _credentials(client) == ("env@example.com", "file-token")
+    with KentikAPI(api_token="arg-token") as client:
+        assert _credentials(client) == ("env@example.com", "arg-token")
 
 
 def test_client_mounts_selected_services():
