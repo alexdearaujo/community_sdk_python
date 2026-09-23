@@ -22,6 +22,24 @@ The SDK parses these headers into a `RateLimit` value with `limit`, `remaining`,
 `reset_seconds`, `window_seconds`, and `raw`. Any field the server omits is
 `None`. A missing or malformed header never fails a call.
 
+### On a result
+
+`rate_limit_of()` returns the quota reported by the call that produced a result:
+
+```python
+from kentik_api import rate_limit_of
+
+devices = client.device.list_devices()
+quota = rate_limit_of(devices)
+if quota is not None and quota.remaining == 0:
+    print(f"Next call to this endpoint waits {quota.reset_seconds}s")
+```
+
+The quota rides along on the returned model without being one of its fields,
+so `model_dump()` and `==` are unaffected. It is `None` when the response
+carried no quota headers, and for results that are not a model (a list, or
+`None`).
+
 ### On an error
 
 Every SDK exception has a `rate_limit` attribute that holds the quota as of the

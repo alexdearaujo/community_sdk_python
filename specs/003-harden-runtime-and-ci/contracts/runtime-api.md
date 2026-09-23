@@ -272,7 +272,7 @@ or disabling TLS verification, is therefore always visible at the point it
 happens.
 
 ```python
-slow = client._transport.api_config.with_timeout(300)
+slow = client.api_config.with_timeout(300)  # public accessor, FR-018a
 client.query.data(api_config_override=slow, data=big_query)
 ```
 

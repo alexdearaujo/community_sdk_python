@@ -6,6 +6,16 @@ import pytest
 
 from kentik_api.core.api_config import APIConfig, HTTPException
 from kentik_api.core.rest_runtime import request_json
+from kentik_api.errors import ConfigurationError
+
+
+def _config(**kwargs) -> APIConfig:
+    return APIConfig(
+        base_path="https://api.example.com",
+        auth_email="dev@example.com",
+        auth_token="token",
+        **kwargs,
+    )
 
 
 def test_request_json_success_builds_headers_and_filters_query(
@@ -13,7 +23,7 @@ def test_request_json_success_builds_headers_and_filters_query(
 ):
     captured = {}
 
-    def _fake_request(self, method, url, headers=None, params=None, json=None):
+    def _fake_request(self, method, url, headers=None, params=None, json=None, **_):
         captured["method"] = method
         captured["url"] = str(url)
         captured["headers"] = headers
@@ -50,19 +60,24 @@ def test_request_json_success_builds_headers_and_filters_query(
 
 
 def test_request_json_returns_none_for_204(monkeypatch: pytest.MonkeyPatch):
-    def _fake_request(self, method, url, headers=None, params=None, json=None):
+    def _fake_request(self, method, url, headers=None, params=None, json=None, **_):
         return httpx.Response(204)
 
     monkeypatch.setattr(httpx.Client, "request", _fake_request)
 
-    result = request_json(method="GET", path="/v1/no-content", expected_status=204)
+    result = request_json(
+        method="GET",
+        path="/v1/no-content",
+        api_config_override=_config(),
+        expected_status=204,
+    )
     assert result is None
 
 
 def test_request_json_raises_http_exception_on_unexpected_status(
     monkeypatch: pytest.MonkeyPatch,
 ):
-    def _fake_request(self, method, url, headers=None, params=None, json=None):
+    def _fake_request(self, method, url, headers=None, params=None, json=None, **_):
         return httpx.Response(500, json={"error": "boom"})
 
     monkeypatch.setattr(httpx.Client, "request", _fake_request)
@@ -71,6 +86,7 @@ def test_request_json_raises_http_exception_on_unexpected_status(
         request_json(
             method="GET",
             path="/v1/fail",
+            api_config_override=_config(),
             expected_status=200,
             operation_name="FailingOp",
         )
@@ -79,31 +95,38 @@ def test_request_json_raises_http_exception_on_unexpected_status(
     assert "FailingOp failed with status code: 500" in str(exc.value)
 
 
-def test_request_json_applies_the_configured_rest_timeout(
+def test_request_json_applies_the_configured_rest_timeout_per_request(
     monkeypatch: pytest.MonkeyPatch,
 ):
     captured = {}
-    real_init = httpx.Client.__init__
 
-    def _spy_init(self, *args, **kwargs):
-        captured["timeout"] = kwargs.get("timeout")
-        real_init(self, *args, **kwargs)
+    def _fake_request(self, *args, timeout=None, **kwargs):
+        captured["timeout"] = timeout
+        return httpx.Response(200, json={})
 
-    monkeypatch.setattr(httpx.Client, "__init__", _spy_init)
-    monkeypatch.setattr(
-        httpx.Client, "request", lambda self, *a, **k: httpx.Response(200, json={})
-    )
+    monkeypatch.setattr(httpx.Client, "request", _fake_request)
     phases = httpx.Timeout(connect=2.0, read=300.0, write=10.0, pool=5.0)
 
-    request_json(
-        "GET",
-        "/v1/test",
-        api_config_override=APIConfig(
-            base_path="https://api.example.com", rest_timeout=phases
-        ),
-    )
+    request_json("GET", "/v1/test", api_config_override=_config(rest_timeout=phases))
 
+    # Per request rather than only at client creation, so a with_timeout() copy
+    # sharing this client's connection still applies its own bounds.
     assert captured["timeout"] is phases
+
+
+def test_config_without_credentials_is_rejected_before_sending(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    def _must_not_send(self, *args, **kwargs):
+        raise AssertionError("an unauthenticated request was sent")
+
+    monkeypatch.setattr(httpx.Client, "request", _must_not_send)
+
+    for config in (None, APIConfig(base_path="https://api.example.com")):
+        with pytest.raises(ConfigurationError, match="no credentials"):
+            request_json(
+                "GET", "/v1/test", api_config_override=config, operation_name="Op"
+            )
 
 
 # Kentik slows responses by 1.5s past the per-minute soft limit rather than

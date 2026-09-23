@@ -7,9 +7,10 @@ from typing import Any, Dict, Optional
 import httpx
 from kentik_api.auth.credentials import auth_headers
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import RateLimit
+from kentik_api.core.rate_limit import RateLimit, attach_rate_limit
 from kentik_api.errors import (
     AuthenticationError,
+    ConfigurationError,
     HTTPException,
     KentikError,
     TransportError,
@@ -29,9 +30,16 @@ def request_json(
     error_cls: type[HTTPException] = HTTPException,
 ) -> Any:
     """Shared REST request execution for generated service methods."""
-    # A config made here is used for one call only, so this call must close it.
-    owns_config = not api_config_override
     api_config = api_config_override if api_config_override else APIConfig()
+    # An override replaces the client's config wholesale, credentials included,
+    # so one that omits them must fail here rather than send an unauthenticated
+    # request (or, before this check, crash inside httpx on a None header).
+    if not api_config.auth_email or not api_config.auth_token:
+        raise ConfigurationError(
+            f"{operation_name}: the APIConfig for this call has no credentials. An "
+            "api_config_override replaces the client's config entirely; build it "
+            "with client.api_config.with_timeout(...) or pass auth_email and auth_token."
+        )
 
     headers: Dict[str, Any] = {
         "Content-Type": "application/json",
@@ -58,21 +66,20 @@ def request_json(
             headers=headers,
             params=clean_query_params,
             json=json_body,
+            # Per request, so a with_timeout() copy sharing this client applies its own.
+            timeout=api_config.rest_timeout,
         )
     except httpx.RequestError as exc:
         raise TransportError(
             f"{operation_name} transport failed: {exc}",
         ) from exc
-    finally:
-        if owns_config:
-            api_config.close()
 
     rate_limit = RateLimit.from_headers(response.headers)
     if rate_limit is not None:
         api_config.rate_limits[path] = rate_limit
 
     try:
-        return _handle_response(
+        body = _handle_response(
             response,
             method=method,
             path=path,
@@ -83,6 +90,15 @@ def request_json(
     except KentikError as exc:
         exc.rate_limit = rate_limit
         raise
+    # A plain dict cannot hold an attribute; a subclass can, and the generated
+    # function hands the quota on to the model it builds from this body.
+    if isinstance(body, dict):
+        body = attach_rate_limit(_ResponseBody(body), rate_limit)
+    return body
+
+
+class _ResponseBody(dict):
+    """A parsed JSON object that can also carry the call's quota."""
 
 
 def _handle_response(

@@ -89,3 +89,118 @@ def test_http_exception_keeps_the_verbatim_grpc_code():
 
     assert exc.grpc_status_code == "NOT_FOUND"
     assert HTTPException(404, "not found").grpc_status_code is None
+
+
+# --- per-call overrides (FR-020 to FR-024) ------------------------------------
+
+import ast  # noqa: E402
+import inspect  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+_BASE = dict(
+    base_path="https://grpc.api.kentik.com",
+    auth_email="dev@example.com",
+    auth_token="token",
+    timeout=60.0,
+)
+
+
+def test_with_timeout_scalar_resets_both_transports():
+    slow = APIConfig(**_BASE).with_timeout(300)
+
+    assert slow.rest_timeout == httpx.Timeout(300)
+    assert slow.grpc_deadline == 300
+
+
+def test_with_timeout_refines_one_transport_and_keeps_the_rest():
+    base = APIConfig(**_BASE, grpc_deadline=90.0)
+    phases = httpx.Timeout(connect=2.0, read=300.0, write=10.0, pool=5.0)
+
+    slow = base.with_timeout(rest_timeout=phases)
+
+    assert slow.rest_timeout is phases
+    assert slow.grpc_deadline == 90.0
+    assert base.with_timeout(grpc_deadline=5).rest_timeout == base.rest_timeout
+
+
+def test_with_timeout_leaves_the_original_untouched():
+    base = APIConfig(**_BASE)
+
+    base.with_timeout(300)
+
+    assert base.rest_timeout == httpx.Timeout(60.0)
+    assert base.grpc_deadline == 60.0
+
+
+def test_with_timeout_validates_like_the_constructor():
+    with pytest.raises(ConfigurationError, match="grpc_deadline"):
+        APIConfig(**_BASE).with_timeout(grpc_deadline=0)
+    with pytest.raises(ConfigurationError, match="at least one"):
+        APIConfig(**_BASE).with_timeout()
+
+
+def test_with_timeout_copies_the_security_fields_and_cannot_change_them():
+    base = APIConfig(**_BASE)
+    slow = base.with_timeout(300)
+
+    for field in ("base_path", "auth_email", "auth_token", "verify"):
+        assert getattr(slow, field) == getattr(base, field)
+    # The helper's signature is the guarantee: none of the four is a parameter.
+    params = set(inspect.signature(APIConfig.with_timeout).parameters) - {"self"}
+    assert params == {"timeout", "rest_timeout", "grpc_deadline"}
+    with pytest.raises(TypeError):
+        base.with_timeout(300, base_path="https://attacker.example")  # type: ignore[call-arg]
+
+
+def test_no_test_fixture_disables_tls_verification():
+    # FR-024: every test need is met without it (research D6).
+    tests_root = Path(__file__).resolve().parents[1]
+    offenders = []
+    for path in tests_root.rglob("*.py"):
+        for node in ast.walk(ast.parse(path.read_text())):
+            if (
+                isinstance(node, ast.keyword)
+                and node.arg == "verify"
+                and isinstance(node.value, ast.Constant)
+                and node.value.value is False
+            ):
+                offenders.append(f"{path.relative_to(tests_root)}:{node.value.lineno}")
+    assert offenders == []
+
+
+def test_override_replaces_the_client_config_rather_than_merging(monkeypatch):
+    """An override naming only a new host must not inherit the client's credentials."""
+    from kentik_api.core.rest_runtime import request_json
+
+    sent = []
+    monkeypatch.setattr(
+        httpx.Client,
+        "request",
+        lambda self, *a, **k: sent.append(k) or httpx.Response(200, json={}),
+    )
+    redirected = APIConfig(base_path="https://elsewhere.example")
+
+    with pytest.raises(ConfigurationError, match="no credentials"):
+        request_json("GET", "/v1/test", api_config_override=redirected)
+
+    assert sent == []
+
+
+def test_omitting_the_override_uses_the_client_config_unchanged(monkeypatch):
+    from kentik_api.core.rest_runtime import request_json
+
+    sent = []
+    monkeypatch.setattr(
+        httpx.Client,
+        "request",
+        lambda self, *a, **k: sent.append((str(self.base_url), k))
+        or httpx.Response(200, json={}),
+    )
+    config = APIConfig(**_BASE)
+
+    request_json("GET", "/v1/test", api_config_override=config)
+
+    base_url, kwargs = sent[0]
+    assert base_url == "https://grpc.api.kentik.com"
+    assert kwargs["timeout"] == config.rest_timeout
+    assert kwargs["headers"]["X-CH-Auth-Email"] == "dev@example.com"

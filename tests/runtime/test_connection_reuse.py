@@ -9,7 +9,7 @@ import pytest
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import request_json
-from kentik_api.errors import ConfigurationError, TransportError
+from kentik_api.errors import ConfigurationError
 from kentik_api.transports.rest_client import RestTransport
 
 
@@ -46,9 +46,7 @@ def test_repeat_calls_on_one_transport_share_one_client(client_count):
 
 def test_shared_client_honours_the_configured_timeout_and_base_url():
     phases = httpx.Timeout(connect=2.0, read=300.0, write=10.0, pool=5.0)
-    config = APIConfig(
-        base_path="https://api.example.com", rest_timeout=phases, verify=False
-    )
+    config = APIConfig(base_path="https://api.example.com", rest_timeout=phases)
     try:
         assert config.client.timeout == phases
         assert str(config.client.base_url) == "https://api.example.com"
@@ -84,33 +82,40 @@ def test_use_after_close_raises_configuration_error_naming_close(client_count):
         _call(transport.api_config)
 
 
-def test_one_off_config_is_closed_after_its_single_call(client_count):
-    _call(None)
-    _call(None)
-
-    # The fallback path makes a fresh config each call, and must not leak it.
-    assert len(client_count) == 2
-    assert all(client.is_closed for client in client_count)
-
-
-def test_one_off_config_is_closed_even_when_the_call_fails(monkeypatch):
-    created: list[httpx.Client] = []
-    real_init = httpx.Client.__init__
-
-    def _counting_init(self, *args, **kwargs):
-        real_init(self, *args, **kwargs)
-        created.append(self)
-
-    def _fail(self, *args, **kwargs):
-        raise httpx.ConnectError("refused")
-
-    monkeypatch.setattr(httpx.Client, "__init__", _counting_init)
-    monkeypatch.setattr(httpx.Client, "request", _fail)
-
-    with pytest.raises(TransportError):
+def test_call_without_a_config_fails_before_opening_a_connection(client_count):
+    # With no config there are no credentials, so nothing is sent and no
+    # client is created that would then need closing.
+    with pytest.raises(ConfigurationError):
         _call(None)
 
-    assert created and created[0].is_closed
+    assert client_count == []
+
+
+def test_with_timeout_copy_shares_the_origin_connection(client_count):
+    transport = RestTransport(KentikCredentials("dev@example.com", "t"))
+    slow = transport.api_config.with_timeout(300)
+
+    _call(transport.api_config)
+    _call(slow)
+
+    assert len(client_count) == 1
+    assert slow.client is transport.api_config.client
+    assert slow.rate_limits is transport.api_config.rate_limits
+
+
+def test_closing_a_copy_leaves_the_origin_open_and_closing_the_origin_ends_both(
+    client_count,
+):
+    transport = RestTransport(KentikCredentials("dev@example.com", "t"))
+    slow = transport.api_config.with_timeout(300)
+    _call(slow)
+
+    slow.close()
+    _call(transport.api_config)
+    transport.close()
+
+    with pytest.raises(ConfigurationError, match=r"close\(\)"):
+        _call(slow)
 
 
 def test_shared_client_retries_failed_connection_attempts_only():

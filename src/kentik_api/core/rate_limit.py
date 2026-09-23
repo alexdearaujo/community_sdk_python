@@ -4,7 +4,15 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
-__all__ = ["RateLimit", "rate_limit_of_rpc"]
+__all__ = [
+    "RateLimit",
+    "attach_rate_limit",
+    "rate_limit_of",
+    "rate_limit_of_rpc",
+]
+
+# Private on purpose: callers read it through rate_limit_of(), not by name.
+_ATTR = "_kentik_rate_limit"
 
 _LIMIT = "x-ratelimit-limit"
 _REMAINING = "x-ratelimit-remaining"
@@ -113,3 +121,24 @@ def rate_limit_of_rpc(call_or_error: object) -> RateLimit | None:
     except Exception:
         return None
     return RateLimit.from_metadata(metadata)
+
+
+def attach_rate_limit[T](result: T, rate_limit: RateLimit | None) -> T:
+    """Rides the quota along on a returned model without changing its fields.
+
+    object.__setattr__ bypasses the generated models' validate_assignment, and
+    leaves model_dump() and == untouched because Pydantic compares declared
+    fields only. Results that cannot carry an attribute (None, lists) are
+    returned unchanged.
+    """
+    if rate_limit is not None and result is not None:
+        try:
+            object.__setattr__(result, _ATTR, rate_limit)
+        except (AttributeError, TypeError):
+            pass
+    return result
+
+
+def rate_limit_of(result: object) -> RateLimit | None:
+    """The quota reported by the call that produced `result`, if any."""
+    return getattr(result, _ATTR, None)

@@ -84,6 +84,15 @@ class KentikAPI(KentikClientMixin):
 
         self._mount_generated_services()
 
+    @property
+    def api_config(self) -> APIConfig:
+        """This client's configuration, the base for a per-call override.
+
+        client.api_config.with_timeout(300) gives a copy with a longer timeout
+        that shares this client's connection and credentials.
+        """
+        return self._transport.api_config
+
     def close(self):
         self._transport.close()
 

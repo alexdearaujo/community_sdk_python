@@ -5,9 +5,12 @@ Every generated gRPC wrapper method routes through call_grpc so error
 handling, status-code mapping, and transport failures stay in one place.
 """
 
+from typing import Any
+
 import grpc
 
-from kentik_api.core.rate_limit import rate_limit_of_rpc
+from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
 from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 
 # Every non-OK code is classified explicitly, so none reaches a silent default.
@@ -84,16 +87,27 @@ def _method_label(stub_method) -> str:
     return str(label)
 
 
-def call_grpc(stub_method, proto_request):
-    """Calls one unary gRPC method and normalizes errors to the SDK exception hierarchy.
+def call_grpc(
+    stub_method, proto_request, *, api_config: APIConfig | None = None
+) -> tuple[Any, RateLimit | None]:
+    """Calls one unary gRPC method; returns the response and the quota it reported.
 
     Only grpc.RpcError is a transport outcome. Anything else the stub raises,
     such as a malformed request, propagates unchanged rather than being
     misreported as a network failure.
+
+    `api_config` is a per-call override: its grpc_deadline bounds this call,
+    ahead of the channel's default. Channel credentials cannot change per call,
+    so the override's credentials do not apply on gRPC.
     """
     path = _method_label(stub_method)
+    kwargs = {} if api_config is None else {"timeout": api_config.grpc_deadline}
     try:
-        return stub_method(proto_request)
+        # with_call exposes the call's initial metadata, where the quota is.
+        if isinstance(stub_method, grpc.UnaryUnaryMultiCallable):
+            response, call = stub_method.with_call(proto_request, **kwargs)
+            return response, rate_limit_of_rpc(call)
+        return stub_method(proto_request, **kwargs), None
     except grpc.RpcError as exc:
         error = map_grpc_error(exc, method="gRPC", path=path)
         error.rate_limit = rate_limit_of_rpc(exc)

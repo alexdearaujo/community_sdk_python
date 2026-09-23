@@ -67,6 +67,27 @@ response = client.as_group.list_as_groups()  # same API, same response models
 
 See [grpc.md](grpc.md) for the full gRPC guide.
 
+## Set a timeout
+
+Every call is bounded: 60 seconds by default, on both transports. Set it for the
+whole client:
+
+```python
+client = KentikAPI(timeout=10)
+```
+
+Or give one slow call more time, without a second client:
+
+```python
+slow = client.api_config.with_timeout(300)
+response = client.device.list_devices(api_config_override=slow)
+```
+
+`with_timeout()` copies the client's configuration and can change only the
+timeouts. It shares the client's connection and credentials. A config passed as
+`api_config_override` replaces the client's for that one call, so an override
+built any other way must carry its own credentials.
+
 ## Next steps
 
 - [REST transport guide](rest.md)

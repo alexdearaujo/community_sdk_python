@@ -132,10 +132,13 @@ class _Stub:
 def test_call_grpc_returns_the_stub_response_unchanged():
     request = object()
 
-    assert call_grpc(_Stub(b"/svc.Service/Op", lambda r: ("reply", r)), request) == (
-        "reply",
-        request,
+    response, rate_limit = call_grpc(
+        _Stub(b"/svc.Service/Op", lambda r: ("reply", r)), request
     )
+
+    assert response == ("reply", request)
+    # A plain callable exposes no call metadata, so there is no quota to report.
+    assert rate_limit is None
 
 
 @pytest.mark.parametrize(

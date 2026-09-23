@@ -75,6 +75,48 @@ class APIConfig:
         self._client: httpx.Client | None = None
         self._closed = False
         self._client_lock = threading.Lock()
+        # Set on a with_timeout() copy, which borrows its origin's connection.
+        self._shares_client_of: APIConfig | None = None
+
+    def with_timeout(
+        self,
+        timeout: float | None = None,
+        *,
+        rest_timeout: httpx.Timeout | float | None = None,
+        grpc_deadline: float | None = None,
+    ) -> "APIConfig":
+        """A copy of this config with different timeouts, for one slow call.
+
+        Deliberately cannot change base_path, the credentials, or verify: a
+        helper that copied credentials AND changed the host would silently send
+        them somewhere new. Changing those four needs an explicit APIConfig(...).
+
+        `timeout` resets both transports' bounds; `rest_timeout` and
+        `grpc_deadline` refine one each, keeping this config's value otherwise.
+        The copy shares this config's connection and quota tracking.
+        """
+        if timeout is None and rest_timeout is None and grpc_deadline is None:
+            raise ConfigurationError(
+                "with_timeout() needs at least one timeout to change"
+            )
+        if timeout is None:
+            timeout = self.timeout
+            rest_timeout = self.rest_timeout if rest_timeout is None else rest_timeout
+            grpc_deadline = (
+                self.grpc_deadline if grpc_deadline is None else grpc_deadline
+            )
+        copy = APIConfig(
+            base_path=self.base_path,
+            auth_email=self.auth_email,
+            auth_token=self.auth_token,
+            verify=self.verify,
+            timeout=timeout,
+            rest_timeout=rest_timeout,
+            grpc_deadline=grpc_deadline,
+        )
+        copy.rate_limits = self.rate_limits
+        copy._shares_client_of = self._shares_client_of or self
+        return copy
 
     @property
     def client(self) -> httpx.Client:
@@ -83,6 +125,8 @@ class APIConfig:
         Created on first use so a gRPC-only client never opens one. Reusing it
         keeps one pooled connection per host instead of a TLS handshake per call.
         """
+        if self._shares_client_of is not None:
+            return self._shares_client_of.client
         with self._client_lock:
             if self._closed:
                 raise ConfigurationError(
@@ -100,7 +144,13 @@ class APIConfig:
             return self._client
 
     def close(self) -> None:
-        """Releases the HTTP client. Safe to call more than once."""
+        """Releases the HTTP client. Safe to call more than once.
+
+        A with_timeout() copy does not own its connection, so closing it is a
+        no-op; close the config it came from.
+        """
+        if self._shares_client_of is not None:
+            return
         with self._client_lock:
             if self._client is not None:
                 self._client.close()

@@ -93,6 +93,14 @@ def test_rate_limit_of_rpc_tolerates_objects_without_metadata():
 # --- REST capture ----------------------------------------------------------
 
 
+def _rest_config() -> APIConfig:
+    return APIConfig(
+        base_path="https://api.example.com",
+        auth_email="dev@example.com",
+        auth_token="t",
+    )
+
+
 def _rest(
     monkeypatch, response: httpx.Response, config: APIConfig, path="/device/v1/device"
 ):
@@ -101,7 +109,7 @@ def _rest(
 
 
 def test_rest_success_records_quota_per_path(monkeypatch):
-    config = APIConfig(base_path="https://api.example.com")
+    config = _rest_config()
 
     _rest(monkeypatch, httpx.Response(200, json={}, headers=MEASURED), config, "/a")
     _rest(
@@ -122,7 +130,7 @@ def test_rest_success_records_quota_per_path(monkeypatch):
     [(401, AuthenticationError), (429, HTTPException), (500, HTTPException)],
 )
 def test_rest_errors_carry_the_quota_of_the_failing_call(monkeypatch, status, expected):
-    config = APIConfig(base_path="https://api.example.com")
+    config = _rest_config()
     headers = {**MEASURED, "x-ratelimit-remaining": "0"}
 
     with pytest.raises(expected) as exc_info:
@@ -140,7 +148,7 @@ def test_rest_response_without_quota_headers_leaves_the_error_slot_empty(monkeyp
         _rest(
             monkeypatch,
             httpx.Response(404, json={}),
-            APIConfig(base_path="https://x.example"),
+            _rest_config(),
         )
 
     assert exc_info.value.rate_limit is None
@@ -153,9 +161,7 @@ def test_transport_failure_has_no_quota_because_no_response_arrived(monkeypatch)
     monkeypatch.setattr(httpx.Client, "request", _fail)
 
     with pytest.raises(TransportError) as exc_info:
-        request_json(
-            "GET", "/a", api_config_override=APIConfig(base_path="https://x.example")
-        )
+        request_json("GET", "/a", api_config_override=_rest_config())
 
     assert exc_info.value.rate_limit is None
 
@@ -228,3 +234,49 @@ def test_interceptor_ignores_calls_without_quota():
     )
 
     assert config.rate_limits == {}
+
+
+# --- attaching quota to results (FR-029, research D5a) -------------------------
+
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of  # noqa: E402
+from kentik_api.gen.device.models import ListDevicesResponse  # noqa: E402
+
+QUOTA = RateLimit(limit=60, remaining=41, reset_seconds=12, window_seconds=60, raw="60")
+
+
+def test_quota_attached_to_a_generated_model_is_readable():
+    model = attach_rate_limit(ListDevicesResponse(), QUOTA)
+
+    assert rate_limit_of(model) is QUOTA
+
+
+def test_attachment_leaves_model_dump_and_equality_unchanged():
+    plain = ListDevicesResponse()
+    tagged = attach_rate_limit(ListDevicesResponse(), QUOTA)
+
+    assert tagged.model_dump() == plain.model_dump()
+    assert (
+        tagged.model_dump(by_alias=True).keys()
+        == plain.model_dump(by_alias=True).keys()
+    )
+    assert tagged == plain
+
+
+def test_results_that_cannot_carry_quota_come_back_unchanged():
+    assert attach_rate_limit(None, QUOTA) is None
+    items = [1, 2]
+    assert attach_rate_limit(items, QUOTA) is items
+    assert rate_limit_of(items) is None
+    assert rate_limit_of(ListDevicesResponse()) is None
+
+
+def test_rest_body_carries_the_quota_to_the_model_built_from_it(monkeypatch):
+    body = _rest(
+        monkeypatch,
+        httpx.Response(200, json={"devices": []}, headers=MEASURED),
+        _rest_config(),
+    )
+
+    assert body == {"devices": []}
+    model = attach_rate_limit(ListDevicesResponse(**body), rate_limit_of(body))
+    assert rate_limit_of(model).remaining == 59
