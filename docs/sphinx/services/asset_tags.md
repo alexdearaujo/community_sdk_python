@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1GetTagValuesResponse (JSON)
         W-->>C: v20260515beta1GetTagValuesResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v20260515beta1GetTagValuesResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1GetTagValuesResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -123,9 +124,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1ListTagKeysResponse (JSON)
         W-->>C: v20260515beta1ListTagKeysResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -145,10 +148,9 @@ sequenceDiagram
         API-->>B: v20260515beta1ListTagKeysResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1ListTagKeysResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -190,9 +192,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1CreateTagKeyResponse (JSON)
         W-->>C: v20260515beta1CreateTagKeyResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -212,10 +216,9 @@ sequenceDiagram
         API-->>B: v20260515beta1CreateTagKeyResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1CreateTagKeyResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -265,9 +268,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1GetTagKeyResponse (JSON)
         W-->>C: v20260515beta1GetTagKeyResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -287,10 +292,9 @@ sequenceDiagram
         API-->>B: v20260515beta1GetTagKeyResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1GetTagKeyResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -340,9 +344,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1UpdateTagKeyResponse (JSON)
         W-->>C: v20260515beta1UpdateTagKeyResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -362,10 +368,9 @@ sequenceDiagram
         API-->>B: v20260515beta1UpdateTagKeyResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1UpdateTagKeyResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -417,9 +422,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1DeleteTagKeyResponse (JSON)
         W-->>C: v20260515beta1DeleteTagKeyResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -439,10 +446,9 @@ sequenceDiagram
         API-->>B: v20260515beta1DeleteTagKeyResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1DeleteTagKeyResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -492,9 +498,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1ListTagValuesResponse (JSON)
         W-->>C: v20260515beta1ListTagValuesResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -514,10 +522,9 @@ sequenceDiagram
         API-->>B: v20260515beta1ListTagValuesResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1ListTagValuesResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -569,9 +576,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1SetTagValuesResponse (JSON)
         W-->>C: v20260515beta1SetTagValuesResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -591,10 +600,9 @@ sequenceDiagram
         API-->>B: v20260515beta1SetTagValuesResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1SetTagValuesResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -644,9 +652,11 @@ sequenceDiagram
     alt success
         API-->>W: v20260515beta1DeleteTagValuesResponse (JSON)
         W-->>C: v20260515beta1DeleteTagValuesResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -666,10 +676,9 @@ sequenceDiagram
         API-->>B: v20260515beta1DeleteTagValuesResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v20260515beta1DeleteTagValuesResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

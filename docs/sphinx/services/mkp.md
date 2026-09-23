@@ -48,9 +48,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407ListPackageResponse (JSON)
         W-->>C: v202407ListPackageResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -70,10 +72,9 @@ sequenceDiagram
         API-->>B: v202407ListPackageResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407ListPackageResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -115,9 +116,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407CreatePackageResponse (JSON)
         W-->>C: v202407CreatePackageResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -137,10 +140,9 @@ sequenceDiagram
         API-->>B: v202407CreatePackageResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407CreatePackageResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -190,9 +192,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407GetPackageResponse (JSON)
         W-->>C: v202407GetPackageResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -212,10 +216,9 @@ sequenceDiagram
         API-->>B: v202407GetPackageResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407GetPackageResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -265,9 +268,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407UpdatePackageResponse (JSON)
         W-->>C: v202407UpdatePackageResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -287,10 +292,9 @@ sequenceDiagram
         API-->>B: v202407UpdatePackageResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407UpdatePackageResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -342,9 +346,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407DeletePackageResponse (JSON)
         W-->>C: v202407DeletePackageResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -364,10 +370,9 @@ sequenceDiagram
         API-->>B: v202407DeletePackageResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407DeletePackageResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -417,9 +422,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407ListTenantResponse (JSON)
         W-->>C: v202407ListTenantResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -439,10 +446,9 @@ sequenceDiagram
         API-->>B: v202407ListTenantResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407ListTenantResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -484,9 +490,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407CreateTenantResponse (JSON)
         W-->>C: v202407CreateTenantResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -506,10 +514,9 @@ sequenceDiagram
         API-->>B: v202407CreateTenantResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407CreateTenantResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -559,9 +566,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407GetTenantResponse (JSON)
         W-->>C: v202407GetTenantResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -581,10 +590,9 @@ sequenceDiagram
         API-->>B: v202407GetTenantResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407GetTenantResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -634,9 +642,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407UpdateTenantResponse (JSON)
         W-->>C: v202407UpdateTenantResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -656,10 +666,9 @@ sequenceDiagram
         API-->>B: v202407UpdateTenantResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407UpdateTenantResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -711,9 +720,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407DeleteTenantResponse (JSON)
         W-->>C: v202407DeleteTenantResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -733,10 +744,9 @@ sequenceDiagram
         API-->>B: v202407DeleteTenantResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407DeleteTenantResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -786,9 +796,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407ListTenantUserResponse (JSON)
         W-->>C: v202407ListTenantUserResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -808,10 +820,9 @@ sequenceDiagram
         API-->>B: v202407ListTenantUserResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407ListTenantUserResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -861,9 +872,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407CreateTenantUserResponse (JSON)
         W-->>C: v202407CreateTenantUserResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -883,10 +896,9 @@ sequenceDiagram
         API-->>B: v202407CreateTenantUserResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407CreateTenantUserResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -938,9 +950,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407UpdateTenantUserResponse (JSON)
         W-->>C: v202407UpdateTenantUserResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -960,10 +974,9 @@ sequenceDiagram
         API-->>B: v202407UpdateTenantUserResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407UpdateTenantUserResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -1017,9 +1030,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407DeleteTenantUserResponse (JSON)
         W-->>C: v202407DeleteTenantUserResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -1039,10 +1054,9 @@ sequenceDiagram
         API-->>B: v202407DeleteTenantUserResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407DeleteTenantUserResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

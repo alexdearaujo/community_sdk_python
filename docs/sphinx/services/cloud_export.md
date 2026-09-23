@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202506ListCloudExportsResponse (JSON)
         W-->>C: v202506ListCloudExportsResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202506ListCloudExportsResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202506ListCloudExportsResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -113,9 +114,11 @@ sequenceDiagram
     alt success
         API-->>W: v202506CreateCloudExportResponse (JSON)
         W-->>C: v202506CreateCloudExportResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -135,10 +138,9 @@ sequenceDiagram
         API-->>B: v202506CreateCloudExportResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202506CreateCloudExportResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -188,9 +190,11 @@ sequenceDiagram
     alt success
         API-->>W: v202506GetCloudExportResponse (JSON)
         W-->>C: v202506GetCloudExportResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -210,10 +214,9 @@ sequenceDiagram
         API-->>B: v202506GetCloudExportResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202506GetCloudExportResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -263,9 +266,11 @@ sequenceDiagram
     alt success
         API-->>W: v202506UpdateCloudExportResponse (JSON)
         W-->>C: v202506UpdateCloudExportResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -285,10 +290,9 @@ sequenceDiagram
         API-->>B: v202506UpdateCloudExportResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202506UpdateCloudExportResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -340,9 +344,11 @@ sequenceDiagram
     alt success
         API-->>W: v202506DeleteCloudExportResponse (JSON)
         W-->>C: v202506DeleteCloudExportResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -362,10 +368,9 @@ sequenceDiagram
         API-->>B: v202506DeleteCloudExportResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202506DeleteCloudExportResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

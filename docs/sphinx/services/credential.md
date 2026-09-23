@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407alpha1ListCredentialGroupResponse (JSON)
         W-->>C: v202407alpha1ListCredentialGroupResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202407alpha1ListCredentialGroupResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407alpha1ListCredentialGroupResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -113,9 +114,11 @@ sequenceDiagram
     alt success
         API-->>W: v202407alpha1GetCredentialGroupResponse (JSON)
         W-->>C: v202407alpha1GetCredentialGroupResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -135,10 +138,9 @@ sequenceDiagram
         API-->>B: v202407alpha1GetCredentialGroupResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202407alpha1GetCredentialGroupResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

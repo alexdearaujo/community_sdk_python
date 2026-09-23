@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202211ListUsersResponse (JSON)
         W-->>C: v202211ListUsersResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202211ListUsersResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202211ListUsersResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -113,9 +114,11 @@ sequenceDiagram
     alt success
         API-->>W: v202211CreateUserResponse (JSON)
         W-->>C: v202211CreateUserResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -135,10 +138,9 @@ sequenceDiagram
         API-->>B: v202211CreateUserResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202211CreateUserResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -188,9 +190,11 @@ sequenceDiagram
     alt success
         API-->>W: v202211GetUserResponse (JSON)
         W-->>C: v202211GetUserResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -210,10 +214,9 @@ sequenceDiagram
         API-->>B: v202211GetUserResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202211GetUserResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -263,9 +266,11 @@ sequenceDiagram
     alt success
         API-->>W: v202211UpdateUserResponse (JSON)
         W-->>C: v202211UpdateUserResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -285,10 +290,9 @@ sequenceDiagram
         API-->>B: v202211UpdateUserResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202211UpdateUserResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -340,9 +344,11 @@ sequenceDiagram
     alt success
         API-->>W: v202211DeleteUserResponse (JSON)
         W-->>C: v202211DeleteUserResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -362,10 +368,9 @@ sequenceDiagram
         API-->>B: v202211DeleteUserResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202211DeleteUserResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -415,9 +420,11 @@ sequenceDiagram
     alt success
         API-->>W: v202211ResetActiveSessionsResponse (JSON)
         W-->>C: v202211ResetActiveSessionsResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -437,10 +444,9 @@ sequenceDiagram
         API-->>B: v202211ResetActiveSessionsResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202211ResetActiveSessionsResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -490,9 +496,11 @@ sequenceDiagram
     alt success
         API-->>W: v202211ResetApiTokenResponse (JSON)
         W-->>C: v202211ResetApiTokenResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -512,10 +520,9 @@ sequenceDiagram
         API-->>B: v202211ResetApiTokenResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202211ResetApiTokenResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

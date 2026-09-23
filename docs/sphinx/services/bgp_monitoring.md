@@ -48,9 +48,11 @@ sequenceDiagram
     alt success
         API-->>W: v202210GetMetricsForTargetResponse (JSON)
         W-->>C: v202210GetMetricsForTargetResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -70,10 +72,9 @@ sequenceDiagram
         API-->>B: v202210GetMetricsForTargetResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202210GetMetricsForTargetResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -123,9 +124,11 @@ sequenceDiagram
     alt success
         API-->>W: v202210GetRoutesForTargetResponse (JSON)
         W-->>C: v202210GetRoutesForTargetResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -145,10 +148,9 @@ sequenceDiagram
         API-->>B: v202210GetRoutesForTargetResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202210GetRoutesForTargetResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -198,9 +200,11 @@ sequenceDiagram
     alt success
         API-->>W: v202210ListMonitorsResponse (JSON)
         W-->>C: v202210ListMonitorsResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -220,10 +224,9 @@ sequenceDiagram
         API-->>B: v202210ListMonitorsResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202210ListMonitorsResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -265,9 +268,11 @@ sequenceDiagram
     alt success
         API-->>W: v202210CreateMonitorResponse (JSON)
         W-->>C: v202210CreateMonitorResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -287,10 +292,9 @@ sequenceDiagram
         API-->>B: v202210CreateMonitorResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202210CreateMonitorResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -340,9 +344,11 @@ sequenceDiagram
     alt success
         API-->>W: v202210GetMonitorResponse (JSON)
         W-->>C: v202210GetMonitorResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -362,10 +368,9 @@ sequenceDiagram
         API-->>B: v202210GetMonitorResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202210GetMonitorResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -415,9 +420,11 @@ sequenceDiagram
     alt success
         API-->>W: v202210UpdateMonitorResponse (JSON)
         W-->>C: v202210UpdateMonitorResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -437,10 +444,9 @@ sequenceDiagram
         API-->>B: v202210UpdateMonitorResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202210UpdateMonitorResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -492,9 +498,11 @@ sequenceDiagram
     alt success
         API-->>W: v202210DeleteMonitorResponse (JSON)
         W-->>C: v202210DeleteMonitorResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -514,10 +522,9 @@ sequenceDiagram
         API-->>B: v202210DeleteMonitorResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202210DeleteMonitorResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -567,9 +574,11 @@ sequenceDiagram
     alt success
         API-->>W: v202210SetMonitorStatusResponse (JSON)
         W-->>C: v202210SetMonitorStatusResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -589,10 +598,9 @@ sequenceDiagram
         API-->>B: v202210SetMonitorStatusResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202210SetMonitorStatusResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

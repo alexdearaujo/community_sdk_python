@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202505beta1CreatePathfinderReportResponse (JSON)
         W-->>C: v202505beta1CreatePathfinderReportResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202505beta1CreatePathfinderReportResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202505beta1CreatePathfinderReportResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

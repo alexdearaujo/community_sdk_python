@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202108alpha1ListInterfaceResponse (JSON)
         W-->>C: v202108alpha1ListInterfaceResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202108alpha1ListInterfaceResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202108alpha1ListInterfaceResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -125,9 +126,11 @@ sequenceDiagram
     alt success
         API-->>W: v202108alpha1CreateInterfaceResponse (JSON)
         W-->>C: v202108alpha1CreateInterfaceResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -147,10 +150,9 @@ sequenceDiagram
         API-->>B: v202108alpha1CreateInterfaceResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202108alpha1CreateInterfaceResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -200,9 +202,11 @@ sequenceDiagram
     alt success
         API-->>W: v202108alpha1GetInterfaceResponse (JSON)
         W-->>C: v202108alpha1GetInterfaceResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -222,10 +226,9 @@ sequenceDiagram
         API-->>B: v202108alpha1GetInterfaceResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202108alpha1GetInterfaceResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -275,9 +278,11 @@ sequenceDiagram
     alt success
         API-->>W: v202108alpha1UpdateInterfaceResponse (JSON)
         W-->>C: v202108alpha1UpdateInterfaceResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -297,10 +302,9 @@ sequenceDiagram
         API-->>B: v202108alpha1UpdateInterfaceResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202108alpha1UpdateInterfaceResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -352,9 +356,11 @@ sequenceDiagram
     alt success
         API-->>W: v202108alpha1DeleteInterfaceResponse (JSON)
         W-->>C: v202108alpha1DeleteInterfaceResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -374,10 +380,9 @@ sequenceDiagram
         API-->>B: v202108alpha1DeleteInterfaceResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202108alpha1DeleteInterfaceResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -427,9 +432,11 @@ sequenceDiagram
     alt success
         API-->>W: v202108alpha1ManualClassifyResponse (JSON)
         W-->>C: v202108alpha1ManualClassifyResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -449,10 +456,9 @@ sequenceDiagram
         API-->>B: v202108alpha1ManualClassifyResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202108alpha1ManualClassifyResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

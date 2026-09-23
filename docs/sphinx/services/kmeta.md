@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202607alpha1ListServiceNowConfigsResponse (JSON)
         W-->>C: v202607alpha1ListServiceNowConfigsResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202607alpha1ListServiceNowConfigsResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202607alpha1ListServiceNowConfigsResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -121,9 +122,11 @@ sequenceDiagram
     alt success
         API-->>W: v202607alpha1CreateServiceNowConfigResponse (JSON)
         W-->>C: v202607alpha1CreateServiceNowConfigResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -143,10 +146,9 @@ sequenceDiagram
         API-->>B: v202607alpha1CreateServiceNowConfigResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202607alpha1CreateServiceNowConfigResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -198,9 +200,11 @@ sequenceDiagram
     alt success
         API-->>W: v202607alpha1GetServiceNowConfigResponse (JSON)
         W-->>C: v202607alpha1GetServiceNowConfigResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -220,10 +224,9 @@ sequenceDiagram
         API-->>B: v202607alpha1GetServiceNowConfigResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202607alpha1GetServiceNowConfigResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -275,9 +278,11 @@ sequenceDiagram
     alt success
         API-->>W: v202607alpha1UpdateServiceNowConfigResponse (JSON)
         W-->>C: v202607alpha1UpdateServiceNowConfigResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -297,10 +302,9 @@ sequenceDiagram
         API-->>B: v202607alpha1UpdateServiceNowConfigResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202607alpha1UpdateServiceNowConfigResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -354,9 +358,11 @@ sequenceDiagram
     alt success
         API-->>W: v202607alpha1DeleteServiceNowConfigResponse (JSON)
         W-->>C: v202607alpha1DeleteServiceNowConfigResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -376,10 +382,9 @@ sequenceDiagram
         API-->>B: v202607alpha1DeleteServiceNowConfigResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202607alpha1DeleteServiceNowConfigResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
