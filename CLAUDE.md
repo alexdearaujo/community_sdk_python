@@ -75,7 +75,10 @@ time ("gRPC proto dependencies not installed for `<service>`
 service"), or no matching gRPC method name was found for that REST
 operation ("gRPC translation for `<Operation>` is not yet
 implemented"). Both REST and gRPC return identical Pydantic models
-for every operation gRPC covers.
+for every operation gRPC covers, and raise the same exception type
+for the same failure. Every gRPC call carries a deadline:
+`GrpcTransport`'s channel interceptor applies `APIConfig.grpc_deadline`
+unless the call passes its own, so generated call sites never need one.
 
 ### The generator's phase modules
 
@@ -160,22 +163,35 @@ code confirms it directly:
     `X-CH-Auth-API-Token`), built by `auth_headers()` in
     `src/kentik_api/auth/credentials.py`, the scheme's one definition,
     which the gRPC auth plugin also derives from
+  - the credentials check, before anything is sent
   - query-param cleaning
-  - the request itself
+  - the request itself, over the one `httpx.Client` its `APIConfig`
+    owns (one pooled connection per client, timeout passed per request)
   - transport-failure wrapping (`TransportError`)
+  - quota capture into `RateLimit`, on the result and on every error
+  - a 401 raised as `AuthenticationError`, ahead of the generated
+    error class, so generated error packages never see one
   - status-code checking
   - JSON error-body parsing
   - dispatch into per-operation error classes via
     `error_cls.from_response`
 - `src/kentik_api/core/grpc_runtime.py` — `call_grpc()` is the gRPC
   analogue of `request_json()`. It routes every generated gRPC wrapper
-  call through one place. `map_grpc_error()` is extracted as a pure
-  function (no I/O, no side effects) that maps a `grpc.RpcError` status
-  code to `AuthenticationError` or `HTTPException`. Testable without a
-  gRPC channel.
+  call through one place, applies a per-call deadline override, and
+  returns `(response, rate_limit)`. `map_grpc_error()` is extracted as
+  a pure function (no I/O, no side effects) that classifies every
+  non-OK `grpc.RpcError` status as `AuthenticationError`,
+  `HTTPException`, or `TransportError`. Testable without a gRPC
+  channel.
 - `src/kentik_api/core/api_config.py` — `APIConfig` is the one
-  shared config object (base URL, auth email/token, TLS verify) used
-  in every call.
+  shared config object (base URL, auth email/token, TLS verify,
+  timeouts, the shared HTTP client, per-endpoint quota) used in every
+  call. A wrapper's `api_config_override` **replaces** it for one call,
+  never merges with it, so an override that changes the host cannot
+  inherit credentials. `with_timeout()` is the only derivation helper,
+  and it can change timeouts only. Changing the host, credentials, or
+  `verify` takes an explicit `APIConfig(...)`, which keeps any
+  credential redirect visible at its call site.
 - `src/kentik_api/errors/__init__.py` — one shared exception
   hierarchy (`KentikError` → `ConfigurationError`,
   `AuthenticationError`, `TransportError`, `HTTPException`) that
