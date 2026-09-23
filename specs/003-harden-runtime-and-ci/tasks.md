@@ -152,17 +152,21 @@ the auth metadata tuple makes a test fail.
 **Independent test**: a formatting violation, a generator change, and a Sphinx
 warning each fail CI on a throwaway branch.
 
-- [ ] T034 [US4] Fix the existing formatting violation by running `uv run ruff format scripts/generate_sdk.py` (FR-046, SC-006)
-- [ ] T035 [P] [US4] Add a lint job running `ruff check` and `ruff format --check` to `.github/workflows/tests.yml` (FR-046)
-- [ ] T036 [P] [US4] Add a generation-determinism job to `.github/workflows/tests.yml` running `make generate` then `git diff --exit-code`, reporting the differing paths on failure and relying on the generator's existing clone fallback for the schema (FR-047, research D7)
-- [ ] T037 [P] [US4] Add a docs job to `.github/workflows/tests.yml` running Sphinx with `-W` (FR-048)
-- [ ] T037a [US4] Empty `suppress_warnings` in `docs/sphinx/conf.py` and fix every `myst.xref_missing` and `toc.not_included` warning it was masking at the source, so the `-W` gate from T037 can fail on a broken link (FR-048a)
-- [ ] T037b [US4] Move every guide under `docs/guides/` into `docs/sphinx/guides/` and add them to the toctree. Update the marker-block paths in `_update_guide_snippets()` in `scripts/generation/docs_rendering.py`, the links in `scripts/README.md` and `CLAUDE.md`, and every later `docs/guides/` path in this file and in spec FR-057. Confirm `make generate local` rewrites the moved files in place and `make docs` builds clean under `-W`. This must land before any later phase edits a guide (FR-056a)
-- [ ] T038 [US4] Replace the hardcoded feature-branch name in `push.branches` in `.github/workflows/tests.yml` and `.github/workflows/build.yml` (FR-049)
-- [ ] T039 [US4] Confirm no CI job runs any `e2e` or `e2e_grpc` test by inspecting `.github/workflows/` (FR-050)
-- [ ] T040 [US4] Name the determinism job in `.github/workflows/tests.yml` so an upstream schema change is distinguishable from a generator regression in its failure output (research D7)
+- [x] T034 [US4] Fix the existing formatting violation by running `uv run ruff format scripts/generate_sdk.py` (FR-046, SC-006)
+- [x] T035 [P] [US4] Add a lint job running `ruff check` and `ruff format --check` to `.github/workflows/tests.yml` (FR-046)
+- [x] T036 [P] [US4] Add a generation-determinism job to `.github/workflows/tests.yml` running `make generate` then `git diff --exit-code`, reporting the differing paths on failure and relying on the generator's existing clone fallback for the schema (FR-047, research D7)
+  - Uses `git status --porcelain`, not `git diff --exit-code`, so a newly generated untracked file also fails the gate. Verified locally against a fresh clone of schema HEAD `a7fd79e`: no differences.
+- [x] T037 [P] [US4] Add a docs job to `.github/workflows/tests.yml` running Sphinx with `-W` (FR-048)
+- [x] T037a [US4] Empty `suppress_warnings` in `docs/sphinx/conf.py` and fix every `myst.xref_missing` and `toc.not_included` warning it was masking at the source, so the `-W` gate from T037 can fail on a broken link (FR-048a)
+  - Recorded 2026-09-22: 18 warnings were masked. 16 were links from Sphinx pages to `README.md` files outside the source tree, now GitHub URLs; 1 was `docs/sphinx/README.md` itself, now excluded; 1 was a link to the excluded `services/README.md`, now `services/index.md`. `make docs` also builds with `-W` now.
+- [x] T037b [US4] Move every guide under `docs/guides/` into `docs/sphinx/guides/` and add them to the toctree. Update the marker-block paths in `_update_guide_snippets()` in `scripts/generation/docs_rendering.py`, the links in `scripts/README.md` and `CLAUDE.md`, and every later `docs/guides/` path in this file and in spec FR-057. Confirm `make generate local` rewrites the moved files in place and `make docs` builds clean under `-W`. This must land before any later phase edits a guide (FR-056a)
+  - Verified the generator writes into the new location: a blanked `service-count` marker in `guides/generation.md` was restored by `make generate local`.
+- [x] T038 [US4] Replace the hardcoded feature-branch name in `push.branches` in `.github/workflows/tests.yml` and `.github/workflows/build.yml` (FR-049)
+- [x] T039 [US4] Confirm no CI job runs any `e2e` or `e2e_grpc` test by inspecting `.github/workflows/` (FR-050)
+- [x] T040 [US4] Name the determinism job in `.github/workflows/tests.yml` so an upstream schema change is distinguishable from a generator regression in its failure output (research D7)
+  - Job is named `generated-output-matches-schema-head`; the generator now logs `Schema commit: <sha>` when it clones, and the failure message names both causes.
 - [ ] T041 [US4] Verify each gate in `.github/workflows/tests.yml` fails as intended, by opening throwaway pull requests carrying a formatting violation, a generator output change, and a broken Sphinx reference (SC-005, SC-006)
-- [ ] T041a [US4] Add `make check-specs` to `.github/workflows/tests.yml`, so a stale or orphaned requirement reference fails CI rather than surviving to implementation, as twelve of them did in this file
+- [x] T041a [US4] Add `make check-specs` to `.github/workflows/tests.yml`, so a stale or orphaned requirement reference fails CI rather than surviving to implementation, as twelve of them did in this file
 
 **Checkpoint**: CI protects determinism, formatting, and docs.
 
@@ -178,7 +182,7 @@ region both raise something catchable as `KentikError`.
 - [ ] T042 [US5] Replace both `ValueError` raises with `ConfigurationError` in `KentikAPI.__init__` in `src/kentik_api/client.py`, keeping each message naming the missing or invalid value (FR-026)
 - [ ] T043 [US5] Confirm `ConfigurationError` in `src/kentik_api/errors/__init__.py` remains a plain `KentikError` subclass, with no `ValueError` base and no deprecation shim (FR-027)
 - [ ] T044 [P] [US5] Add tests for both configuration failures in `tests/smoke/test_client_mounts_and_calls.py`, asserting they are catchable as `KentikError`
-- [ ] T045 [P] [US5] Update `src/kentik_api/errors/README.md` and `docs/guides/error_handling.md` so `ConfigurationError` is no longer described as never raised (FR-057)
+- [ ] T045 [P] [US5] Update `src/kentik_api/errors/README.md` and `docs/sphinx/guides/error_handling.md` so `ConfigurationError` is no longer described as never raised (FR-057)
 
 **Checkpoint**: `except KentikError:` is a complete net.
 
@@ -237,8 +241,8 @@ transports, and two endpoints report separate budgets.
 - [ ] T065 [P] [US8] Add tests in `tests/runtime/test_rate_limit.py` asserting `model_dump()` keys and model equality are unaffected by attachment (research D5a)
 - [ ] T066 [US8] Enable connection-establishment retries with `httpx.HTTPTransport(retries=N)` in `src/kentik_api/core/api_config.py`, which never replay a request the server received (FR-032)
 - [ ] T067 [US8] Confirm no automatic retry of a completed request and none for mutating operations exists anywhere in `src/kentik_api/core/` (FR-032, FR-033)
-- [ ] T067a [P] [US8] Record the retry-eligibility rule in `tests/generated/test_retry_eligibility.py`: derive each discovered operation's eligibility from its HTTP verb via `tests/_discovery.py`, never from a hand-kept list, and assert GET, PUT, and DELETE are eligible (161 operations) while POST and PATCH are not (72). State the rule in `docs/guides/rate_limiting.md` (FR-032a)
-- [ ] T068 [P] [US8] Document the three limits no header reveals, the per-endpoint granularity, and the documented-versus-measured conflict in `docs/guides/rate_limiting.md` (FR-034, FR-035, FR-036)
+- [ ] T067a [P] [US8] Record the retry-eligibility rule in `tests/generated/test_retry_eligibility.py`: derive each discovered operation's eligibility from its HTTP verb via `tests/_discovery.py`, never from a hand-kept list, and assert GET, PUT, and DELETE are eligible (161 operations) while POST and PATCH are not (72). State the rule in `docs/sphinx/guides/rate_limiting.md` (FR-032a)
+- [ ] T068 [P] [US8] Document the three limits no header reveals, the per-endpoint granularity, and the documented-versus-measured conflict in `docs/sphinx/guides/rate_limiting.md` (FR-034, FR-035, FR-036)
 - [ ] T069 [US8] Confirm the default in `src/kentik_api/core/api_config.py` still tolerates the documented 1.5s soft-limit response delay, with a test in `tests/runtime/test_rest_runtime.py` proving a delayed response is not converted into a `TransportError` (FR-037)
 - [ ] T070 [US8] Run `make generate local && git diff --exit-code` and confirm no generated file changed
 
@@ -257,11 +261,11 @@ state which transport suits their workload and why.
 behaviour.
 
 - [ ] T071 [US9] Work through `learn/ex01_same_call.py` through `learn/ex07_rate_limits.py` and complete `learn/findings.md`, marking each line measured, confirmed-in-source, or assumed (FR-051, FR-052)
-- [ ] T072 [US9] Write `docs/guides/rest-vs-grpc.md` covering mechanism, when to choose each, and trade-offs, grounding every claim in a recorded finding (FR-053, FR-054)
-- [ ] T073 [US9] State the measured coverage limits in `docs/guides/rest-vs-grpc.md`: 35 services with a wrapper, 6 without, 198 of 233 operations with a gRPC translation, plus the two distinct `NotImplementedError` cases (FR-054)
-- [ ] T074 [US9] State in `docs/guides/rest-vs-grpc.md` that Kentik's REST API is an Envoy transcoding layer over the same gRPC services, evidenced by `grpc-status`, `grpc-message`, and `server: envoy` on REST responses, and that both draw on one shared per-endpoint quota (FR-055)
-- [ ] T075 [US9] Add `docs/guides/rest-vs-grpc.md` to the documentation navigation and confirm `make docs` builds clean under `-W` (FR-056)
-- [ ] T076 [P] [US9] Update `docs/guides/rest.md` and `docs/guides/grpc.md` for the corrected error behaviour (FR-057)
+- [ ] T072 [US9] Write `docs/sphinx/guides/rest-vs-grpc.md` covering mechanism, when to choose each, and trade-offs, grounding every claim in a recorded finding (FR-053, FR-054)
+- [ ] T073 [US9] State the measured coverage limits in `docs/sphinx/guides/rest-vs-grpc.md`: 35 services with a wrapper, 6 without, 198 of 233 operations with a gRPC translation, plus the two distinct `NotImplementedError` cases (FR-054)
+- [ ] T074 [US9] State in `docs/sphinx/guides/rest-vs-grpc.md` that Kentik's REST API is an Envoy transcoding layer over the same gRPC services, evidenced by `grpc-status`, `grpc-message`, and `server: envoy` on REST responses, and that both draw on one shared per-endpoint quota (FR-055)
+- [ ] T075 [US9] Add `docs/sphinx/guides/rest-vs-grpc.md` to the documentation navigation and confirm `make docs` builds clean under `-W` (FR-056)
+- [ ] T076 [P] [US9] Update `docs/sphinx/guides/rest.md` and `docs/sphinx/guides/grpc.md` for the corrected error behaviour (FR-057)
 - [ ] T077 [US9] Confirm `git status` reports nothing under `learn/` (SC-016, FR-052)
 
 **Checkpoint**: SC-015 met; docs build clean.

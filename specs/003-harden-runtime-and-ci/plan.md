@@ -140,7 +140,7 @@ tests/
 └── smoke/test_examples_import.py       # NEW: every example imports (US12)
 
 .github/workflows/                      # lint, determinism, docs gates (US4)
-docs/guides/rest-vs-grpc.md             # NEW: the published guide (US9)
+docs/sphinx/guides/rest-vs-grpc.md      # NEW: the published guide (US9)
 learn/                                  # gitignored exercise, never committed
 ```
 

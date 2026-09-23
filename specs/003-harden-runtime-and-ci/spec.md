@@ -866,7 +866,8 @@ disappears.
   new guide placed beside them would be equally invisible and FR-056 would be
   unsatisfiable where the plan puts it.
 - **FR-057**: `auth/README.md`, `errors/README.md`,
-  `docs/guides/error_handling.md`, `docs/guides/rest.md`, `docs/guides/grpc.md`,
+  `docs/sphinx/guides/error_handling.md`, `docs/sphinx/guides/rest.md`,
+  `docs/sphinx/guides/grpc.md`,
   and `examples/README.md` MUST be updated in lockstep with the code changes
   that make their current text wrong.
 - **FR-058**: Release notes MUST call out every caller-visible behavior change:
@@ -902,7 +903,7 @@ disappears.
 - **The exercise workspace**: an untracked, gitignored directory holding
   throwaway comparison scripts and their captured output. Never referenced by
   tracked code.
-- **The REST-vs-gRPC guide**: a tracked page under `docs/guides/`, derived from
+- **The REST-vs-gRPC guide**: a tracked page under `docs/sphinx/guides/`, derived from
   the exercise, sitting alongside the existing `rest.md` and `grpc.md` rather
   than replacing them.
 
