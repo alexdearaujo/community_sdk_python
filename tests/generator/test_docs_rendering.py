@@ -79,3 +79,177 @@ def test_group_config_has_no_duplicate_layer_assignments():
     assert len(_GROUP_CONFIG) == len(set(_GROUP_CONFIG)), (
         "Duplicate keys in _GROUP_CONFIG"
     )
+
+
+# --- end to end, against a sandbox copy of the committed tree -----------------
+
+import re  # noqa: E402
+
+import pytest  # noqa: E402
+
+from scripts.generation import docs_rendering  # noqa: E402
+
+_REPO = Path(__file__).resolve().parents[2]
+_MARKER_BLOCK = re.compile(
+    r"(<!-- kentik-gen:([\w-]+) -->).*?(<!-- /kentik-gen:\2 -->)", re.DOTALL
+)
+_GUIDES = ("quickstart", "rest", "grpc", "generation")
+
+
+def _without_marker_contents(text: str) -> str:
+    return _MARKER_BLOCK.sub(r"\1\3", text)
+
+
+def _marker(text: str, name: str) -> str:
+    match = re.search(
+        rf"<!-- kentik-gen:{name} -->(.*?)<!-- /kentik-gen:{name} -->", text, re.DOTALL
+    )
+    assert match, name
+    return match.group(1)
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "src/kentik_api/gen/README.md",
+        "src/kentik_api/gen/device/README.md",
+        "src/kentik_api/gen/alerting/README.md",
+        "src/kentik_api/gen/core/README.md",
+    ],
+)
+def test_readmes_reproduce_the_committed_ones_exactly(sandbox, rel):
+    docs_rendering.generate()
+
+    assert (sandbox.root / rel).read_text() == (_REPO / rel).read_text()
+
+
+def test_architecture_page_matches_committed_apart_from_edge_counts(sandbox):
+    docs_rendering.generate()
+
+    rel = "docs/sphinx/sdk_runtime_architecture.md"
+    service_dependent = [
+        (re.compile(r'\|"x\d+"\|'), "|x|"),
+        (re.compile(r"\d+ Services are in that state today: [^\n]*"), "N Services ..."),
+    ]
+
+    def normalized(text: str) -> str:
+        for pattern, replacement in service_dependent:
+            text = pattern.sub(replacement, text)
+        return text
+
+    produced = (sandbox.root / rel).read_text()
+    assert normalized(produced) == normalized((_REPO / rel).read_text())
+    # The normalized parts are real, not copied: they reflect the sandbox.
+    assert '|"x51"|' not in produced
+    assert "1 Services are in that state today: `core`." in produced
+
+
+def test_architecture_page_lists_every_layer(sandbox):
+    docs_rendering.generate()
+
+    page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
+    for layer in docs_rendering._LAYER_NAMES.values():
+        assert layer in page
+
+
+@pytest.mark.parametrize("guide", _GUIDES)
+def test_guide_prose_outside_marker_blocks_is_left_untouched(sandbox, guide):
+    rel = f"docs/sphinx/guides/{guide}.md"
+
+    docs_rendering.generate()
+
+    produced = (sandbox.root / rel).read_text()
+    assert _without_marker_contents(produced) == _without_marker_contents(
+        (_REPO / rel).read_text()
+    )
+
+
+def test_marker_blocks_describe_the_services_actually_present(sandbox):
+    docs_rendering.generate()
+
+    guides = sandbox.docs / "guides"
+    # device and alerting have wrappers; core does not but is still a Service.
+    assert _marker((guides / "generation.md").read_text(), "service-count") == "3"
+    assert _marker((sandbox.docs / "README.md").read_text(), "service-count") == "3"
+    quickstart = (guides / "quickstart.md").read_text()
+    assert "client.device.list_devices()" in _marker(quickstart, "first-call-example")
+    assert "as_group" not in quickstart
+    grpc_md = (guides / "grpc.md").read_text()
+    assert "ListDevices" in _marker(grpc_md, "grpc-callflow-diagram")
+
+
+def test_generate_is_idempotent(sandbox):
+    docs_rendering.generate()
+    first = {p: p.read_text() for p in sandbox.root.rglob("*.md")}
+
+    docs_rendering.generate()
+
+    assert {p: p.read_text() for p in sandbox.root.rglob("*.md")} == first
+
+
+def test_services_without_a_wrapper_are_named(sandbox):
+    section = "\n".join(docs_rendering._services_without_wrappers_section())
+
+    assert "`core`" in section
+    assert "`device`" not in section
+
+
+def test_no_section_when_every_service_has_a_wrapper(sandbox):
+    import shutil
+
+    shutil.rmtree(sandbox.gen / "core")
+
+    assert docs_rendering._services_without_wrappers_section() == []
+
+
+def test_replace_marker_rewrites_only_the_named_block():
+    text = "a <!-- kentik-gen:x -->old<!-- /kentik-gen:x --> b <!-- kentik-gen:y -->keep<!-- /kentik-gen:y -->"
+
+    result = docs_rendering._replace_marker(text, "x", "new")
+
+    assert (
+        result
+        == "a <!-- kentik-gen:x -->new<!-- /kentik-gen:x --> b <!-- kentik-gen:y -->keep<!-- /kentik-gen:y -->"
+    )
+
+
+def test_guide_update_skips_when_no_generated_tree_exists(sandbox):
+    import shutil
+
+    before = (sandbox.docs / "guides" / "quickstart.md").read_text()
+    shutil.rmtree(sandbox.gen)
+
+    docs_rendering._update_guide_snippets()
+
+    assert (sandbox.docs / "guides" / "quickstart.md").read_text() == before
+
+
+@pytest.mark.parametrize(
+    ("current", "level", "module", "expected"),
+    [
+        (
+            "kentik_api.gen.device.services.device",
+            1,
+            "DeviceService",
+            "kentik_api.gen.device.services.DeviceService",
+        ),
+        (
+            "kentik_api.gen.device.services.device",
+            2,
+            "models",
+            "kentik_api.gen.device.models",
+        ),
+        ("kentik_api.core.rest_runtime", 0, "httpx", "httpx"),
+    ],
+)
+def test_resolve_import_from(current, level, module, expected):
+    assert docs_rendering._resolve_import_from(current, level, module) == expected
+
+
+def test_grpc_stub_method_name_reads_the_wrapper():
+    wrapper = _REPO / "src" / "kentik_api" / "gen" / "device" / "services" / "device.py"
+
+    assert (
+        docs_rendering._grpc_stub_method_name(wrapper, "list_devices") == "ListDevices"
+    )
+    assert docs_rendering._grpc_stub_method_name(wrapper, "no_such_method") is None

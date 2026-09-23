@@ -38,6 +38,15 @@ fixture with `tmp_path` and need no schema checkout. One exception:
 cross-checks generated code against the real local `../api-schema-public`
 checkout and is skipped automatically when that checkout is absent.
 
+To run a whole phase end to end, use the `sandbox` fixture in
+[`conftest.py`](conftest.py). It copies the hand-written runtime and three
+committed services (`device`, `alerting`, `core`) into `tmp_path` and repoints
+each phase module's `PROJECT_ROOT` and `SDK_OUTPUT_DIR` at the copy. The real
+phase function then runs against it, and its output can be compared with the
+committed files. For example, a regenerated wrapper must match the committed one
+byte for byte. Output that depends on which services exist (counts, the first
+listed operation) is compared with those parts normalized.
+
 Run this suite first while editing [`scripts/generate_sdk.py`](../../scripts/generate_sdk.py),
 [`scripts/generation/`](../../scripts/generation/README.md), or template behavior, before running
 [`make test-generated`](../../Makefile) to check the SDK the generator produces.
