@@ -18,3 +18,5 @@ bin/
 
 # Sphinx build output: regenerate locally with `make docs`, do not commit.
 docs/build/
+# Personal Claude Code settings
+.claude/settings.local.json
