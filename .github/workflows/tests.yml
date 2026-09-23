@@ -4,7 +4,10 @@ on:
   pull_request:
     branches: ["**"]
   push:
-    branches: [FA-2-Update-the-python-SDK-from-V5-to-V6, main]
+    branches: [main]
+
+# No job here runs tests/e2e/: those need real credentials and stay opt-in
+# (`make test-e2e`, `make test-e2e-grpc`). pytest's default `-m` excludes them.
 
 jobs:
   test:
@@ -42,3 +45,88 @@ jobs:
 
       - name: Type-check
         run: make typecheck
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Ruff format
+        run: uv run ruff format --check .
+
+  spec-references:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check FR/SC/task cross-references
+        run: make check-specs
+
+  # Regenerates against api-schema-public HEAD (the generator's clone fallback),
+  # so it can fail for two different reasons. The failure message says which.
+  generated-output-matches-schema-head:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Regenerate the SDK from schema HEAD
+        run: make generate
+
+      - name: Fail if generated output differs from what is committed
+        run: |
+          # --porcelain, not `git diff`, so a newly generated untracked file counts too.
+          changed="$(git status --porcelain)"
+          if [ -n "$changed" ]; then
+            echo "::error::Regenerated output differs from the committed tree."
+            echo "Differing paths:"
+            echo "$changed"
+            echo
+            echo "Two possible causes; the 'Schema commit:' line in the previous step tells them apart:"
+            echo "  1. This change altered generator output (scripts/, templates, or runtime"
+            echo "     modules the docs describe). Run 'make generate' and commit the result."
+            echo "  2. Upstream api-schema-public moved since the last regeneration. If this"
+            echo "     change touches no generator input, regenerate on a separate branch."
+            exit 1
+          fi
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync
+
+      # Builds from the committed tree, so a docs failure is never masked by
+      # regeneration; the determinism job already covers stale generated pages.
+      - name: Build Sphinx docs, failing on any warning
+        run: uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html

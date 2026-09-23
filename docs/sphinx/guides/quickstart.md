@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
+<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
 
 # Quick Start
 
@@ -72,7 +72,7 @@ See [grpc.md](grpc.md) for the full gRPC guide.
 - [REST transport guide](rest.md)
 - [gRPC transport guide](grpc.md)
 - [Error handling guide](error_handling.md)
-- [Runnable examples](../../examples/README.md)
+- [Runnable examples](https://github.com/kentik/community_sdk_python/blob/main/examples/README.md)
 
 > [!NOTE]
 > Run examples with `python -m` from the project root to avoid module naming

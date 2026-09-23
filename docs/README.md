@@ -8,11 +8,11 @@ All documentation for the SDK is in or linked from this directory.
 
 | Document | What it covers |
 | --- | --- |
-| [Quick start](guides/quickstart.md) | Install, configure credentials, make your first call |
-| [REST transport guide](guides/rest.md) | HTTP/REST usage, pagination, and tips |
-| [gRPC transport guide](guides/grpc.md) | gRPC usage, sequence diagrams, and transport comparison |
-| [Error handling guide](guides/error_handling.md) | Exception hierarchy and how to catch each type |
-| [SDK generation workflow](guides/generation.md) | How to regenerate the SDK from the OpenAPI schema |
+| [Quick start](sphinx/guides/quickstart.md) | Install, configure credentials, make your first call |
+| [REST transport guide](sphinx/guides/rest.md) | HTTP/REST usage, pagination, and tips |
+| [gRPC transport guide](sphinx/guides/grpc.md) | gRPC usage, sequence diagrams, and transport comparison |
+| [Error handling guide](sphinx/guides/error_handling.md) | Exception hierarchy and how to catch each type |
+| [SDK generation workflow](sphinx/guides/generation.md) | How to regenerate the SDK from the OpenAPI schema |
 
 ## Examples
 

@@ -40,7 +40,7 @@ uv run python scripts/generate_sdk.py --local-repo ../api-schema-public
 ```
 
 [`make generate`](../Makefile) and `make generate local` wrap these two invocations.
-See [`docs/guides/generation.md`](../docs/guides/generation.md) for
+See [`docs/sphinx/guides/generation.md`](../docs/sphinx/guides/generation.md) for
 the full regeneration workflow.
 
 ## Makefile commands

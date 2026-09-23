@@ -39,7 +39,7 @@ local: ## Marker target for `make generate local`
 	fi
 
 docs: generate ## Build the HTML documentation (generates SDK and service stubs first)
-	$(SPHINX) -b html docs/sphinx docs/build/html
+	$(SPHINX) -W --keep-going -b html docs/sphinx docs/build/html
 
 tests: test ## Run the full test suite (alias)
 

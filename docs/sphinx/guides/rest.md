@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
+<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
 
 # REST Transport Guide
 
@@ -77,15 +77,15 @@ sequenceDiagram
     end
 ```
 
-See [`core/rest_runtime.py`](../../src/kentik_api/core/rest_runtime.py) for
+See [`core/rest_runtime.py`](../../../src/kentik_api/core/rest_runtime.py) for
 the implementation. Every REST operation routes through the single
 `request_json()` function.
 
 ## Runnable examples
 
-- [`examples/device/rest.py`](../../examples/device/rest.py)
-- [`examples/user/rest.py`](../../examples/user/rest.py)
-- [`examples/label/rest.py`](../../examples/label/rest.py)
-- [`examples/site/rest.py`](../../examples/site/rest.py)
-- [`examples/alerting/rest.py`](../../examples/alerting/rest.py)
-- [`examples/synthetics/rest.py`](../../examples/synthetics/rest.py)
+- [`examples/device/rest.py`](../../../examples/device/rest.py)
+- [`examples/user/rest.py`](../../../examples/user/rest.py)
+- [`examples/label/rest.py`](../../../examples/label/rest.py)
+- [`examples/site/rest.py`](../../../examples/site/rest.py)
+- [`examples/alerting/rest.py`](../../../examples/alerting/rest.py)
+- [`examples/synthetics/rest.py`](../../../examples/synthetics/rest.py)

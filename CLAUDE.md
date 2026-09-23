@@ -50,7 +50,7 @@ repo.
 - `docs/sphinx/services/<service>.md` — one reference page per
   service, written by `endpoint_docs.EndpointDocsCollector.render()`
 - the `<!-- kentik-gen:... -->` marker blocks inside
-  `docs/guides/{quickstart,rest,grpc,generation}.md` and
+  `docs/sphinx/guides/{quickstart,rest,grpc,generation}.md` and
   `docs/sphinx/README.md` — rewritten by
   `docs_rendering._update_guide_snippets()`. The surrounding prose in
   those files is hand-written; only the marker blocks are generated.

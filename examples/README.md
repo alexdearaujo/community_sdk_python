@@ -52,12 +52,12 @@ client = KentikAPI(protocol="rest")  # REST transport (default)
 client = KentikAPI(protocol="grpc")  # gRPC transport
 ```
 
-See the [gRPC guide](../docs/guides/grpc.md) for transport internals and
+See the [gRPC guide](../docs/sphinx/guides/grpc.md) for transport internals and
 sequence diagrams.
 
 ## Further reading
 
-- [docs/guides/quickstart.md](../docs/guides/quickstart.md)
-- [docs/guides/rest.md](../docs/guides/rest.md)
-- [docs/guides/grpc.md](../docs/guides/grpc.md)
-- [docs/guides/error_handling.md](../docs/guides/error_handling.md)
+- [docs/sphinx/guides/quickstart.md](../docs/sphinx/guides/quickstart.md)
+- [docs/sphinx/guides/rest.md](../docs/sphinx/guides/rest.md)
+- [docs/sphinx/guides/grpc.md](../docs/sphinx/guides/grpc.md)
+- [docs/sphinx/guides/error_handling.md](../docs/sphinx/guides/error_handling.md)

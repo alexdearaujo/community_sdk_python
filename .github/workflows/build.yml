@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: ["**"]
   push:
-    branches: [FA-2-Update-the-python-SDK-from-V5-to-V6, main]
+    branches: [main]
 
 jobs:
   build:

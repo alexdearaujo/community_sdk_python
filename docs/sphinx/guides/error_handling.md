@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
 
 # Error Handling Guide
 
@@ -42,7 +42,7 @@ classDiagram
 | `TransportError` | Network failure before any response arrives |
 | `HTTPException` | Any non-success HTTP or gRPC status code |
 
-All classes are in [`src/kentik_api/errors/__init__.py`](../../src/kentik_api/errors/__init__.py).
+All classes are in [`src/kentik_api/errors/__init__.py`](../../../src/kentik_api/errors/__init__.py).
 
 ## Catching errors
 
@@ -74,7 +74,7 @@ except KentikError as exc:
 
 gRPC errors are normalized to the SDK exception hierarchy
 (`AuthenticationError`, `HTTPException`, or `TransportError`) by
-[`call_grpc()`](../../src/kentik_api/core/grpc_runtime.py) before they
+[`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) before they
 reach the caller. The mapping is:
 
 | gRPC status | HTTP status | Exception |
@@ -91,7 +91,7 @@ reach the caller. The mapping is:
 
 ## Runnable example
 
-See [`examples/common/error_handling.py`](../../examples/common/error_handling.py)
+See [`examples/common/error_handling.py`](../../../examples/common/error_handling.py)
 for a complete error handling demo that works with both transports:
 
 ```bash

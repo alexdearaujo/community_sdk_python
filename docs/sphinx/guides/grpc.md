@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
+<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
 
 # gRPC Transport Guide
 
@@ -56,8 +56,8 @@ sequenceDiagram
 <!-- /kentik-gen:rest-callflow-diagram -->
 
 The REST path routes every call through
-[`request_json()`](../../src/kentik_api/core/rest_runtime.py) in
-[`core/rest_runtime.py`](../../src/kentik_api/core/rest_runtime.py).
+[`request_json()`](../../../src/kentik_api/core/rest_runtime.py) in
+[`core/rest_runtime.py`](../../../src/kentik_api/core/rest_runtime.py).
 
 ### gRPC call flow
 
@@ -98,8 +98,8 @@ The gRPC path uses:
 3. [`MessageToDict`](https://googleapis.dev/python/protobuf/latest/) to convert
    the proto response back to a dict.
 4. `model_validate` to build the Pydantic response model.
-5. [`call_grpc()`](../../src/kentik_api/core/grpc_runtime.py) in
-   [`core/grpc_runtime.py`](../../src/kentik_api/core/grpc_runtime.py) to
+5. [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) in
+   [`core/grpc_runtime.py`](../../../src/kentik_api/core/grpc_runtime.py) to
    normalize gRPC errors to the SDK exception hierarchy.
 
 ## Why the two transports return identical models
@@ -114,9 +114,9 @@ model field. No remapping is needed.
 The same exception types are raised for both transports. See
 [error_handling.md](error_handling.md) for the full hierarchy. gRPC status
 codes are mapped to HTTP-equivalent status codes inside
-[`map_grpc_error()`](../../src/kentik_api/core/grpc_runtime.py), a pure
+[`map_grpc_error()`](../../../src/kentik_api/core/grpc_runtime.py), a pure
 function isolated from the gRPC call itself. This means the mapping table
-can be tested without a live gRPC channel. [`call_grpc()`](../../src/kentik_api/core/grpc_runtime.py)
+can be tested without a live gRPC channel. [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py)
 is the thin wrapper that invokes the stub and delegates all error mapping
 to `map_grpc_error()`.
 
@@ -134,11 +134,11 @@ to `map_grpc_error()`.
 
 ## Runnable gRPC examples
 
-Each service in [examples/](../../examples/README.md) has a `grpc.py` file:
+Each service in [examples/](https://github.com/kentik/community_sdk_python/blob/main/examples/README.md) has a `grpc.py` file:
 
-- [`examples/device/grpc.py`](../../examples/device/grpc.py) — list devices
-- [`examples/user/grpc.py`](../../examples/user/grpc.py) — list users
-- [`examples/label/grpc.py`](../../examples/label/grpc.py) — list labels
-- [`examples/site/grpc.py`](../../examples/site/grpc.py) — list sites
-- [`examples/alerting/grpc.py`](../../examples/alerting/grpc.py) — list alerts
-- [`examples/synthetics/grpc.py`](../../examples/synthetics/grpc.py) — list tests
+- [`examples/device/grpc.py`](../../../examples/device/grpc.py) — list devices
+- [`examples/user/grpc.py`](../../../examples/user/grpc.py) — list users
+- [`examples/label/grpc.py`](../../../examples/label/grpc.py) — list labels
+- [`examples/site/grpc.py`](../../../examples/site/grpc.py) — list sites
+- [`examples/alerting/grpc.py`](../../../examples/alerting/grpc.py) — list alerts
+- [`examples/synthetics/grpc.py`](../../../examples/synthetics/grpc.py) — list tests

@@ -1,7 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Runtime architecture docs (inline Mermaid), the gen/ root README, and per-service READMEs.
 
-Also updates <!-- kentik-gen:MARKER --> blocks in docs/guides/ files so every
+Also updates <!-- kentik-gen:MARKER --> blocks in docs/sphinx/guides/ files so every
 reference to generated service names, method names, and class names stays
 current without manual edits.
 """
@@ -18,7 +18,7 @@ from ._shared import (
     parse_wrapper_methods,
 )
 
-_GUIDES_DIR = PROJECT_ROOT / "docs" / "guides"
+_GUIDES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "guides"
 
 # Top-level README for src/kentik_api/gen/. This lives inside the fully-wiped
 # gen/ tree, so it is generated here rather than hand-written: `make clean`
@@ -538,7 +538,7 @@ def _replace_marker(text: str, marker: str, new_content: str) -> str:
 
 
 def _update_guide_snippets() -> None:
-    """Injects current generated operation names and counts into docs/guides/ marker blocks."""
+    """Injects current generated operation names and counts into docs/sphinx/guides/ marker blocks."""
     if not SDK_OUTPUT_DIR.exists():
         return
 
