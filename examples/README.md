@@ -31,7 +31,14 @@ Each script is self-contained and safe to run read-only.
 
 Each service has a `rest.py` and a `grpc.py` that perform the same
 operation over each transport. The API surface is identical; only the
-`protocol=` argument differs.
+`protocol=` argument differs. `common/error_handling.py` is a standalone
+example, not a helper module: pass `grpc` as its first argument to run it over
+gRPC.
+
+[`tests/smoke/test_examples_import.py`](../tests/smoke/test_examples_import.py)
+imports every example and checks each `client.<service>.<method>(...)` call
+against the real client, so an example that stops matching the SDK fails
+`make test`.
 
 | Directory | Service | REST | gRPC |
 | --- | --- | --- | --- |
@@ -41,7 +48,7 @@ operation over each transport. The API surface is identical; only the
 | [`site/`](site/) | Sites and markets | [`rest.py`](site/rest.py) | [`grpc.py`](site/grpc.py) |
 | [`alerting/`](alerting/) | Alerting | [`rest.py`](alerting/rest.py) | [`grpc.py`](alerting/grpc.py) |
 | [`synthetics/`](synthetics/) | Synthetic tests | [`rest.py`](synthetics/rest.py) | [`grpc.py`](synthetics/grpc.py) |
-| [`common/`](common/) | Shared helpers | [`utils.py`](common/utils.py) | [`error_handling.py`](common/error_handling.py) |
+| [`common/`](common/) | Error handling on either transport | [`error_handling.py`](common/error_handling.py) | same file, `grpc` argument |
 
 ## Transport selection
 

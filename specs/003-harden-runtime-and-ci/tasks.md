@@ -351,10 +351,13 @@ on the same client, each use their own value.
 **Independent test**: every example module imports with no network and no
 credentials, and renaming a referenced wrapper method causes a failure.
 
-- [ ] T093 [P] [US12] Add `tests/smoke/test_examples_import.py` importing every module under `examples/` with no network call and no credentials (FR-044)
-- [ ] T094 [US12] Either make `pretty_print` in `examples/common/utils.py` genuinely used by an example, or delete it (SC-011)
-- [ ] T095 [US12] Correct `examples/README.md`, which describes `examples/common/` as "Shared helpers" although `error_handling.py` is a standalone runnable example and `pretty_print` is imported by nothing (FR-057)
-- [ ] T096 [US12] Prove the suite bites by renaming a wrapper method that `examples/device/rest.py` calls, confirming `tests/smoke/test_examples_import.py` fails, and restoring
+- [x] T093 [P] [US12] Add `tests/smoke/test_examples_import.py` importing every module under `examples/` with no network call and no credentials (FR-044)
+  - Import alone could not satisfy T096, since importing only defines `main()`. The test also resolves every `client.<service>.<method>(...)` call in each example against a real client, keyword arguments included, and asserts each transport example makes at least one such call so the check cannot pass vacuously.
+- [x] T094 [US12] Either make `pretty_print` in `examples/common/utils.py` genuinely used by an example, or delete it (SC-011)
+  - Deleted: no example used it.
+- [x] T095 [US12] Correct `examples/README.md`, which describes `examples/common/` as "Shared helpers" although `error_handling.py` is a standalone runnable example and `pretty_print` is imported by nothing (FR-057)
+- [x] T096 [US12] Prove the suite bites by renaming a wrapper method that `examples/device/rest.py` calls, confirming `tests/smoke/test_examples_import.py` fails, and restoring
+  - Recorded 2026-09-23: renaming `list_devices` in the device wrapper failed 3 cases (`device.rest`, `device.grpc`, `common.error_handling`); restored, all pass.
 
 **Checkpoint**: SC-013 met.
 
