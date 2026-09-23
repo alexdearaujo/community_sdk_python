@@ -70,10 +70,14 @@ sequenceDiagram
         API-->>RJ: JSON response
         RJ-->>W: parsed dict
         W-->>C: Pydantic response model
-    else HTTP error
+    else 401
         API-->>RJ: error JSON
-        RJ-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+        RJ-->>C: raise AuthenticationError
+    else other error status
+        API-->>RJ: error JSON
+        RJ-->>C: raise the operation's HTTPException subclass
+    else no response (unreachable or timed out)
+        RJ-->>C: raise TransportError
     end
 ```
 

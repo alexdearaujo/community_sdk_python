@@ -664,10 +664,14 @@ sequenceDiagram
         API-->>RJ: JSON response
         RJ-->>W: parsed dict
         W-->>C: {primary["response_class"]} (Pydantic)
-    else HTTP error
+    else 401
         API-->>RJ: error JSON
-        RJ-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+        RJ-->>C: raise AuthenticationError
+    else other error status
+        API-->>RJ: error JSON
+        RJ-->>C: raise the operation's HTTPException subclass
+    else no response (unreachable or timed out)
+        RJ-->>C: raise TransportError
     end
 ```
 """,
@@ -687,18 +691,16 @@ sequenceDiagram
     C->>W: {primary["method"]}()
     W->>W: build {request_proto} proto<br/>(ParseDict for operations with a body)
     W->>CG: stub method + proto request
-    CG->>S: {stub_method} (gRPC/TLS)
+    CG->>S: {stub_method} (gRPC/TLS, deadline set by the channel)
     S->>API: serialized proto request
     alt success
         API-->>S: serialized proto response
         S-->>CG: {primary["response_class"]} proto
         CG-->>W: proto response
         W-->>C: {primary["response_class"]} (Pydantic)<br/>via MessageToDict + model_validate
-    else gRPC error (status code)
-        API-->>S: gRPC status + details
+    else gRPC error, deadline, or unreachable
         S-->>CG: raise RpcError
-        CG-->>W: map_grpc_error() -> AuthenticationError<br/>or HTTPException
-        W-->>C: raise
+        CG-->>C: map_grpc_error(): AuthenticationError,<br/>HTTPException, or TransportError
     end
 ```
 """,

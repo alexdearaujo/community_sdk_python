@@ -47,10 +47,14 @@ sequenceDiagram
         API-->>RJ: JSON response
         RJ-->>W: parsed dict
         W-->>C: ListASGroupsResponse (Pydantic)
-    else HTTP error
+    else 401
         API-->>RJ: error JSON
-        RJ-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+        RJ-->>C: raise AuthenticationError
+    else other error status
+        API-->>RJ: error JSON
+        RJ-->>C: raise the operation's HTTPException subclass
+    else no response (unreachable or timed out)
+        RJ-->>C: raise TransportError
     end
 ```
 <!-- /kentik-gen:rest-callflow-diagram -->
@@ -73,18 +77,16 @@ sequenceDiagram
     C->>W: list_as_groups()
     W->>W: build ListASGroupsRequest proto<br/>(ParseDict for operations with a body)
     W->>CG: stub method + proto request
-    CG->>S: ListASGroups (gRPC/TLS)
+    CG->>S: ListASGroups (gRPC/TLS, deadline set by the channel)
     S->>API: serialized proto request
     alt success
         API-->>S: serialized proto response
         S-->>CG: ListASGroupsResponse proto
         CG-->>W: proto response
         W-->>C: ListASGroupsResponse (Pydantic)<br/>via MessageToDict + model_validate
-    else gRPC error (status code)
-        API-->>S: gRPC status + details
+    else gRPC error, deadline, or unreachable
         S-->>CG: raise RpcError
-        CG-->>W: map_grpc_error() -> AuthenticationError<br/>or HTTPException
-        W-->>C: raise
+        CG-->>C: map_grpc_error(): AuthenticationError,<br/>HTTPException, or TransportError
     end
 ```
 <!-- /kentik-gen:grpc-callflow-diagram -->
@@ -111,26 +113,17 @@ model field. No remapping is needed.
 
 ## Error handling
 
-The same exception types are raised for both transports. See
-[error_handling.md](error_handling.md) for the full hierarchy. gRPC status
-codes are mapped to HTTP-equivalent status codes inside
-[`map_grpc_error()`](../../../src/kentik_api/core/grpc_runtime.py), a pure
-function isolated from the gRPC call itself. This means the mapping table
-can be tested without a live gRPC channel. [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py)
-is the thin wrapper that invokes the stub and delegates all error mapping
-to `map_grpc_error()`.
+The same failure raises the same exception type on both transports: rejected
+credentials raise `AuthenticationError`, and a call with no response raises
+`TransportError`. [`map_grpc_error()`](../../../src/kentik_api/core/grpc_runtime.py)
+classifies every non-OK gRPC status. It is a pure function, so the whole table
+is tested without a live channel. [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py)
+invokes the stub and delegates the classification to it. See
+[error_handling.md](error_handling.md) for the full status table.
 
-| gRPC status | HTTP equivalent | SDK exception |
-| --- | --- | --- |
-| `UNAUTHENTICATED` | 401 | `AuthenticationError` |
-| `PERMISSION_DENIED` | 403 | `HTTPException(403)` |
-| `NOT_FOUND` | 404 | `HTTPException(404)` |
-| `INVALID_ARGUMENT` | 400 | `HTTPException(400)` |
-| `ALREADY_EXISTS` | 409 | `HTTPException(409)` |
-| `RESOURCE_EXHAUSTED` | 429 | `HTTPException(429)` |
-| `UNIMPLEMENTED` | 501 | `HTTPException(501)` |
-| `UNAVAILABLE` | 503 | `HTTPException(503)` |
-| Network failure | — | `TransportError` |
+Every call has a deadline: 60 seconds unless `KentikAPI` gets `timeout` or
+`grpc_deadline`. `GrpcTransport` applies it with a channel interceptor, so an
+unresponsive server raises `TransportError` instead of blocking forever.
 
 ## Runnable gRPC examples
 

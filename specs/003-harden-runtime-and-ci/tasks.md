@@ -275,12 +275,16 @@ state which transport suits their workload and why.
 behaviour.
 
 - [ ] T071 [US9] Work through `learn/ex01_same_call.py` through `learn/ex07_rate_limits.py` and complete `learn/findings.md`, marking each line measured, confirmed-in-source, or assumed (FR-051, FR-052)
+  - **Maintainer's own task.** The exercises are run by hand, not by an agent. On 2026-09-22 the exercises were updated (locally, untracked) so their code and prompts match Phases 3 to 10, each naming the commit that changed the behavior it once demonstrated.
 - [ ] T072 [US9] Write `docs/sphinx/guides/rest-vs-grpc.md` covering mechanism, when to choose each, and trade-offs, grounding every claim in a recorded finding (FR-053, FR-054)
+  - Waits on T071: the guide is written from the maintainer's `learn/findings.md`.
 - [ ] T073 [US9] State the measured coverage limits in `docs/sphinx/guides/rest-vs-grpc.md`: 35 services with a wrapper, 6 without, 198 of 233 operations with a gRPC translation, plus the two distinct `NotImplementedError` cases (FR-054)
 - [ ] T074 [US9] State in `docs/sphinx/guides/rest-vs-grpc.md` that Kentik's REST API is an Envoy transcoding layer over the same gRPC services, evidenced by `grpc-status`, `grpc-message`, and `server: envoy` on REST responses, and that both draw on one shared per-endpoint quota (FR-055)
 - [ ] T075 [US9] Add `docs/sphinx/guides/rest-vs-grpc.md` to the documentation navigation and confirm `make docs` builds clean under `-W` (FR-056)
-- [ ] T076 [P] [US9] Update `docs/sphinx/guides/rest.md` and `docs/sphinx/guides/grpc.md` for the corrected error behaviour (FR-057)
-- [ ] T077 [US9] Confirm `git status` reports nothing under `learn/` (SC-016, FR-052)
+- [x] T076 [P] [US9] Update `docs/sphinx/guides/rest.md` and `docs/sphinx/guides/grpc.md` for the corrected error behaviour (FR-057)
+  - The REST and gRPC call-flow diagrams are partly generated; fixed in `docs_rendering.py` and regenerated, plus the hand-written REST diagram and the gRPC guide's stale status table.
+- [x] T077 [US9] Confirm `git status` reports nothing under `learn/` (SC-016, FR-052)
+  - Recorded 2026-09-22: `git status --ignored` shows `learn/` as ignored only; nothing tracked.
 
 **Checkpoint**: SC-015 met; docs build clean.
 
