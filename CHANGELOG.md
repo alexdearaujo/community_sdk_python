@@ -1,0 +1,59 @@
+<!-- HAND-WRITTEN: not modified by [`make generate`](Makefile). Edit directly. -->
+
+# Changelog
+
+This file lists the changes a caller of the SDK can see. The generated API
+surface (services, operations, and models) has its own record in
+[`api_surface.json`](api_surface.json). To list surface changes between two
+releases, run
+[`scripts/release_notes.py`](scripts/release_notes.py):
+
+```bash
+make release-notes SINCE=v1.0.7
+```
+
+## Unreleased
+
+### Breaking changes
+
+Each change below can stop an existing `except` clause or call from working.
+
+| Before | After | What to change |
+| --- | --- | --- |
+| `KentikAPI(...)` raised `ValueError` for missing credentials, an unknown region, or an unknown protocol | It raises `ConfigurationError` | Catch `ConfigurationError` or `KentikError` |
+| A REST 401 raised the operation's generated `HTTPException` subclass | It raises `AuthenticationError`, as gRPC does | Catch `AuthenticationError` |
+| gRPC `CANCELLED`, `DEADLINE_EXCEEDED`, and `UNAVAILABLE` raised `HTTPException` with status 500 or 503 | They raise `TransportError`, as REST does for the same failures | Catch `TransportError` |
+| A gRPC status code with no mapping raised `HTTPException(500)` | Every code has an explicit mapping; an unrecognized code raises `TransportError` | See the table in [the error handling guide](docs/sphinx/guides/error_handling.md) |
+| A gRPC call had no deadline and could block forever | Every gRPC call has a deadline, 60 seconds by default | Set `timeout` or `grpc_deadline` for longer calls |
+| `call_grpc()` wrapped any exception from the stub in `TransportError` | Only a gRPC error is converted; other exceptions propagate unchanged | Catch the original exception type |
+| `call_grpc()` returned the response | It returns `(response, rate_limit)` | Unpack the tuple |
+| `KentikCredentials.get_rest_headers()` existed | It is removed | Use `kentik_api.auth.credentials.auth_headers(email, api_token)` |
+| An `APIConfig` with no credentials failed inside httpx with `TypeError` | It raises `ConfigurationError` before the SDK sends a request | Give the config `auth_email` and `auth_token` |
+
+### Added
+
+- **Timeouts.** `KentikAPI` and `APIConfig` accept `timeout` (both transports),
+  `rest_timeout` (a number or a per-phase `httpx.Timeout`), and
+  `grpc_deadline`. A zero or negative value raises `ConfigurationError`.
+- **Per-call overrides.** Every service method accepts `api_config_override`.
+  `client.api_config.with_timeout(300)` gives a copy with a longer timeout
+  that shares the client's connection and credentials. An override replaces
+  the client's configuration for that call. On gRPC, only its deadline
+  applies.
+- **Quota reporting.** `kentik_api.rate_limit_of(result)` returns the quota
+  that the call reported. Every SDK exception has a `rate_limit` attribute.
+  `client._transport.rate_limits` holds the latest quota for each endpoint.
+  See [the rate limiting guide](docs/sphinx/guides/rate_limiting.md).
+- **`HTTPException.grpc_status_code`** holds the gRPC status name verbatim.
+- **Connection reuse.** A `KentikAPI` client uses one HTTP connection for all
+  its REST calls. `close()` releases it. A call after `close()` raises
+  `ConfigurationError`.
+- **Connection retries.** The SDK retries a failed connection attempt twice.
+  It never retries a request that reached the server.
+
+### Documentation
+
+- The quickstart, REST, gRPC, error handling, and generation guides are part
+  of the published documentation.
+- A new [rate limiting guide](docs/sphinx/guides/rate_limiting.md) covers the
+  quota headers and the three limits that no header shows.

@@ -339,7 +339,7 @@ def _generate_service_wrappers():
                     if arg_name not in ("api_config_override", "data")
                 ]
                 if func_name_pascal in grpc_method_map:
-                    stub_idx, req_class, resp_class = grpc_method_map[func_name_pascal]
+                    stub_idx, req_class, _ = grpc_method_map[func_name_pascal]
                     is_none_return = return_type.strip() == "None"
                     # Guard: if proto deps weren't available at init, fall back.
                     stub_guard = [
