@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional
 from typing import List as TypingList
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -251,7 +252,7 @@ def List(
     )
 
     return (
-        MitigationsServiceListResponse(**body)
+        attach_rate_limit(MitigationsServiceListResponse(**body), rate_limit_of(body))
         if body is not None
         else MitigationsServiceListResponse.model_construct()
     )
@@ -279,7 +280,7 @@ def Create(
     )
 
     return (
-        MitigationsServiceCreateResponse(**body)
+        attach_rate_limit(MitigationsServiceCreateResponse(**body), rate_limit_of(body))
         if body is not None
         else MitigationsServiceCreateResponse.model_construct()
     )
@@ -304,7 +305,9 @@ def AvailableActions(
     )
 
     return (
-        MitigationsServiceAvailableActionsResponse(**body)
+        attach_rate_limit(
+            MitigationsServiceAvailableActionsResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else MitigationsServiceAvailableActionsResponse.model_construct()
     )
@@ -329,7 +332,7 @@ def Get(
     )
 
     return (
-        MitigationsServiceGetResponse(**body)
+        attach_rate_limit(MitigationsServiceGetResponse(**body), rate_limit_of(body))
         if body is not None
         else MitigationsServiceGetResponse.model_construct()
     )
@@ -358,7 +361,7 @@ def Act(
     )
 
     return (
-        MitigationsServiceActResponse(**body)
+        attach_rate_limit(MitigationsServiceActResponse(**body), rate_limit_of(body))
         if body is not None
         else MitigationsServiceActResponse.model_construct()
     )
@@ -383,7 +386,10 @@ def AvailableActionsForMitigation(
     )
 
     return (
-        MitigationsServiceAvailableActionsForMitigationResponse(**body)
+        attach_rate_limit(
+            MitigationsServiceAvailableActionsForMitigationResponse(**body),
+            rate_limit_of(body),
+        )
         if body is not None
         else MitigationsServiceAvailableActionsForMitigationResponse.model_construct()
     )

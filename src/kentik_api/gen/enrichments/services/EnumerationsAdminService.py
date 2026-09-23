@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import FetchValuesByIdsError
@@ -35,7 +36,7 @@ def FetchValuesByIds(
     )
 
     return (
-        FetchValuesByIdsResponse(**body)
+        attach_rate_limit(FetchValuesByIdsResponse(**body), rate_limit_of(body))
         if body is not None
         else FetchValuesByIdsResponse.model_construct()
     )

@@ -1,9 +1,11 @@
-from typing import List, Union, cast
+from typing import List, Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.vault.services.VaultService as RestVaultModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.vault import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -31,7 +33,9 @@ class VaultServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def list_secret(self, *, names: List[str]) -> rest_models.ListSecretResponse:
+    def list_secret(
+        self, *, api_config_override: Optional[APIConfig] = None, names: List[str]
+    ) -> rest_models.ListSecretResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -42,21 +46,29 @@ class VaultServiceWrapper:
                 self._grpc_pb2_1.ListSecretRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.ListSecret, _req)
-            return rest_models.ListSecretResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListSecret, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListSecretResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestVaultModule1.ListSecret(
-                api_config_override=rest_transport.api_config, names=names
+                api_config_override=api_config_override or rest_transport.api_config,
+                names=names,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_secret(self, *, name: str) -> rest_models.GetSecretResponse:
+    def get_secret(
+        self, *, api_config_override: Optional[APIConfig] = None, name: str
+    ) -> rest_models.GetSecretResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -67,14 +79,20 @@ class VaultServiceWrapper:
                 self._grpc_pb2_1.GetSecretRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetSecret, _req)
-            return rest_models.GetSecretResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetSecret, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetSecretResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestVaultModule1.GetSecret(
-                api_config_override=rest_transport.api_config, name=name
+                api_config_override=api_config_override or rest_transport.api_config,
+                name=name,
             )
         else:
             raise TypeError(

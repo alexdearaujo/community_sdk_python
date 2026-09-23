@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -225,7 +226,7 @@ def List(
     )
 
     return (
-        AlertServiceListResponse(**body)
+        attach_rate_limit(AlertServiceListResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertServiceListResponse.model_construct()
     )
@@ -251,7 +252,7 @@ def Clear(
     )
 
     return (
-        AlertServiceClearResponse(**body)
+        attach_rate_limit(AlertServiceClearResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertServiceClearResponse.model_construct()
     )
@@ -276,7 +277,7 @@ def ListComments(
     )
 
     return (
-        AlertServiceListCommentsResponse(**body)
+        attach_rate_limit(AlertServiceListCommentsResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertServiceListCommentsResponse.model_construct()
     )
@@ -305,7 +306,7 @@ def AddComment(
     )
 
     return (
-        AlertServiceAddCommentResponse(**body)
+        attach_rate_limit(AlertServiceAddCommentResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertServiceAddCommentResponse.model_construct()
     )
@@ -334,7 +335,9 @@ def SetExternalContext(
     )
 
     return (
-        AlertServiceSetExternalContextResponse(**body)
+        attach_rate_limit(
+            AlertServiceSetExternalContextResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertServiceSetExternalContextResponse.model_construct()
     )
@@ -359,7 +362,7 @@ def Get(
     )
 
     return (
-        AlertServiceGetResponse(**body)
+        attach_rate_limit(AlertServiceGetResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertServiceGetResponse.model_construct()
     )
@@ -388,7 +391,7 @@ def Ack(
     )
 
     return (
-        AlertServiceAckResponse(**body)
+        attach_rate_limit(AlertServiceAckResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertServiceAckResponse.model_construct()
     )
@@ -417,7 +420,7 @@ def UnAck(
     )
 
     return (
-        AlertServiceUnAckResponse(**body)
+        attach_rate_limit(AlertServiceUnAckResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertServiceUnAckResponse.model_construct()
     )

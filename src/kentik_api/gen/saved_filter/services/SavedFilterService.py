@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -54,7 +55,7 @@ def CreateSavedFilter(
     )
 
     return (
-        CreateSavedFilterResponse(**body)
+        attach_rate_limit(CreateSavedFilterResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateSavedFilterResponse.model_construct()
     )
@@ -79,7 +80,7 @@ def GetSavedFilter(
     )
 
     return (
-        GetSavedFilterResponse(**body)
+        attach_rate_limit(GetSavedFilterResponse(**body), rate_limit_of(body))
         if body is not None
         else GetSavedFilterResponse.model_construct()
     )
@@ -105,7 +106,7 @@ def UpdateSavedFilter(
     )
 
     return (
-        UpdateSavedFilterResponse(**body)
+        attach_rate_limit(UpdateSavedFilterResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateSavedFilterResponse.model_construct()
     )
@@ -130,7 +131,7 @@ def DeleteSavedFilter(
     )
 
     return (
-        DeleteSavedFilterResponse(**body)
+        attach_rate_limit(DeleteSavedFilterResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteSavedFilterResponse.model_construct()
     )
@@ -155,7 +156,7 @@ def ListSavedFilters(
     )
 
     return (
-        ListSavedFiltersResponse(**body)
+        attach_rate_limit(ListSavedFiltersResponse(**body), rate_limit_of(body))
         if body is not None
         else ListSavedFiltersResponse.model_construct()
     )
@@ -180,7 +181,7 @@ def ListSavedFiltersAll(
     )
 
     return (
-        ListSavedFiltersAllResponse(**body)
+        attach_rate_limit(ListSavedFiltersAllResponse(**body), rate_limit_of(body))
         if body is not None
         else ListSavedFiltersAllResponse.model_construct()
     )

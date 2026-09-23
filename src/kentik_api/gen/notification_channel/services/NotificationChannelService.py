@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -42,7 +43,7 @@ def ListNotificationChannels(
     )
 
     return (
-        ListNotificationChannelsResponse(**body)
+        attach_rate_limit(ListNotificationChannelsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListNotificationChannelsResponse.model_construct()
     )
@@ -70,7 +71,9 @@ def SearchNotificationChannels(
     )
 
     return (
-        SearchNotificationChannelsResponse(**body)
+        attach_rate_limit(
+            SearchNotificationChannelsResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else SearchNotificationChannelsResponse.model_construct()
     )
@@ -95,7 +98,7 @@ def GetNotificationChannel(
     )
 
     return (
-        GetNotificationChannelResponse(**body)
+        attach_rate_limit(GetNotificationChannelResponse(**body), rate_limit_of(body))
         if body is not None
         else GetNotificationChannelResponse.model_construct()
     )

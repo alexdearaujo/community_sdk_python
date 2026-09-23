@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import CreateError, DeleteError, GetError, ListError, ReplaceError
@@ -218,7 +219,9 @@ def Create(
     )
 
     return (
-        AlertSilenceNotificationsServiceCreateResponse(**body)
+        attach_rate_limit(
+            AlertSilenceNotificationsServiceCreateResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertSilenceNotificationsServiceCreateResponse.model_construct()
     )
@@ -246,7 +249,9 @@ def List(
     )
 
     return (
-        AlertSilenceNotificationsServiceListResponse(**body)
+        attach_rate_limit(
+            AlertSilenceNotificationsServiceListResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertSilenceNotificationsServiceListResponse.model_construct()
     )
@@ -271,7 +276,9 @@ def Get(
     )
 
     return (
-        AlertSilenceNotificationsServiceGetResponse(**body)
+        attach_rate_limit(
+            AlertSilenceNotificationsServiceGetResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertSilenceNotificationsServiceGetResponse.model_construct()
     )
@@ -296,7 +303,9 @@ def Delete(
     )
 
     return (
-        AlertSilenceNotificationsServiceDeleteResponse(**body)
+        attach_rate_limit(
+            AlertSilenceNotificationsServiceDeleteResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertSilenceNotificationsServiceDeleteResponse.model_construct()
     )
@@ -325,7 +334,9 @@ def Replace(
     )
 
     return (
-        AlertSilenceNotificationsServiceReplaceResponse(**body)
+        attach_rate_limit(
+            AlertSilenceNotificationsServiceReplaceResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertSilenceNotificationsServiceReplaceResponse.model_construct()
     )

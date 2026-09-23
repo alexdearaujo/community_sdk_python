@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -51,7 +52,7 @@ def ListScopes(api_config_override: Optional[APIConfig] = None) -> ListScopesRes
     )
 
     return (
-        ListScopesResponse(**body)
+        attach_rate_limit(ListScopesResponse(**body), rate_limit_of(body))
         if body is not None
         else ListScopesResponse.model_construct()
     )
@@ -77,7 +78,7 @@ def CreateScope(
     )
 
     return (
-        CreateScopeResponse(**body)
+        attach_rate_limit(CreateScopeResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateScopeResponse.model_construct()
     )
@@ -102,7 +103,7 @@ def GetScope(
     )
 
     return (
-        GetScopeResponse(**body)
+        attach_rate_limit(GetScopeResponse(**body), rate_limit_of(body))
         if body is not None
         else GetScopeResponse.model_construct()
     )
@@ -128,7 +129,7 @@ def UpdateScope(
     )
 
     return (
-        UpdateScopeResponse(**body)
+        attach_rate_limit(UpdateScopeResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateScopeResponse.model_construct()
     )
@@ -153,7 +154,7 @@ def DeleteScope(
     )
 
     return (
-        DeleteScopeResponse(**body)
+        attach_rate_limit(DeleteScopeResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteScopeResponse.model_construct()
     )

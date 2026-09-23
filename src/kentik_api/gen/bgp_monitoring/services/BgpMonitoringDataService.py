@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import GetMetricsForTargetError, GetRoutesForTargetError
@@ -59,7 +60,7 @@ def GetMetricsForTarget(
     )
 
     return (
-        GetMetricsForTargetResponse(**body)
+        attach_rate_limit(GetMetricsForTargetResponse(**body), rate_limit_of(body))
         if body is not None
         else GetMetricsForTargetResponse.model_construct()
     )
@@ -85,7 +86,7 @@ def GetRoutesForTarget(
     )
 
     return (
-        GetRoutesForTargetResponse(**body)
+        attach_rate_limit(GetRoutesForTargetResponse(**body), rate_limit_of(body))
         if body is not None
         else GetRoutesForTargetResponse.model_construct()
     )

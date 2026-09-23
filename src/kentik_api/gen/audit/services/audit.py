@@ -3,7 +3,9 @@ from typing import Optional, Union, cast
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.audit.services.AuditService as RestAuditModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.audit import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -34,6 +36,7 @@ class AuditServiceWrapper:
     def list_audit_events(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         startTime: Optional[str] = None,
         endTime: Optional[str] = None,
         offset: Optional[str] = None,
@@ -58,14 +61,19 @@ class AuditServiceWrapper:
                 self._grpc_pb2_1.ListAuditEventsRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.ListAuditEvents, _req)
-            return rest_models.ListAuditEventsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListAuditEvents, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListAuditEventsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAuditModule1.ListAuditEvents(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 startTime=startTime,
                 endTime=endTime,
                 offset=offset,
@@ -77,7 +85,11 @@ class AuditServiceWrapper:
             )
 
     def get_audit_event(
-        self, *, id: str, ctime: Optional[str] = None
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        id: str,
+        ctime: Optional[str] = None,
     ) -> rest_models.GetAuditEventResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -89,14 +101,21 @@ class AuditServiceWrapper:
                 self._grpc_pb2_1.GetAuditEventRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetAuditEvent, _req)
-            return rest_models.GetAuditEventResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetAuditEvent, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetAuditEventResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAuditModule1.GetAuditEvent(
-                api_config_override=rest_transport.api_config, id=id, ctime=ctime
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                ctime=ctime,
             )
         else:
             raise TypeError(
@@ -104,7 +123,7 @@ class AuditServiceWrapper:
             )
 
     def get_audit_event_2(
-        self, *, id: str, ctime: str
+        self, *, api_config_override: Optional[APIConfig] = None, id: str, ctime: str
     ) -> rest_models.GetAuditEventResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -113,7 +132,9 @@ class AuditServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAuditModule1.GetAuditEvent_2(
-                api_config_override=rest_transport.api_config, id=id, ctime=ctime
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                ctime=ctime,
             )
         else:
             raise TypeError(

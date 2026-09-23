@@ -1,6 +1,7 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 import kentik_api.gen.network_class.services.NetworkClassService as RestNetworkClassModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.gen.network_class import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -29,7 +30,7 @@ class NetworkClassServiceWrapper:
                 self._grpc_stub_1 = None
 
     def network_class_get(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.GetNetworkClassResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -38,7 +39,7 @@ class NetworkClassServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestNetworkClassModule1.NetworkClassGet(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(
@@ -46,7 +47,10 @@ class NetworkClassServiceWrapper:
             )
 
     def network_class_update(
-        self, *, data: rest_models.UpdateNetworkClassRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.UpdateNetworkClassRequest,
     ) -> rest_models.UpdateNetworkClassResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -55,7 +59,8 @@ class NetworkClassServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestNetworkClassModule1.NetworkClassUpdate(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(

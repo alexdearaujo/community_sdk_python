@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import GetJourneysNlqError
@@ -35,7 +36,7 @@ def GetJourneysNlq(
     )
 
     return (
-        GetJourneysNlqResponse(**body)
+        attach_rate_limit(GetJourneysNlqResponse(**body), rate_limit_of(body))
         if body is not None
         else GetJourneysNlqResponse.model_construct()
     )

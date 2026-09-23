@@ -3,7 +3,9 @@ from typing import List, Optional, Union, cast
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.interface.services.InterfaceService as RestInterfaceModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.interface import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -34,6 +36,7 @@ class InterfaceServiceWrapper:
     def list_interface(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         filterstext: Optional[str] = None,
         filtersdeviceIds: Optional[List[str]] = None,
         filtersconnectivityTypes: Optional[List[str]] = None,
@@ -64,14 +67,19 @@ class InterfaceServiceWrapper:
                 self._grpc_pb2_1.ListInterfaceRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.ListInterface, _req)
-            return rest_models.ListInterfaceResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListInterface, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListInterfaceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestInterfaceModule1.ListInterface(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 filterstext=filterstext,
                 filtersdeviceIds=filtersdeviceIds,
                 filtersconnectivityTypes=filtersconnectivityTypes,
@@ -86,7 +94,10 @@ class InterfaceServiceWrapper:
             )
 
     def interface_create(
-        self, *, data: rest_models.CreateInterfaceRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateInterfaceRequest,
     ) -> rest_models.CreateInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -95,14 +106,17 @@ class InterfaceServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestInterfaceModule1.InterfaceCreate(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def interface_get(self, *, id: str) -> rest_models.GetInterfaceResponse:
+    def interface_get(
+        self, *, api_config_override: Optional[APIConfig] = None, id: str
+    ) -> rest_models.GetInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
                 "gRPC translation for InterfaceGet is not yet implemented."
@@ -110,7 +124,8 @@ class InterfaceServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestInterfaceModule1.InterfaceGet(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
             )
         else:
             raise TypeError(
@@ -118,7 +133,11 @@ class InterfaceServiceWrapper:
             )
 
     def interface_update(
-        self, *, id: str, data: rest_models.InterfaceServiceUpdateInterfaceBody
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        id: str,
+        data: rest_models.InterfaceServiceUpdateInterfaceBody,
     ) -> rest_models.UpdateInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -127,14 +146,18 @@ class InterfaceServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestInterfaceModule1.InterfaceUpdate(
-                api_config_override=rest_transport.api_config, id=id, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def interface_delete(self, *, id: str) -> rest_models.DeleteInterfaceResponse:
+    def interface_delete(
+        self, *, api_config_override: Optional[APIConfig] = None, id: str
+    ) -> rest_models.DeleteInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
                 "gRPC translation for InterfaceDelete is not yet implemented."
@@ -142,7 +165,8 @@ class InterfaceServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestInterfaceModule1.InterfaceDelete(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
             )
         else:
             raise TypeError(
@@ -150,7 +174,10 @@ class InterfaceServiceWrapper:
             )
 
     def manual_classify(
-        self, *, data: rest_models.ManualClassifyRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.ManualClassifyRequest,
     ) -> rest_models.ManualClassifyResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -162,14 +189,20 @@ class InterfaceServiceWrapper:
                 self._grpc_pb2_1.ManualClassifyRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.ManualClassify, _req)
-            return rest_models.ManualClassifyResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ManualClassify, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ManualClassifyResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestInterfaceModule1.ManualClassify(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(

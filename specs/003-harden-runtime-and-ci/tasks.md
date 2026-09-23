@@ -245,10 +245,11 @@ transports, and two endpoints report separate budgets.
   - Captured in two places, both outside generated code: `GrpcTransport`'s interceptor records quota per method from every call's initial metadata (a failed outcome's `RpcError` carries it), and `call_grpc()` reads it off the `RpcError` for `error.rate_limit`.
 - [x] T062 [US8] Track quota per endpoint in a `rate_limits` mapping on both transports in `src/kentik_api/transports/rest_client.py` and `src/kentik_api/transports/grpc_client.py` (FR-031)
   - The mapping lives on `APIConfig.rate_limits`, which `request_json()` and the gRPC interceptor both reach; each transport exposes it as a `rate_limits` property. Keys are REST paths as sent, or gRPC method names.
-- [ ] T063 [US8] Attach quota to the returned model via `object.__setattr__` and expose a `rate_limit_of(result)` accessor from `src/kentik_api/__init__.py` (FR-029, research D5a)
+- [x] T063 [US8] Attach quota to the returned model via `object.__setattr__` and expose a `rate_limit_of(result)` accessor from `src/kentik_api/__init__.py` (FR-029, research D5a)
   - **Deferred to Phase 13.** The returned model is built in generated code (`<Model>(**body)` in each REST function, `model_validate(...)` in each gRPC wrapper branch); the shared runtime only ever sees a dict or proto. Attaching quota to the result therefore needs a generated-code change, which only Phase 13 may make. Quota is already readable on every error and per endpoint.
+  - Done in Phase 13 as deferred: the REST function template and the gRPC wrapper branch call `attach_rate_limit()`; `request_json()` returns a dict subclass carrying the quota so the template can hand it on. `kentik_api.rate_limit_of` is exported.
 - [x] T064 [US8] Populate `rate_limit` on every SDK error raised from `src/kentik_api/core/rest_runtime.py` and `src/kentik_api/core/grpc_runtime.py` (FR-029)
-- [ ] T065 [P] [US8] Add tests in `tests/runtime/test_rate_limit.py` asserting `model_dump()` keys and model equality are unaffected by attachment (research D5a)
+- [x] T065 [P] [US8] Add tests in `tests/runtime/test_rate_limit.py` asserting `model_dump()` keys and model equality are unaffected by attachment (research D5a)
   - **Deferred to Phase 13** with T063, which it tests.
 - [x] T066 [US8] Enable connection-establishment retries with `httpx.HTTPTransport(retries=N)` in `src/kentik_api/core/api_config.py`, which never replay a request the server received (FR-032)
   - `httpx.HTTPTransport(retries=2)`; `verify` moved onto the transport, since a `Client` given a transport ignores its own `verify`.
@@ -321,18 +322,23 @@ commit with a regenerated `api_surface.json`.
 **Independent test**: one call with an overridden timeout and another without,
 on the same client, each use their own value.
 
-- [ ] T083 [US10] Add a `with_timeout()` derivation helper to `APIConfig` in `src/kentik_api/core/api_config.py` that can vary only timeout-related fields and cannot change `base_path`, `auth_email`, `auth_token`, or `verify` (FR-022, research D6)
-- [ ] T083a [US10] Expose the client's `APIConfig` through a public, read-only `KentikAPI.api_config` property in `src/kentik_api/client.py`, so building an override never needs `client._transport.api_config`, and cover it in `tests/smoke/test_client_mounts_and_calls.py` (FR-018a)
-- [ ] T084 [US10] Raise `ConfigurationError` before sending when an override carries no credentials, in `src/kentik_api/core/rest_runtime.py` (FR-023)
+- [x] T083 [US10] Add a `with_timeout()` derivation helper to `APIConfig` in `src/kentik_api/core/api_config.py` that can vary only timeout-related fields and cannot change `base_path`, `auth_email`, `auth_token`, or `verify` (FR-022, research D6)
+  - Accepts a scalar (both transports) or `rest_timeout` / `grpc_deadline` separately (FR-022). The copy shares the origin's connection, since `request_json()` now passes the timeout per request; closing a copy is a no-op.
+- [x] T083a [US10] Expose the client's `APIConfig` through a public, read-only `KentikAPI.api_config` property in `src/kentik_api/client.py`, so building an override never needs `client._transport.api_config`, and cover it in `tests/smoke/test_client_mounts_and_calls.py` (FR-018a)
+- [x] T084 [US10] Raise `ConfigurationError` before sending when an override carries no credentials, in `src/kentik_api/core/rest_runtime.py` (FR-023)
   - Today that case escapes as a raw httpx `TypeError` (header value `None`), found while writing T069.
-- [ ] T085 [US10] Stop stripping `api_config_override` from wrapper method signatures in `scripts/generation/wrapper_generation.py` (FR-018)
-- [ ] T086 [US10] Thread the override into the gRPC branch in `scripts/generation/wrapper_generation.py` so the deadline applies there too, taking precedence over the D1a interceptor default (FR-019)
-- [ ] T087 [US10] Regenerate with `make generate local` and review the diff, confirming it contains only the signature change and its call-site plumbing (FR-025)
-- [ ] T088 [US10] Update `tests/generated/test_wrapper_contracts.py` to account for the new parameter rather than being weakened to ignore it (FR-018, Constitution Principle IV)
-- [ ] T089 [US10] Add tests in `tests/runtime/test_api_config.py` asserting `with_timeout()` cannot alter the four security-relevant fields, and that no fixture sets `verify=False` (FR-024)
-- [ ] T090 [US10] Assert in `tests/runtime/test_api_config.py` that a supplied override **replaces** the client-wide configuration wholesale, with no field-by-field merge, so an override that changes `base_path` cannot inherit credentials the caller did not restate (FR-021)
-- [ ] T091 [US10] Assert in `tests/runtime/test_api_config.py` that omitting the override leaves behaviour byte-identical to the client-wide defaults (FR-020)
-- [ ] T092 [US10] Commit the generated diff together with a regenerated `api_surface.json`, separate from any hand-written change (FR-025)
+  - With the check in place, `request_json()`'s fallback `APIConfig()` can never send, so Phase 9's close-after-one-call handling for it was removed.
+- [x] T085 [US10] Stop stripping `api_config_override` from wrapper method signatures in `scripts/generation/wrapper_generation.py` (FR-018)
+- [x] T086 [US10] Thread the override into the gRPC branch in `scripts/generation/wrapper_generation.py` so the deadline applies there too, taking precedence over the D1a interceptor default (FR-019)
+  - `call_grpc()` takes `api_config=` and passes its `grpc_deadline` as the call timeout, which the channel interceptor then leaves alone. Channel credentials are fixed per channel, so an override's credentials do not apply on gRPC; documented on `call_grpc()`.
+- [x] T087 [US10] Regenerate with `make generate local` and review the diff, confirming it contains only the signature change and its call-site plumbing (FR-025)
+  - Reviewed 2026-09-23: 86 generated files, all under `services/`. Wrappers gain the parameter, `api_config_override or rest_transport.api_config`, the `call_grpc(..., api_config=...)` tuple, and `attach_rate_limit(...)`; REST modules gain `attach_rate_limit(..., rate_limit_of(body))`. Nothing else.
+- [x] T088 [US10] Update `tests/generated/test_wrapper_contracts.py` to account for the new parameter rather than being weakened to ignore it (FR-018, Constitution Principle IV)
+- [x] T089 [US10] Add tests in `tests/runtime/test_api_config.py` asserting `with_timeout()` cannot alter the four security-relevant fields, and that no fixture sets `verify=False` (FR-024)
+- [x] T090 [US10] Assert in `tests/runtime/test_api_config.py` that a supplied override **replaces** the client-wide configuration wholesale, with no field-by-field merge, so an override that changes `base_path` cannot inherit credentials the caller did not restate (FR-021)
+- [x] T091 [US10] Assert in `tests/runtime/test_api_config.py` that omitting the override leaves behaviour byte-identical to the client-wide defaults (FR-020)
+- [x] T092 [US10] Commit the generated diff together with a regenerated `api_surface.json`, separate from any hand-written change (FR-025)
+  - `api_surface.json` regenerated and unchanged: it records required parameters only, and the new one is optional. The runtime and generator changes are separate commits (`a9fe50c`, `6df01ca`).
 
 **Checkpoint**: SC-010 met; generated diff reviewed on its own.
 

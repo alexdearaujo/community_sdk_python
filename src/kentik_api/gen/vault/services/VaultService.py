@@ -4,6 +4,7 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import GetSecretError, ListSecretError
@@ -36,7 +37,7 @@ def ListSecret(
     )
 
     return (
-        ListSecretResponse(**body)
+        attach_rate_limit(ListSecretResponse(**body), rate_limit_of(body))
         if body is not None
         else ListSecretResponse.model_construct()
     )
@@ -61,7 +62,7 @@ def GetSecret(
     )
 
     return (
-        GetSecretResponse(**body)
+        attach_rate_limit(GetSecretResponse(**body), rate_limit_of(body))
         if body is not None
         else GetSecretResponse.model_construct()
     )

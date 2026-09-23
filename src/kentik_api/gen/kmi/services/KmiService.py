@@ -4,6 +4,7 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -65,7 +66,7 @@ def GetGlobalInsights(
     )
 
     return (
-        GetGlobalInsightsResponse(**body)
+        attach_rate_limit(GetGlobalInsightsResponse(**body), rate_limit_of(body))
         if body is not None
         else GetGlobalInsightsResponse.model_construct()
     )
@@ -105,7 +106,7 @@ def GetASNInsights(
     )
 
     return (
-        GetASNInsightsResponse(**body)
+        attach_rate_limit(GetASNInsightsResponse(**body), rate_limit_of(body))
         if body is not None
         else GetASNInsightsResponse.model_construct()
     )
@@ -136,7 +137,7 @@ def GetASNDetails(
     )
 
     return (
-        GetASNDetailsResponse(**body)
+        attach_rate_limit(GetASNDetailsResponse(**body), rate_limit_of(body))
         if body is not None
         else GetASNDetailsResponse.model_construct()
     )
@@ -167,7 +168,7 @@ def GetRankings(
     )
 
     return (
-        GetRankingsResponse(**body)
+        attach_rate_limit(GetRankingsResponse(**body), rate_limit_of(body))
         if body is not None
         else GetRankingsResponse.model_construct()
     )
@@ -190,7 +191,7 @@ def ListMarkets(api_config_override: Optional[APIConfig] = None) -> ListMarketsR
     )
 
     return (
-        ListMarketsResponse(**body)
+        attach_rate_limit(ListMarketsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListMarketsResponse.model_construct()
     )

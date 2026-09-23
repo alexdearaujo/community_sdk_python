@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -76,7 +77,7 @@ def PackageList(api_config_override: Optional[APIConfig] = None) -> ListPackageR
     )
 
     return (
-        ListPackageResponse(**body)
+        attach_rate_limit(ListPackageResponse(**body), rate_limit_of(body))
         if body is not None
         else ListPackageResponse.model_construct()
     )
@@ -102,7 +103,7 @@ def PackageCreate(
     )
 
     return (
-        CreatePackageResponse(**body)
+        attach_rate_limit(CreatePackageResponse(**body), rate_limit_of(body))
         if body is not None
         else CreatePackageResponse.model_construct()
     )
@@ -127,7 +128,7 @@ def PackageGet(
     )
 
     return (
-        GetPackageResponse(**body)
+        attach_rate_limit(GetPackageResponse(**body), rate_limit_of(body))
         if body is not None
         else GetPackageResponse.model_construct()
     )
@@ -156,7 +157,7 @@ def PackageUpdate(
     )
 
     return (
-        UpdatePackageResponse(**body)
+        attach_rate_limit(UpdatePackageResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdatePackageResponse.model_construct()
     )
@@ -181,7 +182,7 @@ def PackageDelete(
     )
 
     return (
-        DeletePackageResponse(**body)
+        attach_rate_limit(DeletePackageResponse(**body), rate_limit_of(body))
         if body is not None
         else DeletePackageResponse.model_construct()
     )

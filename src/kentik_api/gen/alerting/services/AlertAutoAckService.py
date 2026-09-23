@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import CreateError, DeleteError, GetError, ListError, ReplaceError
@@ -218,7 +219,9 @@ def Create(
     )
 
     return (
-        AlertAutoAckServiceCreateResponse(**body)
+        attach_rate_limit(
+            AlertAutoAckServiceCreateResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertAutoAckServiceCreateResponse.model_construct()
     )
@@ -246,7 +249,7 @@ def List(
     )
 
     return (
-        AlertAutoAckServiceListResponse(**body)
+        attach_rate_limit(AlertAutoAckServiceListResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertAutoAckServiceListResponse.model_construct()
     )
@@ -271,7 +274,7 @@ def Get(
     )
 
     return (
-        AlertAutoAckServiceGetResponse(**body)
+        attach_rate_limit(AlertAutoAckServiceGetResponse(**body), rate_limit_of(body))
         if body is not None
         else AlertAutoAckServiceGetResponse.model_construct()
     )
@@ -296,7 +299,9 @@ def Delete(
     )
 
     return (
-        AlertAutoAckServiceDeleteResponse(**body)
+        attach_rate_limit(
+            AlertAutoAckServiceDeleteResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertAutoAckServiceDeleteResponse.model_construct()
     )
@@ -325,7 +330,9 @@ def Replace(
     )
 
     return (
-        AlertAutoAckServiceReplaceResponse(**body)
+        attach_rate_limit(
+            AlertAutoAckServiceReplaceResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else AlertAutoAckServiceReplaceResponse.model_construct()
     )

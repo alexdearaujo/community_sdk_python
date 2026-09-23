@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional
 from typing import List as TypingList
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import GetError, ListError
@@ -236,7 +237,9 @@ def List(
     )
 
     return (
-        MitigationMethodsServiceListResponse(**body)
+        attach_rate_limit(
+            MitigationMethodsServiceListResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else MitigationMethodsServiceListResponse.model_construct()
     )
@@ -261,7 +264,9 @@ def Get(
     )
 
     return (
-        MitigationMethodsServiceGetResponse(**body)
+        attach_rate_limit(
+            MitigationMethodsServiceGetResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else MitigationMethodsServiceGetResponse.model_construct()
     )

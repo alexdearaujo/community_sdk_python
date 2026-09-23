@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -42,7 +43,7 @@ def ListCostProviders(
     )
 
     return (
-        ListCostProvidersResponse(**body)
+        attach_rate_limit(ListCostProvidersResponse(**body), rate_limit_of(body))
         if body is not None
         else ListCostProvidersResponse.model_construct()
     )
@@ -67,7 +68,9 @@ def ListCostProviderSummaries(
     )
 
     return (
-        ListCostProviderSummariesResponse(**body)
+        attach_rate_limit(
+            ListCostProviderSummariesResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else ListCostProviderSummariesResponse.model_construct()
     )
@@ -95,7 +98,7 @@ def GetCostProviderSummary(
     )
 
     return (
-        GetCostProviderSummaryResponse(**body)
+        attach_rate_limit(GetCostProviderSummaryResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCostProviderSummaryResponse.model_construct()
     )

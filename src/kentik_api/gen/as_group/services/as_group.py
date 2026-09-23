@@ -1,9 +1,11 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.as_group.services.ASGroupService as RestAsGroupModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.as_group import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -32,7 +34,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1 = None
 
     def list_as_groups(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListASGroupsResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -40,14 +42,19 @@ class AsGroupServiceWrapper:
                     "gRPC proto dependencies not installed for as_group service"
                 )
             _req = self._grpc_pb2_1.ListASGroupsRequest()
-            _resp = call_grpc(self._grpc_stub_1.ListASGroups, _req)
-            return rest_models.ListASGroupsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListASGroups, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListASGroupsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAsGroupModule1.ListASGroups(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(
@@ -55,7 +62,10 @@ class AsGroupServiceWrapper:
             )
 
     def create_as_group(
-        self, *, data: rest_models.CreateASGroupRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateASGroupRequest,
     ) -> rest_models.CreateASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -67,21 +77,29 @@ class AsGroupServiceWrapper:
                 self._grpc_pb2_1.CreateASGroupRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateASGroup, _req)
-            return rest_models.CreateASGroupResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateASGroup, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateASGroupResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAsGroupModule1.CreateASGroup(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_as_group(self, *, asGroupid: str) -> rest_models.GetASGroupResponse:
+    def get_as_group(
+        self, *, api_config_override: Optional[APIConfig] = None, asGroupid: str
+    ) -> rest_models.GetASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -92,14 +110,20 @@ class AsGroupServiceWrapper:
                 self._grpc_pb2_1.GetASGroupRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetASGroup, _req)
-            return rest_models.GetASGroupResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetASGroup, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetASGroupResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAsGroupModule1.GetASGroup(
-                api_config_override=rest_transport.api_config, asGroupid=asGroupid
+                api_config_override=api_config_override or rest_transport.api_config,
+                asGroupid=asGroupid,
             )
         else:
             raise TypeError(
@@ -107,7 +131,11 @@ class AsGroupServiceWrapper:
             )
 
     def update_as_group(
-        self, *, asGroupid: str, data: rest_models.ASGroupServiceUpdateASGroupBody
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        asGroupid: str,
+        data: rest_models.ASGroupServiceUpdateASGroupBody,
     ) -> rest_models.UpdateASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
@@ -123,14 +151,19 @@ class AsGroupServiceWrapper:
                 self._grpc_pb2_1.UpdateASGroupRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateASGroup, _req)
-            return rest_models.UpdateASGroupResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateASGroup, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateASGroupResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAsGroupModule1.UpdateASGroup(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 asGroupid=asGroupid,
                 data=data,
             )
@@ -139,7 +172,9 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_as_group(self, *, asGroupid: str) -> rest_models.DeleteASGroupResponse:
+    def delete_as_group(
+        self, *, api_config_override: Optional[APIConfig] = None, asGroupid: str
+    ) -> rest_models.DeleteASGroupResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -150,14 +185,20 @@ class AsGroupServiceWrapper:
                 self._grpc_pb2_1.DeleteASGroupRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.DeleteASGroup, _req)
-            return rest_models.DeleteASGroupResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteASGroup, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteASGroupResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAsGroupModule1.DeleteASGroup(
-                api_config_override=rest_transport.api_config, asGroupid=asGroupid
+                api_config_override=api_config_override or rest_transport.api_config,
+                asGroupid=asGroupid,
             )
         else:
             raise TypeError(

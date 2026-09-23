@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -44,7 +45,7 @@ def ListCustomApplications(
     )
 
     return (
-        ListCustomApplicationsResponse(**body)
+        attach_rate_limit(ListCustomApplicationsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListCustomApplicationsResponse.model_construct()
     )
@@ -70,7 +71,7 @@ def CreateCustomApplication(
     )
 
     return (
-        CreateCustomApplicationResponse(**body)
+        attach_rate_limit(CreateCustomApplicationResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateCustomApplicationResponse.model_construct()
     )
@@ -95,7 +96,7 @@ def GetCustomApplication(
     )
 
     return (
-        GetCustomApplicationResponse(**body)
+        attach_rate_limit(GetCustomApplicationResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCustomApplicationResponse.model_construct()
     )
@@ -124,7 +125,7 @@ def UpdateCustomApplication(
     )
 
     return (
-        UpdateCustomApplicationResponse(**body)
+        attach_rate_limit(UpdateCustomApplicationResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateCustomApplicationResponse.model_construct()
     )
@@ -149,7 +150,7 @@ def DeleteCustomApplication(
     )
 
     return (
-        DeleteCustomApplicationResponse(**body)
+        attach_rate_limit(DeleteCustomApplicationResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteCustomApplicationResponse.model_construct()
     )

@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import DisableError, EnableError, GetError, ListError
@@ -216,7 +217,7 @@ def List(
     )
 
     return (
-        PolicyServiceListResponse(**body)
+        attach_rate_limit(PolicyServiceListResponse(**body), rate_limit_of(body))
         if body is not None
         else PolicyServiceListResponse.model_construct()
     )
@@ -241,7 +242,7 @@ def Get(
     )
 
     return (
-        PolicyServiceGetResponse(**body)
+        attach_rate_limit(PolicyServiceGetResponse(**body), rate_limit_of(body))
         if body is not None
         else PolicyServiceGetResponse.model_construct()
     )
@@ -271,7 +272,7 @@ def Disable(
     )
 
     return (
-        PolicyServiceDisableResponse(**body)
+        attach_rate_limit(PolicyServiceDisableResponse(**body), rate_limit_of(body))
         if body is not None
         else PolicyServiceDisableResponse.model_construct()
     )
@@ -301,7 +302,7 @@ def Enable(
     )
 
     return (
-        PolicyServiceEnableResponse(**body)
+        attach_rate_limit(PolicyServiceEnableResponse(**body), rate_limit_of(body))
         if body is not None
         else PolicyServiceEnableResponse.model_construct()
     )

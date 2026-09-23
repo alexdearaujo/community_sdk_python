@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -55,7 +56,7 @@ def ListCloudExports(
     )
 
     return (
-        ListCloudExportsResponse(**body)
+        attach_rate_limit(ListCloudExportsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListCloudExportsResponse.model_construct()
     )
@@ -81,7 +82,7 @@ def CreateCloudExport(
     )
 
     return (
-        CreateCloudExportResponse(**body)
+        attach_rate_limit(CreateCloudExportResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateCloudExportResponse.model_construct()
     )
@@ -106,7 +107,7 @@ def GetCloudExport(
     )
 
     return (
-        GetCloudExportResponse(**body)
+        attach_rate_limit(GetCloudExportResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCloudExportResponse.model_construct()
     )
@@ -135,7 +136,7 @@ def UpdateCloudExport(
     )
 
     return (
-        UpdateCloudExportResponse(**body)
+        attach_rate_limit(UpdateCloudExportResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateCloudExportResponse.model_construct()
     )
@@ -160,7 +161,7 @@ def DeleteCloudExport(
     )
 
     return (
-        DeleteCloudExportResponse(**body)
+        attach_rate_limit(DeleteCloudExportResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteCloudExportResponse.model_construct()
     )

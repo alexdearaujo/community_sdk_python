@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -65,7 +66,7 @@ def ListSiteMarkets(
     )
 
     return (
-        ListSiteMarketsResponse(**body)
+        attach_rate_limit(ListSiteMarketsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListSiteMarketsResponse.model_construct()
     )
@@ -91,7 +92,7 @@ def CreateSiteMarket(
     )
 
     return (
-        CreateSiteMarketResponse(**body)
+        attach_rate_limit(CreateSiteMarketResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateSiteMarketResponse.model_construct()
     )
@@ -116,7 +117,7 @@ def GetSiteMarket(
     )
 
     return (
-        GetSiteMarketResponse(**body)
+        attach_rate_limit(GetSiteMarketResponse(**body), rate_limit_of(body))
         if body is not None
         else GetSiteMarketResponse.model_construct()
     )
@@ -145,7 +146,7 @@ def UpdateSiteMarket(
     )
 
     return (
-        UpdateSiteMarketResponse(**body)
+        attach_rate_limit(UpdateSiteMarketResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateSiteMarketResponse.model_construct()
     )
@@ -170,7 +171,7 @@ def DeleteSiteMarket(
     )
 
     return (
-        DeleteSiteMarketResponse(**body)
+        attach_rate_limit(DeleteSiteMarketResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteSiteMarketResponse.model_construct()
     )
@@ -193,7 +194,7 @@ def ListSites(api_config_override: Optional[APIConfig] = None) -> ListSitesRespo
     )
 
     return (
-        ListSitesResponse(**body)
+        attach_rate_limit(ListSitesResponse(**body), rate_limit_of(body))
         if body is not None
         else ListSitesResponse.model_construct()
     )
@@ -219,7 +220,7 @@ def CreateSite(
     )
 
     return (
-        CreateSiteResponse(**body)
+        attach_rate_limit(CreateSiteResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateSiteResponse.model_construct()
     )
@@ -244,7 +245,7 @@ def GetSite(
     )
 
     return (
-        GetSiteResponse(**body)
+        attach_rate_limit(GetSiteResponse(**body), rate_limit_of(body))
         if body is not None
         else GetSiteResponse.model_construct()
     )
@@ -273,7 +274,7 @@ def UpdateSite(
     )
 
     return (
-        UpdateSiteResponse(**body)
+        attach_rate_limit(UpdateSiteResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateSiteResponse.model_construct()
     )
@@ -298,7 +299,7 @@ def DeleteSite(
     )
 
     return (
-        DeleteSiteResponse(**body)
+        attach_rate_limit(DeleteSiteResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteSiteResponse.model_construct()
     )

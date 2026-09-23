@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import GetCredentialGroupError, ListCredentialGroupError
@@ -41,7 +42,7 @@ def ListCredentialGroup(
     )
 
     return (
-        ListCredentialGroupResponse(**body)
+        attach_rate_limit(ListCredentialGroupResponse(**body), rate_limit_of(body))
         if body is not None
         else ListCredentialGroupResponse.model_construct()
     )
@@ -66,7 +67,7 @@ def GetCredentialGroup(
     )
 
     return (
-        GetCredentialGroupResponse(**body)
+        attach_rate_limit(GetCredentialGroupResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCredentialGroupResponse.model_construct()
     )

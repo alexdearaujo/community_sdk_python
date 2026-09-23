@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -58,7 +59,7 @@ def GetTagValues(
     )
 
     return (
-        GetTagValuesResponse(**body)
+        attach_rate_limit(GetTagValuesResponse(**body), rate_limit_of(body))
         if body is not None
         else GetTagValuesResponse.model_construct()
     )
@@ -81,7 +82,7 @@ def ListTagKeys(api_config_override: Optional[APIConfig] = None) -> ListTagKeysR
     )
 
     return (
-        ListTagKeysResponse(**body)
+        attach_rate_limit(ListTagKeysResponse(**body), rate_limit_of(body))
         if body is not None
         else ListTagKeysResponse.model_construct()
     )
@@ -107,7 +108,7 @@ def CreateTagKey(
     )
 
     return (
-        CreateTagKeyResponse(**body)
+        attach_rate_limit(CreateTagKeyResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateTagKeyResponse.model_construct()
     )
@@ -132,7 +133,7 @@ def GetTagKey(
     )
 
     return (
-        GetTagKeyResponse(**body)
+        attach_rate_limit(GetTagKeyResponse(**body), rate_limit_of(body))
         if body is not None
         else GetTagKeyResponse.model_construct()
     )
@@ -161,7 +162,7 @@ def UpdateTagKey(
     )
 
     return (
-        UpdateTagKeyResponse(**body)
+        attach_rate_limit(UpdateTagKeyResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateTagKeyResponse.model_construct()
     )
@@ -186,7 +187,7 @@ def DeleteTagKey(
     )
 
     return (
-        DeleteTagKeyResponse(**body)
+        attach_rate_limit(DeleteTagKeyResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteTagKeyResponse.model_construct()
     )
@@ -211,7 +212,7 @@ def ListTagValues(
     )
 
     return (
-        ListTagValuesResponse(**body)
+        attach_rate_limit(ListTagValuesResponse(**body), rate_limit_of(body))
         if body is not None
         else ListTagValuesResponse.model_construct()
     )
@@ -237,7 +238,7 @@ def SetTagValues(
     )
 
     return (
-        SetTagValuesResponse(**body)
+        attach_rate_limit(SetTagValuesResponse(**body), rate_limit_of(body))
         if body is not None
         else SetTagValuesResponse.model_construct()
     )
@@ -263,7 +264,7 @@ def DeleteTagValues(
     )
 
     return (
-        DeleteTagValuesResponse(**body)
+        attach_rate_limit(DeleteTagValuesResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteTagValuesResponse.model_construct()
     )

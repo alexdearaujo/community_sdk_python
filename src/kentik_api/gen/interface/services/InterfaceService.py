@@ -4,6 +4,7 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -70,7 +71,7 @@ def ListInterface(
     )
 
     return (
-        ListInterfaceResponse(**body)
+        attach_rate_limit(ListInterfaceResponse(**body), rate_limit_of(body))
         if body is not None
         else ListInterfaceResponse.model_construct()
     )
@@ -96,7 +97,7 @@ def InterfaceCreate(
     )
 
     return (
-        CreateInterfaceResponse(**body)
+        attach_rate_limit(CreateInterfaceResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateInterfaceResponse.model_construct()
     )
@@ -121,7 +122,7 @@ def InterfaceGet(
     )
 
     return (
-        GetInterfaceResponse(**body)
+        attach_rate_limit(GetInterfaceResponse(**body), rate_limit_of(body))
         if body is not None
         else GetInterfaceResponse.model_construct()
     )
@@ -150,7 +151,7 @@ def InterfaceUpdate(
     )
 
     return (
-        UpdateInterfaceResponse(**body)
+        attach_rate_limit(UpdateInterfaceResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateInterfaceResponse.model_construct()
     )
@@ -175,7 +176,7 @@ def InterfaceDelete(
     )
 
     return (
-        DeleteInterfaceResponse(**body)
+        attach_rate_limit(DeleteInterfaceResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteInterfaceResponse.model_construct()
     )
@@ -201,7 +202,7 @@ def ManualClassify(
     )
 
     return (
-        ManualClassifyResponse(**body)
+        attach_rate_limit(ManualClassifyResponse(**body), rate_limit_of(body))
         if body is not None
         else ManualClassifyResponse.model_construct()
     )
