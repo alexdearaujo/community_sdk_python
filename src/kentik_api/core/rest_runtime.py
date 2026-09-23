@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 
 import httpx
 from kentik_api.core.api_config import APIConfig
-from kentik_api.errors import HTTPException, TransportError
+from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 
 
 def request_json(
@@ -110,6 +110,11 @@ def request_json(
                 details["details"] = payload.get("details")
         elif payload is not None:
             details["response_json"] = payload
+
+        # Handled here, ahead of the generated error_cls, so REST raises the
+        # same type gRPC does for UNAUTHENTICATED without regenerating errors.
+        if response.status_code == 401:
+            raise AuthenticationError(message)
 
         _raise_http_error(message, details=details)
 

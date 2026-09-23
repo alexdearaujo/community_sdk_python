@@ -9,16 +9,33 @@ import grpc
 
 from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 
+# Every non-OK code is classified explicitly, so none reaches a silent default.
+# The HTTP value is the canonical grpc-gateway equivalent, the same status
+# Kentik's Envoy transcoder returns to REST callers for that code.
 _GRPC_STATUS_TO_HTTP: dict[grpc.StatusCode, int] = {
     grpc.StatusCode.INVALID_ARGUMENT: 400,
-    grpc.StatusCode.UNAUTHENTICATED: 401,
+    grpc.StatusCode.FAILED_PRECONDITION: 400,
+    grpc.StatusCode.OUT_OF_RANGE: 400,
     grpc.StatusCode.PERMISSION_DENIED: 403,
     grpc.StatusCode.NOT_FOUND: 404,
     grpc.StatusCode.ALREADY_EXISTS: 409,
+    grpc.StatusCode.ABORTED: 409,
     grpc.StatusCode.RESOURCE_EXHAUSTED: 429,
+    grpc.StatusCode.UNKNOWN: 500,
+    grpc.StatusCode.INTERNAL: 500,
+    grpc.StatusCode.DATA_LOSS: 500,
     grpc.StatusCode.UNIMPLEMENTED: 501,
-    grpc.StatusCode.UNAVAILABLE: 503,
 }
+
+# No response arrived for these, which REST reports as TransportError via
+# httpx.RequestError. Claiming an HTTP status here would invent one.
+_NO_RESPONSE_CODES: frozenset[grpc.StatusCode] = frozenset(
+    {
+        grpc.StatusCode.CANCELLED,
+        grpc.StatusCode.DEADLINE_EXCEEDED,
+        grpc.StatusCode.UNAVAILABLE,
+    }
+)
 
 
 def map_grpc_error(
@@ -26,23 +43,31 @@ def map_grpc_error(
     *,
     method: str = "gRPC",
     path: str = "unknown",
-) -> AuthenticationError | HTTPException:
+) -> AuthenticationError | HTTPException | TransportError:
     """Maps a gRPC RpcError to the SDK exception hierarchy.
 
     Pure function: no I/O, no side effects. Testable without a gRPC channel.
     """
     code = exc.code()  # ty: ignore[unresolved-attribute]  -- grpcio ships no stubs
     details = exc.details() or ""  # ty: ignore[unresolved-attribute]
+    code_name = getattr(code, "name", repr(code))
 
     if code == grpc.StatusCode.UNAUTHENTICATED:
         return AuthenticationError(details)
+    if code in _NO_RESPONSE_CODES:
+        return TransportError(f"{method} {path} failed with {code_name}: {details}")
 
-    http_status = _GRPC_STATUS_TO_HTTP.get(code, 500)
+    http_status = _GRPC_STATUS_TO_HTTP.get(code)
+    if http_status is None:
+        return TransportError(
+            f"{method} {path} failed with unrecognized gRPC status {code_name}: {details}"
+        )
     return HTTPException(
         status_code=http_status,
         message=details,
         method=method,
         path=path,
+        grpc_status_code=code_name,
     )
 
 

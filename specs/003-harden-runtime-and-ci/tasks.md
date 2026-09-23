@@ -86,16 +86,17 @@ stories build on. Nothing here changes behaviour on its own.
 same exception type. Run `uv run python learn/ex04_errors.py` and confirm it
 reports `same exception type on both transports? True`.
 
-- [ ] T011 [US2] Replace `_GRPC_STATUS_TO_HTTP` with an exhaustive classification of all 16 non-OK gRPC codes in `src/kentik_api/core/grpc_runtime.py`, following the table in `specs/003-harden-runtime-and-ci/contracts/runtime-api.md` section 3 (FR-006, FR-009)
-- [ ] T012 [US2] Route `CANCELLED`, `DEADLINE_EXCEEDED`, and `UNAVAILABLE` to `TransportError` in `src/kentik_api/core/grpc_runtime.py`, with no fabricated HTTP status, matching what REST already does for the same conditions (FR-008)
-- [ ] T013 [US2] Set `grpc_status_code` on every `HTTPException` raised from `src/kentik_api/core/grpc_runtime.py`, so the verbatim gRPC code survives the canonical HTTP mapping (FR-010)
-- [ ] T014 [US2] Add an explicit unrecognized-code fallback in `src/kentik_api/core/grpc_runtime.py` raising `TransportError` that names the code, never claiming an HTTP status the server did not send (FR-009)
-- [ ] T015 [US2] Raise `AuthenticationError` for HTTP 401 in `request_json()` in `src/kentik_api/core/rest_runtime.py`, before dispatch to the generated `error_cls`, leaving generated error packages untouched (FR-007, FR-011)
-- [ ] T016 [P] [US2] Add cross-transport symmetry tests in `tests/runtime/test_transport_symmetry.py` covering auth rejection, client-side timeout, and unreachable host over both transports (FR-040, SC-002)
-- [ ] T017 [US2] Update the 401 expectation for **every** discovered endpoint in `tests/generated/test_endpoint_schema_coverage.py`, without narrowing, skipping, or making the suite status-agnostic (FR-041)
-- [ ] T018 [US2] Temporarily revert T015, confirm `tests/generated/test_endpoint_schema_coverage.py` **fails**, restore T015, and record the outcome in the pull request (FR-042, Constitution Principle IV)
-- [ ] T019 [P] [US2] Remove the "works identically for REST and gRPC" claim from `examples/common/error_handling.py`, unless T016 demonstrably covers every `except` branch it declares on both transports (FR-012)
-- [ ] T020 [US2] Run `make generate local && git diff --exit-code` and confirm no generated file changed (FR-005)
+- [x] T011 [US2] Replace `_GRPC_STATUS_TO_HTTP` with an exhaustive classification of all 16 non-OK gRPC codes in `src/kentik_api/core/grpc_runtime.py`, following the table in `specs/003-harden-runtime-and-ci/contracts/runtime-api.md` section 3 (FR-006, FR-009)
+- [x] T012 [US2] Route `CANCELLED`, `DEADLINE_EXCEEDED`, and `UNAVAILABLE` to `TransportError` in `src/kentik_api/core/grpc_runtime.py`, with no fabricated HTTP status, matching what REST already does for the same conditions (FR-008)
+- [x] T013 [US2] Set `grpc_status_code` on every `HTTPException` raised from `src/kentik_api/core/grpc_runtime.py`, so the verbatim gRPC code survives the canonical HTTP mapping (FR-010)
+- [x] T014 [US2] Add an explicit unrecognized-code fallback in `src/kentik_api/core/grpc_runtime.py` raising `TransportError` that names the code, never claiming an HTTP status the server did not send (FR-009)
+- [x] T015 [US2] Raise `AuthenticationError` for HTTP 401 in `request_json()` in `src/kentik_api/core/rest_runtime.py`, before dispatch to the generated `error_cls`, leaving generated error packages untouched (FR-007, FR-011)
+- [x] T016 [P] [US2] Add cross-transport symmetry tests in `tests/runtime/test_transport_symmetry.py` covering auth rejection, client-side timeout, and unreachable host over both transports (FR-040, SC-002)
+- [x] T017 [US2] Update the 401 expectation for **every** discovered endpoint in `tests/generated/test_endpoint_schema_coverage.py`, without narrowing, skipping, or making the suite status-agnostic (FR-041)
+- [x] T018 [US2] Temporarily revert T015, confirm `tests/generated/test_endpoint_schema_coverage.py` **fails**, restore T015, and record the outcome in the pull request (FR-042, Constitution Principle IV)
+  - Recorded 2026-09-22: with the T015 lines removed, 233 of 699 cases failed (every endpoint's 401 case); restored, 699 passed.
+- [x] T019 [P] [US2] Remove the "works identically for REST and gRPC" claim from `examples/common/error_handling.py`, unless T016 demonstrably covers every `except` branch it declares on both transports (FR-012)
+- [x] T020 [US2] Run `make generate local && git diff --exit-code` and confirm no generated file changed (FR-005)
 
 **Checkpoint**: the three measured asymmetries are gone; `make test` green.
 
@@ -131,7 +132,7 @@ the auth metadata tuple makes a test fail.
 - [ ] T028 [P] [US3] Add tests exercising `call_grpc()` end to end with a mock stub in `tests/runtime/test_grpc_runtime.py`, with no live network call (FR-038)
 - [ ] T029 [P] [US3] Add a test asserting the exact gRPC auth metadata keys and values emitted by `KentikCredentials.get_grpc_plugin()` in `tests/runtime/test_credentials.py` (FR-039)
 - [ ] T030 [P] [US3] Add tests covering `GrpcTransport.__init__` and `close()` in `tests/runtime/test_grpc_transport.py`, without opening a real channel (FR-038)
-- [ ] T031 [US3] Extend `tests/runtime/test_grpc_runtime.py` to assert the resulting SDK exception for each of the 16 non-OK gRPC status codes plus the unrecognized-code fallback (FR-040, SC-003)
+- [x] T031 [US3] Extend `tests/runtime/test_grpc_runtime.py` to assert the resulting SDK exception for each of the 16 non-OK gRPC status codes plus the unrecognized-code fallback (FR-040, SC-003)
 - [ ] T032 [US3] Verify 100% line coverage of `src/kentik_api/core/grpc_runtime.py`, `src/kentik_api/auth/credentials.py`, and `src/kentik_api/transports/grpc_client.py`, comparing against the T002 baseline (SC-004)
 - [ ] T033 [US3] Prove the new tests bite: change one character in the `x-ch-auth-email` metadata key in `src/kentik_api/auth/credentials.py`, confirm a test fails, restore, and record the outcome
 

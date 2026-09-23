@@ -1,0 +1,108 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+"""The same failure raises the same SDK exception on both transports (FR-040, SC-002).
+
+Each case drives one failure through both shared chokepoints, `request_json()`
+and `call_grpc()`, so a caller's `except` clauses survive flipping `protocol`.
+"""
+
+from __future__ import annotations
+
+import grpc
+import httpx
+import pytest
+
+from kentik_api.core.api_config import APIConfig
+from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rest_runtime import request_json
+from kentik_api.errors import (
+    AuthenticationError,
+    HTTPException,
+    KentikError,
+    TransportError,
+)
+
+_REQUEST = httpx.Request("GET", "https://api.example.com/device/v202504beta2/device")
+
+# (REST outcome, equivalent gRPC status, exception both must raise)
+CASES = {
+    "auth rejected": (
+        httpx.Response(
+            401, json={"code": 16, "message": "bad token"}, request=_REQUEST
+        ),
+        grpc.StatusCode.UNAUTHENTICATED,
+        AuthenticationError,
+    ),
+    "client-side timeout": (
+        httpx.ReadTimeout("timed out", request=_REQUEST),
+        grpc.StatusCode.DEADLINE_EXCEEDED,
+        TransportError,
+    ),
+    "unreachable host": (
+        httpx.ConnectError("connection refused", request=_REQUEST),
+        grpc.StatusCode.UNAVAILABLE,
+        TransportError,
+    ),
+}
+
+
+def _rest_call(
+    monkeypatch: pytest.MonkeyPatch, outcome: httpx.Response | Exception
+) -> None:
+    def _fake_request(self, *args, **kwargs):
+        if isinstance(outcome, Exception):
+            raise outcome
+        return outcome
+
+    monkeypatch.setattr(httpx.Client, "request", _fake_request)
+    request_json(
+        "GET",
+        "/device/v202504beta2/device",
+        api_config_override=APIConfig(
+            base_path="https://api.example.com",
+            auth_email="dev@example.com",
+            auth_token="t",
+        ),
+        operation_name="ListDevices",
+    )
+
+
+def _grpc_call(rpc_error, code: grpc.StatusCode) -> None:
+    def _stub(_request):
+        raise rpc_error(code, "simulated")
+
+    call_grpc(_stub, object())
+
+
+@pytest.mark.parametrize("failure", CASES, ids=str)
+def test_same_failure_raises_same_type_on_both_transports(
+    monkeypatch, rpc_error, failure
+):
+    rest_outcome, grpc_code, expected = CASES[failure]
+
+    with pytest.raises(KentikError) as rest_exc:
+        _rest_call(monkeypatch, rest_outcome)
+    with pytest.raises(KentikError) as grpc_exc:
+        _grpc_call(rpc_error, grpc_code)
+
+    # Exact type, not isinstance: an HTTPException subclass here would still
+    # break an `except TransportError:` written against the other transport.
+    assert type(rest_exc.value) is expected
+    assert type(grpc_exc.value) is expected
+
+
+def test_api_fault_reaches_the_same_except_branch_on_both_transports(
+    monkeypatch, rpc_error
+):
+    # REST raises the operation's generated HTTPException subclass and gRPC the
+    # base class, so parity here is the `except HTTPException:` branch, with the
+    # same status either way.
+    fault = httpx.Response(
+        404, json={"code": 5, "message": "no such device"}, request=_REQUEST
+    )
+
+    with pytest.raises(HTTPException) as rest_exc:
+        _rest_call(monkeypatch, fault)
+    with pytest.raises(HTTPException) as grpc_exc:
+        _grpc_call(rpc_error, grpc.StatusCode.NOT_FOUND)
+
+    assert rest_exc.value.status_code == grpc_exc.value.status_code == 404
