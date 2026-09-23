@@ -198,9 +198,11 @@ region both raise something catchable as `KentikError`.
 **Independent test**: grepping the header names outside `gen/` returns exactly
 one construction site.
 
-- [ ] T046 [US6] Make `request_json()` in `src/kentik_api/core/rest_runtime.py` call `KentikCredentials.get_rest_headers()` instead of rebuilding the header dict inline, or delete the unused method, so only one definition survives (FR-028)
-- [ ] T047 [US6] Confirm the surviving definition is exercised by the existing REST auth assertions in `tests/runtime/test_rest_runtime.py`
-- [ ] T048 [P] [US6] Update `src/kentik_api/auth/README.md`, which currently documents `get_rest_headers()` as unused (FR-057)
+- [x] T046 [US6] Make `request_json()` in `src/kentik_api/core/rest_runtime.py` call `KentikCredentials.get_rest_headers()` instead of rebuilding the header dict inline, or delete the unused method, so only one definition survives (FR-028)
+  - Neither option as written: `get_rest_headers()` is deleted, and the key names move to `AUTH_EMAIL_KEY` / `AUTH_TOKEN_KEY` plus `auth_headers()` in `auth/credentials.py`. `request_json()` and the gRPC plugin both derive from them, so the gRPC metadata is no longer a second spelling. Also removed `fixup._fix_auth_header`, a third copy that rewrote `Authorization: Bearer` headers no template emits; regeneration with it gone changed no generated file.
+- [x] T047 [US6] Confirm the surviving definition is exercised by the existing REST auth assertions in `tests/runtime/test_rest_runtime.py`
+  - Recorded 2026-09-22: changing `AUTH_EMAIL_KEY` by one character fails 3 tests across both transports (gRPC metadata, REST headers, `request_json`); restored, all pass.
+- [x] T048 [P] [US6] Update `src/kentik_api/auth/README.md`, which currently documents `get_rest_headers()` as unused (FR-057)
 
 **Checkpoint**: `grep -rn "X-CH-Auth-Email" src/ | grep -v "/gen/"` returns one line.
 

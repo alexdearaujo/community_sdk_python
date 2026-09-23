@@ -7,7 +7,7 @@ wrong token, so these keys are asserted verbatim rather than loosely.
 
 from __future__ import annotations
 
-from kentik_api.auth.credentials import KentikCredentials
+from kentik_api.auth.credentials import KentikCredentials, auth_headers
 
 CREDENTIALS = KentikCredentials(email="dev@example.com", api_token="secret-token")
 
@@ -30,9 +30,8 @@ def test_grpc_plugin_emits_exact_auth_metadata():
     ]
 
 
-def test_rest_headers_carry_exact_auth_keys():
-    assert CREDENTIALS.get_rest_headers() == {
+def test_rest_auth_headers_carry_exact_keys():
+    assert auth_headers("dev@example.com", "secret-token") == {
         "X-CH-Auth-Email": "dev@example.com",
         "X-CH-Auth-API-Token": "secret-token",
-        "Content-Type": "application/json",
     }

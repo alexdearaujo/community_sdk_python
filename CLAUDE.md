@@ -98,8 +98,8 @@ subpackage of independently testable phase modules (see
   Single public entrypoint: `fix_generated_service(service_dir)`.
   Internally: rebuilds `models/__init__.py` from a full directory
   scan, replaces wildcard exports with explicit named imports, and
-  applies all file-level content patches (import aliases, auth
-  headers, path parameter sanitization, docstring normalization,
+  applies all file-level content patches (import aliases, path
+  parameter sanitization, docstring normalization,
   duplicate function renaming, and error-handling injection).
 - `wrapper_generation.py` — generates service wrappers and the
   client mixin, collapsed into a single `generate()` entrypoint
@@ -156,8 +156,10 @@ code confirms it directly:
   *only* function that ever calls `httpx` for REST traffic. Every
   generated operation in every service calls this same function. It
   centralizes:
-  - Kentik's auth header scheme (`X-CH-Auth-Email` /
-    `X-CH-Auth-API-Token`)
+  - Kentik's auth headers (`X-CH-Auth-Email` /
+    `X-CH-Auth-API-Token`), built by `auth_headers()` in
+    `src/kentik_api/auth/credentials.py`, the scheme's one definition,
+    which the gRPC auth plugin also derives from
   - query-param cleaning
   - the request itself
   - transport-failure wrapping (`TransportError`)

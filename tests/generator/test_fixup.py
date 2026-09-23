@@ -10,7 +10,6 @@ from pathlib import Path
 from scripts.generation.fixup import (
     _cleanup_service_files,
     _dedupe_top_level_function_names,
-    _fix_auth_header,
     _fix_import_aliases,
     _fix_list_collision,
     _fix_path_parameters,
@@ -99,25 +98,6 @@ def _make_service_dir(tmp_path: Path) -> Path:
     services = tmp_path / "services"
     services.mkdir(parents=True)
     return services
-
-
-def test_patch_auth_header(tmp_path):
-    svc = _make_service_dir(tmp_path)
-    f = svc / "DeviceService.py"
-    f.write_text(
-        textwrap.dedent("""\
-        headers = {
-            "Authorization": f"Bearer {api_config.access_token}",
-        }
-        """)
-    )
-
-    _patch_service_files(tmp_path, set())
-
-    content = f.read_text()
-    assert "X-CH-Auth-Email" in content
-    assert "X-CH-Auth-API-Token" in content
-    assert "Authorization" not in content
 
 
 # ---------------------------------------------------------------------------
@@ -268,14 +248,6 @@ def test_fix_path_parameters_strips_dot_notation():
     result = _fix_path_parameters("path=f'/v1/device/{device.id}'")
     assert "{deviceid}" in result
     assert "{device.id}" not in result
-
-
-def test_fix_auth_header_replaces_bearer():
-    content = '"Authorization": f"Bearer {api_config.access_token}",'
-    result = _fix_auth_header(content)
-    assert "X-CH-Auth-Email" in result
-    assert "X-CH-Auth-API-Token" in result
-    assert "Authorization" not in result
 
 
 def test_fix_typing_wildcard_replaces_star():

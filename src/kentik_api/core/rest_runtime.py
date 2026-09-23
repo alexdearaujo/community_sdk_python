@@ -5,6 +5,7 @@ import json
 from typing import Any, Dict, Optional
 
 import httpx
+from kentik_api.auth.credentials import auth_headers
 from kentik_api.core.api_config import APIConfig
 from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 
@@ -27,8 +28,7 @@ def request_json(
     headers: Dict[str, Any] = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "X-CH-Auth-Email": api_config.auth_email,
-        "X-CH-Auth-API-Token": api_config.auth_token,
+        **auth_headers(api_config.auth_email, api_config.auth_token),
     }
     if header_params:
         headers.update(

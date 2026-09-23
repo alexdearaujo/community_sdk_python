@@ -64,6 +64,7 @@ flowchart TB
     Generated_Service_Wrappers -->|"x35"| gRPC_Runtime
     Generated_Service_Wrappers -->|"x35"| gRPC_Transport
     REST_Runtime --> API_Config
+    REST_Runtime --> Auth_Credentials
     REST_Runtime --> Error_Types
     REST_Transport --> API_Config
     REST_Transport --> Auth_Credentials

@@ -83,8 +83,9 @@ sequenceDiagram
 
 `request_json()` centralizes:
 
-- Kentik's auth header scheme (`X-CH-Auth-Email` /
-  `X-CH-Auth-API-Token`)
+- Kentik's auth headers, built by `auth_headers()` in
+  [`auth/credentials.py`](../auth/credentials.py), the scheme's single
+  definition
 - Query-param cleaning (drops `None` values)
 - The request itself, via a short-lived `httpx.Client`
 - Transport-failure wrapping into `TransportError`
