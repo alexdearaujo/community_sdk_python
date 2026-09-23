@@ -365,12 +365,17 @@ credentials, and renaming a referenced wrapper method causes a failure.
 
 ## Phase 15: Polish and cross-cutting concerns
 
-- [ ] T097 Run `uvx vulture --min-confidence 60 scripts/ src/kentik_api/core src/kentik_api/errors src/kentik_api/transports src/kentik_api/auth src/kentik_api/client.py examples/` and confirm no unused function remains (SC-011)
-- [ ] T098 [P] Write release notes via `scripts/release_notes.py` naming every caller-visible change: `ConfigurationError` replacing `ValueError`, REST raising `AuthenticationError`, gRPC timeouts becoming `TransportError`, connection reuse, timeouts, and the per-call override (FR-058)
-- [ ] T099 [P] Update `CLAUDE.md` for the shared-runtime changes, so it does not drift from the constitution (FR-057)
-- [ ] T100 Run the full definition of done from `specs/003-harden-runtime-and-ci/quickstart.md`: `make test`, `make typecheck`, `make lint`, `make docs`, and `make generate local && git diff --exit-code` (SC-007, SC-008)
-- [ ] T101 Confirm `make test` still needs no network and no credentials, and that no `e2e` or `e2e_grpc` test runs in CI (FR-045, FR-050)
+- [x] T097 Run `uvx vulture --min-confidence 60 scripts/ src/kentik_api/core src/kentik_api/errors src/kentik_api/transports src/kentik_api/auth src/kentik_api/client.py examples/` and confirm no unused function remains (SC-011)
+  - Recorded 2026-09-23: one genuine finding, an unused unpacked `resp_class` in `wrapper_generation.py`, removed. The remaining four function or method findings are false positives: `request_json`, `call_grpc`, and `with_timeout` are called from generated code or by users, outside the scanned paths, and `intercept_unary_unary` is a grpc interceptor hook.
+- [x] T098 [P] Write release notes via `scripts/release_notes.py` naming every caller-visible change: `ConfigurationError` replacing `ValueError`, REST raising `AuthenticationError`, gRPC timeouts becoming `TransportError`, connection reuse, timeouts, and the per-call override (FR-058)
+  - `scripts/release_notes.py` diffs the generated surface and cannot express behavior changes, so they are in a new `CHANGELOG.md`, each breaking change paired with what a caller changes. `make release-notes` still renders the surface diff.
+- [x] T099 [P] Update `CLAUDE.md` for the shared-runtime changes, so it does not drift from the constitution (FR-057)
+- [x] T100 Run the full definition of done from `specs/003-harden-runtime-and-ci/quickstart.md`: `make test`, `make typecheck`, `make lint`, `make docs`, and `make generate local && git diff --exit-code` (SC-007, SC-008)
+  - Recorded 2026-09-23: `make test` 2443 passed; `make typecheck`, `make lint`, `make docs` (with `-W`) clean; `make generate local` left the tree unchanged; `make check-specs` passed.
+- [x] T101 Confirm `make test` still needs no network and no credentials, and that no `e2e` or `e2e_grpc` test runs in CI (FR-045, FR-050)
+  - Recorded 2026-09-23: the full suite passes under pytest-socket with sockets disabled except localhost, and with `KENTIK_EMAIL` and `KENTIK_API_TOKEN` forced empty. `.github/workflows/` runs no e2e test.
 - [ ] T102 Send `reports/upstream-ratelimit-scope-undocumented.html` to the Kentik API team and record the response, particularly the answer to the per-customer versus per-endpoint question
+  - **Maintainer's own task**: sending a report to Kentik is an outward-facing action.
 
 ---
 
