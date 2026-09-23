@@ -1,4 +1,4 @@
-.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck clean deep-clean
+.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck check-specs clean deep-clean
 
 .DEFAULT_GOAL := all
 
@@ -67,6 +67,9 @@ test-e2e-grpc: ## Run end-to-end gRPC-transport tests against the REAL Kentik AP
 lint: ## Run linter and formatter (Ruff)
 	$(RUFF) check --fix .
 	$(RUFF) format .
+
+check-specs: ## Validate FR/SC/task cross-references in specs/
+	$(PYTHON) scripts/check_spec_refs.py
 
 release-notes: ## Render release notes from api_surface.json (SINCE=<ref>, default: latest tag)
 	uv run python scripts/release_notes.py $(if $(SINCE),--since $(SINCE),) $(if $(OUT),-o $(OUT),)
