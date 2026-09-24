@@ -275,7 +275,7 @@ state which transport suits their workload and why.
 **Depends on Phase 3**, because the guide documents the corrected error
 behaviour.
 
-- [ ] T071 [US9] Work through `learn/ex01_same_call.py` through `learn/ex07_rate_limits.py` and complete `learn/findings.md`, marking each line measured, confirmed-in-source, or assumed (FR-051, FR-052)
+- [x] T071 [US9] Work through `learn/ex01_same_call.py` through `learn/ex07_rate_limits.py` and complete `learn/findings.md`, marking each line measured, confirmed-in-source, or assumed (FR-051, FR-052)
   - **Maintainer's own task.** The exercises are run by hand, not by an agent. On 2026-09-22 the exercises were updated (locally, untracked) so their code and prompts match Phases 3 to 10, each naming the commit that changed the behavior it once demonstrated.
   - 2026-09-24: maintainer ran all seven. Claude filled the remaining blanks in `learn/findings.md` from source, mocked tests, and local scans (no live call), and fixed stale per-call deadline text in ex02, ex03, and ex06. Still open: re-run ex02 (now prints the protobuf size) and ex06 to turn their `[A]`/`[C]` rows into `[M]`.
 - [x] T072 [US9] Write `docs/sphinx/guides/rest-vs-grpc.md` covering mechanism, when to choose each, and trade-offs, grounding every claim in a recorded finding (FR-053, FR-054)
