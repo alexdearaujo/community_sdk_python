@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+import ssl
+import urllib.request
+
+import httpcore
 import httpx
 import pytest
 
@@ -142,3 +146,73 @@ def test_transports_expose_quota_per_endpoint_from_their_config():
     finally:
         rest.close()
         grpc_transport.close()
+
+
+@pytest.fixture
+def no_proxy_env(monkeypatch):
+    for name in (
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+        "NO_PROXY",
+        "http_proxy",
+        "https_proxy",
+        "all_proxy",
+        "no_proxy",
+    ):
+        monkeypatch.delenv(name, raising=False)
+    # getproxies() also reads macOS and Windows system settings; keep to the env.
+    monkeypatch.setattr(
+        "httpx._utils.getproxies", urllib.request.getproxies_environment
+    )
+    return monkeypatch
+
+
+def _transport_for(config: APIConfig, url: str) -> httpx.BaseTransport:
+    return config.client._transport_for_url(httpx.URL(url))
+
+
+def test_rest_goes_direct_without_proxy_variables(no_proxy_env):
+    config = APIConfig(base_path="https://api.example.com")
+    try:
+        assert _transport_for(config, "https://api.example.com/x") is (
+            config.client._transport
+        )
+    finally:
+        config.close()
+
+
+def test_rest_honors_https_proxy(no_proxy_env):
+    no_proxy_env.setenv("HTTPS_PROXY", "http://proxy.internal:3128")
+    config = APIConfig(base_path="https://api.example.com")
+    try:
+        transport = _transport_for(config, "https://api.example.com/x")
+        assert isinstance(transport, httpx.HTTPTransport)
+        assert isinstance(transport._pool, httpcore.HTTPProxy)
+        assert transport._pool._proxy_url.host == b"proxy.internal"
+        assert transport._pool._ssl_context.verify_mode is ssl.CERT_REQUIRED
+    finally:
+        config.close()
+
+
+def test_rest_skips_the_proxy_for_no_proxy_hosts(no_proxy_env):
+    no_proxy_env.setenv("HTTPS_PROXY", "http://proxy.internal:3128")
+    no_proxy_env.setenv("NO_PROXY", "api.example.com")
+    config = APIConfig(base_path="https://api.example.com")
+    try:
+        assert _transport_for(config, "https://api.example.com/x") is (
+            config.client._transport
+        )
+    finally:
+        config.close()
+
+
+def test_rest_proxy_also_applies_to_a_with_timeout_copy(no_proxy_env):
+    no_proxy_env.setenv("HTTPS_PROXY", "http://proxy.internal:3128")
+    config = APIConfig(base_path="https://api.example.com")
+    try:
+        slow = config.with_timeout(300)
+        transport = _transport_for(slow, "https://api.example.com/x")
+        assert isinstance(transport._pool, httpcore.HTTPProxy)
+    finally:
+        config.close()

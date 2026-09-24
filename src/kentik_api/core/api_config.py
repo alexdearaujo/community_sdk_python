@@ -4,6 +4,10 @@ from typing import Optional
 
 import httpx
 
+# Private, but it is the function httpx itself uses for this, NO_PROXY rules
+# included. An httpx upgrade that moves it fails here, at import.
+from httpx._utils import get_environment_proxies
+
 from kentik_api.core.rate_limit import RateLimit
 from kentik_api.errors import ConfigurationError, HTTPException
 
@@ -137,11 +141,28 @@ class APIConfig:
                     base_url=self.base_path,
                     timeout=self.rest_timeout,
                     # verify belongs on the transport: a Client given one ignores its own.
-                    transport=httpx.HTTPTransport(
-                        verify=self.verify, retries=_CONNECT_RETRIES
-                    ),
+                    transport=self._transport(),
+                    mounts=self._proxy_mounts(),
                 )
             return self._client
+
+    def _transport(self, proxy: str | None = None) -> httpx.HTTPTransport:
+        return httpx.HTTPTransport(
+            verify=self.verify, retries=_CONNECT_RETRIES, proxy=proxy
+        )
+
+    def _proxy_mounts(self) -> dict[str, httpx.HTTPTransport | None]:
+        """Routes REST through HTTP(S)_PROXY / ALL_PROXY, honoring NO_PROXY.
+
+        httpx reads these itself only when it builds its own transport. Passing
+        one, for the connection retries, turns that off, so rebuild the same
+        routing here. None sends a host direct. Proxied calls get no connection
+        retries: httpcore 1.0 drops `retries` for proxy connections.
+        """
+        return {
+            pattern: None if proxy is None else self._transport(proxy)
+            for pattern, proxy in get_environment_proxies().items()
+        }
 
     def close(self) -> None:
         """Releases the HTTP client. Safe to call more than once.

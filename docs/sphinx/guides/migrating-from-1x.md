@@ -26,7 +26,7 @@ There is no compatibility layer. Rewrite each call against the new client.
 | Errors | `KentikAPIError` and subclasses | `KentikError` and subclasses |
 | Timeout | `timeout=(10.0, 60.0)` | `timeout=60.0`, or `rest_timeout=httpx.Timeout(...)` |
 | Retries | `retry_strategy=Retry(...)` | Failed connection attempts only, twice. No retry after the server responds. |
-| Proxy | `proxy="http://..."` | gRPC uses `https_proxy`. REST has no proxy support. |
+| Proxy | `proxy="http://..."` | The `https_proxy` and `no_proxy` environment variables, on both transports |
 
 ## One call, before and after
 

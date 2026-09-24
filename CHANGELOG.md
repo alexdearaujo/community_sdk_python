@@ -62,7 +62,12 @@ Each change below can stop an existing `except` clause or call from working.
   its REST calls. `close()` releases it. A call after `close()` raises
   `ConfigurationError`.
 - **Connection retries.** The SDK retries a failed connection attempt twice.
-  It never retries a request that reached the server.
+  It never retries a request that reached the server. A call through a proxy
+  is not retried, because httpcore does not support retries for proxy
+  connections.
+- **Proxies.** REST calls honor `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, and
+  `NO_PROXY` (either case). gRPC already honored the lowercase `https_proxy` and
+  `no_proxy`. There is no `proxy=` argument.
 
 ### Dependencies
 
