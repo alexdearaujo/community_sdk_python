@@ -55,8 +55,6 @@ dev = [
     "grpcio-tools==1.84.0",
     "types-protobuf>=6.30.0",
     "ty>=0.0.73",
-    # Pinned: generate_sdk.py formats gen/ with it, so a different version
-    # changes generated output and trips CI's regeneration check.
     "ruff==0.14.11",
 ]
 
