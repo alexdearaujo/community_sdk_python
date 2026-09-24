@@ -50,7 +50,7 @@ class BgpMonitoringServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListMonitorsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -81,7 +81,7 @@ class BgpMonitoringServiceWrapper:
         data: rest_models.CreateMonitorRequest,
     ) -> rest_models.CreateMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -114,7 +114,7 @@ class BgpMonitoringServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -151,7 +151,7 @@ class BgpMonitoringServiceWrapper:
         data: rest_models.BgpMonitoringAdminServiceUpdateMonitorBody,
     ) -> rest_models.UpdateMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -187,7 +187,7 @@ class BgpMonitoringServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -224,7 +224,7 @@ class BgpMonitoringServiceWrapper:
         data: rest_models.BgpMonitoringAdminServiceSetMonitorStatusBody,
     ) -> rest_models.SetMonitorStatusResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -263,7 +263,7 @@ class BgpMonitoringServiceWrapper:
         data: rest_models.GetMetricsForTargetRequest,
     ) -> rest_models.GetMetricsForTargetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -301,7 +301,7 @@ class BgpMonitoringServiceWrapper:
         data: rest_models.GetRoutesForTargetRequest,
     ) -> rest_models.GetRoutesForTargetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )

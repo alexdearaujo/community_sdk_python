@@ -46,7 +46,7 @@ class InterfaceServiceWrapper:
         filtersipTypes: Optional[List[str]] = None,
     ) -> rest_models.ListInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for interface service"
                 )
@@ -180,7 +180,7 @@ class InterfaceServiceWrapper:
         data: rest_models.ManualClassifyRequest,
     ) -> rest_models.ManualClassifyResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for interface service"
                 )

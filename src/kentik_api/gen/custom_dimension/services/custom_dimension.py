@@ -37,7 +37,7 @@ class CustomDimensionServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCustomDimensionsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -67,7 +67,7 @@ class CustomDimensionServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, customDimensionId: str
     ) -> rest_models.GetCustomDimensionInfoResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -110,7 +110,7 @@ class CustomDimensionServiceWrapper:
         data: rest_models.CustomDimension,
     ) -> rest_models.UpdateCustomDimensionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -154,7 +154,7 @@ class CustomDimensionServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, customDimensionId: str
     ) -> rest_models.DeleteCustomDimensionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -197,7 +197,7 @@ class CustomDimensionServiceWrapper:
         data: rest_models.Populator,
     ) -> rest_models.CreatePopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -244,7 +244,7 @@ class CustomDimensionServiceWrapper:
         fieldLimit: Optional[int] = None,
     ) -> rest_models.GetPopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -292,7 +292,7 @@ class CustomDimensionServiceWrapper:
         data: rest_models.Populator,
     ) -> rest_models.UpdatePopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -342,7 +342,7 @@ class CustomDimensionServiceWrapper:
         populatorId: str,
     ) -> rest_models.DeletePopulatorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -390,7 +390,7 @@ class CustomDimensionServiceWrapper:
         limit: Optional[int] = None,
     ) -> rest_models.GetPopulatorFieldResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
@@ -442,7 +442,7 @@ class CustomDimensionServiceWrapper:
         data: rest_models.CustomDimension,
     ) -> rest_models.CreateCustomDimensionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )

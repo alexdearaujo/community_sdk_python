@@ -45,7 +45,7 @@ class KmiServiceWrapper:
         magnitude: Optional[int] = None,
     ) -> rest_models.GetGlobalInsightsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
@@ -105,7 +105,7 @@ class KmiServiceWrapper:
         magnitude: Optional[int] = None,
     ) -> rest_models.GetASNInsightsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
@@ -162,7 +162,7 @@ class KmiServiceWrapper:
         data: rest_models.KmiServiceGetASNDetailsBody,
     ) -> rest_models.GetASNDetailsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
@@ -212,7 +212,7 @@ class KmiServiceWrapper:
         data: rest_models.KmiServiceGetRankingsBody,
     ) -> rest_models.GetRankingsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
@@ -260,7 +260,7 @@ class KmiServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListMarketsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )

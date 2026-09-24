@@ -41,7 +41,7 @@ class AssetTagsServiceWrapper:
         assetId: str,
     ) -> rest_models.GetTagValuesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
@@ -79,7 +79,7 @@ class AssetTagsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListTagKeysResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
@@ -110,7 +110,7 @@ class AssetTagsServiceWrapper:
         data: rest_models.CreateTagKeyRequest,
     ) -> rest_models.CreateTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
@@ -143,7 +143,7 @@ class AssetTagsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
@@ -180,7 +180,7 @@ class AssetTagsServiceWrapper:
         data: rest_models.AssetTagsServiceUpdateTagKeyBody,
     ) -> rest_models.UpdateTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
@@ -216,7 +216,7 @@ class AssetTagsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteTagKeyResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
@@ -253,7 +253,7 @@ class AssetTagsServiceWrapper:
         assetType: str,
     ) -> rest_models.ListTagValuesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
@@ -294,7 +294,7 @@ class AssetTagsServiceWrapper:
         data: rest_models.SetTagValuesRequest,
     ) -> rest_models.SetTagValuesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
@@ -330,7 +330,7 @@ class AssetTagsServiceWrapper:
         data: rest_models.DeleteTagValuesRequest,
     ) -> rest_models.DeleteTagValuesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )

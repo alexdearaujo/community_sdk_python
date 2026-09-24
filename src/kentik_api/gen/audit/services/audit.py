@@ -43,7 +43,7 @@ class AuditServiceWrapper:
         limit: Optional[str] = None,
     ) -> rest_models.ListAuditEventsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for audit service"
                 )
@@ -92,7 +92,7 @@ class AuditServiceWrapper:
         ctime: Optional[str] = None,
     ) -> rest_models.GetAuditEventResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for audit service"
                 )

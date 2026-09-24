@@ -121,7 +121,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertAutoAckServiceCreateRequest,
     ) -> rest_models.AlertAutoAckServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -157,7 +157,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertAutoAckServiceListRequest,
     ) -> rest_models.AlertAutoAckServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -190,7 +190,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, autoAckid: str
     ) -> rest_models.AlertAutoAckServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -223,7 +223,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, autoAckid: str
     ) -> rest_models.AlertAutoAckServiceDeleteResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -260,7 +260,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertAutoAckServiceReplaceBody,
     ) -> rest_models.AlertAutoAckServiceReplaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -301,7 +301,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertServiceListRequest,
     ) -> rest_models.AlertServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -337,7 +337,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertServiceClearRequest,
     ) -> rest_models.AlertServiceClearResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -370,7 +370,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, alertId: str
     ) -> rest_models.AlertServiceListCommentsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -407,7 +407,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertServiceAddCommentBody,
     ) -> rest_models.AlertServiceAddCommentResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -449,7 +449,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertServiceSetExternalContextBody,
     ) -> rest_models.AlertServiceSetExternalContextResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -489,7 +489,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -526,7 +526,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertServiceAckBody,
     ) -> rest_models.AlertServiceAckResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -566,7 +566,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertServiceUnAckBody,
     ) -> rest_models.AlertServiceUnAckResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -605,7 +605,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertSilenceNotificationsServiceCreateRequest,
     ) -> rest_models.AlertSilenceNotificationsServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -641,7 +641,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertSilenceNotificationsServiceListRequest,
     ) -> rest_models.AlertSilenceNotificationsServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -674,7 +674,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertSilenceNotificationsServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -707,7 +707,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertSilenceNotificationsServiceDeleteResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -744,7 +744,7 @@ class AlertingServiceWrapper:
         data: rest_models.AlertSilenceNotificationsServiceReplaceBody,
     ) -> rest_models.AlertSilenceNotificationsServiceReplaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -791,7 +791,7 @@ class AlertingServiceWrapper:
         filtersmodifiedAtend: Optional[str] = None,
     ) -> rest_models.MitigationMethodsServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -846,7 +846,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.MitigationMethodsServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -890,7 +890,7 @@ class AlertingServiceWrapper:
         filtersmodifiedAtend: Optional[str] = None,
     ) -> rest_models.MitigationPlatformsServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -945,7 +945,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.MitigationPlatformsServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -993,7 +993,7 @@ class AlertingServiceWrapper:
         filterstypes: Optional[List[str]] = None,
     ) -> rest_models.MitigationsServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1059,7 +1059,7 @@ class AlertingServiceWrapper:
         data: rest_models.MitigationsServiceCreateRequest,
     ) -> rest_models.MitigationsServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1109,7 +1109,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, action: str
     ) -> rest_models.MitigationsServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1186,7 +1186,7 @@ class AlertingServiceWrapper:
         data: rest_models.PolicyServiceListRequest,
     ) -> rest_models.PolicyServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1223,7 +1223,7 @@ class AlertingServiceWrapper:
         id: str,
     ) -> rest_models.PolicyServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1266,7 +1266,7 @@ class AlertingServiceWrapper:
         data: rest_models.PolicyServiceDisableBody,
     ) -> rest_models.PolicyServiceDisableResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_5 is None:
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1314,7 +1314,7 @@ class AlertingServiceWrapper:
         data: rest_models.PolicyServiceEnableBody,
     ) -> rest_models.PolicyServiceEnableResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_5 is None:
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1360,7 +1360,7 @@ class AlertingServiceWrapper:
         data: rest_models.SuppressionServiceCreateRequest,
     ) -> rest_models.SuppressionServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1396,7 +1396,7 @@ class AlertingServiceWrapper:
         data: rest_models.SuppressionServiceListRequest,
     ) -> rest_models.SuppressionServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1429,7 +1429,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.SuppressionServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1462,7 +1462,7 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.SuppressionServiceDeleteResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
@@ -1499,7 +1499,7 @@ class AlertingServiceWrapper:
         data: rest_models.SuppressionServiceReplaceBody,
     ) -> rest_models.SuppressionServiceReplaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_7 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )

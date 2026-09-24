@@ -37,7 +37,7 @@ class KmetaServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, cid: str
     ) -> rest_models.ListServiceNowConfigsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
@@ -76,7 +76,7 @@ class KmetaServiceWrapper:
         data: rest_models.ServiceNowConfig,
     ) -> rest_models.CreateServiceNowConfigResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
@@ -114,7 +114,7 @@ class KmetaServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, cid: str, id: str
     ) -> rest_models.GetServiceNowConfigResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
@@ -155,7 +155,7 @@ class KmetaServiceWrapper:
         data: rest_models.ServiceNowConfig,
     ) -> rest_models.UpdateServiceNowConfigResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
@@ -196,7 +196,7 @@ class KmetaServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, cid: str, id: str
     ) -> rest_models.DeleteServiceNowConfigResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )

@@ -37,7 +37,7 @@ class CloudExportServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCloudExportsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
@@ -68,7 +68,7 @@ class CloudExportServiceWrapper:
         data: rest_models.CreateCloudExportRequest,
     ) -> rest_models.CreateCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
@@ -103,7 +103,7 @@ class CloudExportServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, exportid: str
     ) -> rest_models.GetCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
@@ -140,7 +140,7 @@ class CloudExportServiceWrapper:
         data: rest_models.CloudExportAdminServiceUpdateCloudExportBody,
     ) -> rest_models.UpdateCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
@@ -180,7 +180,7 @@ class CloudExportServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, exportid: str
     ) -> rest_models.DeleteCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )

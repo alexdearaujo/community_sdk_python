@@ -77,10 +77,9 @@ release-notes: ## Render release notes from api_surface.json (SINCE=<ref>, defau
 impact-report: ## Report what the last regeneration changed (SINCE=<ref>, default: HEAD; CHECKS=0 skips tests)
 	uv run python scripts/impact_report.py $(if $(SINCE),--since $(SINCE),) $(if $(filter 0,$(CHECKS)),--no-checks,) $(if $(OUT),-o $(OUT),)
 
-typecheck: ## Type-check hand-written source with ty
-	uv run ty check src/kentik_api/core src/kentik_api/auth src/kentik_api/errors \
-		src/kentik_api/transports src/kentik_api/client.py \
-		scripts/generation scripts/generate_sdk.py
+typecheck: ## Type-check the SDK, generated code included, and the generator with ty
+	uv run ty check src/kentik_api scripts/generation scripts/generate_sdk.py \
+		scripts/impact_report.py scripts/release_notes.py
 
 clean: ## Remove generated SDK and build artifacts
 	# Keep project-local customization code (do not remove):

@@ -44,7 +44,7 @@ class FlowTagServiceWrapper:
         searchfieldLimit: Optional[int] = None,
     ) -> rest_models.SearchFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -94,7 +94,7 @@ class FlowTagServiceWrapper:
         data: rest_models.CreateFlowTagRequest,
     ) -> rest_models.CreateFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -127,7 +127,7 @@ class FlowTagServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, flowTagid: str
     ) -> rest_models.GetFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -164,7 +164,7 @@ class FlowTagServiceWrapper:
         data: rest_models.FlowTagServiceUpdateFlowTagBody,
     ) -> rest_models.UpdateFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -202,7 +202,7 @@ class FlowTagServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, flowTagid: str
     ) -> rest_models.DeleteFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )

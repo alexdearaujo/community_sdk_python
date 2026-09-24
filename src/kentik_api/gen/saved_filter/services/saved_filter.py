@@ -40,7 +40,7 @@ class SavedFilterServiceWrapper:
         data: rest_models.SavedFilter,
     ) -> rest_models.CreateSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -75,7 +75,7 @@ class SavedFilterServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -112,7 +112,7 @@ class SavedFilterServiceWrapper:
         data: rest_models.SavedFilter,
     ) -> rest_models.UpdateSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -150,7 +150,7 @@ class SavedFilterServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -185,7 +185,7 @@ class SavedFilterServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSavedFiltersResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -213,7 +213,7 @@ class SavedFilterServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSavedFiltersAllResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )

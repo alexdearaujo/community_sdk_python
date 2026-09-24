@@ -53,7 +53,7 @@ class SyntheticsServiceWrapper:
         agentIds: Optional[List[str]] = None,
     ) -> rest_models.ListAgentAlertsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -89,7 +89,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.CreateAgentAlertRequest,
     ) -> rest_models.CreateAgentAlertResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -122,7 +122,7 @@ class SyntheticsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetAgentAlertResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -159,7 +159,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.SyntheticsAdminServiceUpdateAgentAlertBody,
     ) -> rest_models.UpdateAgentAlertResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -195,7 +195,7 @@ class SyntheticsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteAgentAlertResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -228,7 +228,7 @@ class SyntheticsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListAgentsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -256,7 +256,7 @@ class SyntheticsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, agentid: str
     ) -> rest_models.GetAgentResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -293,7 +293,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.SyntheticsAdminServiceUpdateAgentBody,
     ) -> rest_models.UpdateAgentResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -331,7 +331,7 @@ class SyntheticsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, agentid: str
     ) -> rest_models.DeleteAgentResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -364,7 +364,7 @@ class SyntheticsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListTestsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -395,7 +395,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.CreateTestRequest,
     ) -> rest_models.CreateTestResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -428,7 +428,7 @@ class SyntheticsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetTestResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -465,7 +465,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.SyntheticsAdminServiceUpdateTestBody,
     ) -> rest_models.UpdateTestResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -501,7 +501,7 @@ class SyntheticsServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteTestResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -538,7 +538,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.SyntheticsAdminServiceSetTestStatusBody,
     ) -> rest_models.SetTestStatusResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -577,7 +577,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.GetResultsForTestsRequest,
     ) -> rest_models.GetResultsForTestsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -615,7 +615,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.GetResultsForTestsCsvRequest,
     ) -> rest_models.GetResultsForTestsCsvResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
@@ -653,7 +653,7 @@ class SyntheticsServiceWrapper:
         data: rest_models.GetTraceForTestRequest,
     ) -> rest_models.GetTraceForTestResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )

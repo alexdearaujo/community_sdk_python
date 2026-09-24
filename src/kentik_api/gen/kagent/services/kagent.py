@@ -102,7 +102,7 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, agentId: str
     ) -> rest_models.ListAgentCapabilitiesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -141,7 +141,7 @@ class KagentServiceWrapper:
         capabilityname: str,
     ) -> rest_models.GetAgentCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -188,7 +188,7 @@ class KagentServiceWrapper:
         capabilityname: str,
     ) -> rest_models.DeleteAgentCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -237,7 +237,7 @@ class KagentServiceWrapper:
         mask: Optional[str] = None,
     ) -> rest_models.UpsertAgentCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -293,7 +293,7 @@ class KagentServiceWrapper:
         includeDesiredState: Optional[bool] = None,
     ) -> rest_models.ListAgentsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -341,7 +341,7 @@ class KagentServiceWrapper:
         data: rest_models.CreateAgentRequest,
     ) -> rest_models.CreateAgentResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -374,7 +374,7 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, installId: str
     ) -> rest_models.AuthorizeResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -410,7 +410,7 @@ class KagentServiceWrapper:
         data: rest_models.GenerateInstallCommandsRequest,
     ) -> rest_models.GenerateInstallCommandsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -449,7 +449,7 @@ class KagentServiceWrapper:
         unregistered: Optional[bool] = None,
     ) -> rest_models.GetAgentResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -494,7 +494,7 @@ class KagentServiceWrapper:
         unregistered: Optional[bool] = None,
     ) -> rest_models.DeleteAgentResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -540,7 +540,7 @@ class KagentServiceWrapper:
         mask: Optional[str] = None,
     ) -> rest_models.UpdateAgentResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -769,7 +769,7 @@ class KagentServiceWrapper:
         data: rest_models.Config,
     ) -> rest_models.CreateConfigResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_5 is None:
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -802,7 +802,7 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, configname: str
     ) -> rest_models.GetConfigResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_5 is None:
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -835,7 +835,7 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, configname: str
     ) -> rest_models.DeleteConfigResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_5 is None:
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -872,7 +872,7 @@ class KagentServiceWrapper:
         data: rest_models.ConfigServiceUpdateConfigBody,
     ) -> rest_models.UpdateConfigResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_5 is None:
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -910,7 +910,7 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListProvisioningTokensResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_6 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -943,7 +943,7 @@ class KagentServiceWrapper:
         data: rest_models.ProvisioningToken,
     ) -> rest_models.CreateProvisioningTokenResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_6 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -978,7 +978,7 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, token: str
     ) -> rest_models.GetProvisioningTokenResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_6 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -1013,7 +1013,7 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, token: str
     ) -> rest_models.ListAgentsByProvisioningTokenResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_6 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
@@ -1052,7 +1052,7 @@ class KagentServiceWrapper:
         data: rest_models.ProvisioningTokenServiceRevokeProvisioningTokenBody,
     ) -> rest_models.RevokeProvisioningTokenResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_6 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )

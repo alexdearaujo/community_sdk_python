@@ -40,7 +40,7 @@ class ConnectivityCheckerServiceWrapper:
         data: rest_models.CreateConnectivityReportRequest,
     ) -> rest_models.CreateConnectivityReportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for connectivity_checker service"
                 )

@@ -344,7 +344,7 @@ def _generate_service_wrappers():
                     # Guard: if proto deps weren't available at init, fall back.
                     stub_guard = [
                         "        if isinstance(self._transport, GrpcTransport):",
-                        f"            if self._grpc_stub_{stub_idx} is None:",
+                        f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
                         f'                raise NotImplementedError("gRPC proto dependencies not installed for {service} service")',
                     ]
                     if "data" in arg_names and non_data_args:

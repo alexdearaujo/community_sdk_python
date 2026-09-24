@@ -37,7 +37,7 @@ class VaultServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, names: List[str]
     ) -> rest_models.ListSecretResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for vault service"
                 )
@@ -70,7 +70,7 @@ class VaultServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, name: str
     ) -> rest_models.GetSecretResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for vault service"
                 )

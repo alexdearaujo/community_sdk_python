@@ -41,7 +41,7 @@ class DeviceServiceWrapper:
         view: Optional[str] = None,
     ) -> rest_models.ListDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -85,7 +85,7 @@ class DeviceServiceWrapper:
         data: rest_models.CreateDeviceRequest,
     ) -> rest_models.CreateDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -121,7 +121,7 @@ class DeviceServiceWrapper:
         data: rest_models.CreateDevicesRequest,
     ) -> rest_models.CreateDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -157,7 +157,7 @@ class DeviceServiceWrapper:
         data: rest_models.DeleteDevicesRequest,
     ) -> rest_models.DeleteDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -193,7 +193,7 @@ class DeviceServiceWrapper:
         data: rest_models.UpdateDevicesRequest,
     ) -> rest_models.UpdateDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -230,7 +230,7 @@ class DeviceServiceWrapper:
         querynoCustomColumns: Optional[bool] = None,
     ) -> rest_models.GetDeviceByNameResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -275,7 +275,7 @@ class DeviceServiceWrapper:
         querynoCustomColumns: Optional[bool] = None,
     ) -> rest_models.GetDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -320,7 +320,7 @@ class DeviceServiceWrapper:
         data: rest_models.DeviceServiceUpdateDeviceBody,
     ) -> rest_models.UpdateDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -358,7 +358,7 @@ class DeviceServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, deviceid: str
     ) -> rest_models.DeleteDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -395,7 +395,7 @@ class DeviceServiceWrapper:
         data: rest_models.DeviceServiceUpdateDeviceLabelsBody,
     ) -> rest_models.UpdateDeviceLabelsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )

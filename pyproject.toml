@@ -100,3 +100,13 @@ include = ["src/kentik_api/gen/**/*.pyi"]
 
 [tool.ty.overrides.rules]
 conflicting-metaclass = "ignore"
+# protoc declares extension fields as module-level ClassVar.
+invalid-type-form = "ignore"
+
+[[tool.ty.overrides]]
+# protoc's EXPERIMENTAL static helpers use grpc.experimental without importing
+# it. The SDK calls stubs through channels and never uses those helpers.
+include = ["src/kentik_api/gen/**/*_pb2_grpc.py"]
+
+[tool.ty.overrides.rules]
+possibly-missing-submodule = "ignore"

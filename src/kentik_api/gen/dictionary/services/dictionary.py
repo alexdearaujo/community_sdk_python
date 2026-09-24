@@ -37,7 +37,7 @@ class DictionaryServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.GetDictionaryResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for dictionary service"
                 )

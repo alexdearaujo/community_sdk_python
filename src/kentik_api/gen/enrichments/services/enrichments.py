@@ -40,7 +40,7 @@ class EnrichmentsServiceWrapper:
         data: rest_models.FetchValuesByIdsRequest,
     ) -> rest_models.FetchValuesByIdsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for enrichments service"
                 )

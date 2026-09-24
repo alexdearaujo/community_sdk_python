@@ -40,7 +40,7 @@ class AiAdvisorServiceWrapper:
         data: rest_models.CreateChatSessionRequest,
     ) -> rest_models.CreateChatSessionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for ai_advisor service"
                 )
@@ -78,7 +78,7 @@ class AiAdvisorServiceWrapper:
         data: rest_models.UpdateChatSessionRequest,
     ) -> rest_models.UpdateChatSessionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for ai_advisor service"
                 )
@@ -113,7 +113,7 @@ class AiAdvisorServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetChatSessionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for ai_advisor service"
                 )
