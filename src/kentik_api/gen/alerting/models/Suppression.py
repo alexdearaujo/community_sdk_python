@@ -1,12 +1,13 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `make generate`. Do not edit by hand.
 
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
 from .Source import Source
 from .v202303MultiAttributeFilter import v202303MultiAttributeFilter
+from .v202303Severity import v202303Severity
 
 
 class Suppression(BaseModel):
@@ -37,3 +38,9 @@ class Suppression(BaseModel):
     createdAt: Optional[str] = Field(validation_alias="createdAt", default=None)
 
     modifiedAt: Optional[str] = Field(validation_alias="modifiedAt", default=None)
+
+    displayName: Optional[str] = Field(validation_alias="displayName", default=None)
+
+    severities: Optional[List[Optional[v202303Severity]]] = Field(
+        validation_alias="severities", default=None
+    )
