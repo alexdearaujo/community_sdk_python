@@ -59,6 +59,13 @@ OPENAPI_GENERATOR_CMD="openapi-python-generator" make generate local
 2. Run `make generate local`.
 3. Review generated changes in [`src/kentik_api/gen/`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/gen/README.md).
 4. Run tests/lint as needed ([`make test`](../../Makefile), [`make lint`](../../Makefile)).
+5. Optional: run [`make impact-report`](../../Makefile) before you commit.
+   It writes `reports/regeneration-impact-<date>.html` with the schema commit,
+   the changed files by kind, the API surface delta, the toolchain floors, and
+   the test, lint, and type-check results. Proto stubs that changed only their
+   protoc version stamp are counted apart from real schema changes. Add
+   `SINCE=<ref>` to compare against an earlier commit, or `CHECKS=0` to skip
+   the checks. The report leaves its Findings section for you to fill in.
 
 ## Notes
 

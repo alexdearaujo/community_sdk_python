@@ -347,6 +347,11 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
 - `make generate LOCAL_REPO=/path/to/api-schema-public` —
   regenerate from an arbitrary local schema path
 - `make docs` — build Sphinx docs (`docs/sphinx` → `docs/build/html`)
+- `make impact-report` (`SINCE=<ref>`, `CHECKS=0`): run by hand after a
+  regeneration. `scripts/impact_report.py` writes the facts of what changed
+  (schema commit, files by kind, surface delta, floors, checks) to
+  `reports/regeneration-impact-<date>.html`. It never overwrites an earlier
+  report, and it leaves the Findings section to a person.
 - `make test` / `make tests` — full pytest run (mocked layers only —
   never wires in `tests/e2e/`)
 - `make test-generated` / `make test-runtime` / `make test-smoke` /
