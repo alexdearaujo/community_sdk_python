@@ -42,6 +42,9 @@ client = KentikAPI(
 )
 ```
 
+To keep credentials encrypted instead of in a plaintext `.env`, see
+[Authentication](../authentication.md).
+
 ## Make your first call
 
 <!-- kentik-gen:first-call-example -->

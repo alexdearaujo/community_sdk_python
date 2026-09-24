@@ -150,7 +150,7 @@ script's own direct-execution import path.
 
 The **shared REST runtime** is the single most significant piece of
 hand-written engineering in this repo. It routes every generated
-endpoint, across all ~39 services, through one connection path
+endpoint, across all 35 mounted services, through one connection path
 instead of generating or hand-writing bespoke per-endpoint HTTP
 code. This is not just a convention. It's structural. The source
 code confirms it directly:

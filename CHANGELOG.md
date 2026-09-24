@@ -14,6 +14,11 @@ make release-notes SINCE=v1.0.7
 
 ## Unreleased
 
+This is the first release of the SDK for Kentik's V6 API, and it replaces
+kentik-api 1.x completely. If you come from 1.x, read
+[Migrating from 1.x](docs/sphinx/guides/migrating-from-1x.md) instead of the
+tables below, which compare against earlier development builds of this SDK.
+
 ### Breaking changes
 
 Each change below can stop an existing `except` clause or call from working.

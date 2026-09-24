@@ -21,7 +21,7 @@ forward it as `api_config_override`.
 
 `request_json()` (in [`rest_runtime.py`](rest_runtime.py)) is the **only** function that
 calls `httpx` for REST traffic in this SDK. Every generated operation,
-in every one of the ~39 services under
+in every one of the 35 services mounted on the client, under
 [`src/kentik_api/gen/`](../gen/README.md), calls this same function through the
 `httpx.jinja2` template. See
 [`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
