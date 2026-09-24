@@ -17,6 +17,7 @@ guides/rest
 guides/grpc
 guides/error_handling
 guides/rate_limiting
+guides/rest-vs-grpc
 guides/generation
 local_generation_workflow
 sdk_runtime_architecture

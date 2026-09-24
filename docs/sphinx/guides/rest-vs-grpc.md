@@ -1,18 +1,87 @@
----
-orphan: true
----
-
 <!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
 
 # REST vs gRPC
 
-<!-- DRAFT (feature 003): the mechanism and trade-off sections (T072) wait
-on learn/findings.md (T071). Remove `orphan: true` and add this page to the
-toctree in index.md when T075 lands. -->
-
 `KentikAPI(protocol="rest")` and `KentikAPI(protocol="grpc")` give the same
 service methods, and both return the same Pydantic models. This guide explains
 where the two transports differ and how to choose one.
+
+## Choosing a transport
+
+Use REST unless you have a reason not to. The two transports behave the same
+in most ways that matter, and REST covers every operation.
+
+| Workload | Use | Why |
+| --- | --- | --- |
+| One-off script | REST | Every operation works. |
+| CI or automation job | REST | A new operation in the job never raises `NotImplementedError`. |
+| Sustained polling | Either | The per-endpoint quota is the limit, and both transports share it. |
+| Long-running service | Either | Check first that gRPC covers every operation the service calls. |
+| Debugging an API problem | REST | You can read the body and reproduce the call with curl. |
+
+This guide does not cover payload size, general speed, or behavior behind a
+proxy. None of the three was measured, so no advice here depends on them.
+
+## What is the same on both transports
+
+| Behavior | Detail |
+| --- | --- |
+| Return type | The same Pydantic model, with equal contents. |
+| Errors | The same exception class for the same failure. See the [error handling guide](error_handling.md). |
+| Connection | One client keeps one connection (REST) or one channel (gRPC) and reuses it. |
+| Timeout | Every call has one: 60 seconds by default, set with `timeout`. |
+| Quota | One budget per endpoint, shared by both transports. |
+
+The client is the unit to reuse on both transports. The first call on a new
+client pays for the TCP connection and the TLS handshake. In a measured run of
+five `list_devices` calls, the first call took 1.5 s on REST and 1.2 s on gRPC.
+Later calls took 0.86 s and 0.76 s on average. Five calls is too few to rank
+the transports, but it shows that a new client for each call adds hundreds of
+milliseconds.
+
+## How each transport works
+
+| | REST | gRPC |
+| --- | --- | --- |
+| Protocol | HTTP/1.1 | HTTP/2 |
+| Body | JSON (`application/json`) | Protobuf (`application/grpc`) |
+| Readable without tools | Yes | No. Field numbers replace field names. |
+| Reproduce with curl | Yes | No. `grpcurl` can, with the `.proto` files. |
+| Runtime entry point | [`request_json()`](../../../src/kentik_api/core/rest_runtime.py) | [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) |
+
+Each service method checks the transport once. On gRPC, the method converts
+the request to a protobuf message, calls the stub through `call_grpc()`, and
+converts the response back into the same Pydantic model that REST returns.
+
+### Deadlines
+
+A gRPC channel stays open for as long as the client lives, and gRPC's own
+default is to wait forever. The SDK adds the client's deadline to every gRPC
+call that has none, in
+[`GrpcTransport`](../../../src/kentik_api/transports/grpc_client.py). A call
+to a server that accepts the connection and never answers raises
+`TransportError` at the deadline. To give one slow call more time, on either
+transport:
+
+```python
+result = client.device.list_devices(
+    api_config_override=client.api_config.with_timeout(300),
+)
+```
+
+Keep the 60-second default or raise it. An unthrottled `list_devices` call
+returns in about 0.6 s. Past Kentik's soft limit, the API delays each response
+by up to 1.5 s and does not return an error, so a short timeout turns
+throttling into a `TransportError`.
+
+### Errors that only gRPC has
+
+`except KentikError:` catches every API, authentication, configuration, and
+transport failure on both transports. It does not catch `NotImplementedError`,
+which only gRPC raises (see below). Several gRPC codes share one HTTP status,
+so an `HTTPException` from gRPC also keeps the original code in
+`grpc_status_code`. For example, `ABORTED` and `ALREADY_EXISTS` both give
+status 409.
 
 ## Both transports reach the same services
 
@@ -98,6 +167,3 @@ with (
     groups = grpc_client.as_group.list_as_groups()
     packages = rest_client.mkp.package_list()
 ```
-
-<!-- T072: add "How each transport works" and "Choosing a transport" here,
-each claim tied to a line in learn/findings.md. -->
