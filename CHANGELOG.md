@@ -33,6 +33,9 @@ Each change below can stop an existing `except` clause or call from working.
 
 ### Added
 
+- **`kmeta` service.** `client.kmeta` manages ServiceNow configurations: list,
+  get, create, update, and delete. It predates `api_surface.json`, so
+  `make release-notes` does not list it.
 - **`env_file` argument.** `KentikAPI(env_file=path)` reads credentials from
   that file. `env_file=None` turns off file lookup. See
   [Authentication](docs/sphinx/authentication.md) for use with encrypted
@@ -55,6 +58,16 @@ Each change below can stop an existing `except` clause or call from working.
   `ConfigurationError`.
 - **Connection retries.** The SDK retries a failed connection attempt twice.
   It never retries a request that reached the server.
+
+### Dependencies
+
+The generated gRPC and protobuf modules refuse to import on older runtimes, so
+the declared floors match them:
+
+| Package | Before | After |
+| --- | --- | --- |
+| `grpcio` | `>=1.78.0` | `>=1.84.0` |
+| `protobuf` | not declared | `>=7.35.1,<8` |
 
 ### Documentation
 
