@@ -127,6 +127,7 @@ def test_shared_client_retries_failed_connection_attempts_only():
     try:
         transport = config.client._transport
         assert isinstance(transport, httpx.HTTPTransport)
+        assert isinstance(transport._pool, httpcore.ConnectionPool)
         # httpcore retries connection establishment only; a sent request is never replayed.
         assert transport._pool._retries == 2
     finally:
@@ -168,8 +169,10 @@ def no_proxy_env(monkeypatch):
     return monkeypatch
 
 
-def _transport_for(config: APIConfig, url: str) -> httpx.BaseTransport:
-    return config.client._transport_for_url(httpx.URL(url))
+def _transport_for(config: APIConfig, url: str) -> httpx.HTTPTransport:
+    transport = config.client._transport_for_url(httpx.URL(url))
+    assert isinstance(transport, httpx.HTTPTransport)
+    return transport
 
 
 def test_rest_goes_direct_without_proxy_variables(no_proxy_env):
@@ -186,11 +189,11 @@ def test_rest_honors_https_proxy(no_proxy_env):
     no_proxy_env.setenv("HTTPS_PROXY", "http://proxy.internal:3128")
     config = APIConfig(base_path="https://api.example.com")
     try:
-        transport = _transport_for(config, "https://api.example.com/x")
-        assert isinstance(transport, httpx.HTTPTransport)
-        assert isinstance(transport._pool, httpcore.HTTPProxy)
-        assert transport._pool._proxy_url.host == b"proxy.internal"
-        assert transport._pool._ssl_context.verify_mode is ssl.CERT_REQUIRED
+        pool = _transport_for(config, "https://api.example.com/x")._pool
+        assert isinstance(pool, httpcore.HTTPProxy)
+        assert pool._proxy_url.host == b"proxy.internal"
+        assert pool._ssl_context is not None
+        assert pool._ssl_context.verify_mode is ssl.CERT_REQUIRED
     finally:
         config.close()
 

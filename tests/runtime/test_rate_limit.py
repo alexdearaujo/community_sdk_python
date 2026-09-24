@@ -34,6 +34,7 @@ def test_parses_the_measured_kentik_form():
 
 def test_accepts_the_window_spelling_and_any_header_case():
     rl = RateLimit.from_headers({"X-RateLimit-Limit": "100;window=60"})
+    assert rl is not None
 
     assert (rl.limit, rl.window_seconds) == (100, 60)
 
@@ -42,6 +43,7 @@ def test_multiple_windows_model_the_binding_one_and_keep_the_rest_raw():
     raw = "100, 1000;w=3600, 100;w=60"
 
     rl = RateLimit.from_headers({"x-ratelimit-limit": raw})
+    assert rl is not None
 
     assert (rl.limit, rl.window_seconds, rl.raw) == (100, 60, raw)
 
@@ -64,6 +66,7 @@ def test_partially_malformed_headers_keep_what_parsed():
     rl = RateLimit.from_headers(
         {"x-ratelimit-limit": "garbage", "x-ratelimit-remaining": "7"}
     )
+    assert rl is not None
 
     assert (rl.limit, rl.remaining, rl.window_seconds) == (None, 7, None)
 
@@ -74,13 +77,15 @@ def test_parser_never_raises_on_hostile_input():
             raise RuntimeError("boom")
 
     assert RateLimit.from_headers(Exploding(a="b")) is None
-    assert RateLimit.from_metadata([("x-ratelimit-limit",)]) is None
+    # A one-element tuple is the malformed input under test.
+    assert RateLimit.from_metadata([("x-ratelimit-limit",)]) is None  # ty: ignore[invalid-argument-type]
 
 
 def test_grpc_metadata_parses_like_headers_including_bytes_values():
     metadata = [("x-ratelimit-limit", b"60, 60;w=60"), ("x-ratelimit-remaining", "3")]
 
     rl = RateLimit.from_metadata(metadata)
+    assert rl is not None
 
     assert (rl.limit, rl.remaining, rl.window_seconds) == (60, 3, 60)
     assert RateLimit.from_metadata(None) is None
@@ -140,7 +145,9 @@ def test_rest_errors_carry_the_quota_of_the_failing_call(monkeypatch, status, ex
             config,
         )
 
-    assert exc_info.value.rate_limit.remaining == 0
+    rate_limit = exc_info.value.rate_limit
+    assert rate_limit is not None
+    assert rate_limit.remaining == 0
 
 
 def test_rest_response_without_quota_headers_leaves_the_error_slot_empty(monkeypatch):
@@ -182,7 +189,9 @@ def test_grpc_error_carries_quota_from_initial_metadata(rpc_error):
     with pytest.raises(HTTPException) as exc_info:
         call_grpc(_stub, object())
 
-    assert exc_info.value.rate_limit.remaining == 0
+    rate_limit = exc_info.value.rate_limit
+    assert rate_limit is not None
+    assert rate_limit.remaining == 0
 
 
 def _details(method="/svc.Service/Op"):
@@ -279,4 +288,6 @@ def test_rest_body_carries_the_quota_to_the_model_built_from_it(monkeypatch):
 
     assert body == {"devices": []}
     model = attach_rate_limit(ListDevicesResponse(**body), rate_limit_of(body))
-    assert rate_limit_of(model).remaining == 59
+    rate_limit = rate_limit_of(model)
+    assert rate_limit is not None
+    assert rate_limit.remaining == 59

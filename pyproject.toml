@@ -91,6 +91,10 @@ markers = [
 ]
 addopts = "-m 'not e2e and not e2e_grpc'"
 
+[tool.ty.src]
+# Spec Kit's vendored scripts: upstream code that `specify` rewrites on upgrade.
+exclude = [".specify"]
+
 [tool.ty.environment]
 # scripts/ is on sys.path when generate_sdk.py runs as a direct script
 extra-paths = ["scripts"]

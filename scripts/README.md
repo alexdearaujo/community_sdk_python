@@ -57,7 +57,7 @@ the full regeneration workflow.
 | [`make test-e2e`](../Makefile) | Live API tests, REST transport (opt-in, needs `.env`) |
 | [`make test-e2e-grpc`](../Makefile) | Live API tests, gRPC transport (opt-in, needs `.env`) |
 | [`make lint`](../Makefile) | Ruff check + format |
-| [`make typecheck`](../Makefile) | ty type-check on hand-written source |
+| [`make typecheck`](../Makefile) | ty type-check on the whole repo: SDK, generated code, scripts, and tests |
 | [`make clean`](../Makefile) | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
 
 > [!NOTE]

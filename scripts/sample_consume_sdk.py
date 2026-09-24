@@ -24,7 +24,7 @@ def run_mock_demo(region: str = "us") -> None:
         return {"tagKeys": [{"id": "tag-1", "name": "env"}]}
 
     try:
-        _asset_tags_rest.ListTagKeys = _fake_list_tag_keys  # type: ignore[assignment]
+        _asset_tags_rest.ListTagKeys = _fake_list_tag_keys  # ty: ignore[invalid-assignment]
         result = client.asset_tags.list_tag_keys()
         if not isinstance(result, dict) or "tagKeys" not in result:
             raise RuntimeError("Unexpected SDK result shape in mock mode")

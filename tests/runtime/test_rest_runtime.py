@@ -1,6 +1,8 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from __future__ import annotations
 
+from typing import Any
+
 import httpx
 import pytest
 
@@ -149,7 +151,7 @@ def test_default_timeout_absorbs_the_soft_limit_delay():
             self.end_headers()
             self.wfile.write(body)
 
-        def log_message(self, *args):
+        def log_message(self, format: str, *args: Any) -> None:
             pass
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), _ThrottledHandler)

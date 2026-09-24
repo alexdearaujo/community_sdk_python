@@ -35,6 +35,13 @@ OUT_OF_SCOPE = re.compile(r"^\*\*Out of scope\*\*", re.M)
 DIGITS = re.compile(r"\d+")
 
 
+def _base_number(item_id: str) -> int:
+    match = DIGITS.search(item_id)
+    if match is None:
+        raise ValueError(f"{item_id!r} has no number")
+    return int(match.group())
+
+
 def _contiguous(ids: list[str], label: str) -> list[str]:
     """IDs must run 1..N with no gap, or a reference becomes ambiguous.
 
@@ -42,7 +49,7 @@ def _contiguous(ids: list[str], label: str) -> list[str]:
     avoids renumbering its successors, so it shares a base number with the item
     it follows without being a duplicate of it.
     """
-    bases = [int(DIGITS.search(i).group()) for i in ids]
+    bases = [_base_number(i) for i in ids]
     distinct = sorted(set(bases))
     expected = list(range(1, len(distinct) + 1))
     if distinct == expected and len(set(ids)) == len(ids):

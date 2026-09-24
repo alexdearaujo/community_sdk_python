@@ -1,6 +1,7 @@
 """APIConfig timeout derivation and validation (FR-002, FR-015, FR-016, FR-017)."""
 
 import math
+from typing import Any
 
 import httpx
 import pytest
@@ -97,7 +98,7 @@ import ast  # noqa: E402
 import inspect  # noqa: E402
 from pathlib import Path  # noqa: E402
 
-_BASE = dict(
+_BASE: dict[str, Any] = dict(
     base_path="https://grpc.api.kentik.com",
     auth_email="dev@example.com",
     auth_token="token",
@@ -149,7 +150,7 @@ def test_with_timeout_copies_the_security_fields_and_cannot_change_them():
     params = set(inspect.signature(APIConfig.with_timeout).parameters) - {"self"}
     assert params == {"timeout", "rest_timeout", "grpc_deadline"}
     with pytest.raises(TypeError):
-        base.with_timeout(300, base_path="https://attacker.example")  # type: ignore[call-arg]
+        base.with_timeout(300, base_path="https://attacker.example")  # ty: ignore[unknown-argument]
 
 
 def test_no_test_fixture_disables_tls_verification():

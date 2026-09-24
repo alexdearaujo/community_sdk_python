@@ -251,5 +251,7 @@ def test_result_carries_the_quota_of_the_call_that_produced_it(monkeypatch):
     with KentikAPI(email="a@b.com", api_token="t") as client:
         result = client.device.list_devices()
 
-    assert rate_limit_of(result).remaining == 17
+    rate_limit = rate_limit_of(result)
+    assert rate_limit is not None
+    assert rate_limit.remaining == 17
     assert "_kentik_rate_limit" not in result.model_dump()
