@@ -171,21 +171,103 @@ def test_wrapper_for_a_service_without_proto_stubs_is_rest_only(sandbox):
     assert "RestDeviceModule1.ListDevices(" in wrapper
 
 
-def test_discover_grpc_stubs_maps_methods_to_request_and_response_types():
-    stubs, methods = wrapper_generation._discover_grpc_stubs(
-        REAL_GEN / "device", "device"
-    )
+def test_discover_grpc_methods_keys_each_rpc_by_service_and_http_rule():
+    stubs, methods = wrapper_generation._discover_grpc_methods(REAL_GEN / "device")
 
     assert any(stub_class == "DeviceServiceStub" for _, _, stub_class, _ in stubs)
-    assert methods["ListDevices"][1:] == ("ListDevicesRequest", "ListDevicesResponse")
+    get = methods[("DeviceService", "get", "/device/v202504beta2/device/{}")]
+    assert (get.name, get.request_class, get.path_fields, get.body) == (
+        "GetDevice",
+        "GetDeviceRequest",
+        ("id",),
+        "",
+    )
+    update = methods[("DeviceService", "put", "/device/v202504beta2/device/{}")]
+    assert (update.path_fields, update.body) == (("device.id",), "*")
 
 
-def test_discover_grpc_stubs_without_pb_dir_is_empty(tmp_path):
-    assert wrapper_generation._discover_grpc_stubs(tmp_path, "x") == ([], {})
+def test_discover_grpc_methods_without_pb_dir_is_empty(tmp_path):
+    assert wrapper_generation._discover_grpc_methods(tmp_path) == ([], {})
 
 
-def test_discover_grpc_stubs_skips_unparseable_files(tmp_path):
+def test_discover_grpc_methods_skips_unparseable_files(tmp_path):
     (tmp_path / "pb").mkdir()
-    (tmp_path / "pb" / "broken_pb2_grpc.py").write_text("def (:\n")
+    (tmp_path / "pb" / "broken_pb2.py").write_text("def (:\n")
 
-    assert wrapper_generation._discover_grpc_stubs(tmp_path, "x") == ([], {})
+    assert wrapper_generation._discover_grpc_methods(tmp_path) == ([], {})
+
+
+def _grpc_calls_by_rest_module(wrapper_file: Path) -> dict[str, list[str | None]]:
+    """Maps each REST module a wrapper calls to the stub class its gRPC branch uses."""
+    tree = ast.parse(wrapper_file.read_text())
+    module_of_alias = {
+        alias.asname: alias.name.rsplit(".", 1)[1]
+        for node in tree.body
+        if isinstance(node, ast.Import)
+        for alias in node.names
+        if alias.asname
+    }
+    init = next(
+        n
+        for n in ast.walk(tree)
+        if isinstance(n, ast.FunctionDef) and n.name == "__init__"
+    )
+    stub_class_of_attr = {
+        stmt.targets[0].attr: stmt.value.func.attr
+        for stmt in ast.walk(init)
+        if isinstance(stmt, ast.Assign)
+        and isinstance(stmt.targets[0], ast.Attribute)
+        and stmt.targets[0].attr.startswith("_grpc_stub_")
+        and isinstance(stmt.value, ast.Call)
+        and isinstance(stmt.value.func, ast.Attribute)
+    }
+
+    calls: dict[str, list[str | None]] = {}
+    for method in ast.walk(tree):
+        if not isinstance(method, ast.FunctionDef) or method.name == "__init__":
+            continue
+        attrs = [n for n in ast.walk(method) if isinstance(n, ast.Attribute)]
+        rest_module = next(
+            module_of_alias[a.value.id]
+            for a in attrs
+            if isinstance(a.value, ast.Name) and a.value.id in module_of_alias
+        )
+        stub = next(
+            (
+                stub_class_of_attr[a.value.attr]
+                for a in attrs
+                if isinstance(a.value, ast.Attribute)
+                and a.value.attr in stub_class_of_attr
+            ),
+            None,
+        )
+        calls.setdefault(rest_module, []).append(stub)
+    return calls
+
+
+def test_each_grpc_call_uses_the_stub_of_its_own_rest_service(sandbox):
+    # alerting's services all declare generic RPC names such as Delete. Keyed by
+    # name alone, every Delete went to whichever stub was discovered last.
+    sandbox.wrapper_file("alerting").unlink()
+
+    wrapper_generation.generate()
+
+    calls = _grpc_calls_by_rest_module(sandbox.wrapper_file("alerting"))
+    assert len(calls) > 2
+    for rest_module, stubs in calls.items():
+        if rest_module == "MitigationsService":
+            # No proto declares this service, so it has no gRPC translation.
+            assert stubs == [None] * len(stubs)
+        else:
+            assert stubs == [f"{rest_module}Stub"] * len(stubs), rest_module
+
+
+def test_grpc_request_maps_arguments_to_the_rpc_request_fields(sandbox):
+    sandbox.wrapper_file("device").unlink()
+
+    wrapper_generation.generate()
+
+    wrapper = sandbox.wrapper_file("device").read_text()
+    # The REST path says {device.id}, but GetDeviceRequest's field is `id`.
+    assert '{"id": deviceid, "query.noCustomColumns": querynoCustomColumns}' in wrapper
+    assert '{"device.id": deviceid}' in wrapper

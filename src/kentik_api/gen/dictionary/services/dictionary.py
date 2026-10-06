@@ -4,7 +4,7 @@ from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.dictionary.services.DictionaryService as RestDictionaryModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.dictionary import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,7 +41,7 @@ class DictionaryServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for dictionary service"
                 )
-            _req = self._grpc_pb2_1.GetDictionaryRequest()
+            _req = build_grpc_request(self._grpc_pb2_1.GetDictionaryRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetDictionary, _req, api_config=api_config_override
             )

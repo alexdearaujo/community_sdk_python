@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.journeys.services.JourneysDataService as RestJourneysModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.journeys import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,10 +41,8 @@ class JourneysServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for journeys service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"prompt": prompt}.items() if v is not None},
-                self._grpc_pb2_1.GetJourneysNlqRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetJourneysNlqRequest, None, {"prompt": prompt}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetJourneysNlq, _req, api_config=api_config_override

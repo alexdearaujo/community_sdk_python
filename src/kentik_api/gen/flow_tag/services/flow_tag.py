@@ -1,10 +1,10 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.flow_tag.services.FlowTagService as RestFlowTagModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.flow_tag import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -48,20 +48,16 @@ class FlowTagServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.SearchFlowTagRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "searchlimit": searchlimit,
-                        "searchoffset": searchoffset,
-                        "searchlookupFields": searchlookupFields,
-                        "searchlookupValues": searchlookupValues,
-                        "searchfieldLimit": searchfieldLimit,
-                    }.items()
-                    if v is not None
+                    "search.limit": searchlimit,
+                    "search.offset": searchoffset,
+                    "search.lookupFields": searchlookupFields,
+                    "search.lookupValues": searchlookupValues,
+                    "search.fieldLimit": searchfieldLimit,
                 },
-                self._grpc_pb2_1.SearchFlowTagRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.SearchFlowTag, _req, api_config=api_config_override
@@ -98,10 +94,10 @@ class FlowTagServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateFlowTagRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateFlowTagRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateFlowTag, _req, api_config=api_config_override
@@ -131,10 +127,8 @@ class FlowTagServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"flowTagid": flowTagid}.items() if v is not None},
-                self._grpc_pb2_1.GetFlowTagRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetFlowTagRequest, None, {"id": flowTagid}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetFlowTag, _req, api_config=api_config_override
@@ -168,14 +162,10 @@ class FlowTagServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {k: v for k, v in {"flowTagid": flowTagid}.items() if v is not None}
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateFlowTagRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateFlowTagRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"flow_tag.id": flowTagid},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateFlowTag, _req, api_config=api_config_override
@@ -206,10 +196,8 @@ class FlowTagServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"flowTagid": flowTagid}.items() if v is not None},
-                self._grpc_pb2_1.DeleteFlowTagRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteFlowTagRequest, None, {"id": flowTagid}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteFlowTag, _req, api_config=api_config_override

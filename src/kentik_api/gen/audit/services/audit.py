@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.audit.services.AuditService as RestAuditModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.audit import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -47,19 +47,15 @@ class AuditServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for audit service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListAuditEventsRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "startTime": startTime,
-                        "endTime": endTime,
-                        "offset": offset,
-                        "limit": limit,
-                    }.items()
-                    if v is not None
+                    "startTime": startTime,
+                    "endTime": endTime,
+                    "offset": offset,
+                    "limit": limit,
                 },
-                self._grpc_pb2_1.ListAuditEventsRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListAuditEvents, _req, api_config=api_config_override
@@ -96,10 +92,8 @@ class AuditServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for audit service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id, "ctime": ctime}.items() if v is not None},
-                self._grpc_pb2_1.GetAuditEventRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetAuditEventRequest, None, {"id": id, "ctime": ctime}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetAuditEvent, _req, api_config=api_config_override
@@ -126,8 +120,21 @@ class AuditServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str, ctime: str
     ) -> rest_models.GetAuditEventResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for GetAuditEvent_2 is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for audit service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetAuditEventRequest, None, {"id": id, "ctime": ctime}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetAuditEvent, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetAuditEventResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

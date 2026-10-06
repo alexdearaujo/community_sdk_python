@@ -3,8 +3,9 @@ from __future__ import annotations
 
 import grpc
 import pytest
+from google.protobuf import json_format
 
-from kentik_api.core.grpc_runtime import call_grpc, map_grpc_error
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc, map_grpc_error
 from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 
 # The table in contracts/runtime-api.md section 3, restated so a change to the
@@ -163,3 +164,50 @@ def test_call_grpc_labels_unknown_when_the_stub_has_no_label(rpc_error):
         call_grpc(_stub, object())
 
     assert exc_info.value.path == "unknown"
+
+
+# --- build_grpc_request -------------------------------------------------------
+
+
+@pytest.fixture
+def device_pb2():
+    import kentik_api.gen.pb_companions  # noqa: F401  -- registers proto dependencies
+    from kentik_api.gen.device.pb import device_pb2
+
+    return device_pb2
+
+
+def test_build_grpc_request_nests_dotted_field_paths(device_pb2):
+    request = build_grpc_request(
+        device_pb2.GetDeviceRequest,
+        None,
+        {"id": "42", "query.noCustomColumns": True},
+    )
+
+    assert request.id == "42"
+    assert request.query.no_custom_columns is True
+
+
+def test_build_grpc_request_merges_fields_into_the_body(device_pb2):
+    request = build_grpc_request(
+        device_pb2.UpdateDeviceRequest,
+        {"device": {"deviceName": "edge-1"}},
+        {"device.id": "42"},
+    )
+
+    assert request.device.id == "42"
+    assert request.device.device_name == "edge-1"
+
+
+def test_build_grpc_request_skips_unset_fields(device_pb2):
+    request = build_grpc_request(
+        device_pb2.GetDeviceRequest, None, {"id": "42", "query.noCustomColumns": None}
+    )
+
+    assert not request.HasField("query")
+
+
+def test_build_grpc_request_rejects_a_field_the_request_does_not_declare(device_pb2):
+    # A silently dropped argument is how gRPC calls once went out with an empty id.
+    with pytest.raises(json_format.ParseError):
+        build_grpc_request(device_pb2.GetDeviceRequest, None, {"deviceid": "42"})

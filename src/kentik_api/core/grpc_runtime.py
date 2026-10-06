@@ -8,6 +8,7 @@ handling, status-code mapping, and transport failures stay in one place.
 from typing import Any
 
 import grpc
+from google.protobuf.json_format import ParseDict
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
@@ -73,6 +74,31 @@ def map_grpc_error(
         path=path,
         grpc_status_code=code_name,
     )
+
+
+def build_grpc_request(
+    message_cls, body: dict[str, Any] | None, fields: dict[str, Any]
+) -> Any:
+    """Builds a request message the way grpc-gateway transcodes the REST call.
+
+    `body` is the REST request body, already nested under the field the RPC's
+    HTTP rule names. `fields` maps each path and query parameter's dotted field
+    path (for example "device.id") to its value; None means unset. The body
+    tolerates unknown keys as before, but a field path must resolve: an
+    argument that matches no field would otherwise be dropped from the call.
+    """
+    request = ParseDict(body or {}, message_cls(), ignore_unknown_fields=True)
+    nested: dict[str, Any] = {}
+    for field_path, value in fields.items():
+        if value is None:
+            continue
+        *parents, leaf = field_path.split(".")
+        node = nested
+        for parent in parents:
+            node = node.setdefault(parent, {})
+        node[leaf] = value
+    # ParseDict merges into `request`, so path fields land inside the body.
+    return ParseDict(nested, request)
 
 
 def _method_label(stub_method) -> str:

@@ -1,10 +1,10 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.vault.services.VaultService as RestVaultModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.vault import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,10 +41,8 @@ class VaultServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for vault service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"names": names}.items() if v is not None},
-                self._grpc_pb2_1.ListSecretRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListSecretRequest, None, {"names": names}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListSecret, _req, api_config=api_config_override
@@ -74,10 +72,8 @@ class VaultServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for vault service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"name": name}.items() if v is not None},
-                self._grpc_pb2_1.GetSecretRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetSecretRequest, None, {"name": name}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetSecret, _req, api_config=api_config_override

@@ -1,10 +1,10 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.kmi.services.KmiService as RestKmiModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.kmi import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -49,21 +49,17 @@ class KmiServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetGlobalInsightsRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "limit": limit,
-                        "marketId": marketId,
-                        "ip": ip,
-                        "lookback": lookback,
-                        "types": types,
-                        "magnitude": magnitude,
-                    }.items()
-                    if v is not None
+                    "limit": limit,
+                    "marketId": marketId,
+                    "ip": ip,
+                    "lookback": lookback,
+                    "types": types,
+                    "magnitude": magnitude,
                 },
-                self._grpc_pb2_1.GetGlobalInsightsRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetGlobalInsights,
@@ -109,22 +105,18 @@ class KmiServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetASNInsightsRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "asn": asn,
-                        "limit": limit,
-                        "marketId": marketId,
-                        "ip": ip,
-                        "lookback": lookback,
-                        "types": types,
-                        "magnitude": magnitude,
-                    }.items()
-                    if v is not None
+                    "asn": asn,
+                    "limit": limit,
+                    "marketId": marketId,
+                    "ip": ip,
+                    "lookback": lookback,
+                    "types": types,
+                    "magnitude": magnitude,
                 },
-                self._grpc_pb2_1.GetASNInsightsRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetASNInsights, _req, api_config=api_config_override
@@ -166,18 +158,10 @@ class KmiServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {
-                    k: v
-                    for k, v in {"marketId": marketId, "asn": asn, "type": type}.items()
-                    if v is not None
-                }
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.GetASNDetailsRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetASNDetailsRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"market_id": marketId, "asn": asn, "type": type},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetASNDetails, _req, api_config=api_config_override
@@ -216,22 +200,10 @@ class KmiServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {
-                    k: v
-                    for k, v in {
-                        "marketId": marketId,
-                        "rankType": rankType,
-                        "ip": ip,
-                    }.items()
-                    if v is not None
-                }
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.GetRankingsRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetRankingsRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"market_id": marketId, "rank_type": rankType, "ip": ip},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetRankings, _req, api_config=api_config_override
@@ -264,7 +236,7 @@ class KmiServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
-            _req = self._grpc_pb2_1.ListMarketsRequest()
+            _req = build_grpc_request(self._grpc_pb2_1.ListMarketsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListMarkets, _req, api_config=api_config_override
             )

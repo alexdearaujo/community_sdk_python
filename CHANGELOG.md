@@ -69,6 +69,24 @@ Each change below can stop an existing `except` clause or call from working.
   `NO_PROXY` (either case). gRPC already honored the lowercase `https_proxy` and
   `no_proxy`. There is no `proxy=` argument.
 
+### Fixed
+
+- **gRPC calls reach the right RPC.** In a Service with more than one proto
+  service, such as `alerting`, a gRPC call went to whichever service declared
+  an RPC of the same name last. For example, deleting an AlertAutoAck called
+  `SuppressionService.Delete`. Each call now goes to the RPC that shares its
+  REST operation's HTTP rule. No proto declares `MitigationsService`, so on
+  gRPC its `list`, `create`, and `get` now raise `NotImplementedError`, as its
+  other operations already did, instead of calling SuppressionService.
+- **gRPC calls send every argument.** Path and query arguments were sent
+  under their Python names, which match no proto field, and were dropped.
+  For example, `client.device.get_device(deviceid="42")` sent an empty `id`,
+  and pagination and filter arguments had no effect. They now set the request
+  field that grpc-gateway sets for the same REST call.
+- **More operations work on gRPC.** 32 operations that raised
+  `NotImplementedError` on gRPC now make the call, because their REST name
+  differed from their RPC name.
+
 ### Dependencies
 
 The generated gRPC and protobuf modules refuse to import on older runtimes, so

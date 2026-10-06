@@ -1,9 +1,13 @@
 from typing import Optional, Union, cast
 
+from google.protobuf.json_format import MessageToDict
+
 import kentik_api.gen.mkp.services.PackageService as RestMkpModule1
 import kentik_api.gen.mkp.services.TenantService as RestMkpModule2
 import kentik_api.gen.mkp.services.TenantUserService as RestMkpModule3
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.mkp import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -59,8 +63,19 @@ class MkpServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListPackageResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for PackageList is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(self._grpc_pb2_1.ListPackageRequest, None, {})
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListPackage, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListPackageResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -79,8 +94,23 @@ class MkpServiceWrapper:
         data: rest_models.CreatePackageRequest,
     ) -> rest_models.CreatePackageResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for PackageCreate is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreatePackageRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreatePackage, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreatePackageResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -97,8 +127,21 @@ class MkpServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetPackageResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for PackageGet is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetPackageRequest, None, {"id": id}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetPackage, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetPackageResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -119,8 +162,23 @@ class MkpServiceWrapper:
         data: rest_models.PackageServiceUpdatePackageBody,
     ) -> rest_models.UpdatePackageResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for PackageUpdate is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdatePackageRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"package.id": id},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdatePackage, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdatePackageResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -138,8 +196,21 @@ class MkpServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeletePackageResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for PackageDelete is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeletePackageRequest, None, {"id": id}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeletePackage, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeletePackageResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -156,8 +227,19 @@ class MkpServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListTenantResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantList is not yet implemented."
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(self._grpc_pb2_2.ListTenantRequest, None, {})
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_2.ListTenant, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListTenantResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -176,8 +258,23 @@ class MkpServiceWrapper:
         data: rest_models.CreateTenantRequest,
     ) -> rest_models.CreateTenantResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantCreate is not yet implemented."
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_2.CreateTenantRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_2.CreateTenant, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateTenantResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -194,8 +291,21 @@ class MkpServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetTenantResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantGet is not yet implemented."
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_2.GetTenantRequest, None, {"id": id}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_2.GetTenant, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetTenantResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -216,8 +326,23 @@ class MkpServiceWrapper:
         data: rest_models.TenantServiceUpdateTenantBody,
     ) -> rest_models.UpdateTenantResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantUpdate is not yet implemented."
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_2.UpdateTenantRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"tenant.id": id},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_2.UpdateTenant, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateTenantResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -235,8 +360,21 @@ class MkpServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteTenantResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantDelete is not yet implemented."
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_2.DeleteTenantRequest, None, {"id": id}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_2.DeleteTenant, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteTenantResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -253,8 +391,21 @@ class MkpServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, tenantId: str
     ) -> rest_models.ListTenantUserResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantUserList is not yet implemented."
+            if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_3.ListTenantUserRequest, None, {"tenant_id": tenantId}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_3.ListTenantUser, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListTenantUserResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -275,8 +426,23 @@ class MkpServiceWrapper:
         data: rest_models.TenantUserServiceCreateTenantUserBody,
     ) -> rest_models.CreateTenantUserResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantUserCreate is not yet implemented."
+            if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_3.CreateTenantUserRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"user.tenant_id": tenantId},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_3.CreateTenantUser, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateTenantUserResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -299,8 +465,23 @@ class MkpServiceWrapper:
         data: rest_models.TenantUserServiceUpdateTenantUserBody,
     ) -> rest_models.UpdateTenantUserResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantUserUpdate is not yet implemented."
+            if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_3.UpdateTenantUserRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"user.tenant_id": tenantId, "user.id": id},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_3.UpdateTenantUser, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateTenantUserResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -319,8 +500,23 @@ class MkpServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, tenantId: str, id: str
     ) -> rest_models.DeleteTenantUserResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for TenantUserDelete is not yet implemented."
+            if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for mkp service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_3.DeleteTenantUserRequest,
+                None,
+                {"tenant_id": tenantId, "id": id},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_3.DeleteTenantUser, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteTenantUserResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

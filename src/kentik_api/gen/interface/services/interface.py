@@ -1,10 +1,10 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.interface.services.InterfaceService as RestInterfaceModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.interface import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -50,22 +50,18 @@ class InterfaceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for interface service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListInterfaceRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "filterstext": filterstext,
-                        "filtersdeviceIds": filtersdeviceIds,
-                        "filtersconnectivityTypes": filtersconnectivityTypes,
-                        "filtersnetworkBoundaries": filtersnetworkBoundaries,
-                        "filtersproviders": filtersproviders,
-                        "filterssnmpSpeeds": filterssnmpSpeeds,
-                        "filtersipTypes": filtersipTypes,
-                    }.items()
-                    if v is not None
+                    "filters.text": filterstext,
+                    "filters.deviceIds": filtersdeviceIds,
+                    "filters.connectivityTypes": filtersconnectivityTypes,
+                    "filters.networkBoundaries": filtersnetworkBoundaries,
+                    "filters.providers": filtersproviders,
+                    "filters.snmpSpeeds": filterssnmpSpeeds,
+                    "filters.ipTypes": filtersipTypes,
                 },
-                self._grpc_pb2_1.ListInterfaceRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListInterface, _req, api_config=api_config_override
@@ -100,8 +96,23 @@ class InterfaceServiceWrapper:
         data: rest_models.CreateInterfaceRequest,
     ) -> rest_models.CreateInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for InterfaceCreate is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for interface service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateInterfaceRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateInterface, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateInterfaceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -118,8 +129,21 @@ class InterfaceServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for InterfaceGet is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for interface service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetInterfaceRequest, None, {"id": id}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetInterface, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetInterfaceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -140,8 +164,23 @@ class InterfaceServiceWrapper:
         data: rest_models.InterfaceServiceUpdateInterfaceBody,
     ) -> rest_models.UpdateInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for InterfaceUpdate is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for interface service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateInterfaceRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"interface.id": id},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateInterface, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateInterfaceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -159,8 +198,21 @@ class InterfaceServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteInterfaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for InterfaceDelete is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for interface service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteInterfaceRequest, None, {"id": id}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteInterface, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteInterfaceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -184,10 +236,10 @@ class InterfaceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for interface service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ManualClassifyRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.ManualClassifyRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ManualClassify, _req, api_config=api_config_override

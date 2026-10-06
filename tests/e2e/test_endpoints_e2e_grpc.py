@@ -10,9 +10,9 @@ the same operations the same way.
 gRPC coverage is per-operation, not per-service (see CLAUDE.md's "gRPC
 transport is fully implemented" section): a wrapper method raises
 NotImplementedError when the service's proto companions failed to import,
-or when the generator found no gRPC method matching that REST operation's
-name. Neither case is a bug -- both count as a passing outcome here, same
-as a correctly-typed response or a generated KentikError subclass.
+or when no RPC shares that REST operation's HTTP rule. Neither case is a
+bug -- both count as a passing outcome here, same as a correctly-typed
+response or a generated KentikError subclass.
 
 Opt-in only: excluded from `make test`/`make all`/`make test-e2e` by the
 `e2e_grpc` pytest marker (see pyproject.toml's addopts) and only actually
@@ -23,12 +23,16 @@ if no real credentials are configured.
 
 from __future__ import annotations
 
+import importlib
+
 import pytest
 from _discovery import (
     EndpointCase,
     build_all_kwargs,
     case_label,
     discover_endpoint_cases,
+    proto_field,
+    proto_sample_value,
     service_attr,
 )
 
@@ -46,10 +50,13 @@ MUTATING_CASES = [c for c in _ALL_ENDPOINT_CASES if c.method != "get"]
     READ_CASES,
     ids=[f"{c.wrapper.wrapper_class}.{c.wrapper.method_name}" for c in READ_CASES],
 )
-def test_read_endpoint_against_real_api_grpc(case: EndpointCase, grpc_real_client):
+def test_read_endpoint_against_real_api_grpc(
+    case: EndpointCase, grpc_real_client, monkeypatch: pytest.MonkeyPatch
+):
     service_client = getattr(grpc_real_client, service_attr(case))
     method = getattr(service_client, case.wrapper.method_name)
     kwargs = build_all_kwargs(method)
+    _send_samples_the_proto_accepts(monkeypatch, case)
 
     label = f"{case_label(case.wrapper)} ({case.operation_name})"
     print(f'E2E-gRPC: calling "{label}" against the real API. START')
@@ -72,6 +79,28 @@ def test_read_endpoint_against_real_api_grpc(case: EndpointCase, grpc_real_clien
         print(f'E2E-gRPC: "{label}" raised an UNEXPECTED exception. RESULT=FAIL')
         raise
     print(f'E2E-gRPC: "{label}" returned a typed response. RESULT=PASS')
+
+
+def _send_samples_the_proto_accepts(monkeypatch: pytest.MonkeyPatch, case) -> None:
+    # Every option still reaches the server, with a value of its proto type, so
+    # the call tests the API rather than the sample builder.
+    module = importlib.import_module(case.wrapper.module_path)
+    real_build = getattr(module, "build_grpc_request", None)
+    if real_build is None:
+        return
+
+    def _build(message_cls, body, fields):
+        descriptor = message_cls.DESCRIPTOR
+        return real_build(
+            message_cls,
+            body,
+            {
+                path: proto_sample_value(proto_field(descriptor, path), value)
+                for path, value in fields.items()
+            },
+        )
+
+    monkeypatch.setattr(module, "build_grpc_request", _build)
 
 
 @pytest.mark.skip(

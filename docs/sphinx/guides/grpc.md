@@ -93,9 +93,14 @@ sequenceDiagram
 
 The gRPC path uses:
 
-1. [`ParseDict`](https://googleapis.dev/python/protobuf/latest/) from
-   `google.protobuf.json_format` to convert Pydantic model params to a proto
-   request message.
+1. `build_grpc_request()` in
+   [`core/grpc_runtime.py`](../../../src/kentik_api/core/grpc_runtime.py) to
+   build the proto request the way grpc-gateway transcodes the REST call. The
+   body becomes the request, or the field the RPC's HTTP rule names. Each path
+   and query argument sets the field that its HTTP rule placeholder or wire
+   name gives: `get_device(deviceid=...)` sets `id`. It uses
+   [`ParseDict`](https://googleapis.dev/python/protobuf/latest/) from
+   `google.protobuf.json_format`.
 2. A compiled gRPC stub (in `gen/<service>/pb/`) to make the call.
 3. [`MessageToDict`](https://googleapis.dev/python/protobuf/latest/) to convert
    the proto response back to a dict.

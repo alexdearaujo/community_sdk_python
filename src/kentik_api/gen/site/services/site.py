@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.site.services.SiteService as RestSiteModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.site import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,7 +41,7 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req = self._grpc_pb2_1.ListSiteMarketsRequest()
+            _req = build_grpc_request(self._grpc_pb2_1.ListSiteMarketsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListSiteMarkets, _req, api_config=api_config_override
             )
@@ -72,10 +72,10 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateSiteMarketRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateSiteMarketRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateSiteMarket, _req, api_config=api_config_override
@@ -105,10 +105,8 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.GetSiteMarketRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetSiteMarketRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetSiteMarket, _req, api_config=api_config_override
@@ -142,12 +140,10 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateSiteMarketRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateSiteMarketRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"site_market.id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateSiteMarket, _req, api_config=api_config_override
@@ -178,10 +174,8 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.DeleteSiteMarketRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteSiteMarketRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteSiteMarket, _req, api_config=api_config_override
@@ -211,7 +205,7 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req = self._grpc_pb2_1.ListSitesRequest()
+            _req = build_grpc_request(self._grpc_pb2_1.ListSitesRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListSites, _req, api_config=api_config_override
             )
@@ -242,10 +236,10 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateSiteRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateSiteRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateSite, _req, api_config=api_config_override
@@ -275,11 +269,7 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.GetSiteRequest(),
-                ignore_unknown_fields=True,
-            )
+            _req = build_grpc_request(self._grpc_pb2_1.GetSiteRequest, None, {"id": id})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetSite, _req, api_config=api_config_override
             )
@@ -312,12 +302,10 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateSiteRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateSiteRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"site.id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateSite, _req, api_config=api_config_override
@@ -348,10 +336,8 @@ class SiteServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for site service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.DeleteSiteRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteSiteRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteSite, _req, api_config=api_config_override

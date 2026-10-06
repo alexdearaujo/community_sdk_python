@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.capacity_plan.services.CapacityPlanService as RestCapacityPlanModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.capacity_plan import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,7 +41,9 @@ class CapacityPlanServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for capacity_plan service"
                 )
-            _req = self._grpc_pb2_1.ListCapacityPlansRequest()
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListCapacityPlansRequest, None, {}
+            )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListCapacityPlans,
                 _req,
@@ -71,7 +73,9 @@ class CapacityPlanServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for capacity_plan service"
                 )
-            _req = self._grpc_pb2_1.ListCapacitySummariesRequest()
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListCapacitySummariesRequest, None, {}
+            )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListCapacitySummaries,
                 _req,
@@ -101,10 +105,8 @@ class CapacityPlanServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for capacity_plan service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.GetCapacityPlanRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetCapacityPlanRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetCapacityPlan, _req, api_config=api_config_override
@@ -134,10 +136,8 @@ class CapacityPlanServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for capacity_plan service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.GetCapacitySummaryRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetCapacitySummaryRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetCapacitySummary,
