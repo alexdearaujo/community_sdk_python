@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     CreateScopeError,
@@ -93,7 +93,7 @@ def GetScope(
 
     body = request_json(
         method="get",
-        path=f"/rbux/v202607alpha1/scopes/{id}",
+        path=f"/rbux/v202607alpha1/scopes/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -118,7 +118,7 @@ def UpdateScope(
 
     body = request_json(
         method="put",
-        path=f"/rbux/v202607alpha1/scopes/{id}",
+        path=f"/rbux/v202607alpha1/scopes/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data,
@@ -144,7 +144,7 @@ def DeleteScope(
 
     body = request_json(
         method="delete",
-        path=f"/rbux/v202607alpha1/scopes/{id}",
+        path=f"/rbux/v202607alpha1/scopes/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

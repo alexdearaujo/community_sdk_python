@@ -6,7 +6,7 @@ from typing import List as TypingList
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     ActError,
@@ -322,7 +322,7 @@ def Get(
 
     body = request_json(
         method="get",
-        path=f"/v202505/mitigations/{action}",
+        path=f"/v202505/mitigations/{path_segment(action)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -350,7 +350,7 @@ def Act(
 
     body = request_json(
         method="post",
-        path=f"/v202505/mitigations/{action}",
+        path=f"/v202505/mitigations/{path_segment(action)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -376,7 +376,7 @@ def AvailableActionsForMitigation(
 
     body = request_json(
         method="get",
-        path=f"/v202505/mitigations/{id}/actions",
+        path=f"/v202505/mitigations/{path_segment(id)}/actions",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

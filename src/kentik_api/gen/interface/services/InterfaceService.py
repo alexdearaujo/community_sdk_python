@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     InterfaceCreateError,
@@ -112,7 +112,7 @@ def InterfaceGet(
 
     body = request_json(
         method="get",
-        path=f"/interface/v202108alpha1/interfaces/{id}",
+        path=f"/interface/v202108alpha1/interfaces/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -140,7 +140,7 @@ def InterfaceUpdate(
 
     body = request_json(
         method="put",
-        path=f"/interface/v202108alpha1/interfaces/{id}",
+        path=f"/interface/v202108alpha1/interfaces/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -166,7 +166,7 @@ def InterfaceDelete(
 
     body = request_json(
         method="delete",
-        path=f"/interface/v202108alpha1/interfaces/{id}",
+        path=f"/interface/v202108alpha1/interfaces/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

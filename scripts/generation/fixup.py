@@ -162,14 +162,37 @@ def _fix_pydantic_construct(content: str) -> str:
     )
 
 
+_PATH_PLACEHOLDER = re.compile(r"\{([a-zA-Z0-9_.]+)\}")
+_REQUEST_JSON_IMPORT = "from kentik_api.core.rest_runtime import request_json\n"
+
+
 def _fix_path_parameters(content: str) -> str:
-    """Sanitizes path parameter expressions like {device.id} -> {deviceid}."""
-    return re.sub(
+    """Encodes each path placeholder: {device.id} -> {path_segment(deviceid)}.
+
+    The swagger names a placeholder by its proto field path; the generated
+    argument is that path without the dots.
+    """
+    fixed = re.sub(
         r"path\s*=\s*f[\"'].*?[\"']",
-        lambda m: re.sub(
-            r"\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\}", r"{\1\2}", m.group(0)
+        lambda m: _PATH_PLACEHOLDER.sub(
+            lambda p: f"{{path_segment({p.group(1).replace('.', '')})}}", m.group(0)
         ),
         content,
+    )
+    if fixed == content:
+        return content
+    if _REQUEST_JSON_IMPORT not in fixed:
+        raise ValueError(
+            "_fix_path_parameters: path_segment is imported next to "
+            f"{_REQUEST_JSON_IMPORT.strip()!r}, which this module lacks"
+        )
+    # A line of its own, because inject_service_error_handling() matches the
+    # request_json import line's exact text.
+    return fixed.replace(
+        _REQUEST_JSON_IMPORT,
+        "from kentik_api.core.rest_runtime import path_segment\n"
+        + _REQUEST_JSON_IMPORT,
+        1,
     )
 
 

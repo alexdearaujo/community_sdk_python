@@ -147,7 +147,7 @@ def test_capture_reads_a_generated_tree(tmp_path: Path):
         "def ListThings(*, cid: str) -> Thing:\n"
         "    return request_json(\n"
         '        method="get",\n'
-        '        path=f"/demo/v1/{cid}/things",\n'
+        '        path=f"/demo/v1/{path_segment(cid)}/things",\n'
         "        expected_status=200,\n"
         "        error_cls=DemoError,\n"
         '        operation_name="ListThings",\n'

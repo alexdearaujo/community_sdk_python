@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     CreateASGroupError,
@@ -90,7 +90,7 @@ def GetASGroup(
 
     body = request_json(
         method="get",
-        path=f"/as_group/v202212/as_group/{asGroupid}",
+        path=f"/as_group/v202212/as_group/{path_segment(asGroupid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -118,7 +118,7 @@ def UpdateASGroup(
 
     body = request_json(
         method="put",
-        path=f"/as_group/v202212/as_group/{asGroupid}",
+        path=f"/as_group/v202212/as_group/{path_segment(asGroupid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -144,7 +144,7 @@ def DeleteASGroup(
 
     body = request_json(
         method="delete",
-        path=f"/as_group/v202212/as_group/{asGroupid}",
+        path=f"/as_group/v202212/as_group/{path_segment(asGroupid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

@@ -7,6 +7,8 @@ All tests use tmp_path — no schema download or full generation run required.
 import textwrap
 from pathlib import Path
 
+import pytest
+
 from scripts.generation.fixup import (
     _cleanup_service_files,
     _dedupe_top_level_function_names,
@@ -244,10 +246,28 @@ def test_fix_pydantic_construct_rewrites_model_instantiation():
     assert "body is not None" in result
 
 
-def test_fix_path_parameters_strips_dot_notation():
-    result = _fix_path_parameters("path=f'/v1/device/{device.id}'")
-    assert "{deviceid}" in result
-    assert "{device.id}" not in result
+def test_fix_path_parameters_encodes_each_placeholder():
+    result = _fix_path_parameters(
+        "from kentik_api.core.rest_runtime import request_json\n"
+        "path=f'/v1/device/{device.id}/{tagId}'"
+    )
+    assert result == (
+        "from kentik_api.core.rest_runtime import path_segment\n"
+        "from kentik_api.core.rest_runtime import request_json\n"
+        "path=f'/v1/device/{path_segment(deviceid)}/{path_segment(tagId)}'"
+    )
+
+
+def test_fix_path_parameters_leaves_a_module_without_placeholders_alone():
+    content = (
+        "from kentik_api.core.rest_runtime import request_json\npath=f'/v1/devices'"
+    )
+    assert _fix_path_parameters(content) == content
+
+
+def test_fix_path_parameters_requires_the_request_json_import():
+    with pytest.raises(ValueError, match="request_json"):
+        _fix_path_parameters("path=f'/v1/device/{id}'")
 
 
 def test_fix_typing_wildcard_replaces_star():

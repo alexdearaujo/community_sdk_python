@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     TenantUserCreateError,
@@ -68,7 +68,7 @@ def TenantUserList(
 
     body = request_json(
         method="get",
-        path=f"/mkp/v202407/tenants/{tenantId}/users",
+        path=f"/mkp/v202407/tenants/{path_segment(tenantId)}/users",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -96,7 +96,7 @@ def TenantUserCreate(
 
     body = request_json(
         method="post",
-        path=f"/mkp/v202407/tenants/{tenantId}/users",
+        path=f"/mkp/v202407/tenants/{path_segment(tenantId)}/users",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -126,7 +126,7 @@ def TenantUserUpdate(
 
     body = request_json(
         method="put",
-        path=f"/mkp/v202407/tenants/{tenantId}/users/{id}",
+        path=f"/mkp/v202407/tenants/{path_segment(tenantId)}/users/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -152,7 +152,7 @@ def TenantUserDelete(
 
     body = request_json(
         method="delete",
-        path=f"/mkp/v202407/tenants/{tenantId}/users/{id}",
+        path=f"/mkp/v202407/tenants/{path_segment(tenantId)}/users/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
