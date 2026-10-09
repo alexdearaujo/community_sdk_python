@@ -30,3 +30,7 @@ class AgentMetadata(BaseModel):
     publicIpv6Addresses: Optional[List[Optional[AgentMetadataIpValue]]] = Field(
         validation_alias="publicIpv6Addresses", default=None
     )
+
+    staticIpv4: Optional[bool] = Field(validation_alias="staticIpv4", default=None)
+
+    staticIpv6: Optional[bool] = Field(validation_alias="staticIpv6", default=None)

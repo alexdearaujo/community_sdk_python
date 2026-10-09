@@ -31,8 +31,8 @@ class ServiceNowConfig(BaseModel):
 
     proxyAgentId: Optional[str] = Field(validation_alias="proxyAgentId", default=None)
 
-    credentialVaultId: Optional[str] = Field(
-        validation_alias="credentialVaultId", default=None
+    credentialVaultName: Optional[str] = Field(
+        validation_alias="credentialVaultName", default=None
     )
 
     enabled: Optional[bool] = Field(validation_alias="enabled", default=None)

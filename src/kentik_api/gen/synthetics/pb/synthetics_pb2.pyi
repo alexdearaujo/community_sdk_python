@@ -271,6 +271,8 @@ class AgentMetadata(_message.Message):
         "public_ipv4_addresses",
         "private_ipv6_addresses",
         "public_ipv6_addresses",
+        "static_ipv4",
+        "static_ipv6",
     )
     class IpValue(_message.Message):
         __slots__ = ("value",)
@@ -282,6 +284,8 @@ class AgentMetadata(_message.Message):
     PUBLIC_IPV4_ADDRESSES_FIELD_NUMBER: _ClassVar[int]
     PRIVATE_IPV6_ADDRESSES_FIELD_NUMBER: _ClassVar[int]
     PUBLIC_IPV6_ADDRESSES_FIELD_NUMBER: _ClassVar[int]
+    STATIC_IPV4_FIELD_NUMBER: _ClassVar[int]
+    STATIC_IPV6_FIELD_NUMBER: _ClassVar[int]
     private_ipv4_addresses: _containers.RepeatedCompositeFieldContainer[
         AgentMetadata.IpValue
     ]
@@ -294,6 +298,8 @@ class AgentMetadata(_message.Message):
     public_ipv6_addresses: _containers.RepeatedCompositeFieldContainer[
         AgentMetadata.IpValue
     ]
+    static_ipv4: bool
+    static_ipv6: bool
     def __init__(
         self,
         private_ipv4_addresses: _Optional[
@@ -308,6 +314,8 @@ class AgentMetadata(_message.Message):
         public_ipv6_addresses: _Optional[
             _Iterable[_Union[AgentMetadata.IpValue, _Mapping]]
         ] = ...,
+        static_ipv4: _Optional[bool] = ...,
+        static_ipv6: _Optional[bool] = ...,
     ) -> None: ...
 
 class Test(_message.Message):

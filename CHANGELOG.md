@@ -35,12 +35,16 @@ Each change below can stop an existing `except` clause or call from working.
 | `KentikCredentials.get_rest_headers()` existed | It is removed | Use `kentik_api.auth.credentials.auth_headers(email, api_token)` |
 | An `APIConfig` with no credentials failed inside httpx with `TypeError` | It raises `ConfigurationError` before the SDK sends a request | Give the config `auth_email` and `auth_token` |
 | `KentikAPI(...)` loaded every key of the nearest `.env` into `os.environ`, even when you passed credentials | It reads only `KENTIK_EMAIL` and `KENTIK_API_TOKEN`, into memory, and only when an argument or environment variable is missing | Load other `.env` keys yourself, for example with `dotenv.load_dotenv()` |
+| `kmeta` `ServiceNowConfig.credentialVaultId` held a credential vault entry ID | Upstream renamed it `credentialVaultName`; it holds the entry's name and always resolves to the entry's latest version | Read and send `credentialVaultName` |
 
 ### Added
 
 - **`kmeta` service.** `client.kmeta` manages ServiceNow configurations: list,
   get, create, update, and delete. It predates `api_surface.json`, so
   `make release-notes` does not list it.
+- **Static agent addresses.** `synthetics` `AgentMetadata` has read-only
+  `staticIpv4` and `staticIpv6`, true when the agent's public address does not
+  change.
 - **`env_file` argument.** `KentikAPI(env_file=path)` reads credentials from
   that file. `env_file=None` turns off file lookup. See
   [Authentication](docs/sphinx/authentication.md) for use with encrypted
