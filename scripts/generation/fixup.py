@@ -10,6 +10,8 @@ import textwrap
 from pathlib import Path
 from typing import Callable
 
+from pydantic import BaseModel
+
 from ._shared import discover_service_model_classes
 from .error_package import inject_service_error_handling
 
@@ -96,6 +98,7 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         _fix_path_parameters,
         _inject_data_body,
         _fix_typing_wildcard,
+        _fix_shadowed_model_fields,
         _fix_list_collision,
         _make_models_import_transform(model_classes),
         _dedupe_top_level_function_names,
@@ -232,6 +235,27 @@ def _inject_data_body(content: str) -> str:
             func = re.sub(r"json_body\s*=\s*data\.model_dump\(\)\s*,?", "", func)
         fixed_funcs.append(func)
     return "".join(fixed_funcs)
+
+
+_BASEMODEL_ATTRS = frozenset(
+    name for name in dir(BaseModel) if not name.startswith("_")
+)
+# Raw generator output, before ruff, may space the colon: "schema : Optional[...]".
+_MODEL_FIELD = re.compile(r"^( +)(\w+)( *:[^\n=]+= *Field\()", re.MULTILINE)
+
+
+def _fix_shadowed_model_fields(content: str) -> str:
+    """Renames a field that shadows a BaseModel attribute: schema -> schema_.
+
+    Pydantic warns at class creation, so nms's `schema` field printed a
+    UserWarning on every `import kentik_api`. The trailing underscore matches
+    how the generator already escapes keywords (`from_`), and the field's
+    validation_alias keeps the wire name.
+    """
+    return _MODEL_FIELD.sub(
+        lambda m: f"{m[1]}{m[2]}_{m[3]}" if m[2] in _BASEMODEL_ATTRS else m[0],
+        content,
+    )
 
 
 def _fix_typing_wildcard(content: str) -> str:
