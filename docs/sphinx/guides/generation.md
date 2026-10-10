@@ -39,10 +39,10 @@ for the phase module documentation.
 
 Every [`make generate`](../../../Makefile) run wipes and rebuilds:
 
-- [`src/kentik_api/gen/`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/gen/README.md) — all <!-- kentik-gen:service-count -->41<!-- /kentik-gen:service-count --> services
+- [`src/kentik_api/gen/`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/gen/README.md) — all <!-- kentik-gen:service-count -->42<!-- /kentik-gen:service-count --> services
 - [`src/kentik_api/client_mixin.py`](../../../src/kentik_api/client_mixin.py)
 - [`docs/sphinx/sdk_runtime_architecture.md`](../sdk_runtime_architecture.md)
-- [`docs/sphinx/services/*.md`](../services/index.md) — all <!-- kentik-gen:service-count -->41<!-- /kentik-gen:service-count --> service pages
+- [`docs/sphinx/services/*.md`](../services/index.md) — all <!-- kentik-gen:service-count -->42<!-- /kentik-gen:service-count --> service pages
 
 These files are **never hand-edited**.
 

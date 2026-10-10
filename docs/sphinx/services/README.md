@@ -60,6 +60,7 @@ flowchart LR
 | Monitoring | [monitoring.md](monitoring.md) | |
 | Net | [net.md](net.md) | |
 | Network Class | [network_class.md](network_class.md) | Get a network classification. |
+| Nms | [nms.md](nms.md) | |
 | Notification Channel | [notification_channel.md](notification_channel.md) | List available notification channels |
 | Pathfinder | [pathfinder.md](pathfinder.md) | Create a Pathfinder Report. |
 | Plan | [plan.md](plan.md) | List Plans |
