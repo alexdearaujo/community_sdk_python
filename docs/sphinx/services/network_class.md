@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.network_class
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: network_class_get()
-    W->>B: ParseDict(params, NetworkClassGetRequest)
-    B->>API: network_class_get (gRPC/TLS)
+    W->>R: build_grpc_request(GetNetworkClassRequest, arguments)
+    R->>API: NetworkClassService/GetNetworkClass (gRPC/TLS)
     alt success
-        API-->>B: v202109alpha1GetNetworkClassResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202109alpha1GetNetworkClassResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.network_class
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: network_class_update(data=UpdateNetworkClassRequest(...))
-    W->>B: ParseDict(params, NetworkClassUpdateRequest)
-    B->>API: network_class_update (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateNetworkClassRequest, arguments)
+    R->>API: NetworkClassService/UpdateNetworkClass (gRPC/TLS)
     alt success
-        API-->>B: v202109alpha1UpdateNetworkClassResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202109alpha1UpdateNetworkClassResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

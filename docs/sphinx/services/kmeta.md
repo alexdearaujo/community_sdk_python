@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmeta
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_service_now_configs(cid="cid-example")
-    W->>B: ParseDict(params, ListServiceNowConfigsRequest)
-    B->>API: list_service_now_configs (gRPC/TLS)
+    W->>R: build_grpc_request(ListServiceNowConfigsRequest, arguments)
+    R->>API: KmetaService/ListServiceNowConfigs (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1ListServiceNowConfigsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1ListServiceNowConfigsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -136,18 +136,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmeta
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_service_now_config(cid="cid-example", data=ServiceNowConfig(...))
-    W->>B: ParseDict(params, CreateServiceNowConfigRequest)
-    B->>API: create_service_now_config (gRPC/TLS)
+    W->>R: build_grpc_request(CreateServiceNowConfigRequest, arguments)
+    R->>API: KmetaService/CreateServiceNowConfig (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1CreateServiceNowConfigResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1CreateServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -214,18 +214,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmeta
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_service_now_config(cid="cid-example", id="id-example")
-    W->>B: ParseDict(params, GetServiceNowConfigRequest)
-    B->>API: get_service_now_config (gRPC/TLS)
+    W->>R: build_grpc_request(GetServiceNowConfigRequest, arguments)
+    R->>API: KmetaService/GetServiceNowConfig (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1GetServiceNowConfigResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1GetServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -292,18 +292,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmeta
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_service_now_config(cid="cid-example", id="id-example", data=ServiceNowConfig(...))
-    W->>B: ParseDict(params, UpdateServiceNowConfigRequest)
-    B->>API: update_service_now_config (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateServiceNowConfigRequest, arguments)
+    R->>API: KmetaService/UpdateServiceNowConfig (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1UpdateServiceNowConfigResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1UpdateServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -372,18 +372,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmeta
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_service_now_config(cid="cid-example", id="id-example")
-    W->>B: ParseDict(params, DeleteServiceNowConfigRequest)
-    B->>API: delete_service_now_config (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteServiceNowConfigRequest, arguments)
+    R->>API: KmetaService/DeleteServiceNowConfig (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1DeleteServiceNowConfigResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1DeleteServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

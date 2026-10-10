@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_cloud_exports()
-    W->>B: ParseDict(params, ListCloudExportsRequest)
-    B->>API: list_cloud_exports (gRPC/TLS)
+    W->>R: build_grpc_request(ListCloudExportsRequest, arguments)
+    R->>API: CloudExportAdminService/ListCloudExports (gRPC/TLS)
     alt success
-        API-->>B: v202506ListCloudExportsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202506ListCloudExportsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_cloud_export(data=CreateCloudExportRequest(...))
-    W->>B: ParseDict(params, CreateCloudExportRequest)
-    B->>API: create_cloud_export (gRPC/TLS)
+    W->>R: build_grpc_request(CreateCloudExportRequest, arguments)
+    R->>API: CloudExportAdminService/CreateCloudExport (gRPC/TLS)
     alt success
-        API-->>B: v202506CreateCloudExportResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202506CreateCloudExportResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_cloud_export(exportid="exportid-example")
-    W->>B: ParseDict(params, GetCloudExportRequest)
-    B->>API: get_cloud_export (gRPC/TLS)
+    W->>R: build_grpc_request(GetCloudExportRequest, arguments)
+    R->>API: CloudExportAdminService/GetCloudExport (gRPC/TLS)
     alt success
-        API-->>B: v202506GetCloudExportResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202506GetCloudExportResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -280,18 +280,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_cloud_export(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
-    W->>B: ParseDict(params, UpdateCloudExportRequest)
-    B->>API: update_cloud_export (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateCloudExportRequest, arguments)
+    R->>API: CloudExportAdminService/UpdateCloudExport (gRPC/TLS)
     alt success
-        API-->>B: v202506UpdateCloudExportResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202506UpdateCloudExportResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.cloud_export
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_cloud_export(exportid="exportid-example")
-    W->>B: ParseDict(params, DeleteCloudExportRequest)
-    B->>API: delete_cloud_export (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteCloudExportRequest, arguments)
+    R->>API: CloudExportAdminService/DeleteCloudExport (gRPC/TLS)
     alt success
-        API-->>B: v202506DeleteCloudExportResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202506DeleteCloudExportResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

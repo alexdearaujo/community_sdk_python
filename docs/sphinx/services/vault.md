@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.vault
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_secret(names=["names-example"])
-    W->>B: ParseDict(params, ListSecretRequest)
-    B->>API: list_secret (gRPC/TLS)
+    W->>R: build_grpc_request(ListSecretRequest, arguments)
+    R->>API: VaultService/ListSecret (gRPC/TLS)
     alt success
-        API-->>B: v202312alpha1ListSecretResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202312alpha1ListSecretResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -136,18 +136,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.vault
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_secret(name="name-example")
-    W->>B: ParseDict(params, GetSecretRequest)
-    B->>API: get_secret (gRPC/TLS)
+    W->>R: build_grpc_request(GetSecretRequest, arguments)
+    R->>API: VaultService/GetSecret (gRPC/TLS)
     alt success
-        API-->>B: v202312alpha1GetSecretResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202312alpha1GetSecretResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

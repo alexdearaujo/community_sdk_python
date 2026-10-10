@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.ai_advisor
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_chat_session(data=CreateChatSessionRequest(...))
-    W->>B: ParseDict(params, CreateChatSessionRequest)
-    B->>API: create_chat_session (gRPC/TLS)
+    W->>R: build_grpc_request(CreateChatSessionRequest, arguments)
+    R->>API: AiAdvisorDataService/CreateChatSession (gRPC/TLS)
     alt success
-        API-->>B: v202511CreateChatSessionResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202511CreateChatSessionResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -136,18 +136,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.ai_advisor
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_chat_session(data=UpdateChatSessionRequest(...))
-    W->>B: ParseDict(params, UpdateChatSessionRequest)
-    B->>API: update_chat_session (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateChatSessionRequest, arguments)
+    R->>API: AiAdvisorDataService/UpdateChatSession (gRPC/TLS)
     alt success
-        API-->>B: v202511UpdateChatSessionResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202511UpdateChatSessionResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -212,18 +212,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.ai_advisor
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_chat_session(id="id-example")
-    W->>B: ParseDict(params, GetChatSessionRequest)
-    B->>API: get_chat_session (gRPC/TLS)
+    W->>R: build_grpc_request(GetChatSessionRequest, arguments)
+    R->>API: AiAdvisorDataService/GetChatSession (gRPC/TLS)
     alt success
-        API-->>B: v202511GetChatSessionResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202511GetChatSessionResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

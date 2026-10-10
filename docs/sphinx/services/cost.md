@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.cost
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_cost_providers()
-    W->>B: ParseDict(params, ListCostProvidersRequest)
-    B->>API: list_cost_providers (gRPC/TLS)
+    W->>R: build_grpc_request(ListCostProvidersRequest, arguments)
+    R->>API: CostService/ListCostProviders (gRPC/TLS)
     alt success
-        API-->>B: v202308ListCostProvidersResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202308ListCostProvidersResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.cost
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_cost_provider_summaries()
-    W->>B: ParseDict(params, ListCostProviderSummariesRequest)
-    B->>API: list_cost_provider_summaries (gRPC/TLS)
+    W->>R: build_grpc_request(ListCostProviderSummariesRequest, arguments)
+    R->>API: CostService/ListCostProviderSummaries (gRPC/TLS)
     alt success
-        API-->>B: v202308ListCostProviderSummariesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202308ListCostProviderSummariesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -202,18 +202,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.cost
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_cost_provider_summary(id="id-example")
-    W->>B: ParseDict(params, GetCostProviderSummaryRequest)
-    B->>API: get_cost_provider_summary (gRPC/TLS)
+    W->>R: build_grpc_request(GetCostProviderSummaryRequest, arguments)
+    R->>API: CostService/GetCostProviderSummary (gRPC/TLS)
     alt success
-        API-->>B: v202308GetCostProviderSummaryResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202308GetCostProviderSummaryResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

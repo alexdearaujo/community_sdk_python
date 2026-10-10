@@ -56,18 +56,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.nms
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: metrics_schema_service__get_metrics_schema()
-    W->>B: ParseDict(params, MetricsSchemaService_GetMetricsSchemaRequest)
-    B->>API: metrics_schema_service__get_metrics_schema (gRPC/TLS)
+    W->>R: build_grpc_request(GetMetricsSchemaRequest, arguments)
+    R->>API: MetricsSchemaService/GetMetricsSchema (gRPC/TLS)
     alt success
-        API-->>B: v202505GetMetricsSchemaResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505GetMetricsSchemaResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

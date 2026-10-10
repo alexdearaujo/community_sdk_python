@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.user
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_users()
-    W->>B: ParseDict(params, ListUsersRequest)
-    B->>API: list_users (gRPC/TLS)
+    W->>R: build_grpc_request(ListUsersRequest, arguments)
+    R->>API: UserService/ListUsers (gRPC/TLS)
     alt success
-        API-->>B: v202211ListUsersResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202211ListUsersResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.user
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_user(data=CreateUserRequest(...))
-    W->>B: ParseDict(params, CreateUserRequest)
-    B->>API: create_user (gRPC/TLS)
+    W->>R: build_grpc_request(CreateUserRequest, arguments)
+    R->>API: UserService/CreateUser (gRPC/TLS)
     alt success
-        API-->>B: v202211CreateUserResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202211CreateUserResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.user
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_user(id="id-example")
-    W->>B: ParseDict(params, GetUserRequest)
-    B->>API: get_user (gRPC/TLS)
+    W->>R: build_grpc_request(GetUserRequest, arguments)
+    R->>API: UserService/GetUser (gRPC/TLS)
     alt success
-        API-->>B: v202211GetUserResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202211GetUserResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -280,18 +280,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.user
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_user(id="id-example", data=UserServiceUpdateUserBody(...))
-    W->>B: ParseDict(params, UpdateUserRequest)
-    B->>API: update_user (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateUserRequest, arguments)
+    R->>API: UserService/UpdateUser (gRPC/TLS)
     alt success
-        API-->>B: v202211UpdateUserResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202211UpdateUserResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.user
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_user(id="id-example")
-    W->>B: ParseDict(params, DeleteUserRequest)
-    B->>API: delete_user (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteUserRequest, arguments)
+    R->>API: UserService/DeleteUser (gRPC/TLS)
     alt success
-        API-->>B: v202211DeleteUserResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202211DeleteUserResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -434,18 +434,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.user
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: reset_active_sessions(id="id-example")
-    W->>B: ParseDict(params, ResetActiveSessionsRequest)
-    B->>API: reset_active_sessions (gRPC/TLS)
+    W->>R: build_grpc_request(ResetActiveSessionsRequest, arguments)
+    R->>API: UserService/ResetActiveSessions (gRPC/TLS)
     alt success
-        API-->>B: v202211ResetActiveSessionsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202211ResetActiveSessionsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -510,18 +510,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.user
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: reset_api_token(id="id-example")
-    W->>B: ParseDict(params, ResetApiTokenRequest)
-    B->>API: reset_api_token (gRPC/TLS)
+    W->>R: build_grpc_request(ResetApiTokenRequest, arguments)
+    R->>API: UserService/ResetApiToken (gRPC/TLS)
     alt success
-        API-->>B: v202211ResetApiTokenResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202211ResetApiTokenResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

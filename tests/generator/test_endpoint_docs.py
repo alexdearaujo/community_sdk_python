@@ -9,6 +9,7 @@ from scripts.generation._shared import parse_wrapper_methods
 from scripts.generation.endpoint_docs import (
     EndpointDocsCollector,
     _provenance,
+    GrpcCall,
     parse_wrapper_method_signatures,
     render_endpoint_docs,
 )
@@ -90,9 +91,10 @@ def test_parse_wrapper_method_signatures_maps_list_operation(tmp_path: Path) -> 
     result = parse_wrapper_method_signatures(wrapper)
 
     assert ("GET", "/things/v1/thing") in result
-    method_name, params = result[("GET", "/things/v1/thing")]
+    method_name, params, grpc_call = result[("GET", "/things/v1/thing")]
     assert method_name == "list_things"
     assert params == []  # list_things takes no params besides self
+    assert grpc_call is None  # the fixture wrapper has no gRPC branch
 
 
 def test_parse_wrapper_method_signatures_maps_get_with_path_param(
@@ -107,9 +109,40 @@ def test_parse_wrapper_method_signatures_maps_get_with_path_param(
     result = parse_wrapper_method_signatures(wrapper)
 
     assert ("GET", "/things/v1/thing/{thing_id}") in result
-    method_name, params = result[("GET", "/things/v1/thing/{thing_id}")]
+    method_name, params, _ = result[("GET", "/things/v1/thing/{thing_id}")]
     assert method_name == "get_thing"
     assert any(p[0] == "thing_id" for p in params)
+
+
+def test_parse_wrapper_method_signatures_reads_the_rpc_each_method_calls(
+    tmp_path: Path,
+) -> None:
+    svc = tmp_path / "services"
+    svc.mkdir()
+    (svc / "ThingService.py").write_text(_REST_MODULE, encoding="utf-8")
+    wrapper = svc / "thing.py"
+    wrapper.write_text(
+        "import kentik_api.gen.thing.services.ThingService as RestThingModule1\n"
+        "\n"
+        "class ThingServiceWrapper:\n"
+        "    def __init__(self, transport):\n"
+        "        self._grpc_stub_1 = _grpc_1_mod.ThingAdminServiceStub(transport.channel)\n"
+        "\n"
+        "    def get_thing(self, *, thing_id: str) -> GetThingResponse:\n"
+        "        if grpc:\n"
+        "            _req = build_grpc_request(self._grpc_pb2_1.GetThingRequest, None, {})\n"
+        "            _resp, _ = call_grpc(self._grpc_stub_1.GetThing, _req)\n"
+        "        return RestThingModule1.GetThing(thing_id=thing_id)\n",
+        encoding="utf-8",
+    )
+
+    _, _, grpc_call = parse_wrapper_method_signatures(wrapper)[
+        ("GET", "/things/v1/thing/{thing_id}")
+    ]
+
+    assert grpc_call == GrpcCall(
+        rpc="ThingAdminService/GetThing", request="GetThingRequest"
+    )
 
 
 def test_parse_wrapper_method_signatures_returns_empty_without_wrapper_class(
@@ -130,7 +163,7 @@ def test_parse_wrapper_method_signatures_skips_init(tmp_path: Path) -> None:
     result = parse_wrapper_method_signatures(wrapper)
 
     # __init__ should never appear as a key
-    for _, (method_name, _) in result.items():
+    for method_name, _, _ in result.values():
         assert method_name != "__init__"
 
 

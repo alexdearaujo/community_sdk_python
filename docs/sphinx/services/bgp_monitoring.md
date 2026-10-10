@@ -62,18 +62,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_metrics_for_target(data=GetMetricsForTargetRequest(...))
-    W->>B: ParseDict(params, GetMetricsForTargetRequest)
-    B->>API: get_metrics_for_target (gRPC/TLS)
+    W->>R: build_grpc_request(GetMetricsForTargetRequest, arguments)
+    R->>API: BgpMonitoringDataService/GetMetricsForTarget (gRPC/TLS)
     alt success
-        API-->>B: v202210GetMetricsForTargetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210GetMetricsForTargetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -138,18 +138,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_routes_for_target(data=GetRoutesForTargetRequest(...))
-    W->>B: ParseDict(params, GetRoutesForTargetRequest)
-    B->>API: get_routes_for_target (gRPC/TLS)
+    W->>R: build_grpc_request(GetRoutesForTargetRequest, arguments)
+    R->>API: BgpMonitoringDataService/GetRoutesForTarget (gRPC/TLS)
     alt success
-        API-->>B: v202210GetRoutesForTargetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210GetRoutesForTargetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -214,18 +214,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_monitors()
-    W->>B: ParseDict(params, ListMonitorsRequest)
-    B->>API: list_monitors (gRPC/TLS)
+    W->>R: build_grpc_request(ListMonitorsRequest, arguments)
+    R->>API: BgpMonitoringAdminService/ListMonitors (gRPC/TLS)
     alt success
-        API-->>B: v202210ListMonitorsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210ListMonitorsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -282,18 +282,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_monitor(data=CreateMonitorRequest(...))
-    W->>B: ParseDict(params, CreateMonitorRequest)
-    B->>API: create_monitor (gRPC/TLS)
+    W->>R: build_grpc_request(CreateMonitorRequest, arguments)
+    R->>API: BgpMonitoringAdminService/CreateMonitor (gRPC/TLS)
     alt success
-        API-->>B: v202210CreateMonitorResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210CreateMonitorResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_monitor(id="id-example")
-    W->>B: ParseDict(params, GetMonitorRequest)
-    B->>API: get_monitor (gRPC/TLS)
+    W->>R: build_grpc_request(GetMonitorRequest, arguments)
+    R->>API: BgpMonitoringAdminService/GetMonitor (gRPC/TLS)
     alt success
-        API-->>B: v202210GetMonitorResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210GetMonitorResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -434,18 +434,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_monitor(id="id-example", data=BgpMonitoringAdminServiceUpdateMonitorBody(...))
-    W->>B: ParseDict(params, UpdateMonitorRequest)
-    B->>API: update_monitor (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateMonitorRequest, arguments)
+    R->>API: BgpMonitoringAdminService/UpdateMonitor (gRPC/TLS)
     alt success
-        API-->>B: v202210UpdateMonitorResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210UpdateMonitorResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -512,18 +512,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_monitor(id="id-example")
-    W->>B: ParseDict(params, DeleteMonitorRequest)
-    B->>API: delete_monitor (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteMonitorRequest, arguments)
+    R->>API: BgpMonitoringAdminService/DeleteMonitor (gRPC/TLS)
     alt success
-        API-->>B: v202210DeleteMonitorResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210DeleteMonitorResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -588,18 +588,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.bgp_monitoring
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: set_monitor_status(id="id-example", data=BgpMonitoringAdminServiceSetMonitorStatusBody(...))
-    W->>B: ParseDict(params, SetMonitorStatusRequest)
-    B->>API: set_monitor_status (gRPC/TLS)
+    W->>R: build_grpc_request(SetMonitorStatusRequest, arguments)
+    R->>API: BgpMonitoringAdminService/SetMonitorStatus (gRPC/TLS)
     alt success
-        API-->>B: v202210SetMonitorStatusResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210SetMonitorStatusResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

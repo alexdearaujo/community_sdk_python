@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_global_insights()
-    W->>B: ParseDict(params, GetGlobalInsightsRequest)
-    B->>API: get_global_insights (gRPC/TLS)
+    W->>R: build_grpc_request(GetGlobalInsightsRequest, arguments)
+    R->>API: KmiService/GetGlobalInsights (gRPC/TLS)
     alt success
-        API-->>B: v202212GetGlobalInsightsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212GetGlobalInsightsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -139,18 +139,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_asn_insights(asn="asn-example")
-    W->>B: ParseDict(params, GetASNInsightsRequest)
-    B->>API: get_asn_insights (gRPC/TLS)
+    W->>R: build_grpc_request(GetASNInsightsRequest, arguments)
+    R->>API: KmiService/GetASNInsights (gRPC/TLS)
     alt success
-        API-->>B: v202212GetASNInsightsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212GetASNInsightsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -221,18 +221,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_asn_details(marketId="marketId-example", asn="asn-example", type="type-example", data=KmiServiceGetASNDetailsBody(...))
-    W->>B: ParseDict(params, GetASNDetailsRequest)
-    B->>API: get_asn_details (gRPC/TLS)
+    W->>R: build_grpc_request(GetASNDetailsRequest, arguments)
+    R->>API: KmiService/GetASNDetails (gRPC/TLS)
     alt success
-        API-->>B: v202212GetASNDetailsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212GetASNDetailsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -303,18 +303,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_rankings(marketId="marketId-example", rankType="rankType-example", ip="ip-example", data=KmiServiceGetRankingsBody(...))
-    W->>B: ParseDict(params, GetRankingsRequest)
-    B->>API: get_rankings (gRPC/TLS)
+    W->>R: build_grpc_request(GetRankingsRequest, arguments)
+    R->>API: KmiService/GetRankings (gRPC/TLS)
     alt success
-        API-->>B: v202212GetRankingsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212GetRankingsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -385,18 +385,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kmi
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_markets()
-    W->>B: ParseDict(params, ListMarketsRequest)
-    B->>API: list_markets (gRPC/TLS)
+    W->>R: build_grpc_request(ListMarketsRequest, arguments)
+    R->>API: KmiService/ListMarkets (gRPC/TLS)
     alt success
-        API-->>B: v202212ListMarketsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212ListMarketsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

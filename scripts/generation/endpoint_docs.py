@@ -223,10 +223,61 @@ def _rest_function_path_and_method(
     return None
 
 
-def parse_wrapper_method_signatures(
-    wrapper_file: Path,
-) -> dict[tuple[str, str], tuple[str, list[tuple[str, str, bool]]]]:
-    """Maps (http_method, normalized_path) -> (wrapper_method_name, params).
+@dataclass(frozen=True)
+class GrpcCall:
+    """The RPC a wrapper method calls on GrpcTransport, read from its source."""
+
+    rpc: str  # "DeviceService/GetDevice"
+    request: str  # "GetDeviceRequest"
+
+
+WrapperSignatures = dict[
+    tuple[str, str], tuple[str, list[tuple[str, str, bool]], GrpcCall | None]
+]
+
+
+def _grpc_stub_services(init: ast.FunctionDef) -> dict[str, str]:
+    """Maps each `self._grpc_stub_N` to its proto service, from `XStub(channel)`."""
+    services = {}
+    for sub in ast.walk(init):
+        if (
+            isinstance(sub, ast.Assign)
+            and isinstance(sub.value, ast.Call)
+            and isinstance(sub.value.func, ast.Attribute)
+            and sub.value.func.attr.endswith("Stub")
+        ):
+            for target in sub.targets:
+                if isinstance(target, ast.Attribute):
+                    services[target.attr] = sub.value.func.attr.removesuffix("Stub")
+    return services
+
+
+def _grpc_call(
+    method: ast.FunctionDef, stub_services: dict[str, str]
+) -> GrpcCall | None:
+    """Reads `build_grpc_request(self._grpc_pb2_N.Req, ...)` and `call_grpc(self._grpc_stub_N.Rpc, ...)`."""
+    request = rpc = None
+    for sub in ast.walk(method):
+        if not (
+            isinstance(sub, ast.Call) and isinstance(sub.func, ast.Name) and sub.args
+        ):
+            continue
+        first = sub.args[0]
+        if not (
+            isinstance(first, ast.Attribute) and isinstance(first.value, ast.Attribute)
+        ):
+            continue
+        if sub.func.id == "build_grpc_request":
+            request = first.attr
+        elif sub.func.id == "call_grpc" and first.value.attr in stub_services:
+            rpc = f"{stub_services[first.value.attr]}/{first.attr}"
+    return GrpcCall(rpc=rpc, request=request) if rpc and request else None
+
+
+def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
+    """Maps (http_method, normalized_path) -> (wrapper_method_name, params, grpc_call).
+
+    grpc_call is None when the method raises NotImplementedError on gRPC.
 
     Keyed by method+path rather than operationId: multi-swagger-file
     services legitimately reuse generic operationIds like "List"/"Get"
@@ -275,7 +326,17 @@ def parse_wrapper_method_signatures(
     if wrapper_class is None:
         return {}
 
-    mapping: dict[tuple[str, str], tuple[str, list[tuple[str, str, bool]]]] = {}
+    init = next(
+        (
+            n
+            for n in wrapper_class.body
+            if isinstance(n, ast.FunctionDef) and n.name == "__init__"
+        ),
+        None,
+    )
+    stub_services = _grpc_stub_services(init) if init else {}
+
+    mapping: WrapperSignatures = {}
     for node in wrapper_class.body:
         if not isinstance(node, ast.FunctionDef) or node.name == "__init__":
             continue
@@ -311,6 +372,7 @@ def parse_wrapper_method_signatures(
         mapping[(http_method, _normalize_path_for_matching(path_template))] = (
             node.name,
             params,
+            _grpc_call(node, stub_services),
         )
 
     return mapping
@@ -372,6 +434,7 @@ def _render_operation_sequence_diagram(
     doc: EndpointDoc,
     method_name: str,
     params: list[tuple[str, str, bool]],
+    grpc_call: GrpcCall | None,
 ) -> list[str]:
     """Renders REST and gRPC sequence diagrams side by side for one operation."""
     req_params = [(p, t) for p, t, r in params if r]
@@ -384,12 +447,6 @@ def _render_operation_sequence_diagram(
 
     success_resp = next((r for r in doc.responses if r.status.startswith("2")), None)
     success_model = success_resp.type_label if success_resp else "response"
-
-    # gRPC request class follows the convention {OperationId}Request where OperationId
-    # comes from the HTTP method + path, so we derive it from the swagger operationId.
-    grpc_req_class = (
-        f"{doc.operation_id}Request" if doc.operation_id != "-" else "Request"
-    )
 
     rest_diagram = [
         "**REST transport**",
@@ -415,6 +472,17 @@ def _render_operation_sequence_diagram(
         "",
     ]
 
+    if grpc_call is None:
+        grpc_diagram = [
+            "**gRPC transport**",
+            "",
+            "Not available: no RPC declares this operation's HTTP rule, so on "
+            '`protocol="grpc"` this method raises `NotImplementedError`. Call it '
+            'through a `protocol="rest"` client.',
+            "",
+        ]
+        return rest_diagram + grpc_diagram
+
     grpc_diagram = [
         "**gRPC transport**",
         "",
@@ -422,18 +490,18 @@ def _render_operation_sequence_diagram(
         "sequenceDiagram",
         "    participant C as Caller",
         f"    participant W as client.{service}",
-        "    participant B as proto bridge",
+        "    participant R as grpc_runtime",
         "    participant API as Kentik gRPC API",
         "",
         f"    C->>W: {method_name}({call_args})",
-        f"    W->>B: ParseDict(params, {grpc_req_class})",
-        f"    B->>API: {method_name} (gRPC/TLS)",
+        f"    W->>R: build_grpc_request({grpc_call.request}, arguments)",
+        f"    R->>API: {grpc_call.rpc} (gRPC/TLS)",
         "    alt success",
-        f"        API-->>B: {success_model} proto",
-        "        B-->>W: MessageToDict(response)",
+        "        API-->>R: response message",
+        "        R-->>W: MessageToDict(response)",
         f"        W-->>C: {success_model}",
         "    else gRPC error, deadline, or unreachable",
-        "        B-->>W: map_grpc_error()",
+        "        R-->>W: map_grpc_error()",
         "        W-->>C: raise AuthenticationError, HTTPException, or TransportError",
         "    end",
         MD_FENCE,
@@ -446,7 +514,7 @@ def _render_operation_sequence_diagram(
 def _render_endpoint_section(
     service: str,
     doc: EndpointDoc,
-    wrapper_signatures: dict[tuple[str, str], tuple[str, list[tuple[str, str, bool]]]],
+    wrapper_signatures: WrapperSignatures,
     heading_level: int = 4,
 ) -> list[str]:
     heading = "#" * heading_level
@@ -457,7 +525,7 @@ def _render_endpoint_section(
     signature = wrapper_signatures.get(
         (doc.method, _normalize_path_for_matching(doc.path))
     )
-    method_name, params = signature if signature else (None, [])
+    method_name, params, grpc_call = signature if signature else (None, [], None)
 
     lines = [f"{heading} `{doc.method}` `{doc.path}`", ""]
     if doc.summary:
@@ -469,7 +537,9 @@ def _render_endpoint_section(
     # before they read the parameter/response detail tables.
     if method_name is not None:
         lines.extend(
-            _render_operation_sequence_diagram(service, doc, method_name, params)
+            _render_operation_sequence_diagram(
+                service, doc, method_name, params, grpc_call
+            )
         )
 
     all_params = list(doc.parameters)
