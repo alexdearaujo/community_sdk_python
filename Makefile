@@ -1,4 +1,4 @@
-.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck impact-report release-notes check-specs clean deep-clean
+.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck impact-report release-notes check-changelog check-specs clean deep-clean
 
 .DEFAULT_GOAL := all
 
@@ -73,6 +73,9 @@ check-specs: ## Validate FR/SC/task cross-references in specs/
 
 release-notes: ## Render release notes from api_surface.json (SINCE=<ref>, default: latest tag)
 	uv run python scripts/release_notes.py $(if $(SINCE),--since $(SINCE),) $(if $(OUT),-o $(OUT),)
+
+check-changelog: ## Fail if CHANGELOG.md misses a breaking surface change (SINCE=<ref>, default: latest tag)
+	uv run python scripts/release_notes.py --check-changelog $(if $(SINCE),--since $(SINCE),)
 
 impact-report: ## Report what the last regeneration changed (SINCE=<ref>, default: HEAD; CHECKS=0 skips tests)
 	uv run python scripts/impact_report.py $(if $(SINCE),--since $(SINCE),) $(if $(filter 0,$(CHECKS)),--no-checks,) $(if $(OUT),-o $(OUT),)
