@@ -420,8 +420,15 @@ Mocked/offline layers (no network, safe to run anywhere, part of
 - If generation output changed, follow these steps before opening a
   PR:
   1. Regenerate: `make generate local`.
-  2. Run the relevant focused suite.
-  3. Run `make test`.
+  2. Read the message at the end of the run. If it says `⚠️ API SURFACE
+     CHANGED`, write a `CHANGELOG.md` Unreleased entry for each listed
+     change, naming each breaking change exactly as the alert does. Then
+     run `make check-changelog SINCE=HEAD`. `make generate` never writes
+     release notes or `CHANGELOG.md` itself; skipping this step fails the
+     `changelog` CI job. See "Update the release notes after every
+     regeneration" in `docs/sphinx/guides/generation.md`.
+  3. Run the relevant focused suite.
+  4. Run `make test`.
 
 Live layer (real network, opt-in only, **not** part of `make test`):
 

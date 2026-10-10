@@ -19,7 +19,6 @@ since the baseline has no mention in CHANGELOG.md's Unreleased section.
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import subprocess
 import sys
@@ -43,14 +42,6 @@ def _git(*args: str) -> str:
     return result.stdout.strip()
 
 
-def _surface_at(ref: str) -> dict | None:
-    """Returns the recorded surface at ref, or None if that revision has no record."""
-    try:
-        return json.loads(_git("show", f"{ref}:{SURFACE_RELPATH}"))
-    except RuntimeError:
-        return None
-
-
 def _tags_newest_first() -> list[str]:
     try:
         tags = _git("tag", "--sort=-creatordate")
@@ -71,7 +62,7 @@ def _default_baseline() -> tuple[str, dict] | None:
     for tag in _tags_newest_first():
         if _git("rev-list", "-n", "1", tag) == head:
             continue
-        surface = _surface_at(tag)
+        surface = api_surface.recorded_at(tag)
         if surface is not None:
             return tag, surface
     return None
@@ -128,7 +119,7 @@ def main() -> None:
     after = api_surface.read(surface_path)
 
     if args.since:
-        before = _surface_at(args.since)
+        before = api_surface.recorded_at(args.since)
         baseline = None if before is None else (args.since, before)
     else:
         baseline = _default_baseline()

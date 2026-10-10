@@ -574,6 +574,11 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
     # Last: the surface record must reflect the final formatted output.
     surface_path = api_surface.generate()
     print(f"\nRecorded API surface in {surface_path.name}")
+    print(
+        api_surface.render_regeneration_alert(
+            api_surface.recorded_at("HEAD"), api_surface.read(surface_path)
+        )
+    )
 
     print("\n✅ SDK and Documentation Generation Complete!")
 

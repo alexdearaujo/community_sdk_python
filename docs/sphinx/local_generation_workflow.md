@@ -59,7 +59,12 @@ OPENAPI_GENERATOR_CMD="openapi-python-generator" make generate local
 2. Run `make generate local`.
 3. Review generated changes in [`src/kentik_api/gen/`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/gen/README.md).
 4. Run tests/lint as needed ([`make test`](../../Makefile), [`make lint`](../../Makefile)).
-5. Optional: run [`make impact-report`](../../Makefile) before you commit.
+5. Required: read the message at the end of the `make generate` output. If
+   it says `⚠️ API SURFACE CHANGED`, update [`CHANGELOG.md`](https://github.com/kentik/community_sdk_python/blob/main/CHANGELOG.md)
+   and run `make check-changelog SINCE=HEAD` before you commit. The steps are
+   in "Update the release notes after every regeneration" in the
+   [generation guide](guides/generation.md).
+6. Optional: run [`make impact-report`](../../Makefile) before you commit.
    It writes `reports/regeneration-impact-<date>.html` with the schema commit,
    the changed files by kind, the API surface delta, the toolchain floors, and
    the test, lint, and type-check results. Proto stubs that changed only their

@@ -315,3 +315,30 @@ def test_breaking_changes_name_what_a_changelog_entry_must_mention():
     ]
 
     assert names == ["/thing", "Old", "T.a"]
+
+
+def test_regeneration_alert_lists_changes_and_next_steps():
+    before = _surface({"kmeta": _service(fields={"Config": {"vaultId": _field()}})})
+    after = _surface({"kmeta": _service(fields={"Config": {"vaultName": _field()}})})
+
+    alert = api_surface.render_regeneration_alert(before, after)
+
+    assert "API SURFACE CHANGED since HEAD: 1 BREAKING change" in alert
+    assert "`kmeta`: field removed, `Config.vaultId`" in alert
+    assert "make check-changelog SINCE=HEAD" in alert
+    assert "make release-notes SINCE=HEAD" in alert
+
+
+def test_regeneration_alert_is_quiet_when_nothing_changed():
+    surface = _surface({"demo": _service(["GET /thing"])})
+
+    alert = api_surface.render_regeneration_alert(surface, surface)
+
+    assert "unchanged since HEAD" in alert
+    assert "CHANGED" not in alert
+
+
+def test_regeneration_alert_says_when_there_is_no_committed_record():
+    alert = api_surface.render_regeneration_alert(None, _surface({}))
+
+    assert "No api_surface.json is committed at HEAD" in alert
