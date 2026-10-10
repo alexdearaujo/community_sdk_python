@@ -3,9 +3,9 @@
 # Changelog
 
 This file lists the changes a caller of the SDK can see. The generated API
-surface (services, operations, and models) has its own record in
-[`api_surface.json`](api_surface.json). To list surface changes between two
-releases, run
+surface (services, operations, model fields, and enum values) has its own
+record in [`api_surface.json`](api_surface.json). To list surface changes
+between two releases, run
 [`scripts/release_notes.py`](scripts/release_notes.py):
 
 ```bash

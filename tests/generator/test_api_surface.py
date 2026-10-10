@@ -21,14 +21,24 @@ def _surface(services: dict, **top) -> dict:
     }
 
 
-def _service(operations=(), models=(), mounted=True) -> dict:
+def _service(operations=(), models=(), mounted=True, fields=None, enums=None) -> dict:
     return {
         "mounted": mounted,
         "operations": {
             op: {"operation": op.split()[-1], "status": 200} for op in operations
         },
         "models": list(models),
+        "fields": fields or {},
+        "enums": enums or {},
     }
+
+
+def _field(type_="Optional[str]", required=False) -> dict:
+    return {"type": type_, "required": required}
+
+
+def _render(before: dict, after: dict) -> str:
+    return api_surface.render_markdown(api_surface.diff(before, after), since="v1.0.7")
 
 
 def test_identical_surfaces_produce_no_delta():
@@ -85,7 +95,7 @@ def test_removed_service_is_flagged_breaking():
         api_surface.diff(before, _surface({})), since="v1.0.7"
     )
 
-    assert "Services removed: `client.vault`" in markdown
+    assert "Service removed: `client.vault`" in markdown
 
 
 def test_unmounting_a_service_is_flagged_breaking():
@@ -141,7 +151,15 @@ def test_capture_reads_a_generated_tree(tmp_path: Path):
     service = tmp_path / "demo"
     (service / "services").mkdir(parents=True)
     (service / "models").mkdir()
-    (service / "models" / "Thing.py").write_text("class Thing(BaseModel):\n    pass\n")
+    (service / "models" / "Thing.py").write_text(
+        "class Thing(BaseModel):\n"
+        '    model_config = {"populate_by_name": True}\n'
+        '    name: str = Field(validation_alias="name")\n'
+        '    note: Optional[str] = Field(validation_alias="note", default=None)\n'
+    )
+    (service / "models" / "Color.py").write_text(
+        'class Color(str, Enum):\n    RED = "RED"\n    BLUE = "BLUE"\n'
+    )
     (service / "services" / "DemoService.py").write_text(
         "from kentik_api.core.rest_runtime import request_json\n"
         "def ListThings(*, cid: str) -> Thing:\n"
@@ -156,7 +174,15 @@ def test_capture_reads_a_generated_tree(tmp_path: Path):
 
     surface = api_surface.capture(tmp_path)
 
-    assert surface["services"]["demo"]["models"] == ["Thing"]
+    demo = surface["services"]["demo"]
+    assert demo["models"] == ["Color", "Thing"]
+    assert demo["fields"] == {
+        "Thing": {
+            "name": {"type": "str", "required": True},
+            "note": {"type": "Optional[str]", "required": False},
+        }
+    }
+    assert demo["enums"] == {"Color": ["RED", "BLUE"]}
     operations = surface["services"]["demo"]["operations"]
     assert "GET /demo/v1/{cid}/things" in operations
     assert operations["GET /demo/v1/{cid}/things"]["operation"] == "ListThings"
@@ -202,3 +228,90 @@ def test_single_new_model_is_singular():
     )
 
     assert "1 new model: `ListResolvedAddressesResponse`" in markdown
+
+
+def test_renamed_field_is_flagged_breaking():
+    """kmeta renamed ServiceNowConfig.credentialVaultId to credentialVaultName."""
+    before = _surface({"kmeta": _service(fields={"Config": {"vaultId": _field()}})})
+    after = _surface({"kmeta": _service(fields={"Config": {"vaultName": _field()}})})
+
+    markdown = _render(before, after)
+
+    assert markdown.startswith("### Breaking changes")
+    assert "`kmeta`: field removed, `Config.vaultId`" in markdown
+    assert "field added, `Config.vaultName` (`Optional[str]`)" in markdown
+
+
+def test_new_optional_field_is_not_breaking_but_a_required_one_is():
+    before = _surface({"demo": _service(fields={"Thing": {}})})
+    optional = _surface({"demo": _service(fields={"Thing": {"note": _field()}})})
+    required = _surface(
+        {"demo": _service(fields={"Thing": {"name": _field("str", required=True)}})}
+    )
+
+    assert "Breaking changes" not in _render(before, optional)
+    assert "new required field `Thing.name`" in _render(before, required)
+
+
+def test_retyped_or_newly_required_field_is_breaking_but_relaxing_is_not():
+    def surface(field: dict) -> dict:
+        return _surface({"demo": _service(fields={"Thing": {"count": field}})})
+
+    optional_str = surface(_field())
+    assert "changed from" in _render(optional_str, surface(_field("Optional[int]")))
+    assert "changed from" in _render(optional_str, surface(_field(required=True)))
+    relaxed = _render(surface(_field(required=True)), optional_str)
+    assert "Breaking changes" not in relaxed
+    assert "`Thing.count`: `Optional[str]`, required to `Optional[str]`" in relaxed
+
+
+def test_removed_enum_value_is_breaking_and_an_added_one_is_not():
+    before = _surface({"demo": _service(enums={"Color": ["RED", "BLUE"]})})
+    after = _surface({"demo": _service(enums={"Color": ["RED", "GREEN"]})})
+
+    markdown = _render(before, after)
+
+    assert "`demo`: enum value removed, `Color.BLUE`" in markdown
+    assert "enum value added, `Color.GREEN`" in markdown
+    names = [
+        n for _, n in api_surface.breaking_changes(api_surface.diff(before, after))
+    ]
+    assert names == ["Color.BLUE"]
+
+
+def test_operation_status_and_required_params_changes_are_reported():
+    before = _surface({"demo": _service(["GET /thing"])})
+    after = _surface({"demo": _service(["GET /thing"])})
+    after["services"]["demo"]["operations"]["GET /thing"].update(
+        status=201, required_params=["id"]
+    )
+
+    markdown = _render(before, after)
+
+    assert "`GET /thing` succeeds with 201, not 200" in markdown
+    assert "`demo`: `GET /thing` now requires `id`" in markdown
+
+
+def test_a_record_without_fields_compares_as_unchanged():
+    """Records written before schema_version 2 carry no fields or enums."""
+    before = _surface({"demo": _service(models=["Thing"])})
+    del before["services"]["demo"]["fields"], before["services"]["demo"]["enums"]
+    after = _surface(
+        {"demo": _service(models=["Thing"], fields={"Thing": {"note": _field()}})}
+    )
+
+    assert api_surface.is_empty(api_surface.diff(before, after))
+
+
+def test_breaking_changes_name_what_a_changelog_entry_must_mention():
+    before = _surface(
+        {"demo": _service(["GET /thing"], ["Old"], fields={"T": {"a": _field()}})}
+    )
+    after = _surface({"demo": _service([], [], fields={"T": {}})})
+
+    names = [
+        name
+        for _, name in api_surface.breaking_changes(api_surface.diff(before, after))
+    ]
+
+    assert names == ["/thing", "Old", "T.a"]
