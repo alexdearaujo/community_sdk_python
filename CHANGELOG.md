@@ -16,6 +16,11 @@ Each release appends that list to its GitHub release notes. A pull request
 whose surface change can break a caller (a removed or retyped field, for
 example) fails `make check-changelog` until this file names the change.
 
+`make generate` does not edit this file. When a regeneration ends with
+`⚠️ API SURFACE CHANGED`, add an entry here for each listed change before you
+commit. See "Update the release notes after every regeneration" in
+[the generation guide](docs/sphinx/guides/generation.md).
+
 ## Unreleased
 
 This is the first release of the SDK for Kentik's V6 API, and it replaces

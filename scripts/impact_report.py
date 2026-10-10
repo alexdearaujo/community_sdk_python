@@ -20,7 +20,6 @@ from __future__ import annotations
 import argparse
 import datetime
 import html
-import json
 import re
 import subprocess
 import sys
@@ -126,13 +125,6 @@ def schema_commit(schema_repo: Path) -> str:
         return _git("log", "-1", "--format=%h %cs", cwd=schema_repo)
     except RuntimeError as exc:
         return f"unknown ({exc})"
-
-
-def surface_at(ref: str) -> dict | None:
-    try:
-        return json.loads(_git("show", f"{ref}:{SURFACE_RELPATH}"))
-    except RuntimeError:
-        return None
 
 
 def floor_check(surface: dict) -> list[str]:
@@ -299,7 +291,7 @@ def main() -> None:
     if not surface_path.exists():
         raise SystemExit(f"{SURFACE_RELPATH} is missing. Run `make generate` first.")
     after = api_surface.read(surface_path)
-    before = surface_at(args.since)
+    before = api_surface.recorded_at(args.since)
     surface_delta = (
         f"_`{SURFACE_RELPATH}` does not exist at `{args.since}`, so there is no "
         "surface to compare against._"

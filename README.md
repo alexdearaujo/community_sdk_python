@@ -186,6 +186,12 @@ make                  # generate + test (default)
 See [`scripts/README.md`](scripts/README.md) for generator internals and
 [`docs/sphinx/guides/generation.md`](docs/sphinx/guides/generation.md) for the full workflow.
 
+> [!WARNING]
+> `make generate` does not write release notes. If the run ends with
+> `⚠️ API SURFACE CHANGED`, update [`CHANGELOG.md`](CHANGELOG.md) and run
+> `make check-changelog SINCE=HEAD` before you commit. The steps are in
+> [Update the release notes after every regeneration](docs/sphinx/guides/generation.md#update-the-release-notes-after-every-regeneration).
+
 ### Testing
 
 ```bash

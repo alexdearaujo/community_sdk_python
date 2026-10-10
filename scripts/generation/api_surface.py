@@ -15,6 +15,7 @@ from __future__ import annotations
 import ast
 import json
 import re
+import subprocess
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -167,6 +168,18 @@ def write(surface: dict[str, Any], path: Path | None = None) -> Path:
 def read(path: Path | None = None) -> dict[str, Any]:
     target = SURFACE_FILE if path is None else path
     return json.loads(target.read_text(encoding="utf-8"))
+
+
+def recorded_at(ref: str) -> dict[str, Any] | None:
+    """Returns the surface committed at a git ref, or None if it has no record."""
+    result = subprocess.run(
+        ["git", "show", f"{ref}:{SURFACE_FILE.name}"],
+        cwd=PROJECT_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return json.loads(result.stdout) if result.returncode == 0 else None
 
 
 def diff(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
@@ -457,6 +470,55 @@ def render_markdown(delta: dict[str, Any], *, since: str) -> str:
         lines.append("")
 
     return "\n".join(lines).rstrip() + "\n"
+
+
+_RULE = "=" * 72
+
+
+def render_regeneration_alert(
+    before: dict[str, Any] | None, after: dict[str, Any]
+) -> str:
+    """Tells whoever ran `make generate` what changed and what they must do next.
+
+    Release notes are not written here: they are cut at release time from the
+    committed record, so this only says the CHANGELOG needs the change.
+    """
+    if before is None:
+        return (
+            "\nNo api_surface.json is committed at HEAD, so this run cannot say "
+            "what changed.\nCompare against an earlier ref with "
+            "`make release-notes SINCE=<ref>`.\n"
+        )
+    delta = diff(before, after)
+    if is_empty(delta):
+        return "\nAPI surface unchanged since HEAD. No CHANGELOG entry is needed.\n"
+
+    breaking = breaking_changes(delta)
+    headline = (
+        f"{len(breaking)} BREAKING change{'s' if len(breaking) != 1 else ''}"
+        if breaking
+        else "no breaking changes"
+    )
+    return "\n".join(
+        [
+            "",
+            _RULE,
+            f"⚠️  API SURFACE CHANGED since HEAD: {headline}",
+            _RULE,
+            render_markdown(delta, since="HEAD").rstrip(),
+            _RULE,
+            "Before you commit this regeneration, update the release notes:",
+            "  1. Describe each change above in CHANGELOG.md, under ## Unreleased.",
+            "     Name every breaking change exactly as listed above.",
+            "  2. make check-changelog SINCE=HEAD   # fails if one is not named",
+            "  3. make release-notes SINCE=HEAD     # preview what the release lists",
+            "  4. Commit api_surface.json, the regenerated code, and CHANGELOG.md.",
+            'Steps: "Update the release notes after every regeneration" in',
+            "docs/sphinx/guides/generation.md.",
+            _RULE,
+            "",
+        ]
+    )
 
 
 def render_summary(surface: dict[str, Any]) -> str:
