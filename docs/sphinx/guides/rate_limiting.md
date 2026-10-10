@@ -126,5 +126,5 @@ after a response are your decision.
 
 If you add your own retries, retry only idempotent operations: those that use
 GET, PUT, or DELETE. Do not retry POST or PATCH. A repeated POST or PATCH can
-create or change something twice. Of the SDK's 233 operations, 161 are
+create or change something twice. Of the SDK's 234 operations, 162 are
 idempotent and 72 are not.

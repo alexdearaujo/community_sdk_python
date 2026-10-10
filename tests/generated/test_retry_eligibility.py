@@ -46,6 +46,6 @@ def test_eligibility_split_matches_the_recorded_counts():
         for verb in _verbs_by_operation().values()
     )
 
-    # Recorded in FR-032a. A schema change that moves these is a prompt to
-    # re-read the rule, not to edit the numbers blindly.
-    assert counts == {"eligible": 161, "never": 72}
+    # FR-032a recorded 161; nms's GET made it 162. A schema change that moves
+    # these is a prompt to re-read the rule, not to edit the numbers blindly.
+    assert counts == {"eligible": 162, "never": 72}

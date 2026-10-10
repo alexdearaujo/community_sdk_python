@@ -11438,6 +11438,173 @@
         ]
       }
     },
+    "nms": {
+      "mounted": true,
+      "operations": {
+        "GET /nms/v202505/metrics_schema": {
+          "operation": "MetricsSchemaService_GetMetricsSchema",
+          "status": 200,
+          "required_params": []
+        }
+      },
+      "models": [
+        "FieldDisplay",
+        "FieldSchema",
+        "FieldType",
+        "GetMetricsSchemaResponse",
+        "MeasurementSchema",
+        "MetricsSchema",
+        "Usage",
+        "protobufAny",
+        "rpcStatus"
+      ],
+      "fields": {
+        "FieldDisplay": {
+          "precision": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "FieldSchema": {
+          "type": {
+            "type": "Optional[FieldType]",
+            "required": false
+          },
+          "column": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "mask": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "unit": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "label": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "values": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          },
+          "lastSeen": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "supportedUsages": {
+            "type": "Optional[List[Optional[Usage]]]",
+            "required": false
+          },
+          "queryColumn": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "enrichment": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "display": {
+            "type": "Optional[FieldDisplay]",
+            "required": false
+          },
+          "isPrimaryKey": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "GetMetricsSchemaResponse": {
+          "schema_": {
+            "type": "Optional[MetricsSchema]",
+            "required": false
+          }
+        },
+        "MeasurementSchema": {
+          "id": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "entityType": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "appProtocol": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "sourceTimestampColumn": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "dimensions": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          },
+          "metrics": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          },
+          "lastSeen": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "tags": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "MetricsSchema": {
+          "measurements": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          }
+        },
+        "protobufAny": {
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "rpcStatus": {
+          "code": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "message": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "details": {
+            "type": "Optional[List[Optional[protobufAny]]]",
+            "required": false
+          }
+        }
+      },
+      "enums": {
+        "FieldType": [
+          "FIELD_TYPE_UNSPECIFIED",
+          "FIELD_TYPE_INT",
+          "FIELD_TYPE_FLOAT",
+          "FIELD_TYPE_STRING"
+        ],
+        "Usage": [
+          "USAGE_UNSPECIFIED",
+          "USAGE_QUERY",
+          "USAGE_KMETRICS_ALERT",
+          "USAGE_FLOW_ALERT"
+        ]
+      }
+    },
     "notification_channel": {
       "mounted": true,
       "operations": {

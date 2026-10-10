@@ -1,0 +1,46 @@
+# AUTO-GENERATED: scripts/openapi_templates/service.jinja2 via openapi-python-generator
+# Rebuilt on every `make generate`. Do not edit by hand.
+
+from typing import Any, Dict, Optional
+
+from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
+from kentik_api.core.rest_runtime import request_json
+
+from ..error import MetricsSchemaService_GetMetricsSchemaError
+from ..models import (  # noqa: F401
+    FieldDisplay,
+    FieldSchema,
+    FieldType,
+    GetMetricsSchemaResponse,
+    MeasurementSchema,
+    MetricsSchema,
+    Usage,
+    protobufAny,
+    rpcStatus,
+)
+
+
+def MetricsSchemaService_GetMetricsSchema(
+    api_config_override: Optional[APIConfig] = None,
+) -> GetMetricsSchemaResponse:
+    query_params: Dict[str, Any] = {}
+
+    header_params: Dict[str, Any] = {}
+
+    body = request_json(
+        method="get",
+        path="/nms/v202505/metrics_schema",
+        api_config_override=api_config_override,
+        query_params=query_params,
+        header_params=header_params,
+        expected_status=200,
+        operation_name="MetricsSchemaService_GetMetricsSchema",
+        error_cls=MetricsSchemaService_GetMetricsSchemaError,
+    )
+
+    return (
+        attach_rate_limit(GetMetricsSchemaResponse(**body), rate_limit_of(body))
+        if body is not None
+        else GetMetricsSchemaResponse.model_construct()
+    )

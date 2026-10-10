@@ -51,6 +51,10 @@ Each change below can stop an existing `except` clause or call from working.
 - **`kmeta` service.** `client.kmeta` manages ServiceNow configurations: list,
   get, create, update, and delete. It predates `api_surface.json`, so
   `make release-notes` does not list it.
+- **`nms` service.** `client.nms.metrics_schema_service__get_metrics_schema()`
+  returns the NMS metrics schema: each measurement and its fields, on REST
+  and gRPC. The response's `schema` field is `schema_` in Python, because
+  `schema` is a `BaseModel` attribute.
 - **Static agent addresses.** `synthetics` `AgentMetadata` has read-only
   `staticIpv4` and `staticIpv6`, true when the agent's public address does not
   change.

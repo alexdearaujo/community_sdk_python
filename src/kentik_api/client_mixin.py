@@ -38,6 +38,7 @@ from kentik_api.gen.mkp.services.mkp import MkpServiceWrapper
 from kentik_api.gen.network_class.services.network_class import (
     NetworkClassServiceWrapper,
 )
+from kentik_api.gen.nms.services.nms import NmsServiceWrapper
 from kentik_api.gen.notification_channel.services.notification_channel import (
     NotificationChannelServiceWrapper,
 )
@@ -88,6 +89,7 @@ class KentikClientMixin:
         label: "LabelServiceWrapper"
         mkp: "MkpServiceWrapper"
         network_class: "NetworkClassServiceWrapper"
+        nms: "NmsServiceWrapper"
         notification_channel: "NotificationChannelServiceWrapper"
         pathfinder: "PathfinderServiceWrapper"
         plan: "PlanServiceWrapper"
@@ -126,6 +128,7 @@ class KentikClientMixin:
         self.label = LabelServiceWrapper(self._transport)
         self.mkp = MkpServiceWrapper(self._transport)
         self.network_class = NetworkClassServiceWrapper(self._transport)
+        self.nms = NmsServiceWrapper(self._transport)
         self.notification_channel = NotificationChannelServiceWrapper(self._transport)
         self.pathfinder = PathfinderServiceWrapper(self._transport)
         self.plan = PlanServiceWrapper(self._transport)

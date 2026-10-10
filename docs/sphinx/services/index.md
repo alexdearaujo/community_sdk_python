@@ -40,6 +40,7 @@ mkp
 monitoring
 net
 network_class
+nms
 notification_channel
 pathfinder
 plan
