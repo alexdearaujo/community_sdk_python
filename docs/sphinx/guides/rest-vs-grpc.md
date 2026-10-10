@@ -117,25 +117,16 @@ REST covers every operation the SDK has. gRPC covers most of them:
 
 | Measure | Count |
 | --- | --- |
-| Services with a wrapper on the client | 35 |
+| Services with a wrapper on the client | 36 |
 | Services with no wrapper | 6 |
-| Wrapper operations | 233 |
-| Operations with a gRPC translation | 198 |
-| Operations that are REST only | 35 |
+| Wrapper operations | 234 |
+| Operations with a gRPC translation | 228 |
+| Operations that are REST only | 6 |
 
-The generator gives an operation a gRPC translation when it finds a gRPC
-method with the same name as the REST operation. The 35 REST-only operations
-are in seven services:
-
-| Service | REST-only operations |
-| --- | --- |
-| `mkp` | 14 of 14 |
-| `kagent` | 8 of 28 |
-| `interface` | 4 of 6 |
-| `alerting` | 3 of 37 |
-| `ktbgp` | 3 of 3 |
-| `network_class` | 2 of 2 |
-| `audit` | 1 of 3 |
+The generator gives an operation a gRPC translation when an RPC declares the
+same HTTP rule as the REST operation: the same proto service, HTTP verb, and
+path. The 6 REST-only operations are all in `alerting`. They belong to
+`MitigationsService`, which no proto declares.
 
 The six services with no wrapper are `core`, `deviceconf`, `diagnostic`,
 `kptr`, `monitoring`, and `net`. The SDK has models and proto stubs for them,
@@ -149,7 +140,7 @@ cases. The two have different causes and different fixes:
 
 | Message | Cause | What to do |
 | --- | --- | --- |
-| `gRPC translation for <Operation> is not yet implemented.` | The operation is one of the 35 REST-only operations. | Call it through a `protocol="rest"` client. |
+| `gRPC translation for <Operation> is not yet implemented.` | The operation is one of the 6 REST-only operations. | Call it through a `protocol="rest"` client. |
 | `gRPC proto dependencies not installed for <service> service` | The service's compiled proto modules failed to import when the client started. | Repair the installation. Every other method of that service raises the same error. |
 
 The first case is fixed and predictable: the same operations raise it on
