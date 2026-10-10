@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
-    W->>B: ParseDict(params, GetTagValuesRequest)
-    B->>API: get_tag_values (gRPC/TLS)
+    W->>R: build_grpc_request(GetTagValuesRequest, arguments)
+    R->>API: AssetTagsService/GetTagValues (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1GetTagValuesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1GetTagValuesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -138,18 +138,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_tag_keys()
-    W->>B: ParseDict(params, ListTagKeysRequest)
-    B->>API: list_tag_keys (gRPC/TLS)
+    W->>R: build_grpc_request(ListTagKeysRequest, arguments)
+    R->>API: AssetTagsService/ListTagKeys (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1ListTagKeysResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1ListTagKeysResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -206,18 +206,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_tag_key(data=CreateTagKeyRequest(...))
-    W->>B: ParseDict(params, CreateTagKeyRequest)
-    B->>API: create_tag_key (gRPC/TLS)
+    W->>R: build_grpc_request(CreateTagKeyRequest, arguments)
+    R->>API: AssetTagsService/CreateTagKey (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1CreateTagKeyResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1CreateTagKeyResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -282,18 +282,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_tag_key(id="id-example")
-    W->>B: ParseDict(params, GetTagKeyRequest)
-    B->>API: get_tag_key (gRPC/TLS)
+    W->>R: build_grpc_request(GetTagKeyRequest, arguments)
+    R->>API: AssetTagsService/GetTagKey (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1GetTagKeyResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1GetTagKeyResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
-    W->>B: ParseDict(params, UpdateTagKeyRequest)
-    B->>API: update_tag_key (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateTagKeyRequest, arguments)
+    R->>API: AssetTagsService/UpdateTagKey (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1UpdateTagKeyResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1UpdateTagKeyResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -436,18 +436,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_tag_key(id="id-example")
-    W->>B: ParseDict(params, DeleteTagKeyRequest)
-    B->>API: delete_tag_key (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteTagKeyRequest, arguments)
+    R->>API: AssetTagsService/DeleteTagKey (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1DeleteTagKeyResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1DeleteTagKeyResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -512,18 +512,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
-    W->>B: ParseDict(params, ListTagValuesRequest)
-    B->>API: list_tag_values (gRPC/TLS)
+    W->>R: build_grpc_request(ListTagValuesRequest, arguments)
+    R->>API: AssetTagsService/ListTagValues (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1ListTagValuesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1ListTagValuesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -590,18 +590,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: set_tag_values(data=SetTagValuesRequest(...))
-    W->>B: ParseDict(params, SetTagValuesRequest)
-    B->>API: set_tag_values (gRPC/TLS)
+    W->>R: build_grpc_request(SetTagValuesRequest, arguments)
+    R->>API: AssetTagsService/SetTagValues (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1SetTagValuesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1SetTagValuesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -666,18 +666,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.asset_tags
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_tag_values(data=DeleteTagValuesRequest(...))
-    W->>B: ParseDict(params, DeleteTagValuesRequest)
-    B->>API: delete_tag_values (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteTagValuesRequest, arguments)
+    R->>API: AssetTagsService/DeleteTagValues (gRPC/TLS)
     alt success
-        API-->>B: v20260515beta1DeleteTagValuesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260515beta1DeleteTagValuesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

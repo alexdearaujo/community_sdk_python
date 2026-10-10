@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.enrichments
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: fetch_values_by_ids(data=FetchValuesByIdsRequest(...))
-    W->>B: ParseDict(params, FetchValuesByIdsRequest)
-    B->>API: fetch_values_by_ids (gRPC/TLS)
+    W->>R: build_grpc_request(FetchValuesByIdsRequest, arguments)
+    R->>API: EnumerationsAdminService/FetchValuesByIds (gRPC/TLS)
     alt success
-        API-->>B: v202601alpha1FetchValuesByIdsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202601alpha1FetchValuesByIdsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

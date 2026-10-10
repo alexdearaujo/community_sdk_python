@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_as_groups()
-    W->>B: ParseDict(params, ListASGroupsRequest)
-    B->>API: list_as_groups (gRPC/TLS)
+    W->>R: build_grpc_request(ListASGroupsRequest, arguments)
+    R->>API: ASGroupService/ListASGroups (gRPC/TLS)
     alt success
-        API-->>B: v202212ListASGroupsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212ListASGroupsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_as_group(data=CreateASGroupRequest(...))
-    W->>B: ParseDict(params, CreateASGroupRequest)
-    B->>API: create_as_group (gRPC/TLS)
+    W->>R: build_grpc_request(CreateASGroupRequest, arguments)
+    R->>API: ASGroupService/CreateASGroup (gRPC/TLS)
     alt success
-        API-->>B: v202212CreateASGroupResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212CreateASGroupResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_as_group(asGroupid="asGroupid-example")
-    W->>B: ParseDict(params, GetASGroupRequest)
-    B->>API: get_as_group (gRPC/TLS)
+    W->>R: build_grpc_request(GetASGroupRequest, arguments)
+    R->>API: ASGroupService/GetASGroup (gRPC/TLS)
     alt success
-        API-->>B: v202212GetASGroupResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212GetASGroupResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -280,18 +280,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_as_group(asGroupid="asGroupid-example", data=ASGroupServiceUpdateASGroupBody(...))
-    W->>B: ParseDict(params, UpdateASGroupRequest)
-    B->>API: update_as_group (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateASGroupRequest, arguments)
+    R->>API: ASGroupService/UpdateASGroup (gRPC/TLS)
     alt success
-        API-->>B: v202212UpdateASGroupResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212UpdateASGroupResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.as_group
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_as_group(asGroupid="asGroupid-example")
-    W->>B: ParseDict(params, DeleteASGroupRequest)
-    B->>API: delete_as_group (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteASGroupRequest, arguments)
+    R->>API: ASGroupService/DeleteASGroup (gRPC/TLS)
     alt success
-        API-->>B: v202212DeleteASGroupResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212DeleteASGroupResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.label
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_labels()
-    W->>B: ParseDict(params, ListLabelsRequest)
-    B->>API: list_labels (gRPC/TLS)
+    W->>R: build_grpc_request(ListLabelsRequest, arguments)
+    R->>API: LabelService/ListLabels (gRPC/TLS)
     alt success
-        API-->>B: v202210ListLabelsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210ListLabelsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.label
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_label(data=CreateLabelRequest(...))
-    W->>B: ParseDict(params, CreateLabelRequest)
-    B->>API: create_label (gRPC/TLS)
+    W->>R: build_grpc_request(CreateLabelRequest, arguments)
+    R->>API: LabelService/CreateLabel (gRPC/TLS)
     alt success
-        API-->>B: v202210CreateLabelResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210CreateLabelResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.label
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_label(id="id-example", data=LabelServiceUpdateLabelBody(...))
-    W->>B: ParseDict(params, UpdateLabelRequest)
-    B->>API: update_label (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateLabelRequest, arguments)
+    R->>API: LabelService/UpdateLabel (gRPC/TLS)
     alt success
-        API-->>B: v202210UpdateLabelResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210UpdateLabelResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -282,18 +282,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.label
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_label(id="id-example")
-    W->>B: ParseDict(params, DeleteLabelRequest)
-    B->>API: delete_label (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteLabelRequest, arguments)
+    R->>API: LabelService/DeleteLabel (gRPC/TLS)
     alt success
-        API-->>B: v202210DeleteLabelResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210DeleteLabelResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

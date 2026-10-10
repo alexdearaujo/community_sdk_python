@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_interface()
-    W->>B: ParseDict(params, ListInterfaceRequest)
-    B->>API: list_interface (gRPC/TLS)
+    W->>R: build_grpc_request(ListInterfaceRequest, arguments)
+    R->>API: InterfaceService/ListInterface (gRPC/TLS)
     alt success
-        API-->>B: v202108alpha1ListInterfaceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202108alpha1ListInterfaceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -140,18 +140,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: interface_create(data=CreateInterfaceRequest(...))
-    W->>B: ParseDict(params, InterfaceCreateRequest)
-    B->>API: interface_create (gRPC/TLS)
+    W->>R: build_grpc_request(CreateInterfaceRequest, arguments)
+    R->>API: InterfaceService/CreateInterface (gRPC/TLS)
     alt success
-        API-->>B: v202108alpha1CreateInterfaceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202108alpha1CreateInterfaceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -216,18 +216,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: interface_get(id="id-example")
-    W->>B: ParseDict(params, InterfaceGetRequest)
-    B->>API: interface_get (gRPC/TLS)
+    W->>R: build_grpc_request(GetInterfaceRequest, arguments)
+    R->>API: InterfaceService/GetInterface (gRPC/TLS)
     alt success
-        API-->>B: v202108alpha1GetInterfaceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202108alpha1GetInterfaceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -292,18 +292,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: interface_update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
-    W->>B: ParseDict(params, InterfaceUpdateRequest)
-    B->>API: interface_update (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateInterfaceRequest, arguments)
+    R->>API: InterfaceService/UpdateInterface (gRPC/TLS)
     alt success
-        API-->>B: v202108alpha1UpdateInterfaceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202108alpha1UpdateInterfaceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -370,18 +370,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: interface_delete(id="id-example")
-    W->>B: ParseDict(params, InterfaceDeleteRequest)
-    B->>API: interface_delete (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteInterfaceRequest, arguments)
+    R->>API: InterfaceService/DeleteInterface (gRPC/TLS)
     alt success
-        API-->>B: v202108alpha1DeleteInterfaceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202108alpha1DeleteInterfaceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -446,18 +446,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.interface
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: manual_classify(data=ManualClassifyRequest(...))
-    W->>B: ParseDict(params, ManualClassifyRequest)
-    B->>API: manual_classify (gRPC/TLS)
+    W->>R: build_grpc_request(ManualClassifyRequest, arguments)
+    R->>API: InterfaceService/ManualClassify (gRPC/TLS)
     alt success
-        API-->>B: v202108alpha1ManualClassifyResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202108alpha1ManualClassifyResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

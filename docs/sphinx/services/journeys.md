@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.journeys
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_journeys_nlq(prompt="prompt-example")
-    W->>B: ParseDict(params, GetJourneysNlqRequest)
-    B->>API: get_journeys_nlq (gRPC/TLS)
+    W->>R: build_grpc_request(GetJourneysNlqRequest, arguments)
+    R->>API: JourneysDataService/GetJourneysNlq (gRPC/TLS)
     alt success
-        API-->>B: v202406GetJourneysNlqResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202406GetJourneysNlqResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

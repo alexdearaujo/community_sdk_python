@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: search_flow_tag()
-    W->>B: ParseDict(params, SearchFlowTagRequest)
-    B->>API: search_flow_tag (gRPC/TLS)
+    W->>R: build_grpc_request(SearchFlowTagRequest, arguments)
+    R->>API: FlowTagService/SearchFlowTag (gRPC/TLS)
     alt success
-        API-->>B: v202404alpha1SearchFlowTagResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202404alpha1SearchFlowTagResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -138,18 +138,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_flow_tag(data=CreateFlowTagRequest(...))
-    W->>B: ParseDict(params, CreateFlowTagRequest)
-    B->>API: create_flow_tag (gRPC/TLS)
+    W->>R: build_grpc_request(CreateFlowTagRequest, arguments)
+    R->>API: FlowTagService/CreateFlowTag (gRPC/TLS)
     alt success
-        API-->>B: v202404alpha1CreateFlowTagResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202404alpha1CreateFlowTagResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -214,18 +214,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_flow_tag(flowTagid="flowTagid-example")
-    W->>B: ParseDict(params, GetFlowTagRequest)
-    B->>API: get_flow_tag (gRPC/TLS)
+    W->>R: build_grpc_request(GetFlowTagRequest, arguments)
+    R->>API: FlowTagService/GetFlowTag (gRPC/TLS)
     alt success
-        API-->>B: v202404alpha1GetFlowTagResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202404alpha1GetFlowTagResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -290,18 +290,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_flow_tag(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
-    W->>B: ParseDict(params, UpdateFlowTagRequest)
-    B->>API: update_flow_tag (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateFlowTagRequest, arguments)
+    R->>API: FlowTagService/UpdateFlowTag (gRPC/TLS)
     alt success
-        API-->>B: v202404alpha1UpdateFlowTagResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202404alpha1UpdateFlowTagResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -368,18 +368,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.flow_tag
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_flow_tag(flowTagid="flowTagid-example")
-    W->>B: ParseDict(params, DeleteFlowTagRequest)
-    B->>API: delete_flow_tag (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteFlowTagRequest, arguments)
+    R->>API: FlowTagService/DeleteFlowTag (gRPC/TLS)
     alt success
-        API-->>B: v202404alpha1DeleteFlowTagResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202404alpha1DeleteFlowTagResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.dictionary
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_dictionary()
-    W->>B: ParseDict(params, GetDictionaryRequest)
-    B->>API: get_dictionary (gRPC/TLS)
+    W->>R: build_grpc_request(GetDictionaryRequest, arguments)
+    R->>API: DictionaryService/GetDictionary (gRPC/TLS)
     alt success
-        API-->>B: v20260604alpha1GetDictionaryResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v20260604alpha1GetDictionaryResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

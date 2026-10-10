@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_saved_filter(data=SavedFilter(...))
-    W->>B: ParseDict(params, CreateSavedFilterRequest)
-    B->>API: create_saved_filter (gRPC/TLS)
+    W->>R: build_grpc_request(CreateSavedFilterRequest, arguments)
+    R->>API: SavedFilterService/CreateSavedFilter (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1CreateSavedFilterResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1CreateSavedFilterResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -136,18 +136,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_saved_filter(id="id-example")
-    W->>B: ParseDict(params, GetSavedFilterRequest)
-    B->>API: get_saved_filter (gRPC/TLS)
+    W->>R: build_grpc_request(GetSavedFilterRequest, arguments)
+    R->>API: SavedFilterService/GetSavedFilter (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1GetSavedFilterResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1GetSavedFilterResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -212,18 +212,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_saved_filter(id="id-example", data=SavedFilter(...))
-    W->>B: ParseDict(params, UpdateSavedFilterRequest)
-    B->>API: update_saved_filter (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateSavedFilterRequest, arguments)
+    R->>API: SavedFilterService/UpdateSavedFilter (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1UpdateSavedFilterResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1UpdateSavedFilterResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -290,18 +290,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_saved_filter(id="id-example")
-    W->>B: ParseDict(params, DeleteSavedFilterRequest)
-    B->>API: delete_saved_filter (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteSavedFilterRequest, arguments)
+    R->>API: SavedFilterService/DeleteSavedFilter (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1DeleteSavedFilterResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1DeleteSavedFilterResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -366,18 +366,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_saved_filters()
-    W->>B: ParseDict(params, ListSavedFiltersRequest)
-    B->>API: list_saved_filters (gRPC/TLS)
+    W->>R: build_grpc_request(ListSavedFiltersRequest, arguments)
+    R->>API: SavedFilterService/ListSavedFilters (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1ListSavedFiltersResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1ListSavedFiltersResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -434,18 +434,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.saved_filter
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_saved_filters_all()
-    W->>B: ParseDict(params, ListSavedFiltersAllRequest)
-    B->>API: list_saved_filters_all (gRPC/TLS)
+    W->>R: build_grpc_request(ListSavedFiltersAllRequest, arguments)
+    R->>API: SavedFilterService/ListSavedFiltersAll (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1ListSavedFiltersAllResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1ListSavedFiltersAllResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

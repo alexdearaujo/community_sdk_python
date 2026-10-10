@@ -62,18 +62,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_agent_alerts()
-    W->>B: ParseDict(params, ListAgentAlertsRequest)
-    B->>API: list_agent_alerts (gRPC/TLS)
+    W->>R: build_grpc_request(ListAgentAlertsRequest, arguments)
+    R->>API: SyntheticsAdminService/ListAgentAlerts (gRPC/TLS)
     alt success
-        API-->>B: v202309ListAgentAlertsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309ListAgentAlertsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -136,18 +136,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_agent_alert(data=CreateAgentAlertRequest(...))
-    W->>B: ParseDict(params, CreateAgentAlertRequest)
-    B->>API: create_agent_alert (gRPC/TLS)
+    W->>R: build_grpc_request(CreateAgentAlertRequest, arguments)
+    R->>API: SyntheticsAdminService/CreateAgentAlert (gRPC/TLS)
     alt success
-        API-->>B: v202309CreateAgentAlertResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309CreateAgentAlertResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -212,18 +212,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_agent_alert(id="id-example")
-    W->>B: ParseDict(params, GetAgentAlertRequest)
-    B->>API: get_agent_alert (gRPC/TLS)
+    W->>R: build_grpc_request(GetAgentAlertRequest, arguments)
+    R->>API: SyntheticsAdminService/GetAgentAlert (gRPC/TLS)
     alt success
-        API-->>B: v202309GetAgentAlertResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309GetAgentAlertResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -288,18 +288,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_agent_alert(id="id-example", data=SyntheticsAdminServiceUpdateAgentAlertBody(...))
-    W->>B: ParseDict(params, UpdateAgentAlertRequest)
-    B->>API: update_agent_alert (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateAgentAlertRequest, arguments)
+    R->>API: SyntheticsAdminService/UpdateAgentAlert (gRPC/TLS)
     alt success
-        API-->>B: v202309UpdateAgentAlertResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309UpdateAgentAlertResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -366,18 +366,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_agent_alert(id="id-example")
-    W->>B: ParseDict(params, DeleteAgentAlertRequest)
-    B->>API: delete_agent_alert (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteAgentAlertRequest, arguments)
+    R->>API: SyntheticsAdminService/DeleteAgentAlert (gRPC/TLS)
     alt success
-        API-->>B: v202309DeleteAgentAlertResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309DeleteAgentAlertResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -442,18 +442,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_agents()
-    W->>B: ParseDict(params, ListAgentsRequest)
-    B->>API: list_agents (gRPC/TLS)
+    W->>R: build_grpc_request(ListAgentsRequest, arguments)
+    R->>API: SyntheticsAdminService/ListAgents (gRPC/TLS)
     alt success
-        API-->>B: v202309ListAgentsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309ListAgentsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -510,18 +510,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_agent(agentid="agentid-example")
-    W->>B: ParseDict(params, GetAgentRequest)
-    B->>API: get_agent (gRPC/TLS)
+    W->>R: build_grpc_request(GetAgentRequest, arguments)
+    R->>API: SyntheticsAdminService/GetAgent (gRPC/TLS)
     alt success
-        API-->>B: v202309GetAgentResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309GetAgentResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -586,18 +586,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_agent(agentid="agentid-example", data=SyntheticsAdminServiceUpdateAgentBody(...))
-    W->>B: ParseDict(params, UpdateAgentRequest)
-    B->>API: update_agent (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateAgentRequest, arguments)
+    R->>API: SyntheticsAdminService/UpdateAgent (gRPC/TLS)
     alt success
-        API-->>B: v202309UpdateAgentResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309UpdateAgentResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -664,18 +664,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_agent(agentid="agentid-example")
-    W->>B: ParseDict(params, DeleteAgentRequest)
-    B->>API: delete_agent (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteAgentRequest, arguments)
+    R->>API: SyntheticsAdminService/DeleteAgent (gRPC/TLS)
     alt success
-        API-->>B: v202309DeleteAgentResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309DeleteAgentResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -740,18 +740,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_tests()
-    W->>B: ParseDict(params, ListTestsRequest)
-    B->>API: list_tests (gRPC/TLS)
+    W->>R: build_grpc_request(ListTestsRequest, arguments)
+    R->>API: SyntheticsAdminService/ListTests (gRPC/TLS)
     alt success
-        API-->>B: v202309ListTestsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309ListTestsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -808,18 +808,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_test(data=CreateTestRequest(...))
-    W->>B: ParseDict(params, CreateTestRequest)
-    B->>API: create_test (gRPC/TLS)
+    W->>R: build_grpc_request(CreateTestRequest, arguments)
+    R->>API: SyntheticsAdminService/CreateTest (gRPC/TLS)
     alt success
-        API-->>B: v202309CreateTestResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309CreateTestResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -884,18 +884,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_test(id="id-example")
-    W->>B: ParseDict(params, GetTestRequest)
-    B->>API: get_test (gRPC/TLS)
+    W->>R: build_grpc_request(GetTestRequest, arguments)
+    R->>API: SyntheticsAdminService/GetTest (gRPC/TLS)
     alt success
-        API-->>B: v202309GetTestResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309GetTestResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -960,18 +960,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_test(id="id-example", data=SyntheticsAdminServiceUpdateTestBody(...))
-    W->>B: ParseDict(params, UpdateTestRequest)
-    B->>API: update_test (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateTestRequest, arguments)
+    R->>API: SyntheticsAdminService/UpdateTest (gRPC/TLS)
     alt success
-        API-->>B: v202309UpdateTestResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309UpdateTestResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1038,18 +1038,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_test(id="id-example")
-    W->>B: ParseDict(params, DeleteTestRequest)
-    B->>API: delete_test (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteTestRequest, arguments)
+    R->>API: SyntheticsAdminService/DeleteTest (gRPC/TLS)
     alt success
-        API-->>B: v202309DeleteTestResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309DeleteTestResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1112,18 +1112,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: set_test_status(id="id-example", data=SyntheticsAdminServiceSetTestStatusBody(...))
-    W->>B: ParseDict(params, SetTestStatusRequest)
-    B->>API: set_test_status (gRPC/TLS)
+    W->>R: build_grpc_request(SetTestStatusRequest, arguments)
+    R->>API: SyntheticsAdminService/SetTestStatus (gRPC/TLS)
     alt success
-        API-->>B: v202309SetTestStatusResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309SetTestStatusResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1190,18 +1190,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_results_for_tests(data=GetResultsForTestsRequest(...))
-    W->>B: ParseDict(params, GetResultsForTestsRequest)
-    B->>API: get_results_for_tests (gRPC/TLS)
+    W->>R: build_grpc_request(GetResultsForTestsRequest, arguments)
+    R->>API: SyntheticsDataService/GetResultsForTests (gRPC/TLS)
     alt success
-        API-->>B: v202309GetResultsForTestsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309GetResultsForTestsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1266,18 +1266,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_results_for_tests_csv(data=GetResultsForTestsCsvRequest(...))
-    W->>B: ParseDict(params, GetResultsForTestsCsvRequest)
-    B->>API: get_results_for_tests_csv (gRPC/TLS)
+    W->>R: build_grpc_request(GetResultsForTestsCsvRequest, arguments)
+    R->>API: SyntheticsDataService/GetResultsForTestsCsv (gRPC/TLS)
     alt success
-        API-->>B: v202309GetResultsForTestsCsvResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309GetResultsForTestsCsvResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1342,18 +1342,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.synthetics
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_trace_for_test(data=GetTraceForTestRequest(...))
-    W->>B: ParseDict(params, GetTraceForTestRequest)
-    B->>API: get_trace_for_test (gRPC/TLS)
+    W->>R: build_grpc_request(GetTraceForTestRequest, arguments)
+    R->>API: SyntheticsDataService/GetTraceForTest (gRPC/TLS)
     alt success
-        API-->>B: v202309GetTraceForTestResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202309GetTraceForTestResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

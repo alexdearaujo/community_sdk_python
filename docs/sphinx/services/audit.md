@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.audit
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_audit_events()
-    W->>B: ParseDict(params, ListAuditEventsRequest)
-    B->>API: list_audit_events (gRPC/TLS)
+    W->>R: build_grpc_request(ListAuditEventsRequest, arguments)
+    R->>API: AuditService/ListAuditEvents (gRPC/TLS)
     alt success
-        API-->>B: v202601ListAuditEventsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202601ListAuditEventsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -137,18 +137,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.audit
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_audit_event(id="id-example")
-    W->>B: ParseDict(params, GetAuditEventRequest)
-    B->>API: get_audit_event (gRPC/TLS)
+    W->>R: build_grpc_request(GetAuditEventRequest, arguments)
+    R->>API: AuditService/GetAuditEvent (gRPC/TLS)
     alt success
-        API-->>B: v202601GetAuditEventResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202601GetAuditEventResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -214,18 +214,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.audit
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_audit_event_2(id="id-example", ctime="ctime-example")
-    W->>B: ParseDict(params, GetAuditEventRequest)
-    B->>API: get_audit_event_2 (gRPC/TLS)
+    W->>R: build_grpc_request(GetAuditEventRequest, arguments)
+    R->>API: AuditService/GetAuditEvent (gRPC/TLS)
     alt success
-        API-->>B: v202601GetAuditEventResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202601GetAuditEventResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.notification_channel
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_notification_channels()
-    W->>B: ParseDict(params, ListNotificationChannelsRequest)
-    B->>API: list_notification_channels (gRPC/TLS)
+    W->>R: build_grpc_request(ListNotificationChannelsRequest, arguments)
+    R->>API: NotificationChannelService/ListNotificationChannels (gRPC/TLS)
     alt success
-        API-->>B: v202210ListNotificationChannelsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210ListNotificationChannelsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.notification_channel
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: search_notification_channels(data=SearchNotificationChannelsRequest(...))
-    W->>B: ParseDict(params, SearchNotificationChannelsRequest)
-    B->>API: search_notification_channels (gRPC/TLS)
+    W->>R: build_grpc_request(SearchNotificationChannelsRequest, arguments)
+    R->>API: NotificationChannelService/SearchNotificationChannels (gRPC/TLS)
     alt success
-        API-->>B: v202210SearchNotificationChannelsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210SearchNotificationChannelsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.notification_channel
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_notification_channel(id="id-example")
-    W->>B: ParseDict(params, GetNotificationChannelRequest)
-    B->>API: get_notification_channel (gRPC/TLS)
+    W->>R: build_grpc_request(GetNotificationChannelRequest, arguments)
+    R->>API: NotificationChannelService/GetNotificationChannel (gRPC/TLS)
     alt success
-        API-->>B: v202210GetNotificationChannelResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202210GetNotificationChannelResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

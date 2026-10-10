@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_custom_applications()
-    W->>B: ParseDict(params, ListCustomApplicationsRequest)
-    B->>API: list_custom_applications (gRPC/TLS)
+    W->>R: build_grpc_request(ListCustomApplicationsRequest, arguments)
+    R->>API: CustomApplicationService/ListCustomApplications (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1ListCustomApplicationsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1ListCustomApplicationsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_custom_application(data=CustomApplication(...))
-    W->>B: ParseDict(params, CreateCustomApplicationRequest)
-    B->>API: create_custom_application (gRPC/TLS)
+    W->>R: build_grpc_request(CreateCustomApplicationRequest, arguments)
+    R->>API: CustomApplicationService/CreateCustomApplication (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1CreateCustomApplicationResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1CreateCustomApplicationResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_custom_application(customApplicationId="customApplicationId-example")
-    W->>B: ParseDict(params, GetCustomApplicationRequest)
-    B->>API: get_custom_application (gRPC/TLS)
+    W->>R: build_grpc_request(GetCustomApplicationRequest, arguments)
+    R->>API: CustomApplicationService/GetCustomApplication (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1GetCustomApplicationResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1GetCustomApplicationResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -280,18 +280,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_custom_application(customApplicationId="customApplicationId-example", data=CustomApplication(...))
-    W->>B: ParseDict(params, UpdateCustomApplicationRequest)
-    B->>API: update_custom_application (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateCustomApplicationRequest, arguments)
+    R->>API: CustomApplicationService/UpdateCustomApplication (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1UpdateCustomApplicationResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1UpdateCustomApplicationResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_application
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_custom_application(customApplicationId="customApplicationId-example")
-    W->>B: ParseDict(params, DeleteCustomApplicationRequest)
-    B->>API: delete_custom_application (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteCustomApplicationRequest, arguments)
+    R->>API: CustomApplicationService/DeleteCustomApplication (gRPC/TLS)
     alt success
-        API-->>B: v202501alpha1DeleteCustomApplicationResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501alpha1DeleteCustomApplicationResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
