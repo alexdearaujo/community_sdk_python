@@ -13,4 +13,6 @@ class protobufAny(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    type: Optional[str] = Field(validation_alias="@type", default=None)
+    type: Optional[str] = Field(
+        validation_alias="@type", serialization_alias="@type", default=None
+    )

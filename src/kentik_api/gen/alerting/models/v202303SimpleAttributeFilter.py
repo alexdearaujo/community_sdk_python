@@ -26,7 +26,7 @@ class v202303SimpleAttributeFilter(BaseModel):
     contains: Optional[str] = Field(validation_alias="contains", default=None)
 
     in_: Optional[v202303SimpleAttributeFilterStringArray] = Field(
-        validation_alias="in", default=None
+        validation_alias="in", serialization_alias="in", default=None
     )
 
     matchesRegex: Optional[str] = Field(validation_alias="matchesRegex", default=None)

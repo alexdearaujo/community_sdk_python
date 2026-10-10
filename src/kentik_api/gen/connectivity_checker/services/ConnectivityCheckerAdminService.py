@@ -32,7 +32,7 @@ def CreateConnectivityReport(
         path="/connectivity_checker/v202410beta1/create",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(),
+        json_body=data.model_dump(by_alias=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateConnectivityReport",

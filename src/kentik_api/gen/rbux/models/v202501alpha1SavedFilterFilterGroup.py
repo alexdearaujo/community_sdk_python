@@ -22,7 +22,9 @@ class v202501alpha1SavedFilterFilterGroup(BaseModel):
         validation_alias="filters", default=None
     )
 
-    not_: Optional[bool] = Field(validation_alias="not", default=None)
+    not_: Optional[bool] = Field(
+        validation_alias="not", serialization_alias="not", default=None
+    )
 
     savedFilterIds: Optional[List[Optional[v202501alpha1SavedFilterFilterId]]] = Field(
         validation_alias="savedFilterIds", default=None

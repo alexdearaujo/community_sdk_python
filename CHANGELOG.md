@@ -103,6 +103,12 @@ Each change below can stop an existing `except` clause or call from working.
 - **More operations work on gRPC.** 32 operations that raised
   `NotImplementedError` on gRPC now make the call, because their REST name
   differed from their RPC name.
+- **Renamed fields keep their wire name in requests.** A field whose
+  Python name differs from its JSON name went out under the Python name.
+  For example, a saved filter group's `not_` was sent as `"not_"`, so the
+  API ignored the negation, and `protobufAny.type` lost its `@type` key.
+  Request bodies now use the JSON names (`not`, `and`, `or`, `in`,
+  `from`, `@type`) on REST and gRPC.
 - **REST path arguments are encoded.** A path argument went into the URL
   as is, so `client.device.delete_device(deviceid="../../user/7")` sent the
   DELETE to another resource, and a `?` or `#` cut the path short. Each path

@@ -15,4 +15,6 @@ class GetMetricsSchemaResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    schema_: Optional[MetricsSchema] = Field(validation_alias="schema", default=None)
+    schema_: Optional[MetricsSchema] = Field(
+        validation_alias="schema", serialization_alias="schema", default=None
+    )

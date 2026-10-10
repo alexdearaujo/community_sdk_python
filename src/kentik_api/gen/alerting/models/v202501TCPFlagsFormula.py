@@ -16,5 +16,5 @@ class v202501TCPFlagsFormula(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     or_: Optional[List[Optional[v202501TCPFlagsPredicateGroup]]] = Field(
-        validation_alias="or", default=None
+        validation_alias="or", serialization_alias="or", default=None
     )

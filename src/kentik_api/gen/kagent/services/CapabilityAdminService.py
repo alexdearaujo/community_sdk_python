@@ -112,7 +112,7 @@ def CapabilityAdminService_CreateCapability(
         path="/kagent/v202401/capabilities",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(),
+        json_body=data.model_dump(by_alias=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityAdminService_CreateCapability",
