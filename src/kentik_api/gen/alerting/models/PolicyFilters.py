@@ -17,7 +17,9 @@ class PolicyFilters(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    not_: Optional[bool] = Field(validation_alias="not", default=None)
+    not_: Optional[bool] = Field(
+        validation_alias="not", serialization_alias="not", default=None
+    )
 
     connector: Optional[PolicyFiltersFilterConnector] = Field(
         validation_alias="connector", default=None

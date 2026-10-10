@@ -16,5 +16,5 @@ class v202501TCPFlagsPredicateGroup(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     and_: Optional[List[Optional[v202501TCPFlagsPredicate]]] = Field(
-        validation_alias="and", default=None
+        validation_alias="and", serialization_alias="and", default=None
     )

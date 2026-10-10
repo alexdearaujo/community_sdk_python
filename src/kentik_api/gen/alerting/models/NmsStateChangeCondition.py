@@ -15,6 +15,8 @@ class NmsStateChangeCondition(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    from_: Optional[NmsStateSet] = Field(validation_alias="from", default=None)
+    from_: Optional[NmsStateSet] = Field(
+        validation_alias="from", serialization_alias="from", default=None
+    )
 
     to: Optional[NmsStateSet] = Field(validation_alias="to", default=None)
