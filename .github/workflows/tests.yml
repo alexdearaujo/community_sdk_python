@@ -78,6 +78,24 @@ jobs:
       - name: Check FR/SC/task cross-references
         run: make check-specs
 
+  # A pull request that can break callers must say so in CHANGELOG.md. The
+  # baseline is the merge base, so only this pull request's changes count.
+  changelog:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fail if CHANGELOG.md misses a breaking API surface change
+        run: make check-changelog SINCE="$(git merge-base HEAD origin/${{ github.base_ref }})"
+
   # Regenerates against api-schema-public HEAD (the generator's clone fallback),
   # so it can fail for two different reasons. The failure message says which.
   generated-output-matches-schema-head:
