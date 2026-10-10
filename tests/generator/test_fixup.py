@@ -16,6 +16,7 @@ from scripts.generation.fixup import (
     _fix_list_collision,
     _fix_path_parameters,
     _fix_pydantic_construct,
+    _fix_shadowed_model_fields,
     _fix_typing_wildcard,
     _fix_wildcard_exports,
     _inject_data_body,
@@ -268,6 +269,20 @@ def test_fix_path_parameters_leaves_a_module_without_placeholders_alone():
 def test_fix_path_parameters_requires_the_request_json_import():
     with pytest.raises(ValueError, match="request_json"):
         _fix_path_parameters("path=f'/v1/device/{id}'")
+
+
+def test_fix_shadowed_model_fields_renames_only_basemodel_attributes():
+    content = (
+        '    schema: Optional[MetricsSchema] = Field(validation_alias="schema", default=None)\n'
+        '    name: str = Field(validation_alias="name")\n'
+        '    json : Optional[str] = Field(validation_alias="json", default=None)\n'
+    )
+
+    assert _fix_shadowed_model_fields(content) == (
+        '    schema_: Optional[MetricsSchema] = Field(validation_alias="schema", default=None)\n'
+        '    name: str = Field(validation_alias="name")\n'
+        '    json_ : Optional[str] = Field(validation_alias="json", default=None)\n'
+    )
 
 
 def test_fix_typing_wildcard_replaces_star():
