@@ -212,7 +212,7 @@ def test_interceptor_records_quota_per_method_on_success():
         initial_metadata=lambda: [("x-ratelimit-remaining", "41")],
     )
 
-    result = _DefaultDeadlineInterceptor(config).intercept_unary_unary(
+    result = _DefaultDeadlineInterceptor(config, lambda: False).intercept_unary_unary(
         lambda details, request: outcome, _details(), object()
     )
 
@@ -227,7 +227,7 @@ def test_interceptor_records_quota_from_a_failed_calls_error(rpc_error):
     # grpcio's failure outcome reports no metadata of its own.
     outcome = SimpleNamespace(exception=lambda: error, initial_metadata=lambda: None)
 
-    _DefaultDeadlineInterceptor(config).intercept_unary_unary(
+    _DefaultDeadlineInterceptor(config, lambda: False).intercept_unary_unary(
         lambda details, request: outcome, _details(b"/svc.Service/Op"), object()
     )
 
@@ -238,7 +238,7 @@ def test_interceptor_ignores_calls_without_quota():
     config = APIConfig()
     outcome = SimpleNamespace(exception=lambda: None, initial_metadata=lambda: None)
 
-    _DefaultDeadlineInterceptor(config).intercept_unary_unary(
+    _DefaultDeadlineInterceptor(config, lambda: False).intercept_unary_unary(
         lambda details, request: outcome, _details(), object()
     )
 

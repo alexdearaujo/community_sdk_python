@@ -309,7 +309,8 @@ def _handle_response(
 
         try:
             payload = response.json()
-        except json.JSONDecodeError:
+        except ValueError:
+            # JSONDecodeError, or UnicodeDecodeError for a non-UTF-8 body.
             payload = None
 
         if isinstance(payload, dict):
@@ -335,7 +336,7 @@ def _handle_response(
 
     try:
         return response.json()
-    except json.JSONDecodeError:
+    except ValueError:
         preview = response.text[:200].replace("\n", " ")
         content_type = response.headers.get("content-type", "unknown")
         _raise_http_error(

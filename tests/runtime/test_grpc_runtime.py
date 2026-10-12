@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import grpc
 import pytest
-from google.protobuf import json_format
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc, map_grpc_error
@@ -215,7 +214,7 @@ def test_build_grpc_request_skips_unset_fields(device_pb2):
 
 def test_build_grpc_request_rejects_a_field_the_request_does_not_declare(device_pb2):
     # A silently dropped argument is how gRPC calls once went out with an empty id.
-    with pytest.raises(json_format.ParseError):
+    with pytest.raises(ConfigurationError):
         build_grpc_request(device_pb2.GetDeviceRequest, None, {"deviceid": "42"})
 
 

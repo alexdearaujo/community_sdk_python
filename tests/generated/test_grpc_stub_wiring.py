@@ -14,6 +14,7 @@ suite stayed green. These tests make that failure mode loud.
 
 from __future__ import annotations
 
+import ast
 import importlib
 import re
 from pathlib import Path
@@ -24,13 +25,20 @@ import pytest
 from kentik_api.transports.grpc_client import GrpcTransport
 
 _MIXIN = Path(__file__).resolve().parents[2] / "src" / "kentik_api" / "client_mixin.py"
-_MOUNTED_RE = re.compile(r"from kentik_api\.gen\.(\w+)\.services\.\w+ import (\w+)")
+_GEN = _MIXIN.parent / "gen"
 
 
 def _mounted_wrappers() -> list[tuple[str, str]]:
+    """Reads the mixin's imports with ast, so a wrapped or aliased import still counts."""
     if not _MIXIN.exists():
         return []
-    return sorted(set(_MOUNTED_RE.findall(_MIXIN.read_text(encoding="utf-8"))))
+    found = set()
+    for node in ast.walk(ast.parse(_MIXIN.read_text(encoding="utf-8"))):
+        if isinstance(node, ast.ImportFrom) and node.module:
+            parts = node.module.split(".")
+            if parts[:2] == ["kentik_api", "gen"] and parts[3:4] == ["services"]:
+                found.update((parts[2], alias.name) for alias in node.names)
+    return sorted(found)
 
 
 MOUNTED = _mounted_wrappers()
@@ -93,3 +101,15 @@ def test_mounted_wrapper_proto_module_imports_cleanly(service: str, wrapper_clas
     importlib.import_module("kentik_api.gen.pb_companions")
     for module in modules:
         importlib.import_module(module)
+
+
+def test_every_service_with_a_wrapper_is_checked_here():
+    with_wrapper = {
+        path.parent.parent.name for path in _GEN.glob("*/services/*ServiceWrapper*.py")
+    } or {
+        p.parent.parent.name
+        for p in _GEN.glob("*/services/*.py")
+        if "ServiceWrapper" in p.read_text(encoding="utf-8")
+    }
+
+    assert {svc for svc, _ in MOUNTED} == with_wrapper

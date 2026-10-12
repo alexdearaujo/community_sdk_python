@@ -207,6 +207,13 @@ excludes both by default; only `make test-e2e`/`-m e2e` (REST) or
 `make test-e2e-grpc`/`-m e2e_grpc` (gRPC) runs them. Never hardcode
 credentials in test code. Never read or print `.env` contents.
 
+## Regression gates added by the pre-PR audit
+
+- Derive expected counts from `api_surface.json` or the generated tree. Never hardcode them (see `test_retry_eligibility.py`).
+- Read the client mixin with `ast`, not a regex (see `test_grpc_stub_wiring.py`).
+- Assert exact auth metadata and the region hosts at the transport boundary (`test_credentials.py`, `test_client_mounts_and_calls.py`).
+- Known gaps still open are listed in `reports/pre-pr-audit-2026-10-10/deferred-risks.md`.
+
 ## Guidelines
 
 - Prefer deterministic unit tests over network calls for the

@@ -8,7 +8,7 @@ handling, status-code mapping, and transport failures stay in one place.
 from typing import Any
 
 import grpc
-from google.protobuf.json_format import ParseDict
+from google.protobuf.json_format import ParseDict, ParseError
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
@@ -103,7 +103,12 @@ def build_grpc_request(
             node = node.setdefault(parent, {})
         node[leaf] = value
     # ParseDict merges into `request`, so path fields land inside the body.
-    return ParseDict(nested, request)
+    try:
+        return ParseDict(nested, request)
+    except ParseError as exc:
+        raise ConfigurationError(
+            f"Invalid argument for {message_cls.DESCRIPTOR.name}: {exc}"
+        ) from exc
 
 
 def _method_label(stub_method) -> str:

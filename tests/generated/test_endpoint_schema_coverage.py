@@ -264,7 +264,9 @@ def test_unknown_enum_from_server_stays_inside_kentik_error_hierarchy():
         route = mock_api.get("/user/v202211/users").mock(
             return_value=httpx.Response(200, json=unknown_enum_payload)
         )
-        with KentikAPI(email="dev@example.com", api_token="token", env_file=None) as api:
+        with KentikAPI(
+            email="dev@example.com", api_token="token", env_file=None
+        ) as api:
             with pytest.raises(KentikError) as exc_info:
                 api.user.list_users()
 
@@ -283,7 +285,9 @@ def test_enum_values_use_wire_representation_for_path_and_query_parameters():
             url__regex=r"https://grpc\.api\.kentik\.com/v202505/policies/.*/1"
         ).mock(return_value=httpx.Response(500, json=error_payload))
 
-        with KentikAPI(email="dev@example.com", api_token="token", env_file=None) as api:
+        with KentikAPI(
+            email="dev@example.com", api_token="token", env_file=None
+        ) as api:
             with pytest.raises(HTTPException):
                 api.device.list_devices(view=DeviceView.DEVICE_VIEW_BASIC)
 

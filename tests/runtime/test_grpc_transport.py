@@ -41,9 +41,9 @@ def _intercepted_timeout(
         seen["method"] = details.method
         return "response"
 
-    result = _DefaultDeadlineInterceptor(api_config, lambda: False).intercept_unary_unary(
-        continuation, _details(call_timeout), request=object()
-    )
+    result = _DefaultDeadlineInterceptor(
+        api_config, lambda: False
+    ).intercept_unary_unary(continuation, _details(call_timeout), request=object())
     assert result == "response"
     assert seen["method"] == "/svc.Service/Op"
     return seen["timeout"]

@@ -5,9 +5,9 @@ import httpx
 from dotenv import dotenv_values, find_dotenv
 
 from kentik_api.auth.credentials import KentikCredentials
+from kentik_api.client_mixin import KentikClientMixin
 from kentik_api.core.api_config import APIConfig
 from kentik_api.errors import ConfigurationError
-from kentik_api.client_mixin import KentikClientMixin
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 
@@ -76,7 +76,7 @@ class KentikAPI(KentikClientMixin):
 
         try:
             grpc_target, rest_base_url = _REGION_ENDPOINTS[region.lower()]
-        except KeyError:
+        except (KeyError, AttributeError):
             valid = ", ".join(f"'{r}'" for r in _REGION_ENDPOINTS)
             raise ConfigurationError(
                 f"Invalid region '{region}'. Must be one of: {valid}."

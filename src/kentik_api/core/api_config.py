@@ -1,4 +1,5 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
+import math
 import threading
 from typing import Optional
 
@@ -20,9 +21,9 @@ _CONNECT_RETRIES = 2
 
 def _require_positive(field: str, value: float) -> None:
     # `not value > 0` rather than `value <= 0` so NaN is rejected too.
-    if not value > 0:
+    if not value > 0 or math.isinf(value):
         raise ConfigurationError(
-            f"{field} must be a positive number of seconds, got {value!r}"
+            f"{field} must be a finite positive number of seconds, got {value!r}"
         )
 
 

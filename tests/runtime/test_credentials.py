@@ -35,3 +35,30 @@ def test_rest_auth_headers_carry_exact_keys():
         "X-CH-Auth-Email": "dev@example.com",
         "X-CH-Auth-API-Token": "secret-token",
     }
+
+
+def test_grpc_transport_attaches_the_credentials_plugin_to_the_channel(monkeypatch):
+    import grpc
+
+    from kentik_api.transports.grpc_client import GrpcTransport
+
+    seen = {}
+    monkeypatch.setattr(
+        grpc,
+        "metadata_call_credentials",
+        lambda plugin: seen.setdefault("plugin", plugin) and object(),
+    )
+    monkeypatch.setattr(grpc, "composite_channel_credentials", lambda *a: object())
+    monkeypatch.setattr(grpc, "secure_channel", lambda *a: object())
+    monkeypatch.setattr(grpc, "intercept_channel", lambda channel, _: channel)
+
+    GrpcTransport(CREDENTIALS, target="grpc.example.com:443")
+
+    received = []
+    seen["plugin"](context=None, callback=lambda md, err: received.append(md))
+    assert received == [
+        (
+            ("x-ch-auth-email", "dev@example.com"),
+            ("x-ch-auth-api-token", "secret-token"),
+        )
+    ]

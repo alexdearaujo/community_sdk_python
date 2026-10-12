@@ -260,3 +260,47 @@ def test_grpc_call_after_close_raises_configuration_error_not_process_crash():
 
     with pytest.raises(ConfigurationError, match="closed"):
         call_grpc(stub, object())
+
+
+@pytest.mark.parametrize("status", [200, 500])
+def test_non_utf8_body_raises_an_sdk_error_not_unicode_decode_error(
+    monkeypatch: pytest.MonkeyPatch, status: int
+):
+    monkeypatch.setattr(
+        httpx.Client,
+        "request",
+        lambda self, *a, **k: httpx.Response(status, content=b"\xff\xfe\x00bad"),
+    )
+
+    with pytest.raises(HTTPException):
+        request_json("GET", "/v1/x", api_config_override=_config(), operation_name="Op")
+
+
+@pytest.mark.parametrize("bad", [float("inf"), float("nan"), 0, -1])
+def test_timeout_must_be_finite_and_positive(bad: float):
+    with pytest.raises(ConfigurationError):
+        _config(timeout=bad)
+
+
+def test_http_exception_survives_pickling():
+    import pickle
+
+    original = HTTPException(
+        404,
+        "gone",
+        method="GET",
+        path="/v1/x",
+        details={"k": 1},
+        grpc_status_code="NOT_FOUND",
+    )
+
+    restored = pickle.loads(pickle.dumps(original))
+
+    assert type(restored) is HTTPException
+    assert (restored.status_code, restored.message, restored.path) == (
+        404,
+        "gone",
+        "/v1/x",
+    )
+    assert restored.details == {"k": 1}
+    assert str(restored) == str(original)

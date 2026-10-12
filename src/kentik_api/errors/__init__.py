@@ -47,6 +47,17 @@ class HTTPException(KentikError):
         self.details = details or {}
         super().__init__(f"{status_code}: {message}")
 
+    def __reduce__(self):
+        # Exception's default pickling replays args, which this signature rejects.
+        return (_rebuild_http_exception, (type(self), self.__dict__.copy()))
+
+
+def _rebuild_http_exception(cls: type[HTTPException], state: dict[str, Any]):
+    error = cls.__new__(cls)
+    error.__dict__.update(state)
+    error.args = (f"{state['status_code']}: {state['message']}",)
+    return error
+
 
 __all__ = [
     "KentikError",
