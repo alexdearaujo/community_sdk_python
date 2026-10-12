@@ -41,7 +41,10 @@ from _discovery import (
 from pydantic import BaseModel
 
 from kentik_api.auth.credentials import KentikCredentials
+from kentik_api.client import KentikAPI
 from kentik_api.errors import AuthenticationError, HTTPException, KentikError
+from kentik_api.gen.alerting.models import PolicyType
+from kentik_api.gen.device.models import DeviceView
 from kentik_api.transports.rest_client import RestTransport
 
 
@@ -240,3 +243,63 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
             f"({mode}). RESULT=FAIL"
         )
         raise
+
+
+def test_unknown_enum_from_server_stays_inside_kentik_error_hierarchy():
+    unknown_enum_payload = {
+        "users": [
+            {
+                "id": "1",
+                "userEmail": "a@b.c",
+                "userFullName": "User A",
+                "role": "ROLE_MEMBER",
+                "permissions": [],
+                "filter": {},
+                "defaultLandingPageType": "LANDING_TYPE_SOMETHING_NEW",
+            }
+        ]
+    }
+
+    with respx.mock(base_url="https://grpc.api.kentik.com") as mock_api:
+        route = mock_api.get("/user/v202211/users").mock(
+            return_value=httpx.Response(200, json=unknown_enum_payload)
+        )
+        with KentikAPI(email="dev@example.com", api_token="token", env_file=None) as api:
+            with pytest.raises(KentikError) as exc_info:
+                api.user.list_users()
+
+    assert route.called
+    assert type(exc_info.value).__name__ != "ValidationError"
+
+
+def test_enum_values_use_wire_representation_for_path_and_query_parameters():
+    error_payload = {"message": "simulated failure"}
+
+    with respx.mock(assert_all_called=False) as mock_api:
+        list_devices_route = mock_api.get(
+            "https://grpc.api.kentik.com/device/v202504beta2/device"
+        ).mock(return_value=httpx.Response(500, json=error_payload))
+        policy_get_route = mock_api.get(
+            url__regex=r"https://grpc\.api\.kentik\.com/v202505/policies/.*/1"
+        ).mock(return_value=httpx.Response(500, json=error_payload))
+
+        with KentikAPI(email="dev@example.com", api_token="token", env_file=None) as api:
+            with pytest.raises(HTTPException):
+                api.device.list_devices(view=DeviceView.DEVICE_VIEW_BASIC)
+
+            with pytest.raises(HTTPException):
+                api.alerting.policy_get(
+                    policyType=PolicyType.POLICY_TYPE_AGENT,
+                    id="1",
+                )
+
+    assert list_devices_route.called
+    assert policy_get_route.called
+
+    list_devices_url = list_devices_route.calls.last.request.url
+    policy_get_url = str(policy_get_route.calls.last.request.url)
+
+    assert list_devices_url.params.get("view") == "DEVICE_VIEW_BASIC"
+    assert "DeviceView." not in str(list_devices_url)
+    assert "/POLICY_TYPE_AGENT/1" in policy_get_url
+    assert "PolicyType." not in policy_get_url

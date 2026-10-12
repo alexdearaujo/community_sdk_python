@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateCloudExportError,
@@ -55,10 +58,12 @@ def ListCloudExports(
         error_cls=ListCloudExportsError,
     )
 
-    return (
-        attach_rate_limit(ListCloudExportsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListCloudExportsResponse.model_construct()
+    return parse_response_model(
+        ListCloudExportsResponse,
+        body,
+        operation_name="ListCloudExports",
+        method="get",
+        path="/cloud_export/v202506/exports",
     )
 
 
@@ -81,10 +86,12 @@ def CreateCloudExport(
         error_cls=CreateCloudExportError,
     )
 
-    return (
-        attach_rate_limit(CreateCloudExportResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateCloudExportResponse.model_construct()
+    return parse_response_model(
+        CreateCloudExportResponse,
+        body,
+        operation_name="CreateCloudExport",
+        method="post",
+        path="/cloud_export/v202506/exports",
     )
 
 
@@ -106,10 +113,12 @@ def GetCloudExport(
         error_cls=GetCloudExportError,
     )
 
-    return (
-        attach_rate_limit(GetCloudExportResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetCloudExportResponse.model_construct()
+    return parse_response_model(
+        GetCloudExportResponse,
+        body,
+        operation_name="GetCloudExport",
+        method="get",
+        path="/cloud_export/v202506/exports/{export.id}",
     )
 
 
@@ -135,10 +144,12 @@ def UpdateCloudExport(
         error_cls=UpdateCloudExportError,
     )
 
-    return (
-        attach_rate_limit(UpdateCloudExportResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateCloudExportResponse.model_construct()
+    return parse_response_model(
+        UpdateCloudExportResponse,
+        body,
+        operation_name="UpdateCloudExport",
+        method="put",
+        path="/cloud_export/v202506/exports/{export.id}",
     )
 
 
@@ -160,8 +171,10 @@ def DeleteCloudExport(
         error_cls=DeleteCloudExportError,
     )
 
-    return (
-        attach_rate_limit(DeleteCloudExportResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteCloudExportResponse.model_construct()
+    return parse_response_model(
+        DeleteCloudExportResponse,
+        body,
+        operation_name="DeleteCloudExport",
+        method="delete",
+        path="/cloud_export/v202506/exports/{export.id}",
     )

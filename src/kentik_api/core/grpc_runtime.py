@@ -12,7 +12,12 @@ from google.protobuf.json_format import ParseDict
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
-from kentik_api.errors import AuthenticationError, HTTPException, TransportError
+from kentik_api.errors import (
+    AuthenticationError,
+    ConfigurationError,
+    HTTPException,
+    TransportError,
+)
 
 # Every non-OK code is classified explicitly, so none reaches a silent default.
 # The HTTP value is the canonical grpc-gateway equivalent, the same status
@@ -113,6 +118,28 @@ def _method_label(stub_method) -> str:
     return str(label)
 
 
+def _validate_grpc_override(api_config: APIConfig) -> None:
+    # gRPC auth metadata and target are bound to the channel at transport setup.
+    # A direct APIConfig(...) passed per call cannot change them safely.
+    source = getattr(api_config, "_shares_client_of", None)
+    if source is None:
+        raise ConfigurationError(
+            "gRPC api_config_override must come from client.api_config.with_timeout(...). "
+            "Per-call credential, host, or verify overrides are not supported on gRPC."
+        )
+
+    if (
+        api_config.base_path != source.base_path
+        or api_config.auth_email != source.auth_email
+        or api_config.auth_token != source.auth_token
+        or api_config.verify != source.verify
+    ):
+        raise ConfigurationError(
+            "gRPC api_config_override can only change timeouts. "
+            "Credential, host, and verify changes require a new KentikAPI client."
+        )
+
+
 def call_grpc(
     stub_method, proto_request, *, api_config: APIConfig | None = None
 ) -> tuple[Any, RateLimit | None]:
@@ -127,6 +154,9 @@ def call_grpc(
     so the override's credentials do not apply on gRPC.
     """
     path = _method_label(stub_method)
+    if api_config is not None:
+        _validate_grpc_override(api_config)
+
     kwargs = {} if api_config is None else {"timeout": api_config.grpc_deadline}
     try:
         # with_call exposes the call's initial metadata, where the quota is.

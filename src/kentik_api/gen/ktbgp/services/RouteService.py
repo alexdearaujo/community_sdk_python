@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import (
     RouteService_AnnounceError,
@@ -82,10 +81,12 @@ def RouteService_Announce(
         error_cls=RouteService_AnnounceError,
     )
 
-    return (
-        attach_rate_limit(RouteServiceAnnounceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else RouteServiceAnnounceResponse.model_construct()
+    return parse_response_model(
+        RouteServiceAnnounceResponse,
+        body,
+        operation_name="RouteService_Announce",
+        method="post",
+        path="/routes/announce",
     )
 
 
@@ -108,10 +109,12 @@ def RouteService_List(
         error_cls=RouteService_ListError,
     )
 
-    return (
-        attach_rate_limit(RouteServiceListResponse(**body), rate_limit_of(body))
-        if body is not None
-        else RouteServiceListResponse.model_construct()
+    return parse_response_model(
+        RouteServiceListResponse,
+        body,
+        operation_name="RouteService_List",
+        method="post",
+        path="/routes/list",
     )
 
 
@@ -136,8 +139,10 @@ def RouteService_Withdraw(
         error_cls=RouteService_WithdrawError,
     )
 
-    return (
-        attach_rate_limit(RouteServiceWithdrawResponse(**body), rate_limit_of(body))
-        if body is not None
-        else RouteServiceWithdrawResponse.model_construct()
+    return parse_response_model(
+        RouteServiceWithdrawResponse,
+        body,
+        operation_name="RouteService_Withdraw",
+        method="post",
+        path="/routes/withdraw",
     )

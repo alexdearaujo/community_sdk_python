@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     GetNotificationChannelError,
@@ -42,10 +45,12 @@ def ListNotificationChannels(
         error_cls=ListNotificationChannelsError,
     )
 
-    return (
-        attach_rate_limit(ListNotificationChannelsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListNotificationChannelsResponse.model_construct()
+    return parse_response_model(
+        ListNotificationChannelsResponse,
+        body,
+        operation_name="ListNotificationChannels",
+        method="get",
+        path="/notification_channel/v202210/notification_channels",
     )
 
 
@@ -70,12 +75,12 @@ def SearchNotificationChannels(
         error_cls=SearchNotificationChannelsError,
     )
 
-    return (
-        attach_rate_limit(
-            SearchNotificationChannelsResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else SearchNotificationChannelsResponse.model_construct()
+    return parse_response_model(
+        SearchNotificationChannelsResponse,
+        body,
+        operation_name="SearchNotificationChannels",
+        method="post",
+        path="/notification_channel/v202210/notification_channels/search",
     )
 
 
@@ -97,8 +102,10 @@ def GetNotificationChannel(
         error_cls=GetNotificationChannelError,
     )
 
-    return (
-        attach_rate_limit(GetNotificationChannelResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetNotificationChannelResponse.model_construct()
+    return parse_response_model(
+        GetNotificationChannelResponse,
+        body,
+        operation_name="GetNotificationChannel",
+        method="get",
+        path="/notification_channel/v202210/notification_channels/{id}",
     )

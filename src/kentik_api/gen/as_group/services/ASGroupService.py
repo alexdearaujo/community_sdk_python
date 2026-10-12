@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateASGroupError,
@@ -48,10 +51,12 @@ def ListASGroups(
         error_cls=ListASGroupsError,
     )
 
-    return (
-        attach_rate_limit(ListASGroupsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListASGroupsResponse.model_construct()
+    return parse_response_model(
+        ListASGroupsResponse,
+        body,
+        operation_name="ListASGroups",
+        method="get",
+        path="/as_group/v202212/as_group",
     )
 
 
@@ -74,10 +79,12 @@ def CreateASGroup(
         error_cls=CreateASGroupError,
     )
 
-    return (
-        attach_rate_limit(CreateASGroupResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateASGroupResponse.model_construct()
+    return parse_response_model(
+        CreateASGroupResponse,
+        body,
+        operation_name="CreateASGroup",
+        method="post",
+        path="/as_group/v202212/as_group",
     )
 
 
@@ -99,10 +106,12 @@ def GetASGroup(
         error_cls=GetASGroupError,
     )
 
-    return (
-        attach_rate_limit(GetASGroupResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetASGroupResponse.model_construct()
+    return parse_response_model(
+        GetASGroupResponse,
+        body,
+        operation_name="GetASGroup",
+        method="get",
+        path="/as_group/v202212/as_group/{asGroup.id}",
     )
 
 
@@ -128,10 +137,12 @@ def UpdateASGroup(
         error_cls=UpdateASGroupError,
     )
 
-    return (
-        attach_rate_limit(UpdateASGroupResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateASGroupResponse.model_construct()
+    return parse_response_model(
+        UpdateASGroupResponse,
+        body,
+        operation_name="UpdateASGroup",
+        method="put",
+        path="/as_group/v202212/as_group/{asGroup.id}",
     )
 
 
@@ -153,8 +164,10 @@ def DeleteASGroup(
         error_cls=DeleteASGroupError,
     )
 
-    return (
-        attach_rate_limit(DeleteASGroupResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteASGroupResponse.model_construct()
+    return parse_response_model(
+        DeleteASGroupResponse,
+        body,
+        operation_name="DeleteASGroup",
+        method="delete",
+        path="/as_group/v202212/as_group/{asGroup.id}",
     )

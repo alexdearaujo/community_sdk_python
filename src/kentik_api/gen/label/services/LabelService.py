@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateLabelError,
@@ -42,10 +45,12 @@ def ListLabels(api_config_override: Optional[APIConfig] = None) -> ListLabelsRes
         error_cls=ListLabelsError,
     )
 
-    return (
-        attach_rate_limit(ListLabelsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListLabelsResponse.model_construct()
+    return parse_response_model(
+        ListLabelsResponse,
+        body,
+        operation_name="ListLabels",
+        method="get",
+        path="/label/v202210/labels",
     )
 
 
@@ -68,10 +73,12 @@ def CreateLabel(
         error_cls=CreateLabelError,
     )
 
-    return (
-        attach_rate_limit(CreateLabelResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateLabelResponse.model_construct()
+    return parse_response_model(
+        CreateLabelResponse,
+        body,
+        operation_name="CreateLabel",
+        method="post",
+        path="/label/v202210/labels",
     )
 
 
@@ -97,10 +104,12 @@ def UpdateLabel(
         error_cls=UpdateLabelError,
     )
 
-    return (
-        attach_rate_limit(UpdateLabelResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateLabelResponse.model_construct()
+    return parse_response_model(
+        UpdateLabelResponse,
+        body,
+        operation_name="UpdateLabel",
+        method="post",
+        path="/label/v202210/labels/{id}",
     )
 
 
@@ -122,8 +131,10 @@ def DeleteLabel(
         error_cls=DeleteLabelError,
     )
 
-    return (
-        attach_rate_limit(DeleteLabelResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteLabelResponse.model_construct()
+    return parse_response_model(
+        DeleteLabelResponse,
+        body,
+        operation_name="DeleteLabel",
+        method="delete",
+        path="/label/v202210/labels/{id}",
     )

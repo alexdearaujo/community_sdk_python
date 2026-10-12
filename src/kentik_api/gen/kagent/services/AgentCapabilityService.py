@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     DeleteAgentCapabilityError,
@@ -92,10 +95,12 @@ def ListAgentCapabilities(
         error_cls=ListAgentCapabilitiesError,
     )
 
-    return (
-        attach_rate_limit(ListAgentCapabilitiesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListAgentCapabilitiesResponse.model_construct()
+    return parse_response_model(
+        ListAgentCapabilitiesResponse,
+        body,
+        operation_name="ListAgentCapabilities",
+        method="get",
+        path="/kagent/v202401/agents/{agentId}/capabilities",
     )
 
 
@@ -120,10 +125,12 @@ def GetAgentCapability(
         error_cls=GetAgentCapabilityError,
     )
 
-    return (
-        attach_rate_limit(GetAgentCapabilityResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetAgentCapabilityResponse.model_construct()
+    return parse_response_model(
+        GetAgentCapabilityResponse,
+        body,
+        operation_name="GetAgentCapability",
+        method="get",
+        path="/kagent/v202401/agents/{agentId}/capabilities/{capability.name}",
     )
 
 
@@ -148,10 +155,12 @@ def DeleteAgentCapability(
         error_cls=DeleteAgentCapabilityError,
     )
 
-    return (
-        attach_rate_limit(DeleteAgentCapabilityResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteAgentCapabilityResponse.model_construct()
+    return parse_response_model(
+        DeleteAgentCapabilityResponse,
+        body,
+        operation_name="DeleteAgentCapability",
+        method="delete",
+        path="/kagent/v202401/agents/{agentId}/capabilities/{capability.name}",
     )
 
 
@@ -179,8 +188,10 @@ def UpsertAgentCapability(
         error_cls=UpsertAgentCapabilityError,
     )
 
-    return (
-        attach_rate_limit(UpsertAgentCapabilityResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpsertAgentCapabilityResponse.model_construct()
+    return parse_response_model(
+        UpsertAgentCapabilityResponse,
+        body,
+        operation_name="UpsertAgentCapability",
+        method="patch",
+        path="/kagent/v202401/agents/{agentId}/capabilities/{capability.name}",
     )

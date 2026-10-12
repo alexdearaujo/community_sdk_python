@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from scripts.generation import wrapper_generation
+from scripts.generation.parity import select_latest_swagger_files_by_service
 from scripts.generation.wrapper_generation import (
     _to_snake_case,
     qualify_wrapper_annotation_types,
@@ -89,6 +90,30 @@ def test_generate_writes_wrapper_and_mounts_it_in_client_mixin(
     assert "self.device = DeviceServiceWrapper(self._transport)" in mixin_content
 
 
+@pytest.mark.parametrize(
+    ("versions", "expected"),
+    [
+        (["v202504beta2", "v202504"], "v202504"),
+        (["v202501beta9", "v202501beta10"], "v202501beta10"),
+        (["v202501alpha9", "v202501alpha10"], "v202501alpha10"),
+        (["v20260515beta1", "v202605"], "v202605"),
+        (["v202509", "v202605alpha1"], "v202605alpha1"),
+    ],
+)
+def test_version_selection_uses_release_order_not_plain_string_order(
+    tmp_path: Path, versions: list[str], expected: str
+):
+    for version in versions:
+        swagger_dir = tmp_path / "svc" / version
+        swagger_dir.mkdir(parents=True, exist_ok=True)
+        (swagger_dir / "svc.swagger.json").write_text("{}", encoding="utf-8")
+
+    by_service, selected_count, _ = select_latest_swagger_files_by_service(tmp_path)
+
+    assert selected_count == 1
+    assert by_service["svc"][0]["version"] == expected
+
+
 # --- end to end, against a sandbox copy of the committed tree -----------------
 
 import ast  # noqa: E402
@@ -100,7 +125,9 @@ _SCRIPTS_DIR = Path(__file__).resolve().parents[2] / "scripts"
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
-from generate_sdk import _inject_generated_headers  # noqa: E402  # type: ignore[import-not-found]
+from generate_sdk import (
+    _inject_generated_headers,  # noqa: E402  # type: ignore[import-not-found]
+)
 
 REAL_GEN = Path(__file__).resolve().parents[2] / "src" / "kentik_api" / "gen"
 
@@ -130,6 +157,22 @@ def test_regenerated_wrapper_matches_the_committed_one_byte_for_byte(sandbox, se
 
     committed = (REAL_GEN / service / "services" / f"{service}.py").read_text()
     assert sandbox.wrapper_file(service).read_text() == committed
+
+
+def test_wrapper_generation_is_deterministic_across_repeated_runs(sandbox):
+    wrapper_generation.generate()
+
+    first = {
+        "device": sandbox.wrapper_file("device").read_text(),
+        "alerting": sandbox.wrapper_file("alerting").read_text(),
+        "mixin": (sandbox.package / "client_mixin.py").read_text(),
+    }
+
+    wrapper_generation.generate()
+
+    assert sandbox.wrapper_file("device").read_text() == first["device"]
+    assert sandbox.wrapper_file("alerting").read_text() == first["alerting"]
+    assert (sandbox.package / "client_mixin.py").read_text() == first["mixin"]
 
 
 def test_service_without_rest_paths_gets_no_wrapper(sandbox):

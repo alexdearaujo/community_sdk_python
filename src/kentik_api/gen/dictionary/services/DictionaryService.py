@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import GetDictionaryError
 from ..models import (  # noqa: F401
@@ -45,8 +44,10 @@ def GetDictionary(
         error_cls=GetDictionaryError,
     )
 
-    return (
-        attach_rate_limit(GetDictionaryResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetDictionaryResponse.model_construct()
+    return parse_response_model(
+        GetDictionaryResponse,
+        body,
+        operation_name="GetDictionary",
+        method="get",
+        path="/dictionary/v20260604alpha1",
     )

@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     GetCapacityPlanError,
@@ -52,10 +55,12 @@ def ListCapacityPlans(
         error_cls=ListCapacityPlansError,
     )
 
-    return (
-        attach_rate_limit(ListCapacityPlansResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListCapacityPlansResponse.model_construct()
+    return parse_response_model(
+        ListCapacityPlansResponse,
+        body,
+        operation_name="ListCapacityPlans",
+        method="get",
+        path="/capacity_plan/v202212/capacity_plan",
     )
 
 
@@ -77,10 +82,12 @@ def ListCapacitySummaries(
         error_cls=ListCapacitySummariesError,
     )
 
-    return (
-        attach_rate_limit(ListCapacitySummariesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListCapacitySummariesResponse.model_construct()
+    return parse_response_model(
+        ListCapacitySummariesResponse,
+        body,
+        operation_name="ListCapacitySummaries",
+        method="get",
+        path="/capacity_plan/v202212/capacity_plan/summary",
     )
 
 
@@ -102,10 +109,12 @@ def GetCapacityPlan(
         error_cls=GetCapacityPlanError,
     )
 
-    return (
-        attach_rate_limit(GetCapacityPlanResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetCapacityPlanResponse.model_construct()
+    return parse_response_model(
+        GetCapacityPlanResponse,
+        body,
+        operation_name="GetCapacityPlan",
+        method="get",
+        path="/capacity_plan/v202212/capacity_plan/{id}",
     )
 
 
@@ -127,8 +136,10 @@ def GetCapacitySummary(
         error_cls=GetCapacitySummaryError,
     )
 
-    return (
-        attach_rate_limit(GetCapacitySummaryResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetCapacitySummaryResponse.model_construct()
+    return parse_response_model(
+        GetCapacitySummaryResponse,
+        body,
+        operation_name="GetCapacitySummary",
+        method="get",
+        path="/capacity_plan/v202212/capacity_plan/{id}/summary",
     )

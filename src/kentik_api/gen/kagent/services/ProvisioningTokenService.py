@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateProvisioningTokenError,
@@ -93,10 +96,12 @@ def ListProvisioningTokens(
         error_cls=ListProvisioningTokensError,
     )
 
-    return (
-        attach_rate_limit(ListProvisioningTokensResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListProvisioningTokensResponse.model_construct()
+    return parse_response_model(
+        ListProvisioningTokensResponse,
+        body,
+        operation_name="ListProvisioningTokens",
+        method="get",
+        path="/kagent/v202401/provisioning-tokens",
     )
 
 
@@ -119,10 +124,12 @@ def CreateProvisioningToken(
         error_cls=CreateProvisioningTokenError,
     )
 
-    return (
-        attach_rate_limit(CreateProvisioningTokenResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateProvisioningTokenResponse.model_construct()
+    return parse_response_model(
+        CreateProvisioningTokenResponse,
+        body,
+        operation_name="CreateProvisioningToken",
+        method="post",
+        path="/kagent/v202401/provisioning-tokens",
     )
 
 
@@ -144,10 +151,12 @@ def GetProvisioningToken(
         error_cls=GetProvisioningTokenError,
     )
 
-    return (
-        attach_rate_limit(GetProvisioningTokenResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetProvisioningTokenResponse.model_construct()
+    return parse_response_model(
+        GetProvisioningTokenResponse,
+        body,
+        operation_name="GetProvisioningToken",
+        method="get",
+        path="/kagent/v202401/provisioning-tokens/{token}",
     )
 
 
@@ -169,12 +178,12 @@ def ListAgentsByProvisioningToken(
         error_cls=ListAgentsByProvisioningTokenError,
     )
 
-    return (
-        attach_rate_limit(
-            ListAgentsByProvisioningTokenResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else ListAgentsByProvisioningTokenResponse.model_construct()
+    return parse_response_model(
+        ListAgentsByProvisioningTokenResponse,
+        body,
+        operation_name="ListAgentsByProvisioningToken",
+        method="get",
+        path="/kagent/v202401/provisioning-tokens/{token}/agents",
     )
 
 
@@ -200,8 +209,10 @@ def RevokeProvisioningToken(
         error_cls=RevokeProvisioningTokenError,
     )
 
-    return (
-        attach_rate_limit(RevokeProvisioningTokenResponse(**body), rate_limit_of(body))
-        if body is not None
-        else RevokeProvisioningTokenResponse.model_construct()
+    return parse_response_model(
+        RevokeProvisioningTokenResponse,
+        body,
+        operation_name="RevokeProvisioningToken",
+        method="post",
+        path="/kagent/v202401/provisioning-tokens/{token}/revoke",
     )

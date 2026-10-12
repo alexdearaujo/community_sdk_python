@@ -5,8 +5,14 @@ import grpc
 import pytest
 from google.protobuf import json_format
 
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc, map_grpc_error
-from kentik_api.errors import AuthenticationError, HTTPException, TransportError
+from kentik_api.errors import (
+    AuthenticationError,
+    ConfigurationError,
+    HTTPException,
+    TransportError,
+)
 
 # The table in contracts/runtime-api.md section 3, restated so a change to the
 # runtime's mapping has to be made deliberately in two places.
@@ -211,3 +217,64 @@ def test_build_grpc_request_rejects_a_field_the_request_does_not_declare(device_
     # A silently dropped argument is how gRPC calls once went out with an empty id.
     with pytest.raises(json_format.ParseError):
         build_grpc_request(device_pb2.GetDeviceRequest, None, {"deviceid": "42"})
+
+
+def test_call_grpc_rejects_direct_per_call_config_override_for_grpc():
+    called = False
+
+    class _Stub:
+        _method = "/svc.Service/Op"
+
+        def __call__(self, _request, **_kwargs):
+            nonlocal called
+            called = True
+            return b"ok"
+
+    with pytest.raises(ConfigurationError, match="with_timeout"):
+        call_grpc(
+            _Stub(),
+            object(),
+            api_config=APIConfig(
+                auth_email="override@example.com",
+                auth_token="override-token",
+                grpc_deadline=5.0,
+            ),
+        )
+
+    assert not called
+
+
+def test_call_grpc_allows_with_timeout_override_for_deadline_only():
+    seen_timeout = None
+
+    class _Stub:
+        _method = "/svc.Service/Op"
+
+        def __call__(self, _request, **kwargs):
+            nonlocal seen_timeout
+            seen_timeout = kwargs.get("timeout")
+            return b"ok"
+
+    base = APIConfig(auth_email="dev@example.com", auth_token="token")
+    override = base.with_timeout(grpc_deadline=7.5)
+
+    response, rate_limit = call_grpc(_Stub(), object(), api_config=override)
+
+    assert response == b"ok"
+    assert rate_limit is None
+    assert seen_timeout == 7.5
+
+
+def test_call_grpc_rejects_tampered_with_timeout_override():
+    class _Stub:
+        _method = "/svc.Service/Op"
+
+        def __call__(self, _request, **_kwargs):
+            return b"ok"
+
+    base = APIConfig(auth_email="dev@example.com", auth_token="token")
+    override = base.with_timeout(grpc_deadline=7.5)
+    override.base_path = "https://127.0.0.1:1"
+
+    with pytest.raises(ConfigurationError, match="only change timeouts"):
+        call_grpc(_Stub(), object(), api_config=override)

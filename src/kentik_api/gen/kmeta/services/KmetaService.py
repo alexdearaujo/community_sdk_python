@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateServiceNowConfigError,
@@ -44,10 +47,12 @@ def ListServiceNowConfigs(
         error_cls=ListServiceNowConfigsError,
     )
 
-    return (
-        attach_rate_limit(ListServiceNowConfigsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListServiceNowConfigsResponse.model_construct()
+    return parse_response_model(
+        ListServiceNowConfigsResponse,
+        body,
+        operation_name="ListServiceNowConfigs",
+        method="get",
+        path="/kmeta/v202607alpha1/{cid}/servicenow/config",
     )
 
 
@@ -70,10 +75,12 @@ def CreateServiceNowConfig(
         error_cls=CreateServiceNowConfigError,
     )
 
-    return (
-        attach_rate_limit(CreateServiceNowConfigResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateServiceNowConfigResponse.model_construct()
+    return parse_response_model(
+        CreateServiceNowConfigResponse,
+        body,
+        operation_name="CreateServiceNowConfig",
+        method="post",
+        path="/kmeta/v202607alpha1/{cid}/servicenow/config",
     )
 
 
@@ -95,10 +102,12 @@ def GetServiceNowConfig(
         error_cls=GetServiceNowConfigError,
     )
 
-    return (
-        attach_rate_limit(GetServiceNowConfigResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetServiceNowConfigResponse.model_construct()
+    return parse_response_model(
+        GetServiceNowConfigResponse,
+        body,
+        operation_name="GetServiceNowConfig",
+        method="get",
+        path="/kmeta/v202607alpha1/{cid}/servicenow/config/{id}",
     )
 
 
@@ -125,10 +134,12 @@ def UpdateServiceNowConfig(
         error_cls=UpdateServiceNowConfigError,
     )
 
-    return (
-        attach_rate_limit(UpdateServiceNowConfigResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateServiceNowConfigResponse.model_construct()
+    return parse_response_model(
+        UpdateServiceNowConfigResponse,
+        body,
+        operation_name="UpdateServiceNowConfig",
+        method="put",
+        path="/kmeta/v202607alpha1/{cid}/servicenow/config/{id}",
     )
 
 
@@ -150,8 +161,10 @@ def DeleteServiceNowConfig(
         error_cls=DeleteServiceNowConfigError,
     )
 
-    return (
-        attach_rate_limit(DeleteServiceNowConfigResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteServiceNowConfigResponse.model_construct()
+    return parse_response_model(
+        DeleteServiceNowConfigResponse,
+        body,
+        operation_name="DeleteServiceNowConfig",
+        method="delete",
+        path="/kmeta/v202607alpha1/{cid}/servicenow/config/{id}",
     )

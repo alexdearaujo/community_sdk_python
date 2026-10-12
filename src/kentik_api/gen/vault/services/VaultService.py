@@ -4,8 +4,11 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import GetSecretError, ListSecretError
 from ..models import (  # noqa: F401
@@ -36,10 +39,12 @@ def ListSecret(
         error_cls=ListSecretError,
     )
 
-    return (
-        attach_rate_limit(ListSecretResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListSecretResponse.model_construct()
+    return parse_response_model(
+        ListSecretResponse,
+        body,
+        operation_name="ListSecret",
+        method="get",
+        path="/vault/v202312alpha1/secrets",
     )
 
 
@@ -61,8 +66,10 @@ def GetSecret(
         error_cls=GetSecretError,
     )
 
-    return (
-        attach_rate_limit(GetSecretResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetSecretResponse.model_construct()
+    return parse_response_model(
+        GetSecretResponse,
+        body,
+        operation_name="GetSecret",
+        method="get",
+        path="/vault/v202312alpha1/secrets/{name}",
     )

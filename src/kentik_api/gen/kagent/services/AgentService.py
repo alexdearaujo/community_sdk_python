@@ -4,8 +4,11 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     AuthorizeError,
@@ -105,10 +108,12 @@ def ListAgents(
         error_cls=ListAgentsError,
     )
 
-    return (
-        attach_rate_limit(ListAgentsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListAgentsResponse.model_construct()
+    return parse_response_model(
+        ListAgentsResponse,
+        body,
+        operation_name="ListAgents",
+        method="get",
+        path="/kagent/v202401/agents",
     )
 
 
@@ -131,10 +136,12 @@ def CreateAgent(
         error_cls=CreateAgentError,
     )
 
-    return (
-        attach_rate_limit(CreateAgentResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateAgentResponse.model_construct()
+    return parse_response_model(
+        CreateAgentResponse,
+        body,
+        operation_name="CreateAgent",
+        method="post",
+        path="/kagent/v202401/agents",
     )
 
 
@@ -156,10 +163,12 @@ def Authorize(
         error_cls=AuthorizeError,
     )
 
-    return (
-        attach_rate_limit(AuthorizeResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AuthorizeResponse.model_construct()
+    return parse_response_model(
+        AuthorizeResponse,
+        body,
+        operation_name="Authorize",
+        method="put",
+        path="/kagent/v202401/agents/authorize/{installId}",
     )
 
 
@@ -184,10 +193,12 @@ def GenerateInstallCommands(
         error_cls=GenerateInstallCommandsError,
     )
 
-    return (
-        attach_rate_limit(GenerateInstallCommandsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GenerateInstallCommandsResponse.model_construct()
+    return parse_response_model(
+        GenerateInstallCommandsResponse,
+        body,
+        operation_name="GenerateInstallCommands",
+        method="post",
+        path="/kagent/v202401/agents/install-commands",
     )
 
 
@@ -212,10 +223,12 @@ def GetAgent(
         error_cls=GetAgentError,
     )
 
-    return (
-        attach_rate_limit(GetAgentResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetAgentResponse.model_construct()
+    return parse_response_model(
+        GetAgentResponse,
+        body,
+        operation_name="GetAgent",
+        method="get",
+        path="/kagent/v202401/agents/{agent.id}",
     )
 
 
@@ -240,10 +253,12 @@ def DeleteAgent(
         error_cls=DeleteAgentError,
     )
 
-    return (
-        attach_rate_limit(DeleteAgentResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteAgentResponse.model_construct()
+    return parse_response_model(
+        DeleteAgentResponse,
+        body,
+        operation_name="DeleteAgent",
+        method="delete",
+        path="/kagent/v202401/agents/{agent.id}",
     )
 
 
@@ -270,8 +285,10 @@ def UpdateAgent(
         error_cls=UpdateAgentError,
     )
 
-    return (
-        attach_rate_limit(UpdateAgentResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateAgentResponse.model_construct()
+    return parse_response_model(
+        UpdateAgentResponse,
+        body,
+        operation_name="UpdateAgent",
+        method="patch",
+        path="/kagent/v202401/agents/{agent.id}",
     )

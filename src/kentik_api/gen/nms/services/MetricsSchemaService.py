@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import MetricsSchemaService_GetMetricsSchemaError
 from ..models import (  # noqa: F401
@@ -39,8 +38,10 @@ def MetricsSchemaService_GetMetricsSchema(
         error_cls=MetricsSchemaService_GetMetricsSchemaError,
     )
 
-    return (
-        attach_rate_limit(GetMetricsSchemaResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetMetricsSchemaResponse.model_construct()
+    return parse_response_model(
+        GetMetricsSchemaResponse,
+        body,
+        operation_name="MetricsSchemaService_GetMetricsSchema",
+        method="get",
+        path="/nms/v202505/metrics_schema",
     )

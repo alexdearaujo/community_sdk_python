@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import CreateError, DeleteError, GetError, ListError, ReplaceError
 from ..models import (  # noqa: F401
@@ -218,10 +221,12 @@ def Create(
         error_cls=CreateError,
     )
 
-    return (
-        attach_rate_limit(SuppressionServiceCreateResponse(**body), rate_limit_of(body))
-        if body is not None
-        else SuppressionServiceCreateResponse.model_construct()
+    return parse_response_model(
+        SuppressionServiceCreateResponse,
+        body,
+        operation_name="Create",
+        method="post",
+        path="/v202505/suppressions",
     )
 
 
@@ -246,10 +251,12 @@ def List(
         error_cls=ListError,
     )
 
-    return (
-        attach_rate_limit(SuppressionServiceListResponse(**body), rate_limit_of(body))
-        if body is not None
-        else SuppressionServiceListResponse.model_construct()
+    return parse_response_model(
+        SuppressionServiceListResponse,
+        body,
+        operation_name="List",
+        method="post",
+        path="/v202505/suppressions/list",
     )
 
 
@@ -271,10 +278,12 @@ def Get(
         error_cls=GetError,
     )
 
-    return (
-        attach_rate_limit(SuppressionServiceGetResponse(**body), rate_limit_of(body))
-        if body is not None
-        else SuppressionServiceGetResponse.model_construct()
+    return parse_response_model(
+        SuppressionServiceGetResponse,
+        body,
+        operation_name="Get",
+        method="get",
+        path="/v202505/suppressions/{id}",
     )
 
 
@@ -296,10 +305,12 @@ def Delete(
         error_cls=DeleteError,
     )
 
-    return (
-        attach_rate_limit(SuppressionServiceDeleteResponse(**body), rate_limit_of(body))
-        if body is not None
-        else SuppressionServiceDeleteResponse.model_construct()
+    return parse_response_model(
+        SuppressionServiceDeleteResponse,
+        body,
+        operation_name="Delete",
+        method="delete",
+        path="/v202505/suppressions/{id}",
     )
 
 
@@ -325,10 +336,10 @@ def Replace(
         error_cls=ReplaceError,
     )
 
-    return (
-        attach_rate_limit(
-            SuppressionServiceReplaceResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else SuppressionServiceReplaceResponse.model_construct()
+    return parse_response_model(
+        SuppressionServiceReplaceResponse,
+        body,
+        operation_name="Replace",
+        method="patch",
+        path="/v202505/suppressions/{id}",
     )

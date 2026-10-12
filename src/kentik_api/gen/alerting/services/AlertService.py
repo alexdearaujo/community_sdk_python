@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     AckError,
@@ -225,10 +228,12 @@ def List(
         error_cls=ListError,
     )
 
-    return (
-        attach_rate_limit(AlertServiceListResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertServiceListResponse.model_construct()
+    return parse_response_model(
+        AlertServiceListResponse,
+        body,
+        operation_name="List",
+        method="post",
+        path="/v202505/alerts",
     )
 
 
@@ -251,10 +256,12 @@ def Clear(
         error_cls=ClearError,
     )
 
-    return (
-        attach_rate_limit(AlertServiceClearResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertServiceClearResponse.model_construct()
+    return parse_response_model(
+        AlertServiceClearResponse,
+        body,
+        operation_name="Clear",
+        method="post",
+        path="/v202505/alerts/clear",
     )
 
 
@@ -276,10 +283,12 @@ def ListComments(
         error_cls=ListCommentsError,
     )
 
-    return (
-        attach_rate_limit(AlertServiceListCommentsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertServiceListCommentsResponse.model_construct()
+    return parse_response_model(
+        AlertServiceListCommentsResponse,
+        body,
+        operation_name="ListComments",
+        method="get",
+        path="/v202505/alerts/{alertId}/comments",
     )
 
 
@@ -305,10 +314,12 @@ def AddComment(
         error_cls=AddCommentError,
     )
 
-    return (
-        attach_rate_limit(AlertServiceAddCommentResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertServiceAddCommentResponse.model_construct()
+    return parse_response_model(
+        AlertServiceAddCommentResponse,
+        body,
+        operation_name="AddComment",
+        method="post",
+        path="/v202505/alerts/{alertId}/comments",
     )
 
 
@@ -334,12 +345,12 @@ def SetExternalContext(
         error_cls=SetExternalContextError,
     )
 
-    return (
-        attach_rate_limit(
-            AlertServiceSetExternalContextResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else AlertServiceSetExternalContextResponse.model_construct()
+    return parse_response_model(
+        AlertServiceSetExternalContextResponse,
+        body,
+        operation_name="SetExternalContext",
+        method="put",
+        path="/v202505/alerts/{alertId}/external-context",
     )
 
 
@@ -361,10 +372,12 @@ def Get(
         error_cls=GetError,
     )
 
-    return (
-        attach_rate_limit(AlertServiceGetResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertServiceGetResponse.model_construct()
+    return parse_response_model(
+        AlertServiceGetResponse,
+        body,
+        operation_name="Get",
+        method="get",
+        path="/v202505/alerts/{id}",
     )
 
 
@@ -390,10 +403,12 @@ def Ack(
         error_cls=AckError,
     )
 
-    return (
-        attach_rate_limit(AlertServiceAckResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertServiceAckResponse.model_construct()
+    return parse_response_model(
+        AlertServiceAckResponse,
+        body,
+        operation_name="Ack",
+        method="post",
+        path="/v202505/alerts/{id}/ack",
     )
 
 
@@ -419,8 +434,10 @@ def UnAck(
         error_cls=UnAckError,
     )
 
-    return (
-        attach_rate_limit(AlertServiceUnAckResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertServiceUnAckResponse.model_construct()
+    return parse_response_model(
+        AlertServiceUnAckResponse,
+        body,
+        operation_name="UnAck",
+        method="post",
+        path="/v202505/alerts/{id}/unack",
     )

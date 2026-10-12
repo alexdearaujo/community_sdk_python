@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateCustomApplicationError,
@@ -44,10 +47,12 @@ def ListCustomApplications(
         error_cls=ListCustomApplicationsError,
     )
 
-    return (
-        attach_rate_limit(ListCustomApplicationsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListCustomApplicationsResponse.model_construct()
+    return parse_response_model(
+        ListCustomApplicationsResponse,
+        body,
+        operation_name="ListCustomApplications",
+        method="get",
+        path="/custom_application/v202501alpha1",
     )
 
 
@@ -70,10 +75,12 @@ def CreateCustomApplication(
         error_cls=CreateCustomApplicationError,
     )
 
-    return (
-        attach_rate_limit(CreateCustomApplicationResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateCustomApplicationResponse.model_construct()
+    return parse_response_model(
+        CreateCustomApplicationResponse,
+        body,
+        operation_name="CreateCustomApplication",
+        method="post",
+        path="/custom_application/v202501alpha1",
     )
 
 
@@ -95,10 +102,12 @@ def GetCustomApplication(
         error_cls=GetCustomApplicationError,
     )
 
-    return (
-        attach_rate_limit(GetCustomApplicationResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetCustomApplicationResponse.model_construct()
+    return parse_response_model(
+        GetCustomApplicationResponse,
+        body,
+        operation_name="GetCustomApplication",
+        method="get",
+        path="/custom_application/v202501alpha1/{customApplicationId}",
     )
 
 
@@ -124,10 +133,12 @@ def UpdateCustomApplication(
         error_cls=UpdateCustomApplicationError,
     )
 
-    return (
-        attach_rate_limit(UpdateCustomApplicationResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateCustomApplicationResponse.model_construct()
+    return parse_response_model(
+        UpdateCustomApplicationResponse,
+        body,
+        operation_name="UpdateCustomApplication",
+        method="put",
+        path="/custom_application/v202501alpha1/{customApplicationId}",
     )
 
 
@@ -149,8 +160,10 @@ def DeleteCustomApplication(
         error_cls=DeleteCustomApplicationError,
     )
 
-    return (
-        attach_rate_limit(DeleteCustomApplicationResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteCustomApplicationResponse.model_construct()
+    return parse_response_model(
+        DeleteCustomApplicationResponse,
+        body,
+        operation_name="DeleteCustomApplication",
+        method="delete",
+        path="/custom_application/v202501alpha1/{customApplicationId}",
     )

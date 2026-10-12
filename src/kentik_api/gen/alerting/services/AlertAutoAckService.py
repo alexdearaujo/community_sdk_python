@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import CreateError, DeleteError, GetError, ListError, ReplaceError
 from ..models import (  # noqa: F401
@@ -218,12 +221,12 @@ def Create(
         error_cls=CreateError,
     )
 
-    return (
-        attach_rate_limit(
-            AlertAutoAckServiceCreateResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else AlertAutoAckServiceCreateResponse.model_construct()
+    return parse_response_model(
+        AlertAutoAckServiceCreateResponse,
+        body,
+        operation_name="Create",
+        method="post",
+        path="/v202505/alerts/ack/auto",
     )
 
 
@@ -248,10 +251,12 @@ def List(
         error_cls=ListError,
     )
 
-    return (
-        attach_rate_limit(AlertAutoAckServiceListResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertAutoAckServiceListResponse.model_construct()
+    return parse_response_model(
+        AlertAutoAckServiceListResponse,
+        body,
+        operation_name="List",
+        method="post",
+        path="/v202505/alerts/ack/auto/list",
     )
 
 
@@ -273,10 +278,12 @@ def Get(
         error_cls=GetError,
     )
 
-    return (
-        attach_rate_limit(AlertAutoAckServiceGetResponse(**body), rate_limit_of(body))
-        if body is not None
-        else AlertAutoAckServiceGetResponse.model_construct()
+    return parse_response_model(
+        AlertAutoAckServiceGetResponse,
+        body,
+        operation_name="Get",
+        method="get",
+        path="/v202505/alerts/ack/auto/{autoAck.id}",
     )
 
 
@@ -298,12 +305,12 @@ def Delete(
         error_cls=DeleteError,
     )
 
-    return (
-        attach_rate_limit(
-            AlertAutoAckServiceDeleteResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else AlertAutoAckServiceDeleteResponse.model_construct()
+    return parse_response_model(
+        AlertAutoAckServiceDeleteResponse,
+        body,
+        operation_name="Delete",
+        method="delete",
+        path="/v202505/alerts/ack/auto/{autoAck.id}",
     )
 
 
@@ -329,10 +336,10 @@ def Replace(
         error_cls=ReplaceError,
     )
 
-    return (
-        attach_rate_limit(
-            AlertAutoAckServiceReplaceResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else AlertAutoAckServiceReplaceResponse.model_construct()
+    return parse_response_model(
+        AlertAutoAckServiceReplaceResponse,
+        body,
+        operation_name="Replace",
+        method="patch",
+        path="/v202505/alerts/ack/auto/{autoAck.id}",
     )

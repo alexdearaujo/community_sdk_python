@@ -4,8 +4,11 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     GetASNDetailsError,
@@ -65,10 +68,12 @@ def GetGlobalInsights(
         error_cls=GetGlobalInsightsError,
     )
 
-    return (
-        attach_rate_limit(GetGlobalInsightsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetGlobalInsightsResponse.model_construct()
+    return parse_response_model(
+        GetGlobalInsightsResponse,
+        body,
+        operation_name="GetGlobalInsights",
+        method="get",
+        path="/kmi/v202212/insights",
     )
 
 
@@ -105,10 +110,12 @@ def GetASNInsights(
         error_cls=GetASNInsightsError,
     )
 
-    return (
-        attach_rate_limit(GetASNInsightsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetASNInsightsResponse.model_construct()
+    return parse_response_model(
+        GetASNInsightsResponse,
+        body,
+        operation_name="GetASNInsights",
+        method="get",
+        path="/kmi/v202212/insights/{asn}",
     )
 
 
@@ -136,10 +143,12 @@ def GetASNDetails(
         error_cls=GetASNDetailsError,
     )
 
-    return (
-        attach_rate_limit(GetASNDetailsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetASNDetailsResponse.model_construct()
+    return parse_response_model(
+        GetASNDetailsResponse,
+        body,
+        operation_name="GetASNDetails",
+        method="post",
+        path="/kmi/v202212/market/{marketId}/network/{asn}/{type}",
     )
 
 
@@ -167,10 +176,12 @@ def GetRankings(
         error_cls=GetRankingsError,
     )
 
-    return (
-        attach_rate_limit(GetRankingsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetRankingsResponse.model_construct()
+    return parse_response_model(
+        GetRankingsResponse,
+        body,
+        operation_name="GetRankings",
+        method="post",
+        path="/kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}",
     )
 
 
@@ -190,8 +201,10 @@ def ListMarkets(api_config_override: Optional[APIConfig] = None) -> ListMarketsR
         error_cls=ListMarketsError,
     )
 
-    return (
-        attach_rate_limit(ListMarketsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListMarketsResponse.model_construct()
+    return parse_response_model(
+        ListMarketsResponse,
+        body,
+        operation_name="ListMarkets",
+        method="get",
+        path="/kmi/v202212/markets",
     )

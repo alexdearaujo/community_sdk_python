@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import CreateConnectivityReportError
 from ..models import (  # noqa: F401
@@ -39,8 +38,10 @@ def CreateConnectivityReport(
         error_cls=CreateConnectivityReportError,
     )
 
-    return (
-        attach_rate_limit(CreateConnectivityReportResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateConnectivityReportResponse.model_construct()
+    return parse_response_model(
+        CreateConnectivityReportResponse,
+        body,
+        operation_name="CreateConnectivityReport",
+        method="post",
+        path="/connectivity_checker/v202410beta1/create",
     )

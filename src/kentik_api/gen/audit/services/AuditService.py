@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import GetAuditEventError, ListAuditEventsError
 from ..models import (  # noqa: F401
@@ -46,10 +49,12 @@ def ListAuditEvents(
         error_cls=ListAuditEventsError,
     )
 
-    return (
-        attach_rate_limit(ListAuditEventsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListAuditEventsResponse.model_construct()
+    return parse_response_model(
+        ListAuditEventsResponse,
+        body,
+        operation_name="ListAuditEvents",
+        method="get",
+        path="/audit/v202601/events",
     )
 
 
@@ -74,10 +79,12 @@ def GetAuditEvent(
         error_cls=GetAuditEventError,
     )
 
-    return (
-        attach_rate_limit(GetAuditEventResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetAuditEventResponse.model_construct()
+    return parse_response_model(
+        GetAuditEventResponse,
+        body,
+        operation_name="GetAuditEvent",
+        method="get",
+        path="/audit/v202601/events/{id}",
     )
 
 
@@ -99,8 +106,10 @@ def GetAuditEvent_2(
         error_cls=GetAuditEventError,
     )
 
-    return (
-        attach_rate_limit(GetAuditEventResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetAuditEventResponse.model_construct()
+    return parse_response_model(
+        GetAuditEventResponse,
+        body,
+        operation_name="GetAuditEvent",
+        method="get",
+        path="/audit/v202601/events/{id}/{ctime}",
     )
