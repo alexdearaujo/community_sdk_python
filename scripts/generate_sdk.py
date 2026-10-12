@@ -250,7 +250,6 @@ def patched_swagger(swagger_path: Path, version: str):
         suffix=".json",
         delete=False,
         encoding="utf-8",
-        dir=swagger_path.parent,
     ) as tmp:
         json.dump(schema, tmp)
         tmp_path = Path(tmp.name)
@@ -513,6 +512,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                     print("    [stdout]")
                                     print(e.stdout)
                                 print("    ------------------------")
+                                raise
                     else:
                         print(
                             "    ⚠️ Directory exists, but no .proto files found inside."

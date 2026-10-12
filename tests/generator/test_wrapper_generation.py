@@ -125,8 +125,8 @@ _SCRIPTS_DIR = Path(__file__).resolve().parents[2] / "scripts"
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
-from generate_sdk import (
-    _inject_generated_headers,  # noqa: E402  # type: ignore[import-not-found]
+from generate_sdk import (  # noqa: E402
+    _inject_generated_headers,  # type: ignore[import-not-found]
 )
 
 REAL_GEN = Path(__file__).resolve().parents[2] / "src" / "kentik_api" / "gen"

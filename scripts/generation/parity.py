@@ -2,6 +2,7 @@
 """Swagger file selection and generated/schema service-directory parity validation."""
 
 import json
+import re
 from pathlib import Path
 from typing import TypedDict
 
@@ -36,6 +37,23 @@ def _swagger_file_metadata(
     }
 
 
+_VERSION_RE = re.compile(r"^v(\d{6})\d*(?:(alpha|beta)(\d+)?)?$")
+_STAGE_RANK = {"alpha": 0, "beta": 1, None: 2}
+
+
+def _version_key(version: str) -> tuple[int, str, int, int, str]:
+    """Orders versions by release: year-month, then alpha < beta < final, then number.
+
+    Plain string order puts `beta10` before `beta9` and `beta2` after the final.
+    An unrecognised name sorts below every recognised one, so it never wins silently.
+    """
+    match = _VERSION_RE.match(version)
+    if match is None:
+        return (0, "", 0, 0, version)
+    month, stage, number = match.groups()
+    return (1, month, _STAGE_RANK[stage], int(number or 0), version)
+
+
 def select_latest_swagger_files_by_service(
     openapi_base: Path,
 ) -> tuple[dict[str, list[SwaggerFileMetadata]], int, int]:
@@ -51,7 +69,9 @@ def select_latest_swagger_files_by_service(
             metadata["filename"],
         )
         existing = latest_by_family.get(family_key)
-        if existing is None or metadata["version"] > existing["version"]:
+        if existing is None or _version_key(metadata["version"]) > _version_key(
+            existing["version"]
+        ):
             latest_by_family[family_key] = metadata
 
     by_service: dict[str, list[SwaggerFileMetadata]] = {}
@@ -150,6 +170,11 @@ def validate_schema_files(swagger_paths: list[Path]) -> list[SchemaValidationFai
 
 def validate_schema_files_or_raise(swagger_paths: list[Path]) -> None:
     """Fails generation if any schema file is structurally invalid."""
+    if not swagger_paths:
+        raise RuntimeError(
+            "No swagger files selected; the schema checkout is empty or the "
+            "path is wrong, so nothing would be generated."
+        )
     failures = validate_schema_files(swagger_paths)
     if not failures:
         return

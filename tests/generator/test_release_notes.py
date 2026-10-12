@@ -83,8 +83,7 @@ def test_surface_breaking_changes_include_operation_signature_breaks(tmp_path):
         "    querynoCustomColumns: Optional[bool] = None,\n"
         "    view: Optional[str] = None,\n"
         ") -> ListDevicesResponse:",
-        "    querynoCustomColumns: Optional[bool] = None,\n"
-        ") -> ListDevicesResponse:",
+        "    querynoCustomColumns: Optional[bool] = None,\n) -> ListDevicesResponse:",
         1,
     )
     source = re.sub(
@@ -115,7 +114,7 @@ def test_surface_breaking_changes_include_operation_signature_breaks(tmp_path):
     )
 
 
-def test_check_changelog_rejects_substring_only_mentions(tmp_path, monkeypatch):
+def test_check_changelog_rejects_substring_only_mentions(tmp_path, monkeypatch, capsys):
     delta = release_notes.api_surface.diff(
         {
             "services": {
@@ -136,5 +135,8 @@ def test_check_changelog_rejects_substring_only_mentions(tmp_path, monkeypatch):
         "## Unreleased\n\n- Documented how to pass user credentials.\n",
     )
 
-    with pytest.raises(SystemExit, match="breaking changes"):
+    with pytest.raises(SystemExit) as exc:
         release_notes._check_changelog(delta, "v2.0.0")
+
+    assert exc.value.code == 1
+    assert "breaking changes" in capsys.readouterr().err
