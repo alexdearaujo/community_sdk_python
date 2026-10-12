@@ -1,13 +1,11 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
+import ipaddress
 import math
 import threading
+import urllib.request
 from typing import Optional
 
 import httpx
-
-# Private, but it is the function httpx itself uses for this, NO_PROXY rules
-# included. An httpx upgrade that moves it fails here, at import.
-from httpx._utils import get_environment_proxies
 
 from kentik_api.core.rate_limit import RateLimit
 from kentik_api.errors import ConfigurationError, HTTPException
@@ -17,6 +15,32 @@ __all__ = ["APIConfig", "HTTPException"]
 # Retries only a failed connection attempt, which never reached the server, so
 # no request can be replayed (FR-032). A response of any status is never retried.
 _CONNECT_RETRIES = 2
+
+
+def _environment_proxies() -> dict[str, str | None]:
+    """Maps httpx mount patterns to a proxy URL, or None for a host that goes direct.
+
+    Mirrors what httpx builds from the environment, with public APIs only, so an
+    httpx release that moves its private helpers cannot break the import.
+    """
+    info = urllib.request.getproxies()
+    routes: dict[str, str | None] = {}
+    for scheme in ("http", "https", "all"):
+        if url := info.get(scheme):
+            routes[f"{scheme}://"] = url if "://" in url else f"http://{url}"
+
+    for host in (h.strip() for h in info.get("no", "").split(",")):
+        if host == "*":
+            return {}
+        if not host:
+            continue
+        try:
+            ipaddress.ip_address(host.strip("[]"))
+            exact = True
+        except ValueError:
+            exact = host.lower() == "localhost"
+        routes[f"all://{host if exact else '*' + host}"] = None
+    return routes
 
 
 def _require_positive(field: str, value: float) -> None:
@@ -162,7 +186,7 @@ class APIConfig:
         """
         return {
             pattern: None if proxy is None else self._transport(proxy)
-            for pattern, proxy in get_environment_proxies().items()
+            for pattern, proxy in _environment_proxies().items()
         }
 
     def close(self) -> None:

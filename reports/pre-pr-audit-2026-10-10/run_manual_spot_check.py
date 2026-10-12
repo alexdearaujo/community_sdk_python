@@ -5,6 +5,7 @@ This helper runs exactly one check per invocation, records sanitized details,
 and appends a markdown summary plus a JSON artifact.
 """
 
+# ruff: noqa: E402
 from __future__ import annotations
 
 import argparse
@@ -323,7 +324,9 @@ def run_c4() -> dict[str, Any]:
         .get("type", "")
         .endswith("ConfigurationError")
     )
-    grpc_bad_succeeded = details.get("grpc_bad_override", {}).get("outcome") == "succeeded"
+    grpc_bad_succeeded = (
+        details.get("grpc_bad_override", {}).get("outcome") == "succeeded"
+    )
     grpc_no_creds_succeeded = (
         details.get("grpc_no_creds_override", {}).get("outcome") == "succeeded"
     )
@@ -345,7 +348,9 @@ def run_c4() -> dict[str, Any]:
         summary = "C4 not reproduced: gRPC override no longer succeeded with invalid override."
     else:
         verdict = "inconclusive"
-        summary = "C4 completed but did not produce a clean reproduce/not-reproduced split."
+        summary = (
+            "C4 completed but did not produce a clean reproduce/not-reproduced split."
+        )
 
     return {
         "verdict": verdict,
@@ -368,11 +373,7 @@ def run_c5() -> dict[str, Any]:
 
     users = payload.get("users") or []
     target_index = next(
-        (
-            index
-            for index, user in enumerate(users)
-            if isinstance(user, dict)
-        ),
+        (index for index, user in enumerate(users) if isinstance(user, dict)),
         None,
     )
 
@@ -385,9 +386,9 @@ def run_c5() -> dict[str, Any]:
         }
 
     mutated_payload = copy.deepcopy(payload)
-    mutated_payload["users"][target_index][
-        "defaultLandingPageType"
-    ] = "LANDING_TYPE_SPOT_CHECK_UNKNOWN"
+    mutated_payload["users"][target_index]["defaultLandingPageType"] = (
+        "LANDING_TYPE_SPOT_CHECK_UNKNOWN"
+    )
 
     try:
         ListUsersResponse.model_validate(mutated_payload)
@@ -492,7 +493,9 @@ def _sanitize_data(data: Any, sensitive: dict[str, str]) -> Any:
     if isinstance(data, str):
         return _sanitize_text(data, sensitive)
     if isinstance(data, dict):
-        return {str(key): _sanitize_data(value, sensitive) for key, value in data.items()}
+        return {
+            str(key): _sanitize_data(value, sensitive) for key, value in data.items()
+        }
     if isinstance(data, list):
         return [_sanitize_data(item, sensitive) for item in data]
     return data
@@ -535,8 +538,7 @@ def _append_markdown_record(
         entry += f"- Remediation state: {remediation_update.get('state', '')}\n"
         if remediation_update.get("verification_gate"):
             entry += (
-                "- Verification gate: "
-                f"{remediation_update.get('verification_gate')}\n"
+                f"- Verification gate: {remediation_update.get('verification_gate')}\n"
             )
         if remediation_update.get("state_owner"):
             entry += f"- State owner: {remediation_update.get('state_owner')}\n"
@@ -545,18 +547,9 @@ def _append_markdown_record(
         if remediation_update.get("mitigation"):
             entry += f"- Mitigation: {remediation_update.get('mitigation')}\n"
         if remediation_update.get("revisit_trigger"):
-            entry += (
-                "- Revisit trigger: "
-                f"{remediation_update.get('revisit_trigger')}\n"
-            )
+            entry += f"- Revisit trigger: {remediation_update.get('revisit_trigger')}\n"
 
-    entry += (
-        "\n"
-        f"Summary: {result['summary']}\n\n"
-        "```json\n"
-        f"{details_json}\n"
-        "```\n\n"
-    )
+    entry += f"\nSummary: {result['summary']}\n\n```json\n{details_json}\n```\n\n"
 
     with output_file.open("a", encoding="utf-8") as handle:
         handle.write(entry)
@@ -595,7 +588,7 @@ def _run_one_check(
 
     finished = _now_utc()
 
-    result = {
+    result: dict[str, Any] = {
         "check_id": check.check_id,
         "finding": check.finding,
         "description": check.description,

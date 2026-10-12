@@ -205,3 +205,31 @@ def test_omitting_the_override_uses_the_client_config_unchanged(monkeypatch):
     assert base_url == "https://grpc.api.kentik.com"
     assert kwargs["timeout"] == config.rest_timeout
     assert kwargs["headers"]["X-CH-Auth-Email"] == "dev@example.com"
+
+
+def test_proxy_routing_uses_no_private_httpx_import():
+    import inspect
+
+    from kentik_api.core import api_config
+
+    assert "httpx._" not in inspect.getsource(api_config)
+
+
+def test_environment_proxies_follow_the_proxy_variables(monkeypatch):
+    from kentik_api.core.api_config import _environment_proxies
+
+    for name in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY"):
+        monkeypatch.delenv(name, raising=False)
+        monkeypatch.delenv(name.lower(), raising=False)
+    monkeypatch.setenv("HTTPS_PROXY", "proxy.internal:3128")
+    monkeypatch.setenv("NO_PROXY", "api.example.com, localhost,10.0.0.1")
+
+    assert _environment_proxies() == {
+        "https://": "http://proxy.internal:3128",
+        "all://*api.example.com": None,
+        "all://localhost": None,
+        "all://10.0.0.1": None,
+    }
+
+    monkeypatch.setenv("NO_PROXY", "*")
+    assert _environment_proxies() == {}
