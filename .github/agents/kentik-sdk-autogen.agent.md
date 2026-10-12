@@ -1,6 +1,3 @@
-<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
-<!-- markdownlint-disable MD041 -- frontmatter must start the file for the agent-file format; the notice above still leads the file's visible content. -->
-
 ---
 name: Kentik SDK Autogen
 
@@ -18,6 +15,9 @@ tools: [read, search, edit, execute, todo]
 user-invocable: true
 
 ---
+
+<!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
+<!-- markdownlint-disable MD041 -- frontmatter must start the file for the agent-file format; the notice above still leads the file's visible content. -->
 
 # Kentik SDK Autogen
 

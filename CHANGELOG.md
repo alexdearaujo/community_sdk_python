@@ -9,7 +9,7 @@ between two releases, run
 [`scripts/release_notes.py`](scripts/release_notes.py):
 
 ```bash
-make release-notes SINCE=v1.0.7
+make release-notes
 ```
 
 Each release appends that list to its GitHub release notes. A pull request

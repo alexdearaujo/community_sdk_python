@@ -78,3 +78,10 @@ Before PR draft or ready-for-review transition:
 - Ensure deferred blockers are listed in PR description.
 
 Expected outcome: branch is ready for reviewer verification and CI parity.
+
+## 7. Closure notes (2026-10-12)
+
+- Tasks T001 to T064 are complete. Some descriptions carry a "deferred" note where the work moved to the ledger.
+- Evidence: [validation.md](../../reports/pre-pr-audit-2026-10-10/validation.md) holds one state table per phase and the final gate results.
+- Open risks: 57 entries in [deferred-risks.md](../../reports/pre-pr-audit-2026-10-10/deferred-risks.md). The PR summary block is at the end of [report.md](../../reports/pre-pr-audit-2026-10-10/report.md).
+- Not run: C4 and C5 live spot checks, and any live e2e suite. They need explicit opt-in.

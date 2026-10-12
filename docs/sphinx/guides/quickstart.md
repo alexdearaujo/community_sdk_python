@@ -12,7 +12,7 @@ Install the SDK and make your first API call in under five minutes.
 ## Install
 
 ```bash
-pip install kentik-api
+pip install -U "kentik-api>=2"
 ```
 
 Or with uv in a project:
