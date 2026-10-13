@@ -123,15 +123,14 @@ def build_grpc_request(
 
     `body` is the REST request body, already nested under the field the RPC's
     HTTP rule names. `fields` maps each path and query parameter's dotted field
-    path (for example "device.id") to its value; None means unset. The body
-    tolerates unknown keys as before, but a field path must resolve: an
-    argument that matches no field would otherwise be dropped from the call.
+    path (for example "device.id") to its value; None means unset. Both must
+    resolve: an unknown body key or enum name would otherwise be dropped, and a
+    full-replace update would then blank the field it was meant to set.
 
     `update_mask_from` names the body field of a PATCH whose request has an
     `update_mask`. grpc-gateway fills an unset mask from the keys sent there,
     and an empty mask on gRPC would replace every field instead.
     """
-    request = ParseDict(body or {}, message_cls(), ignore_unknown_fields=True)
     nested: dict[str, Any] = {}
     for field_path, value in fields.items():
         if value is None:
@@ -141,8 +140,9 @@ def build_grpc_request(
         for parent in parents:
             node = node.setdefault(parent, {})
         node[leaf] = value
-    # ParseDict merges into `request`, so path fields land inside the body.
     try:
+        request = ParseDict(body or {}, message_cls())
+        # ParseDict merges into `request`, so path fields land inside the body.
         request = ParseDict(nested, request)
     except ParseError as exc:
         raise ConfigurationError(

@@ -218,6 +218,32 @@ def test_build_grpc_request_rejects_a_field_the_request_does_not_declare(device_
         build_grpc_request(device_pb2.GetDeviceRequest, None, {"deviceid": "42"})
 
 
+@pytest.mark.parametrize(
+    ("body", "bad"),
+    [
+        ({"capability": {"dispalyName": "Edge"}}, "dispalyName"),
+        ({"capability": {"name": "snmp", "nmae": "x"}}, "nmae"),
+    ],
+)
+def test_build_grpc_request_rejects_an_unknown_body_key(capability_pb2, body, bad):
+    # R11: a dropped key left the update mask empty, so the PATCH would replace
+    # every field of the capability instead of failing.
+    with pytest.raises(ConfigurationError, match=bad):
+        build_grpc_request(
+            capability_pb2.UpdateCapabilityRequest,
+            body,
+            {"capability.name": "snmp"},
+            update_mask_from="capability",
+        )
+
+
+def test_build_grpc_request_rejects_an_unknown_enum_name(device_pb2):
+    with pytest.raises(ConfigurationError, match="DEVICE_VIEW_FUL"):
+        build_grpc_request(
+            device_pb2.ListDevicesRequest, {"view": "DEVICE_VIEW_FUL"}, {}
+        )
+
+
 @pytest.fixture
 def capability_pb2():
     import kentik_api.gen.pb_companions  # noqa: F401  -- registers proto dependencies

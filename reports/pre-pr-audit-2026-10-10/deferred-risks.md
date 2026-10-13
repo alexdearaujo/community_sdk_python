@@ -46,7 +46,7 @@ This ledger records findings that are intentionally deferred.
 | R7 | runtime | Empty-string credentials need a resolution-order decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R9 | runtime | Mutability rules for config objects need a design decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R10 | runtime | Needs one live call to settle. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R11 | runtime | Free-form bodies need schema-aware gRPC encoding. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R11 | runtime | Free-form bodies need schema-aware gRPC encoding. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R12 | runtime | The missing update_mask argument needs generator work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R13 | runtime | No consumer needs the error details today. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R14 | runtime | Wrapper generation hides the import cause. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -118,4 +118,10 @@ This ledger records findings that are intentionally deferred.
   grpc-gateway derives the mask from the PATCH body on REST, and
   `build_grpc_request` now does the same on gRPC. Only `UpdateCapability`
   qualifies today. `UpdateConfig` sends its `mask` in a `*` body. 43 entries
+  remain open.
+- R11 is resolved (2026-10-13). `build_grpc_request` parses the body
+  strictly, so an unknown key or enum name raises `ConfigurationError` before
+  the send. The proto descriptor is the schema, so no extra encoding is
+  needed. A recursive check found all 235 typed request model and message
+  pairs match, so only untyped `Dict` bodies (R16) can now fail. 42 entries
   remain open.

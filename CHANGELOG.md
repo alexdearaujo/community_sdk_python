@@ -128,6 +128,14 @@ by a number. The Service word stays when it is the object of the call
   `ExternalContext.jiraCloud` are now `Optional`, so alerts with an external
   context parse, and `set_external_context` accepts one context.
   `Nlri.prefix` (`bgp_monitoring`) is now `Optional[str]`.
+- **A misspelled key or enum value in a gRPC body raises an error.** gRPC
+  dropped a body key or enum name the proto does not declare. On a
+  full-replace update this blanked the field the caller meant to set, and on a
+  PATCH it left the update mask empty, so every field was replaced. gRPC now
+  raises `ConfigurationError` that names the bad key before it sends anything.
+  Typed request models are not affected: every field they declare exists in
+  the proto. Code that passes extra keys in a `Dict[str, Any]` body must remove
+  them.
 - **A gRPC PATCH updates only the fields you send.** For a PATCH whose body is
   one field, grpc-gateway builds the request's `update_mask` from the keys in
   the REST body. The gRPC call sent an empty mask instead, which updates every
