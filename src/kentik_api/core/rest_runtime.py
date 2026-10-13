@@ -79,6 +79,19 @@ def _payload_preview(payload: Any, *, max_chars: int = 200) -> str:
     return f"{rendered[:max_chars]}..."
 
 
+def _unusable_body(
+    operation_name: str, method: str, path: str, problem: str, preview: str
+) -> HTTPException:
+    """A success status whose body the SDK cannot use: the 502 a gateway would give."""
+    return HTTPException(
+        status_code=502,
+        message=f"{operation_name} returned {problem}",
+        method=method.upper(),
+        path=path,
+        details={"response_preview": preview},
+    )
+
+
 def parse_response_model(
     model_cls: type[_MODEL_T],
     body: Any,
@@ -88,7 +101,8 @@ def parse_response_model(
     path: str,
 ) -> _MODEL_T:
     if body is None:
-        return model_cls.model_construct()
+        # proto JSON encodes an empty message as {}, never null.
+        raise _unusable_body(operation_name, method, path, "a null body", "null")
 
     try:
         parsed = model_cls.model_validate(body)
@@ -120,7 +134,7 @@ def parse_response_model_list(
     path: str,
 ) -> list[_MODEL_T]:
     if body is None:
-        return []
+        raise _unusable_body(operation_name, method, path, "a null body", "null")
 
     if not isinstance(body, list):
         raise HTTPException(
@@ -339,15 +353,11 @@ def _handle_response(
     except ValueError:
         preview = response.text[:200].replace("\n", " ")
         content_type = response.headers.get("content-type", "unknown")
-        _raise_http_error(
-            (
-                f"{operation_name} returned non-JSON response "
-                f"(content-type={content_type}, preview={preview!r})"
-            ),
-            details={
-                "method": method.upper(),
-                "path": path,
-                "content_type": content_type,
-                "preview": preview,
-            },
-        )
+        # Not error_cls: its message blames the status code, which was a success.
+        raise _unusable_body(
+            operation_name,
+            method,
+            path,
+            f"a non-JSON body (content-type={content_type})",
+            preview,
+        ) from None

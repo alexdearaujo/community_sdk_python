@@ -304,3 +304,40 @@ def test_http_exception_survives_pickling():
     )
     assert restored.details == {"k": 1}
     assert str(restored) == str(original)
+
+
+@pytest.mark.parametrize(
+    ("response", "problem"),
+    [
+        (
+            httpx.Response(200, text="<html/>", headers={"content-type": "text/html"}),
+            "a non-JSON body (content-type=text/html)",
+        ),
+        (
+            httpx.Response(
+                200, content=b"null", headers={"content-type": "application/json"}
+            ),
+            "a null body",
+        ),
+        (httpx.Response(200, json=[{"site": {}}]), "data that does not match"),
+    ],
+)
+def test_a_success_status_with_an_unusable_body_raises_502(
+    monkeypatch: pytest.MonkeyPatch, response: httpx.Response, problem: str
+):
+    # R2: a non-JSON 200 blamed "status code: 200", and a null body returned an
+    # empty model that nothing validated.
+    from kentik_api import KentikAPI
+
+    monkeypatch.setattr(httpx.Client, "request", lambda self, *a, **k: response)
+    client = KentikAPI(email="dev@example.com", api_token="token", env_file=None)
+    try:
+        with pytest.raises(HTTPException) as exc:
+            client.site.get_site(id="1")
+    finally:
+        client.close()
+
+    assert type(exc.value) is HTTPException
+    assert exc.value.status_code == 502
+    assert f"GetSite returned {problem}" in str(exc.value)
+    assert "status code" not in str(exc.value)

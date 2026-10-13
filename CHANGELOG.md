@@ -128,6 +128,11 @@ by a number. The Service word stays when it is the object of the call
   `ExternalContext.jiraCloud` are now `Optional`, so alerts with an external
   context parse, and `set_external_context` accepts one context.
   `Nlri.prefix` (`bgp_monitoring`) is now `Optional[str]`.
+- **A success status with an unusable body raises a 502.** A REST success
+  whose body is not JSON raised the operation's error class with the message
+  "failed with status code: 200". A JSON `null` body returned an empty model
+  that nothing validated. Both now raise `HTTPException` with status 502 and
+  a message that names the problem, as a body of the wrong shape already did.
 - **Responses parse when the server leaves a message field unset.** A proto
   `REQUIRED` field binds the request, not the response, and an unset message
   field is absent from a response. So a policy without a baseline failed

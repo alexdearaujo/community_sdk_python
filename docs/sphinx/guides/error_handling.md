@@ -41,7 +41,7 @@ classDiagram
 | `ConfigurationError` | `KentikAPI(...)` gets missing credentials, an unknown region or protocol, or a non-positive timeout |
 | `AuthenticationError` | Credentials are rejected: a REST 401 or a gRPC `UNAUTHENTICATED` status |
 | `TransportError` | No response arrived: connection failure, timeout, or a gRPC `CANCELLED`, `DEADLINE_EXCEEDED`, or `UNAVAILABLE` status |
-| `HTTPException` | The API responded with a fault. Both transports raise the operation's generated subclass, such as `ListDevicesNotFoundError`. gRPC sets `grpc_status_code` as well |
+| `HTTPException` | The API responded with a fault. Both transports raise the operation's generated subclass, such as `ListDevicesNotFoundError`. gRPC sets `grpc_status_code` as well. A success status whose body the SDK cannot use (not JSON, JSON `null`, or the wrong shape) raises a plain `HTTPException` with status 502 |
 
 Every exception carries a `rate_limit` attribute with the quota the API
 reported on the failing call, or `None` when no response arrived. See the
