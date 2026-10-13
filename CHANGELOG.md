@@ -114,6 +114,12 @@ by a number. The Service word stays when it is the object of the call
 
 ### Fixed
 
+- **A REST timeout bounds the whole call.** httpx restarts its read timeout on
+  every chunk, so a server that kept sending a few bytes held a call with
+  `timeout=1.0` open for 11 seconds. A numeric `timeout` or `rest_timeout` is
+  now a total deadline: the call raises `TransportError` once the deadline
+  passes, at most one read later. A `rest_timeout` given as an `httpx.Timeout`
+  keeps httpx's per-phase meaning and sets no total deadline.
 - **`Alert.acknowledgement` is the acknowledgement object again.** The
   generator stripped a version prefix, and the enum `v202505AlertAcknowledgement`
   overwrote the object `AlertAcknowledgement`. Any alert with an acknowledgement

@@ -91,6 +91,10 @@ timeouts. It shares the client's connection and credentials. A config passed as
 `api_config_override` replaces the client's for that one call, so an override
 built any other way must carry its own credentials.
 
+A number is a total deadline for the call. To bound each REST phase separately
+instead, as httpx does, pass `rest_timeout=httpx.Timeout(...)`: a slow body then
+keeps the call open for as long as each read arrives in time.
+
 ## Next steps
 
 - [REST transport guide](rest.md)

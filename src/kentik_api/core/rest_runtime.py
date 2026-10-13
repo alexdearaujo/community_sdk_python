@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import time
 from enum import Enum
 from typing import Any, Dict, Optional, TypeVar
 from urllib.parse import quote
@@ -10,7 +11,7 @@ import httpx
 from pydantic import BaseModel, ValidationError
 
 from kentik_api.auth.credentials import auth_headers
-from kentik_api.core.api_config import APIConfig
+from kentik_api.core.api_config import DEADLINE_EXTENSION, APIConfig
 from kentik_api.core.rate_limit import RateLimit, attach_rate_limit, rate_limit_of
 from kentik_api.errors import (
     AuthenticationError,
@@ -236,6 +237,10 @@ def request_json(
         if value is not None
     }
 
+    extensions = {}
+    if api_config.rest_deadline is not None:
+        extensions[DEADLINE_EXTENSION] = time.monotonic() + api_config.rest_deadline
+
     try:
         response = api_config.client.request(
             method.lower(),
@@ -245,6 +250,7 @@ def request_json(
             json=json_body,
             # Per request, so a with_timeout() copy sharing this client applies its own.
             timeout=api_config.rest_timeout,
+            extensions=extensions,
         )
     except httpx.RequestError as exc:
         raise TransportError(
