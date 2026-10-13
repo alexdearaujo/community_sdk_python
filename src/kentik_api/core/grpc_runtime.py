@@ -64,6 +64,14 @@ def map_grpc_error(
 
     if code == grpc.StatusCode.UNAUTHENTICATED:
         return AuthenticationError(details)
+    if code == grpc.StatusCode.RESOURCE_EXHAUSTED and "larger than max" in details:
+        # Raised by the client when a response exceeds the receive limit. It is
+        # not Kentik's quota, so it must not read as a 429 that callers back off on.
+        return TransportError(
+            f"{method} {path} response exceeded the gRPC receive limit: {details}. "
+            "Pass grpc_options=[('grpc.max_receive_message_length', N)] to KentikAPI, "
+            "or use protocol='rest'."
+        )
     if code in _NO_RESPONSE_CODES:
         return TransportError(f"{method} {path} failed with {code_name}: {details}")
 

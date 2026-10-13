@@ -1,5 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import os
+from collections.abc import Sequence
+from typing import Any
 
 import httpx
 from dotenv import dotenv_values, find_dotenv
@@ -57,6 +59,7 @@ class KentikAPI(KentikClientMixin):
         timeout: float = 60.0,
         rest_timeout: httpx.Timeout | float | None = None,
         grpc_deadline: float | None = None,
+        grpc_options: Sequence[tuple[str, Any]] | None = None,
         env_file: str | os.PathLike[str] | None = ".env",
     ):
         """Connect to the Kentik API over REST or gRPC.
@@ -93,7 +96,10 @@ class KentikAPI(KentikClientMixin):
 
         if protocol.lower() == "grpc":
             self._transport = GrpcTransport(
-                self.credentials, target=grpc_target, api_config=api_config
+                self.credentials,
+                target=grpc_target,
+                api_config=api_config,
+                options=grpc_options,
             )
         elif protocol.lower() == "rest":
             self._transport = RestTransport(

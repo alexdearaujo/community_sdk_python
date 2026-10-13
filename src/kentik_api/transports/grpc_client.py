@@ -1,6 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import collections
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
+from typing import Any
 
 import grpc
 
@@ -9,6 +10,20 @@ from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
 from kentik_api.errors import ConfigurationError
 from kentik_api.transports.base import BaseTransport
+
+
+# grpcio keeps a 4 MiB receive limit, which a large account's list call exceeds.
+# 1.0.7 allowed 40 MiB, and REST has no such limit.
+_MAX_RECEIVE_BYTES = 40 * 1024 * 1024
+
+
+def channel_options(
+    extra: Sequence[tuple[str, Any]] | None = None,
+) -> list[tuple[str, Any]]:
+    """Channel options with the SDK defaults; a caller's option wins on the same key."""
+    merged = {"grpc.max_receive_message_length": _MAX_RECEIVE_BYTES}
+    merged.update(dict(extra or ()))
+    return list(merged.items())
 
 
 class _CallDetails(
@@ -82,6 +97,7 @@ class GrpcTransport(BaseTransport):
         credentials: KentikCredentials,
         target: str = "grpc.api.kentik.com:443",
         api_config: APIConfig | None = None,
+        options: Sequence[tuple[str, Any]] | None = None,
     ):
         self.api_config = api_config or APIConfig(
             auth_email=credentials.email,
@@ -94,7 +110,9 @@ class GrpcTransport(BaseTransport):
         composite_creds = grpc.composite_channel_credentials(channel_creds, call_creds)
 
         self.channel = grpc.intercept_channel(
-            grpc.secure_channel(target, composite_creds),
+            grpc.secure_channel(
+                target, composite_creds, options=channel_options(options)
+            ),
             _DefaultDeadlineInterceptor(self.api_config, self._is_closed),
         )
         self._closed = False

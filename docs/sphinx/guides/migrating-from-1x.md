@@ -78,6 +78,10 @@ credentials, and for how to keep them encrypted.
 
 See the [error handling guide](error_handling.md).
 
+A gRPC response larger than 40 MiB raises `TransportError`, not a 429. 1.x
+allowed 40 MB, and grpcio alone allows only 4 MiB. To change the limit, pass
+`grpc_options=[("grpc.max_receive_message_length", N)]` to `KentikAPI`.
+
 ## Features that 1.x had and 2.x does not
 
 | 1.x feature | In 2.x |

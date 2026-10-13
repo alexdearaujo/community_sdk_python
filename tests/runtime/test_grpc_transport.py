@@ -139,7 +139,7 @@ def test_init_wires_credentials_and_deadline_into_the_channel_and_close_releases
 
     raw, intercepted = object(), _FakeChannel()
 
-    def fake_secure_channel(target, creds):
+    def fake_secure_channel(target, creds, options=None):
         calls["target"] = target
         return raw
 
@@ -164,3 +164,88 @@ def test_init_wires_credentials_and_deadline_into_the_channel_and_close_releases
 
     transport.close()
     assert intercepted.closed
+
+
+def test_channel_options_raise_the_receive_limit_and_let_callers_override_it():
+    from kentik_api.transports.grpc_client import channel_options
+
+    assert dict(channel_options())["grpc.max_receive_message_length"] == 40 * 1024**2
+    assert dict(channel_options([("grpc.max_receive_message_length", 1)])) == {
+        "grpc.max_receive_message_length": 1
+    }
+
+
+def test_transport_passes_the_channel_options_to_grpc(monkeypatch):
+    seen = {}
+
+    def fake_secure_channel(target, creds, options=None):
+        seen["options"] = dict(options or ())
+        return object()
+
+    monkeypatch.setattr(grpc, "secure_channel", fake_secure_channel)
+    monkeypatch.setattr(grpc, "intercept_channel", lambda channel, _: channel)
+
+    GrpcTransport(CREDENTIALS, options=[("grpc.keepalive_time_ms", 5000)])
+
+    assert seen["options"]["grpc.keepalive_time_ms"] == 5000
+    assert seen["options"]["grpc.max_receive_message_length"] == 40 * 1024**2
+
+
+def _serve_blob(size: int):
+    handler = grpc.method_handlers_generic_handler(
+        "svc.Service",
+        {
+            "Op": grpc.unary_unary_rpc_method_handler(
+                lambda request, context: b"x" * size,
+                request_deserializer=lambda raw: raw,
+                response_serializer=lambda raw: raw,
+            )
+        },
+    )
+    from concurrent import futures
+
+    server = grpc.server(
+        futures.ThreadPoolExecutor(max_workers=1),
+        options=[("grpc.max_send_message_length", -1)],
+    )
+    server.add_generic_rpc_handlers((handler,))
+    port = server.add_insecure_port("127.0.0.1:0")
+    server.start()
+    return server, port
+
+
+def _call_blob(port: int, options):
+    from kentik_api.transports.grpc_client import channel_options
+
+    channel = grpc.insecure_channel(
+        f"127.0.0.1:{port}", options=channel_options(options)
+    )
+    stub = channel.unary_unary(
+        "/svc.Service/Op",
+        request_serializer=lambda raw: raw,
+        response_deserializer=lambda raw: raw,
+    )
+    try:
+        return call_grpc(stub, b"")[0]
+    finally:
+        channel.close()
+
+
+def test_a_five_megabyte_response_succeeds_with_the_default_limit():
+    server, port = _serve_blob(5 * 1024**2)
+    try:
+        assert len(_call_blob(port, None)) == 5 * 1024**2
+    finally:
+        server.stop(0)
+
+
+def test_a_response_over_the_limit_is_a_transport_error_not_a_quota_error():
+    from kentik_api.errors import HTTPException
+
+    server, port = _serve_blob(5 * 1024**2)
+    try:
+        with pytest.raises(TransportError, match="receive limit") as exc_info:
+            _call_blob(port, [("grpc.max_receive_message_length", 1024)])
+        assert not isinstance(exc_info.value, HTTPException)
+    finally:
+        server.stop(0)
