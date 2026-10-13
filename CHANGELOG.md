@@ -114,6 +114,11 @@ by a number. The Service word stays when it is the object of the call
 
 ### Fixed
 
+- **An empty credential argument raises an error.** `KentikAPI(email="")`
+  took the email from the environment or `.env` instead, so a caller whose
+  secret lookup returned nothing silently ran as another identity. An `email`
+  or `api_token` argument that is empty or only whitespace now raises
+  `ConfigurationError`. Omit the argument to read it from the environment.
 - **A REST timeout bounds the whole call.** httpx restarts its read timeout on
   every chunk, so a server that kept sending a few bytes held a call with
   `timeout=1.0` open for 11 seconds. A numeric `timeout` or `rest_timeout` is

@@ -500,7 +500,8 @@ task.
 environment variables, then the `env_file` arg (`.env` by default,
 searched upward from the cwd; `None` disables it). The file is read
 with `dotenv_values` into a dict, and only when a value is still
-missing. Never switch this back to `load_dotenv`: writing the file
+missing. An explicit argument that is empty or only whitespace raises
+`ConfigurationError` instead of falling back. Never switch this back to `load_dotenv`: writing the file
 into `os.environ` leaks secrets into every subprocess, which breaks
 callers that keep credentials encrypted (sops, age). Never read or print `.env` contents — it holds real
 credentials.
