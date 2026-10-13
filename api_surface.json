@@ -1518,12 +1518,12 @@
         },
         "ExternalContext": {
           "servicenow": {
-            "type": "ServiceNowContext",
-            "required": true
+            "type": "Optional[ServiceNowContext]",
+            "required": false
           },
           "jiraCloud": {
-            "type": "JiraCloudContext",
-            "required": true
+            "type": "Optional[JiraCloudContext]",
+            "required": false
           }
         },
         "FlowContext": {
@@ -4439,8 +4439,8 @@
             "required": true
           },
           "prefix": {
-            "type": "str",
-            "required": true
+            "type": "Optional[str]",
+            "required": false
           }
         },
         "RouteInfo": {

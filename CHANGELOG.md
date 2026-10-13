@@ -95,6 +95,13 @@ Each change below can stop an existing `except` clause or call from working.
   `AlertFilters.ackStates` uses `v202505AlertAcknowledgement`. Code that
   imported the enum as `AlertAcknowledgement` must import
   `v202505AlertAcknowledgement`.
+- **`oneof` members are optional.** The OpenAPI schema drops the proto `oneof`
+  grouping and marks every member as required, so no valid message could pass
+  validation. The generator now reads the `oneof` groups from the proto and
+  makes their members optional. `ExternalContext.servicenow` and
+  `ExternalContext.jiraCloud` are now `Optional`, so alerts with an external
+  context parse, and `set_external_context` accepts one context.
+  `Nlri.prefix` (`bgp_monitoring`) is now `Optional[str]`.
 - **A gRPC response over 4 MiB no longer reads as a quota error.** The channel
   now allows 40 MiB, and `KentikAPI(grpc_options=[...])` changes it. A response
   over the limit raises `TransportError`, not `HTTPException` with status 429.

@@ -27,8 +27,11 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _rewrite_grpc_imports,
     clean_schema_names,
     inline_request_body_refs,
+    oneof_members_by_definition,
     patched_swagger,
+    relax_oneof_required,
 )
+from google.protobuf import descriptor_pb2  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # _rewrite_grpc_imports: three protoc output styles
@@ -410,6 +413,67 @@ def test_patched_swagger_does_not_modify_original(tmp_path: Path):
     assert swagger_path.read_text() == original_text
     # The temp file must be cleaned up
     assert not tmp_path_arg.exists()
+
+
+# ---------------------------------------------------------------------------
+# oneof members: protoc-gen-openapiv2 marks every REQUIRED oneof member as
+# required, so the generated model rejects every valid message (B3).
+# ---------------------------------------------------------------------------
+
+
+def _descriptor_set() -> descriptor_pb2.FileDescriptorSet:
+    message = descriptor_pb2.DescriptorProto(name="ExternalContext")
+    message.oneof_decl.add(name="context")
+    message.oneof_decl.add(name="_note")
+    message.field.add(name="servicenow", json_name="servicenow", oneof_index=0)
+    message.field.add(name="jira_cloud", json_name="jiraCloud", oneof_index=0)
+    message.field.add(name="id", json_name="id")
+    message.field.add(
+        name="note", json_name="note", oneof_index=1, proto3_optional=True
+    )
+    nested = message.nested_type.add(name="Inner")
+    nested.oneof_decl.add(name="kind")
+    nested.field.add(name="a", json_name="a", oneof_index=0)
+    file = descriptor_pb2.FileDescriptorProto(package="kentik.alerting.v202505")
+    file.message_type.append(message)
+    return descriptor_pb2.FileDescriptorSet(file=[file])
+
+
+def test_oneof_members_by_definition_uses_swagger_names_and_skips_optional():
+    assert oneof_members_by_definition(_descriptor_set()) == {
+        "v202505ExternalContext": {"servicenow", "jiraCloud"},
+        "v202505ExternalContextInner": {"a"},
+    }
+
+
+def test_patched_swagger_drops_oneof_members_from_required(tmp_path: Path):
+    schema = {
+        "components": {
+            "schemas": {
+                "v202505ExternalContext": {
+                    "type": "object",
+                    "required": ["servicenow", "jiraCloud", "id"],
+                },
+                "v202505ExternalContextInner": {"required": ["a"]},
+            }
+        }
+    }
+    swagger_path = tmp_path / "alert.swagger.json"
+    swagger_path.write_text(json.dumps(schema), encoding="utf-8")
+    members = oneof_members_by_definition(_descriptor_set())
+
+    with patched_swagger(swagger_path, "v202505", members) as patched_path:
+        schemas = json.loads(patched_path.read_text())["components"]["schemas"]
+
+    assert schemas["ExternalContext"]["required"] == ["id"]
+    assert "required" not in schemas["ExternalContextInner"]
+
+
+def test_relax_oneof_required_does_not_mutate_input():
+    schema = {"definitions": {"v1Thing": {"required": ["a", "b"]}}}
+    result = relax_oneof_required(schema, {"v1Thing": {"a"}})
+    assert result["definitions"]["v1Thing"]["required"] == ["b"]
+    assert schema["definitions"]["v1Thing"]["required"] == ["a", "b"]
 
 
 # ---------------------------------------------------------------------------

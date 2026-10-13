@@ -25,6 +25,7 @@ from generation._shared import (
     SDK_OUTPUT_DIR,
 )
 from generation.endpoint_docs import EndpointDocsCollector
+from google.protobuf import descriptor_pb2
 
 # Configuration
 DEFAULT_REPO = "https://github.com/kentik/api-schema-public.git"
@@ -246,6 +247,59 @@ def inline_request_body_refs(schema: dict) -> dict:
     return schema
 
 
+def oneof_members_by_definition(
+    descriptors: descriptor_pb2.FileDescriptorSet,
+) -> dict[str, set[str]]:
+    """Maps each swagger definition name to the JSON names of its oneof members.
+
+    Keys follow protoc-gen-openapiv2's naming: the last package component, then
+    the message name chain (`v202505ExternalContext`). Proto3 `optional` fields
+    sit in synthetic oneofs and are left out.
+    """
+    members: dict[str, set[str]] = {}
+
+    def walk(prefix: str, messages) -> None:
+        for message in messages:
+            name = prefix + message.name
+            in_oneof = {
+                field.json_name
+                for field in message.field
+                if field.HasField("oneof_index") and not field.proto3_optional
+            }
+            if in_oneof:
+                members[name] = in_oneof
+            walk(name, message.nested_type)
+
+    for file in descriptors.file:
+        walk(file.package.rsplit(".", 1)[-1], file.message_type)
+    return members
+
+
+def relax_oneof_required(schema: dict, oneof_members: dict[str, set[str]]) -> dict:
+    """Returns a copy of schema with oneof members removed from `required`.
+
+    protoc-gen-openapiv2 drops the oneof grouping, so members marked REQUIRED
+    all land in `required` and no valid message can satisfy the model.
+    """
+    import copy
+
+    schema = copy.deepcopy(schema)
+    for section in _definition_sections(schema):
+        for name, definition in section.items():
+            members = oneof_members.get(name)
+            if not members or not isinstance(definition, dict):
+                continue
+            required = definition.get("required")
+            if not required:
+                continue
+            kept = [field for field in required if field not in members]
+            if kept:
+                definition["required"] = kept
+            else:
+                del definition["required"]
+    return schema
+
+
 def _definition_sections(schema: dict) -> list[dict]:
     sections: list[dict] = []
     if "definitions" in schema:
@@ -258,7 +312,11 @@ def _definition_sections(schema: dict) -> list[dict]:
 
 
 @contextlib.contextmanager
-def patched_swagger(swagger_path: Path, version: str):
+def patched_swagger(
+    swagger_path: Path,
+    version: str,
+    oneof_members: dict[str, set[str]] | None = None,
+):
     """Yields a temp-file path containing the schema with clean names and inlined request bodies.
 
     The original swagger_path is never modified, so local schema checkouts stay clean.
@@ -266,6 +324,8 @@ def patched_swagger(swagger_path: Path, version: str):
     from tempfile import NamedTemporaryFile
 
     schema = json.loads(swagger_path.read_text(encoding="utf-8"))
+    # Before clean_schema_names: oneof_members is keyed by the prefixed names.
+    schema = relax_oneof_required(schema, oneof_members or {})
     schema = clean_schema_names(schema, version)
     schema = inline_request_body_refs(schema)
     with NamedTemporaryFile(
@@ -444,20 +504,9 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                 )
 
                 # -----------------------------------------------------------------
-                # 1. GENERATE OPENAPI (REST)
+                # 1. GENERATE PROTOBUF (gRPC), first: REST models need its oneofs
                 # -----------------------------------------------------------------
-                with patched_swagger(swagger_path, version) as tmp_swagger:
-                    run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
-
-                # Extract per-operation documentation now, while the swagger
-                # file is still available -- rendered as real Sphinx text
-                # later (endpoint_docs_collector.render()), once wrapper
-                # methods exist.
-                endpoint_docs_collector.extract(service, swagger_path)
-
-                # -----------------------------------------------------------------
-                # 2. GENERATE PROTOBUF (gRPC)
-                # -----------------------------------------------------------------
+                oneof_members: dict[str, set[str]] = {}
                 swagger_rel_parent = swagger_path.relative_to(openapi_base).parent
                 proto_dir = proto_base / "kentik" / swagger_rel_parent
                 print(f"    Hunting for protos in: {proto_dir}")
@@ -498,6 +547,8 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                 f"--python_out={tmp_pb_path}",
                                 f"--grpc_python_out={tmp_pb_path}",
                                 f"--pyi_out={tmp_pb_path}",
+                                f"--descriptor_set_out={tmp_pb_path / 'descriptors.pb'}",
+                                "--include_imports",
                             ]
                             cmd.extend(rel_proto_files)
 
@@ -523,6 +574,12 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                     content = _rewrite_grpc_imports(content)
                                     pb_file.write_text(content, encoding="utf-8")
 
+                                oneof_members = oneof_members_by_definition(
+                                    descriptor_pb2.FileDescriptorSet.FromString(
+                                        (tmp_pb_path / "descriptors.pb").read_bytes()
+                                    )
+                                )
+
                             except subprocess.CalledProcessError as e:
                                 print(
                                     f"    ❌ Protobuf generation failed for {service}!"
@@ -542,6 +599,20 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                         )
                 else:
                     print("    ⚠️ No proto directory found, skipping gRPC.")
+
+                # -----------------------------------------------------------------
+                # 2. GENERATE OPENAPI (REST)
+                # -----------------------------------------------------------------
+                with patched_swagger(
+                    swagger_path, version, oneof_members
+                ) as tmp_swagger:
+                    run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
+
+                # Extract per-operation documentation now, while the swagger
+                # file is still available -- rendered as real Sphinx text
+                # later (endpoint_docs_collector.render()), once wrapper
+                # methods exist.
+                endpoint_docs_collector.extract(service, swagger_path)
 
         for service, swagger_paths in service_swagger_paths.items():
             service_dir = SDK_OUTPUT_DIR / service
