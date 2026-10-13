@@ -103,7 +103,7 @@ class MkpServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreatePackageRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -177,7 +177,7 @@ class MkpServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdatePackageRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"package.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -282,7 +282,7 @@ class MkpServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.CreateTenantRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -356,7 +356,7 @@ class MkpServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateTenantRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"tenant.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -465,7 +465,7 @@ class MkpServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_3.CreateTenantUserRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"user.tenant_id": tenantId},
             )
             _resp, _rate_limit = call_grpc(
@@ -507,7 +507,7 @@ class MkpServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_3.UpdateTenantUserRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"user.tenant_id": tenantId, "user.id": id},
             )
             _resp, _rate_limit = call_grpc(

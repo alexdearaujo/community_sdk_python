@@ -128,6 +128,19 @@ by a number. The Service word stays when it is the object of the call
   `ExternalContext.jiraCloud` are now `Optional`, so alerts with an external
   context parse, and `set_external_context` accepts one context.
   `Nlri.prefix` (`bgp_monitoring`) is now `Optional[str]`.
+- **Request bodies send only the fields you set.** REST sent `null` for every
+  optional field left unset. On a PATCH, grpc-gateway builds the update mask
+  from the body keys, so those nulls cleared the fields. Both transports now
+  send exactly the fields set on the model. To clear a field, set it to `None`
+  explicitly.
+- **Four untyped request bodies are now models.** Their `data` parameter took
+  `Dict[str, Any]`, because the schema declares their bodies inline. `data`
+  now takes a typed model:
+  - `kagent` `upsert_agent_capability`: `AgentCapabilityServiceUpsertAgentCapabilityBody`
+  - `kagent` `update_agent`: `AgentServiceUpdateAgentBody`
+  - `kagent` `capability_admin_service__update_capability`:
+    `CapabilityAdminServiceUpdateCapabilityBody`
+  - `rbux` `update_scope`: `ScopeServiceUpdateScopeBody`
 - **A misspelled key or enum value in a gRPC body raises an error.** gRPC
   dropped a body key or enum name the proto does not declare. On a
   full-replace update this blanked the field the caller meant to set, and on a

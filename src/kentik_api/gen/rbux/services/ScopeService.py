@@ -26,6 +26,7 @@ from ..models import (  # noqa: F401
     Scope,
     ScopeConfig,
     ScopeDimensions,
+    ScopeServiceUpdateScopeBody,
     UpdateScopeResponse,
     protobufAny,
     rpcStatus,
@@ -75,7 +76,7 @@ def CreateScope(
         path="/rbux/v202607alpha1/scopes",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateScope",
@@ -119,7 +120,10 @@ def GetScope(
 
 
 def UpdateScope(
-    api_config_override: Optional[APIConfig] = None, *, id: str, data: Dict[str, Any]
+    api_config_override: Optional[APIConfig] = None,
+    *,
+    id: str,
+    data: ScopeServiceUpdateScopeBody,
 ) -> UpdateScopeResponse:
     query_params: Dict[str, Any] = {}
 
@@ -130,7 +134,7 @@ def UpdateScope(
         path=f"/rbux/v202607alpha1/scopes/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data,
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateScope",

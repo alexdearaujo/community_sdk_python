@@ -105,7 +105,7 @@ class InterfaceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateInterfaceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -179,7 +179,7 @@ class InterfaceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateInterfaceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"interface.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -253,7 +253,7 @@ class InterfaceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.ManualClassifyRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(

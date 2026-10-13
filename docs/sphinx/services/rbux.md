@@ -261,7 +261,7 @@ sequenceDiagram
     participant W as client.rbux
     participant API as Kentik REST API
 
-    C->>W: update_scope(id="id-example", data=Dict[str, Any](...))
+    C->>W: update_scope(id="id-example", data=ScopeServiceUpdateScopeBody(...))
     W->>API: PUT /rbux/v202607alpha1/scopes/{id}
     alt success
         API-->>W: v202607alpha1UpdateScopeResponse (JSON)
@@ -283,7 +283,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_scope(id="id-example", data=Dict[str, Any](...))
+    C->>W: update_scope(id="id-example", data=ScopeServiceUpdateScopeBody(...))
     W->>R: build_grpc_request(UpdateScopeRequest, arguments)
     R->>API: ScopeService/UpdateScope (gRPC/TLS)
     alt success
@@ -319,7 +319,7 @@ from kentik_api.client import KentikAPI
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.rbux.update_scope(
     id="id-example",
-    data=Dict[str, Any](...),
+    data=ScopeServiceUpdateScopeBody(...),
 )
 ```
 
@@ -402,7 +402,7 @@ response = client.rbux.delete_scope(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 17 models)</summary>
+<summary>Model relationships (2 of 18 models)</summary>
 
 ```mermaid
 classDiagram
@@ -443,6 +443,10 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.rbux.models.ScopeDimensions
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.rbux.models.ScopeServiceUpdateScopeBody
 ```
 
 ```{eval-rst}

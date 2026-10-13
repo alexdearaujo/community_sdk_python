@@ -81,7 +81,7 @@ class KmetaServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateServiceNowConfigRequest,
-                {"config": data.model_dump(by_alias=True, exclude_none=True)},
+                {"config": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"cid": cid},
             )
             _resp, _rate_limit = call_grpc(
@@ -160,7 +160,7 @@ class KmetaServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateServiceNowConfigRequest,
-                {"config": data.model_dump(by_alias=True, exclude_none=True)},
+                {"config": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"cid": cid, "id": id},
             )
             _resp, _rate_limit = call_grpc(

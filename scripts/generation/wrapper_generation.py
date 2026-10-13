@@ -453,7 +453,7 @@ def _generate_service_wrappers():
                 body_expr = (
                     "dict(data)"
                     if data_annotation.lstrip().lower().startswith("dict[")
-                    else "data.model_dump(by_alias=True, exclude_none=True)"
+                    else "data.model_dump(by_alias=True, exclude_unset=True)"
                 )
                 call_args = [
                     f"{arg}={arg}" for arg in arg_names if arg != "api_config_override"

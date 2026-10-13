@@ -87,7 +87,7 @@ class DeviceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateDeviceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -126,7 +126,7 @@ class DeviceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateDevicesRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -165,7 +165,7 @@ class DeviceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteDevicesRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -204,7 +204,7 @@ class DeviceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateDevicesRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -329,7 +329,7 @@ class DeviceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateDeviceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"device.id": deviceid},
             )
             _resp, _rate_limit = call_grpc(
@@ -404,7 +404,7 @@ class DeviceServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateDeviceLabelsRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(

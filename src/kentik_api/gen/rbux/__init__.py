@@ -13,6 +13,7 @@ from .models import (  # noqa: F401
     Scope,
     ScopeConfig,
     ScopeDimensions,
+    ScopeServiceUpdateScopeBody,
     UpdateScopeResponse,
     protobufAny,
     rpcStatus,

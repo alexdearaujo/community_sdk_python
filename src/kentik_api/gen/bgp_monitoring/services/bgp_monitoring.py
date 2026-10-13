@@ -90,7 +90,7 @@ class BgpMonitoringServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateMonitorRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -164,7 +164,7 @@ class BgpMonitoringServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateMonitorRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"monitor.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -239,7 +239,7 @@ class BgpMonitoringServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.SetMonitorStatusRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -279,7 +279,7 @@ class BgpMonitoringServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.GetMetricsForTargetRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -318,7 +318,7 @@ class BgpMonitoringServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.GetRoutesForTargetRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(

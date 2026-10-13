@@ -116,7 +116,7 @@ class CustomDimensionServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateCustomDimensionRequest,
-                {"dimension": data.model_dump(by_alias=True, exclude_none=True)},
+                {"dimension": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
@@ -193,7 +193,7 @@ class CustomDimensionServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreatePopulatorRequest,
-                {"populator": data.model_dump(by_alias=True, exclude_none=True)},
+                {"populator": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
@@ -282,7 +282,7 @@ class CustomDimensionServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdatePopulatorRequest,
-                {"populator": data.model_dump(by_alias=True, exclude_none=True)},
+                {"populator": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"custom_dimension_id": customDimensionId, "populator_id": populatorId},
             )
             _resp, _rate_limit = call_grpc(
@@ -417,7 +417,7 @@ class CustomDimensionServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateCustomDimensionRequest,
-                {"dimension": data.model_dump(by_alias=True, exclude_none=True)},
+                {"dimension": data.model_dump(by_alias=True, exclude_unset=True)},
                 {},
             )
             _resp, _rate_limit = call_grpc(

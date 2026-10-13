@@ -118,7 +118,7 @@ class AssetTagsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateTagKeyRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -192,7 +192,7 @@ class AssetTagsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateTagKeyRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -307,7 +307,7 @@ class AssetTagsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.SetTagValuesRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -346,7 +346,7 @@ class AssetTagsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteTagValuesRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(

@@ -77,7 +77,7 @@ class SiteServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateSiteMarketRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -151,7 +151,7 @@ class SiteServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateSiteMarketRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"site_market.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -256,7 +256,7 @@ class SiteServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateSiteRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -328,7 +328,7 @@ class SiteServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateSiteRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"site.id": id},
             )
             _resp, _rate_limit = call_grpc(

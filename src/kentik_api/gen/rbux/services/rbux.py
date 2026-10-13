@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union, cast
+from typing import Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict
 
@@ -77,7 +77,7 @@ class RbuxServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateScopeRequest,
-                {"scope": data.model_dump(by_alias=True, exclude_none=True)},
+                {"scope": data.model_dump(by_alias=True, exclude_unset=True)},
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -142,7 +142,7 @@ class RbuxServiceWrapper:
         *,
         api_config_override: Optional[APIConfig] = None,
         id: str,
-        data: Dict[str, Any],
+        data: rest_models.ScopeServiceUpdateScopeBody,
     ) -> rest_models.UpdateScopeResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
@@ -151,7 +151,7 @@ class RbuxServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateScopeRequest,
-                {"scope": dict(data)},
+                {"scope": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"scope.id": id},
             )
             _resp, _rate_limit = call_grpc(

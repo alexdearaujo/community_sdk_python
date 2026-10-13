@@ -199,8 +199,13 @@ def _fix_path_parameters(content: str) -> str:
     )
 
 
+# Only the fields the caller set: grpc-gateway builds a PATCH's update mask from
+# the body keys, so a null for every unset field would clear them all.
+_BODY_DUMP = "data.model_dump(by_alias=True, exclude_unset=True)"
+
+
 def _inject_data_body(content: str) -> str:
-    """Injects json_body=data.model_dump(by_alias=True) into request_json() calls that have a data param."""
+    """Injects json_body=<_BODY_DUMP> into request_json() calls that have a data param."""
     functions = re.split(r"^(?=async def |def )", content, flags=re.MULTILINE)
     fixed_funcs = []
     for func in functions:
@@ -216,17 +221,17 @@ def _inject_data_body(content: str) -> str:
             if "request_json(" in func:
                 func = re.sub(
                     r"(query_params=query_params)(,?)(\s*)",
-                    r"\1,\n                json_body=data.model_dump(by_alias=True)\3",
+                    rf"\1,\n                json_body={_BODY_DUMP}\3",
                     func,
                     count=1,
                 )
             else:
                 func = re.sub(
                     r"(params=query_params)(,?)(\s*\))",
-                    r"\1, json=data.model_dump(by_alias=True)\3",
+                    rf"\1, json={_BODY_DUMP}\3",
                     func,
                 )
-        func = re.sub(r"\bdata\.dict\(\)", "data.model_dump(by_alias=True)", func)
+        func = re.sub(r"\bdata\.dict\(\)", _BODY_DUMP, func)
         if not has_data_param and has_json_kwarg:
             func = re.sub(r",\s*json=data\.model_dump\([^)]*\)", "", func)
             func = re.sub(r"json=data\.model_dump\([^)]*\)", "", func)

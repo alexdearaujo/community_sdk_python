@@ -68,7 +68,7 @@ def SearchNotificationChannels(
         path="/notification_channel/v202210/notification_channels/search",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="SearchNotificationChannels",

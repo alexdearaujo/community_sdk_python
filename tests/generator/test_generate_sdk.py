@@ -29,6 +29,7 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _qualify_colliding_imports,
     _rewrite_grpc_imports,
     clean_schema_names,
+    hoist_inline_request_bodies,
     inline_request_body_refs,
     oneof_members_by_definition,
     patched_swagger,
@@ -397,6 +398,56 @@ def test_inline_request_body_refs_does_not_mutate_input():
     post = schema["paths"]["/things"]["post"]
     inline_request_body_refs(schema)
     assert "$ref" in post["requestBody"]
+
+
+def _inline_body_schema() -> dict:
+    return {
+        "paths": {
+            "/capabilities/{capability.name}": {
+                "patch": {
+                    "operationId": "CapabilityAdminService_UpdateCapability",
+                    "tags": ["CapabilityAdminService"],
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "capability",
+                                    "properties": {"displayName": {"type": "string"}},
+                                    "required": ["capability"],
+                                }
+                            }
+                        }
+                    },
+                }
+            }
+        },
+        "components": {"schemas": {}},
+    }
+
+
+def test_inline_request_body_is_hoisted_to_a_named_schema():
+    # R16: an inline object body became Dict[str, Any] in the generated wrapper.
+    schema = hoist_inline_request_bodies(_inline_body_schema())
+
+    name = "CapabilityAdminServiceUpdateCapabilityBody"
+    media = schema["paths"]["/capabilities/{capability.name}"]["patch"]["requestBody"]
+    assert media["content"]["application/json"]["schema"] == {
+        "$ref": f"#/components/schemas/{name}"
+    }
+    # `capability` wraps the body on the wire and is not one of its properties.
+    assert schema["components"]["schemas"][name] == {
+        "type": "object",
+        "properties": {"displayName": {"type": "string"}},
+    }
+
+
+def test_hoisting_refuses_to_overwrite_an_existing_schema():
+    schema = _inline_body_schema()
+    schema["components"]["schemas"]["CapabilityAdminServiceUpdateCapabilityBody"] = {}
+
+    with pytest.raises(ValueError, match="exists"):
+        hoist_inline_request_bodies(schema)
 
 
 def test_patched_swagger_does_not_modify_original(tmp_path: Path):

@@ -3,10 +3,19 @@
 
 from .Agent import Agent as Agent
 from .AgentCapability import AgentCapability as AgentCapability
+from .AgentCapabilityServiceUpsertAgentCapabilityBody import (
+    AgentCapabilityServiceUpsertAgentCapabilityBody as AgentCapabilityServiceUpsertAgentCapabilityBody,
+)
 from .AgentRegistration import AgentRegistration as AgentRegistration
+from .AgentServiceUpdateAgentBody import (
+    AgentServiceUpdateAgentBody as AgentServiceUpdateAgentBody,
+)
 from .AuthorizeResponse import AuthorizeResponse as AuthorizeResponse
 from .BootstrapInfo import BootstrapInfo as BootstrapInfo
 from .Capability import Capability as Capability
+from .CapabilityAdminServiceUpdateCapabilityBody import (
+    CapabilityAdminServiceUpdateCapabilityBody as CapabilityAdminServiceUpdateCapabilityBody,
+)
 from .CapabilityDistro import CapabilityDistro as CapabilityDistro
 from .CapabilityRelease import CapabilityRelease as CapabilityRelease
 from .CapabilitySupportedDistro import (

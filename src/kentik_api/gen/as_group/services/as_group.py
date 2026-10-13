@@ -77,7 +77,7 @@ class AsGroupServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateASGroupRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -151,7 +151,7 @@ class AsGroupServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateASGroupRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"as_group.id": asGroupid},
             )
             _resp, _rate_limit = call_grpc(

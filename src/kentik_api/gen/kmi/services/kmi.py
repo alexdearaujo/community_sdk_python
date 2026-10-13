@@ -164,7 +164,7 @@ class KmiServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetASNDetailsRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"market_id": marketId, "asn": asn, "type": type},
             )
             _resp, _rate_limit = call_grpc(
@@ -209,7 +209,7 @@ class KmiServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetRankingsRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"market_id": marketId, "rank_type": rankType, "ip": ip},
             )
             _resp, _rate_limit = call_grpc(

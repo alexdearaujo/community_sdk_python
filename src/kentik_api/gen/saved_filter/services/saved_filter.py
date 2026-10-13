@@ -46,7 +46,7 @@ class SavedFilterServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateSavedFilterRequest,
-                {"filter": data.model_dump(by_alias=True, exclude_none=True)},
+                {"filter": data.model_dump(by_alias=True, exclude_unset=True)},
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -120,7 +120,7 @@ class SavedFilterServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateSavedFilterRequest,
-                {"filter": data.model_dump(by_alias=True, exclude_none=True)},
+                {"filter": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(

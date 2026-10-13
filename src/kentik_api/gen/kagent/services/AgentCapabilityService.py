@@ -19,10 +19,13 @@ from ..error import (
 from ..models import (  # noqa: F401
     Agent,
     AgentCapability,
+    AgentCapabilityServiceUpsertAgentCapabilityBody,
     AgentRegistration,
+    AgentServiceUpdateAgentBody,
     AuthorizeResponse,
     BootstrapInfo,
     Capability,
+    CapabilityAdminServiceUpdateCapabilityBody,
     CapabilityDistro,
     CapabilityRelease,
     CapabilitySupportedDistro,
@@ -169,7 +172,7 @@ def UpsertAgentCapability(
     *,
     agentId: str,
     capabilityname: str,
-    data: Dict[str, Any],
+    data: AgentCapabilityServiceUpsertAgentCapabilityBody,
     mask: Optional[str] = None,
 ) -> UpsertAgentCapabilityResponse:
     query_params: Dict[str, Any] = {"mask": mask}
@@ -181,7 +184,7 @@ def UpsertAgentCapability(
         path=f"/kagent/v202401/agents/{path_segment(agentId)}/capabilities/{path_segment(capabilityname)}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data,
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpsertAgentCapability",

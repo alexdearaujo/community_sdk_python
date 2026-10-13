@@ -139,7 +139,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.AlertAutoAckServiceCreateRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -178,7 +178,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.AlertAutoAckServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -288,7 +288,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.AlertAutoAckServiceReplaceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"auto_ack.id": autoAckid},
             )
             _resp, _rate_limit = call_grpc(
@@ -328,7 +328,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -367,7 +367,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceClearRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -443,7 +443,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceAddCommentRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"alert_id": alertId},
             )
             _resp, _rate_limit = call_grpc(
@@ -484,7 +484,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceSetExternalContextRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"alert_id": alertId},
             )
             _resp, _rate_limit = call_grpc(
@@ -559,7 +559,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceAckRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -600,7 +600,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceUnAckRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -640,7 +640,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_7.AlertSilenceNotificationsServiceCreateRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -679,7 +679,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_7.AlertSilenceNotificationsServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -791,7 +791,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_7.AlertSilenceNotificationsServiceReplaceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"silence.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -1106,7 +1106,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_5.MitigationsServiceCreateRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1213,7 +1213,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_5.MitigationsServiceActRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"action": action},
             )
             _resp, _rate_limit = call_grpc(
@@ -1289,7 +1289,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_6.PolicyServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1371,7 +1371,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_6.PolicyServiceDisableRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -1414,7 +1414,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_6.PolicyServiceEnableRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -1455,7 +1455,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_8.SuppressionServiceCreateRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1494,7 +1494,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_8.SuppressionServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1602,7 +1602,7 @@ class AlertingServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_8.SuppressionServiceReplaceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"suppression.id": id},
             )
             _resp, _rate_limit = call_grpc(

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import List, Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict
 
@@ -222,7 +222,7 @@ class KagentServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         agentId: str,
         capabilityname: str,
-        data: Dict[str, Any],
+        data: rest_models.AgentCapabilityServiceUpsertAgentCapabilityBody,
         mask: Optional[str] = None,
     ) -> rest_models.UpsertAgentCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -232,7 +232,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpsertAgentCapabilityRequest,
-                {"capability": dict(data)},
+                {"capability": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"agent_id": agentId, "capability.name": capabilityname, "mask": mask},
             )
             _resp, _rate_limit = call_grpc(
@@ -324,7 +324,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.CreateAgentRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -397,7 +397,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.GenerateInstallCommandsRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -510,7 +510,7 @@ class KagentServiceWrapper:
         *,
         api_config_override: Optional[APIConfig] = None,
         agentid: str,
-        data: Dict[str, Any],
+        data: rest_models.AgentServiceUpdateAgentBody,
         mask: Optional[str] = None,
     ) -> rest_models.UpdateAgentResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -520,7 +520,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateAgentRequest,
-                {"agent": dict(data)},
+                {"agent": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"agent.id": agentid, "mask": mask},
             )
             _resp, _rate_limit = call_grpc(
@@ -594,7 +594,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_4.CreateCapabilityRequest,
-                {"capability": data.model_dump(by_alias=True, exclude_none=True)},
+                {"capability": data.model_dump(by_alias=True, exclude_unset=True)},
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -693,7 +693,7 @@ class KagentServiceWrapper:
         *,
         api_config_override: Optional[APIConfig] = None,
         capabilityname: str,
-        data: Dict[str, Any],
+        data: rest_models.CapabilityAdminServiceUpdateCapabilityBody,
     ) -> rest_models.UpdateCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
@@ -702,7 +702,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_4.UpdateCapabilityRequest,
-                {"capability": dict(data)},
+                {"capability": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"capability.name": capabilityname},
                 update_mask_from="capability",
             )
@@ -897,7 +897,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_5.CreateConfigRequest,
-                {"config": data.model_dump(by_alias=True, exclude_none=True)},
+                {"config": data.model_dump(by_alias=True, exclude_unset=True)},
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1005,7 +1005,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_5.UpdateConfigRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"config.name": configname},
             )
             _resp, _rate_limit = call_grpc(
@@ -1078,7 +1078,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_6.CreateProvisioningTokenRequest,
-                {"token": data.model_dump(by_alias=True, exclude_none=True)},
+                {"token": data.model_dump(by_alias=True, exclude_unset=True)},
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1188,7 +1188,7 @@ class KagentServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_6.RevokeProvisioningTokenRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"token": token},
             )
             _resp, _rate_limit = call_grpc(

@@ -79,7 +79,7 @@ class CloudExportServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateCloudExportRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -153,7 +153,7 @@ class CloudExportServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateCloudExportRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"export.id": exportid},
             )
             _resp, _rate_limit = call_grpc(

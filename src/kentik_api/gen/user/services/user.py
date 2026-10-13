@@ -77,7 +77,7 @@ class UserServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateUserRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -149,7 +149,7 @@ class UserServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateUserRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"user.id": id},
             )
             _resp, _rate_limit = call_grpc(

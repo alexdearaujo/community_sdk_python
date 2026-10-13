@@ -79,7 +79,7 @@ class CustomApplicationServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateCustomApplicationRequest,
-                {"application": data.model_dump(by_alias=True, exclude_none=True)},
+                {"application": data.model_dump(by_alias=True, exclude_unset=True)},
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -158,7 +158,7 @@ class CustomApplicationServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateCustomApplicationRequest,
-                {"application": data.model_dump(by_alias=True, exclude_none=True)},
+                {"application": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"custom_application_id": customApplicationId},
             )
             _resp, _rate_limit = call_grpc(

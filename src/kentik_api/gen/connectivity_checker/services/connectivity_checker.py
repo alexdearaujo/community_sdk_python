@@ -46,7 +46,7 @@ class ConnectivityCheckerServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateConnectivityReportRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(

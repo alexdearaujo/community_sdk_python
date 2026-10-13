@@ -20,10 +20,13 @@ from ..error import (
 from ..models import (  # noqa: F401
     Agent,
     AgentCapability,
+    AgentCapabilityServiceUpsertAgentCapabilityBody,
     AgentRegistration,
+    AgentServiceUpdateAgentBody,
     AuthorizeResponse,
     BootstrapInfo,
     Capability,
+    CapabilityAdminServiceUpdateCapabilityBody,
     CapabilityDistro,
     CapabilityRelease,
     CapabilitySupportedDistro,
@@ -117,7 +120,7 @@ def CapabilityAdminService_CreateCapability(
         path="/kagent/v202401/capabilities",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityAdminService_CreateCapability",
@@ -191,7 +194,7 @@ def CapabilityAdminService_UpdateCapability(
     api_config_override: Optional[APIConfig] = None,
     *,
     capabilityname: str,
-    data: Dict[str, Any],
+    data: CapabilityAdminServiceUpdateCapabilityBody,
 ) -> UpdateCapabilityResponse:
     query_params: Dict[str, Any] = {}
 
@@ -202,7 +205,7 @@ def CapabilityAdminService_UpdateCapability(
         path=f"/kagent/v202401/capabilities/{path_segment(capabilityname)}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data,
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityAdminService_UpdateCapability",

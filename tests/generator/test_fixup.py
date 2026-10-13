@@ -374,4 +374,4 @@ def test_inject_data_body_adds_json_body_param():
             )
         """)
     result = _inject_data_body(content)
-    assert "json_body=data.model_dump(by_alias=True)" in result
+    assert "json_body=data.model_dump(by_alias=True, exclude_unset=True)" in result

@@ -425,7 +425,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: update_agent(agentid="agentid-example", data=Dict[str, Any](...))
+    C->>W: update_agent(agentid="agentid-example", data=AgentServiceUpdateAgentBody(...))
     W->>API: PATCH /kagent/v202401/agents/{agent.id}
     alt success
         API-->>W: v202401UpdateAgentResponse (JSON)
@@ -447,7 +447,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_agent(agentid="agentid-example", data=Dict[str, Any](...))
+    C->>W: update_agent(agentid="agentid-example", data=AgentServiceUpdateAgentBody(...))
     W->>R: build_grpc_request(UpdateAgentRequest, arguments)
     R->>API: AgentService/UpdateAgent (gRPC/TLS)
     alt success
@@ -484,7 +484,7 @@ from kentik_api.client import KentikAPI
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.kagent.update_agent(
     agentid="agentid-example",
-    data=Dict[str, Any](...),
+    data=AgentServiceUpdateAgentBody(...),
 )
 ```
 
@@ -735,7 +735,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: upsert_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example", data=Dict[str, Any](...))
+    C->>W: upsert_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example", data=AgentCapabilityServiceUpsertAgentCapabilityBody(...))
     W->>API: PATCH /kagent/v202401/agents/{agentId}/capabilities/{capability.name}
     alt success
         API-->>W: v202401UpsertAgentCapabilityResponse (JSON)
@@ -757,7 +757,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: upsert_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example", data=Dict[str, Any](...))
+    C->>W: upsert_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example", data=AgentCapabilityServiceUpsertAgentCapabilityBody(...))
     W->>R: build_grpc_request(UpsertAgentCapabilityRequest, arguments)
     R->>API: AgentCapabilityService/UpsertAgentCapability (gRPC/TLS)
     alt success
@@ -796,7 +796,7 @@ client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from 
 response = client.kagent.upsert_agent_capability(
     agentId="agentId-example",
     capabilityname="capabilityname-example",
-    data=Dict[str, Any](...),
+    data=AgentCapabilityServiceUpsertAgentCapabilityBody(...),
 )
 ```
 
@@ -1106,7 +1106,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_admin_service__update_capability(capabilityname="capabilityname-example", data=Dict[str, Any](...))
+    C->>W: capability_admin_service__update_capability(capabilityname="capabilityname-example", data=CapabilityAdminServiceUpdateCapabilityBody(...))
     W->>API: PATCH /kagent/v202401/capabilities/{capability.name}
     alt success
         API-->>W: v202401UpdateCapabilityResponse (JSON)
@@ -1128,7 +1128,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_admin_service__update_capability(capabilityname="capabilityname-example", data=Dict[str, Any](...))
+    C->>W: capability_admin_service__update_capability(capabilityname="capabilityname-example", data=CapabilityAdminServiceUpdateCapabilityBody(...))
     W->>R: build_grpc_request(UpdateCapabilityRequest, arguments)
     R->>API: CapabilityAdminService/UpdateCapability (gRPC/TLS)
     alt success
@@ -1164,7 +1164,7 @@ from kentik_api.client import KentikAPI
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
 response = client.kagent.capability_admin_service__update_capability(
     capabilityname="capabilityname-example",
-    data=Dict[str, Any](...),
+    data=CapabilityAdminServiceUpdateCapabilityBody(...),
 )
 ```
 
@@ -2149,7 +2149,7 @@ response = client.kagent.revoke_provisioning_token(
 ## Data Models
 
 <details>
-<summary>Model relationships (4 of 57 models)</summary>
+<summary>Model relationships (4 of 60 models)</summary>
 
 ```mermaid
 classDiagram
@@ -2171,7 +2171,15 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.kagent.models.AgentCapabilityServiceUpsertAgentCapabilityBody
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.kagent.models.AgentRegistration
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.kagent.models.AgentServiceUpdateAgentBody
 ```
 
 ```{eval-rst}
@@ -2184,6 +2192,10 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.kagent.models.Capability
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.kagent.models.CapabilityAdminServiceUpdateCapabilityBody
 ```
 
 ```{eval-rst}

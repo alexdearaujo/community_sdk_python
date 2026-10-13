@@ -265,6 +265,45 @@ def clean_schema_names(schema: dict, version: str) -> dict:
     return schema
 
 
+def hoist_inline_request_bodies(schema: dict) -> dict:
+    """Returns a copy of schema with inline object request bodies moved to components.
+
+    protoc-gen-openapiv2 inlines a one-field body whose message is partly set by
+    the path, and the model generator types an inline object as Dict[str, Any].
+    Its `required` can also name the wrapping field, which is not a property.
+    """
+    import copy
+
+    schema = copy.deepcopy(schema)
+    schemas = schema.get("components", {}).get("schemas")
+    if schemas is None:
+        return schema
+    for path_item in schema.get("paths", {}).values():
+        for op in path_item.values():
+            if not isinstance(op, dict):
+                continue
+            media = op.get("requestBody", {}).get("content", {}).get("application/json")
+            body = (media or {}).get("schema")
+            if not isinstance(body, dict) or "properties" not in body:
+                continue
+            # protoc-gen-openapiv2's own name for such a body: <Service><Method>Body.
+            method = op["operationId"].rsplit("_", 1)[-1]
+            name = f"{op['tags'][0]}{method}Body"
+            if name in schemas:
+                raise ValueError(
+                    f"Cannot hoist the {method} request body: {name} exists"
+                )
+            required = [f for f in body.get("required", []) if f in body["properties"]]
+            body.pop("title", None)
+            if required:
+                body["required"] = required
+            else:
+                body.pop("required", None)
+            schemas[name] = body
+            media["schema"] = {"$ref": f"#/components/schemas/{name}"}
+    return schema
+
+
 def inline_request_body_refs(schema: dict) -> dict:
     """Returns a copy of schema with requestBody $refs inlined from components/requestBodies.
 
@@ -434,6 +473,7 @@ def patched_swagger(
     schema = relax_response_message_required(schema)
     schema = clean_schema_names(schema, version)
     schema = inline_request_body_refs(schema)
+    schema = hoist_inline_request_bodies(schema)
     with NamedTemporaryFile(
         mode="w",
         suffix=".json",

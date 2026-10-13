@@ -77,7 +77,7 @@ class LabelServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateLabelRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -117,7 +117,7 @@ class LabelServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateLabelRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"label.id": id},
             )
             _resp, _rate_limit = call_grpc(

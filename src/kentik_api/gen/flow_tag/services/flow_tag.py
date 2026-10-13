@@ -99,7 +99,7 @@ class FlowTagServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateFlowTagRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -173,7 +173,7 @@ class FlowTagServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateFlowTagRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"flow_tag.id": flowTagid},
             )
             _resp, _rate_limit = call_grpc(

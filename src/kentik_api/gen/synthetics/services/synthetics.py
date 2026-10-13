@@ -96,7 +96,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.CreateAgentAlertRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -170,7 +170,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateAgentAlertRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -310,7 +310,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateAgentRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"agent.id": agentid},
             )
             _resp, _rate_limit = call_grpc(
@@ -415,7 +415,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.CreateTestRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -487,7 +487,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateTestRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"test.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -562,7 +562,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_2.SetTestStatusRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -602,7 +602,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetResultsForTestsRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -641,7 +641,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetResultsForTestsCsvRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -680,7 +680,7 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetTraceForTestRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
