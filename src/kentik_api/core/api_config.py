@@ -1,6 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import ipaddress
 import math
+import os
 import threading
 import time
 import urllib.request
@@ -156,6 +157,7 @@ class APIConfig:
         self._client: httpx.Client | None = None
         self._closed = False
         self._client_lock = threading.Lock()
+        self._pid = os.getpid()
         # Set on a with_timeout() copy, which borrows its origin's connection.
         self._shares_client_of: APIConfig | None = None
 
@@ -209,6 +211,13 @@ class APIConfig:
         """
         if self._shares_client_of is not None:
             return self._shares_client_of.client
+        if self._pid != os.getpid():
+            # A forked child must not write to the parent's sockets, and may have
+            # inherited the lock held. The old client is dropped, not closed:
+            # closing it would send a TLS close_notify on the parent's connection.
+            self._pid = os.getpid()
+            self._client_lock = threading.Lock()
+            self._client = None
         with self._client_lock:
             if self._closed:
                 raise ConfigurationError(

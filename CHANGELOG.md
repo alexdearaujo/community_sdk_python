@@ -114,6 +114,10 @@ by a number. The Service word stays when it is the object of the call
 
 ### Fixed
 
+- **A forked process opens its own REST connection.** After `os.fork()`, for
+  example in a multiprocessing worker, the child reused the parent's pooled
+  connection, so both processes wrote to one socket. The child now opens a new
+  connection on its first REST call. gRPC channels follow gRPC's own fork rules.
 - **An empty credential argument raises an error.** `KentikAPI(email="")`
   took the email from the environment or `.env` instead, so a caller whose
   secret lookup returned nothing silently ran as another identity. An `email`

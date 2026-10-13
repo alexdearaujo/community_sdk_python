@@ -78,6 +78,22 @@ def test_closing_an_unused_transport_is_harmless():
     RestTransport(KentikCredentials("dev@example.com", "t")).close()
 
 
+def test_a_forked_child_gets_its_own_client(monkeypatch):
+    config = APIConfig()
+    parent_client = config.client
+    child_pid = config._pid + 1
+    monkeypatch.setattr("kentik_api.core.api_config.os.getpid", lambda: child_pid)
+
+    child_client = config.client
+
+    # Sharing a pooled socket across processes interleaves both sides' bytes.
+    assert child_client is not parent_client
+    assert config.client is child_client
+    assert not parent_client.is_closed
+    config.close()
+    parent_client.close()
+
+
 def test_use_after_close_raises_configuration_error_naming_close(client_count):
     transport = RestTransport(KentikCredentials("dev@example.com", "t"))
     transport.close()
