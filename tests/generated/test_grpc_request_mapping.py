@@ -63,8 +63,13 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
 
     built: dict[str, Any] = {}
 
-    def _build(message_cls, body, fields):
-        built.update(message_cls=message_cls, body=body, fields=fields)
+    def _build(message_cls, body, fields, update_mask_from=None):
+        built.update(
+            message_cls=message_cls,
+            body=body,
+            fields=fields,
+            update_mask_from=update_mask_from,
+        )
         return message_cls()
 
     monkeypatch.setattr(module, "build_grpc_request", _build)
@@ -103,6 +108,11 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
     for name, value in arguments.items():
         assert any(v is value for v in fields.values()), f"{name} is not sent"
     assert (built["body"] is not None) == ("data" in kwargs)
+    if built["update_mask_from"]:
+        mask = request_descriptor.fields_by_name["update_mask"]
+        assert mask.message_type.full_name == "google.protobuf.FieldMask"
+        assert built["update_mask_from"] in request_descriptor.fields_by_name
+        assert set(built["body"]) == {built["update_mask_from"]}
 
 
 def _sent_device_request(monkeypatch, method_name: str, **kwargs) -> Any:

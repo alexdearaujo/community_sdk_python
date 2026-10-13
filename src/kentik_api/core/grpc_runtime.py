@@ -89,8 +89,35 @@ def map_grpc_error(
     )
 
 
+def _mask_paths(message: Any, sent: dict[str, Any], prefix: str = "") -> list[str]:
+    """The field paths a JSON body sets, as grpc-gateway's FieldMaskFromRequestBody."""
+    fields = message.DESCRIPTOR.fields_by_name
+    by_json = {field.json_name: field for field in fields.values()}
+    paths: list[str] = []
+    for key, value in sent.items():
+        field = by_json.get(key) or fields.get(key)
+        if field is None:
+            continue
+        path = f"{prefix}{field.name}"
+        nested = field.message_type
+        if (
+            isinstance(value, dict)
+            and value
+            and nested is not None
+            and not nested.GetOptions().map_entry
+            and not nested.full_name.startswith("google.protobuf.")
+        ):
+            paths += _mask_paths(getattr(message, field.name), value, f"{path}.")
+        else:
+            paths.append(path)
+    return paths
+
+
 def build_grpc_request(
-    message_cls, body: dict[str, Any] | None, fields: dict[str, Any]
+    message_cls,
+    body: dict[str, Any] | None,
+    fields: dict[str, Any],
+    update_mask_from: str | None = None,
 ) -> Any:
     """Builds a request message the way grpc-gateway transcodes the REST call.
 
@@ -99,6 +126,10 @@ def build_grpc_request(
     path (for example "device.id") to its value; None means unset. The body
     tolerates unknown keys as before, but a field path must resolve: an
     argument that matches no field would otherwise be dropped from the call.
+
+    `update_mask_from` names the body field of a PATCH whose request has an
+    `update_mask`. grpc-gateway fills an unset mask from the keys sent there,
+    and an empty mask on gRPC would replace every field instead.
     """
     request = ParseDict(body or {}, message_cls(), ignore_unknown_fields=True)
     nested: dict[str, Any] = {}
@@ -112,11 +143,18 @@ def build_grpc_request(
         node[leaf] = value
     # ParseDict merges into `request`, so path fields land inside the body.
     try:
-        return ParseDict(nested, request)
+        request = ParseDict(nested, request)
     except ParseError as exc:
         raise ConfigurationError(
             f"Invalid argument for {message_cls.DESCRIPTOR.name}: {exc}"
         ) from exc
+    if update_mask_from:
+        sent = (body or {}).get(update_mask_from)
+        if isinstance(sent, dict) and not request.update_mask.paths:
+            request.update_mask.paths.extend(
+                _mask_paths(getattr(request, update_mask_from), sent)
+            )
+    return request
 
 
 def _method_label(stub_method) -> str:
@@ -194,7 +232,9 @@ def call_grpc(
     if api_config is not None:
         _validate_grpc_override(api_config)
 
-    kwargs = {} if api_config is None else {"timeout": api_config.grpc_deadline}
+    kwargs: dict[str, Any] = (
+        {} if api_config is None else {"timeout": api_config.grpc_deadline}
+    )
     try:
         # with_call exposes the call's initial metadata, where the quota is.
         if isinstance(stub_method, grpc.UnaryUnaryMultiCallable):

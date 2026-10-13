@@ -704,6 +704,7 @@ class KagentServiceWrapper:
                 self._grpc_pb2_4.UpdateCapabilityRequest,
                 {"capability": dict(data)},
                 {"capability.name": capabilityname},
+                update_mask_from="capability",
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_4.UpdateCapability,

@@ -29,6 +29,7 @@ class GrpcMethod:
     request_class: str
     path_fields: tuple[str, ...]  # request field path per URL placeholder, in order
     body: str  # HTTP rule body: "" (none), "*" (whole request), or one field name
+    update_mask_from: str = ""  # body field grpc-gateway derives update_mask from
 
 
 GrpcRuleKey = tuple[str, str, str]  # (proto service, HTTP verb, normalized path)
@@ -87,6 +88,7 @@ def _discover_grpc_methods(
         if fd is None or not (pb_dir / f"{pb2_grpc_stem}.py").exists():
             continue
         local_messages = {f".{fd.package}.{m.name}" for m in fd.message_type}
+        messages = {m.name: m for m in fd.message_type}
 
         for service in fd.service:
             idx = str(len(stubs_info) + 1)
@@ -101,6 +103,12 @@ def _discover_grpc_methods(
                         f"which {pb2_file.name} does not define"
                     )
                 rule = method.options.Extensions[annotations_pb2.http]  # pyright: ignore[reportArgumentType]  # ty: ignore[invalid-argument-type]  -- stubs type the handle loosely
+                request_class = method.input_type.rsplit(".", 1)[1]
+                has_update_mask = any(
+                    field.name == "update_mask"
+                    and field.type_name == ".google.protobuf.FieldMask"
+                    for field in messages[request_class].field
+                )
                 for binding in (rule, *rule.additional_bindings):
                     verb = binding.WhichOneof("pattern")
                     if verb is None or verb == "custom":
@@ -110,12 +118,18 @@ def _discover_grpc_methods(
                         GrpcMethod(
                             stub_idx=idx,
                             name=method.name,
-                            request_class=method.input_type.rsplit(".", 1)[1],
+                            request_class=request_class,
                             path_fields=tuple(
                                 p.split("=", 1)[0]
                                 for p in _PLACEHOLDER.findall(template)
                             ),
                             body=binding.body,
+                            # grpc-gateway's PATCH rule for a one-field body.
+                            update_mask_from=binding.body
+                            if verb == "patch"
+                            and has_update_mask
+                            and binding.body not in ("", "*")
+                            else "",
                         )
                     )
 
@@ -466,12 +480,17 @@ def _generate_service_wrappers():
                     fields_arg = ", ".join(
                         f'"{field}": {arg}' for field, arg in request_fields
                     )
+                    mask_arg = (
+                        f', update_mask_from="{grpc_method.update_mask_from}"'
+                        if grpc_method.update_mask_from
+                        else ""
+                    )
                     grpc_lines = [
                         "        if isinstance(self._transport, GrpcTransport):",
                         # Guard: if proto deps weren't available at init, fall back.
                         f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
                         f'                raise NotImplementedError("gRPC proto dependencies not installed for {service} service")',
-                        f"            _req = build_grpc_request(self._grpc_pb2_{stub_idx}.{grpc_method.request_class}, {body_arg}, {{{fields_arg}}})",
+                        f"            _req = build_grpc_request(self._grpc_pb2_{stub_idx}.{grpc_method.request_class}, {body_arg}, {{{fields_arg}}}{mask_arg})",
                         f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
                         f"api_config=api_config_override, error_cls={module_alias}.{op.error_cls_name})",
                     ]

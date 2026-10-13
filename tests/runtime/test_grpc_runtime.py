@@ -218,6 +218,47 @@ def test_build_grpc_request_rejects_a_field_the_request_does_not_declare(device_
         build_grpc_request(device_pb2.GetDeviceRequest, None, {"deviceid": "42"})
 
 
+@pytest.fixture
+def capability_pb2():
+    import kentik_api.gen.pb_companions  # noqa: F401  -- registers proto dependencies
+    from kentik_api.gen.kagent.pb import capability_pb2
+
+    return capability_pb2
+
+
+def test_patch_derives_update_mask_from_the_sent_keys(capability_pb2):
+    # R12: grpc-gateway fills the mask from the REST body; an empty mask on gRPC
+    # would replace every field of the capability, not just the ones sent.
+    request = build_grpc_request(
+        capability_pb2.UpdateCapabilityRequest,
+        {"capability": {"displayName": "Edge", "description": ""}},
+        {"capability.name": "snmp"},
+        update_mask_from="capability",
+    )
+
+    assert list(request.update_mask.paths) == ["display_name", "description"]
+    assert request.capability.name == "snmp"
+
+
+def test_update_mask_paths_recurse_into_nested_messages(device_pb2):
+    from kentik_api.core.grpc_runtime import _mask_paths
+
+    device = device_pb2.UpdateDeviceRequest().device
+    sent = {"deviceName": "edge-1", "deviceSnmpV3Conf": {"username": "u"}}
+
+    assert _mask_paths(device, sent) == ["device_name", "device_snmp_v3_conf.username"]
+
+
+def test_no_update_mask_without_update_mask_from(capability_pb2):
+    request = build_grpc_request(
+        capability_pb2.UpdateCapabilityRequest,
+        {"capability": {"displayName": "Edge"}},
+        {"capability.name": "snmp"},
+    )
+
+    assert not request.update_mask.paths
+
+
 def test_call_grpc_rejects_direct_per_call_config_override_for_grpc():
     called = False
 

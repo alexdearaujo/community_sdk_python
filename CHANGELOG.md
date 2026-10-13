@@ -128,6 +128,11 @@ by a number. The Service word stays when it is the object of the call
   `ExternalContext.jiraCloud` are now `Optional`, so alerts with an external
   context parse, and `set_external_context` accepts one context.
   `Nlri.prefix` (`bgp_monitoring`) is now `Optional[str]`.
+- **A gRPC PATCH updates only the fields you send.** For a PATCH whose body is
+  one field, grpc-gateway builds the request's `update_mask` from the keys in
+  the REST body. The gRPC call sent an empty mask instead, which updates every
+  field and can clear the ones you left out. gRPC now builds the same mask.
+  This applies to `client.kagent.capability_admin_service__update_capability`.
 - **A success status with an unusable body raises a 502.** A REST success
   whose body is not JSON raised the operation's error class with the message
   "failed with status code: 200". A JSON `null` body returned an empty model
