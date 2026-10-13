@@ -98,7 +98,9 @@ by a number. The Service word stays when it is the object of the call
   applies.
 - **Quota reporting.** `kentik_api.rate_limit_of(result)` returns the quota
   that the call reported. Every SDK exception has a `rate_limit` attribute.
-  `client._transport.rate_limits` holds the latest quota for each endpoint.
+  `client.api_config.rate_limits` holds the latest quota for each endpoint,
+  keyed by HTTP method and path template on REST (for example
+  `GET /device/v202504beta2/device/{device.id}`) and by gRPC method on gRPC.
   See [the rate limiting guide](docs/sphinx/guides/rate_limiting.md).
 - **`HTTPException.grpc_status_code`** holds the gRPC status name verbatim.
 - **Connection reuse.** A `KentikAPI` client uses one HTTP connection for all

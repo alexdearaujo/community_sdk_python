@@ -72,6 +72,7 @@ def TenantUserList(
     body = request_json(
         method="get",
         path=f"/mkp/v202407/tenants/{path_segment(tenantId)}/users",
+        path_template="/mkp/v202407/tenants/{tenantId}/users",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -102,6 +103,7 @@ def TenantUserCreate(
     body = request_json(
         method="post",
         path=f"/mkp/v202407/tenants/{path_segment(tenantId)}/users",
+        path_template="/mkp/v202407/tenants/{tenantId}/users",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -134,6 +136,7 @@ def TenantUserUpdate(
     body = request_json(
         method="put",
         path=f"/mkp/v202407/tenants/{path_segment(tenantId)}/users/{path_segment(id)}",
+        path_template="/mkp/v202407/tenants/{tenantId}/users/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -162,6 +165,7 @@ def TenantUserDelete(
     body = request_json(
         method="delete",
         path=f"/mkp/v202407/tenants/{path_segment(tenantId)}/users/{path_segment(id)}",
+        path_template="/mkp/v202407/tenants/{tenantId}/users/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

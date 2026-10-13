@@ -91,6 +91,7 @@ def CapabilityAdminService_ListCapabilities(
     body = request_json(
         method="get",
         path="/kagent/v202401/capabilities",
+        path_template="/kagent/v202401/capabilities",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -118,6 +119,7 @@ def CapabilityAdminService_CreateCapability(
     body = request_json(
         method="post",
         path="/kagent/v202401/capabilities",
+        path_template="/kagent/v202401/capabilities",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -146,6 +148,7 @@ def CapabilityAdminService_GetCapability(
     body = request_json(
         method="get",
         path=f"/kagent/v202401/capabilities/{path_segment(capabilityname)}",
+        path_template="/kagent/v202401/capabilities/{capability.name}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -173,6 +176,7 @@ def CapabilityAdminService_DeleteCapability(
     body = request_json(
         method="delete",
         path=f"/kagent/v202401/capabilities/{path_segment(capabilityname)}",
+        path_template="/kagent/v202401/capabilities/{capability.name}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -203,6 +207,7 @@ def CapabilityAdminService_UpdateCapability(
     body = request_json(
         method="patch",
         path=f"/kagent/v202401/capabilities/{path_segment(capabilityname)}",
+        path_template="/kagent/v202401/capabilities/{capability.name}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

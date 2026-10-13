@@ -220,6 +220,7 @@ def List(
     body = request_json(
         method="post",
         path="/v202505/alerts",
+        path_template="/v202505/alerts",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -248,6 +249,7 @@ def Clear(
     body = request_json(
         method="post",
         path="/v202505/alerts/clear",
+        path_template="/v202505/alerts/clear",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -276,6 +278,7 @@ def ListComments(
     body = request_json(
         method="get",
         path=f"/v202505/alerts/{path_segment(alertId)}/comments",
+        path_template="/v202505/alerts/{alertId}/comments",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -306,6 +309,7 @@ def AddComment(
     body = request_json(
         method="post",
         path=f"/v202505/alerts/{path_segment(alertId)}/comments",
+        path_template="/v202505/alerts/{alertId}/comments",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -337,6 +341,7 @@ def SetExternalContext(
     body = request_json(
         method="put",
         path=f"/v202505/alerts/{path_segment(alertId)}/external-context",
+        path_template="/v202505/alerts/{alertId}/external-context",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -365,6 +370,7 @@ def Get(
     body = request_json(
         method="get",
         path=f"/v202505/alerts/{path_segment(id)}",
+        path_template="/v202505/alerts/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -395,6 +401,7 @@ def Ack(
     body = request_json(
         method="post",
         path=f"/v202505/alerts/{path_segment(id)}/ack",
+        path_template="/v202505/alerts/{id}/ack",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -426,6 +433,7 @@ def UnAck(
     body = request_json(
         method="post",
         path=f"/v202505/alerts/{path_segment(id)}/unack",
+        path_template="/v202505/alerts/{id}/unack",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

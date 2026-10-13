@@ -26,6 +26,7 @@ def GetJourneysNlq(
     body = request_json(
         method="get",
         path="/journeys/v202406/GetJourneysNlq",
+        path_template="/journeys/v202406/GetJourneysNlq",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

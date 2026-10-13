@@ -58,6 +58,7 @@ def SearchFlowTag(
     body = request_json(
         method="get",
         path="/flow_tag/v202404alpha1/tag",
+        path_template="/flow_tag/v202404alpha1/tag",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -85,6 +86,7 @@ def CreateFlowTag(
     body = request_json(
         method="post",
         path="/flow_tag/v202404alpha1/tag",
+        path_template="/flow_tag/v202404alpha1/tag",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -113,6 +115,7 @@ def GetFlowTag(
     body = request_json(
         method="get",
         path=f"/flow_tag/v202404alpha1/tag/{path_segment(flowTagid)}",
+        path_template="/flow_tag/v202404alpha1/tag/{flowTag.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -143,6 +146,7 @@ def UpdateFlowTag(
     body = request_json(
         method="put",
         path=f"/flow_tag/v202404alpha1/tag/{path_segment(flowTagid)}",
+        path_template="/flow_tag/v202404alpha1/tag/{flowTag.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -171,6 +175,7 @@ def DeleteFlowTag(
     body = request_json(
         method="delete",
         path=f"/flow_tag/v202404alpha1/tag/{path_segment(flowTagid)}",
+        path_template="/flow_tag/v202404alpha1/tag/{flowTag.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

@@ -102,6 +102,7 @@ def GetResultsForTests(
     body = request_json(
         method="post",
         path="/synthetics/v202309/results",
+        path_template="/synthetics/v202309/results",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -132,6 +133,7 @@ def GetResultsForTestsCsv(
     body = request_json(
         method="post",
         path="/synthetics/v202309/results/csv",
+        path_template="/synthetics/v202309/results/csv",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -160,6 +162,7 @@ def GetTraceForTest(
     body = request_json(
         method="post",
         path="/synthetics/v202309/trace",
+        path_template="/synthetics/v202309/trace",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

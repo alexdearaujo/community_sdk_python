@@ -213,6 +213,7 @@ def Create(
     body = request_json(
         method="post",
         path="/v202505/alerts/silence",
+        path_template="/v202505/alerts/silence",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -243,6 +244,7 @@ def List(
     body = request_json(
         method="post",
         path="/v202505/alerts/silence/list",
+        path_template="/v202505/alerts/silence/list",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -271,6 +273,7 @@ def Get(
     body = request_json(
         method="get",
         path=f"/v202505/alerts/silence/{path_segment(id)}",
+        path_template="/v202505/alerts/silence/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -298,6 +301,7 @@ def Delete(
     body = request_json(
         method="delete",
         path=f"/v202505/alerts/silence/{path_segment(id)}",
+        path_template="/v202505/alerts/silence/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -328,6 +332,7 @@ def Replace(
     body = request_json(
         method="patch",
         path=f"/v202505/alerts/silence/{path_segment(id)}",
+        path_template="/v202505/alerts/silence/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

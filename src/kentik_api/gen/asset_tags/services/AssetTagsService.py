@@ -53,6 +53,7 @@ def GetTagValues(
     body = request_json(
         method="get",
         path=f"/asset_tags/v20260515beta1/assets/{path_segment(assetType)}/{path_segment(assetId)}/values",
+        path_template="/asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -78,6 +79,7 @@ def ListTagKeys(api_config_override: Optional[APIConfig] = None) -> ListTagKeysR
     body = request_json(
         method="get",
         path="/asset_tags/v20260515beta1/keys",
+        path_template="/asset_tags/v20260515beta1/keys",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -105,6 +107,7 @@ def CreateTagKey(
     body = request_json(
         method="post",
         path="/asset_tags/v20260515beta1/keys",
+        path_template="/asset_tags/v20260515beta1/keys",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -133,6 +136,7 @@ def GetTagKey(
     body = request_json(
         method="get",
         path=f"/asset_tags/v20260515beta1/keys/{path_segment(id)}",
+        path_template="/asset_tags/v20260515beta1/keys/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -163,6 +167,7 @@ def UpdateTagKey(
     body = request_json(
         method="put",
         path=f"/asset_tags/v20260515beta1/keys/{path_segment(id)}",
+        path_template="/asset_tags/v20260515beta1/keys/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -191,6 +196,7 @@ def DeleteTagKey(
     body = request_json(
         method="delete",
         path=f"/asset_tags/v20260515beta1/keys/{path_segment(id)}",
+        path_template="/asset_tags/v20260515beta1/keys/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -218,6 +224,7 @@ def ListTagValues(
     body = request_json(
         method="get",
         path=f"/asset_tags/v20260515beta1/keys/{path_segment(tagId)}/{path_segment(assetType)}/values",
+        path_template="/asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -245,6 +252,7 @@ def SetTagValues(
     body = request_json(
         method="put",
         path="/asset_tags/v20260515beta1/values",
+        path_template="/asset_tags/v20260515beta1/values",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -273,6 +281,7 @@ def DeleteTagValues(
     body = request_json(
         method="post",
         path="/asset_tags/v20260515beta1/values/delete",
+        path_template="/asset_tags/v20260515beta1/values/delete",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

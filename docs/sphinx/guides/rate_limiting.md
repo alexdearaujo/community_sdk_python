@@ -60,17 +60,18 @@ except HTTPException as exc:
 
 ### Per endpoint
 
-The transport keeps the latest quota for each endpoint it has called:
+The client keeps the latest quota for each endpoint it has called:
 
 ```python
-client.device.list_devices()
-quota = client._transport.rate_limits["/device/v202504beta2/device"]
+client.device.get_device(deviceid="42")
+quota = client.api_config.rate_limits["GET /device/v202504beta2/device/{device.id}"]
 print(quota.remaining, quota.reset_seconds)
 ```
 
-The keys are REST paths on the REST transport, for example
-`/device/v202504beta2/device`. On the gRPC transport they are gRPC method names,
-for example `/kentik.device.v202504beta2.DeviceService/ListDevices`.
+On the REST transport a key is the HTTP method and the schema's path template,
+so calls with different IDs share one entry. On the gRPC transport a key is the
+gRPC method name, for example
+`/kentik.device.v202504beta2.DeviceService/GetDevice`.
 
 ## Quota is per endpoint
 

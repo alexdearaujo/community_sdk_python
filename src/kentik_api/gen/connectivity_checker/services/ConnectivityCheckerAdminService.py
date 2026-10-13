@@ -29,6 +29,7 @@ def CreateConnectivityReport(
     body = request_json(
         method="post",
         path="/connectivity_checker/v202410beta1/create",
+        path_template="/connectivity_checker/v202410beta1/create",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

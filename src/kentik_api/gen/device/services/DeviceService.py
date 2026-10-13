@@ -75,6 +75,7 @@ def ListDevices(
     body = request_json(
         method="get",
         path="/device/v202504beta2/device",
+        path_template="/device/v202504beta2/device",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -102,6 +103,7 @@ def CreateDevice(
     body = request_json(
         method="post",
         path="/device/v202504beta2/device",
+        path_template="/device/v202504beta2/device",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -130,6 +132,7 @@ def CreateDevices(
     body = request_json(
         method="post",
         path="/device/v202504beta2/device/batch_create",
+        path_template="/device/v202504beta2/device/batch_create",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -158,6 +161,7 @@ def DeleteDevices(
     body = request_json(
         method="post",
         path="/device/v202504beta2/device/batch_delete",
+        path_template="/device/v202504beta2/device/batch_delete",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -186,6 +190,7 @@ def UpdateDevices(
     body = request_json(
         method="put",
         path="/device/v202504beta2/device/batch_update",
+        path_template="/device/v202504beta2/device/batch_update",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -217,6 +222,7 @@ def GetDeviceByName(
     body = request_json(
         method="get",
         path=f"/device/v202504beta2/device/name/{path_segment(deviceName)}",
+        path_template="/device/v202504beta2/device/name/{deviceName}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -247,6 +253,7 @@ def GetDevice(
     body = request_json(
         method="get",
         path=f"/device/v202504beta2/device/{path_segment(deviceid)}",
+        path_template="/device/v202504beta2/device/{device.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -277,6 +284,7 @@ def UpdateDevice(
     body = request_json(
         method="put",
         path=f"/device/v202504beta2/device/{path_segment(deviceid)}",
+        path_template="/device/v202504beta2/device/{device.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -305,6 +313,7 @@ def DeleteDevice(
     body = request_json(
         method="delete",
         path=f"/device/v202504beta2/device/{path_segment(deviceid)}",
+        path_template="/device/v202504beta2/device/{device.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -335,6 +344,7 @@ def UpdateDeviceLabels(
     body = request_json(
         method="put",
         path=f"/device/v202504beta2/device/{path_segment(id)}/labels",
+        path_template="/device/v202504beta2/device/{id}/labels",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

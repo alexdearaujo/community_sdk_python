@@ -190,6 +190,7 @@ def request_json(
     method: str,
     path: str,
     *,
+    path_template: Optional[str] = None,
     api_config_override: Optional[APIConfig] = None,
     query_params: Optional[Dict[str, Any]] = None,
     json_body: Any = None,
@@ -198,7 +199,11 @@ def request_json(
     operation_name: str = "request",
     error_cls: type[HTTPException] = HTTPException,
 ) -> Any:
-    """Shared REST request execution for generated service methods."""
+    """Shared REST request execution for generated service methods.
+
+    `path_template` is the schema path, such as `/device/v1/device/{device.id}`.
+    It keys the quota, so one endpoint keeps one entry whatever IDs it is called with.
+    """
     api_config = api_config_override if api_config_override else APIConfig()
     # An override replaces the client's config wholesale, credentials included,
     # so one that omits them must fail here rather than send an unauthenticated
@@ -259,7 +264,7 @@ def request_json(
 
     rate_limit = RateLimit.from_headers(response.headers)
     if rate_limit is not None:
-        api_config.rate_limits[path] = rate_limit
+        api_config.rate_limits[f"{method.upper()} {path_template or path}"] = rate_limit
 
     try:
         body = _handle_response(

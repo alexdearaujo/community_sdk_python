@@ -43,6 +43,7 @@ def ListASGroups(
     body = request_json(
         method="get",
         path="/as_group/v202212/as_group",
+        path_template="/as_group/v202212/as_group",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -70,6 +71,7 @@ def CreateASGroup(
     body = request_json(
         method="post",
         path="/as_group/v202212/as_group",
+        path_template="/as_group/v202212/as_group",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -98,6 +100,7 @@ def GetASGroup(
     body = request_json(
         method="get",
         path=f"/as_group/v202212/as_group/{path_segment(asGroupid)}",
+        path_template="/as_group/v202212/as_group/{asGroup.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -128,6 +131,7 @@ def UpdateASGroup(
     body = request_json(
         method="put",
         path=f"/as_group/v202212/as_group/{path_segment(asGroupid)}",
+        path_template="/as_group/v202212/as_group/{asGroup.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -156,6 +160,7 @@ def DeleteASGroup(
     body = request_json(
         method="delete",
         path=f"/as_group/v202212/as_group/{path_segment(asGroupid)}",
+        path_template="/as_group/v202212/as_group/{asGroup.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

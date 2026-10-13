@@ -99,6 +99,7 @@ def CapabilityReleaseService_GetCapabilityRelease(
     body = request_json(
         method="get",
         path="/kagent/v202401/releases",
+        path_template="/kagent/v202401/releases",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -140,6 +141,7 @@ def CapabilityReleaseService_GetCapabilityLatestReleases(
     body = request_json(
         method="get",
         path="/kagent/v202401/releases/latest",
+        path_template="/kagent/v202401/releases/latest",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -169,6 +171,7 @@ def CapabilityReleaseService_GetCapabilitySupportedDistros(
     body = request_json(
         method="get",
         path="/kagent/v202401/releases/supported_distros",
+        path_template="/kagent/v202401/releases/supported_distros",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

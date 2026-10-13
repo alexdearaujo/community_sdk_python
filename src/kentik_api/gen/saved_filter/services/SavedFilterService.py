@@ -48,6 +48,7 @@ def CreateSavedFilter(
     body = request_json(
         method="post",
         path="/saved-filter/v202501alpha1",
+        path_template="/saved-filter/v202501alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -76,6 +77,7 @@ def GetSavedFilter(
     body = request_json(
         method="get",
         path=f"/saved-filter/v202501alpha1/{path_segment(id)}",
+        path_template="/saved-filter/v202501alpha1/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -103,6 +105,7 @@ def UpdateSavedFilter(
     body = request_json(
         method="put",
         path=f"/saved-filter/v202501alpha1/{path_segment(id)}",
+        path_template="/saved-filter/v202501alpha1/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -131,6 +134,7 @@ def DeleteSavedFilter(
     body = request_json(
         method="delete",
         path=f"/saved-filter/v202501alpha1/{path_segment(id)}",
+        path_template="/saved-filter/v202501alpha1/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -158,6 +162,7 @@ def ListSavedFilters(
     body = request_json(
         method="get",
         path="/saved-filters/v202501alpha1",
+        path_template="/saved-filters/v202501alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -185,6 +190,7 @@ def ListSavedFiltersAll(
     body = request_json(
         method="get",
         path="/saved-filters/v202501alpha1/all",
+        path_template="/saved-filters/v202501alpha1/all",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

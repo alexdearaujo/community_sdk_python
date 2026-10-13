@@ -30,6 +30,7 @@ def MetricsSchemaService_GetMetricsSchema(
     body = request_json(
         method="get",
         path="/nms/v202505/metrics_schema",
+        path_template="/nms/v202505/metrics_schema",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

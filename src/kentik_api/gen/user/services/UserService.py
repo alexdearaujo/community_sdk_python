@@ -46,6 +46,7 @@ def ListUsers(api_config_override: Optional[APIConfig] = None) -> ListUsersRespo
     body = request_json(
         method="get",
         path="/user/v202211/users",
+        path_template="/user/v202211/users",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -73,6 +74,7 @@ def CreateUser(
     body = request_json(
         method="post",
         path="/user/v202211/users",
+        path_template="/user/v202211/users",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -101,6 +103,7 @@ def GetUser(
     body = request_json(
         method="get",
         path=f"/user/v202211/users/{path_segment(id)}",
+        path_template="/user/v202211/users/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -131,6 +134,7 @@ def UpdateUser(
     body = request_json(
         method="put",
         path=f"/user/v202211/users/{path_segment(id)}",
+        path_template="/user/v202211/users/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -159,6 +163,7 @@ def DeleteUser(
     body = request_json(
         method="delete",
         path=f"/user/v202211/users/{path_segment(id)}",
+        path_template="/user/v202211/users/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -186,6 +191,7 @@ def ResetActiveSessions(
     body = request_json(
         method="put",
         path=f"/user/v202211/users/{path_segment(id)}/reset_active_sessions",
+        path_template="/user/v202211/users/{id}/reset_active_sessions",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -213,6 +219,7 @@ def ResetApiToken(
     body = request_json(
         method="put",
         path=f"/user/v202211/users/{path_segment(id)}/reset_api_token",
+        path_template="/user/v202211/users/{id}/reset_api_token",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

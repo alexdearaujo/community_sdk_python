@@ -31,6 +31,7 @@ def ListSecret(
     body = request_json(
         method="get",
         path="/vault/v202312alpha1/secrets",
+        path_template="/vault/v202312alpha1/secrets",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -58,6 +59,7 @@ def GetSecret(
     body = request_json(
         method="get",
         path=f"/vault/v202312alpha1/secrets/{path_segment(name)}",
+        path_template="/vault/v202312alpha1/secrets/{name}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

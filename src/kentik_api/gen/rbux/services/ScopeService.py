@@ -47,6 +47,7 @@ def ListScopes(api_config_override: Optional[APIConfig] = None) -> ListScopesRes
     body = request_json(
         method="get",
         path="/rbux/v202607alpha1/scopes",
+        path_template="/rbux/v202607alpha1/scopes",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -74,6 +75,7 @@ def CreateScope(
     body = request_json(
         method="post",
         path="/rbux/v202607alpha1/scopes",
+        path_template="/rbux/v202607alpha1/scopes",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -102,6 +104,7 @@ def GetScope(
     body = request_json(
         method="get",
         path=f"/rbux/v202607alpha1/scopes/{path_segment(id)}",
+        path_template="/rbux/v202607alpha1/scopes/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -132,6 +135,7 @@ def UpdateScope(
     body = request_json(
         method="put",
         path=f"/rbux/v202607alpha1/scopes/{path_segment(id)}",
+        path_template="/rbux/v202607alpha1/scopes/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -160,6 +164,7 @@ def DeleteScope(
     body = request_json(
         method="delete",
         path=f"/rbux/v202607alpha1/scopes/{path_segment(id)}",
+        path_template="/rbux/v202607alpha1/scopes/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

@@ -72,6 +72,7 @@ def RouteService_Announce(
     body = request_json(
         method="post",
         path="/routes/announce",
+        path_template="/routes/announce",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -100,6 +101,7 @@ def RouteService_List(
     body = request_json(
         method="post",
         path="/routes/list",
+        path_template="/routes/list",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -130,6 +132,7 @@ def RouteService_Withdraw(
     body = request_json(
         method="post",
         path="/routes/withdraw",
+        path_template="/routes/withdraw",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

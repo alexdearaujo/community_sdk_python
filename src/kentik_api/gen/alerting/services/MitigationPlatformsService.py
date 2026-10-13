@@ -232,6 +232,7 @@ def List(
     body = request_json(
         method="get",
         path="/v202505/mitigations/platforms",
+        path_template="/v202505/mitigations/platforms",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -259,6 +260,7 @@ def Get(
     body = request_json(
         method="get",
         path=f"/v202505/mitigations/platforms/{path_segment(id)}",
+        path_template="/v202505/mitigations/platforms/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

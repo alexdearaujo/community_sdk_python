@@ -30,6 +30,7 @@ def CreatePathfinderReport(
     body = request_json(
         method="post",
         path="/pathfinder/v202505beta1/create",
+        path_template="/pathfinder/v202505beta1/create",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

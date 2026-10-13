@@ -36,6 +36,7 @@ def ListCredentialGroup(
     body = request_json(
         method="get",
         path="/credential/v202407alpha1/group",
+        path_template="/credential/v202407alpha1/group",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -63,6 +64,7 @@ def GetCredentialGroup(
     body = request_json(
         method="get",
         path=f"/credential/v202407alpha1/group/{path_segment(id)}",
+        path_template="/credential/v202407alpha1/group/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

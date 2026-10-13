@@ -34,6 +34,7 @@ def CreateChatSession(
     body = request_json(
         method="post",
         path="/ai_advisor/v202511/chat",
+        path_template="/ai_advisor/v202511/chat",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -62,6 +63,7 @@ def UpdateChatSession(
     body = request_json(
         method="put",
         path="/ai_advisor/v202511/chat",
+        path_template="/ai_advisor/v202511/chat",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -90,6 +92,7 @@ def GetChatSession(
     body = request_json(
         method="get",
         path=f"/ai_advisor/v202511/chat/{path_segment(id)}",
+        path_template="/ai_advisor/v202511/chat/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

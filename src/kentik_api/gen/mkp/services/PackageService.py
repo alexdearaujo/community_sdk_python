@@ -71,6 +71,7 @@ def PackageList(api_config_override: Optional[APIConfig] = None) -> ListPackageR
     body = request_json(
         method="get",
         path="/mkp/v202407/packages",
+        path_template="/mkp/v202407/packages",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -98,6 +99,7 @@ def PackageCreate(
     body = request_json(
         method="post",
         path="/mkp/v202407/packages",
+        path_template="/mkp/v202407/packages",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -126,6 +128,7 @@ def PackageGet(
     body = request_json(
         method="get",
         path=f"/mkp/v202407/packages/{path_segment(id)}",
+        path_template="/mkp/v202407/packages/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -156,6 +159,7 @@ def PackageUpdate(
     body = request_json(
         method="put",
         path=f"/mkp/v202407/packages/{path_segment(id)}",
+        path_template="/mkp/v202407/packages/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -184,6 +188,7 @@ def PackageDelete(
     body = request_json(
         method="delete",
         path=f"/mkp/v202407/packages/{path_segment(id)}",
+        path_template="/mkp/v202407/packages/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

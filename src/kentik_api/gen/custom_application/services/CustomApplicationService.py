@@ -39,6 +39,7 @@ def ListCustomApplications(
     body = request_json(
         method="get",
         path="/custom_application/v202501alpha1",
+        path_template="/custom_application/v202501alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -66,6 +67,7 @@ def CreateCustomApplication(
     body = request_json(
         method="post",
         path="/custom_application/v202501alpha1",
+        path_template="/custom_application/v202501alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -94,6 +96,7 @@ def GetCustomApplication(
     body = request_json(
         method="get",
         path=f"/custom_application/v202501alpha1/{path_segment(customApplicationId)}",
+        path_template="/custom_application/v202501alpha1/{customApplicationId}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -124,6 +127,7 @@ def UpdateCustomApplication(
     body = request_json(
         method="put",
         path=f"/custom_application/v202501alpha1/{path_segment(customApplicationId)}",
+        path_template="/custom_application/v202501alpha1/{customApplicationId}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -152,6 +156,7 @@ def DeleteCustomApplication(
     body = request_json(
         method="delete",
         path=f"/custom_application/v202501alpha1/{path_segment(customApplicationId)}",
+        path_template="/custom_application/v202501alpha1/{customApplicationId}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

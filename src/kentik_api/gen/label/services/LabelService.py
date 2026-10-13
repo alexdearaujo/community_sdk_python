@@ -37,6 +37,7 @@ def ListLabels(api_config_override: Optional[APIConfig] = None) -> ListLabelsRes
     body = request_json(
         method="get",
         path="/label/v202210/labels",
+        path_template="/label/v202210/labels",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -64,6 +65,7 @@ def CreateLabel(
     body = request_json(
         method="post",
         path="/label/v202210/labels",
+        path_template="/label/v202210/labels",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -95,6 +97,7 @@ def UpdateLabel(
     body = request_json(
         method="post",
         path=f"/label/v202210/labels/{path_segment(id)}",
+        path_template="/label/v202210/labels/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -123,6 +126,7 @@ def DeleteLabel(
     body = request_json(
         method="delete",
         path=f"/label/v202210/labels/{path_segment(id)}",
+        path_template="/label/v202210/labels/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

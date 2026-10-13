@@ -37,6 +37,7 @@ def ListNotificationChannels(
     body = request_json(
         method="get",
         path="/notification_channel/v202210/notification_channels",
+        path_template="/notification_channel/v202210/notification_channels",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -66,6 +67,7 @@ def SearchNotificationChannels(
     body = request_json(
         method="post",
         path="/notification_channel/v202210/notification_channels/search",
+        path_template="/notification_channel/v202210/notification_channels/search",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -94,6 +96,7 @@ def GetNotificationChannel(
     body = request_json(
         method="get",
         path=f"/notification_channel/v202210/notification_channels/{path_segment(id)}",
+        path_template="/notification_channel/v202210/notification_channels/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

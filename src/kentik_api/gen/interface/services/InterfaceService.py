@@ -65,6 +65,7 @@ def ListInterface(
     body = request_json(
         method="get",
         path="/interface/v202108alpha1/interfaces",
+        path_template="/interface/v202108alpha1/interfaces",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -92,6 +93,7 @@ def InterfaceCreate(
     body = request_json(
         method="post",
         path="/interface/v202108alpha1/interfaces",
+        path_template="/interface/v202108alpha1/interfaces",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -120,6 +122,7 @@ def InterfaceGet(
     body = request_json(
         method="get",
         path=f"/interface/v202108alpha1/interfaces/{path_segment(id)}",
+        path_template="/interface/v202108alpha1/interfaces/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -150,6 +153,7 @@ def InterfaceUpdate(
     body = request_json(
         method="put",
         path=f"/interface/v202108alpha1/interfaces/{path_segment(id)}",
+        path_template="/interface/v202108alpha1/interfaces/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -178,6 +182,7 @@ def InterfaceDelete(
     body = request_json(
         method="delete",
         path=f"/interface/v202108alpha1/interfaces/{path_segment(id)}",
+        path_template="/interface/v202108alpha1/interfaces/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -205,6 +210,7 @@ def ManualClassify(
     body = request_json(
         method="post",
         path="/interface/v202108alpha1/manual_classify",
+        path_template="/interface/v202108alpha1/manual_classify",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),

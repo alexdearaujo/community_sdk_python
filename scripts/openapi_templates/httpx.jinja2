@@ -15,6 +15,7 @@
     body = request_json(
         method='{{ method }}',
         path=f'{{ path_name }}',
+        path_template='{{ path_name }}',
         api_config_override=api_config_override,
         query_params=query_params,
         {% if body_param %}
