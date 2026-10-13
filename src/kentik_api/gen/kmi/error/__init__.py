@@ -78,75 +78,89 @@ class KmiError(HTTPException):
         )
 
 
-class GetASNDetailsUnexpectedError(KmiError):
+class GetASNDetailsError(KmiError):
+    """Operation-local error for GetASNDetails."""
+
+    response_error_map: dict[str, type[KmiError]] = {}
+
+
+class GetASNDetailsUnexpectedError(GetASNDetailsError):
     """Operation-local response error for GetASNDetails (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class GetASNDetailsError(KmiError):
-    """Operation-local error for GetASNDetails."""
-
-    response_error_map = {
-        "default": GetASNDetailsUnexpectedError,
-    }
-
-
-class GetASNInsightsUnexpectedError(KmiError):
-    """Operation-local response error for GetASNInsights (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+GetASNDetailsError.response_error_map = {
+    "default": GetASNDetailsUnexpectedError,
+}
 
 
 class GetASNInsightsError(KmiError):
     """Operation-local error for GetASNInsights."""
 
-    response_error_map = {
-        "default": GetASNInsightsUnexpectedError,
-    }
+    response_error_map: dict[str, type[KmiError]] = {}
 
 
-class GetGlobalInsightsUnexpectedError(KmiError):
-    """Operation-local response error for GetGlobalInsights (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetASNInsightsUnexpectedError(GetASNInsightsError):
+    """Operation-local response error for GetASNInsights (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetASNInsightsError.response_error_map = {
+    "default": GetASNInsightsUnexpectedError,
+}
 
 
 class GetGlobalInsightsError(KmiError):
     """Operation-local error for GetGlobalInsights."""
 
-    response_error_map = {
-        "default": GetGlobalInsightsUnexpectedError,
-    }
+    response_error_map: dict[str, type[KmiError]] = {}
 
 
-class GetRankingsUnexpectedError(KmiError):
-    """Operation-local response error for GetRankings (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetGlobalInsightsUnexpectedError(GetGlobalInsightsError):
+    """Operation-local response error for GetGlobalInsights (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetGlobalInsightsError.response_error_map = {
+    "default": GetGlobalInsightsUnexpectedError,
+}
 
 
 class GetRankingsError(KmiError):
     """Operation-local error for GetRankings."""
 
-    response_error_map = {
-        "default": GetRankingsUnexpectedError,
-    }
+    response_error_map: dict[str, type[KmiError]] = {}
 
 
-class ListMarketsUnexpectedError(KmiError):
-    """Operation-local response error for ListMarkets (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetRankingsUnexpectedError(GetRankingsError):
+    """Operation-local response error for GetRankings (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetRankingsError.response_error_map = {
+    "default": GetRankingsUnexpectedError,
+}
 
 
 class ListMarketsError(KmiError):
     """Operation-local error for ListMarkets."""
 
-    response_error_map = {
-        "default": ListMarketsUnexpectedError,
-    }
+    response_error_map: dict[str, type[KmiError]] = {}
 
+
+class ListMarketsUnexpectedError(ListMarketsError):
+    """Operation-local response error for ListMarkets (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+ListMarketsError.response_error_map = {
+    "default": ListMarketsUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[KmiError]] = {
     "GetASNDetails": GetASNDetailsError,

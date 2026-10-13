@@ -58,7 +58,10 @@ class AuditServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListAuditEvents, _req, api_config=api_config_override
+                self._grpc_stub_1.ListAuditEvents,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAuditModule1.ListAuditEventsError,
             )
             return attach_rate_limit(
                 rest_models.ListAuditEventsResponse.model_validate(
@@ -96,7 +99,10 @@ class AuditServiceWrapper:
                 self._grpc_pb2_1.GetAuditEventRequest, None, {"id": id, "ctime": ctime}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetAuditEvent, _req, api_config=api_config_override
+                self._grpc_stub_1.GetAuditEvent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAuditModule1.GetAuditEventError,
             )
             return attach_rate_limit(
                 rest_models.GetAuditEventResponse.model_validate(
@@ -128,7 +134,10 @@ class AuditServiceWrapper:
                 self._grpc_pb2_1.GetAuditEventRequest, None, {"id": id, "ctime": ctime}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetAuditEvent, _req, api_config=api_config_override
+                self._grpc_stub_1.GetAuditEvent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAuditModule1.GetAuditEventError,
             )
             return attach_rate_limit(
                 rest_models.GetAuditEventResponse.model_validate(

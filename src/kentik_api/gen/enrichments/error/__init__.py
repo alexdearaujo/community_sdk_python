@@ -78,19 +78,21 @@ class EnrichmentsError(HTTPException):
         )
 
 
-class FetchValuesByIdsUnexpectedError(EnrichmentsError):
+class FetchValuesByIdsError(EnrichmentsError):
+    """Operation-local error for FetchValuesByIds."""
+
+    response_error_map: dict[str, type[EnrichmentsError]] = {}
+
+
+class FetchValuesByIdsUnexpectedError(FetchValuesByIdsError):
     """Operation-local response error for FetchValuesByIds (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class FetchValuesByIdsError(EnrichmentsError):
-    """Operation-local error for FetchValuesByIds."""
-
-    response_error_map = {
-        "default": FetchValuesByIdsUnexpectedError,
-    }
-
+FetchValuesByIdsError.response_error_map = {
+    "default": FetchValuesByIdsUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[EnrichmentsError]] = {
     "FetchValuesByIds": FetchValuesByIdsError,

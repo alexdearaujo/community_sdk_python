@@ -61,7 +61,10 @@ class SyntheticsServiceWrapper:
                 self._grpc_pb2_2.ListAgentAlertsRequest, None, {"agentIds": agentIds}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.ListAgentAlerts, _req, api_config=api_config_override
+                self._grpc_stub_2.ListAgentAlerts,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.ListAgentAlertsError,
             )
             return attach_rate_limit(
                 rest_models.ListAgentAlertsResponse.model_validate(
@@ -97,7 +100,10 @@ class SyntheticsServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.CreateAgentAlert, _req, api_config=api_config_override
+                self._grpc_stub_2.CreateAgentAlert,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.CreateAgentAlertError,
             )
             return attach_rate_limit(
                 rest_models.CreateAgentAlertResponse.model_validate(
@@ -128,7 +134,10 @@ class SyntheticsServiceWrapper:
                 self._grpc_pb2_2.GetAgentAlertRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.GetAgentAlert, _req, api_config=api_config_override
+                self._grpc_stub_2.GetAgentAlert,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.GetAgentAlertError,
             )
             return attach_rate_limit(
                 rest_models.GetAgentAlertResponse.model_validate(
@@ -165,7 +174,10 @@ class SyntheticsServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.UpdateAgentAlert, _req, api_config=api_config_override
+                self._grpc_stub_2.UpdateAgentAlert,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.UpdateAgentAlertError,
             )
             return attach_rate_limit(
                 rest_models.UpdateAgentAlertResponse.model_validate(
@@ -197,7 +209,10 @@ class SyntheticsServiceWrapper:
                 self._grpc_pb2_2.DeleteAgentAlertRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.DeleteAgentAlert, _req, api_config=api_config_override
+                self._grpc_stub_2.DeleteAgentAlert,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.DeleteAgentAlertError,
             )
             return attach_rate_limit(
                 rest_models.DeleteAgentAlertResponse.model_validate(
@@ -226,7 +241,10 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_2.ListAgentsRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.ListAgents, _req, api_config=api_config_override
+                self._grpc_stub_2.ListAgents,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.ListAgentsError,
             )
             return attach_rate_limit(
                 rest_models.ListAgentsResponse.model_validate(
@@ -256,7 +274,10 @@ class SyntheticsServiceWrapper:
                 self._grpc_pb2_2.GetAgentRequest, None, {"id": agentid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.GetAgent, _req, api_config=api_config_override
+                self._grpc_stub_2.GetAgent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.GetAgentError,
             )
             return attach_rate_limit(
                 rest_models.GetAgentResponse.model_validate(
@@ -293,7 +314,10 @@ class SyntheticsServiceWrapper:
                 {"agent.id": agentid},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.UpdateAgent, _req, api_config=api_config_override
+                self._grpc_stub_2.UpdateAgent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.UpdateAgentError,
             )
             return attach_rate_limit(
                 rest_models.UpdateAgentResponse.model_validate(
@@ -325,7 +349,10 @@ class SyntheticsServiceWrapper:
                 self._grpc_pb2_2.DeleteAgentRequest, None, {"id": agentid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.DeleteAgent, _req, api_config=api_config_override
+                self._grpc_stub_2.DeleteAgent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.DeleteAgentError,
             )
             return attach_rate_limit(
                 rest_models.DeleteAgentResponse.model_validate(
@@ -354,7 +381,10 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_2.ListTestsRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.ListTests, _req, api_config=api_config_override
+                self._grpc_stub_2.ListTests,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.ListTestsError,
             )
             return attach_rate_limit(
                 rest_models.ListTestsResponse.model_validate(
@@ -389,7 +419,10 @@ class SyntheticsServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.CreateTest, _req, api_config=api_config_override
+                self._grpc_stub_2.CreateTest,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.CreateTestError,
             )
             return attach_rate_limit(
                 rest_models.CreateTestResponse.model_validate(
@@ -418,7 +451,10 @@ class SyntheticsServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_2.GetTestRequest, None, {"id": id})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.GetTest, _req, api_config=api_config_override
+                self._grpc_stub_2.GetTest,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.GetTestError,
             )
             return attach_rate_limit(
                 rest_models.GetTestResponse.model_validate(
@@ -455,7 +491,10 @@ class SyntheticsServiceWrapper:
                 {"test.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.UpdateTest, _req, api_config=api_config_override
+                self._grpc_stub_2.UpdateTest,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.UpdateTestError,
             )
             return attach_rate_limit(
                 rest_models.UpdateTestResponse.model_validate(
@@ -487,7 +526,10 @@ class SyntheticsServiceWrapper:
                 self._grpc_pb2_2.DeleteTestRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.DeleteTest, _req, api_config=api_config_override
+                self._grpc_stub_2.DeleteTest,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.DeleteTestError,
             )
             return attach_rate_limit(
                 rest_models.DeleteTestResponse.model_validate(
@@ -524,7 +566,10 @@ class SyntheticsServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.SetTestStatus, _req, api_config=api_config_override
+                self._grpc_stub_2.SetTestStatus,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule1.SetTestStatusError,
             )
             return attach_rate_limit(
                 rest_models.SetTestStatusResponse.model_validate(
@@ -564,6 +609,7 @@ class SyntheticsServiceWrapper:
                 self._grpc_stub_1.GetResultsForTests,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestSyntheticsModule2.GetResultsForTestsError,
             )
             return attach_rate_limit(
                 rest_models.GetResultsForTestsResponse.model_validate(
@@ -602,6 +648,7 @@ class SyntheticsServiceWrapper:
                 self._grpc_stub_1.GetResultsForTestsCsv,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestSyntheticsModule2.GetResultsForTestsCsvError,
             )
             return attach_rate_limit(
                 rest_models.GetResultsForTestsCsvResponse.model_validate(
@@ -637,7 +684,10 @@ class SyntheticsServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetTraceForTest, _req, api_config=api_config_override
+                self._grpc_stub_1.GetTraceForTest,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSyntheticsModule2.GetTraceForTestError,
             )
             return attach_rate_limit(
                 rest_models.GetTraceForTestResponse.model_validate(

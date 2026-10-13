@@ -159,7 +159,7 @@ def test_wrapper_raises_for_grpc_unimplemented(
 
     received_configs: list[Any] = []
 
-    def _mock_call_grpc(stub_method, request, *, api_config=None):
+    def _mock_call_grpc(stub_method, request, *, api_config=None, error_cls=None):
         nonlocal _grpc_was_called
         _grpc_was_called = True
         received_configs.append(api_config)

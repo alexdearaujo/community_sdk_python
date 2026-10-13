@@ -51,7 +51,10 @@ class AssetTagsServiceWrapper:
                 {"asset_type": assetType, "asset_id": assetId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetTagValues, _req, api_config=api_config_override
+                self._grpc_stub_1.GetTagValues,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.GetTagValuesError,
             )
             return attach_rate_limit(
                 rest_models.GetTagValuesResponse.model_validate(
@@ -81,7 +84,10 @@ class AssetTagsServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListTagKeysRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListTagKeys, _req, api_config=api_config_override
+                self._grpc_stub_1.ListTagKeys,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.ListTagKeysError,
             )
             return attach_rate_limit(
                 rest_models.ListTagKeysResponse.model_validate(
@@ -116,7 +122,10 @@ class AssetTagsServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateTagKey, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateTagKey,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.CreateTagKeyError,
             )
             return attach_rate_limit(
                 rest_models.CreateTagKeyResponse.model_validate(
@@ -147,7 +156,10 @@ class AssetTagsServiceWrapper:
                 self._grpc_pb2_1.GetTagKeyRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetTagKey, _req, api_config=api_config_override
+                self._grpc_stub_1.GetTagKey,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.GetTagKeyError,
             )
             return attach_rate_limit(
                 rest_models.GetTagKeyResponse.model_validate(
@@ -184,7 +196,10 @@ class AssetTagsServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateTagKey, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateTagKey,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.UpdateTagKeyError,
             )
             return attach_rate_limit(
                 rest_models.UpdateTagKeyResponse.model_validate(
@@ -216,7 +231,10 @@ class AssetTagsServiceWrapper:
                 self._grpc_pb2_1.DeleteTagKeyRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteTagKey, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteTagKey,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.DeleteTagKeyError,
             )
             return attach_rate_limit(
                 rest_models.DeleteTagKeyResponse.model_validate(
@@ -253,7 +271,10 @@ class AssetTagsServiceWrapper:
                 {"tag_id": tagId, "asset_type": assetType},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListTagValues, _req, api_config=api_config_override
+                self._grpc_stub_1.ListTagValues,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.ListTagValuesError,
             )
             return attach_rate_limit(
                 rest_models.ListTagValuesResponse.model_validate(
@@ -290,7 +311,10 @@ class AssetTagsServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.SetTagValues, _req, api_config=api_config_override
+                self._grpc_stub_1.SetTagValues,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.SetTagValuesError,
             )
             return attach_rate_limit(
                 rest_models.SetTagValuesResponse.model_validate(
@@ -326,7 +350,10 @@ class AssetTagsServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteTagValues, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteTagValues,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAssetTagsModule1.DeleteTagValuesError,
             )
             return attach_rate_limit(
                 rest_models.DeleteTagValuesResponse.model_validate(

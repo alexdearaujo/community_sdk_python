@@ -78,257 +78,310 @@ class SyntheticsError(HTTPException):
         )
 
 
-class CreateAgentAlertUnexpectedError(SyntheticsError):
+class CreateAgentAlertError(SyntheticsError):
+    """Operation-local error for CreateAgentAlert."""
+
+    response_error_map: dict[str, type[SyntheticsError]] = {}
+
+
+class CreateAgentAlertUnexpectedError(CreateAgentAlertError):
     """Operation-local response error for CreateAgentAlert (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateAgentAlertError(SyntheticsError):
-    """Operation-local error for CreateAgentAlert."""
-
-    response_error_map = {
-        "default": CreateAgentAlertUnexpectedError,
-    }
-
-
-class CreateTestUnexpectedError(SyntheticsError):
-    """Operation-local response error for CreateTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateAgentAlertError.response_error_map = {
+    "default": CreateAgentAlertUnexpectedError,
+}
 
 
 class CreateTestError(SyntheticsError):
     """Operation-local error for CreateTest."""
 
-    response_error_map = {
-        "default": CreateTestUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class DeleteAgentUnexpectedError(SyntheticsError):
-    """Operation-local response error for DeleteAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateTestUnexpectedError(CreateTestError):
+    """Operation-local response error for CreateTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CreateTestError.response_error_map = {
+    "default": CreateTestUnexpectedError,
+}
 
 
 class DeleteAgentError(SyntheticsError):
     """Operation-local error for DeleteAgent."""
 
-    response_error_map = {
-        "default": DeleteAgentUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class DeleteAgentAlertUnexpectedError(SyntheticsError):
-    """Operation-local response error for DeleteAgentAlert (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteAgentUnexpectedError(DeleteAgentError):
+    """Operation-local response error for DeleteAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteAgentError.response_error_map = {
+    "default": DeleteAgentUnexpectedError,
+}
 
 
 class DeleteAgentAlertError(SyntheticsError):
     """Operation-local error for DeleteAgentAlert."""
 
-    response_error_map = {
-        "default": DeleteAgentAlertUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class DeleteTestUnexpectedError(SyntheticsError):
-    """Operation-local response error for DeleteTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteAgentAlertUnexpectedError(DeleteAgentAlertError):
+    """Operation-local response error for DeleteAgentAlert (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteAgentAlertError.response_error_map = {
+    "default": DeleteAgentAlertUnexpectedError,
+}
 
 
 class DeleteTestError(SyntheticsError):
     """Operation-local error for DeleteTest."""
 
-    response_error_map = {
-        "default": DeleteTestUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class GetAgentUnexpectedError(SyntheticsError):
-    """Operation-local response error for GetAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteTestUnexpectedError(DeleteTestError):
+    """Operation-local response error for DeleteTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteTestError.response_error_map = {
+    "default": DeleteTestUnexpectedError,
+}
 
 
 class GetAgentError(SyntheticsError):
     """Operation-local error for GetAgent."""
 
-    response_error_map = {
-        "default": GetAgentUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class GetAgentAlertUnexpectedError(SyntheticsError):
-    """Operation-local response error for GetAgentAlert (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetAgentUnexpectedError(GetAgentError):
+    """Operation-local response error for GetAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetAgentError.response_error_map = {
+    "default": GetAgentUnexpectedError,
+}
 
 
 class GetAgentAlertError(SyntheticsError):
     """Operation-local error for GetAgentAlert."""
 
-    response_error_map = {
-        "default": GetAgentAlertUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class GetResultsForTestsUnexpectedError(SyntheticsError):
-    """Operation-local response error for GetResultsForTests (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetAgentAlertUnexpectedError(GetAgentAlertError):
+    """Operation-local response error for GetAgentAlert (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetAgentAlertError.response_error_map = {
+    "default": GetAgentAlertUnexpectedError,
+}
 
 
 class GetResultsForTestsError(SyntheticsError):
     """Operation-local error for GetResultsForTests."""
 
-    response_error_map = {
-        "default": GetResultsForTestsUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class GetResultsForTestsCsvUnexpectedError(SyntheticsError):
-    """Operation-local response error for GetResultsForTestsCsv (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetResultsForTestsUnexpectedError(GetResultsForTestsError):
+    """Operation-local response error for GetResultsForTests (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetResultsForTestsError.response_error_map = {
+    "default": GetResultsForTestsUnexpectedError,
+}
 
 
 class GetResultsForTestsCsvError(SyntheticsError):
     """Operation-local error for GetResultsForTestsCsv."""
 
-    response_error_map = {
-        "default": GetResultsForTestsCsvUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class GetTestUnexpectedError(SyntheticsError):
-    """Operation-local response error for GetTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetResultsForTestsCsvUnexpectedError(GetResultsForTestsCsvError):
+    """Operation-local response error for GetResultsForTestsCsv (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetResultsForTestsCsvError.response_error_map = {
+    "default": GetResultsForTestsCsvUnexpectedError,
+}
 
 
 class GetTestError(SyntheticsError):
     """Operation-local error for GetTest."""
 
-    response_error_map = {
-        "default": GetTestUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class GetTraceForTestUnexpectedError(SyntheticsError):
-    """Operation-local response error for GetTraceForTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetTestUnexpectedError(GetTestError):
+    """Operation-local response error for GetTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetTestError.response_error_map = {
+    "default": GetTestUnexpectedError,
+}
 
 
 class GetTraceForTestError(SyntheticsError):
     """Operation-local error for GetTraceForTest."""
 
-    response_error_map = {
-        "default": GetTraceForTestUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class ListAgentAlertsUnexpectedError(SyntheticsError):
-    """Operation-local response error for ListAgentAlerts (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetTraceForTestUnexpectedError(GetTraceForTestError):
+    """Operation-local response error for GetTraceForTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetTraceForTestError.response_error_map = {
+    "default": GetTraceForTestUnexpectedError,
+}
 
 
 class ListAgentAlertsError(SyntheticsError):
     """Operation-local error for ListAgentAlerts."""
 
-    response_error_map = {
-        "default": ListAgentAlertsUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class ListAgentsUnexpectedError(SyntheticsError):
-    """Operation-local response error for ListAgents (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListAgentAlertsUnexpectedError(ListAgentAlertsError):
+    """Operation-local response error for ListAgentAlerts (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListAgentAlertsError.response_error_map = {
+    "default": ListAgentAlertsUnexpectedError,
+}
 
 
 class ListAgentsError(SyntheticsError):
     """Operation-local error for ListAgents."""
 
-    response_error_map = {
-        "default": ListAgentsUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class ListTestsUnexpectedError(SyntheticsError):
-    """Operation-local response error for ListTests (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListAgentsUnexpectedError(ListAgentsError):
+    """Operation-local response error for ListAgents (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListAgentsError.response_error_map = {
+    "default": ListAgentsUnexpectedError,
+}
 
 
 class ListTestsError(SyntheticsError):
     """Operation-local error for ListTests."""
 
-    response_error_map = {
-        "default": ListTestsUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class SetTestStatusUnexpectedError(SyntheticsError):
-    """Operation-local response error for SetTestStatus (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListTestsUnexpectedError(ListTestsError):
+    """Operation-local response error for ListTests (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListTestsError.response_error_map = {
+    "default": ListTestsUnexpectedError,
+}
 
 
 class SetTestStatusError(SyntheticsError):
     """Operation-local error for SetTestStatus."""
 
-    response_error_map = {
-        "default": SetTestStatusUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class UpdateAgentUnexpectedError(SyntheticsError):
-    """Operation-local response error for UpdateAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class SetTestStatusUnexpectedError(SetTestStatusError):
+    """Operation-local response error for SetTestStatus (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+SetTestStatusError.response_error_map = {
+    "default": SetTestStatusUnexpectedError,
+}
 
 
 class UpdateAgentError(SyntheticsError):
     """Operation-local error for UpdateAgent."""
 
-    response_error_map = {
-        "default": UpdateAgentUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class UpdateAgentAlertUnexpectedError(SyntheticsError):
-    """Operation-local response error for UpdateAgentAlert (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateAgentUnexpectedError(UpdateAgentError):
+    """Operation-local response error for UpdateAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+UpdateAgentError.response_error_map = {
+    "default": UpdateAgentUnexpectedError,
+}
 
 
 class UpdateAgentAlertError(SyntheticsError):
     """Operation-local error for UpdateAgentAlert."""
 
-    response_error_map = {
-        "default": UpdateAgentAlertUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
 
-class UpdateTestUnexpectedError(SyntheticsError):
-    """Operation-local response error for UpdateTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateAgentAlertUnexpectedError(UpdateAgentAlertError):
+    """Operation-local response error for UpdateAgentAlert (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+UpdateAgentAlertError.response_error_map = {
+    "default": UpdateAgentAlertUnexpectedError,
+}
 
 
 class UpdateTestError(SyntheticsError):
     """Operation-local error for UpdateTest."""
 
-    response_error_map = {
-        "default": UpdateTestUnexpectedError,
-    }
+    response_error_map: dict[str, type[SyntheticsError]] = {}
 
+
+class UpdateTestUnexpectedError(UpdateTestError):
+    """Operation-local response error for UpdateTest (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateTestError.response_error_map = {
+    "default": UpdateTestUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[SyntheticsError]] = {
     "CreateAgentAlert": CreateAgentAlertError,

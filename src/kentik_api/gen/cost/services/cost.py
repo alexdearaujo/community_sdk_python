@@ -48,6 +48,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.ListCostProviders,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCostModule1.ListCostProvidersError,
             )
             return attach_rate_limit(
                 rest_models.ListCostProvidersResponse.model_validate(
@@ -83,6 +84,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.ListCostProviderSummaries,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCostModule1.ListCostProviderSummariesError,
             )
             return attach_rate_limit(
                 rest_models.ListCostProviderSummariesResponse.model_validate(
@@ -122,6 +124,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.GetCostProviderSummary,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCostModule1.GetCostProviderSummaryError,
             )
             return attach_rate_limit(
                 rest_models.GetCostProviderSummaryResponse.model_validate(

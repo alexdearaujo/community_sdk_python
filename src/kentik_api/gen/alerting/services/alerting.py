@@ -131,7 +131,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Create, _req, api_config=api_config_override
+                self._grpc_stub_2.Create,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.CreateError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceCreateResponse.model_validate(
@@ -167,7 +170,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.List, _req, api_config=api_config_override
+                self._grpc_stub_2.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.ListError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceListResponse.model_validate(
@@ -198,7 +204,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_2.AlertAutoAckServiceGetRequest, None, {"id": autoAckid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Get, _req, api_config=api_config_override
+                self._grpc_stub_2.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.GetError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceGetResponse.model_validate(
@@ -231,7 +240,10 @@ class AlertingServiceWrapper:
                 {"id": autoAckid},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Delete, _req, api_config=api_config_override
+                self._grpc_stub_2.Delete,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.DeleteError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceDeleteResponse.model_validate(
@@ -268,7 +280,10 @@ class AlertingServiceWrapper:
                 {"auto_ack.id": autoAckid},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Replace, _req, api_config=api_config_override
+                self._grpc_stub_2.Replace,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.ReplaceError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceReplaceResponse.model_validate(
@@ -305,7 +320,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.List, _req, api_config=api_config_override
+                self._grpc_stub_1.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.ListError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceListResponse.model_validate(
@@ -341,7 +359,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.Clear, _req, api_config=api_config_override
+                self._grpc_stub_1.Clear,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.ClearError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceClearResponse.model_validate(
@@ -374,7 +395,10 @@ class AlertingServiceWrapper:
                 {"alert_id": alertId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListComments, _req, api_config=api_config_override
+                self._grpc_stub_1.ListComments,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.ListCommentsError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceListCommentsResponse.model_validate(
@@ -411,7 +435,10 @@ class AlertingServiceWrapper:
                 {"alert_id": alertId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.AddComment, _req, api_config=api_config_override
+                self._grpc_stub_1.AddComment,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.AddCommentError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceAddCommentResponse.model_validate(
@@ -452,6 +479,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_1.SetExternalContext,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestAlertingModule2.SetExternalContextError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceSetExternalContextResponse.model_validate(
@@ -483,7 +511,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_1.AlertServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.Get, _req, api_config=api_config_override
+                self._grpc_stub_1.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.GetError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceGetResponse.model_validate(
@@ -520,7 +551,10 @@ class AlertingServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.Ack, _req, api_config=api_config_override
+                self._grpc_stub_1.Ack,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.AckError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceAckResponse.model_validate(
@@ -558,7 +592,10 @@ class AlertingServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UnAck, _req, api_config=api_config_override
+                self._grpc_stub_1.UnAck,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.UnAckError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceUnAckResponse.model_validate(
@@ -595,7 +632,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.Create, _req, api_config=api_config_override
+                self._grpc_stub_6.Create,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.CreateError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceCreateResponse.model_validate(
@@ -631,7 +671,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.List, _req, api_config=api_config_override
+                self._grpc_stub_6.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.ListError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceListResponse.model_validate(
@@ -664,7 +707,10 @@ class AlertingServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.Get, _req, api_config=api_config_override
+                self._grpc_stub_6.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.GetError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceGetResponse.model_validate(
@@ -697,7 +743,10 @@ class AlertingServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.Delete, _req, api_config=api_config_override
+                self._grpc_stub_6.Delete,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.DeleteError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceDeleteResponse.model_validate(
@@ -734,7 +783,10 @@ class AlertingServiceWrapper:
                 {"silence.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.Replace, _req, api_config=api_config_override
+                self._grpc_stub_6.Replace,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.ReplaceError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceReplaceResponse.model_validate(
@@ -789,7 +841,10 @@ class AlertingServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_3.List, _req, api_config=api_config_override
+                self._grpc_stub_3.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule4.ListError,
             )
             return attach_rate_limit(
                 rest_models.MitigationMethodsServiceListResponse.model_validate(
@@ -828,7 +883,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_3.MitigationMethodsServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_3.Get, _req, api_config=api_config_override
+                self._grpc_stub_3.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule4.GetError,
             )
             return attach_rate_limit(
                 rest_models.MitigationMethodsServiceGetResponse.model_validate(
@@ -882,7 +940,10 @@ class AlertingServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.List, _req, api_config=api_config_override
+                self._grpc_stub_4.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule5.ListError,
             )
             return attach_rate_limit(
                 rest_models.MitigationPlatformsServiceListResponse.model_validate(
@@ -921,7 +982,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_4.MitigationPlatformsServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.Get, _req, api_config=api_config_override
+                self._grpc_stub_4.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule5.GetError,
             )
             return attach_rate_limit(
                 rest_models.MitigationPlatformsServiceGetResponse.model_validate(
@@ -1099,7 +1163,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.List, _req, api_config=api_config_override
+                self._grpc_stub_5.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule7.ListError,
             )
             return attach_rate_limit(
                 rest_models.PolicyServiceListResponse.model_validate(
@@ -1136,7 +1203,10 @@ class AlertingServiceWrapper:
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.Get, _req, api_config=api_config_override
+                self._grpc_stub_5.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule7.GetError,
             )
             return attach_rate_limit(
                 rest_models.PolicyServiceGetResponse.model_validate(
@@ -1175,7 +1245,10 @@ class AlertingServiceWrapper:
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.Disable, _req, api_config=api_config_override
+                self._grpc_stub_5.Disable,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule7.DisableError,
             )
             return attach_rate_limit(
                 rest_models.PolicyServiceDisableResponse.model_validate(
@@ -1215,7 +1288,10 @@ class AlertingServiceWrapper:
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.Enable, _req, api_config=api_config_override
+                self._grpc_stub_5.Enable,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule7.EnableError,
             )
             return attach_rate_limit(
                 rest_models.PolicyServiceEnableResponse.model_validate(
@@ -1253,7 +1329,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.Create, _req, api_config=api_config_override
+                self._grpc_stub_7.Create,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.CreateError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceCreateResponse.model_validate(
@@ -1289,7 +1368,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.List, _req, api_config=api_config_override
+                self._grpc_stub_7.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.ListError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceListResponse.model_validate(
@@ -1320,7 +1402,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_7.SuppressionServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.Get, _req, api_config=api_config_override
+                self._grpc_stub_7.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.GetError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceGetResponse.model_validate(
@@ -1351,7 +1436,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_7.SuppressionServiceDeleteRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.Delete, _req, api_config=api_config_override
+                self._grpc_stub_7.Delete,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.DeleteError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceDeleteResponse.model_validate(
@@ -1388,7 +1476,10 @@ class AlertingServiceWrapper:
                 {"suppression.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.Replace, _req, api_config=api_config_override
+                self._grpc_stub_7.Replace,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.ReplaceError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceReplaceResponse.model_validate(

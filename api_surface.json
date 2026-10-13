@@ -2,7 +2,7 @@
   "schema_version": 3,
   "requirements": {
     "grpcio": "grpcio>=1.84.0",
-    "httpx": "httpx>=0.28.1",
+    "httpx": "httpx>=0.28.1,<1",
     "protobuf": "protobuf>=7.35.1,<8",
     "pydantic": "pydantic>=2.12.5"
   },

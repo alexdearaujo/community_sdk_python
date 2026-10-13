@@ -48,6 +48,7 @@ class CredentialServiceWrapper:
                 self._grpc_stub_1.ListCredentialGroup,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCredentialModule1.ListCredentialGroupError,
             )
             return attach_rate_limit(
                 rest_models.ListCredentialGroupResponse.model_validate(
@@ -80,6 +81,7 @@ class CredentialServiceWrapper:
                 self._grpc_stub_1.GetCredentialGroup,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCredentialModule1.GetCredentialGroupError,
             )
             return attach_rate_limit(
                 rest_models.GetCredentialGroupResponse.model_validate(

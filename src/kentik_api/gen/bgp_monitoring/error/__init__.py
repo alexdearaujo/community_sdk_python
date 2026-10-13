@@ -78,117 +78,140 @@ class BgpMonitoringError(HTTPException):
         )
 
 
-class CreateMonitorUnexpectedError(BgpMonitoringError):
+class CreateMonitorError(BgpMonitoringError):
+    """Operation-local error for CreateMonitor."""
+
+    response_error_map: dict[str, type[BgpMonitoringError]] = {}
+
+
+class CreateMonitorUnexpectedError(CreateMonitorError):
     """Operation-local response error for CreateMonitor (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateMonitorError(BgpMonitoringError):
-    """Operation-local error for CreateMonitor."""
-
-    response_error_map = {
-        "default": CreateMonitorUnexpectedError,
-    }
-
-
-class DeleteMonitorUnexpectedError(BgpMonitoringError):
-    """Operation-local response error for DeleteMonitor (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateMonitorError.response_error_map = {
+    "default": CreateMonitorUnexpectedError,
+}
 
 
 class DeleteMonitorError(BgpMonitoringError):
     """Operation-local error for DeleteMonitor."""
 
-    response_error_map = {
-        "default": DeleteMonitorUnexpectedError,
-    }
+    response_error_map: dict[str, type[BgpMonitoringError]] = {}
 
 
-class GetMetricsForTargetUnexpectedError(BgpMonitoringError):
-    """Operation-local response error for GetMetricsForTarget (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteMonitorUnexpectedError(DeleteMonitorError):
+    """Operation-local response error for DeleteMonitor (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteMonitorError.response_error_map = {
+    "default": DeleteMonitorUnexpectedError,
+}
 
 
 class GetMetricsForTargetError(BgpMonitoringError):
     """Operation-local error for GetMetricsForTarget."""
 
-    response_error_map = {
-        "default": GetMetricsForTargetUnexpectedError,
-    }
+    response_error_map: dict[str, type[BgpMonitoringError]] = {}
 
 
-class GetMonitorUnexpectedError(BgpMonitoringError):
-    """Operation-local response error for GetMonitor (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetMetricsForTargetUnexpectedError(GetMetricsForTargetError):
+    """Operation-local response error for GetMetricsForTarget (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetMetricsForTargetError.response_error_map = {
+    "default": GetMetricsForTargetUnexpectedError,
+}
 
 
 class GetMonitorError(BgpMonitoringError):
     """Operation-local error for GetMonitor."""
 
-    response_error_map = {
-        "default": GetMonitorUnexpectedError,
-    }
+    response_error_map: dict[str, type[BgpMonitoringError]] = {}
 
 
-class GetRoutesForTargetUnexpectedError(BgpMonitoringError):
-    """Operation-local response error for GetRoutesForTarget (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetMonitorUnexpectedError(GetMonitorError):
+    """Operation-local response error for GetMonitor (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetMonitorError.response_error_map = {
+    "default": GetMonitorUnexpectedError,
+}
 
 
 class GetRoutesForTargetError(BgpMonitoringError):
     """Operation-local error for GetRoutesForTarget."""
 
-    response_error_map = {
-        "default": GetRoutesForTargetUnexpectedError,
-    }
+    response_error_map: dict[str, type[BgpMonitoringError]] = {}
 
 
-class ListMonitorsUnexpectedError(BgpMonitoringError):
-    """Operation-local response error for ListMonitors (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetRoutesForTargetUnexpectedError(GetRoutesForTargetError):
+    """Operation-local response error for GetRoutesForTarget (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetRoutesForTargetError.response_error_map = {
+    "default": GetRoutesForTargetUnexpectedError,
+}
 
 
 class ListMonitorsError(BgpMonitoringError):
     """Operation-local error for ListMonitors."""
 
-    response_error_map = {
-        "default": ListMonitorsUnexpectedError,
-    }
+    response_error_map: dict[str, type[BgpMonitoringError]] = {}
 
 
-class SetMonitorStatusUnexpectedError(BgpMonitoringError):
-    """Operation-local response error for SetMonitorStatus (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListMonitorsUnexpectedError(ListMonitorsError):
+    """Operation-local response error for ListMonitors (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListMonitorsError.response_error_map = {
+    "default": ListMonitorsUnexpectedError,
+}
 
 
 class SetMonitorStatusError(BgpMonitoringError):
     """Operation-local error for SetMonitorStatus."""
 
-    response_error_map = {
-        "default": SetMonitorStatusUnexpectedError,
-    }
+    response_error_map: dict[str, type[BgpMonitoringError]] = {}
 
 
-class UpdateMonitorUnexpectedError(BgpMonitoringError):
-    """Operation-local response error for UpdateMonitor (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class SetMonitorStatusUnexpectedError(SetMonitorStatusError):
+    """Operation-local response error for SetMonitorStatus (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+SetMonitorStatusError.response_error_map = {
+    "default": SetMonitorStatusUnexpectedError,
+}
 
 
 class UpdateMonitorError(BgpMonitoringError):
     """Operation-local error for UpdateMonitor."""
 
-    response_error_map = {
-        "default": UpdateMonitorUnexpectedError,
-    }
+    response_error_map: dict[str, type[BgpMonitoringError]] = {}
 
+
+class UpdateMonitorUnexpectedError(UpdateMonitorError):
+    """Operation-local response error for UpdateMonitor (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateMonitorError.response_error_map = {
+    "default": UpdateMonitorUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[BgpMonitoringError]] = {
     "CreateMonitor": CreateMonitorError,

@@ -88,6 +88,14 @@ Each change below can stop an existing `except` clause or call from working.
 
 ### Fixed
 
+- **A gRPC response over 4 MiB no longer reads as a quota error.** The channel
+  now allows 40 MiB, and `KentikAPI(grpc_options=[...])` changes it. A response
+  over the limit raises `TransportError`, not `HTTPException` with status 429.
+- **`except <Operation>Error` now catches what the operation raises.** Each
+  response error class, such as `ListDevicesNotFoundError`, now extends its
+  operation class, `ListDevicesError`, as well as the service class. gRPC now
+  raises the same class as REST, with `grpc_status_code` set, where it raised
+  the plain `HTTPException` before.
 - **gRPC calls reach the right RPC.** In a Service with more than one proto
   service, such as `alerting`, a gRPC call went to whichever service declared
   an RPC of the same name last. For example, deleting an AlertAutoAck called
@@ -125,6 +133,9 @@ the declared floors match them:
 | --- | --- | --- |
 | `grpcio` | `>=1.78.0` | `>=1.84.0` |
 | `protobuf` | not declared | `>=7.35.1,<8` |
+| `httpx` | `>=0.28.1` | `>=0.28.1,<1` |
+| `python-dotenv` | `>=1.1.1` | `>=1.2.1` |
+| `googleapis-common-protos` | `>=1.63.0` | `>=1.73.1` |
 
 ### Documentation
 

@@ -78,75 +78,89 @@ class FlowTagError(HTTPException):
         )
 
 
-class CreateFlowTagUnexpectedError(FlowTagError):
+class CreateFlowTagError(FlowTagError):
+    """Operation-local error for CreateFlowTag."""
+
+    response_error_map: dict[str, type[FlowTagError]] = {}
+
+
+class CreateFlowTagUnexpectedError(CreateFlowTagError):
     """Operation-local response error for CreateFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateFlowTagError(FlowTagError):
-    """Operation-local error for CreateFlowTag."""
-
-    response_error_map = {
-        "default": CreateFlowTagUnexpectedError,
-    }
-
-
-class DeleteFlowTagUnexpectedError(FlowTagError):
-    """Operation-local response error for DeleteFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateFlowTagError.response_error_map = {
+    "default": CreateFlowTagUnexpectedError,
+}
 
 
 class DeleteFlowTagError(FlowTagError):
     """Operation-local error for DeleteFlowTag."""
 
-    response_error_map = {
-        "default": DeleteFlowTagUnexpectedError,
-    }
+    response_error_map: dict[str, type[FlowTagError]] = {}
 
 
-class GetFlowTagUnexpectedError(FlowTagError):
-    """Operation-local response error for GetFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteFlowTagUnexpectedError(DeleteFlowTagError):
+    """Operation-local response error for DeleteFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteFlowTagError.response_error_map = {
+    "default": DeleteFlowTagUnexpectedError,
+}
 
 
 class GetFlowTagError(FlowTagError):
     """Operation-local error for GetFlowTag."""
 
-    response_error_map = {
-        "default": GetFlowTagUnexpectedError,
-    }
+    response_error_map: dict[str, type[FlowTagError]] = {}
 
 
-class SearchFlowTagUnexpectedError(FlowTagError):
-    """Operation-local response error for SearchFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetFlowTagUnexpectedError(GetFlowTagError):
+    """Operation-local response error for GetFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetFlowTagError.response_error_map = {
+    "default": GetFlowTagUnexpectedError,
+}
 
 
 class SearchFlowTagError(FlowTagError):
     """Operation-local error for SearchFlowTag."""
 
-    response_error_map = {
-        "default": SearchFlowTagUnexpectedError,
-    }
+    response_error_map: dict[str, type[FlowTagError]] = {}
 
 
-class UpdateFlowTagUnexpectedError(FlowTagError):
-    """Operation-local response error for UpdateFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class SearchFlowTagUnexpectedError(SearchFlowTagError):
+    """Operation-local response error for SearchFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+SearchFlowTagError.response_error_map = {
+    "default": SearchFlowTagUnexpectedError,
+}
 
 
 class UpdateFlowTagError(FlowTagError):
     """Operation-local error for UpdateFlowTag."""
 
-    response_error_map = {
-        "default": UpdateFlowTagUnexpectedError,
-    }
+    response_error_map: dict[str, type[FlowTagError]] = {}
 
+
+class UpdateFlowTagUnexpectedError(UpdateFlowTagError):
+    """Operation-local response error for UpdateFlowTag (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateFlowTagError.response_error_map = {
+    "default": UpdateFlowTagUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[FlowTagError]] = {
     "CreateFlowTag": CreateFlowTagError,

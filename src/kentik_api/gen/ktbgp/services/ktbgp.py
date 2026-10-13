@@ -50,7 +50,10 @@ class KtbgpServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.Announce, _req, api_config=api_config_override
+                self._grpc_stub_1.Announce,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKtbgpModule1.RouteService_AnnounceError,
             )
             return attach_rate_limit(
                 rest_models.RouteServiceAnnounceResponse.model_validate(
@@ -86,7 +89,10 @@ class KtbgpServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.List, _req, api_config=api_config_override
+                self._grpc_stub_1.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKtbgpModule1.RouteService_ListError,
             )
             return attach_rate_limit(
                 rest_models.RouteServiceListResponse.model_validate(
@@ -122,7 +128,10 @@ class KtbgpServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.Withdraw, _req, api_config=api_config_override
+                self._grpc_stub_1.Withdraw,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKtbgpModule1.RouteService_WithdrawError,
             )
             return attach_rate_limit(
                 rest_models.RouteServiceWithdrawResponse.model_validate(

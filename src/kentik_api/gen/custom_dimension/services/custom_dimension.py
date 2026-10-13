@@ -48,6 +48,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.ListCustomDimensions,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.ListCustomDimensionsError,
             )
             return attach_rate_limit(
                 rest_models.ListCustomDimensionsResponse.model_validate(
@@ -82,6 +83,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.GetCustomDimensionInfo,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.GetCustomDimensionInfoError,
             )
             return attach_rate_limit(
                 rest_models.GetCustomDimensionInfoResponse.model_validate(
@@ -121,6 +123,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.UpdateCustomDimension,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.UpdateCustomDimensionError,
             )
             return attach_rate_limit(
                 rest_models.UpdateCustomDimensionResponse.model_validate(
@@ -157,6 +160,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.DeleteCustomDimension,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.DeleteCustomDimensionError,
             )
             return attach_rate_limit(
                 rest_models.DeleteCustomDimensionResponse.model_validate(
@@ -193,7 +197,10 @@ class CustomDimensionServiceWrapper:
                 {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreatePopulator, _req, api_config=api_config_override
+                self._grpc_stub_1.CreatePopulator,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.CreatePopulatorError,
             )
             return attach_rate_limit(
                 rest_models.CreatePopulatorResponse.model_validate(
@@ -236,7 +243,10 @@ class CustomDimensionServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetPopulator, _req, api_config=api_config_override
+                self._grpc_stub_1.GetPopulator,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.GetPopulatorError,
             )
             return attach_rate_limit(
                 rest_models.GetPopulatorResponse.model_validate(
@@ -276,7 +286,10 @@ class CustomDimensionServiceWrapper:
                 {"custom_dimension_id": customDimensionId, "populator_id": populatorId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdatePopulator, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdatePopulator,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.UpdatePopulatorError,
             )
             return attach_rate_limit(
                 rest_models.UpdatePopulatorResponse.model_validate(
@@ -315,7 +328,10 @@ class CustomDimensionServiceWrapper:
                 {"custom_dimension_id": customDimensionId, "populator_id": populatorId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeletePopulator, _req, api_config=api_config_override
+                self._grpc_stub_1.DeletePopulator,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.DeletePopulatorError,
             )
             return attach_rate_limit(
                 rest_models.DeletePopulatorResponse.model_validate(
@@ -365,6 +381,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.GetPopulatorField,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.GetPopulatorFieldError,
             )
             return attach_rate_limit(
                 rest_models.GetPopulatorFieldResponse.model_validate(
@@ -407,6 +424,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.CreateCustomDimension,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomDimensionModule1.CreateCustomDimensionError,
             )
             return attach_rate_limit(
                 rest_models.CreateCustomDimensionResponse.model_validate(

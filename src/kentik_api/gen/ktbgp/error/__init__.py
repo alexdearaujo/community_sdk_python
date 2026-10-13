@@ -78,47 +78,55 @@ class KtbgpError(HTTPException):
         )
 
 
-class RouteService_AnnounceUnexpectedError(KtbgpError):
+class RouteService_AnnounceError(KtbgpError):
+    """Operation-local error for RouteService_Announce."""
+
+    response_error_map: dict[str, type[KtbgpError]] = {}
+
+
+class RouteService_AnnounceUnexpectedError(RouteService_AnnounceError):
     """Operation-local response error for RouteService_Announce (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class RouteService_AnnounceError(KtbgpError):
-    """Operation-local error for RouteService_Announce."""
-
-    response_error_map = {
-        "default": RouteService_AnnounceUnexpectedError,
-    }
-
-
-class RouteService_ListUnexpectedError(KtbgpError):
-    """Operation-local response error for RouteService_List (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+RouteService_AnnounceError.response_error_map = {
+    "default": RouteService_AnnounceUnexpectedError,
+}
 
 
 class RouteService_ListError(KtbgpError):
     """Operation-local error for RouteService_List."""
 
-    response_error_map = {
-        "default": RouteService_ListUnexpectedError,
-    }
+    response_error_map: dict[str, type[KtbgpError]] = {}
 
 
-class RouteService_WithdrawUnexpectedError(KtbgpError):
-    """Operation-local response error for RouteService_Withdraw (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class RouteService_ListUnexpectedError(RouteService_ListError):
+    """Operation-local response error for RouteService_List (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+RouteService_ListError.response_error_map = {
+    "default": RouteService_ListUnexpectedError,
+}
 
 
 class RouteService_WithdrawError(KtbgpError):
     """Operation-local error for RouteService_Withdraw."""
 
-    response_error_map = {
-        "default": RouteService_WithdrawUnexpectedError,
-    }
+    response_error_map: dict[str, type[KtbgpError]] = {}
 
+
+class RouteService_WithdrawUnexpectedError(RouteService_WithdrawError):
+    """Operation-local response error for RouteService_Withdraw (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+RouteService_WithdrawError.response_error_map = {
+    "default": RouteService_WithdrawUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[KtbgpError]] = {
     "RouteService_Announce": RouteService_AnnounceError,

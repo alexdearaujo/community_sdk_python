@@ -78,47 +78,55 @@ class AiAdvisorError(HTTPException):
         )
 
 
-class CreateChatSessionUnexpectedError(AiAdvisorError):
+class CreateChatSessionError(AiAdvisorError):
+    """Operation-local error for CreateChatSession."""
+
+    response_error_map: dict[str, type[AiAdvisorError]] = {}
+
+
+class CreateChatSessionUnexpectedError(CreateChatSessionError):
     """Operation-local response error for CreateChatSession (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateChatSessionError(AiAdvisorError):
-    """Operation-local error for CreateChatSession."""
-
-    response_error_map = {
-        "default": CreateChatSessionUnexpectedError,
-    }
-
-
-class GetChatSessionUnexpectedError(AiAdvisorError):
-    """Operation-local response error for GetChatSession (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateChatSessionError.response_error_map = {
+    "default": CreateChatSessionUnexpectedError,
+}
 
 
 class GetChatSessionError(AiAdvisorError):
     """Operation-local error for GetChatSession."""
 
-    response_error_map = {
-        "default": GetChatSessionUnexpectedError,
-    }
+    response_error_map: dict[str, type[AiAdvisorError]] = {}
 
 
-class UpdateChatSessionUnexpectedError(AiAdvisorError):
-    """Operation-local response error for UpdateChatSession (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetChatSessionUnexpectedError(GetChatSessionError):
+    """Operation-local response error for GetChatSession (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetChatSessionError.response_error_map = {
+    "default": GetChatSessionUnexpectedError,
+}
 
 
 class UpdateChatSessionError(AiAdvisorError):
     """Operation-local error for UpdateChatSession."""
 
-    response_error_map = {
-        "default": UpdateChatSessionUnexpectedError,
-    }
+    response_error_map: dict[str, type[AiAdvisorError]] = {}
 
+
+class UpdateChatSessionUnexpectedError(UpdateChatSessionError):
+    """Operation-local response error for UpdateChatSession (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateChatSessionError.response_error_map = {
+    "default": UpdateChatSessionUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[AiAdvisorError]] = {
     "CreateChatSession": CreateChatSessionError,

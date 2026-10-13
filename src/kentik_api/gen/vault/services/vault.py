@@ -45,7 +45,10 @@ class VaultServiceWrapper:
                 self._grpc_pb2_1.ListSecretRequest, None, {"names": names}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListSecret, _req, api_config=api_config_override
+                self._grpc_stub_1.ListSecret,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestVaultModule1.ListSecretError,
             )
             return attach_rate_limit(
                 rest_models.ListSecretResponse.model_validate(
@@ -76,7 +79,10 @@ class VaultServiceWrapper:
                 self._grpc_pb2_1.GetSecretRequest, None, {"name": name}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetSecret, _req, api_config=api_config_override
+                self._grpc_stub_1.GetSecret,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestVaultModule1.GetSecretError,
             )
             return attach_rate_limit(
                 rest_models.GetSecretResponse.model_validate(

@@ -419,7 +419,7 @@ def _generate_service_wrappers():
                         f'                raise NotImplementedError("gRPC proto dependencies not installed for {service} service")',
                         f"            _req = build_grpc_request(self._grpc_pb2_{stub_idx}.{grpc_method.request_class}, {body_arg}, {{{fields_arg}}})",
                         f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
-                        "api_config=api_config_override)",
+                        f"api_config=api_config_override, error_cls={module_alias}.{op.error_cls_name})",
                     ]
                     if is_none_return:
                         grpc_lines.append("            return None")

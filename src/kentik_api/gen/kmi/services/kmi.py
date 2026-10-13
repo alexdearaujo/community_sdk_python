@@ -65,6 +65,7 @@ class KmiServiceWrapper:
                 self._grpc_stub_1.GetGlobalInsights,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKmiModule1.GetGlobalInsightsError,
             )
             return attach_rate_limit(
                 rest_models.GetGlobalInsightsResponse.model_validate(
@@ -119,7 +120,10 @@ class KmiServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetASNInsights, _req, api_config=api_config_override
+                self._grpc_stub_1.GetASNInsights,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKmiModule1.GetASNInsightsError,
             )
             return attach_rate_limit(
                 rest_models.GetASNInsightsResponse.model_validate(
@@ -164,7 +168,10 @@ class KmiServiceWrapper:
                 {"market_id": marketId, "asn": asn, "type": type},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetASNDetails, _req, api_config=api_config_override
+                self._grpc_stub_1.GetASNDetails,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKmiModule1.GetASNDetailsError,
             )
             return attach_rate_limit(
                 rest_models.GetASNDetailsResponse.model_validate(
@@ -206,7 +213,10 @@ class KmiServiceWrapper:
                 {"market_id": marketId, "rank_type": rankType, "ip": ip},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetRankings, _req, api_config=api_config_override
+                self._grpc_stub_1.GetRankings,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKmiModule1.GetRankingsError,
             )
             return attach_rate_limit(
                 rest_models.GetRankingsResponse.model_validate(
@@ -238,7 +248,10 @@ class KmiServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListMarketsRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListMarkets, _req, api_config=api_config_override
+                self._grpc_stub_1.ListMarkets,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKmiModule1.ListMarketsError,
             )
             return attach_rate_limit(
                 rest_models.ListMarketsResponse.model_validate(

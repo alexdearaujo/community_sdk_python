@@ -50,7 +50,10 @@ class EnrichmentsServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.FetchValuesByIds, _req, api_config=api_config_override
+                self._grpc_stub_1.FetchValuesByIds,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestEnrichmentsModule1.FetchValuesByIdsError,
             )
             return attach_rate_limit(
                 rest_models.FetchValuesByIdsResponse.model_validate(

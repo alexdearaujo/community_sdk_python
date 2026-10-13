@@ -78,399 +78,496 @@ class KagentError(HTTPException):
         )
 
 
-class AuthorizeUnexpectedError(KagentError):
+class AuthorizeError(KagentError):
+    """Operation-local error for Authorize."""
+
+    response_error_map: dict[str, type[KagentError]] = {}
+
+
+class AuthorizeUnexpectedError(AuthorizeError):
     """Operation-local response error for Authorize (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class AuthorizeError(KagentError):
-    """Operation-local error for Authorize."""
-
-    response_error_map = {
-        "default": AuthorizeUnexpectedError,
-    }
-
-
-class CapabilityAdminService_CreateCapabilityUnexpectedError(KagentError):
-    """Operation-local response error for CapabilityAdminService_CreateCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+AuthorizeError.response_error_map = {
+    "default": AuthorizeUnexpectedError,
+}
 
 
 class CapabilityAdminService_CreateCapabilityError(KagentError):
     """Operation-local error for CapabilityAdminService_CreateCapability."""
 
-    response_error_map = {
-        "default": CapabilityAdminService_CreateCapabilityUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class CapabilityAdminService_DeleteCapabilityUnexpectedError(KagentError):
-    """Operation-local response error for CapabilityAdminService_DeleteCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CapabilityAdminService_CreateCapabilityUnexpectedError(
+    CapabilityAdminService_CreateCapabilityError
+):
+    """Operation-local response error for CapabilityAdminService_CreateCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CapabilityAdminService_CreateCapabilityError.response_error_map = {
+    "default": CapabilityAdminService_CreateCapabilityUnexpectedError,
+}
 
 
 class CapabilityAdminService_DeleteCapabilityError(KagentError):
     """Operation-local error for CapabilityAdminService_DeleteCapability."""
 
-    response_error_map = {
-        "default": CapabilityAdminService_DeleteCapabilityUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class CapabilityAdminService_GetCapabilityUnexpectedError(KagentError):
-    """Operation-local response error for CapabilityAdminService_GetCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CapabilityAdminService_DeleteCapabilityUnexpectedError(
+    CapabilityAdminService_DeleteCapabilityError
+):
+    """Operation-local response error for CapabilityAdminService_DeleteCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CapabilityAdminService_DeleteCapabilityError.response_error_map = {
+    "default": CapabilityAdminService_DeleteCapabilityUnexpectedError,
+}
 
 
 class CapabilityAdminService_GetCapabilityError(KagentError):
     """Operation-local error for CapabilityAdminService_GetCapability."""
 
-    response_error_map = {
-        "default": CapabilityAdminService_GetCapabilityUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class CapabilityAdminService_ListCapabilitiesUnexpectedError(KagentError):
-    """Operation-local response error for CapabilityAdminService_ListCapabilities (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CapabilityAdminService_GetCapabilityUnexpectedError(
+    CapabilityAdminService_GetCapabilityError
+):
+    """Operation-local response error for CapabilityAdminService_GetCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CapabilityAdminService_GetCapabilityError.response_error_map = {
+    "default": CapabilityAdminService_GetCapabilityUnexpectedError,
+}
 
 
 class CapabilityAdminService_ListCapabilitiesError(KagentError):
     """Operation-local error for CapabilityAdminService_ListCapabilities."""
 
-    response_error_map = {
-        "default": CapabilityAdminService_ListCapabilitiesUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class CapabilityAdminService_UpdateCapabilityUnexpectedError(KagentError):
-    """Operation-local response error for CapabilityAdminService_UpdateCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CapabilityAdminService_ListCapabilitiesUnexpectedError(
+    CapabilityAdminService_ListCapabilitiesError
+):
+    """Operation-local response error for CapabilityAdminService_ListCapabilities (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CapabilityAdminService_ListCapabilitiesError.response_error_map = {
+    "default": CapabilityAdminService_ListCapabilitiesUnexpectedError,
+}
 
 
 class CapabilityAdminService_UpdateCapabilityError(KagentError):
     """Operation-local error for CapabilityAdminService_UpdateCapability."""
 
-    response_error_map = {
-        "default": CapabilityAdminService_UpdateCapabilityUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class CapabilityReleaseService_GetCapabilityLatestReleasesUnexpectedError(KagentError):
-    """Operation-local response error for CapabilityReleaseService_GetCapabilityLatestReleases (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CapabilityAdminService_UpdateCapabilityUnexpectedError(
+    CapabilityAdminService_UpdateCapabilityError
+):
+    """Operation-local response error for CapabilityAdminService_UpdateCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CapabilityAdminService_UpdateCapabilityError.response_error_map = {
+    "default": CapabilityAdminService_UpdateCapabilityUnexpectedError,
+}
 
 
 class CapabilityReleaseService_GetCapabilityLatestReleasesError(KagentError):
     """Operation-local error for CapabilityReleaseService_GetCapabilityLatestReleases."""
 
-    response_error_map = {
-        "default": CapabilityReleaseService_GetCapabilityLatestReleasesUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class CapabilityReleaseService_GetCapabilityReleaseUnexpectedError(KagentError):
-    """Operation-local response error for CapabilityReleaseService_GetCapabilityRelease (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CapabilityReleaseService_GetCapabilityLatestReleasesUnexpectedError(
+    CapabilityReleaseService_GetCapabilityLatestReleasesError
+):
+    """Operation-local response error for CapabilityReleaseService_GetCapabilityLatestReleases (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CapabilityReleaseService_GetCapabilityLatestReleasesError.response_error_map = {
+    "default": CapabilityReleaseService_GetCapabilityLatestReleasesUnexpectedError,
+}
 
 
 class CapabilityReleaseService_GetCapabilityReleaseError(KagentError):
     """Operation-local error for CapabilityReleaseService_GetCapabilityRelease."""
 
-    response_error_map = {
-        "default": CapabilityReleaseService_GetCapabilityReleaseUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
+
+
+class CapabilityReleaseService_GetCapabilityReleaseUnexpectedError(
+    CapabilityReleaseService_GetCapabilityReleaseError
+):
+    """Operation-local response error for CapabilityReleaseService_GetCapabilityRelease (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+CapabilityReleaseService_GetCapabilityReleaseError.response_error_map = {
+    "default": CapabilityReleaseService_GetCapabilityReleaseUnexpectedError,
+}
+
+
+class CapabilityReleaseService_GetCapabilitySupportedDistrosError(KagentError):
+    """Operation-local error for CapabilityReleaseService_GetCapabilitySupportedDistros."""
+
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
 class CapabilityReleaseService_GetCapabilitySupportedDistrosUnexpectedError(
-    KagentError
+    CapabilityReleaseService_GetCapabilitySupportedDistrosError
 ):
     """Operation-local response error for CapabilityReleaseService_GetCapabilitySupportedDistros (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CapabilityReleaseService_GetCapabilitySupportedDistrosError(KagentError):
-    """Operation-local error for CapabilityReleaseService_GetCapabilitySupportedDistros."""
-
-    response_error_map = {
-        "default": CapabilityReleaseService_GetCapabilitySupportedDistrosUnexpectedError,
-    }
-
-
-class CreateAgentUnexpectedError(KagentError):
-    """Operation-local response error for CreateAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CapabilityReleaseService_GetCapabilitySupportedDistrosError.response_error_map = {
+    "default": CapabilityReleaseService_GetCapabilitySupportedDistrosUnexpectedError,
+}
 
 
 class CreateAgentError(KagentError):
     """Operation-local error for CreateAgent."""
 
-    response_error_map = {
-        "default": CreateAgentUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class CreateConfigUnexpectedError(KagentError):
-    """Operation-local response error for CreateConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateAgentUnexpectedError(CreateAgentError):
+    """Operation-local response error for CreateAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CreateAgentError.response_error_map = {
+    "default": CreateAgentUnexpectedError,
+}
 
 
 class CreateConfigError(KagentError):
     """Operation-local error for CreateConfig."""
 
-    response_error_map = {
-        "default": CreateConfigUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class CreateProvisioningTokenUnexpectedError(KagentError):
-    """Operation-local response error for CreateProvisioningToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateConfigUnexpectedError(CreateConfigError):
+    """Operation-local response error for CreateConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CreateConfigError.response_error_map = {
+    "default": CreateConfigUnexpectedError,
+}
 
 
 class CreateProvisioningTokenError(KagentError):
     """Operation-local error for CreateProvisioningToken."""
 
-    response_error_map = {
-        "default": CreateProvisioningTokenUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class DeleteAgentUnexpectedError(KagentError):
-    """Operation-local response error for DeleteAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateProvisioningTokenUnexpectedError(CreateProvisioningTokenError):
+    """Operation-local response error for CreateProvisioningToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CreateProvisioningTokenError.response_error_map = {
+    "default": CreateProvisioningTokenUnexpectedError,
+}
 
 
 class DeleteAgentError(KagentError):
     """Operation-local error for DeleteAgent."""
 
-    response_error_map = {
-        "default": DeleteAgentUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class DeleteAgentCapabilityUnexpectedError(KagentError):
-    """Operation-local response error for DeleteAgentCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteAgentUnexpectedError(DeleteAgentError):
+    """Operation-local response error for DeleteAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteAgentError.response_error_map = {
+    "default": DeleteAgentUnexpectedError,
+}
 
 
 class DeleteAgentCapabilityError(KagentError):
     """Operation-local error for DeleteAgentCapability."""
 
-    response_error_map = {
-        "default": DeleteAgentCapabilityUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class DeleteConfigUnexpectedError(KagentError):
-    """Operation-local response error for DeleteConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteAgentCapabilityUnexpectedError(DeleteAgentCapabilityError):
+    """Operation-local response error for DeleteAgentCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteAgentCapabilityError.response_error_map = {
+    "default": DeleteAgentCapabilityUnexpectedError,
+}
 
 
 class DeleteConfigError(KagentError):
     """Operation-local error for DeleteConfig."""
 
-    response_error_map = {
-        "default": DeleteConfigUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class GenerateInstallCommandsUnexpectedError(KagentError):
-    """Operation-local response error for GenerateInstallCommands (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteConfigUnexpectedError(DeleteConfigError):
+    """Operation-local response error for DeleteConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteConfigError.response_error_map = {
+    "default": DeleteConfigUnexpectedError,
+}
 
 
 class GenerateInstallCommandsError(KagentError):
     """Operation-local error for GenerateInstallCommands."""
 
-    response_error_map = {
-        "default": GenerateInstallCommandsUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class GetAgentUnexpectedError(KagentError):
-    """Operation-local response error for GetAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GenerateInstallCommandsUnexpectedError(GenerateInstallCommandsError):
+    """Operation-local response error for GenerateInstallCommands (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GenerateInstallCommandsError.response_error_map = {
+    "default": GenerateInstallCommandsUnexpectedError,
+}
 
 
 class GetAgentError(KagentError):
     """Operation-local error for GetAgent."""
 
-    response_error_map = {
-        "default": GetAgentUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class GetAgentCapabilityUnexpectedError(KagentError):
-    """Operation-local response error for GetAgentCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetAgentUnexpectedError(GetAgentError):
+    """Operation-local response error for GetAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetAgentError.response_error_map = {
+    "default": GetAgentUnexpectedError,
+}
 
 
 class GetAgentCapabilityError(KagentError):
     """Operation-local error for GetAgentCapability."""
 
-    response_error_map = {
-        "default": GetAgentCapabilityUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class GetConfigUnexpectedError(KagentError):
-    """Operation-local response error for GetConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetAgentCapabilityUnexpectedError(GetAgentCapabilityError):
+    """Operation-local response error for GetAgentCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetAgentCapabilityError.response_error_map = {
+    "default": GetAgentCapabilityUnexpectedError,
+}
 
 
 class GetConfigError(KagentError):
     """Operation-local error for GetConfig."""
 
-    response_error_map = {
-        "default": GetConfigUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class GetProvisioningTokenUnexpectedError(KagentError):
-    """Operation-local response error for GetProvisioningToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetConfigUnexpectedError(GetConfigError):
+    """Operation-local response error for GetConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetConfigError.response_error_map = {
+    "default": GetConfigUnexpectedError,
+}
 
 
 class GetProvisioningTokenError(KagentError):
     """Operation-local error for GetProvisioningToken."""
 
-    response_error_map = {
-        "default": GetProvisioningTokenUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class ListAgentCapabilitiesUnexpectedError(KagentError):
-    """Operation-local response error for ListAgentCapabilities (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetProvisioningTokenUnexpectedError(GetProvisioningTokenError):
+    """Operation-local response error for GetProvisioningToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetProvisioningTokenError.response_error_map = {
+    "default": GetProvisioningTokenUnexpectedError,
+}
 
 
 class ListAgentCapabilitiesError(KagentError):
     """Operation-local error for ListAgentCapabilities."""
 
-    response_error_map = {
-        "default": ListAgentCapabilitiesUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class ListAgentsUnexpectedError(KagentError):
-    """Operation-local response error for ListAgents (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListAgentCapabilitiesUnexpectedError(ListAgentCapabilitiesError):
+    """Operation-local response error for ListAgentCapabilities (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListAgentCapabilitiesError.response_error_map = {
+    "default": ListAgentCapabilitiesUnexpectedError,
+}
 
 
 class ListAgentsError(KagentError):
     """Operation-local error for ListAgents."""
 
-    response_error_map = {
-        "default": ListAgentsUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class ListAgentsByProvisioningTokenUnexpectedError(KagentError):
-    """Operation-local response error for ListAgentsByProvisioningToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListAgentsUnexpectedError(ListAgentsError):
+    """Operation-local response error for ListAgents (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListAgentsError.response_error_map = {
+    "default": ListAgentsUnexpectedError,
+}
 
 
 class ListAgentsByProvisioningTokenError(KagentError):
     """Operation-local error for ListAgentsByProvisioningToken."""
 
-    response_error_map = {
-        "default": ListAgentsByProvisioningTokenUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class ListProvisioningTokensUnexpectedError(KagentError):
-    """Operation-local response error for ListProvisioningTokens (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListAgentsByProvisioningTokenUnexpectedError(ListAgentsByProvisioningTokenError):
+    """Operation-local response error for ListAgentsByProvisioningToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListAgentsByProvisioningTokenError.response_error_map = {
+    "default": ListAgentsByProvisioningTokenUnexpectedError,
+}
 
 
 class ListProvisioningTokensError(KagentError):
     """Operation-local error for ListProvisioningTokens."""
 
-    response_error_map = {
-        "default": ListProvisioningTokensUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class RevokeProvisioningTokenUnexpectedError(KagentError):
-    """Operation-local response error for RevokeProvisioningToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListProvisioningTokensUnexpectedError(ListProvisioningTokensError):
+    """Operation-local response error for ListProvisioningTokens (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListProvisioningTokensError.response_error_map = {
+    "default": ListProvisioningTokensUnexpectedError,
+}
 
 
 class RevokeProvisioningTokenError(KagentError):
     """Operation-local error for RevokeProvisioningToken."""
 
-    response_error_map = {
-        "default": RevokeProvisioningTokenUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class UpdateAgentUnexpectedError(KagentError):
-    """Operation-local response error for UpdateAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class RevokeProvisioningTokenUnexpectedError(RevokeProvisioningTokenError):
+    """Operation-local response error for RevokeProvisioningToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+RevokeProvisioningTokenError.response_error_map = {
+    "default": RevokeProvisioningTokenUnexpectedError,
+}
 
 
 class UpdateAgentError(KagentError):
     """Operation-local error for UpdateAgent."""
 
-    response_error_map = {
-        "default": UpdateAgentUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class UpdateConfigUnexpectedError(KagentError):
-    """Operation-local response error for UpdateConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateAgentUnexpectedError(UpdateAgentError):
+    """Operation-local response error for UpdateAgent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+UpdateAgentError.response_error_map = {
+    "default": UpdateAgentUnexpectedError,
+}
 
 
 class UpdateConfigError(KagentError):
     """Operation-local error for UpdateConfig."""
 
-    response_error_map = {
-        "default": UpdateConfigUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
 
-class UpsertAgentCapabilityUnexpectedError(KagentError):
-    """Operation-local response error for UpsertAgentCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateConfigUnexpectedError(UpdateConfigError):
+    """Operation-local response error for UpdateConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+UpdateConfigError.response_error_map = {
+    "default": UpdateConfigUnexpectedError,
+}
 
 
 class UpsertAgentCapabilityError(KagentError):
     """Operation-local error for UpsertAgentCapability."""
 
-    response_error_map = {
-        "default": UpsertAgentCapabilityUnexpectedError,
-    }
+    response_error_map: dict[str, type[KagentError]] = {}
 
+
+class UpsertAgentCapabilityUnexpectedError(UpsertAgentCapabilityError):
+    """Operation-local response error for UpsertAgentCapability (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpsertAgentCapabilityError.response_error_map = {
+    "default": UpsertAgentCapabilityUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[KagentError]] = {
     "Authorize": AuthorizeError,

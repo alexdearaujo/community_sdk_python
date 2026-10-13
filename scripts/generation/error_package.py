@@ -247,6 +247,16 @@ def generate_service_error_package(
         operation_class = service_error_class_name(operation_id)
         operation_class_names.append(operation_class)
         response_mapping_entries: list[str] = []
+        # The operation class comes first so each response class can extend it,
+        # which makes `except <Operation>Error` catch every error the call raises.
+        lines.extend(
+            [
+                "",
+                f"class {operation_class}({title}Error):",
+                f'    """Operation-local error for {operation_id}."""',
+                f"    response_error_map: dict[str, type[{title}Error]] = {{}}",
+            ]
+        )
         for status_code, response in sorted(
             metadata["responses"].items(), key=lambda item: item[0]
         ):
@@ -263,21 +273,19 @@ def generate_service_error_package(
             lines.extend(
                 [
                     "",
-                    f"class {leaf_class}({title}Error):",
+                    f"class {leaf_class}({operation_class}):",
                     f'    """{leaf_doc}"""',
                     "    pass",
                 ]
             )
-            response_mapping_entries.append(f'        "{status_code}": {leaf_class},')
+            response_mapping_entries.append(f'    "{status_code}": {leaf_class},')
 
         lines.extend(
             [
                 "",
-                f"class {operation_class}({title}Error):",
-                f'    """Operation-local error for {operation_id}."""',
-                "    response_error_map = {",
+                f"{operation_class}.response_error_map = {{",
                 *response_mapping_entries,
-                "    }",
+                "}",
             ]
         )
 

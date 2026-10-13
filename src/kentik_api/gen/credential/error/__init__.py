@@ -78,33 +78,38 @@ class CredentialError(HTTPException):
         )
 
 
-class GetCredentialGroupUnexpectedError(CredentialError):
+class GetCredentialGroupError(CredentialError):
+    """Operation-local error for GetCredentialGroup."""
+
+    response_error_map: dict[str, type[CredentialError]] = {}
+
+
+class GetCredentialGroupUnexpectedError(GetCredentialGroupError):
     """Operation-local response error for GetCredentialGroup (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class GetCredentialGroupError(CredentialError):
-    """Operation-local error for GetCredentialGroup."""
-
-    response_error_map = {
-        "default": GetCredentialGroupUnexpectedError,
-    }
-
-
-class ListCredentialGroupUnexpectedError(CredentialError):
-    """Operation-local response error for ListCredentialGroup (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+GetCredentialGroupError.response_error_map = {
+    "default": GetCredentialGroupUnexpectedError,
+}
 
 
 class ListCredentialGroupError(CredentialError):
     """Operation-local error for ListCredentialGroup."""
 
-    response_error_map = {
-        "default": ListCredentialGroupUnexpectedError,
-    }
+    response_error_map: dict[str, type[CredentialError]] = {}
 
+
+class ListCredentialGroupUnexpectedError(ListCredentialGroupError):
+    """Operation-local response error for ListCredentialGroup (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+ListCredentialGroupError.response_error_map = {
+    "default": ListCredentialGroupUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[CredentialError]] = {
     "GetCredentialGroup": GetCredentialGroupError,

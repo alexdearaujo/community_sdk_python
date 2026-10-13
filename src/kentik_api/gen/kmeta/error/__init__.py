@@ -78,75 +78,89 @@ class KmetaError(HTTPException):
         )
 
 
-class CreateServiceNowConfigUnexpectedError(KmetaError):
+class CreateServiceNowConfigError(KmetaError):
+    """Operation-local error for CreateServiceNowConfig."""
+
+    response_error_map: dict[str, type[KmetaError]] = {}
+
+
+class CreateServiceNowConfigUnexpectedError(CreateServiceNowConfigError):
     """Operation-local response error for CreateServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateServiceNowConfigError(KmetaError):
-    """Operation-local error for CreateServiceNowConfig."""
-
-    response_error_map = {
-        "default": CreateServiceNowConfigUnexpectedError,
-    }
-
-
-class DeleteServiceNowConfigUnexpectedError(KmetaError):
-    """Operation-local response error for DeleteServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateServiceNowConfigError.response_error_map = {
+    "default": CreateServiceNowConfigUnexpectedError,
+}
 
 
 class DeleteServiceNowConfigError(KmetaError):
     """Operation-local error for DeleteServiceNowConfig."""
 
-    response_error_map = {
-        "default": DeleteServiceNowConfigUnexpectedError,
-    }
+    response_error_map: dict[str, type[KmetaError]] = {}
 
 
-class GetServiceNowConfigUnexpectedError(KmetaError):
-    """Operation-local response error for GetServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteServiceNowConfigUnexpectedError(DeleteServiceNowConfigError):
+    """Operation-local response error for DeleteServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteServiceNowConfigError.response_error_map = {
+    "default": DeleteServiceNowConfigUnexpectedError,
+}
 
 
 class GetServiceNowConfigError(KmetaError):
     """Operation-local error for GetServiceNowConfig."""
 
-    response_error_map = {
-        "default": GetServiceNowConfigUnexpectedError,
-    }
+    response_error_map: dict[str, type[KmetaError]] = {}
 
 
-class ListServiceNowConfigsUnexpectedError(KmetaError):
-    """Operation-local response error for ListServiceNowConfigs (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetServiceNowConfigUnexpectedError(GetServiceNowConfigError):
+    """Operation-local response error for GetServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetServiceNowConfigError.response_error_map = {
+    "default": GetServiceNowConfigUnexpectedError,
+}
 
 
 class ListServiceNowConfigsError(KmetaError):
     """Operation-local error for ListServiceNowConfigs."""
 
-    response_error_map = {
-        "default": ListServiceNowConfigsUnexpectedError,
-    }
+    response_error_map: dict[str, type[KmetaError]] = {}
 
 
-class UpdateServiceNowConfigUnexpectedError(KmetaError):
-    """Operation-local response error for UpdateServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListServiceNowConfigsUnexpectedError(ListServiceNowConfigsError):
+    """Operation-local response error for ListServiceNowConfigs (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListServiceNowConfigsError.response_error_map = {
+    "default": ListServiceNowConfigsUnexpectedError,
+}
 
 
 class UpdateServiceNowConfigError(KmetaError):
     """Operation-local error for UpdateServiceNowConfig."""
 
-    response_error_map = {
-        "default": UpdateServiceNowConfigUnexpectedError,
-    }
+    response_error_map: dict[str, type[KmetaError]] = {}
 
+
+class UpdateServiceNowConfigUnexpectedError(UpdateServiceNowConfigError):
+    """Operation-local response error for UpdateServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateServiceNowConfigError.response_error_map = {
+    "default": UpdateServiceNowConfigUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[KmetaError]] = {
     "CreateServiceNowConfig": CreateServiceNowConfigError,

@@ -277,3 +277,46 @@ def test_call_grpc_rejects_tampered_with_timeout_override():
 
     with pytest.raises(ConfigurationError, match="only change timeouts"):
         call_grpc(_Stub(), object(), api_config=override)
+
+
+def test_call_grpc_raises_the_operation_error_class_like_rest(rpc_error):
+    class ServiceError(HTTPException):
+        pass
+
+    class GetThingError(ServiceError):
+        response_error_map: dict = {}
+
+    class GetThingNotFoundError(GetThingError):
+        pass
+
+    class GetThingUnexpectedError(GetThingError):
+        pass
+
+    GetThingError.response_error_map = {
+        "404": GetThingNotFoundError,
+        "default": GetThingUnexpectedError,
+    }
+
+    def failing(code):
+        def stub(_request, **_kwargs):
+            raise rpc_error(code, "boom")
+
+        return stub
+
+    with pytest.raises(GetThingNotFoundError) as exc_info:
+        call_grpc(failing(grpc.StatusCode.NOT_FOUND), object(), error_cls=GetThingError)
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.grpc_status_code == "NOT_FOUND"
+
+    with pytest.raises(GetThingUnexpectedError):
+        call_grpc(failing(grpc.StatusCode.INTERNAL), object(), error_cls=GetThingError)
+
+    # Auth and transport failures keep their own types, as on REST.
+    with pytest.raises(AuthenticationError):
+        call_grpc(
+            failing(grpc.StatusCode.UNAUTHENTICATED), object(), error_cls=GetThingError
+        )
+    with pytest.raises(TransportError):
+        call_grpc(
+            failing(grpc.StatusCode.UNAVAILABLE), object(), error_cls=GetThingError
+        )

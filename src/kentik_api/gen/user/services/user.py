@@ -43,7 +43,10 @@ class UserServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListUsersRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListUsers, _req, api_config=api_config_override
+                self._grpc_stub_1.ListUsers,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestUserModule1.ListUsersError,
             )
             return attach_rate_limit(
                 rest_models.ListUsersResponse.model_validate(
@@ -78,7 +81,10 @@ class UserServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateUser, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateUser,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestUserModule1.CreateUserError,
             )
             return attach_rate_limit(
                 rest_models.CreateUserResponse.model_validate(
@@ -107,7 +113,10 @@ class UserServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.GetUserRequest, None, {"id": id})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetUser, _req, api_config=api_config_override
+                self._grpc_stub_1.GetUser,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestUserModule1.GetUserError,
             )
             return attach_rate_limit(
                 rest_models.GetUserResponse.model_validate(
@@ -144,7 +153,10 @@ class UserServiceWrapper:
                 {"user.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateUser, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateUser,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestUserModule1.UpdateUserError,
             )
             return attach_rate_limit(
                 rest_models.UpdateUserResponse.model_validate(
@@ -176,7 +188,10 @@ class UserServiceWrapper:
                 self._grpc_pb2_1.DeleteUserRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteUser, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteUser,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestUserModule1.DeleteUserError,
             )
             return attach_rate_limit(
                 rest_models.DeleteUserResponse.model_validate(
@@ -210,6 +225,7 @@ class UserServiceWrapper:
                 self._grpc_stub_1.ResetActiveSessions,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestUserModule1.ResetActiveSessionsError,
             )
             return attach_rate_limit(
                 rest_models.ResetActiveSessionsResponse.model_validate(
@@ -240,7 +256,10 @@ class UserServiceWrapper:
                 self._grpc_pb2_1.ResetApiTokenRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ResetApiToken, _req, api_config=api_config_override
+                self._grpc_stub_1.ResetApiToken,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestUserModule1.ResetApiTokenError,
             )
             return attach_rate_limit(
                 rest_models.ResetApiTokenResponse.model_validate(

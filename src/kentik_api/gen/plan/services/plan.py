@@ -43,7 +43,10 @@ class PlanServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListPlansRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListPlans, _req, api_config=api_config_override
+                self._grpc_stub_1.ListPlans,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestPlanModule1.ListPlansError,
             )
             return attach_rate_limit(
                 rest_models.ListPlansResponse.model_validate(

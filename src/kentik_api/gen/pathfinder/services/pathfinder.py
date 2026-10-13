@@ -53,6 +53,7 @@ class PathfinderServiceWrapper:
                 self._grpc_stub_1.CreatePathfinderReport,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestPathfinderModule1.CreatePathfinderReportError,
             )
             return attach_rate_limit(
                 rest_models.CreatePathfinderReportResponse.model_validate(

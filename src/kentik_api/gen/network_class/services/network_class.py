@@ -43,7 +43,10 @@ class NetworkClassServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.GetNetworkClassRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetNetworkClass, _req, api_config=api_config_override
+                self._grpc_stub_1.GetNetworkClass,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestNetworkClassModule1.NetworkClassGetError,
             )
             return attach_rate_limit(
                 rest_models.GetNetworkClassResponse.model_validate(
@@ -81,6 +84,7 @@ class NetworkClassServiceWrapper:
                 self._grpc_stub_1.UpdateNetworkClass,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestNetworkClassModule1.NetworkClassUpdateError,
             )
             return attach_rate_limit(
                 rest_models.UpdateNetworkClassResponse.model_validate(

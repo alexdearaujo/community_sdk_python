@@ -60,7 +60,10 @@ class FlowTagServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.SearchFlowTag, _req, api_config=api_config_override
+                self._grpc_stub_1.SearchFlowTag,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestFlowTagModule1.SearchFlowTagError,
             )
             return attach_rate_limit(
                 rest_models.SearchFlowTagResponse.model_validate(
@@ -100,7 +103,10 @@ class FlowTagServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateFlowTag, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateFlowTag,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestFlowTagModule1.CreateFlowTagError,
             )
             return attach_rate_limit(
                 rest_models.CreateFlowTagResponse.model_validate(
@@ -131,7 +137,10 @@ class FlowTagServiceWrapper:
                 self._grpc_pb2_1.GetFlowTagRequest, None, {"id": flowTagid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetFlowTag, _req, api_config=api_config_override
+                self._grpc_stub_1.GetFlowTag,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestFlowTagModule1.GetFlowTagError,
             )
             return attach_rate_limit(
                 rest_models.GetFlowTagResponse.model_validate(
@@ -168,7 +177,10 @@ class FlowTagServiceWrapper:
                 {"flow_tag.id": flowTagid},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateFlowTag, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateFlowTag,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestFlowTagModule1.UpdateFlowTagError,
             )
             return attach_rate_limit(
                 rest_models.UpdateFlowTagResponse.model_validate(
@@ -200,7 +212,10 @@ class FlowTagServiceWrapper:
                 self._grpc_pb2_1.DeleteFlowTagRequest, None, {"id": flowTagid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteFlowTag, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteFlowTag,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestFlowTagModule1.DeleteFlowTagError,
             )
             return attach_rate_limit(
                 rest_models.DeleteFlowTagResponse.model_validate(

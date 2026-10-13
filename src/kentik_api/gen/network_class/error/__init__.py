@@ -78,33 +78,38 @@ class NetworkClassError(HTTPException):
         )
 
 
-class NetworkClassGetUnexpectedError(NetworkClassError):
+class NetworkClassGetError(NetworkClassError):
+    """Operation-local error for NetworkClassGet."""
+
+    response_error_map: dict[str, type[NetworkClassError]] = {}
+
+
+class NetworkClassGetUnexpectedError(NetworkClassGetError):
     """Operation-local response error for NetworkClassGet (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class NetworkClassGetError(NetworkClassError):
-    """Operation-local error for NetworkClassGet."""
-
-    response_error_map = {
-        "default": NetworkClassGetUnexpectedError,
-    }
-
-
-class NetworkClassUpdateUnexpectedError(NetworkClassError):
-    """Operation-local response error for NetworkClassUpdate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+NetworkClassGetError.response_error_map = {
+    "default": NetworkClassGetUnexpectedError,
+}
 
 
 class NetworkClassUpdateError(NetworkClassError):
     """Operation-local error for NetworkClassUpdate."""
 
-    response_error_map = {
-        "default": NetworkClassUpdateUnexpectedError,
-    }
+    response_error_map: dict[str, type[NetworkClassError]] = {}
 
+
+class NetworkClassUpdateUnexpectedError(NetworkClassUpdateError):
+    """Operation-local response error for NetworkClassUpdate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+NetworkClassUpdateError.response_error_map = {
+    "default": NetworkClassUpdateUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[NetworkClassError]] = {
     "NetworkClassGet": NetworkClassGetError,

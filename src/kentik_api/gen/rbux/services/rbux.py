@@ -43,7 +43,10 @@ class RbuxServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListScopesRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListScopes, _req, api_config=api_config_override
+                self._grpc_stub_1.ListScopes,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestRbuxModule1.ListScopesError,
             )
             return attach_rate_limit(
                 rest_models.ListScopesResponse.model_validate(
@@ -78,7 +81,10 @@ class RbuxServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateScope, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateScope,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestRbuxModule1.CreateScopeError,
             )
             return attach_rate_limit(
                 rest_models.CreateScopeResponse.model_validate(
@@ -109,7 +115,10 @@ class RbuxServiceWrapper:
                 self._grpc_pb2_1.GetScopeRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetScope, _req, api_config=api_config_override
+                self._grpc_stub_1.GetScope,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestRbuxModule1.GetScopeError,
             )
             return attach_rate_limit(
                 rest_models.GetScopeResponse.model_validate(
@@ -146,7 +155,10 @@ class RbuxServiceWrapper:
                 {"scope.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateScope, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateScope,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestRbuxModule1.UpdateScopeError,
             )
             return attach_rate_limit(
                 rest_models.UpdateScopeResponse.model_validate(
@@ -178,7 +190,10 @@ class RbuxServiceWrapper:
                 self._grpc_pb2_1.DeleteScopeRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteScope, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteScope,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestRbuxModule1.DeleteScopeError,
             )
             return attach_rate_limit(
                 rest_models.DeleteScopeResponse.model_validate(

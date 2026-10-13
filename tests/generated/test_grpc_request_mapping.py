@@ -37,7 +37,7 @@ def _grpc_wrapper(module: Any, wrapper_class: str) -> Any:
 def _capture_rpc(monkeypatch: pytest.MonkeyPatch, module: Any) -> dict[str, Any]:
     captured: dict[str, Any] = {}
 
-    def _call_grpc(rpc_path, request, *, api_config=None):
+    def _call_grpc(rpc_path, request, *, api_config=None, error_cls=None):
         captured["rpc_path"] = rpc_path
         captured["request"] = request
         raise _Stop

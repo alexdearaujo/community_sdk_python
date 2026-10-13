@@ -45,7 +45,10 @@ class NmsServiceWrapper:
                 self._grpc_pb2_1.GetMetricsSchemaRequest, None, {}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetMetricsSchema, _req, api_config=api_config_override
+                self._grpc_stub_1.GetMetricsSchema,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestNmsModule1.MetricsSchemaService_GetMetricsSchemaError,
             )
             return attach_rate_limit(
                 rest_models.GetMetricsSchemaResponse.model_validate(
