@@ -298,11 +298,7 @@ def test_each_grpc_call_uses_the_stub_of_its_own_rest_service(sandbox):
     calls = _grpc_calls_by_rest_module(sandbox.wrapper_file("alerting"))
     assert len(calls) > 2
     for rest_module, stubs in calls.items():
-        if rest_module == "MitigationsService":
-            # No proto declares this service, so it has no gRPC translation.
-            assert stubs == [None] * len(stubs)
-        else:
-            assert stubs == [f"{rest_module}Stub"] * len(stubs), rest_module
+        assert stubs == [f"{rest_module}Stub"] * len(stubs), rest_module
 
 
 def test_grpc_request_maps_arguments_to_the_rpc_request_fields(sandbox):

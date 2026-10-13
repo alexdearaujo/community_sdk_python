@@ -114,9 +114,15 @@ Each change below can stop an existing `except` clause or call from working.
   service, such as `alerting`, a gRPC call went to whichever service declared
   an RPC of the same name last. For example, deleting an AlertAutoAck called
   `SuppressionService.Delete`. Each call now goes to the RPC that shares its
-  REST operation's HTTP rule. No proto declares `MitigationsService`, so on
-  gRPC its `list`, `create`, and `get` now raise `NotImplementedError`, as its
-  other operations already did, instead of calling SuppressionService.
+  REST operation's HTTP rule.
+- **`alerting` mitigation operations work on gRPC.** `alerting` has two
+  protos named `mitigation.proto`, and the second overwrote the first in
+  `pb/`, which lost `MitigationsService`. Its six operations raised
+  `NotImplementedError` on gRPC. Proto modules whose names collide inside a
+  Service now carry their folder in the name, for example
+  `pb/mitigation_public_v202505_pb2.py` and `pb/mitigation_types_v202506_pb2.py`.
+  Code that imported `kentik_api.gen.alerting.pb.mitigation_pb2` directly must
+  import one of these.
 - **gRPC calls send every argument.** Path and query arguments were sent
   under their Python names, which match no proto field, and were dropped.
   For example, `client.device.get_device(deviceid="42")` sent an empty `id`,

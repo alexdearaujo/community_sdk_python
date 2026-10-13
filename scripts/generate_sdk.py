@@ -173,6 +173,48 @@ def _relink_pb2_dependency_imports(output_dir: Path) -> int:
     return rewritten
 
 
+def _proto_collisions(
+    selected_swagger_files: dict, openapi_base: Path, proto_base: Path
+) -> dict[str, set[str]]:
+    """Per service, the proto file stems that more than one compiled folder declares.
+
+    Every folder of a service compiles into one flat pb/ directory, so without a
+    rename the last `mitigation_pb2.py` written wins and the other is lost.
+    """
+    collisions: dict[str, set[str]] = {}
+    for service, files in selected_swagger_files.items():
+        folders: dict[str, set[Path]] = {}
+        for metadata in files:
+            folder = Path(metadata["path"]).relative_to(openapi_base).parent
+            for proto in (proto_base / "kentik" / folder).glob("*.proto"):
+                folders.setdefault(proto.stem, set()).add(folder)
+        collisions[service] = {s for s, dirs in folders.items() if len(dirs) > 1}
+    return collisions
+
+
+def _pb_stem(package: str, stem: str, collisions: dict[str, set[str]]) -> str:
+    """The pb/ module stem for proto `stem` in `package`, qualified when it collides.
+
+    `kentik.alerting.types.v202506` + `mitigation` -> `mitigation_types_v202506`.
+    """
+    parts = package.split(".")
+    if parts[0] != "kentik" or len(parts) < 3:
+        return stem
+    if stem not in collisions.get(parts[1], set()):
+        return stem
+    return "_".join([stem, *parts[2:]])
+
+
+def _qualify_colliding_imports(content: str, collisions: dict[str, set[str]]) -> str:
+    """Points protoc's `from kentik.<pkg> import <stem>_pb2` lines at renamed modules."""
+    return re.sub(
+        r"^(from (kentik(?:\.\w+)+) import )(\w+)_pb2\b",
+        lambda m: f"{m[1]}{_pb_stem(m[2], m[3], collisions)}_pb2",
+        content,
+        flags=re.MULTILINE,
+    )
+
+
 def clean_schema_names(schema: dict, version: str) -> dict:
     import copy
 
@@ -476,6 +518,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
 
         _compile_proto_companions(schema_root)
 
+        proto_collisions = _proto_collisions(
+            selected_swagger_files, openapi_base, proto_base
+        )
+
         service_swagger_paths: dict[str, list[Path]] = {}
         endpoint_docs_collector = EndpointDocsCollector()
 
@@ -567,7 +613,22 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                 )
 
                                 for gen_py in generated_files:
-                                    shutil.copy(gen_py, pb_dir / gen_py.name)
+                                    package = ".".join(
+                                        gen_py.relative_to(tmp_pb_path).parent.parts
+                                    )
+                                    stem, _, suffix = gen_py.name.partition("_pb2")
+                                    target = pb_dir / (
+                                        _pb_stem(package, stem, proto_collisions)
+                                        + "_pb2"
+                                        + suffix
+                                    )
+                                    target.write_text(
+                                        _qualify_colliding_imports(
+                                            gen_py.read_text(encoding="utf-8"),
+                                            proto_collisions,
+                                        ),
+                                        encoding="utf-8",
+                                    )
 
                                 for pb_file in pb_dir.rglob("*_grpc.py"):
                                     content = pb_file.read_text(encoding="utf-8")

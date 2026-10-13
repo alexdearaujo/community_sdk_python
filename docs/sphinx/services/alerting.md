@@ -1056,7 +1056,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_list()
+    W->>R: build_grpc_request(MitigationsServiceListRequest, arguments)
+    R->>API: MitigationsService/List (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceListResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -1124,7 +1142,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_create(data=MitigationsServiceCreateRequest(...))
+    W->>R: build_grpc_request(MitigationsServiceCreateRequest, arguments)
+    R->>API: MitigationsService/Create (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceCreateResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -1182,7 +1218,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: available_actions()
+    W->>R: build_grpc_request(MitigationsServiceAvailableActionsRequest, arguments)
+    R->>API: MitigationsService/AvailableActions (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceAvailableActionsResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Responses
 
@@ -1232,7 +1286,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_get(action="action-example")
+    W->>R: build_grpc_request(MitigationsServiceGetRequest, arguments)
+    R->>API: MitigationsService/Get (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceGetResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -1290,7 +1362,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: act(action="action-example", data=MitigationsServiceActBody(...))
+    W->>R: build_grpc_request(MitigationsServiceActRequest, arguments)
+    R->>API: MitigationsService/Act (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceActResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -1350,7 +1440,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: available_actions_for_mitigation(id="id-example")
+    W->>R: build_grpc_request(MitigationsServiceAvailableActionsForMitigationRequest, arguments)
+    R->>API: MitigationsService/AvailableActionsForMitigation (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceAvailableActionsForMitigationResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 

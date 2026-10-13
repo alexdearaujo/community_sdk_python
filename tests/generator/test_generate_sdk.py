@@ -24,6 +24,9 @@ if str(_scripts_dir) not in sys.path:
     sys.path.insert(0, str(_scripts_dir))
 
 from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
+    _pb_stem,
+    _proto_collisions,
+    _qualify_colliding_imports,
     _rewrite_grpc_imports,
     clean_schema_names,
     inline_request_body_refs,
@@ -474,6 +477,59 @@ def test_relax_oneof_required_does_not_mutate_input():
     result = relax_oneof_required(schema, {"v1Thing": {"a"}})
     assert result["definitions"]["v1Thing"]["required"] == ["b"]
     assert schema["definitions"]["v1Thing"]["required"] == ["a", "b"]
+
+
+# ---------------------------------------------------------------------------
+# Proto file-name collisions: every folder of a Service compiles into one flat
+# pb/ directory, so two `mitigation.proto` files overwrote each other (B4).
+# ---------------------------------------------------------------------------
+
+
+def test_proto_collisions_finds_stems_shared_across_compiled_folders(tmp_path):
+    openapi_base, proto_base = tmp_path / "openapi", tmp_path / "proto"
+    selected = {"alerting": [], "device": []}
+    for service, folder, protos in [
+        ("alerting", "alerting/public/v202505", ["mitigation", "alert"]),
+        ("alerting", "alerting/types/v202506", ["mitigation", "sorting"]),
+        ("device", "device/v202308beta1", ["device"]),
+    ]:
+        for proto in protos:
+            path = proto_base / "kentik" / folder / f"{proto}.proto"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.touch()
+        selected[service].append({"path": str(openapi_base / folder / "x.json")})
+
+    assert _proto_collisions(selected, openapi_base, proto_base) == {
+        "alerting": {"mitigation"},
+        "device": set(),
+    }
+
+
+def test_pb_stem_qualifies_only_colliding_kentik_modules():
+    collisions = {"alerting": {"mitigation"}}
+    assert (
+        _pb_stem("kentik.alerting.types.v202506", "mitigation", collisions)
+        == "mitigation_types_v202506"
+    )
+    assert _pb_stem("kentik.alerting.public.v202505", "alert", collisions) == "alert"
+    assert _pb_stem("kentik.ktbgp.v202501", "mitigation", collisions) == "mitigation"
+
+
+def test_qualify_colliding_imports_resolves_by_package_not_name():
+    content = (
+        "from kentik.alerting.types.v202506 import mitigation_pb2 as _types\n"
+        "from kentik.alerting.public.v202505 import mitigation_pb2 as _public\n"
+        "from kentik.alerting.public.v202505 import common_pb2 as _common\n"
+    )
+    result = _qualify_colliding_imports(content, {"alerting": {"mitigation"}})
+    assert result == (
+        "from kentik.alerting.types.v202506 import mitigation_types_v202506_pb2 as _types\n"
+        "from kentik.alerting.public.v202505 import mitigation_public_v202505_pb2 as _public\n"
+        "from kentik.alerting.public.v202505 import common_pb2 as _common\n"
+    )
+    assert "import mitigation_public_v202505_pb2 as _public" in _rewrite_grpc_imports(
+        result
+    )
 
 
 # ---------------------------------------------------------------------------
