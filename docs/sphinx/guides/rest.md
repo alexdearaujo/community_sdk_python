@@ -22,7 +22,7 @@ Every generated service is available as an attribute on the client:
 ```python
 response = client.as_group.list_as_groups()
 response = client.asset_tags.list_tag_keys()
-response = client.audit.list_audit_events()
+response = client.audit.list_events()
 ```
 <!-- /kentik-gen:list-methods-example -->
 
@@ -42,7 +42,7 @@ Methods that take a request body expect a Pydantic model:
 ```python
 from kentik_api.gen.alerting.models import AlertAutoAckServiceListRequest
 
-response = client.alerting.list(data=AlertAutoAckServiceListRequest())
+response = client.alerting.auto_ack_list(data=AlertAutoAckServiceListRequest())
 ```
 <!-- /kentik-gen:request-body-example -->
 

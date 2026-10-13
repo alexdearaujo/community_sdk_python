@@ -66,7 +66,7 @@ class CustomDimensionServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_custom_dimension_info(
+    def get_info(
         self, *, api_config_override: Optional[APIConfig] = None, customDimensionId: str
     ) -> rest_models.GetCustomDimensionInfoResponse:
         if isinstance(self._transport, GrpcTransport):

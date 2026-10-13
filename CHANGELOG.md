@@ -45,6 +45,32 @@ Each change below can stop an existing `except` clause or call from working.
 | An `APIConfig` with no credentials failed inside httpx with `TypeError` | It raises `ConfigurationError` before the SDK sends a request | Give the config `auth_email` and `auth_token` |
 | `KentikAPI(...)` loaded every key of the nearest `.env` into `os.environ`, even when you passed credentials | It reads only `KENTIK_EMAIL` and `KENTIK_API_TOKEN`, into memory, and only when an argument or environment variable is missing | Load other `.env` keys yourself, for example with `dotenv.load_dotenv()` |
 | `kmeta` `ServiceNowConfig.credentialVaultId` held a credential vault entry ID | Upstream renamed it `credentialVaultName`; it holds the entry's name and always resolves to the entry's latest version | Read and send `credentialVaultName` |
+| Client method names depended on module and route order, and many repeated the Service name (`client.audit.get_audit_event`) | Names no longer depend on order and drop the Service word when two or more words remain. See [Renamed client methods](#renamed-client-methods) | Use the new names in the table below |
+
+#### Renamed client methods
+
+A name that several modules of one Service declare carries the module prefix
+in every module, so a client method name never moves to another operation. A
+second HTTP route of one operation is named by its extra path parameters, not
+by a number. The Service word stays when it is the object of the call
+(`client.device.get_device`) or when removing it would leave one word
+(`client.alerting.alert_list`).
+
+| Service | Before | After |
+| --- | --- | --- |
+| `alerting` | `list`, `get`, `create`, `delete`, `replace` (AlertAutoAckService) | `auto_ack_list`, `auto_ack_get`, `auto_ack_create`, `auto_ack_delete`, `auto_ack_replace` |
+| `alerting` | `alert_silence_notifications_list`, `alert_silence_notifications_get`, `alert_silence_notifications_create`, `alert_silence_notifications_delete`, `alert_silence_notifications_replace` | `silence_notifications_list`, `silence_notifications_get`, `silence_notifications_create`, `silence_notifications_delete`, `silence_notifications_replace` |
+| `audit` | `list_audit_events`, `get_audit_event`, `get_audit_event_2` | `list_events`, `get_event`, `get_event_by_ctime` |
+| `cost` | `list_cost_providers`, `list_cost_provider_summaries`, `get_cost_provider_summary` | `list_providers`, `list_provider_summaries`, `get_provider_summary` |
+| `credential` | `list_credential_group`, `get_credential_group` | `list_group`, `get_group` |
+| `custom_dimension` | `get_custom_dimension_info` | `get_info` |
+| `device` | `update_device_labels` | `update_labels` |
+| `journeys` | `get_journeys_nlq` | `get_nlq` |
+| `pathfinder` | `create_pathfinder_report` | `create_report` |
+| `site` | `list_site_markets`, `get_site_market`, `create_site_market`, `update_site_market`, `delete_site_market` | `list_markets`, `get_market`, `create_market`, `update_market`, `delete_market` |
+
+`api_surface.json` now records the client method for each operation, so
+`make check-changelog` flags a renamed method as a breaking change.
 
 ### Added
 

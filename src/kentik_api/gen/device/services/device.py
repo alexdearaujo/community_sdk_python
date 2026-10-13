@@ -390,7 +390,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_device_labels(
+    def update_labels(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,

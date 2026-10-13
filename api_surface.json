@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "requirements": {
     "grpcio": "grpcio>=1.84.0",
     "httpx": "httpx>=0.28.1,<1",
@@ -16,6 +16,7 @@
       "operations": {
         "GET /ai_advisor/v202511/chat/{id}": {
           "operation": "GetChatSession",
+          "method": "get_chat_session",
           "status": 200,
           "required_params": [
             "id"
@@ -28,6 +29,7 @@
         },
         "POST /ai_advisor/v202511/chat": {
           "operation": "CreateChatSession",
+          "method": "create_chat_session",
           "status": 200,
           "required_params": [
             "data"
@@ -40,6 +42,7 @@
         },
         "PUT /ai_advisor/v202511/chat": {
           "operation": "UpdateChatSession",
+          "method": "update_chat_session",
           "status": 200,
           "required_params": [
             "data"
@@ -188,6 +191,7 @@
       "operations": {
         "DELETE /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Delete",
+          "method": "auto_ack_delete",
           "status": 200,
           "required_params": [
             "autoAckid"
@@ -200,6 +204,7 @@
         },
         "DELETE /v202505/alerts/silence/{id}": {
           "operation": "Delete",
+          "method": "silence_notifications_delete",
           "status": 200,
           "required_params": [
             "id"
@@ -212,6 +217,7 @@
         },
         "DELETE /v202505/suppressions/{id}": {
           "operation": "Delete",
+          "method": "suppression_delete",
           "status": 200,
           "required_params": [
             "id"
@@ -224,6 +230,7 @@
         },
         "GET /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Get",
+          "method": "auto_ack_get",
           "status": 200,
           "required_params": [
             "autoAckid"
@@ -236,6 +243,7 @@
         },
         "GET /v202505/alerts/silence/{id}": {
           "operation": "Get",
+          "method": "silence_notifications_get",
           "status": 200,
           "required_params": [
             "id"
@@ -248,6 +256,7 @@
         },
         "GET /v202505/alerts/{alertId}/comments": {
           "operation": "ListComments",
+          "method": "list_comments",
           "status": 200,
           "required_params": [
             "alertId"
@@ -260,6 +269,7 @@
         },
         "GET /v202505/alerts/{id}": {
           "operation": "Get",
+          "method": "alert_get",
           "status": 200,
           "required_params": [
             "id"
@@ -272,6 +282,7 @@
         },
         "GET /v202505/mitigations": {
           "operation": "List",
+          "method": "mitigations_list",
           "status": 200,
           "required_params": [],
           "params": {
@@ -294,6 +305,7 @@
         },
         "GET /v202505/mitigations/actions": {
           "operation": "AvailableActions",
+          "method": "available_actions",
           "status": 200,
           "required_params": [],
           "params": {
@@ -303,6 +315,7 @@
         },
         "GET /v202505/mitigations/methods": {
           "operation": "List",
+          "method": "mitigation_methods_list",
           "status": 200,
           "required_params": [],
           "params": {
@@ -321,6 +334,7 @@
         },
         "GET /v202505/mitigations/methods/{id}": {
           "operation": "Get",
+          "method": "mitigation_methods_get",
           "status": 200,
           "required_params": [
             "id"
@@ -333,6 +347,7 @@
         },
         "GET /v202505/mitigations/platforms": {
           "operation": "List",
+          "method": "mitigation_platforms_list",
           "status": 200,
           "required_params": [],
           "params": {
@@ -351,6 +366,7 @@
         },
         "GET /v202505/mitigations/platforms/{id}": {
           "operation": "Get",
+          "method": "mitigation_platforms_get",
           "status": 200,
           "required_params": [
             "id"
@@ -363,6 +379,7 @@
         },
         "GET /v202505/mitigations/{action}": {
           "operation": "Get",
+          "method": "mitigations_get",
           "status": 200,
           "required_params": [
             "action"
@@ -375,6 +392,7 @@
         },
         "GET /v202505/mitigations/{id}/actions": {
           "operation": "AvailableActionsForMitigation",
+          "method": "available_actions_for_mitigation",
           "status": 200,
           "required_params": [
             "id"
@@ -387,6 +405,7 @@
         },
         "GET /v202505/policies/{policyType}/{id}": {
           "operation": "Get",
+          "method": "policy_get",
           "status": 200,
           "required_params": [
             "id",
@@ -401,6 +420,7 @@
         },
         "GET /v202505/suppressions/{id}": {
           "operation": "Get",
+          "method": "suppression_get",
           "status": 200,
           "required_params": [
             "id"
@@ -413,6 +433,7 @@
         },
         "PATCH /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Replace",
+          "method": "auto_ack_replace",
           "status": 200,
           "required_params": [
             "autoAckid",
@@ -427,6 +448,7 @@
         },
         "PATCH /v202505/alerts/silence/{id}": {
           "operation": "Replace",
+          "method": "silence_notifications_replace",
           "status": 200,
           "required_params": [
             "data",
@@ -441,6 +463,7 @@
         },
         "PATCH /v202505/suppressions/{id}": {
           "operation": "Replace",
+          "method": "suppression_replace",
           "status": 200,
           "required_params": [
             "data",
@@ -455,6 +478,7 @@
         },
         "POST /v202505/alerts": {
           "operation": "List",
+          "method": "alert_list",
           "status": 200,
           "required_params": [
             "data"
@@ -467,6 +491,7 @@
         },
         "POST /v202505/alerts/ack/auto": {
           "operation": "Create",
+          "method": "auto_ack_create",
           "status": 200,
           "required_params": [
             "data"
@@ -479,6 +504,7 @@
         },
         "POST /v202505/alerts/ack/auto/list": {
           "operation": "List",
+          "method": "auto_ack_list",
           "status": 200,
           "required_params": [
             "data"
@@ -491,6 +517,7 @@
         },
         "POST /v202505/alerts/clear": {
           "operation": "Clear",
+          "method": "clear",
           "status": 200,
           "required_params": [
             "data"
@@ -503,6 +530,7 @@
         },
         "POST /v202505/alerts/silence": {
           "operation": "Create",
+          "method": "silence_notifications_create",
           "status": 200,
           "required_params": [
             "data"
@@ -515,6 +543,7 @@
         },
         "POST /v202505/alerts/silence/list": {
           "operation": "List",
+          "method": "silence_notifications_list",
           "status": 200,
           "required_params": [
             "data"
@@ -527,6 +556,7 @@
         },
         "POST /v202505/alerts/{alertId}/comments": {
           "operation": "AddComment",
+          "method": "add_comment",
           "status": 200,
           "required_params": [
             "alertId",
@@ -541,6 +571,7 @@
         },
         "POST /v202505/alerts/{id}/ack": {
           "operation": "Ack",
+          "method": "ack",
           "status": 200,
           "required_params": [
             "data",
@@ -555,6 +586,7 @@
         },
         "POST /v202505/alerts/{id}/unack": {
           "operation": "UnAck",
+          "method": "un_ack",
           "status": 200,
           "required_params": [
             "data",
@@ -569,6 +601,7 @@
         },
         "POST /v202505/mitigations": {
           "operation": "Create",
+          "method": "mitigations_create",
           "status": 200,
           "required_params": [
             "data"
@@ -581,6 +614,7 @@
         },
         "POST /v202505/mitigations/{action}": {
           "operation": "Act",
+          "method": "act",
           "status": 200,
           "required_params": [
             "action",
@@ -595,6 +629,7 @@
         },
         "POST /v202505/policies/list": {
           "operation": "List",
+          "method": "policy_list",
           "status": 200,
           "required_params": [
             "data"
@@ -607,6 +642,7 @@
         },
         "POST /v202505/policies/{policyType}/{id}/disable": {
           "operation": "Disable",
+          "method": "disable",
           "status": 200,
           "required_params": [
             "data",
@@ -623,6 +659,7 @@
         },
         "POST /v202505/policies/{policyType}/{id}/enable": {
           "operation": "Enable",
+          "method": "enable",
           "status": 200,
           "required_params": [
             "data",
@@ -639,6 +676,7 @@
         },
         "POST /v202505/suppressions": {
           "operation": "Create",
+          "method": "suppression_create",
           "status": 200,
           "required_params": [
             "data"
@@ -651,6 +689,7 @@
         },
         "POST /v202505/suppressions/list": {
           "operation": "List",
+          "method": "suppression_list",
           "status": 200,
           "required_params": [
             "data"
@@ -663,6 +702,7 @@
         },
         "PUT /v202505/alerts/{alertId}/external-context": {
           "operation": "SetExternalContext",
+          "method": "set_external_context",
           "status": 200,
           "required_params": [
             "alertId",
@@ -3405,6 +3445,7 @@
       "operations": {
         "DELETE /as_group/v202212/as_group/{asGroupid}": {
           "operation": "DeleteASGroup",
+          "method": "delete_as_group",
           "status": 200,
           "required_params": [
             "asGroupid"
@@ -3417,6 +3458,7 @@
         },
         "GET /as_group/v202212/as_group": {
           "operation": "ListASGroups",
+          "method": "list_as_groups",
           "status": 200,
           "required_params": [],
           "params": {
@@ -3426,6 +3468,7 @@
         },
         "GET /as_group/v202212/as_group/{asGroupid}": {
           "operation": "GetASGroup",
+          "method": "get_as_group",
           "status": 200,
           "required_params": [
             "asGroupid"
@@ -3438,6 +3481,7 @@
         },
         "POST /as_group/v202212/as_group": {
           "operation": "CreateASGroup",
+          "method": "create_as_group",
           "status": 200,
           "required_params": [
             "data"
@@ -3450,6 +3494,7 @@
         },
         "PUT /as_group/v202212/as_group/{asGroupid}": {
           "operation": "UpdateASGroup",
+          "method": "update_as_group",
           "status": 200,
           "required_params": [
             "asGroupid",
@@ -3601,6 +3646,7 @@
       "operations": {
         "DELETE /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "DeleteTagKey",
+          "method": "delete_tag_key",
           "status": 200,
           "required_params": [
             "id"
@@ -3613,6 +3659,7 @@
         },
         "GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values": {
           "operation": "GetTagValues",
+          "method": "get_tag_values",
           "status": 200,
           "required_params": [
             "assetId",
@@ -3627,6 +3674,7 @@
         },
         "GET /asset_tags/v20260515beta1/keys": {
           "operation": "ListTagKeys",
+          "method": "list_tag_keys",
           "status": 200,
           "required_params": [],
           "params": {
@@ -3636,6 +3684,7 @@
         },
         "GET /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "GetTagKey",
+          "method": "get_tag_key",
           "status": 200,
           "required_params": [
             "id"
@@ -3648,6 +3697,7 @@
         },
         "GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values": {
           "operation": "ListTagValues",
+          "method": "list_tag_values",
           "status": 200,
           "required_params": [
             "assetType",
@@ -3662,6 +3712,7 @@
         },
         "POST /asset_tags/v20260515beta1/keys": {
           "operation": "CreateTagKey",
+          "method": "create_tag_key",
           "status": 200,
           "required_params": [
             "data"
@@ -3674,6 +3725,7 @@
         },
         "POST /asset_tags/v20260515beta1/values/delete": {
           "operation": "DeleteTagValues",
+          "method": "delete_tag_values",
           "status": 200,
           "required_params": [
             "data"
@@ -3686,6 +3738,7 @@
         },
         "PUT /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "UpdateTagKey",
+          "method": "update_tag_key",
           "status": 200,
           "required_params": [
             "data",
@@ -3700,6 +3753,7 @@
         },
         "PUT /asset_tags/v20260515beta1/values": {
           "operation": "SetTagValues",
+          "method": "set_tag_values",
           "status": 200,
           "required_params": [
             "data"
@@ -3913,6 +3967,7 @@
       "operations": {
         "GET /audit/v202601/events": {
           "operation": "ListAuditEvents",
+          "method": "list_events",
           "status": 200,
           "required_params": [],
           "params": {
@@ -3926,6 +3981,7 @@
         },
         "GET /audit/v202601/events/{id}": {
           "operation": "GetAuditEvent",
+          "method": "get_event",
           "status": 200,
           "required_params": [
             "id"
@@ -3939,6 +3995,7 @@
         },
         "GET /audit/v202601/events/{id}/{ctime}": {
           "operation": "GetAuditEvent",
+          "method": "get_event_by_ctime",
           "status": 200,
           "required_params": [
             "ctime",
@@ -4105,6 +4162,7 @@
       "operations": {
         "DELETE /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "DeleteMonitor",
+          "method": "delete_monitor",
           "status": 200,
           "required_params": [
             "id"
@@ -4117,6 +4175,7 @@
         },
         "GET /bgp_monitoring/v202210/monitors": {
           "operation": "ListMonitors",
+          "method": "list_monitors",
           "status": 200,
           "required_params": [],
           "params": {
@@ -4126,6 +4185,7 @@
         },
         "GET /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "GetMonitor",
+          "method": "get_monitor",
           "status": 200,
           "required_params": [
             "id"
@@ -4138,6 +4198,7 @@
         },
         "POST /bgp_monitoring/v202210/metrics": {
           "operation": "GetMetricsForTarget",
+          "method": "get_metrics_for_target",
           "status": 200,
           "required_params": [
             "data"
@@ -4150,6 +4211,7 @@
         },
         "POST /bgp_monitoring/v202210/monitors": {
           "operation": "CreateMonitor",
+          "method": "create_monitor",
           "status": 200,
           "required_params": [
             "data"
@@ -4162,6 +4224,7 @@
         },
         "POST /bgp_monitoring/v202210/routes": {
           "operation": "GetRoutesForTarget",
+          "method": "get_routes_for_target",
           "status": 200,
           "required_params": [
             "data"
@@ -4174,6 +4237,7 @@
         },
         "PUT /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "UpdateMonitor",
+          "method": "update_monitor",
           "status": 200,
           "required_params": [
             "data",
@@ -4188,6 +4252,7 @@
         },
         "PUT /bgp_monitoring/v202210/monitors/{id}/status": {
           "operation": "SetMonitorStatus",
+          "method": "set_monitor_status",
           "status": 200,
           "required_params": [
             "data",
@@ -4568,6 +4633,7 @@
       "operations": {
         "GET /capacity_plan/v202212/capacity_plan": {
           "operation": "ListCapacityPlans",
+          "method": "list_capacity_plans",
           "status": 200,
           "required_params": [],
           "params": {
@@ -4577,6 +4643,7 @@
         },
         "GET /capacity_plan/v202212/capacity_plan/summary": {
           "operation": "ListCapacitySummaries",
+          "method": "list_capacity_summaries",
           "status": 200,
           "required_params": [],
           "params": {
@@ -4586,6 +4653,7 @@
         },
         "GET /capacity_plan/v202212/capacity_plan/{id}": {
           "operation": "GetCapacityPlan",
+          "method": "get_capacity_plan",
           "status": 200,
           "required_params": [
             "id"
@@ -4598,6 +4666,7 @@
         },
         "GET /capacity_plan/v202212/capacity_plan/{id}/summary": {
           "operation": "GetCapacitySummary",
+          "method": "get_capacity_summary",
           "status": 200,
           "required_params": [
             "id"
@@ -4919,6 +4988,7 @@
       "operations": {
         "DELETE /cloud_export/v202506/exports/{exportid}": {
           "operation": "DeleteCloudExport",
+          "method": "delete_cloud_export",
           "status": 200,
           "required_params": [
             "exportid"
@@ -4931,6 +5001,7 @@
         },
         "GET /cloud_export/v202506/exports": {
           "operation": "ListCloudExports",
+          "method": "list_cloud_exports",
           "status": 200,
           "required_params": [],
           "params": {
@@ -4940,6 +5011,7 @@
         },
         "GET /cloud_export/v202506/exports/{exportid}": {
           "operation": "GetCloudExport",
+          "method": "get_cloud_export",
           "status": 200,
           "required_params": [
             "exportid"
@@ -4952,6 +5024,7 @@
         },
         "POST /cloud_export/v202506/exports": {
           "operation": "CreateCloudExport",
+          "method": "create_cloud_export",
           "status": 200,
           "required_params": [
             "data"
@@ -4964,6 +5037,7 @@
         },
         "PUT /cloud_export/v202506/exports/{exportid}": {
           "operation": "UpdateCloudExport",
+          "method": "update_cloud_export",
           "status": 200,
           "required_params": [
             "data",
@@ -5328,6 +5402,7 @@
       "operations": {
         "POST /connectivity_checker/v202410beta1/create": {
           "operation": "CreateConnectivityReport",
+          "method": "create_connectivity_report",
           "status": 200,
           "required_params": [
             "data"
@@ -5491,6 +5566,7 @@
       "operations": {
         "GET /cost/v202308/cost/providers": {
           "operation": "ListCostProviders",
+          "method": "list_providers",
           "status": 200,
           "required_params": [],
           "params": {
@@ -5500,6 +5576,7 @@
         },
         "GET /cost/v202308/cost/summary": {
           "operation": "ListCostProviderSummaries",
+          "method": "list_provider_summaries",
           "status": 200,
           "required_params": [],
           "params": {
@@ -5510,6 +5587,7 @@
         },
         "GET /cost/v202308/cost/summary/{id}": {
           "operation": "GetCostProviderSummary",
+          "method": "get_provider_summary",
           "status": 200,
           "required_params": [
             "id"
@@ -5681,6 +5759,7 @@
       "operations": {
         "GET /credential/v202407alpha1/group": {
           "operation": "ListCredentialGroup",
+          "method": "list_group",
           "status": 200,
           "required_params": [],
           "params": {
@@ -5690,6 +5769,7 @@
         },
         "GET /credential/v202407alpha1/group/{id}": {
           "operation": "GetCredentialGroup",
+          "method": "get_group",
           "status": 200,
           "required_params": [
             "id"
@@ -5926,6 +6006,7 @@
       "operations": {
         "DELETE /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "DeleteCustomApplication",
+          "method": "delete_custom_application",
           "status": 200,
           "required_params": [
             "customApplicationId"
@@ -5938,6 +6019,7 @@
         },
         "GET /custom_application/v202501alpha1": {
           "operation": "ListCustomApplications",
+          "method": "list_custom_applications",
           "status": 200,
           "required_params": [],
           "params": {
@@ -5947,6 +6029,7 @@
         },
         "GET /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "GetCustomApplication",
+          "method": "get_custom_application",
           "status": 200,
           "required_params": [
             "customApplicationId"
@@ -5959,6 +6042,7 @@
         },
         "POST /custom_application/v202501alpha1": {
           "operation": "CreateCustomApplication",
+          "method": "create_custom_application",
           "status": 200,
           "required_params": [
             "data"
@@ -5971,6 +6055,7 @@
         },
         "PUT /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "UpdateCustomApplication",
+          "method": "update_custom_application",
           "status": 200,
           "required_params": [
             "customApplicationId",
@@ -6090,6 +6175,7 @@
       "operations": {
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "DeleteCustomDimension",
+          "method": "delete_custom_dimension",
           "status": 200,
           "required_params": [
             "customDimensionId"
@@ -6102,6 +6188,7 @@
         },
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "DeletePopulator",
+          "method": "delete_populator",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6116,6 +6203,7 @@
         },
         "GET /custom_dimensions/v202411alpha1": {
           "operation": "ListCustomDimensions",
+          "method": "list_custom_dimensions",
           "status": 200,
           "required_params": [],
           "params": {
@@ -6125,6 +6213,7 @@
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "GetCustomDimensionInfo",
+          "method": "get_info",
           "status": 200,
           "required_params": [
             "customDimensionId"
@@ -6137,6 +6226,7 @@
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "GetPopulator",
+          "method": "get_populator",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6152,6 +6242,7 @@
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}": {
           "operation": "GetPopulatorField",
+          "method": "get_populator_field",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6170,6 +6261,7 @@
         },
         "POST /custom_dimensions/v202411alpha1/{customDimensionId}/populator": {
           "operation": "CreatePopulator",
+          "method": "create_populator",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6184,6 +6276,7 @@
         },
         "POST /v1/customdimension": {
           "operation": "CreateCustomDimension",
+          "method": "create_custom_dimension",
           "status": 200,
           "required_params": [
             "data"
@@ -6196,6 +6289,7 @@
         },
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "UpdateCustomDimension",
+          "method": "update_custom_dimension",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6210,6 +6304,7 @@
         },
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "UpdatePopulator",
+          "method": "update_populator",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6483,6 +6578,7 @@
       "operations": {
         "DELETE /device/v202504beta2/device/{deviceid}": {
           "operation": "DeleteDevice",
+          "method": "delete_device",
           "status": 200,
           "required_params": [
             "deviceid"
@@ -6495,6 +6591,7 @@
         },
         "GET /device/v202504beta2/device": {
           "operation": "ListDevices",
+          "method": "list_devices",
           "status": 200,
           "required_params": [],
           "params": {
@@ -6506,6 +6603,7 @@
         },
         "GET /device/v202504beta2/device/name/{deviceName}": {
           "operation": "GetDeviceByName",
+          "method": "get_device_by_name",
           "status": 200,
           "required_params": [
             "deviceName"
@@ -6519,6 +6617,7 @@
         },
         "GET /device/v202504beta2/device/{deviceid}": {
           "operation": "GetDevice",
+          "method": "get_device",
           "status": 200,
           "required_params": [
             "deviceid"
@@ -6532,6 +6631,7 @@
         },
         "POST /device/v202504beta2/device": {
           "operation": "CreateDevice",
+          "method": "create_device",
           "status": 200,
           "required_params": [
             "data"
@@ -6544,6 +6644,7 @@
         },
         "POST /device/v202504beta2/device/batch_create": {
           "operation": "CreateDevices",
+          "method": "create_devices",
           "status": 200,
           "required_params": [
             "data"
@@ -6556,6 +6657,7 @@
         },
         "POST /device/v202504beta2/device/batch_delete": {
           "operation": "DeleteDevices",
+          "method": "delete_devices",
           "status": 200,
           "required_params": [
             "data"
@@ -6568,6 +6670,7 @@
         },
         "PUT /device/v202504beta2/device/batch_update": {
           "operation": "UpdateDevices",
+          "method": "update_devices",
           "status": 200,
           "required_params": [
             "data"
@@ -6580,6 +6683,7 @@
         },
         "PUT /device/v202504beta2/device/{deviceid}": {
           "operation": "UpdateDevice",
+          "method": "update_device",
           "status": 200,
           "required_params": [
             "data",
@@ -6594,6 +6698,7 @@
         },
         "PUT /device/v202504beta2/device/{id}/labels": {
           "operation": "UpdateDeviceLabels",
+          "method": "update_labels",
           "status": 200,
           "required_params": [
             "data",
@@ -7829,6 +7934,7 @@
       "operations": {
         "GET /dictionary/v20260604alpha1": {
           "operation": "GetDictionary",
+          "method": "get_dictionary",
           "status": 200,
           "required_params": [],
           "params": {
@@ -8174,6 +8280,7 @@
       "operations": {
         "POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids": {
           "operation": "FetchValuesByIds",
+          "method": "fetch_values_by_ids",
           "status": 200,
           "required_params": [
             "data"
@@ -8232,6 +8339,7 @@
       "operations": {
         "DELETE /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "DeleteFlowTag",
+          "method": "delete_flow_tag",
           "status": 200,
           "required_params": [
             "flowTagid"
@@ -8244,6 +8352,7 @@
         },
         "GET /flow_tag/v202404alpha1/tag": {
           "operation": "SearchFlowTag",
+          "method": "search_flow_tag",
           "status": 200,
           "required_params": [],
           "params": {
@@ -8258,6 +8367,7 @@
         },
         "GET /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "GetFlowTag",
+          "method": "get_flow_tag",
           "status": 200,
           "required_params": [
             "flowTagid"
@@ -8270,6 +8380,7 @@
         },
         "POST /flow_tag/v202404alpha1/tag": {
           "operation": "CreateFlowTag",
+          "method": "create_flow_tag",
           "status": 200,
           "required_params": [
             "data"
@@ -8282,6 +8393,7 @@
         },
         "PUT /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "UpdateFlowTag",
+          "method": "update_flow_tag",
           "status": 200,
           "required_params": [
             "data",
@@ -8540,6 +8652,7 @@
       "operations": {
         "DELETE /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceDelete",
+          "method": "interface_delete",
           "status": 200,
           "required_params": [
             "id"
@@ -8552,6 +8665,7 @@
         },
         "GET /interface/v202108alpha1/interfaces": {
           "operation": "ListInterface",
+          "method": "list_interface",
           "status": 200,
           "required_params": [],
           "params": {
@@ -8568,6 +8682,7 @@
         },
         "GET /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceGet",
+          "method": "interface_get",
           "status": 200,
           "required_params": [
             "id"
@@ -8580,6 +8695,7 @@
         },
         "POST /interface/v202108alpha1/interfaces": {
           "operation": "InterfaceCreate",
+          "method": "interface_create",
           "status": 200,
           "required_params": [
             "data"
@@ -8592,6 +8708,7 @@
         },
         "POST /interface/v202108alpha1/manual_classify": {
           "operation": "ManualClassify",
+          "method": "manual_classify",
           "status": 200,
           "required_params": [
             "data"
@@ -8604,6 +8721,7 @@
         },
         "PUT /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceUpdate",
+          "method": "interface_update",
           "status": 200,
           "required_params": [
             "data",
@@ -8950,6 +9068,7 @@
       "operations": {
         "GET /journeys/v202406/GetJourneysNlq": {
           "operation": "GetJourneysNlq",
+          "method": "get_nlq",
           "status": 200,
           "required_params": [
             "prompt"
@@ -9026,6 +9145,7 @@
       "operations": {
         "DELETE /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "DeleteAgentCapability",
+          "method": "delete_agent_capability",
           "status": 200,
           "required_params": [
             "agentId",
@@ -9040,6 +9160,7 @@
         },
         "DELETE /kagent/v202401/agents/{agentid}": {
           "operation": "DeleteAgent",
+          "method": "delete_agent",
           "status": 200,
           "required_params": [
             "agentid"
@@ -9053,6 +9174,7 @@
         },
         "DELETE /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_DeleteCapability",
+          "method": "capability_admin_service__delete_capability",
           "status": 200,
           "required_params": [
             "capabilityname"
@@ -9065,6 +9187,7 @@
         },
         "DELETE /kagent/v202401/config/{configname}": {
           "operation": "DeleteConfig",
+          "method": "delete_config",
           "status": 200,
           "required_params": [
             "configname"
@@ -9077,6 +9200,7 @@
         },
         "GET /kagent/v202401/agents": {
           "operation": "ListAgents",
+          "method": "list_agents",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9090,6 +9214,7 @@
         },
         "GET /kagent/v202401/agents/{agentId}/capabilities": {
           "operation": "ListAgentCapabilities",
+          "method": "list_agent_capabilities",
           "status": 200,
           "required_params": [
             "agentId"
@@ -9102,6 +9227,7 @@
         },
         "GET /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "GetAgentCapability",
+          "method": "get_agent_capability",
           "status": 200,
           "required_params": [
             "agentId",
@@ -9116,6 +9242,7 @@
         },
         "GET /kagent/v202401/agents/{agentid}": {
           "operation": "GetAgent",
+          "method": "get_agent",
           "status": 200,
           "required_params": [
             "agentid"
@@ -9129,6 +9256,7 @@
         },
         "GET /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_ListCapabilities",
+          "method": "capability_admin_service__list_capabilities",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9138,6 +9266,7 @@
         },
         "GET /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_GetCapability",
+          "method": "capability_admin_service__get_capability",
           "status": 200,
           "required_params": [
             "capabilityname"
@@ -9150,6 +9279,7 @@
         },
         "GET /kagent/v202401/config/{configname}": {
           "operation": "GetConfig",
+          "method": "get_config",
           "status": 200,
           "required_params": [
             "configname"
@@ -9162,6 +9292,7 @@
         },
         "GET /kagent/v202401/provisioning-tokens": {
           "operation": "ListProvisioningTokens",
+          "method": "list_provisioning_tokens",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9171,6 +9302,7 @@
         },
         "GET /kagent/v202401/provisioning-tokens/{token}": {
           "operation": "GetProvisioningToken",
+          "method": "get_provisioning_token",
           "status": 200,
           "required_params": [
             "token"
@@ -9183,6 +9315,7 @@
         },
         "GET /kagent/v202401/provisioning-tokens/{token}/agents": {
           "operation": "ListAgentsByProvisioningToken",
+          "method": "list_agents_by_provisioning_token",
           "status": 200,
           "required_params": [
             "token"
@@ -9195,6 +9328,7 @@
         },
         "GET /kagent/v202401/releases": {
           "operation": "CapabilityReleaseService_GetCapabilityRelease",
+          "method": "capability_release_service__get_capability_release",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9210,6 +9344,7 @@
         },
         "GET /kagent/v202401/releases/latest": {
           "operation": "CapabilityReleaseService_GetCapabilityLatestReleases",
+          "method": "capability_release_service__get_capability_latest_releases",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9225,6 +9360,7 @@
         },
         "GET /kagent/v202401/releases/supported_distros": {
           "operation": "CapabilityReleaseService_GetCapabilitySupportedDistros",
+          "method": "capability_release_service__get_capability_supported_distros",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9235,6 +9371,7 @@
         },
         "PATCH /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "UpsertAgentCapability",
+          "method": "upsert_agent_capability",
           "status": 200,
           "required_params": [
             "agentId",
@@ -9252,6 +9389,7 @@
         },
         "PATCH /kagent/v202401/agents/{agentid}": {
           "operation": "UpdateAgent",
+          "method": "update_agent",
           "status": 200,
           "required_params": [
             "agentid",
@@ -9267,6 +9405,7 @@
         },
         "PATCH /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_UpdateCapability",
+          "method": "capability_admin_service__update_capability",
           "status": 200,
           "required_params": [
             "capabilityname",
@@ -9281,6 +9420,7 @@
         },
         "PATCH /kagent/v202401/config/{configname}": {
           "operation": "UpdateConfig",
+          "method": "update_config",
           "status": 200,
           "required_params": [
             "configname",
@@ -9295,6 +9435,7 @@
         },
         "POST /kagent/v202401/agents": {
           "operation": "CreateAgent",
+          "method": "create_agent",
           "status": 200,
           "required_params": [
             "data"
@@ -9307,6 +9448,7 @@
         },
         "POST /kagent/v202401/agents/install-commands": {
           "operation": "GenerateInstallCommands",
+          "method": "generate_install_commands",
           "status": 200,
           "required_params": [
             "data"
@@ -9319,6 +9461,7 @@
         },
         "POST /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_CreateCapability",
+          "method": "capability_admin_service__create_capability",
           "status": 200,
           "required_params": [
             "data"
@@ -9331,6 +9474,7 @@
         },
         "POST /kagent/v202401/config": {
           "operation": "CreateConfig",
+          "method": "create_config",
           "status": 200,
           "required_params": [
             "data"
@@ -9343,6 +9487,7 @@
         },
         "POST /kagent/v202401/provisioning-tokens": {
           "operation": "CreateProvisioningToken",
+          "method": "create_provisioning_token",
           "status": 200,
           "required_params": [
             "data"
@@ -9355,6 +9500,7 @@
         },
         "POST /kagent/v202401/provisioning-tokens/{token}/revoke": {
           "operation": "RevokeProvisioningToken",
+          "method": "revoke_provisioning_token",
           "status": 200,
           "required_params": [
             "data",
@@ -9369,6 +9515,7 @@
         },
         "PUT /kagent/v202401/agents/authorize/{installId}": {
           "operation": "Authorize",
+          "method": "authorize",
           "status": 200,
           "required_params": [
             "installId"
@@ -10109,6 +10256,7 @@
       "operations": {
         "DELETE /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "DeleteServiceNowConfig",
+          "method": "delete_service_now_config",
           "status": 200,
           "required_params": [
             "cid",
@@ -10123,6 +10271,7 @@
         },
         "GET /kmeta/v202607alpha1/{cid}/servicenow/config": {
           "operation": "ListServiceNowConfigs",
+          "method": "list_service_now_configs",
           "status": 200,
           "required_params": [
             "cid"
@@ -10135,6 +10284,7 @@
         },
         "GET /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "GetServiceNowConfig",
+          "method": "get_service_now_config",
           "status": 200,
           "required_params": [
             "cid",
@@ -10149,6 +10299,7 @@
         },
         "POST /kmeta/v202607alpha1/{cid}/servicenow/config": {
           "operation": "CreateServiceNowConfig",
+          "method": "create_service_now_config",
           "status": 200,
           "required_params": [
             "cid",
@@ -10163,6 +10314,7 @@
         },
         "PUT /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "UpdateServiceNowConfig",
+          "method": "update_service_now_config",
           "status": 200,
           "required_params": [
             "cid",
@@ -10284,6 +10436,7 @@
       "operations": {
         "GET /kmi/v202212/insights": {
           "operation": "GetGlobalInsights",
+          "method": "get_global_insights",
           "status": 200,
           "required_params": [],
           "params": {
@@ -10299,6 +10452,7 @@
         },
         "GET /kmi/v202212/insights/{asn}": {
           "operation": "GetASNInsights",
+          "method": "get_asn_insights",
           "status": 200,
           "required_params": [
             "asn"
@@ -10317,6 +10471,7 @@
         },
         "GET /kmi/v202212/markets": {
           "operation": "ListMarkets",
+          "method": "list_markets",
           "status": 200,
           "required_params": [],
           "params": {
@@ -10326,6 +10481,7 @@
         },
         "POST /kmi/v202212/market/{marketId}/network/{asn}/{type}": {
           "operation": "GetASNDetails",
+          "method": "get_asn_details",
           "status": 200,
           "required_params": [
             "asn",
@@ -10344,6 +10500,7 @@
         },
         "POST /kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}": {
           "operation": "GetRankings",
+          "method": "get_rankings",
           "status": 200,
           "required_params": [
             "data",
@@ -10666,6 +10823,7 @@
       "operations": {
         "POST /routes/announce": {
           "operation": "RouteService_Announce",
+          "method": "route_service__announce",
           "status": 200,
           "required_params": [
             "data"
@@ -10678,6 +10836,7 @@
         },
         "POST /routes/list": {
           "operation": "RouteService_List",
+          "method": "route_service__list",
           "status": 200,
           "required_params": [
             "data"
@@ -10690,6 +10849,7 @@
         },
         "POST /routes/withdraw": {
           "operation": "RouteService_Withdraw",
+          "method": "route_service__withdraw",
           "status": 200,
           "required_params": [
             "data"
@@ -11287,6 +11447,7 @@
       "operations": {
         "DELETE /label/v202210/labels/{id}": {
           "operation": "DeleteLabel",
+          "method": "delete_label",
           "status": 200,
           "required_params": [
             "id"
@@ -11299,6 +11460,7 @@
         },
         "GET /label/v202210/labels": {
           "operation": "ListLabels",
+          "method": "list_labels",
           "status": 200,
           "required_params": [],
           "params": {
@@ -11308,6 +11470,7 @@
         },
         "POST /label/v202210/labels": {
           "operation": "CreateLabel",
+          "method": "create_label",
           "status": 200,
           "required_params": [
             "data"
@@ -11320,6 +11483,7 @@
         },
         "POST /label/v202210/labels/{id}": {
           "operation": "UpdateLabel",
+          "method": "update_label",
           "status": 200,
           "required_params": [
             "data",
@@ -11434,6 +11598,7 @@
       "operations": {
         "DELETE /mkp/v202407/packages/{id}": {
           "operation": "PackageDelete",
+          "method": "package_delete",
           "status": 200,
           "required_params": [
             "id"
@@ -11446,6 +11611,7 @@
         },
         "DELETE /mkp/v202407/tenants/{id}": {
           "operation": "TenantDelete",
+          "method": "tenant_delete",
           "status": 200,
           "required_params": [
             "id"
@@ -11458,6 +11624,7 @@
         },
         "DELETE /mkp/v202407/tenants/{tenantId}/users/{id}": {
           "operation": "TenantUserDelete",
+          "method": "tenant_user_delete",
           "status": 200,
           "required_params": [
             "id",
@@ -11472,6 +11639,7 @@
         },
         "GET /mkp/v202407/packages": {
           "operation": "PackageList",
+          "method": "package_list",
           "status": 200,
           "required_params": [],
           "params": {
@@ -11481,6 +11649,7 @@
         },
         "GET /mkp/v202407/packages/{id}": {
           "operation": "PackageGet",
+          "method": "package_get",
           "status": 200,
           "required_params": [
             "id"
@@ -11493,6 +11662,7 @@
         },
         "GET /mkp/v202407/tenants": {
           "operation": "TenantList",
+          "method": "tenant_list",
           "status": 200,
           "required_params": [],
           "params": {
@@ -11502,6 +11672,7 @@
         },
         "GET /mkp/v202407/tenants/{id}": {
           "operation": "TenantGet",
+          "method": "tenant_get",
           "status": 200,
           "required_params": [
             "id"
@@ -11514,6 +11685,7 @@
         },
         "GET /mkp/v202407/tenants/{tenantId}/users": {
           "operation": "TenantUserList",
+          "method": "tenant_user_list",
           "status": 200,
           "required_params": [
             "tenantId"
@@ -11526,6 +11698,7 @@
         },
         "POST /mkp/v202407/packages": {
           "operation": "PackageCreate",
+          "method": "package_create",
           "status": 200,
           "required_params": [
             "data"
@@ -11538,6 +11711,7 @@
         },
         "POST /mkp/v202407/tenants": {
           "operation": "TenantCreate",
+          "method": "tenant_create",
           "status": 200,
           "required_params": [
             "data"
@@ -11550,6 +11724,7 @@
         },
         "POST /mkp/v202407/tenants/{tenantId}/users": {
           "operation": "TenantUserCreate",
+          "method": "tenant_user_create",
           "status": 200,
           "required_params": [
             "data",
@@ -11564,6 +11739,7 @@
         },
         "PUT /mkp/v202407/packages/{id}": {
           "operation": "PackageUpdate",
+          "method": "package_update",
           "status": 200,
           "required_params": [
             "data",
@@ -11578,6 +11754,7 @@
         },
         "PUT /mkp/v202407/tenants/{id}": {
           "operation": "TenantUpdate",
+          "method": "tenant_update",
           "status": 200,
           "required_params": [
             "data",
@@ -11592,6 +11769,7 @@
         },
         "PUT /mkp/v202407/tenants/{tenantId}/users/{id}": {
           "operation": "TenantUserUpdate",
+          "method": "tenant_user_update",
           "status": 200,
           "required_params": [
             "data",
@@ -12363,6 +12541,7 @@
       "operations": {
         "GET /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassGet",
+          "method": "network_class_get",
           "status": 200,
           "required_params": [],
           "params": {
@@ -12372,6 +12551,7 @@
         },
         "POST /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassUpdate",
+          "method": "network_class_update",
           "status": 200,
           "required_params": [
             "data"
@@ -12480,6 +12660,7 @@
       "operations": {
         "GET /nms/v202505/metrics_schema": {
           "operation": "MetricsSchemaService_GetMetricsSchema",
+          "method": "metrics_schema_service__get_metrics_schema",
           "status": 200,
           "required_params": [],
           "params": {
@@ -12651,6 +12832,7 @@
       "operations": {
         "GET /notification_channel/v202210/notification_channels": {
           "operation": "ListNotificationChannels",
+          "method": "list_notification_channels",
           "status": 200,
           "required_params": [],
           "params": {
@@ -12660,6 +12842,7 @@
         },
         "GET /notification_channel/v202210/notification_channels/{id}": {
           "operation": "GetNotificationChannel",
+          "method": "get_notification_channel",
           "status": 200,
           "required_params": [
             "id"
@@ -12672,6 +12855,7 @@
         },
         "POST /notification_channel/v202210/notification_channels/search": {
           "operation": "SearchNotificationChannels",
+          "method": "search_notification_channels",
           "status": 200,
           "required_params": [
             "data"
@@ -12804,6 +12988,7 @@
       "operations": {
         "POST /pathfinder/v202505beta1/create": {
           "operation": "CreatePathfinderReport",
+          "method": "create_report",
           "status": 200,
           "required_params": [
             "data"
@@ -12955,6 +13140,7 @@
       "operations": {
         "GET /plans/v202501alpha1": {
           "operation": "ListPlans",
+          "method": "list_plans",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13141,6 +13327,7 @@
       "operations": {
         "DELETE /rbux/v202607alpha1/scopes/{id}": {
           "operation": "DeleteScope",
+          "method": "delete_scope",
           "status": 200,
           "required_params": [
             "id"
@@ -13153,6 +13340,7 @@
         },
         "GET /rbux/v202607alpha1/scopes": {
           "operation": "ListScopes",
+          "method": "list_scopes",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13162,6 +13350,7 @@
         },
         "GET /rbux/v202607alpha1/scopes/{id}": {
           "operation": "GetScope",
+          "method": "get_scope",
           "status": 200,
           "required_params": [
             "id"
@@ -13174,6 +13363,7 @@
         },
         "POST /rbux/v202607alpha1/scopes": {
           "operation": "CreateScope",
+          "method": "create_scope",
           "status": 200,
           "required_params": [
             "data"
@@ -13186,6 +13376,7 @@
         },
         "PUT /rbux/v202607alpha1/scopes/{id}": {
           "operation": "UpdateScope",
+          "method": "update_scope",
           "status": 200,
           "required_params": [
             "data",
@@ -13471,6 +13662,7 @@
       "operations": {
         "DELETE /saved-filter/v202501alpha1/{id}": {
           "operation": "DeleteSavedFilter",
+          "method": "delete_saved_filter",
           "status": 200,
           "required_params": [
             "id"
@@ -13483,6 +13675,7 @@
         },
         "GET /saved-filter/v202501alpha1/{id}": {
           "operation": "GetSavedFilter",
+          "method": "get_saved_filter",
           "status": 200,
           "required_params": [
             "id"
@@ -13495,6 +13688,7 @@
         },
         "GET /saved-filters/v202501alpha1": {
           "operation": "ListSavedFilters",
+          "method": "list_saved_filters",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13504,6 +13698,7 @@
         },
         "GET /saved-filters/v202501alpha1/all": {
           "operation": "ListSavedFiltersAll",
+          "method": "list_saved_filters_all",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13513,6 +13708,7 @@
         },
         "POST /saved-filter/v202501alpha1": {
           "operation": "CreateSavedFilter",
+          "method": "create_saved_filter",
           "status": 200,
           "required_params": [
             "data"
@@ -13525,6 +13721,7 @@
         },
         "PUT /saved-filter/v202501alpha1/{id}": {
           "operation": "UpdateSavedFilter",
+          "method": "update_saved_filter",
           "status": 200,
           "required_params": [
             "data",
@@ -13787,6 +13984,7 @@
       "operations": {
         "DELETE /site/v202509/site_markets/{id}": {
           "operation": "DeleteSiteMarket",
+          "method": "delete_market",
           "status": 200,
           "required_params": [
             "id"
@@ -13799,6 +13997,7 @@
         },
         "DELETE /site/v202509/sites/{id}": {
           "operation": "DeleteSite",
+          "method": "delete_site",
           "status": 200,
           "required_params": [
             "id"
@@ -13811,6 +14010,7 @@
         },
         "GET /site/v202509/site_markets": {
           "operation": "ListSiteMarkets",
+          "method": "list_markets",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13820,6 +14020,7 @@
         },
         "GET /site/v202509/site_markets/{id}": {
           "operation": "GetSiteMarket",
+          "method": "get_market",
           "status": 200,
           "required_params": [
             "id"
@@ -13832,6 +14033,7 @@
         },
         "GET /site/v202509/sites": {
           "operation": "ListSites",
+          "method": "list_sites",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13841,6 +14043,7 @@
         },
         "GET /site/v202509/sites/{id}": {
           "operation": "GetSite",
+          "method": "get_site",
           "status": 200,
           "required_params": [
             "id"
@@ -13853,6 +14056,7 @@
         },
         "POST /site/v202509/site_markets": {
           "operation": "CreateSiteMarket",
+          "method": "create_market",
           "status": 200,
           "required_params": [
             "data"
@@ -13865,6 +14069,7 @@
         },
         "POST /site/v202509/sites": {
           "operation": "CreateSite",
+          "method": "create_site",
           "status": 200,
           "required_params": [
             "data"
@@ -13877,6 +14082,7 @@
         },
         "PUT /site/v202509/site_markets/{id}": {
           "operation": "UpdateSiteMarket",
+          "method": "update_market",
           "status": 200,
           "required_params": [
             "data",
@@ -13891,6 +14097,7 @@
         },
         "PUT /site/v202509/sites/{id}": {
           "operation": "UpdateSite",
+          "method": "update_site",
           "status": 200,
           "required_params": [
             "data",
@@ -14197,6 +14404,7 @@
       "operations": {
         "DELETE /synthetics/v202309/agentAlerts/{id}": {
           "operation": "DeleteAgentAlert",
+          "method": "delete_agent_alert",
           "status": 200,
           "required_params": [
             "id"
@@ -14209,6 +14417,7 @@
         },
         "DELETE /synthetics/v202309/agents/{agentid}": {
           "operation": "DeleteAgent",
+          "method": "delete_agent",
           "status": 200,
           "required_params": [
             "agentid"
@@ -14221,6 +14430,7 @@
         },
         "DELETE /synthetics/v202309/tests/{id}": {
           "operation": "DeleteTest",
+          "method": "delete_test",
           "status": 200,
           "required_params": [
             "id"
@@ -14233,6 +14443,7 @@
         },
         "GET /synthetics/v202309/agentAlerts": {
           "operation": "ListAgentAlerts",
+          "method": "list_agent_alerts",
           "status": 200,
           "required_params": [],
           "params": {
@@ -14243,6 +14454,7 @@
         },
         "GET /synthetics/v202309/agentAlerts/{id}": {
           "operation": "GetAgentAlert",
+          "method": "get_agent_alert",
           "status": 200,
           "required_params": [
             "id"
@@ -14255,6 +14467,7 @@
         },
         "GET /synthetics/v202309/agents": {
           "operation": "ListAgents",
+          "method": "list_agents",
           "status": 200,
           "required_params": [],
           "params": {
@@ -14264,6 +14477,7 @@
         },
         "GET /synthetics/v202309/agents/{agentid}": {
           "operation": "GetAgent",
+          "method": "get_agent",
           "status": 200,
           "required_params": [
             "agentid"
@@ -14276,6 +14490,7 @@
         },
         "GET /synthetics/v202309/tests": {
           "operation": "ListTests",
+          "method": "list_tests",
           "status": 200,
           "required_params": [],
           "params": {
@@ -14285,6 +14500,7 @@
         },
         "GET /synthetics/v202309/tests/{id}": {
           "operation": "GetTest",
+          "method": "get_test",
           "status": 200,
           "required_params": [
             "id"
@@ -14297,6 +14513,7 @@
         },
         "POST /synthetics/v202309/agentAlerts": {
           "operation": "CreateAgentAlert",
+          "method": "create_agent_alert",
           "status": 200,
           "required_params": [
             "data"
@@ -14309,6 +14526,7 @@
         },
         "POST /synthetics/v202309/results": {
           "operation": "GetResultsForTests",
+          "method": "get_results_for_tests",
           "status": 200,
           "required_params": [
             "data"
@@ -14321,6 +14539,7 @@
         },
         "POST /synthetics/v202309/results/csv": {
           "operation": "GetResultsForTestsCsv",
+          "method": "get_results_for_tests_csv",
           "status": 200,
           "required_params": [
             "data"
@@ -14333,6 +14552,7 @@
         },
         "POST /synthetics/v202309/tests": {
           "operation": "CreateTest",
+          "method": "create_test",
           "status": 200,
           "required_params": [
             "data"
@@ -14345,6 +14565,7 @@
         },
         "POST /synthetics/v202309/trace": {
           "operation": "GetTraceForTest",
+          "method": "get_trace_for_test",
           "status": 200,
           "required_params": [
             "data"
@@ -14357,6 +14578,7 @@
         },
         "PUT /synthetics/v202309/agentAlerts/{id}": {
           "operation": "UpdateAgentAlert",
+          "method": "update_agent_alert",
           "status": 200,
           "required_params": [
             "data",
@@ -14371,6 +14593,7 @@
         },
         "PUT /synthetics/v202309/agents/{agentid}": {
           "operation": "UpdateAgent",
+          "method": "update_agent",
           "status": 200,
           "required_params": [
             "agentid",
@@ -14385,6 +14608,7 @@
         },
         "PUT /synthetics/v202309/tests/{id}": {
           "operation": "UpdateTest",
+          "method": "update_test",
           "status": 200,
           "required_params": [
             "data",
@@ -14399,6 +14623,7 @@
         },
         "PUT /synthetics/v202309/tests/{id}/status": {
           "operation": "SetTestStatus",
+          "method": "set_test_status",
           "status": 200,
           "required_params": [
             "data",
@@ -15841,6 +16066,7 @@
       "operations": {
         "DELETE /user/v202211/users/{id}": {
           "operation": "DeleteUser",
+          "method": "delete_user",
           "status": 200,
           "required_params": [
             "id"
@@ -15853,6 +16079,7 @@
         },
         "GET /user/v202211/users": {
           "operation": "ListUsers",
+          "method": "list_users",
           "status": 200,
           "required_params": [],
           "params": {
@@ -15862,6 +16089,7 @@
         },
         "GET /user/v202211/users/{id}": {
           "operation": "GetUser",
+          "method": "get_user",
           "status": 200,
           "required_params": [
             "id"
@@ -15874,6 +16102,7 @@
         },
         "POST /user/v202211/users": {
           "operation": "CreateUser",
+          "method": "create_user",
           "status": 200,
           "required_params": [
             "data"
@@ -15886,6 +16115,7 @@
         },
         "PUT /user/v202211/users/{id}": {
           "operation": "UpdateUser",
+          "method": "update_user",
           "status": 200,
           "required_params": [
             "data",
@@ -15900,6 +16130,7 @@
         },
         "PUT /user/v202211/users/{id}/reset_active_sessions": {
           "operation": "ResetActiveSessions",
+          "method": "reset_active_sessions",
           "status": 200,
           "required_params": [
             "id"
@@ -15912,6 +16143,7 @@
         },
         "PUT /user/v202211/users/{id}/reset_api_token": {
           "operation": "ResetApiToken",
+          "method": "reset_api_token",
           "status": 200,
           "required_params": [
             "id"
@@ -16100,6 +16332,7 @@
       "operations": {
         "GET /vault/v202312alpha1/secrets": {
           "operation": "ListSecret",
+          "method": "list_secret",
           "status": 200,
           "required_params": [
             "names"
@@ -16112,6 +16345,7 @@
         },
         "GET /vault/v202312alpha1/secrets/{name}": {
           "operation": "GetSecret",
+          "method": "get_secret",
           "status": 200,
           "required_params": [
             "name"

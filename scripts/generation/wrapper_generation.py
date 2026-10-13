@@ -100,7 +100,7 @@ def _discover_grpc_methods(
                         f"{service.name}.{method.name} takes {method.input_type}, "
                         f"which {pb2_file.name} does not define"
                     )
-                rule = method.options.Extensions[annotations_pb2.http]  # ty: ignore[invalid-argument-type]  -- stubs type the handle loosely
+                rule = method.options.Extensions[annotations_pb2.http]  # pyright: ignore[reportArgumentType]  # ty: ignore[invalid-argument-type]  -- stubs type the handle loosely
                 for binding in (rule, *rule.additional_bindings):
                     verb = binding.WhichOneof("pattern")
                     if verb is None or verb == "custom":
@@ -173,6 +173,79 @@ def _to_snake_case(name: str) -> str:
     step1 = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", name)
     step2 = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", step1)
     return step2.lower()
+
+
+def _drop_service_word(service: str, name: str) -> str:
+    """Removes the Service's own word where it only qualifies another word.
+
+    `client.audit.get_audit_event` reads `audit` twice, so it becomes `get_event`.
+    The word stays when it is the object (`device.get_device`) or when removing
+    it would leave one word (`alerting.alert_list`, not a bare `list`).
+    """
+    head, sep, tail = name.partition("_by_")
+    words = head.split("_")
+    service_words = service.split("_")
+    singular = [*service_words[:-1], re.sub(r"(ing|s)$", "", service_words[-1])]
+    for form in (service_words, singular):
+        n = len(form)
+        for i in range(len(words) - n):
+            if words[i : i + n] == form and len(words) - n >= 2:
+                return "_".join(words[:i] + words[i + n :]) + sep + tail
+    return name
+
+
+def _wrapper_method_names(
+    service: str,
+    ops_by_file: dict[Path, list[RestOperation]],
+) -> dict[tuple[Path, str], str]:
+    """Names each wrapper method from its own operation, never from file order.
+
+    A name declared by more than one REST module gets the module prefix in every
+    module, so a bare name always means one operation and cannot move to another
+    when a module is added. A second HTTP route of one operation is named by its
+    extra path parameters (`get_event_by_ctime`), not by route order.
+    """
+    base_names: dict[tuple[Path, str], str] = {}
+    for rest_file, ops in ops_by_file.items():
+        routes: dict[str, list[RestOperation]] = {}
+        for op in ops:
+            # fixup suffixes a repeated operationId: GetAuditEvent, GetAuditEvent_2.
+            routes.setdefault(re.sub(r"_\d+$", "", op.name), []).append(op)
+        for base, group in routes.items():
+            fewest = min(len(_PLACEHOLDER.findall(op.path)) for op in group)
+            shortest = [
+                op for op in group if len(_PLACEHOLDER.findall(op.path)) == fewest
+            ]
+            if len(shortest) > 1:
+                raise ValueError(
+                    f"{rest_file.name}: routes of {base} have the same number of "
+                    "path parameters, so none can keep the bare name"
+                )
+            known = set(_PLACEHOLDER.findall(shortest[0].path))
+            for op in group:
+                extra = [p for p in _PLACEHOLDER.findall(op.path) if p not in known]
+                name = _to_snake_case(base)
+                if extra:
+                    name += "_by_" + "_".join(
+                        re.sub(r"\W", "_", _to_snake_case(p)) for p in extra
+                    )
+                base_names[(rest_file, op.name)] = name
+
+    declared_by: dict[str, set[Path]] = {}
+    for (rest_file, _), name in base_names.items():
+        declared_by.setdefault(name, set()).add(rest_file)
+
+    names: dict[tuple[Path, str], str] = {}
+    for (rest_file, op_name), name in base_names.items():
+        if len(declared_by[name]) > 1:
+            prefix = _to_snake_case(re.sub(r"Service$", "", rest_file.stem))
+            name = f"{prefix}_{name}"
+        names[(rest_file, op_name)] = _drop_service_word(service, name)
+
+    duplicates = {n for n in names.values() if list(names.values()).count(n) > 1}
+    if duplicates:
+        raise ValueError(f"Wrapper method names are not unique: {sorted(duplicates)}")
+    return names
 
 
 def _generate_service_wrappers():
@@ -264,8 +337,6 @@ def _generate_service_wrappers():
             )
         wrapper_code.append("")
 
-        emitted_method_names: set[str] = set()
-
         # Insert REST module imports at the top of wrapper_code (before GrpcTransport).
         for idx, service_py in enumerate(rest_files, start=1):
             rest_module_name = service_py.stem  # e.g., 'DeviceService'
@@ -292,38 +363,21 @@ def _generate_service_wrappers():
             for offset, imp_line in enumerate(grpc_import_lines):
                 wrapper_code.insert(rest_transport_line_idx + 1 + offset, imp_line)
 
+        ops_by_file = {f: parse_generated_rest_module(f) for f in rest_files}
+        method_names = _wrapper_method_names(service, ops_by_file)
+
         for idx, service_py in enumerate(rest_files, start=1):
             rest_module_name = service_py.stem
             module_alias = f"Rest{title}Module{idx}"
 
-            for op in parse_generated_rest_module(service_py):
+            for op in ops_by_file[service_py]:
                 func_name_pascal = op.name
                 return_type = qualify_wrapper_annotation_types(
                     op.return_type, model_classes
                 )
                 return_type = re.sub(r"\bTypingList\b", "List", return_type)
 
-                # Convert PascalCase to snake_case (ListDevices -> list_devices)
-                func_name_snake = _to_snake_case(func_name_pascal)
-
-                # Keep wrapper method names unique across the full class.
-                # If a collision occurs (e.g., many sub-services each define `List`),
-                # prefix with module name and then add numeric suffixes if needed.
-                unique_method_name = func_name_snake
-                if unique_method_name in emitted_method_names:
-                    module_prefix = _to_snake_case(
-                        re.sub(r"Service$", "", rest_module_name)
-                    )
-                    unique_method_name = f"{module_prefix}_{func_name_snake}"
-                    suffix = 2
-                    while unique_method_name in emitted_method_names:
-                        unique_method_name = (
-                            f"{module_prefix}_{func_name_snake}_{suffix}"
-                        )
-                        suffix += 1
-
-                emitted_method_names.add(func_name_snake)
-                emitted_method_names.add(unique_method_name)
+                unique_method_name = method_names[(service_py, op.name)]
 
                 # Build the wrapper signature: the REST params (their own
                 # api_config_override is re-added below as keyword-only, so it

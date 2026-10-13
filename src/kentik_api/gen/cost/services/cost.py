@@ -33,7 +33,7 @@ class CostServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def list_cost_providers(
+    def list_providers(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCostProvidersResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -66,7 +66,7 @@ class CostServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def list_cost_provider_summaries(
+    def list_provider_summaries(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -103,7 +103,7 @@ class CostServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_cost_provider_summary(
+    def get_provider_summary(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,

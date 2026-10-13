@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.custom_dimension
     participant API as Kentik REST API
 
-    C->>W: get_custom_dimension_info(customDimensionId="customDimensionId-example")
+    C->>W: get_info(customDimensionId="customDimensionId-example")
     W->>API: GET /custom_dimensions/v202411alpha1/{customDimensionId}
     alt success
         API-->>W: v202411alpha1GetCustomDimensionInfoResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_custom_dimension_info(customDimensionId="customDimensionId-example")
+    C->>W: get_info(customDimensionId="customDimensionId-example")
     W->>R: build_grpc_request(GetCustomDimensionInfoRequest, arguments)
     R->>API: CustomDimensionService/GetCustomDimensionInfo (gRPC/TLS)
     alt success
@@ -164,7 +164,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_dimension.get_custom_dimension_info(
+response = client.custom_dimension.get_info(
     customDimensionId="customDimensionId-example",
 )
 ```

@@ -33,7 +33,7 @@ class SiteServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def list_site_markets(
+    def list_markets(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSiteMarketsResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -64,7 +64,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_site_market(
+    def create_market(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -103,7 +103,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_site_market(
+    def get_market(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -137,7 +137,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_site_market(
+    def update_market(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -178,7 +178,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_site_market(
+    def delete_market(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):

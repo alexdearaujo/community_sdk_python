@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.audit
     participant API as Kentik REST API
 
-    C->>W: list_audit_events()
+    C->>W: list_events()
     W->>API: GET /audit/v202601/events
     alt success
         API-->>W: v202601ListAuditEventsResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_audit_events()
+    C->>W: list_events()
     W->>R: build_grpc_request(ListAuditEventsRequest, arguments)
     R->>API: AuditService/ListAuditEvents (gRPC/TLS)
     alt success
@@ -99,7 +99,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.audit.list_audit_events()
+response = client.audit.list_events()
 ```
 
 ---
@@ -118,7 +118,7 @@ sequenceDiagram
     participant W as client.audit
     participant API as Kentik REST API
 
-    C->>W: get_audit_event(id="id-example")
+    C->>W: get_event(id="id-example")
     W->>API: GET /audit/v202601/events/{id}
     alt success
         API-->>W: v202601GetAuditEventResponse (JSON)
@@ -140,7 +140,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_audit_event(id="id-example")
+    C->>W: get_event(id="id-example")
     W->>R: build_grpc_request(GetAuditEventRequest, arguments)
     R->>API: AuditService/GetAuditEvent (gRPC/TLS)
     alt success
@@ -174,7 +174,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.audit.get_audit_event(
+response = client.audit.get_event(
     id="id-example",
 )
 ```
@@ -195,7 +195,7 @@ sequenceDiagram
     participant W as client.audit
     participant API as Kentik REST API
 
-    C->>W: get_audit_event_2(id="id-example", ctime="ctime-example")
+    C->>W: get_event_by_ctime(id="id-example", ctime="ctime-example")
     W->>API: GET /audit/v202601/events/{id}/{ctime}
     alt success
         API-->>W: v202601GetAuditEventResponse (JSON)
@@ -217,7 +217,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_audit_event_2(id="id-example", ctime="ctime-example")
+    C->>W: get_event_by_ctime(id="id-example", ctime="ctime-example")
     W->>R: build_grpc_request(GetAuditEventRequest, arguments)
     R->>API: AuditService/GetAuditEvent (gRPC/TLS)
     alt success
@@ -251,7 +251,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.audit.get_audit_event_2(
+response = client.audit.get_event_by_ctime(
     id="id-example",
     ctime="ctime-example",
 )

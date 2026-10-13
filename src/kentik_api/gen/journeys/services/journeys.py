@@ -33,7 +33,7 @@ class JourneysServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def get_journeys_nlq(
+    def get_nlq(
         self, *, api_config_override: Optional[APIConfig] = None, prompt: str
     ) -> rest_models.GetJourneysNlqResponse:
         if isinstance(self._transport, GrpcTransport):

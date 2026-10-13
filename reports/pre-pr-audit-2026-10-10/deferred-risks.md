@@ -20,7 +20,7 @@ This ledger records findings that are intentionally deferred.
 | B4 | blocker | Proto file-name collision handling needs pb layout redesign. | gRPC routes can be missing for specific services even when proto RPCs exist upstream. | Keep REST path as supported default for impacted methods and track explicit gRPC not-implemented behavior. | sdk-generation | Revisit when pb package-tree and import relinking work is scheduled. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/generator/mitigation_lost.py](reports/pre-pr-audit-2026-10-10/evidence/generator/mitigation_lost.py) | 2026-10-11 |
 | B8 | blocker | Packaging guard for httpx major bump and private import replacement is not implemented in this batch. | Future dependency resolution may break import-time behavior on new httpx major releases. | Pin release process checks for dependency drift and keep upgrade blocked until compatibility patch lands. | sdk-release | Revisit when packaging and release-hardening phase starts. | resolved | [pyproject.toml](pyproject.toml), [src/kentik_api/core/api_config.py](src/kentik_api/core/api_config.py) | 2026-10-11 |
 | B9 | blocker | gRPC receive-size policy and RESOURCE_EXHAUSTED classification need deeper runtime change. | Large responses may fail with misleading quota-like errors. | Keep REST fallback guidance for large payload workflows and track gRPC response-size incidents. | sdk-runtime | Revisit when gRPC runtime sizing and error taxonomy tasks are active. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/packaging/scripts/grpc_maxsize.py](reports/pre-pr-audit-2026-10-10/evidence/packaging/scripts/grpc_maxsize.py) | 2026-10-11 |
-| B11 | blocker | Public-name stability requires generator naming policy redesign. | Minor schema evolution can cause user-facing API name drift across releases. | Continue publishing clear surface-change notes and avoid stability guarantees for pending name-policy areas. | sdk-generation | Revisit when wrapper naming strategy work enters implementation phase. | open | [reports/pre-pr-audit-2026-10-10/evidence/gencode/wrapper_names.py](reports/pre-pr-audit-2026-10-10/evidence/gencode/wrapper_names.py) | 2026-10-11 |
+| B11 | blocker | Public-name stability requires generator naming policy redesign. | Minor schema evolution can cause user-facing API name drift across releases. | Continue publishing clear surface-change notes and avoid stability guarantees for pending name-policy areas. | sdk-generation | Revisit when wrapper naming strategy work enters implementation phase. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/gencode/wrapper_names.py](reports/pre-pr-audit-2026-10-10/evidence/gencode/wrapper_names.py) | 2026-10-11 |
 | B12 | blocker | Operation-specific error hierarchy alignment is incomplete across transports. | Catch clauses scoped to operation-specific classes may miss real raised exceptions. | Document current catch guidance and prefer broader KentikError handling at integration boundaries. | sdk-runtime | Revisit when transport-symmetry and error-hierarchy tasks are implemented. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/tests/error_class_probe.py](reports/pre-pr-audit-2026-10-10/evidence/tests/error_class_probe.py) | 2026-10-11 |
 | P2 | latent | Pinning needs a dev-group dependency and CI changes. | A future upstream schema change can break generation or the release gate (generator toolchain unpinned). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | P3 | latent | Needs a pinned schema commit and a scheduled sync job. | A future upstream schema change can break generation or the release gate (CI follows a moving schema). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -76,5 +76,25 @@ This ledger records findings that are intentionally deferred.
 - 2026-10-12: 53 entries remain open. Owners: sdk-generation 21, sdk-runtime 15, sdk-release 13, sdk-tests 6.
 - B2, B8, B9 and B12 are resolved (live-verified 2026-10-12 and 2026-10-13). Each one is listed in the PR description.
 - B3 is resolved (2026-10-13). The generator reads `oneof` groups from the protoc descriptor set and drops their members from the swagger `required` list. `repro_extctx.py` now passes both checks.
-- B4 is resolved (2026-10-13) without a pb package tree. Only proto modules whose names collide inside a Service get their folder in the name (`mitigation_public_v202505_pb2`), and protoc's imports are rewritten by package path. All six `MitigationsService` operations now route over gRPC. `mitigation_lost.py` still reads the old `mitigation_pb2_grpc.py` path, so its last line fails.
-- B4 live check (2026-10-13, lab account): all six `MitigationsService` RPCs reach the server over gRPC, and the SDK builds each request (duration, enum path value, int64 ids) without a local error. Every gRPC call returns the upstream alerting `500 RangeError`, so a successful gRPC response waits on Kentik's fix. REST create, get, act STOP and act DELETE succeeded on mitigation `10000`, which is now archived. The lab had no mitigation device, so the mitigation never started.
+- B4 is resolved (2026-10-13) without a pb package tree. Only proto modules
+  whose names collide inside a Service get their folder in the name
+  (`mitigation_public_v202505_pb2`), and protoc's imports are rewritten by
+  package path. All six `MitigationsService` operations now route over gRPC.
+  `mitigation_lost.py` still reads the old `mitigation_pb2_grpc.py` path, so
+  its last line fails.
+- B4 live check (2026-10-13, lab account): all six `MitigationsService` RPCs
+  reach the server over gRPC, and the SDK builds each request (duration, enum
+  path value, int64 ids) without a local error. Every gRPC call returns the
+  upstream alerting `500 RangeError`, so a successful gRPC response waits on
+  Kentik's fix. REST create, get, act STOP and act DELETE succeeded on
+  mitigation `10000`, which is now archived. The lab had no mitigation device,
+  so the mitigation never started.
+- B11 is resolved (2026-10-13). Wrapper method names no longer depend on file
+  or route order: a name several REST modules declare gets the module prefix
+  in every module, and a second HTTP route is named by its extra path
+  parameters. Generation fails instead of adding a number suffix.
+  `api_surface.json` (schema version 4) records each operation's client
+  method, so a rename is a breaking change for `make check-changelog`.
+  Renamed: 32 client methods in 10 Services, also dropping the Service word
+  where two or more words remain (`audit.get_audit_event` to `get_event`). The
+  CHANGELOG's "Renamed client methods" table lists them.

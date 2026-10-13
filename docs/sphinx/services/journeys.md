@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.journeys
     participant API as Kentik REST API
 
-    C->>W: get_journeys_nlq(prompt="prompt-example")
+    C->>W: get_nlq(prompt="prompt-example")
     W->>API: GET /journeys/v202406/GetJourneysNlq
     alt success
         API-->>W: v202406GetJourneysNlqResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_journeys_nlq(prompt="prompt-example")
+    C->>W: get_nlq(prompt="prompt-example")
     W->>R: build_grpc_request(GetJourneysNlqRequest, arguments)
     R->>API: JourneysDataService/GetJourneysNlq (gRPC/TLS)
     alt success
@@ -96,7 +96,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.journeys.get_journeys_nlq(
+response = client.journeys.get_nlq(
     prompt="prompt-example",
 )
 ```

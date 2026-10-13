@@ -33,7 +33,7 @@ class AuditServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def list_audit_events(
+    def list_events(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -83,7 +83,7 @@ class AuditServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_audit_event(
+    def get_event(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -122,7 +122,7 @@ class AuditServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_audit_event_2(
+    def get_event_by_ctime(
         self, *, api_config_override: Optional[APIConfig] = None, id: str, ctime: str
     ) -> rest_models.GetAuditEventResponse:
         if isinstance(self._transport, GrpcTransport):

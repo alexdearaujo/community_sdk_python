@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.cost
     participant API as Kentik REST API
 
-    C->>W: list_cost_providers()
+    C->>W: list_providers()
     W->>API: GET /cost/v202308/cost/providers
     alt success
         API-->>W: v202308ListCostProvidersResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_cost_providers()
+    C->>W: list_providers()
     W->>R: build_grpc_request(ListCostProvidersRequest, arguments)
     R->>API: CostService/ListCostProviders (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.cost.list_cost_providers()
+response = client.cost.list_providers()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.cost
     participant API as Kentik REST API
 
-    C->>W: list_cost_provider_summaries()
+    C->>W: list_provider_summaries()
     W->>API: GET /cost/v202308/cost/summary
     alt success
         API-->>W: v202308ListCostProviderSummariesResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_cost_provider_summaries()
+    C->>W: list_provider_summaries()
     W->>R: build_grpc_request(ListCostProviderSummariesRequest, arguments)
     R->>API: CostService/ListCostProviderSummaries (gRPC/TLS)
     alt success
@@ -164,7 +164,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.cost.list_cost_provider_summaries()
+response = client.cost.list_provider_summaries()
 ```
 
 ---
@@ -183,7 +183,7 @@ sequenceDiagram
     participant W as client.cost
     participant API as Kentik REST API
 
-    C->>W: get_cost_provider_summary(id="id-example")
+    C->>W: get_provider_summary(id="id-example")
     W->>API: GET /cost/v202308/cost/summary/{id}
     alt success
         API-->>W: v202308GetCostProviderSummaryResponse (JSON)
@@ -205,7 +205,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_cost_provider_summary(id="id-example")
+    C->>W: get_provider_summary(id="id-example")
     W->>R: build_grpc_request(GetCostProviderSummaryRequest, arguments)
     R->>API: CostService/GetCostProviderSummary (gRPC/TLS)
     alt success
@@ -239,7 +239,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.cost.get_cost_provider_summary(
+response = client.cost.get_provider_summary(
     id="id-example",
 )
 ```

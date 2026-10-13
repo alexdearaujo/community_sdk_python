@@ -6,9 +6,12 @@ from pathlib import Path
 import pytest
 
 from scripts.generation import wrapper_generation
+from scripts.generation._shared import RestOperation
 from scripts.generation.parity import select_latest_swagger_files_by_service
 from scripts.generation.wrapper_generation import (
+    _drop_service_word,
     _to_snake_case,
+    _wrapper_method_names,
     qualify_wrapper_annotation_types,
 )
 
@@ -26,6 +29,90 @@ from scripts.generation.wrapper_generation import (
 )
 def test_to_snake_case_keeps_acronyms_as_one_word(pascal_name, expected_snake_name):
     assert _to_snake_case(pascal_name) == expected_snake_name
+
+
+def _op(name: str, path: str) -> RestOperation:
+    return RestOperation(name, "get", path, 200, "Err", name, (), 0, "None", ())
+
+
+def _names(
+    ops_by_file: dict[str, list[RestOperation]], service: str = "demo"
+) -> dict[str, str]:
+    files = {Path(f"{stem}.py"): ops for stem, ops in ops_by_file.items()}
+    return {
+        f"{path.stem}.{op}": name
+        for (path, op), name in _wrapper_method_names(service, files).items()
+    }
+
+
+def test_shared_operation_names_are_prefixed_in_every_module():
+    # B11: the first module in file order used to keep the bare `list`, so a new
+    # module that sorts earlier would silently take it over.
+    names = _names(
+        {
+            "AlertAutoAckService": [_op("List", "/auto-acks")],
+            "AlertService": [_op("List", "/alerts"), _op("Ack", "/alerts/{id}")],
+        },
+        service="alerting",
+    )
+    assert names == {
+        "AlertAutoAckService.List": "auto_ack_list",
+        "AlertService.List": "alert_list",
+        "AlertService.Ack": "ack",
+    }
+
+
+def test_a_new_module_does_not_change_existing_prefixed_names():
+    before = _names({"BService": [_op("List", "/b")], "CService": [_op("List", "/c")]})
+    after = _names(
+        {
+            "AService": [_op("List", "/a")],
+            "BService": [_op("List", "/b")],
+            "CService": [_op("List", "/c")],
+        }
+    )
+    assert before.items() <= after.items()
+
+
+def test_second_http_route_is_named_by_its_extra_path_parameters():
+    names = _names(
+        {
+            "AuditService": [
+                _op("GetAuditEvent", "/events/{id}"),
+                _op("GetAuditEvent_2", "/events/{id}/{ctime}"),
+            ]
+        },
+        service="audit",
+    )
+    assert names == {
+        "AuditService.GetAuditEvent": "get_event",
+        "AuditService.GetAuditEvent_2": "get_event_by_ctime",
+    }
+
+
+@pytest.mark.parametrize(
+    ("service", "name", "expected"),
+    [
+        ("audit", "list_audit_events", "list_events"),
+        ("alerting", "alert_silence_notifications_get", "silence_notifications_get"),
+        ("site", "update_site_market", "update_market"),
+        ("custom_dimension", "get_custom_dimension_info", "get_info"),
+        # The Service word is the object of the call: keep it.
+        ("device", "get_device", "get_device"),
+        # Dropping it would leave one word.
+        ("alerting", "alert_list", "alert_list"),
+        ("interface", "interface_get", "interface_get"),
+        # A route suffix is never shortened.
+        ("device", "get_device_by_device_name", "get_device_by_device_name"),
+    ],
+)
+def test_drop_service_word(service, name, expected):
+    assert _drop_service_word(service, name) == expected
+
+
+def test_routes_that_cannot_be_told_apart_fail_generation():
+    with pytest.raises(ValueError, match="same number of path parameters"):
+        _names({"XService": [_op("Get", "/a/{id}"), _op("Get_2", "/b/{id}")]})
 
 
 def test_qualify_wrapper_annotation_types_qualifies_known_model_names():

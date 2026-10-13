@@ -126,7 +126,7 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_8 = None
                 self._grpc_stub_8 = None
 
-    def create(
+    def auto_ack_create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -165,7 +165,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def list(
+    def auto_ack_list(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -204,7 +204,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get(
+    def auto_ack_get(
         self, *, api_config_override: Optional[APIConfig] = None, autoAckid: str
     ) -> rest_models.AlertAutoAckServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -238,7 +238,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete(
+    def auto_ack_delete(
         self, *, api_config_override: Optional[APIConfig] = None, autoAckid: str
     ) -> rest_models.AlertAutoAckServiceDeleteResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -274,7 +274,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def replace(
+    def auto_ack_replace(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -627,7 +627,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_create(
+    def silence_notifications_create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -666,7 +666,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_list(
+    def silence_notifications_list(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -705,7 +705,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_get(
+    def silence_notifications_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertSilenceNotificationsServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -741,7 +741,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_delete(
+    def silence_notifications_delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertSilenceNotificationsServiceDeleteResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -777,7 +777,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_replace(
+    def silence_notifications_replace(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,

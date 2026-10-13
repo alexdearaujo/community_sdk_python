@@ -33,7 +33,7 @@ class PathfinderServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def create_pathfinder_report(
+    def create_report(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
