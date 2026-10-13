@@ -1538,8 +1538,8 @@
         },
         "EventPolicyLevelSettings": {
           "filters": {
-            "type": "PolicyDimensionFilters",
-            "required": true
+            "type": "Optional[PolicyDimensionFilters]",
+            "required": false
           }
         },
         "EventPolicySettings": {
@@ -1552,8 +1552,8 @@
             "required": true
           },
           "filters": {
-            "type": "PolicyFilters",
-            "required": true
+            "type": "Optional[PolicyFilters]",
+            "required": false
           }
         },
         "ExternalContext": {
@@ -1680,8 +1680,8 @@
             "required": true
           },
           "activation": {
-            "type": "FlowPolicyLevelSettingsActivationSettings",
-            "required": true
+            "type": "Optional[FlowPolicyLevelSettingsActivationSettings]",
+            "required": false
           },
           "mitigationAssociations": {
             "type": "List[FlowPolicyLevelSettingsMitigationAssociation]",
@@ -1740,16 +1740,16 @@
         },
         "FlowPolicySettings": {
           "dataset": {
-            "type": "FlowPolicySettingsDatasetConfig",
-            "required": true
+            "type": "Optional[FlowPolicySettingsDatasetConfig]",
+            "required": false
           },
           "evaluation": {
-            "type": "FlowPolicySettingsEvaluationConfig",
-            "required": true
+            "type": "Optional[FlowPolicySettingsEvaluationConfig]",
+            "required": false
           },
           "baseline": {
-            "type": "FlowPolicySettingsBaselineConfig",
-            "required": true
+            "type": "Optional[FlowPolicySettingsBaselineConfig]",
+            "required": false
           }
         },
         "FlowPolicySettingsBaselineConfig": {
@@ -1788,12 +1788,12 @@
         },
         "FlowPolicySettingsDatasetConfig": {
           "sources": {
-            "type": "PolicyDataSources",
-            "required": true
+            "type": "Optional[PolicyDataSources]",
+            "required": false
           },
           "filters": {
-            "type": "PolicyFilters",
-            "required": true
+            "type": "Optional[PolicyFilters]",
+            "required": false
           },
           "dimensions": {
             "type": "List[str]",
@@ -16368,8 +16368,8 @@
       "fields": {
         "GetSecretResponse": {
           "secret": {
-            "type": "Secret",
-            "required": true
+            "type": "Optional[Secret]",
+            "required": false
           }
         },
         "ListSecretResponse": {

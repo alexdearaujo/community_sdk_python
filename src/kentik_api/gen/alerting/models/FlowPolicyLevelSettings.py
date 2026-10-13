@@ -1,7 +1,7 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `make generate`. Do not edit by hand.
 
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -25,8 +25,8 @@ class FlowPolicyLevelSettings(BaseModel):
         validation_alias="conditions"
     )
 
-    activation: FlowPolicyLevelSettingsActivationSettings = Field(
-        validation_alias="activation"
+    activation: Optional[FlowPolicyLevelSettingsActivationSettings] = Field(
+        validation_alias="activation", default=None
     )
 
     mitigationAssociations: List[FlowPolicyLevelSettingsMitigationAssociation] = Field(

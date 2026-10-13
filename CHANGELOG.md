@@ -128,6 +128,18 @@ by a number. The Service word stays when it is the object of the call
   `ExternalContext.jiraCloud` are now `Optional`, so alerts with an external
   context parse, and `set_external_context` accepts one context.
   `Nlri.prefix` (`bgp_monitoring`) is now `Optional[str]`.
+- **Responses parse when the server leaves a message field unset.** A proto
+  `REQUIRED` field binds the request, not the response, and an unset message
+  field is absent from a response. So a policy without a baseline failed
+  validation. In models that a response can reach, message fields are now
+  `Optional`. Models used only in requests keep them required. Code that reads
+  these fields must handle `None`: `FlowPolicySettings.baseline`,
+  `FlowPolicySettings.dataset`, `FlowPolicySettings.evaluation`,
+  `FlowPolicySettingsDatasetConfig.sources`,
+  `FlowPolicySettingsDatasetConfig.filters`,
+  `FlowPolicyLevelSettings.activation`, `EventPolicySettings.filters`,
+  `EventPolicyLevelSettings.filters` (`alerting`), and
+  `GetSecretResponse.secret` (`vault`).
 - **A gRPC response over 4 MiB no longer reads as a quota error.** The channel
   now allows 40 MiB, and `KentikAPI(grpc_options=[...])` changes it. A response
   over the limit raises `TransportError`, not `HTTPException` with status 429.

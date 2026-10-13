@@ -50,7 +50,7 @@ This ledger records findings that are intentionally deferred.
 | R12 | runtime | The missing update_mask argument needs generator work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R13 | runtime | No consumer needs the error details today. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R14 | runtime | Wrapper generation hides the import cause. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R15 | runtime | Model output step must relax REQUIRED on message fields. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R15 | runtime | Model output step must relax REQUIRED on message fields. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R16 | runtime | Generator does not hoist inline objects. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T2 | test gap | In-process grpc.server success-path test. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -102,3 +102,7 @@ This ledger records findings that are intentionally deferred.
   operations have a gRPC translation. `mitigation_lost.py` now checks the
   renamed stub modules.
 - 2026-10-13: 47 entries remain open, none of them blockers.
+- R15 is resolved (2026-10-13). The generator drops message-typed fields from
+  `required` in every model a response can reach. Models used only in
+  requests keep them. Nine fields became `Optional`, and a policy without a
+  `baseline` now parses. 46 entries remain open.
