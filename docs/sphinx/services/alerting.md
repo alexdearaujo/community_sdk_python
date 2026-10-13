@@ -2774,7 +2774,7 @@ response = client.alerting.suppression_delete(
 ## Data Models
 
 <details>
-<summary>Model relationships (10 of 185 models)</summary>
+<summary>Model relationships (10 of 186 models)</summary>
 
 ```mermaid
 classDiagram
@@ -2804,8 +2804,7 @@ classDiagram
 ```
 
 ```{eval-rst}
-.. autoclass:: kentik_api.gen.alerting.models.AlertAcknowledgement
-   :members:
+.. autopydantic_model:: kentik_api.gen.alerting.models.AlertAcknowledgement
 ```
 
 ```{eval-rst}
@@ -3556,6 +3555,11 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.alerting.models.v202501TCPFlagsPredicateGroup
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.alerting.models.v202505AlertAcknowledgement
+   :members:
 ```
 
 ```{eval-rst}

@@ -205,6 +205,7 @@ from ..models import (  # noqa: F401
     v202501TCPFlagsFormula,
     v202501TCPFlagsPredicate,
     v202501TCPFlagsPredicateGroup,
+    v202505AlertAcknowledgement,
     v202506MitigationTarget,
 )
 

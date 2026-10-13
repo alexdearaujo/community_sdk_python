@@ -177,11 +177,30 @@ def clean_schema_names(schema: dict, version: str) -> dict:
 
     schema = copy.deepcopy(schema)
 
+    # A versioned name whose stripped form already exists is a different schema,
+    # for example an enum `v202505AlertAcknowledgement` next to the object
+    # `AlertAcknowledgement`. Stripping it would overwrite the object, so it
+    # keeps its prefix, and so do the references that point at it.
+    keep_prefixed = {
+        old_key
+        for section in _definition_sections(schema)
+        for old_key in section
+        if old_key.startswith(version)
+        and old_key[len(version) :] in section
+        and len(old_key) > len(version)
+    }
+    for old_key in sorted(keep_prefixed):
+        print(
+            f"    ⚠️ Schema name collision: keeping `{old_key}` because "
+            f"`{old_key[len(version) :]}` already exists."
+        )
+
     def _clean_refs(node: object) -> None:
         if isinstance(node, dict):
-            if "$ref" in node and isinstance(node["$ref"], str):
-                if f"/{version}" in node["$ref"]:
-                    node["$ref"] = node["$ref"].replace(f"/{version}", "/")
+            ref = node.get("$ref")
+            if isinstance(ref, str) and f"/{version}" in ref:
+                if ref.rsplit("/", 1)[-1] not in keep_prefixed:
+                    node["$ref"] = ref.replace(f"/{version}", "/")
             for child_value in node.values():
                 _clean_refs(child_value)
         elif isinstance(node, list):
@@ -191,7 +210,11 @@ def clean_schema_names(schema: dict, version: str) -> dict:
     _clean_refs(schema)
 
     for section in _definition_sections(schema):
-        for old_key in [key for key in section if key.startswith(version)]:
+        for old_key in [
+            key
+            for key in section
+            if key.startswith(version) and key not in keep_prefixed
+        ]:
             new_key = old_key[len(version) :]
             if new_key:
                 section[new_key] = section.pop(old_key)

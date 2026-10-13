@@ -450,3 +450,57 @@ def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir():
         "cleans SDK_OUTPUT_DIR, so a validation failure never leaves "
         "generated output partially wiped"
     )
+
+
+def test_clean_schema_names_keeps_the_prefix_when_stripping_would_overwrite_a_schema():
+    schema = {
+        "definitions": {
+            "AlertAcknowledgement": {
+                "type": "object",
+                "properties": {"state": {"type": "string"}},
+            },
+            "v202505AlertAcknowledgement": {"type": "string", "enum": ["A", "B"]},
+            "v202505Alert": {
+                "type": "object",
+                "properties": {
+                    "acknowledgement": {"$ref": "#/definitions/AlertAcknowledgement"},
+                    "legacy": {"$ref": "#/definitions/v202505AlertAcknowledgement"},
+                },
+            },
+        }
+    }
+
+    result = clean_schema_names(schema, "v202505")["definitions"]
+
+    assert result["AlertAcknowledgement"]["type"] == "object"
+    assert result["v202505AlertAcknowledgement"]["enum"] == ["A", "B"]
+    assert "Alert" in result
+    props = result["Alert"]["properties"]
+    assert props["acknowledgement"]["$ref"].endswith("/AlertAcknowledgement")
+    assert props["legacy"]["$ref"].endswith("/v202505AlertAcknowledgement")
+
+
+def test_the_real_alert_schema_keeps_acknowledgement_an_object():
+    import json
+
+    swagger = (
+        Path(__file__).resolve().parents[3]
+        / "api-schema-public"
+        / "gen"
+        / "openapiv3"
+        / "kentik"
+        / "alerting"
+        / "public"
+        / "v202505"
+        / "alert.swagger.json"
+    )
+    if not swagger.exists():
+        pytest.skip("local api-schema-public checkout not available")
+
+    result = clean_schema_names(
+        json.loads(swagger.read_text(encoding="utf-8")), "v202505"
+    )
+    definitions = result["components"]["schemas"]
+
+    assert definitions["AlertAcknowledgement"].get("type") == "object"
+    assert "v202505AlertAcknowledgement" in definitions

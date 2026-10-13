@@ -5,12 +5,12 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from .AlertAcknowledgement import AlertAcknowledgement
 from .AlertState import AlertState
 from .Source import Source
 from .v202303MultiAttributeFilter import v202303MultiAttributeFilter
 from .v202303Severity import v202303Severity
 from .v202303TimeRange import v202303TimeRange
+from .v202505AlertAcknowledgement import v202505AlertAcknowledgement
 
 
 class AlertFilters(BaseModel):
@@ -54,7 +54,7 @@ class AlertFilters(BaseModel):
         validation_alias="recentSeverities", default=None
     )
 
-    ackStates: Optional[List[Optional[AlertAcknowledgement]]] = Field(
+    ackStates: Optional[List[Optional[v202505AlertAcknowledgement]]] = Field(
         validation_alias="ackStates", default=None
     )
 

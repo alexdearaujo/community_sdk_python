@@ -88,6 +88,13 @@ Each change below can stop an existing `except` clause or call from working.
 
 ### Fixed
 
+- **`Alert.acknowledgement` is the acknowledgement object again.** The
+  generator stripped a version prefix, and the enum `v202505AlertAcknowledgement`
+  overwrote the object `AlertAcknowledgement`. Any alert with an acknowledgement
+  then failed validation. The enum now keeps its prefixed name, and
+  `AlertFilters.ackStates` uses `v202505AlertAcknowledgement`. Code that
+  imported the enum as `AlertAcknowledgement` must import
+  `v202505AlertAcknowledgement`.
 - **A gRPC response over 4 MiB no longer reads as a quota error.** The channel
   now allows 40 MiB, and `KentikAPI(grpc_options=[...])` changes it. A response
   over the limit raises `TransportError`, not `HTTPException` with status 429.

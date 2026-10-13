@@ -861,6 +861,7 @@
         "v202501TCPFlagsFormula",
         "v202501TCPFlagsPredicate",
         "v202501TCPFlagsPredicateGroup",
+        "v202505AlertAcknowledgement",
         "v202506MitigationTarget"
       ],
       "fields": {
@@ -915,6 +916,24 @@
           },
           "externalContexts": {
             "type": "Optional[List[Optional[ExternalContext]]]",
+            "required": false
+          }
+        },
+        "AlertAcknowledgement": {
+          "state": {
+            "type": "Optional[v202505AlertAcknowledgement]",
+            "required": false
+          },
+          "ackedByUser": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "autoAckId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "ackedAt": {
+            "type": "Optional[str]",
             "required": false
           }
         },
@@ -1079,7 +1098,7 @@
             "required": false
           },
           "ackStates": {
-            "type": "Optional[List[Optional[AlertAcknowledgement]]]",
+            "type": "Optional[List[Optional[v202505AlertAcknowledgement]]]",
             "required": false
           },
           "activeAt": {
@@ -3121,12 +3140,6 @@
           "AGGREGATION_TYPE_REL_MAX",
           "AGGREGATION_TYPE_REL_MIN"
         ],
-        "AlertAcknowledgement": [
-          "ALERT_ACKNOWLEDGEMENT_UNSPECIFIED",
-          "ALERT_ACKNOWLEDGEMENT_REQUIRED",
-          "ALERT_ACKNOWLEDGEMENT_DONE",
-          "ALERT_ACKNOWLEDGEMENT_NOT_ACKED"
-        ],
         "AlertState": [
           "ALERT_STATE_UNSPECIFIED",
           "ALERT_STATE_CLEAR",
@@ -3378,6 +3391,12 @@
           "TCP_FLAG_URG",
           "TCP_FLAG_ECE",
           "TCP_FLAG_CWR"
+        ],
+        "v202505AlertAcknowledgement": [
+          "ALERT_ACKNOWLEDGEMENT_UNSPECIFIED",
+          "ALERT_ACKNOWLEDGEMENT_REQUIRED",
+          "ALERT_ACKNOWLEDGEMENT_DONE",
+          "ALERT_ACKNOWLEDGEMENT_NOT_ACKED"
         ]
       }
     },
