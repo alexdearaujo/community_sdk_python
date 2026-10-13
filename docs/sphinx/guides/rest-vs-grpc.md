@@ -113,20 +113,18 @@ that no header shows.
 
 ## What gRPC covers
 
-REST covers every operation the SDK has. gRPC covers most of them:
+REST covers every operation the SDK has, and so does gRPC:
 
 | Measure | Count |
 | --- | --- |
 | Services with a wrapper on the client | 36 |
 | Services with no wrapper | 6 |
 | Wrapper operations | 234 |
-| Operations with a gRPC translation | 228 |
-| Operations that are REST only | 6 |
+| Operations with a gRPC translation | 234 |
 
 The generator gives an operation a gRPC translation when an RPC declares the
 same HTTP rule as the REST operation: the same proto service, HTTP verb, and
-path. The 6 REST-only operations are all in `alerting`. They belong to
-`MitigationsService`, which no proto declares.
+path. Every operation in the current schema has such an RPC.
 
 The six services with no wrapper are `core`, `deviceconf`, `diagnostic`,
 `kptr`, `monitoring`, and `net`. The SDK has models and proto stubs for them,
@@ -140,11 +138,11 @@ cases. The two have different causes and different fixes:
 
 | Message | Cause | What to do |
 | --- | --- | --- |
-| `gRPC translation for <Operation> is not yet implemented.` | The operation is one of the 6 REST-only operations. | Call it through a `protocol="rest"` client. |
+| `gRPC translation for <Operation> is not yet implemented.` | No RPC declares the operation's HTTP rule. No operation in the current schema is in this state. | Call it through a `protocol="rest"` client. |
 | `gRPC proto dependencies not installed for <service> service` | The service's compiled proto modules failed to import when the client started. | Repair the installation. Every other method of that service raises the same error. |
 
-The first case is fixed and predictable: the same operations raise it on
-every run. The second case depends on the environment.
+The first case is fixed and predictable: a schema change adds or removes it,
+not the run. The second case depends on the environment.
 
 A program that needs both transports can hold two clients:
 

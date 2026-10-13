@@ -67,7 +67,7 @@ This ledger records findings that are intentionally deferred.
 | D3 | release or docs | CLAUDE.md rewrite needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D4 | release or docs | Constitution change needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D5 | release or docs | docs_rendering text needs a generator change. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D6 | release or docs | Waits for B4. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D6 | release or docs | Waits for B4. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D11 | release or docs | Spec 001 quickstart commands need a rewrite. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D12 | release or docs | Needs template changes for docstrings. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 
@@ -98,3 +98,7 @@ This ledger records findings that are intentionally deferred.
   Renamed: 32 client methods in 10 Services, also dropping the Service word
   where two or more words remain (`audit.get_audit_event` to `get_event`). The
   CHANGELOG's "Renamed client methods" table lists them.
+- D6 is resolved (2026-10-13). The REST vs gRPC guide now says all 234
+  operations have a gRPC translation. `mitigation_lost.py` now checks the
+  renamed stub modules.
+- 2026-10-13: 47 entries remain open, none of them blockers.
