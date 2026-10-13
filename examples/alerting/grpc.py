@@ -4,7 +4,7 @@
 Uses the alert_list operation from the AlertService group.
 The Kentik backend rejects the call unless the filters carry a startedAt time
 range, although the schema marks every field optional.
-On the test account the backend's gRPC List fails with a 500 RangeError; REST works.
+On the test account every alerting gRPC call fails with a server 500 RangeError; REST works.
 """
 
 from datetime import UTC, datetime, timedelta

@@ -47,8 +47,8 @@ def test_alert_list_with_started_at_over_grpc(grpc_real_client):
     try:
         response = grpc_real_client.alerting.alert_list(data=_last_30_days_request())
     except HTTPException as exc:
-        # Observed 2026-10-13: every alerting List RPC fails server-side, even
-        # for a hand-built proto request, while the REST route works.
+        # Observed 2026-10-13: every alerting gRPC RPC fails server-side, even
+        # for Get with one id, while the REST routes work.
         if exc.status_code == 500 and "RangeError" in str(exc):
             pytest.xfail(f"backend gRPC alerting List fails: {exc}")
         raise
