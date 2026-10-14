@@ -116,6 +116,10 @@ by a number. The Service word stays when it is the object of the call
 
 ### Fixed
 
+- **A space in a REST query value goes out as `%20`.** httpx wrote it as `+`,
+  which Envoy's gRPC transcoder does not decode by default, so a value such as
+  a journeys `prompt` could reach the service with plus signs. `%20` means a
+  space to every server.
 - **`APIConfig` and `KentikCredentials` settings are read-only.** The SDK reads
   each setting at a different time: `verify` and `base_path` when the REST
   connection opens, the credentials when the gRPC channel opens, a timeout on

@@ -5,7 +5,7 @@ import json
 import time
 from enum import Enum
 from typing import Any, Dict, Optional, TypeVar
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 
 import httpx
 from pydantic import BaseModel, ValidationError
@@ -241,6 +241,11 @@ def request_json(
         for (key, value) in (query_params or {}).items()
         if value is not None
     }
+    # httpx writes a space as "+", which Envoy's transcoder does not decode by
+    # default; "%20" means a space to every server. httpx still renders the values.
+    query = urlencode(
+        httpx.QueryParams(clean_query_params).multi_items(), quote_via=quote
+    )
 
     extensions = {}
     if api_config.rest_deadline is not None:
@@ -249,9 +254,8 @@ def request_json(
     try:
         response = api_config.client.request(
             method.lower(),
-            httpx.URL(path),
+            httpx.URL(path, query=query.encode()) if query else httpx.URL(path),
             headers=headers,
-            params=clean_query_params,
             json=json_body,
             # Per request, so a with_timeout() copy sharing this client applies its own.
             timeout=api_config.rest_timeout,
