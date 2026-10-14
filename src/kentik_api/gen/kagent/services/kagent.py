@@ -34,9 +34,10 @@ class KagentServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.AgentCapabilityServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.kagent.pb.agent_pb2 as _pb2_2_mod
@@ -46,9 +47,10 @@ class KagentServiceWrapper:
                 self._grpc_stub_2 = _pb2_grpc_2_mod.AgentServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_2 = None
                 self._grpc_stub_2 = None
+                self._grpc_import_error_2 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.kagent.pb.capability_pb2 as _pb2_3_mod
@@ -58,9 +60,10 @@ class KagentServiceWrapper:
                 self._grpc_stub_3 = _pb2_grpc_3_mod.CapabilityReleaseServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_3 = None
                 self._grpc_stub_3 = None
+                self._grpc_import_error_3 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.kagent.pb.capability_pb2 as _pb2_4_mod
@@ -70,9 +73,10 @@ class KagentServiceWrapper:
                 self._grpc_stub_4 = _pb2_grpc_4_mod.CapabilityAdminServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_4 = None
                 self._grpc_stub_4 = None
+                self._grpc_import_error_4 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.kagent.pb.config_pb2 as _pb2_5_mod
@@ -82,9 +86,10 @@ class KagentServiceWrapper:
                 self._grpc_stub_5 = _pb2_grpc_5_mod.ConfigServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_5 = None
                 self._grpc_stub_5 = None
+                self._grpc_import_error_5 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.kagent.pb.provisioning_token_pb2 as _pb2_6_mod
@@ -94,9 +99,10 @@ class KagentServiceWrapper:
                 self._grpc_stub_6 = _pb2_grpc_6_mod.ProvisioningTokenServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_6 = None
                 self._grpc_stub_6 = None
+                self._grpc_import_error_6 = exc
 
     def list_agent_capabilities(
         self, *, api_config_override: Optional[APIConfig] = None, agentId: str
@@ -104,8 +110,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.ListAgentCapabilitiesRequest,
                 None,
@@ -144,8 +150,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetAgentCapabilityRequest,
                 None,
@@ -185,8 +191,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteAgentCapabilityRequest,
                 None,
@@ -228,8 +234,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpsertAgentCapabilityRequest,
                 {"capability": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -273,8 +279,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.ListAgentsRequest,
                 None,
@@ -320,8 +326,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.CreateAgentRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -356,8 +362,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.AuthorizeRequest, None, {"install_id": installId}
             )
@@ -393,8 +399,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.GenerateInstallCommandsRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -433,8 +439,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.GetAgentRequest,
                 None,
@@ -474,8 +480,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.DeleteAgentRequest,
                 None,
@@ -516,8 +522,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateAgentRequest,
                 {"agent": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -554,8 +560,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_4!r}"
+                ) from self._grpc_import_error_4
             _req = build_grpc_request(
                 self._grpc_pb2_4.ListCapabilitiesRequest, None, {}
             )
@@ -590,8 +596,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_4!r}"
+                ) from self._grpc_import_error_4
             _req = build_grpc_request(
                 self._grpc_pb2_4.CreateCapabilityRequest,
                 {"capability": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -626,8 +632,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_4!r}"
+                ) from self._grpc_import_error_4
             _req = build_grpc_request(
                 self._grpc_pb2_4.GetCapabilityRequest, None, {"name": capabilityname}
             )
@@ -660,8 +666,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_4!r}"
+                ) from self._grpc_import_error_4
             _req = build_grpc_request(
                 self._grpc_pb2_4.DeleteCapabilityRequest, None, {"name": capabilityname}
             )
@@ -698,8 +704,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_4!r}"
+                ) from self._grpc_import_error_4
             _req = build_grpc_request(
                 self._grpc_pb2_4.UpdateCapabilityRequest,
                 {"capability": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -744,8 +750,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.GetCapabilityReleaseRequest,
                 None,
@@ -800,8 +806,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.GetCapabilityLatestReleasesRequest,
                 None,
@@ -854,8 +860,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.GetCapabilitySupportedDistrosRequest,
                 None,
@@ -893,8 +899,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.CreateConfigRequest,
                 {"config": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -929,8 +935,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.GetConfigRequest, None, {"name": configname}
             )
@@ -963,8 +969,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.DeleteConfigRequest, None, {"name": configname}
             )
@@ -1001,8 +1007,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.UpdateConfigRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -1038,8 +1044,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.ListProvisioningTokensRequest, None, {}
             )
@@ -1074,8 +1080,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.CreateProvisioningTokenRequest,
                 {"token": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -1110,8 +1116,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.GetProvisioningTokenRequest, None, {"token": token}
             )
@@ -1144,8 +1150,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.ListAgentsByProvisioningTokenRequest,
                 None,
@@ -1184,8 +1190,8 @@ class KagentServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kagent service"
-                )
+                    f"gRPC proto modules for kagent service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.RevokeProvisioningTokenRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),

@@ -116,6 +116,11 @@ by a number. The Service word stays when it is the object of the call
 
 ### Fixed
 
+- **A failed gRPC proto import names its cause.** When a service's proto
+  modules failed to import, every gRPC call raised "gRPC proto dependencies
+  not installed", even for a descriptor-pool conflict, which needs a different
+  fix. The `NotImplementedError` now reads "gRPC proto modules for `<service>`
+  service failed to import: `<cause>`" and is chained from the import error.
 - **gRPC errors keep the server's error details.** gRPC dropped the
   `google.rpc.Status` that the server sends in a trailer, so a `BadRequest`
   did not say which field it rejected. It is now decoded into

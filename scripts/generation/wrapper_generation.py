@@ -338,12 +338,19 @@ def _generate_service_wrappers():
                 wrapper_code.append(
                     f"                self._grpc_stub_{stub_index_str} = _pb2_grpc_{stub_index_str}_mod.{stub_class}(self._transport.channel)"
                 )
-                wrapper_code.append("            except (ImportError, TypeError):")
+                wrapper_code.append(
+                    "            except (ImportError, TypeError) as exc:"
+                )
                 wrapper_code.append(
                     f"                self._grpc_pb2_{stub_index_str} = None"
                 )
                 wrapper_code.append(
                     f"                self._grpc_stub_{stub_index_str} = None"
+                )
+                # Kept for the call that fails: a descriptor-pool conflict is a
+                # TypeError too, and a generic message would hide which one it was.
+                wrapper_code.append(
+                    f"                self._grpc_import_error_{stub_index_str} = exc"
                 )
         else:
             wrapper_code.append(
@@ -489,7 +496,7 @@ def _generate_service_wrappers():
                         "        if isinstance(self._transport, GrpcTransport):",
                         # Guard: if proto deps weren't available at init, fall back.
                         f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
-                        f'                raise NotImplementedError("gRPC proto dependencies not installed for {service} service")',
+                        f'                raise NotImplementedError(f"gRPC proto modules for {service} service failed to import: {{self._grpc_import_error_{stub_idx}!r}}") from self._grpc_import_error_{stub_idx}',
                         f"            _req = build_grpc_request(self._grpc_pb2_{stub_idx}.{grpc_method.request_class}, {body_arg}, {{{fields_arg}}}{mask_arg})",
                         f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
                         f"api_config=api_config_override, error_cls={module_alias}.{op.error_cls_name})",

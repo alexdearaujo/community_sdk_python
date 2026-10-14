@@ -29,9 +29,10 @@ class NetworkClassServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.NetworkClassServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def network_class_get(
         self, *, api_config_override: Optional[APIConfig] = None
@@ -39,8 +40,8 @@ class NetworkClassServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for network_class service"
-                )
+                    f"gRPC proto modules for network_class service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.GetNetworkClassRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetNetworkClass,
@@ -73,8 +74,8 @@ class NetworkClassServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for network_class service"
-                )
+                    f"gRPC proto modules for network_class service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateNetworkClassRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),

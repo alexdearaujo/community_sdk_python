@@ -81,8 +81,8 @@ query argument that resolves to no field fails generation or raises
 `ParseError`, never drops silently. A wrapper method raises
 `NotImplementedError` for `GrpcTransport` in exactly two cases: the
 service's proto companions failed to import at wrapper `__init__`
-time ("gRPC proto dependencies not installed for `<service>`
-service"), or no RPC shares that REST operation's HTTP rule
+time ("gRPC proto modules for `<service>` service failed to import:
+`<cause>`", chained from the import error), or no RPC shares that REST operation's HTTP rule
 ("gRPC translation for `<Operation>` is not yet
 implemented"). Both REST and gRPC return identical Pydantic models
 for every operation gRPC covers, and raise the same exception type

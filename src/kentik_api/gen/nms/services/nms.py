@@ -29,9 +29,10 @@ class NmsServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.MetricsSchemaServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def metrics_schema_service__get_metrics_schema(
         self, *, api_config_override: Optional[APIConfig] = None
@@ -39,8 +40,8 @@ class NmsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for nms service"
-                )
+                    f"gRPC proto modules for nms service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetMetricsSchemaRequest, None, {}
             )

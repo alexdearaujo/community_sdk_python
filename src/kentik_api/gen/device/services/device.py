@@ -29,9 +29,10 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.DeviceServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def list_devices(
         self,
@@ -43,8 +44,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.ListDevicesRequest,
                 None,
@@ -83,8 +84,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateDeviceRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -122,8 +123,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateDevicesRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -161,8 +162,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteDevicesRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -200,8 +201,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateDevicesRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -240,8 +241,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetDeviceByNameRequest,
                 None,
@@ -284,8 +285,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetDeviceRequest,
                 None,
@@ -325,8 +326,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateDeviceRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -362,8 +363,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteDeviceRequest, None, {"id": deviceid}
             )
@@ -400,8 +401,8 @@ class DeviceServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for device service"
-                )
+                    f"gRPC proto modules for device service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateDeviceLabelsRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),

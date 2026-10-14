@@ -29,9 +29,10 @@ class RbuxServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.ScopeServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def list_scopes(
         self, *, api_config_override: Optional[APIConfig] = None
@@ -39,8 +40,8 @@ class RbuxServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for rbux service"
-                )
+                    f"gRPC proto modules for rbux service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.ListScopesRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListScopes,
@@ -73,8 +74,8 @@ class RbuxServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for rbux service"
-                )
+                    f"gRPC proto modules for rbux service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateScopeRequest,
                 {"scope": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -109,8 +110,8 @@ class RbuxServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for rbux service"
-                )
+                    f"gRPC proto modules for rbux service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetScopeRequest, None, {"id": id}
             )
@@ -147,8 +148,8 @@ class RbuxServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for rbux service"
-                )
+                    f"gRPC proto modules for rbux service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateScopeRequest,
                 {"scope": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -184,8 +185,8 @@ class RbuxServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for rbux service"
-                )
+                    f"gRPC proto modules for rbux service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteScopeRequest, None, {"id": id}
             )

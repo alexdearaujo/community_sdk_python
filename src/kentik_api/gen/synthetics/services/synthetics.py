@@ -30,9 +30,10 @@ class SyntheticsServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.SyntheticsDataServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.synthetics.pb.synthetics_pb2 as _pb2_2_mod
@@ -42,9 +43,10 @@ class SyntheticsServiceWrapper:
                 self._grpc_stub_2 = _pb2_grpc_2_mod.SyntheticsAdminServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_2 = None
                 self._grpc_stub_2 = None
+                self._grpc_import_error_2 = exc
 
     def list_agent_alerts(
         self,
@@ -55,8 +57,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.ListAgentAlertsRequest, None, {"agentIds": agentIds}
             )
@@ -92,8 +94,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.CreateAgentAlertRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -128,8 +130,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.GetAgentAlertRequest, None, {"id": id}
             )
@@ -166,8 +168,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateAgentAlertRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -203,8 +205,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.DeleteAgentAlertRequest, None, {"id": id}
             )
@@ -237,8 +239,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(self._grpc_pb2_2.ListAgentsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.ListAgents,
@@ -268,8 +270,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.GetAgentRequest, None, {"id": agentid}
             )
@@ -306,8 +308,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateAgentRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -343,8 +345,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.DeleteAgentRequest, None, {"id": agentid}
             )
@@ -377,8 +379,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(self._grpc_pb2_2.ListTestsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.ListTests,
@@ -411,8 +413,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.CreateTestRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -447,8 +449,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(self._grpc_pb2_2.GetTestRequest, None, {"id": id})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.GetTest,
@@ -483,8 +485,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateTestRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -520,8 +522,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.DeleteTestRequest, None, {"id": id}
             )
@@ -558,8 +560,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.SetTestStatusRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -598,8 +600,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetResultsForTestsRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -637,8 +639,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetResultsForTestsCsvRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
@@ -676,8 +678,8 @@ class SyntheticsServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for synthetics service"
-                )
+                    f"gRPC proto modules for synthetics service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetTraceForTestRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),

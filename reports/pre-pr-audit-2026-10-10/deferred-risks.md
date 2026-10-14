@@ -49,7 +49,7 @@ This ledger records findings that are intentionally deferred.
 | R11 | runtime | Free-form bodies need schema-aware gRPC encoding. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R12 | runtime | The missing update_mask argument needs generator work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R13 | runtime | No consumer needs the error details today. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R14 | runtime | Wrapper generation hides the import cause. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R14 | runtime | Wrapper generation hides the import cause. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R15 | runtime | Model output step must relax REQUIRED on message fields. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R16 | runtime | Generator does not hoist inline objects. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -169,3 +169,8 @@ This ledger records findings that are intentionally deferred.
   lost every detail field, so both transports match. `rate_limit_of_rpc` falls
   back to trailing metadata for trailers-only responses. 34 entries remain
   open.
+- R14 is resolved (2026-10-13). Each generated wrapper keeps the exception
+  its proto import raised, and the guard on each gRPC method raises
+  `NotImplementedError` naming it, chained with `from`. The import still
+  degrades instead of failing the client, so REST keeps working. 33 entries
+  remain open.

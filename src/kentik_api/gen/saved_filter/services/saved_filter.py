@@ -29,9 +29,10 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.SavedFilterServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def create_saved_filter(
         self,
@@ -42,8 +43,8 @@ class SavedFilterServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for saved_filter service"
-                )
+                    f"gRPC proto modules for saved_filter service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateSavedFilterRequest,
                 {"filter": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -78,8 +79,8 @@ class SavedFilterServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for saved_filter service"
-                )
+                    f"gRPC proto modules for saved_filter service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetSavedFilterRequest, None, {"id": id}
             )
@@ -116,8 +117,8 @@ class SavedFilterServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for saved_filter service"
-                )
+                    f"gRPC proto modules for saved_filter service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateSavedFilterRequest,
                 {"filter": data.model_dump(by_alias=True, exclude_unset=True)},
@@ -153,8 +154,8 @@ class SavedFilterServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for saved_filter service"
-                )
+                    f"gRPC proto modules for saved_filter service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteSavedFilterRequest, None, {"id": id}
             )
@@ -187,8 +188,8 @@ class SavedFilterServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for saved_filter service"
-                )
+                    f"gRPC proto modules for saved_filter service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.ListSavedFiltersRequest, None, {}
             )
@@ -220,8 +221,8 @@ class SavedFilterServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for saved_filter service"
-                )
+                    f"gRPC proto modules for saved_filter service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.ListSavedFiltersAllRequest, None, {}
             )
