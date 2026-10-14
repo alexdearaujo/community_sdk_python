@@ -56,7 +56,8 @@ OPENAPI_GENERATOR_CMD="openapi-python-generator" make generate local
 ## Update Cycle (Simple Repeatable Flow)
 
 1. Pull latest schema updates in your local `api-schema-public` clone.
-2. Run `make generate local`.
+2. Run `make generate local`. It writes the checkout's commit to
+   `schema.lock`; commit that file with the generated changes.
 3. Review generated changes in [`src/kentik_api/gen/`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/gen/README.md).
 4. Run tests/lint as needed ([`make test`](../../Makefile), [`make lint`](../../Makefile)).
 5. Required: read the message at the end of the `make generate` output. If

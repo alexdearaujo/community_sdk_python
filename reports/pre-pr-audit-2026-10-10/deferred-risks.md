@@ -23,7 +23,7 @@ This ledger records findings that are intentionally deferred.
 | B11 | blocker | Public-name stability requires generator naming policy redesign. | Minor schema evolution can cause user-facing API name drift across releases. | Continue publishing clear surface-change notes and avoid stability guarantees for pending name-policy areas. | sdk-generation | Revisit when wrapper naming strategy work enters implementation phase. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/gencode/wrapper_names.py](reports/pre-pr-audit-2026-10-10/evidence/gencode/wrapper_names.py) | 2026-10-11 |
 | B12 | blocker | Operation-specific error hierarchy alignment is incomplete across transports. | Catch clauses scoped to operation-specific classes may miss real raised exceptions. | Document current catch guidance and prefer broader KentikError handling at integration boundaries. | sdk-runtime | Revisit when transport-symmetry and error-hierarchy tasks are implemented. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/tests/error_class_probe.py](reports/pre-pr-audit-2026-10-10/evidence/tests/error_class_probe.py) | 2026-10-11 |
 | P2 | latent | Pinning needs a dev-group dependency and CI changes. | A future upstream schema change can break generation or the release gate (generator toolchain unpinned). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
-| P3 | latent | Needs a pinned schema commit and a scheduled sync job. | A future upstream schema change can break generation or the release gate (CI follows a moving schema). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| P3 | latent | Needs a pinned schema commit and a scheduled sync job. | A future upstream schema change can break generation or the release gate (CI follows a moving schema). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | P4 | latent | Staging-directory swap is a larger generator change. | A future upstream schema change can break generation or the release gate (generation is not atomic). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | P6 | latent | Ancestor-tag baselines, ref failure, and requirement parsing remain. | A future upstream schema change can break generation or the release gate (changelog gate gaps). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | L1 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -283,3 +283,13 @@ This ledger records findings that are intentionally deferred.
   gRPC now validates through REST's `parse_response_model`, so it raises the
   same `HTTPException` 502, not a raw `ValidationError`, and a test pins that
   on both transports. 16 entries remain open.
+- P3 is resolved (2026-10-14). `schema.lock` pins the schema commit
+  (`9de9a68`). `make generate` fetches that commit, and every completed run
+  writes the commit it used, so CI's drift job (now
+  `generated-output-matches-schema-pin`) no longer follows upstream HEAD.
+  `make sync-schema` moves the pin. The weekly `schema-sync` workflow runs it
+  and opens a pull request with the surface delta when the output changes. A
+  pull request that GITHUB_TOKEN opens starts no CI, so a maintainer closes
+  and reopens it. `dependabot.yml` covers `github-actions` and `uv`, and every
+  action is pinned by commit SHA. Regenerating from GitHub at the pin
+  reproduces the committed tree exactly. 15 entries remain open.

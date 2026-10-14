@@ -32,6 +32,10 @@ from google.protobuf import descriptor_pb2
 DEFAULT_REPO = "https://github.com/kentik/api-schema-public.git"
 DEFAULT_OPENAPI_GENERATOR = "openapi-python-generator"
 CUSTOM_OPENAPI_TEMPLATE_PATH = PROJECT_ROOT / "scripts" / "openapi_templates"
+# The schema commit the committed tree was generated from, so CI regenerates
+# at that commit instead of following upstream HEAD.
+SCHEMA_PIN = PROJECT_ROOT / "schema.lock"
+_COMMIT_SHA = re.compile(r"[0-9a-f]{40}")
 
 
 def run_cmd(cmd: list[str]):
@@ -76,29 +80,80 @@ def openapi_generator_cmd(swagger_path: Path, out_dir: Path) -> list[str]:
     return cmd
 
 
+def is_remote(repo_source: str) -> bool:
+    return repo_source.startswith(("http", "git@"))
+
+
+def read_schema_pin(path: Path = SCHEMA_PIN) -> str:
+    if not path.exists():
+        raise ValueError(
+            f"{path.name} is missing. Run `make sync-schema` to pin upstream HEAD."
+        )
+    commit = path.read_text(encoding="utf-8").strip()
+    if not _COMMIT_SHA.fullmatch(commit):
+        raise ValueError(
+            f"{path.name} must hold one 40-character commit SHA, not {commit!r}."
+        )
+    return commit
+
+
+def fetch_schema(repo_url: str, ref: str, dest: Path) -> str:
+    """Checks out `ref` of `repo_url` into `dest` and returns its commit."""
+    if ref.startswith("-"):
+        # git would parse it as an option.
+        raise ValueError(f"Schema ref {ref!r} must not start with '-'.")
+    run_cmd(["git", "init", "-q", str(dest)])
+    run_cmd(["git", "-C", str(dest), "fetch", "-q", "--depth", "1", repo_url, ref])
+    run_cmd(["git", "-C", str(dest), "checkout", "-q", "--detach", "FETCH_HEAD"])
+    return _git_stdout(dest, "rev-parse", "HEAD")
+
+
+def _git_stdout(repo: Path, *args: str) -> str:
+    return subprocess.run(
+        ["git", "-C", str(repo), *args], capture_output=True, text=True, check=True
+    ).stdout.strip()
+
+
+def local_schema_commit(repo: Path) -> str | None:
+    """The checkout's commit, or None when no commit reproduces it."""
+    try:
+        commit = _git_stdout(repo, "rev-parse", "HEAD")
+        dirty = _git_stdout(repo, "status", "--porcelain", "--untracked-files=no")
+    except subprocess.CalledProcessError:
+        print(f"⚠️ {repo} is not a git checkout; {SCHEMA_PIN.name} stays unchanged.")
+        return None
+    if dirty:
+        print(f"⚠️ {repo} has uncommitted changes; {SCHEMA_PIN.name} stays unchanged.")
+        return None
+    return commit
+
+
 @contextlib.contextmanager
-def get_schema_root(repo_source: str):
-    """Handles local paths or remote Git repos for schema source."""
-    if repo_source.startswith("http") or repo_source.startswith("git@"):
+def get_schema_root(repo_source: str, ref: str | None = None):
+    """Yields the schema root and the commit it holds (None if unknown).
+
+    A remote source is fetched at `ref`, by default the pinned commit.
+    """
+    if is_remote(repo_source):
+        ref = ref or read_schema_pin()
         with TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
-            print(f"Cloning schema repository from {repo_source}...")
-            run_cmd(["git", "clone", "--depth", "1", repo_source, str(tmp_path)])
-            # Logged so a CI determinism failure can be traced to the schema
-            # commit it generated from, separating upstream drift from a
-            # generator regression.
-            commit = subprocess.run(
-                ["git", "-C", str(tmp_path), "rev-parse", "HEAD"],
-                capture_output=True,
-                text=True,
-                check=True,
-            ).stdout.strip()
+            print(f"Fetching schema repository {repo_source} at {ref}...")
+            commit = fetch_schema(repo_source, ref, tmp_path)
             print(f"Schema commit: {commit}")
-            yield tmp_path
+            yield tmp_path, commit
     else:
+        if ref:
+            raise ValueError(
+                "A schema ref applies to the remote repository only; "
+                "check it out in the local repository instead."
+            )
         local_path = Path(repo_source.replace("file://", "")).resolve()
         print(f"Using local schema repository at {local_path}...")
-        yield local_path
+        commit = local_schema_commit(local_path)
+        if commit:
+            print(f"Schema commit: {commit}")
+        yield local_path, commit
 
 
 def _rewrite_grpc_imports(content: str) -> str:
@@ -595,8 +650,8 @@ def _compile_proto_companions(schema_root: Path) -> None:
         print(f"    ❌ Proto companion compilation failed: {e.stderr or e.stdout}")
 
 
-def generate_modular_sdk(repo_source=DEFAULT_REPO):
-    with get_schema_root(repo_source) as schema_root:
+def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None):
+    with get_schema_root(repo_source, schema_ref) as (schema_root, schema_commit):
         # Define base paths using the yielded root
         openapi_base = schema_root / "gen" / "openapiv3" / "kentik"
         proto_base = schema_root / "proto"
@@ -860,6 +915,11 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
         )
     )
 
+    # Only a completed run moves the pin.
+    if schema_commit:
+        SCHEMA_PIN.write_text(schema_commit + "\n", encoding="utf-8")
+        print(f"Pinned schema commit {schema_commit} in {SCHEMA_PIN.name}")
+
     print("\n✅ SDK and Documentation Generation Complete!")
 
 
@@ -925,6 +985,11 @@ if __name__ == "__main__":
         default=DEFAULT_REPO,
         help="Local schema repository path (or file:// path). Defaults to the public repo URL.",
     )
+    parser.add_argument(
+        "--schema-ref",
+        dest="schema_ref",
+        help=f"Remote ref to generate from, e.g. HEAD. Defaults to the commit in {SCHEMA_PIN.name}.",
+    )
     args = parser.parse_args()
 
-    generate_modular_sdk(args.local_repo)
+    generate_modular_sdk(args.local_repo, args.schema_ref)

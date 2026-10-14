@@ -17,10 +17,10 @@ jobs:
       matrix:
         python-version: ["3.12", "3.13", "3.14"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -33,10 +33,10 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           python-version: "3.12"
 
@@ -49,10 +49,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           python-version: "3.12"
 
@@ -68,10 +68,10 @@ jobs:
   spec-references:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           python-version: "3.12"
 
@@ -84,34 +84,34 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           python-version: "3.12"
 
       - name: Fail if CHANGELOG.md misses a breaking API surface change
         run: make check-changelog SINCE="$(git merge-base HEAD origin/${{ github.base_ref }})"
 
-  # Regenerates against api-schema-public HEAD (the generator's clone fallback),
-  # so it can fail for two different reasons. The failure message says which.
-  generated-output-matches-schema-head:
+  # Regenerates at the schema commit in schema.lock, so upstream drift cannot
+  # fail it. The scheduled schema-sync workflow moves that pin.
+  generated-output-matches-schema-pin:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           python-version: "3.12"
 
       - name: Install dependencies
         run: uv sync --locked
 
-      - name: Regenerate the SDK from schema HEAD
+      - name: Regenerate the SDK at the pinned schema commit
         run: make generate
 
       - name: Fail if generated output differs from what is committed
@@ -123,21 +123,19 @@ jobs:
             echo "Differing paths:"
             echo "$changed"
             echo
-            echo "Two possible causes; the 'Schema commit:' line in the previous step tells them apart:"
-            echo "  1. This change altered generator output (scripts/, templates, or runtime"
-            echo "     modules the docs describe). Run 'make generate' and commit the result."
-            echo "  2. Upstream api-schema-public moved since the last regeneration. If this"
-            echo "     change touches no generator input, regenerate on a separate branch."
+            echo "This change altered generator output (scripts/, templates, or runtime"
+            echo "modules the docs describe), or schema.lock names a commit the tree was"
+            echo "not generated from. Run 'make generate' and commit the result."
             exit 1
           fi
 
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           python-version: "3.12"
 

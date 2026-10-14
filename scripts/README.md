@@ -32,14 +32,17 @@ flowchart LR
 ## Run the generator
 
 ```bash
-# From the public schema repo (default)
+# From the public schema repo, at the commit in schema.lock (default)
 uv run python scripts/generate_sdk.py
+
+# From the public schema repo, at another ref
+uv run python scripts/generate_sdk.py --schema-ref HEAD
 
 # From a local checkout of api-schema-public
 uv run python scripts/generate_sdk.py --local-repo ../api-schema-public
 ```
 
-[`make generate`](../Makefile) and `make generate local` wrap these two invocations.
+[`make generate`](../Makefile), `make sync-schema`, and `make generate local` wrap these invocations.
 See [`docs/sphinx/guides/generation.md`](../docs/sphinx/guides/generation.md) for
 the full regeneration workflow.
 
@@ -48,7 +51,8 @@ the full regeneration workflow.
 | Command | Effect |
 | --- | --- |
 | `make` | Generate services and run tests (default) |
-| [`make generate`](../Makefile) | Regenerate from remote schema |
+| [`make generate`](../Makefile) | Regenerate from the remote schema at the commit in `schema.lock` |
+| `make sync-schema` | Regenerate from remote schema HEAD and move the pin |
 | `make generate local` | Regenerate from `../api-schema-public/` |
 | `make generate LOCAL_REPO=/path` | Regenerate from an arbitrary path |
 | [`make services`](../Makefile) | Alias for [`make generate`](../Makefile) |

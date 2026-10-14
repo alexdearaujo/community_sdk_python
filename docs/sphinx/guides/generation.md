@@ -20,9 +20,19 @@ make generate local
 # Override the schema path
 make generate LOCAL_REPO=/path/to/api-schema-public
 
-# Fetch the latest schema from GitHub (slower, no local checkout needed)
+# Fetch the pinned schema commit from GitHub (no local checkout needed)
 make generate
+
+# Fetch schema HEAD from GitHub and move the pin
+make sync-schema
 ```
+
+`schema.lock` holds the schema commit that the committed tree was
+generated from. Every completed run writes the commit it used to that
+file, so commit it with the regenerated output. CI regenerates at that
+commit, so a schema change upstream cannot fail a pull request. The
+scheduled `schema-sync` workflow runs `make sync-schema` every week and
+opens a pull request when the output changes.
 
 > [!WARNING]
 > `make generate` does not write release notes. When a run changes the API

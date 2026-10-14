@@ -1,4 +1,4 @@
-.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck impact-report release-notes check-changelog check-specs clean deep-clean
+.PHONY: all help install generate services local sync-schema docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck impact-report release-notes check-changelog check-specs clean deep-clean
 
 .DEFAULT_GOAL := all
 
@@ -10,13 +10,15 @@ SPHINX := uv run sphinx-build
 DEFAULT_LOCAL_REPO := ../api-schema-public/
 
 # Supports either:
+# - make generate                 (remote schema at the commit in schema.lock)
+# - make generate SCHEMA_REF=<ref> (remote schema at another ref)
 # - make generate local
 # - make generate LOCAL_REPO=/path/to/api-schema-public
 ifneq ($(filter local,$(MAKECMDGOALS)),)
 LOCAL_REPO := $(DEFAULT_LOCAL_REPO)
 endif
 
-GENERATE_ARGS := $(if $(LOCAL_REPO),--local-repo $(LOCAL_REPO),)
+GENERATE_ARGS := $(if $(LOCAL_REPO),--local-repo $(LOCAL_REPO),) $(if $(SCHEMA_REF),--schema-ref $(SCHEMA_REF),)
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -30,6 +32,9 @@ generate: ## Generate the SDK and Architecture Diagrams
 	$(PYTHON) scripts/generate_sdk.py $(GENERATE_ARGS)
 
 services: generate ## Generate SDK services/models and architecture diagrams
+
+sync-schema: ## Regenerate from upstream schema HEAD and move the pin in schema.lock
+	$(PYTHON) scripts/generate_sdk.py --schema-ref HEAD
 
 local: ## Marker target for `make generate local`
 	@if [ "$(MAKECMDGOALS)" = "local" ]; then \
