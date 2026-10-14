@@ -55,9 +55,9 @@ This ledger records findings that are intentionally deferred.
 | T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T2 | test gap | In-process grpc.server success-path test. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T3 | test gap | Needs gRPC routes recorded in api_surface.json. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T4 | test gap | Needs the real request builder run on populated bodies. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| T4 | test gap | Needs the real request builder run on populated bodies. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | K1 | release or docs | dist/ is local build output; the owner deletes it. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K2 | release or docs | Publishing keeps the legacy SDK's `PYPI_TOKEN` setup until the PR is accepted and a release validates it; the owner of the PyPI project and token is not yet known. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | unknown (under investigation) | Revisit once the PyPI owner is found and the first 2.0.0 release has run. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -245,3 +245,15 @@ This ledger records findings that are intentionally deferred.
   auth metadata, the deadline, and the path argument. The client checks a
   populated nested response and a 404 error class. An auth plugin that sends
   no metadata fails the test. 21 entries remain open.
+- T9 is resolved (2026-10-14). `build_all_kwargs` fills every field of a
+  request body, nested optional fields included, except one that would
+  recurse. All 339 top-level body fields now get a value (93 before). The
+  e2e tests keep required fields only, since they call a real account.
+- T4 is resolved (2026-10-14). The mapping test runs the real
+  `build_grpc_request` on those bodies. `proto_sample_body` first swaps each
+  sample the proto rejects (well-known types, int64 strings, zero enums, a
+  second oneof member) and keeps unknown keys, so wrong nesting still fails
+  `ParseDict`. The test checks that the body is the caller's data, at the root
+  or under one field, and that every field it sends is set in the request.
+  A dropped body and a body nested under the wrong field both fail it. 19
+  entries remain open.

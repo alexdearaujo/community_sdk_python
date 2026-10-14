@@ -154,43 +154,60 @@ def sample_value_by_name(name: str) -> Any:
     return object()
 
 
-def sample_model_instance(
-    model_cls: type[BaseModel], _seen: frozenset = frozenset()
-) -> BaseModel:
-    """Builds a minimal valid instance of a generated Pydantic model.
+class _RecursiveModel(ValueError):
+    pass
 
-    Only required fields are filled (optional fields are left to their
-    defaults), mirroring the smallest payload a real caller could send.
+
+def sample_model_instance(
+    model_cls: type[BaseModel],
+    _seen: frozenset = frozenset(),
+    every_field: bool = False,
+) -> BaseModel:
+    """Builds a valid instance of a generated Pydantic model.
+
+    By default only required fields are filled, the smallest payload a real
+    caller could send. every_field also fills each optional field, except one
+    that would recurse into a model already being sampled.
     """
     if model_cls in _seen:
-        raise ValueError(
+        raise _RecursiveModel(
             f"Recursive model reference detected while sampling {model_cls!r}"
         )
     seen = _seen | {model_cls}
 
     kwargs: dict[str, Any] = {}
     for field_name, field_info in model_cls.model_fields.items():
-        if not field_info.is_required():
-            continue
-        kwargs[field_name] = _sample_value_for_type(
-            field_info.annotation, field_name, seen
-        )
+        if field_info.is_required():
+            kwargs[field_name] = _sample_value_for_type(
+                field_info.annotation, field_name, seen, every_field
+            )
+        elif every_field:
+            try:
+                kwargs[field_name] = _sample_value_for_type(
+                    field_info.annotation, field_name, seen, every_field
+                )
+            except _RecursiveModel:
+                pass
     return model_cls(**kwargs)
 
 
-def _sample_value_for_type(annotation: Any, name: str, seen: frozenset) -> Any:
+def _sample_value_for_type(
+    annotation: Any, name: str, seen: frozenset, every_field: bool = False
+) -> Any:
     if annotation is inspect.Parameter.empty or annotation is Any:
         return sample_value_by_name(name)
 
     origin = get_origin(annotation)
     if origin is Union:
         args = [arg for arg in get_args(annotation) if arg is not type(None)]
-        return _sample_value_for_type(args[0], name, seen) if args else None
+        return (
+            _sample_value_for_type(args[0], name, seen, every_field) if args else None
+        )
 
     if origin in (list, set, frozenset):
         args = get_args(annotation)
         item_type = args[0] if args else Any
-        item = _sample_value_for_type(item_type, name, seen)
+        item = _sample_value_for_type(item_type, name, seen, every_field)
         return [item] if origin is list else {item}
 
     if origin is dict:
@@ -206,7 +223,7 @@ def _sample_value_for_type(annotation: Any, name: str, seen: frozenset) -> Any:
         )
 
     if isinstance(annotation, type) and issubclass(annotation, BaseModel):
-        return sample_model_instance(annotation, seen)
+        return sample_model_instance(annotation, seen, every_field)
 
     if isinstance(annotation, type) and issubclass(annotation, Enum):
         return next(iter(annotation))
@@ -280,6 +297,8 @@ def proto_sample_value(field: Any, value: Any) -> Any:
             Timestamp().FromJsonString(value)
         except (TypeError, ValueError):
             return _SAMPLE_TIMESTAMP
+    elif message_type is not None and message_type.full_name in _WELL_KNOWN_SAMPLES:
+        return _WELL_KNOWN_SAMPLES[message_type.full_name]
     if field.cpp_type in _PROTO_INT_TYPES:
         try:
             int(value)
@@ -288,10 +307,77 @@ def proto_sample_value(field: Any, value: Any) -> Any:
     return value
 
 
-def sample_value_for_annotation(annotation: Any, name: str) -> Any:
+# JSON samples the well-known types accept, which a model's `str` sample is not.
+_WELL_KNOWN_SAMPLES = {
+    "google.protobuf.Timestamp": _SAMPLE_TIMESTAMP,
+    "google.protobuf.Duration": "1s",
+    "google.protobuf.FieldMask": "id",
+    "google.protobuf.Struct": {"key": "value"},
+    "google.protobuf.Value": "value",
+    "google.protobuf.ListValue": ["value"],
+    "google.protobuf.Any": {
+        "@type": "type.googleapis.com/google.protobuf.Timestamp",
+        "value": _SAMPLE_TIMESTAMP,
+    },
+}
+
+
+def proto_sample_body(descriptor: Any, body: Any) -> Any:
+    """Swaps each body sample the request message rejects for one it accepts.
+
+    Each enum gets a non-zero value, so a sent field is never at its default,
+    and each oneof keeps only its first member. A key that names no field is
+    kept, so the real ParseDict still fails on it.
+    """
+    if not isinstance(body, dict):
+        return body
+    adapted: dict[str, Any] = {}
+    oneofs_seen: set[str] = set()
+    for key, value in body.items():
+        field = proto_field(descriptor, key)
+        if field is None or value is None:
+            adapted[key] = value
+            continue
+        oneof = field.containing_oneof
+        if oneof is not None and not oneof.name.startswith("_"):
+            if oneof.name in oneofs_seen:
+                continue
+            oneofs_seen.add(oneof.name)
+        adapted[key] = _proto_sample_field(field, value)
+    return adapted
+
+
+def _proto_sample_field(field: Any, value: Any) -> Any:
+    message_type = field.message_type
+    if message_type is not None and message_type.GetOptions().map_entry:
+        return value
+    if isinstance(value, list):
+        return [_proto_sample_item(field, item) for item in value]
+    return _proto_sample_item(field, value)
+
+
+def _proto_sample_item(field: Any, value: Any) -> Any:
+    message_type = field.message_type
+    if message_type is None:
+        if field.enum_type is not None:
+            zero = field.enum_type.values_by_number.get(0)
+            if zero is not None and value == zero.name:
+                value = None  # proto_sample_value then picks a non-zero name
+        return proto_sample_value(field, value)
+    if message_type.full_name in _WELL_KNOWN_SAMPLES:
+        return proto_sample_value(field, value)
+    if message_type.full_name.startswith("google.protobuf."):
+        # A wrapper type (Int64Value, StringValue, ...) is its `value` field in JSON.
+        return proto_sample_value(message_type.fields_by_name["value"], value)
+    return proto_sample_body(message_type, value)
+
+
+def sample_value_for_annotation(
+    annotation: Any, name: str, every_field: bool = False
+) -> Any:
     if annotation is inspect.Parameter.empty:
         return sample_value_by_name(name)
-    return _sample_value_for_type(annotation, name, frozenset())
+    return _sample_value_for_type(annotation, name, frozenset(), every_field)
 
 
 def build_required_kwargs(method: Any) -> dict[str, Any]:
@@ -309,11 +395,12 @@ def build_required_kwargs(method: Any) -> dict[str, Any]:
     return kwargs
 
 
-def build_all_kwargs(method: Any) -> dict[str, Any]:
+def build_all_kwargs(method: Any, every_field: bool = True) -> dict[str, Any]:
     """Like `build_required_kwargs`, but also fills optional parameters.
 
     This exercises every declared option (required and optional) on an
-    operation, not just the minimum needed to make a valid call.
+    operation, not just the minimum needed to make a valid call. every_field
+    also fills every optional field of a request body.
     """
     sig = inspect.signature(method)
     kwargs: dict[str, Any] = {}
@@ -322,7 +409,9 @@ def build_all_kwargs(method: Any) -> dict[str, Any]:
             continue
         if param.kind in (param.VAR_POSITIONAL, param.VAR_KEYWORD):
             continue
-        kwargs[param.name] = sample_value_for_annotation(param.annotation, param.name)
+        kwargs[param.name] = sample_value_for_annotation(
+            param.annotation, param.name, every_field
+        )
     return kwargs
 
 
