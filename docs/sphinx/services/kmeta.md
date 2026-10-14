@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_service_now_configs(cid="cid-example")
     W->>API: GET /kmeta/v202607alpha1/{cid}/servicenow/config
     alt success
-        API-->>W: v202607alpha1ListServiceNowConfigsResponse (JSON)
-        W-->>C: v202607alpha1ListServiceNowConfigsResponse
+        API-->>W: ListServiceNowConfigsResponse (JSON)
+        W-->>C: ListServiceNowConfigsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1ListServiceNowConfigsResponse
+        W-->>C: ListServiceNowConfigsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -86,7 +86,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1ListServiceNowConfigsResponse` |
+| 200 | A successful response. | `ListServiceNowConfigsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -120,8 +120,8 @@ sequenceDiagram
     C->>W: create_service_now_config(cid="cid-example", data=ServiceNowConfig(...))
     W->>API: POST /kmeta/v202607alpha1/{cid}/servicenow/config
     alt success
-        API-->>W: v202607alpha1CreateServiceNowConfigResponse (JSON)
-        W-->>C: v202607alpha1CreateServiceNowConfigResponse
+        API-->>W: CreateServiceNowConfigResponse (JSON)
+        W-->>C: CreateServiceNowConfigResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -145,7 +145,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1CreateServiceNowConfigResponse
+        W-->>C: CreateServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -157,13 +157,13 @@ sequenceDiagram
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
 | `cid` | path | `string` | Yes |
-| `data` | body | `-` | No |
+| `data` | body | `ServiceNowConfig` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1CreateServiceNowConfigResponse` |
+| 200 | A successful response. | `CreateServiceNowConfigResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -198,8 +198,8 @@ sequenceDiagram
     C->>W: get_service_now_config(cid="cid-example", id="id-example")
     W->>API: GET /kmeta/v202607alpha1/{cid}/servicenow/config/{id}
     alt success
-        API-->>W: v202607alpha1GetServiceNowConfigResponse (JSON)
-        W-->>C: v202607alpha1GetServiceNowConfigResponse
+        API-->>W: GetServiceNowConfigResponse (JSON)
+        W-->>C: GetServiceNowConfigResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -223,7 +223,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1GetServiceNowConfigResponse
+        W-->>C: GetServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -241,7 +241,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1GetServiceNowConfigResponse` |
+| 200 | A successful response. | `GetServiceNowConfigResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -276,8 +276,8 @@ sequenceDiagram
     C->>W: update_service_now_config(cid="cid-example", id="id-example", data=ServiceNowConfig(...))
     W->>API: PUT /kmeta/v202607alpha1/{cid}/servicenow/config/{id}
     alt success
-        API-->>W: v202607alpha1UpdateServiceNowConfigResponse (JSON)
-        W-->>C: v202607alpha1UpdateServiceNowConfigResponse
+        API-->>W: UpdateServiceNowConfigResponse (JSON)
+        W-->>C: UpdateServiceNowConfigResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -301,7 +301,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1UpdateServiceNowConfigResponse
+        W-->>C: UpdateServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -314,13 +314,13 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | `cid` | path | `string` | Yes |
 | `id` | path | `string` | Yes |
-| `data` | body | `-` | No |
+| `data` | body | `ServiceNowConfig` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1UpdateServiceNowConfigResponse` |
+| 200 | A successful response. | `UpdateServiceNowConfigResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -356,8 +356,8 @@ sequenceDiagram
     C->>W: delete_service_now_config(cid="cid-example", id="id-example")
     W->>API: DELETE /kmeta/v202607alpha1/{cid}/servicenow/config/{id}
     alt success
-        API-->>W: v202607alpha1DeleteServiceNowConfigResponse (JSON)
-        W-->>C: v202607alpha1DeleteServiceNowConfigResponse
+        API-->>W: DeleteServiceNowConfigResponse (JSON)
+        W-->>C: DeleteServiceNowConfigResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -381,7 +381,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1DeleteServiceNowConfigResponse
+        W-->>C: DeleteServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -399,7 +399,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1DeleteServiceNowConfigResponse` |
+| 200 | A successful response. | `DeleteServiceNowConfigResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -418,12 +418,22 @@ response = client.kmeta.delete_service_now_config(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 8 models)</summary>
+<summary>Model relationships (8 of 8 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateServiceNowConfigResponse
+    class DeleteServiceNowConfigResponse
+    class GetServiceNowConfigResponse
+    class ListServiceNowConfigsResponse
+    class ServiceNowConfig
+    class UpdateServiceNowConfigResponse
     class protobufAny
     class rpcStatus
+    CreateServiceNowConfigResponse --> ServiceNowConfig
+    GetServiceNowConfigResponse --> ServiceNowConfig
+    ListServiceNowConfigsResponse --> ServiceNowConfig
+    UpdateServiceNowConfigResponse --> ServiceNowConfig
     rpcStatus --> protobufAny
 ```
 

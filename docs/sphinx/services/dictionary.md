@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: get_dictionary()
     W->>API: GET /dictionary/v20260604alpha1
     alt success
-        API-->>W: v20260604alpha1GetDictionaryResponse (JSON)
-        W-->>C: v20260604alpha1GetDictionaryResponse
+        API-->>W: GetDictionaryResponse (JSON)
+        W-->>C: GetDictionaryResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260604alpha1GetDictionaryResponse
+        W-->>C: GetDictionaryResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260604alpha1GetDictionaryResponse` |
+| 200 | A successful response. | `GetDictionaryResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -96,12 +96,19 @@ response = client.dictionary.get_dictionary()
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 15 models)</summary>
+<summary>Model relationships (6 of 15 models)</summary>
 
 ```mermaid
 classDiagram
+    class GetDictionaryResponse
+    class MeasurementDetail
+    class MetricFamilyDef
+    class OperatorSet
     class protobufAny
     class rpcStatus
+    GetDictionaryResponse --> MeasurementDetail
+    GetDictionaryResponse --> MetricFamilyDef
+    GetDictionaryResponse --> OperatorSet
     rpcStatus --> protobufAny
 ```
 

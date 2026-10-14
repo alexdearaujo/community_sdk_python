@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_custom_applications()
     W->>API: GET /custom_application/v202501alpha1
     alt success
-        API-->>W: v202501alpha1ListCustomApplicationsResponse (JSON)
-        W-->>C: v202501alpha1ListCustomApplicationsResponse
+        API-->>W: ListCustomApplicationsResponse (JSON)
+        W-->>C: ListCustomApplicationsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1ListCustomApplicationsResponse
+        W-->>C: ListCustomApplicationsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1ListCustomApplicationsResponse` |
+| 200 | A successful response. | `ListCustomApplicationsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: create_custom_application(data=CustomApplication(...))
     W->>API: POST /custom_application/v202501alpha1
     alt success
-        API-->>W: v202501alpha1CreateCustomApplicationResponse (JSON)
-        W-->>C: v202501alpha1CreateCustomApplicationResponse
+        API-->>W: CreateCustomApplicationResponse (JSON)
+        W-->>C: CreateCustomApplicationResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1CreateCustomApplicationResponse
+        W-->>C: CreateCustomApplicationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,13 +148,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `-` | No |
+| `data` | body | `CustomApplication` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1CreateCustomApplicationResponse` |
+| 200 | A successful response. | `CreateCustomApplicationResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -188,8 +188,8 @@ sequenceDiagram
     C->>W: get_custom_application(customApplicationId="customApplicationId-example")
     W->>API: GET /custom_application/v202501alpha1/{customApplicationId}
     alt success
-        API-->>W: v202501alpha1GetCustomApplicationResponse (JSON)
-        W-->>C: v202501alpha1GetCustomApplicationResponse
+        API-->>W: GetCustomApplicationResponse (JSON)
+        W-->>C: GetCustomApplicationResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -213,7 +213,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1GetCustomApplicationResponse
+        W-->>C: GetCustomApplicationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -230,7 +230,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1GetCustomApplicationResponse` |
+| 200 | A successful response. | `GetCustomApplicationResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -264,8 +264,8 @@ sequenceDiagram
     C->>W: update_custom_application(customApplicationId="customApplicationId-example", data=CustomApplication(...))
     W->>API: PUT /custom_application/v202501alpha1/{customApplicationId}
     alt success
-        API-->>W: v202501alpha1UpdateCustomApplicationResponse (JSON)
-        W-->>C: v202501alpha1UpdateCustomApplicationResponse
+        API-->>W: UpdateCustomApplicationResponse (JSON)
+        W-->>C: UpdateCustomApplicationResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -289,7 +289,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1UpdateCustomApplicationResponse
+        W-->>C: UpdateCustomApplicationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -301,13 +301,13 @@ sequenceDiagram
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
 | `customApplicationId` | path | `string` | Yes |
-| `data` | body | `-` | No |
+| `data` | body | `CustomApplication` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1UpdateCustomApplicationResponse` |
+| 200 | A successful response. | `UpdateCustomApplicationResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -342,8 +342,8 @@ sequenceDiagram
     C->>W: delete_custom_application(customApplicationId="customApplicationId-example")
     W->>API: DELETE /custom_application/v202501alpha1/{customApplicationId}
     alt success
-        API-->>W: v202501alpha1DeleteCustomApplicationResponse (JSON)
-        W-->>C: v202501alpha1DeleteCustomApplicationResponse
+        API-->>W: DeleteCustomApplicationResponse (JSON)
+        W-->>C: DeleteCustomApplicationResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -367,7 +367,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1DeleteCustomApplicationResponse
+        W-->>C: DeleteCustomApplicationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -384,7 +384,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1DeleteCustomApplicationResponse` |
+| 200 | A successful response. | `DeleteCustomApplicationResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -402,12 +402,22 @@ response = client.custom_application.delete_custom_application(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 8 models)</summary>
+<summary>Model relationships (8 of 8 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateCustomApplicationResponse
+    class CustomApplication
+    class DeleteCustomApplicationResponse
+    class GetCustomApplicationResponse
+    class ListCustomApplicationsResponse
+    class UpdateCustomApplicationResponse
     class protobufAny
     class rpcStatus
+    CreateCustomApplicationResponse --> CustomApplication
+    GetCustomApplicationResponse --> CustomApplication
+    ListCustomApplicationsResponse --> CustomApplication
+    UpdateCustomApplicationResponse --> CustomApplication
     rpcStatus --> protobufAny
 ```
 

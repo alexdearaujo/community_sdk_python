@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_secret(names=["names-example"])
     W->>API: GET /vault/v202312alpha1/secrets
     alt success
-        API-->>W: v202312alpha1ListSecretResponse (JSON)
-        W-->>C: v202312alpha1ListSecretResponse
+        API-->>W: ListSecretResponse (JSON)
+        W-->>C: ListSecretResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202312alpha1ListSecretResponse
+        W-->>C: ListSecretResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -86,7 +86,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202312alpha1ListSecretResponse` |
+| 200 | A successful response. | `ListSecretResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -120,8 +120,8 @@ sequenceDiagram
     C->>W: get_secret(name="name-example")
     W->>API: GET /vault/v202312alpha1/secrets/{name}
     alt success
-        API-->>W: v202312alpha1GetSecretResponse (JSON)
-        W-->>C: v202312alpha1GetSecretResponse
+        API-->>W: GetSecretResponse (JSON)
+        W-->>C: GetSecretResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -145,7 +145,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202312alpha1GetSecretResponse
+        W-->>C: GetSecretResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -162,7 +162,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202312alpha1GetSecretResponse` |
+| 200 | A successful response. | `GetSecretResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -180,12 +180,17 @@ response = client.vault.get_secret(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 6 models)</summary>
+<summary>Model relationships (5 of 6 models)</summary>
 
 ```mermaid
 classDiagram
+    class GetSecretResponse
+    class ListSecretResponse
+    class Secret
     class protobufAny
     class rpcStatus
+    GetSecretResponse --> Secret
+    ListSecretResponse --> Secret
     rpcStatus --> protobufAny
 ```
 

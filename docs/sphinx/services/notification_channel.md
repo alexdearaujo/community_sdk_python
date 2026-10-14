@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_notification_channels()
     W->>API: GET /notification_channel/v202210/notification_channels
     alt success
-        API-->>W: v202210ListNotificationChannelsResponse (JSON)
-        W-->>C: v202210ListNotificationChannelsResponse
+        API-->>W: ListNotificationChannelsResponse (JSON)
+        W-->>C: ListNotificationChannelsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210ListNotificationChannelsResponse
+        W-->>C: ListNotificationChannelsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210ListNotificationChannelsResponse` |
+| 200 | A successful response. | `ListNotificationChannelsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: search_notification_channels(data=SearchNotificationChannelsRequest(...))
     W->>API: POST /notification_channel/v202210/notification_channels/search
     alt success
-        API-->>W: v202210SearchNotificationChannelsResponse (JSON)
-        W-->>C: v202210SearchNotificationChannelsResponse
+        API-->>W: SearchNotificationChannelsResponse (JSON)
+        W-->>C: SearchNotificationChannelsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210SearchNotificationChannelsResponse
+        W-->>C: SearchNotificationChannelsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,13 +148,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202210SearchNotificationChannelsRequest` | Yes |
+| `data` | body | `SearchNotificationChannelsRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210SearchNotificationChannelsResponse` |
+| 200 | A successful response. | `SearchNotificationChannelsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -188,8 +188,8 @@ sequenceDiagram
     C->>W: get_notification_channel(id="id-example")
     W->>API: GET /notification_channel/v202210/notification_channels/{id}
     alt success
-        API-->>W: v202210GetNotificationChannelResponse (JSON)
-        W-->>C: v202210GetNotificationChannelResponse
+        API-->>W: GetNotificationChannelResponse (JSON)
+        W-->>C: GetNotificationChannelResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -213,7 +213,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210GetNotificationChannelResponse
+        W-->>C: GetNotificationChannelResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -230,7 +230,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210GetNotificationChannelResponse` |
+| 200 | A successful response. | `GetNotificationChannelResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -248,12 +248,23 @@ response = client.notification_channel.get_notification_channel(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 8 models)</summary>
+<summary>Model relationships (8 of 8 models)</summary>
 
 ```mermaid
 classDiagram
+    class ChannelType
+    class GetNotificationChannelResponse
+    class ListNotificationChannelsResponse
+    class NotificationChannel
+    class SearchNotificationChannelsRequest
+    class SearchNotificationChannelsResponse
     class protobufAny
     class rpcStatus
+    GetNotificationChannelResponse --> NotificationChannel
+    ListNotificationChannelsResponse --> NotificationChannel
+    NotificationChannel --> ChannelType
+    SearchNotificationChannelsRequest --> ChannelType
+    SearchNotificationChannelsResponse --> NotificationChannel
     rpcStatus --> protobufAny
 ```
 

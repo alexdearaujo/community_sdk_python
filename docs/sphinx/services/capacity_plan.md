@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_capacity_plans()
     W->>API: GET /capacity_plan/v202212/capacity_plan
     alt success
-        API-->>W: v202212ListCapacityPlansResponse (JSON)
-        W-->>C: v202212ListCapacityPlansResponse
+        API-->>W: ListCapacityPlansResponse (JSON)
+        W-->>C: ListCapacityPlansResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212ListCapacityPlansResponse
+        W-->>C: ListCapacityPlansResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212ListCapacityPlansResponse` |
+| 200 | A successful response. | `ListCapacityPlansResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: list_capacity_summaries()
     W->>API: GET /capacity_plan/v202212/capacity_plan/summary
     alt success
-        API-->>W: v202212ListCapacitySummariesResponse (JSON)
-        W-->>C: v202212ListCapacitySummariesResponse
+        API-->>W: ListCapacitySummariesResponse (JSON)
+        W-->>C: ListCapacitySummariesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212ListCapacitySummariesResponse
+        W-->>C: ListCapacitySummariesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,7 +148,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212ListCapacitySummariesResponse` |
+| 200 | A successful response. | `ListCapacitySummariesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -180,8 +180,8 @@ sequenceDiagram
     C->>W: get_capacity_plan(id="id-example")
     W->>API: GET /capacity_plan/v202212/capacity_plan/{id}
     alt success
-        API-->>W: v202212GetCapacityPlanResponse (JSON)
-        W-->>C: v202212GetCapacityPlanResponse
+        API-->>W: GetCapacityPlanResponse (JSON)
+        W-->>C: GetCapacityPlanResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -205,7 +205,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212GetCapacityPlanResponse
+        W-->>C: GetCapacityPlanResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -222,7 +222,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212GetCapacityPlanResponse` |
+| 200 | A successful response. | `GetCapacityPlanResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -256,8 +256,8 @@ sequenceDiagram
     C->>W: get_capacity_summary(id="id-example")
     W->>API: GET /capacity_plan/v202212/capacity_plan/{id}/summary
     alt success
-        API-->>W: v202212GetCapacitySummaryResponse (JSON)
-        W-->>C: v202212GetCapacitySummaryResponse
+        API-->>W: GetCapacitySummaryResponse (JSON)
+        W-->>C: GetCapacitySummaryResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -281,7 +281,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212GetCapacitySummaryResponse
+        W-->>C: GetCapacitySummaryResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -298,7 +298,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212GetCapacitySummaryResponse` |
+| 200 | A successful response. | `GetCapacitySummaryResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -316,12 +316,22 @@ response = client.capacity_plan.get_capacity_summary(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 17 models)</summary>
+<summary>Model relationships (8 of 17 models)</summary>
 
 ```mermaid
 classDiagram
+    class CapacityPlan
+    class CapacitySummary
+    class GetCapacityPlanResponse
+    class GetCapacitySummaryResponse
+    class ListCapacityPlansResponse
+    class ListCapacitySummariesResponse
     class protobufAny
     class rpcStatus
+    GetCapacityPlanResponse --> CapacityPlan
+    GetCapacitySummaryResponse --> CapacitySummary
+    ListCapacityPlansResponse --> CapacityPlan
+    ListCapacitySummariesResponse --> CapacitySummary
     rpcStatus --> protobufAny
 ```
 

@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_devices()
     W->>API: GET /device/v202504beta2/device
     alt success
-        API-->>W: v202504beta2ListDevicesResponse (JSON)
-        W-->>C: v202504beta2ListDevicesResponse
+        API-->>W: ListDevicesResponse (JSON)
+        W-->>C: ListDevicesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2ListDevicesResponse
+        W-->>C: ListDevicesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -87,7 +87,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2ListDevicesResponse` |
+| 200 | A successful response. | `ListDevicesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -119,8 +119,8 @@ sequenceDiagram
     C->>W: create_device(data=CreateDeviceRequest(...))
     W->>API: POST /device/v202504beta2/device
     alt success
-        API-->>W: v202504beta2CreateDeviceResponse (JSON)
-        W-->>C: v202504beta2CreateDeviceResponse
+        API-->>W: CreateDeviceResponse (JSON)
+        W-->>C: CreateDeviceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -144,7 +144,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2CreateDeviceResponse
+        W-->>C: CreateDeviceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -155,13 +155,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202504beta2CreateDeviceRequest` | Yes |
+| `data` | body | `CreateDeviceRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2CreateDeviceResponse` |
+| 200 | A successful response. | `CreateDeviceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -195,8 +195,8 @@ sequenceDiagram
     C->>W: create_devices(data=CreateDevicesRequest(...))
     W->>API: POST /device/v202504beta2/device/batch_create
     alt success
-        API-->>W: v202504beta2CreateDevicesResponse (JSON)
-        W-->>C: v202504beta2CreateDevicesResponse
+        API-->>W: CreateDevicesResponse (JSON)
+        W-->>C: CreateDevicesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -220,7 +220,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2CreateDevicesResponse
+        W-->>C: CreateDevicesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -231,13 +231,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202504beta2CreateDevicesRequest` | Yes |
+| `data` | body | `CreateDevicesRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2CreateDevicesResponse` |
+| 200 | A successful response. | `CreateDevicesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -271,8 +271,8 @@ sequenceDiagram
     C->>W: delete_devices(data=DeleteDevicesRequest(...))
     W->>API: POST /device/v202504beta2/device/batch_delete
     alt success
-        API-->>W: v202504beta2DeleteDevicesResponse (JSON)
-        W-->>C: v202504beta2DeleteDevicesResponse
+        API-->>W: DeleteDevicesResponse (JSON)
+        W-->>C: DeleteDevicesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -296,7 +296,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2DeleteDevicesResponse
+        W-->>C: DeleteDevicesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -307,13 +307,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202504beta2DeleteDevicesRequest` | Yes |
+| `data` | body | `DeleteDevicesRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2DeleteDevicesResponse` |
+| 200 | A successful response. | `DeleteDevicesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -347,8 +347,8 @@ sequenceDiagram
     C->>W: update_devices(data=UpdateDevicesRequest(...))
     W->>API: PUT /device/v202504beta2/device/batch_update
     alt success
-        API-->>W: v202504beta2UpdateDevicesResponse (JSON)
-        W-->>C: v202504beta2UpdateDevicesResponse
+        API-->>W: UpdateDevicesResponse (JSON)
+        W-->>C: UpdateDevicesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -372,7 +372,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2UpdateDevicesResponse
+        W-->>C: UpdateDevicesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -383,13 +383,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202504beta2UpdateDevicesRequest` | Yes |
+| `data` | body | `UpdateDevicesRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2UpdateDevicesResponse` |
+| 200 | A successful response. | `UpdateDevicesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -423,8 +423,8 @@ sequenceDiagram
     C->>W: get_device_by_name(deviceName="deviceName-example")
     W->>API: GET /device/v202504beta2/device/name/{deviceName}
     alt success
-        API-->>W: v202504beta2GetDeviceByNameResponse (JSON)
-        W-->>C: v202504beta2GetDeviceByNameResponse
+        API-->>W: GetDeviceByNameResponse (JSON)
+        W-->>C: GetDeviceByNameResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -448,7 +448,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2GetDeviceByNameResponse
+        W-->>C: GetDeviceByNameResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -466,7 +466,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2GetDeviceByNameResponse` |
+| 200 | A successful response. | `GetDeviceByNameResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -500,8 +500,8 @@ sequenceDiagram
     C->>W: get_device(deviceid="deviceid-example")
     W->>API: GET /device/v202504beta2/device/{device.id}
     alt success
-        API-->>W: v202504beta2GetDeviceResponse (JSON)
-        W-->>C: v202504beta2GetDeviceResponse
+        API-->>W: GetDeviceResponse (JSON)
+        W-->>C: GetDeviceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -525,7 +525,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2GetDeviceResponse
+        W-->>C: GetDeviceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -543,7 +543,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2GetDeviceResponse` |
+| 200 | A successful response. | `GetDeviceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -577,8 +577,8 @@ sequenceDiagram
     C->>W: update_device(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
     W->>API: PUT /device/v202504beta2/device/{device.id}
     alt success
-        API-->>W: v202504beta2UpdateDeviceResponse (JSON)
-        W-->>C: v202504beta2UpdateDeviceResponse
+        API-->>W: UpdateDeviceResponse (JSON)
+        W-->>C: UpdateDeviceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -602,7 +602,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2UpdateDeviceResponse
+        W-->>C: UpdateDeviceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -620,7 +620,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2UpdateDeviceResponse` |
+| 200 | A successful response. | `UpdateDeviceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -655,8 +655,8 @@ sequenceDiagram
     C->>W: delete_device(deviceid="deviceid-example")
     W->>API: DELETE /device/v202504beta2/device/{device.id}
     alt success
-        API-->>W: v202504beta2DeleteDeviceResponse (JSON)
-        W-->>C: v202504beta2DeleteDeviceResponse
+        API-->>W: DeleteDeviceResponse (JSON)
+        W-->>C: DeleteDeviceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -680,7 +680,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2DeleteDeviceResponse
+        W-->>C: DeleteDeviceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -697,7 +697,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2DeleteDeviceResponse` |
+| 200 | A successful response. | `DeleteDeviceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -731,8 +731,8 @@ sequenceDiagram
     C->>W: update_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
     W->>API: PUT /device/v202504beta2/device/{id}/labels
     alt success
-        API-->>W: v202504beta2UpdateDeviceLabelsResponse (JSON)
-        W-->>C: v202504beta2UpdateDeviceLabelsResponse
+        API-->>W: UpdateDeviceLabelsResponse (JSON)
+        W-->>C: UpdateDeviceLabelsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -756,7 +756,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202504beta2UpdateDeviceLabelsResponse
+        W-->>C: UpdateDeviceLabelsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -774,7 +774,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202504beta2UpdateDeviceLabelsResponse` |
+| 200 | A successful response. | `UpdateDeviceLabelsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -793,16 +793,43 @@ response = client.device.update_labels(
 ## Data Models
 
 <details>
-<summary>Model relationships (5 of 33 models)</summary>
+<summary>Model relationships (21 of 33 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateDeviceRequest
+    class CreateDeviceResponse
+    class CreateDevicesRequest
+    class CreateDevicesResponse
+    class DeleteDeviceResponse
+    class DeleteDevicesRequest
+    class DeleteDevicesResponse
+    class DeviceConcise
+    class DeviceDetailed
     class DeviceServiceUpdateDeviceBody
     class DeviceServiceUpdateDeviceLabelsBody
+    class GetDeviceByNameResponse
+    class GetDeviceResponse
     class LabelConcise
+    class ListDevicesResponse
+    class UpdateDeviceLabelsResponse
+    class UpdateDeviceResponse
+    class UpdateDevicesRequest
+    class UpdateDevicesResponse
     class protobufAny
     class rpcStatus
+    CreateDeviceRequest --> DeviceConcise
+    CreateDeviceResponse --> DeviceDetailed
+    CreateDevicesRequest --> DeviceConcise
+    CreateDevicesResponse --> DeviceDetailed
     DeviceServiceUpdateDeviceLabelsBody --> LabelConcise
+    GetDeviceByNameResponse --> DeviceDetailed
+    GetDeviceResponse --> DeviceDetailed
+    ListDevicesResponse --> DeviceDetailed
+    UpdateDeviceLabelsResponse --> DeviceDetailed
+    UpdateDeviceResponse --> DeviceDetailed
+    UpdateDevicesRequest --> DeviceConcise
+    UpdateDevicesResponse --> DeviceDetailed
     rpcStatus --> protobufAny
 ```
 

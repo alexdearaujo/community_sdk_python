@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: create_chat_session(data=CreateChatSessionRequest(...))
     W->>API: POST /ai_advisor/v202511/chat
     alt success
-        API-->>W: v202511CreateChatSessionResponse (JSON)
-        W-->>C: v202511CreateChatSessionResponse
+        API-->>W: CreateChatSessionResponse (JSON)
+        W-->>C: CreateChatSessionResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202511CreateChatSessionResponse
+        W-->>C: CreateChatSessionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,13 +80,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202511CreateChatSessionRequest` | Yes |
+| `data` | body | `CreateChatSessionRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202511CreateChatSessionResponse` |
+| 200 | A successful response. | `CreateChatSessionResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -120,8 +120,8 @@ sequenceDiagram
     C->>W: update_chat_session(data=UpdateChatSessionRequest(...))
     W->>API: PUT /ai_advisor/v202511/chat
     alt success
-        API-->>W: v202511UpdateChatSessionResponse (JSON)
-        W-->>C: v202511UpdateChatSessionResponse
+        API-->>W: UpdateChatSessionResponse (JSON)
+        W-->>C: UpdateChatSessionResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -145,7 +145,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202511UpdateChatSessionResponse
+        W-->>C: UpdateChatSessionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -156,13 +156,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202511UpdateChatSessionRequest` | Yes |
+| `data` | body | `UpdateChatSessionRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202511UpdateChatSessionResponse` |
+| 200 | A successful response. | `UpdateChatSessionResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -196,8 +196,8 @@ sequenceDiagram
     C->>W: get_chat_session(id="id-example")
     W->>API: GET /ai_advisor/v202511/chat/{id}
     alt success
-        API-->>W: v202511GetChatSessionResponse (JSON)
-        W-->>C: v202511GetChatSessionResponse
+        API-->>W: GetChatSessionResponse (JSON)
+        W-->>C: GetChatSessionResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -221,7 +221,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202511GetChatSessionResponse
+        W-->>C: GetChatSessionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -238,7 +238,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202511GetChatSessionResponse` |
+| 200 | A successful response. | `GetChatSessionResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -256,12 +256,24 @@ response = client.ai_advisor.get_chat_session(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 9 models)</summary>
+<summary>Model relationships (9 of 9 models)</summary>
 
 ```mermaid
 classDiagram
+    class ChatMessage
+    class CreateChatSessionRequest
+    class CreateChatSessionResponse
+    class GetChatSessionResponse
+    class SessionStatus
+    class UpdateChatSessionRequest
+    class UpdateChatSessionResponse
     class protobufAny
     class rpcStatus
+    ChatMessage --> SessionStatus
+    CreateChatSessionResponse --> SessionStatus
+    GetChatSessionResponse --> ChatMessage
+    GetChatSessionResponse --> SessionStatus
+    UpdateChatSessionResponse --> SessionStatus
     rpcStatus --> protobufAny
 ```
 

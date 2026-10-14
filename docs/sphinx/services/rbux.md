@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_scopes()
     W->>API: GET /rbux/v202607alpha1/scopes
     alt success
-        API-->>W: v202607alpha1ListScopesResponse (JSON)
-        W-->>C: v202607alpha1ListScopesResponse
+        API-->>W: ListScopesResponse (JSON)
+        W-->>C: ListScopesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1ListScopesResponse
+        W-->>C: ListScopesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1ListScopesResponse` |
+| 200 | A successful response. | `ListScopesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: create_scope(data=Scope(...))
     W->>API: POST /rbux/v202607alpha1/scopes
     alt success
-        API-->>W: v202607alpha1CreateScopeResponse (JSON)
-        W-->>C: v202607alpha1CreateScopeResponse
+        API-->>W: CreateScopeResponse (JSON)
+        W-->>C: CreateScopeResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1CreateScopeResponse
+        W-->>C: CreateScopeResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,13 +148,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202607alpha1Scope` | Yes |
+| `data` | body | `Scope` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1CreateScopeResponse` |
+| 200 | A successful response. | `CreateScopeResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -188,8 +188,8 @@ sequenceDiagram
     C->>W: get_scope(id="id-example")
     W->>API: GET /rbux/v202607alpha1/scopes/{id}
     alt success
-        API-->>W: v202607alpha1GetScopeResponse (JSON)
-        W-->>C: v202607alpha1GetScopeResponse
+        API-->>W: GetScopeResponse (JSON)
+        W-->>C: GetScopeResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -213,7 +213,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1GetScopeResponse
+        W-->>C: GetScopeResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -230,7 +230,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1GetScopeResponse` |
+| 200 | A successful response. | `GetScopeResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -264,8 +264,8 @@ sequenceDiagram
     C->>W: update_scope(id="id-example", data=ScopeServiceUpdateScopeBody(...))
     W->>API: PUT /rbux/v202607alpha1/scopes/{id}
     alt success
-        API-->>W: v202607alpha1UpdateScopeResponse (JSON)
-        W-->>C: v202607alpha1UpdateScopeResponse
+        API-->>W: UpdateScopeResponse (JSON)
+        W-->>C: UpdateScopeResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -289,7 +289,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1UpdateScopeResponse
+        W-->>C: UpdateScopeResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -301,13 +301,13 @@ sequenceDiagram
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
-| `data` | body | `object` | Yes |
+| `data` | body | `ScopeServiceUpdateScopeBody` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1UpdateScopeResponse` |
+| 200 | A successful response. | `UpdateScopeResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -342,8 +342,8 @@ sequenceDiagram
     C->>W: delete_scope(id="id-example")
     W->>API: DELETE /rbux/v202607alpha1/scopes/{id}
     alt success
-        API-->>W: v202607alpha1DeleteScopeResponse (JSON)
-        W-->>C: v202607alpha1DeleteScopeResponse
+        API-->>W: DeleteScopeResponse (JSON)
+        W-->>C: DeleteScopeResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -367,7 +367,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202607alpha1DeleteScopeResponse
+        W-->>C: DeleteScopeResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -384,7 +384,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202607alpha1DeleteScopeResponse` |
+| 200 | A successful response. | `DeleteScopeResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -402,12 +402,26 @@ response = client.rbux.delete_scope(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 18 models)</summary>
+<summary>Model relationships (10 of 18 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateScopeResponse
+    class DeleteScopeResponse
+    class GetScopeResponse
+    class ListScopesResponse
+    class Scope
+    class ScopeConfig
+    class ScopeServiceUpdateScopeBody
+    class UpdateScopeResponse
     class protobufAny
     class rpcStatus
+    CreateScopeResponse --> Scope
+    GetScopeResponse --> Scope
+    ListScopesResponse --> Scope
+    Scope --> ScopeConfig
+    ScopeServiceUpdateScopeBody --> ScopeConfig
+    UpdateScopeResponse --> Scope
     rpcStatus --> protobufAny
 ```
 

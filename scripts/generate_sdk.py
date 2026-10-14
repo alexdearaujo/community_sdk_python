@@ -800,12 +800,8 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                     swagger_path, version, oneof_members
                 ) as tmp_swagger:
                     run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
-
-                # Extract per-operation documentation now, while the swagger
-                # file is still available -- rendered as real Sphinx text
-                # later (endpoint_docs_collector.render()), once wrapper
-                # methods exist.
-                endpoint_docs_collector.extract(service, swagger_path)
+                    # The patched swagger, so pages name the models the SDK defines.
+                    endpoint_docs_collector.extract(service, tmp_swagger)
 
         for service, swagger_paths in service_swagger_paths.items():
             service_dir = SDK_OUTPUT_DIR / service

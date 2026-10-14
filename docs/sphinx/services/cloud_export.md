@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_cloud_exports()
     W->>API: GET /cloud_export/v202506/exports
     alt success
-        API-->>W: v202506ListCloudExportsResponse (JSON)
-        W-->>C: v202506ListCloudExportsResponse
+        API-->>W: ListCloudExportsResponse (JSON)
+        W-->>C: ListCloudExportsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202506ListCloudExportsResponse
+        W-->>C: ListCloudExportsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202506ListCloudExportsResponse` |
+| 200 | A successful response. | `ListCloudExportsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: create_cloud_export(data=CreateCloudExportRequest(...))
     W->>API: POST /cloud_export/v202506/exports
     alt success
-        API-->>W: v202506CreateCloudExportResponse (JSON)
-        W-->>C: v202506CreateCloudExportResponse
+        API-->>W: CreateCloudExportResponse (JSON)
+        W-->>C: CreateCloudExportResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202506CreateCloudExportResponse
+        W-->>C: CreateCloudExportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,13 +148,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202506CreateCloudExportRequest` | Yes |
+| `data` | body | `CreateCloudExportRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202506CreateCloudExportResponse` |
+| 200 | A successful response. | `CreateCloudExportResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -188,8 +188,8 @@ sequenceDiagram
     C->>W: get_cloud_export(exportid="exportid-example")
     W->>API: GET /cloud_export/v202506/exports/{export.id}
     alt success
-        API-->>W: v202506GetCloudExportResponse (JSON)
-        W-->>C: v202506GetCloudExportResponse
+        API-->>W: GetCloudExportResponse (JSON)
+        W-->>C: GetCloudExportResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -213,7 +213,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202506GetCloudExportResponse
+        W-->>C: GetCloudExportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -230,7 +230,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202506GetCloudExportResponse` |
+| 200 | A successful response. | `GetCloudExportResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -264,8 +264,8 @@ sequenceDiagram
     C->>W: update_cloud_export(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
     W->>API: PUT /cloud_export/v202506/exports/{export.id}
     alt success
-        API-->>W: v202506UpdateCloudExportResponse (JSON)
-        W-->>C: v202506UpdateCloudExportResponse
+        API-->>W: UpdateCloudExportResponse (JSON)
+        W-->>C: UpdateCloudExportResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -289,7 +289,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202506UpdateCloudExportResponse
+        W-->>C: UpdateCloudExportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -307,7 +307,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202506UpdateCloudExportResponse` |
+| 200 | A successful response. | `UpdateCloudExportResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -342,8 +342,8 @@ sequenceDiagram
     C->>W: delete_cloud_export(exportid="exportid-example")
     W->>API: DELETE /cloud_export/v202506/exports/{export.id}
     alt success
-        API-->>W: v202506DeleteCloudExportResponse (JSON)
-        W-->>C: v202506DeleteCloudExportResponse
+        API-->>W: DeleteCloudExportResponse (JSON)
+        W-->>C: DeleteCloudExportResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -367,7 +367,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202506DeleteCloudExportResponse
+        W-->>C: DeleteCloudExportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -384,7 +384,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202506DeleteCloudExportResponse` |
+| 200 | A successful response. | `DeleteCloudExportResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -402,13 +402,25 @@ response = client.cloud_export.delete_cloud_export(
 ## Data Models
 
 <details>
-<summary>Model relationships (3 of 19 models)</summary>
+<summary>Model relationships (10 of 19 models)</summary>
 
 ```mermaid
 classDiagram
+    class CloudExport
     class CloudExportAdminServiceUpdateCloudExportBody
+    class CreateCloudExportRequest
+    class CreateCloudExportResponse
+    class DeleteCloudExportResponse
+    class GetCloudExportResponse
+    class ListCloudExportsResponse
+    class UpdateCloudExportResponse
     class protobufAny
     class rpcStatus
+    CreateCloudExportRequest --> CloudExport
+    CreateCloudExportResponse --> CloudExport
+    GetCloudExportResponse --> CloudExport
+    ListCloudExportsResponse --> CloudExport
+    UpdateCloudExportResponse --> CloudExport
     rpcStatus --> protobufAny
 ```
 

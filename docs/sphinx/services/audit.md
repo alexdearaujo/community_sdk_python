@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_events()
     W->>API: GET /audit/v202601/events
     alt success
-        API-->>W: v202601ListAuditEventsResponse (JSON)
-        W-->>C: v202601ListAuditEventsResponse
+        API-->>W: ListAuditEventsResponse (JSON)
+        W-->>C: ListAuditEventsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202601ListAuditEventsResponse
+        W-->>C: ListAuditEventsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -89,7 +89,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202601ListAuditEventsResponse` |
+| 200 | A successful response. | `ListAuditEventsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -121,8 +121,8 @@ sequenceDiagram
     C->>W: get_event(id="id-example")
     W->>API: GET /audit/v202601/events/{id}
     alt success
-        API-->>W: v202601GetAuditEventResponse (JSON)
-        W-->>C: v202601GetAuditEventResponse
+        API-->>W: GetAuditEventResponse (JSON)
+        W-->>C: GetAuditEventResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -146,7 +146,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202601GetAuditEventResponse
+        W-->>C: GetAuditEventResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -164,7 +164,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202601GetAuditEventResponse` |
+| 200 | A successful response. | `GetAuditEventResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -198,8 +198,8 @@ sequenceDiagram
     C->>W: get_event_by_ctime(id="id-example", ctime="ctime-example")
     W->>API: GET /audit/v202601/events/{id}/{ctime}
     alt success
-        API-->>W: v202601GetAuditEventResponse (JSON)
-        W-->>C: v202601GetAuditEventResponse
+        API-->>W: GetAuditEventResponse (JSON)
+        W-->>C: GetAuditEventResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -223,7 +223,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202601GetAuditEventResponse
+        W-->>C: GetAuditEventResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -241,7 +241,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202601GetAuditEventResponse` |
+| 200 | A successful response. | `GetAuditEventResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -260,12 +260,17 @@ response = client.audit.get_event_by_ctime(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 6 models)</summary>
+<summary>Model relationships (5 of 6 models)</summary>
 
 ```mermaid
 classDiagram
+    class AuditEvent
+    class GetAuditEventResponse
+    class ListAuditEventsResponse
     class protobufAny
     class rpcStatus
+    GetAuditEventResponse --> AuditEvent
+    ListAuditEventsResponse --> AuditEvent
     rpcStatus --> protobufAny
 ```
 

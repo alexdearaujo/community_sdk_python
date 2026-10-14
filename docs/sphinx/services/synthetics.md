@@ -46,8 +46,8 @@ sequenceDiagram
     C->>W: list_agent_alerts()
     W->>API: GET /synthetics/v202309/agentAlerts
     alt success
-        API-->>W: v202309ListAgentAlertsResponse (JSON)
-        W-->>C: v202309ListAgentAlertsResponse
+        API-->>W: ListAgentAlertsResponse (JSON)
+        W-->>C: ListAgentAlertsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -71,7 +71,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309ListAgentAlertsResponse
+        W-->>C: ListAgentAlertsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -88,7 +88,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309ListAgentAlertsResponse` |
+| 200 | A successful response. | `ListAgentAlertsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -120,8 +120,8 @@ sequenceDiagram
     C->>W: create_agent_alert(data=CreateAgentAlertRequest(...))
     W->>API: POST /synthetics/v202309/agentAlerts
     alt success
-        API-->>W: v202309CreateAgentAlertResponse (JSON)
-        W-->>C: v202309CreateAgentAlertResponse
+        API-->>W: CreateAgentAlertResponse (JSON)
+        W-->>C: CreateAgentAlertResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -145,7 +145,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309CreateAgentAlertResponse
+        W-->>C: CreateAgentAlertResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -156,13 +156,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202309CreateAgentAlertRequest` | Yes |
+| `data` | body | `CreateAgentAlertRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309CreateAgentAlertResponse` |
+| 200 | A successful response. | `CreateAgentAlertResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -196,8 +196,8 @@ sequenceDiagram
     C->>W: get_agent_alert(id="id-example")
     W->>API: GET /synthetics/v202309/agentAlerts/{id}
     alt success
-        API-->>W: v202309GetAgentAlertResponse (JSON)
-        W-->>C: v202309GetAgentAlertResponse
+        API-->>W: GetAgentAlertResponse (JSON)
+        W-->>C: GetAgentAlertResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -221,7 +221,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309GetAgentAlertResponse
+        W-->>C: GetAgentAlertResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -238,7 +238,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309GetAgentAlertResponse` |
+| 200 | A successful response. | `GetAgentAlertResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -272,8 +272,8 @@ sequenceDiagram
     C->>W: update_agent_alert(id="id-example", data=SyntheticsAdminServiceUpdateAgentAlertBody(...))
     W->>API: PUT /synthetics/v202309/agentAlerts/{id}
     alt success
-        API-->>W: v202309UpdateAgentAlertResponse (JSON)
-        W-->>C: v202309UpdateAgentAlertResponse
+        API-->>W: UpdateAgentAlertResponse (JSON)
+        W-->>C: UpdateAgentAlertResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -297,7 +297,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309UpdateAgentAlertResponse
+        W-->>C: UpdateAgentAlertResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -315,7 +315,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309UpdateAgentAlertResponse` |
+| 200 | A successful response. | `UpdateAgentAlertResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -350,8 +350,8 @@ sequenceDiagram
     C->>W: delete_agent_alert(id="id-example")
     W->>API: DELETE /synthetics/v202309/agentAlerts/{id}
     alt success
-        API-->>W: v202309DeleteAgentAlertResponse (JSON)
-        W-->>C: v202309DeleteAgentAlertResponse
+        API-->>W: DeleteAgentAlertResponse (JSON)
+        W-->>C: DeleteAgentAlertResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -375,7 +375,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309DeleteAgentAlertResponse
+        W-->>C: DeleteAgentAlertResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -392,7 +392,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309DeleteAgentAlertResponse` |
+| 200 | A successful response. | `DeleteAgentAlertResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -426,8 +426,8 @@ sequenceDiagram
     C->>W: list_agents()
     W->>API: GET /synthetics/v202309/agents
     alt success
-        API-->>W: v202309ListAgentsResponse (JSON)
-        W-->>C: v202309ListAgentsResponse
+        API-->>W: ListAgentsResponse (JSON)
+        W-->>C: ListAgentsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -451,7 +451,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309ListAgentsResponse
+        W-->>C: ListAgentsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -462,7 +462,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309ListAgentsResponse` |
+| 200 | A successful response. | `ListAgentsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -494,8 +494,8 @@ sequenceDiagram
     C->>W: get_agent(agentid="agentid-example")
     W->>API: GET /synthetics/v202309/agents/{agent.id}
     alt success
-        API-->>W: v202309GetAgentResponse (JSON)
-        W-->>C: v202309GetAgentResponse
+        API-->>W: GetAgentResponse (JSON)
+        W-->>C: GetAgentResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -519,7 +519,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309GetAgentResponse
+        W-->>C: GetAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -536,7 +536,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309GetAgentResponse` |
+| 200 | A successful response. | `GetAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -570,8 +570,8 @@ sequenceDiagram
     C->>W: update_agent(agentid="agentid-example", data=SyntheticsAdminServiceUpdateAgentBody(...))
     W->>API: PUT /synthetics/v202309/agents/{agent.id}
     alt success
-        API-->>W: v202309UpdateAgentResponse (JSON)
-        W-->>C: v202309UpdateAgentResponse
+        API-->>W: UpdateAgentResponse (JSON)
+        W-->>C: UpdateAgentResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -595,7 +595,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309UpdateAgentResponse
+        W-->>C: UpdateAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -613,7 +613,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309UpdateAgentResponse` |
+| 200 | A successful response. | `UpdateAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -648,8 +648,8 @@ sequenceDiagram
     C->>W: delete_agent(agentid="agentid-example")
     W->>API: DELETE /synthetics/v202309/agents/{agent.id}
     alt success
-        API-->>W: v202309DeleteAgentResponse (JSON)
-        W-->>C: v202309DeleteAgentResponse
+        API-->>W: DeleteAgentResponse (JSON)
+        W-->>C: DeleteAgentResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -673,7 +673,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309DeleteAgentResponse
+        W-->>C: DeleteAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -690,7 +690,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309DeleteAgentResponse` |
+| 200 | A successful response. | `DeleteAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -724,8 +724,8 @@ sequenceDiagram
     C->>W: list_tests()
     W->>API: GET /synthetics/v202309/tests
     alt success
-        API-->>W: v202309ListTestsResponse (JSON)
-        W-->>C: v202309ListTestsResponse
+        API-->>W: ListTestsResponse (JSON)
+        W-->>C: ListTestsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -749,7 +749,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309ListTestsResponse
+        W-->>C: ListTestsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -760,7 +760,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309ListTestsResponse` |
+| 200 | A successful response. | `ListTestsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -792,8 +792,8 @@ sequenceDiagram
     C->>W: create_test(data=CreateTestRequest(...))
     W->>API: POST /synthetics/v202309/tests
     alt success
-        API-->>W: v202309CreateTestResponse (JSON)
-        W-->>C: v202309CreateTestResponse
+        API-->>W: CreateTestResponse (JSON)
+        W-->>C: CreateTestResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -817,7 +817,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309CreateTestResponse
+        W-->>C: CreateTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -828,13 +828,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202309CreateTestRequest` | Yes |
+| `data` | body | `CreateTestRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309CreateTestResponse` |
+| 200 | A successful response. | `CreateTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -868,8 +868,8 @@ sequenceDiagram
     C->>W: get_test(id="id-example")
     W->>API: GET /synthetics/v202309/tests/{id}
     alt success
-        API-->>W: v202309GetTestResponse (JSON)
-        W-->>C: v202309GetTestResponse
+        API-->>W: GetTestResponse (JSON)
+        W-->>C: GetTestResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -893,7 +893,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309GetTestResponse
+        W-->>C: GetTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -910,7 +910,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309GetTestResponse` |
+| 200 | A successful response. | `GetTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -944,8 +944,8 @@ sequenceDiagram
     C->>W: update_test(id="id-example", data=SyntheticsAdminServiceUpdateTestBody(...))
     W->>API: PUT /synthetics/v202309/tests/{id}
     alt success
-        API-->>W: v202309UpdateTestResponse (JSON)
-        W-->>C: v202309UpdateTestResponse
+        API-->>W: UpdateTestResponse (JSON)
+        W-->>C: UpdateTestResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -969,7 +969,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309UpdateTestResponse
+        W-->>C: UpdateTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -987,7 +987,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309UpdateTestResponse` |
+| 200 | A successful response. | `UpdateTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1022,8 +1022,8 @@ sequenceDiagram
     C->>W: delete_test(id="id-example")
     W->>API: DELETE /synthetics/v202309/tests/{id}
     alt success
-        API-->>W: v202309DeleteTestResponse (JSON)
-        W-->>C: v202309DeleteTestResponse
+        API-->>W: DeleteTestResponse (JSON)
+        W-->>C: DeleteTestResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1047,7 +1047,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309DeleteTestResponse
+        W-->>C: DeleteTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1064,7 +1064,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309DeleteTestResponse` |
+| 200 | A successful response. | `DeleteTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1096,8 +1096,8 @@ sequenceDiagram
     C->>W: set_test_status(id="id-example", data=SyntheticsAdminServiceSetTestStatusBody(...))
     W->>API: PUT /synthetics/v202309/tests/{id}/status
     alt success
-        API-->>W: v202309SetTestStatusResponse (JSON)
-        W-->>C: v202309SetTestStatusResponse
+        API-->>W: SetTestStatusResponse (JSON)
+        W-->>C: SetTestStatusResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1121,7 +1121,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309SetTestStatusResponse
+        W-->>C: SetTestStatusResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1139,7 +1139,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309SetTestStatusResponse` |
+| 200 | A successful response. | `SetTestStatusResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1174,8 +1174,8 @@ sequenceDiagram
     C->>W: get_results_for_tests(data=GetResultsForTestsRequest(...))
     W->>API: POST /synthetics/v202309/results
     alt success
-        API-->>W: v202309GetResultsForTestsResponse (JSON)
-        W-->>C: v202309GetResultsForTestsResponse
+        API-->>W: GetResultsForTestsResponse (JSON)
+        W-->>C: GetResultsForTestsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1199,7 +1199,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309GetResultsForTestsResponse
+        W-->>C: GetResultsForTestsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1210,13 +1210,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202309GetResultsForTestsRequest` | Yes |
+| `data` | body | `GetResultsForTestsRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309GetResultsForTestsResponse` |
+| 200 | A successful response. | `GetResultsForTestsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1250,8 +1250,8 @@ sequenceDiagram
     C->>W: get_results_for_tests_csv(data=GetResultsForTestsCsvRequest(...))
     W->>API: POST /synthetics/v202309/results/csv
     alt success
-        API-->>W: v202309GetResultsForTestsCsvResponse (JSON)
-        W-->>C: v202309GetResultsForTestsCsvResponse
+        API-->>W: GetResultsForTestsCsvResponse (JSON)
+        W-->>C: GetResultsForTestsCsvResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1275,7 +1275,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309GetResultsForTestsCsvResponse
+        W-->>C: GetResultsForTestsCsvResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1286,13 +1286,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202309GetResultsForTestsCsvRequest` | Yes |
+| `data` | body | `GetResultsForTestsCsvRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309GetResultsForTestsCsvResponse` |
+| 200 | A successful response. | `GetResultsForTestsCsvResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1326,8 +1326,8 @@ sequenceDiagram
     C->>W: get_trace_for_test(data=GetTraceForTestRequest(...))
     W->>API: POST /synthetics/v202309/trace
     alt success
-        API-->>W: v202309GetTraceForTestResponse (JSON)
-        W-->>C: v202309GetTraceForTestResponse
+        API-->>W: GetTraceForTestResponse (JSON)
+        W-->>C: GetTraceForTestResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1351,7 +1351,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202309GetTraceForTestResponse
+        W-->>C: GetTraceForTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1362,13 +1362,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202309GetTraceForTestRequest` | Yes |
+| `data` | body | `GetTraceForTestRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202309GetTraceForTestResponse` |
+| 200 | A successful response. | `GetTraceForTestResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1386,19 +1386,53 @@ response = client.synthetics.get_trace_for_test(
 ## Data Models
 
 <details>
-<summary>Model relationships (7 of 77 models)</summary>
+<summary>Model relationships (30 of 77 models)</summary>
 
 ```mermaid
 classDiagram
+    class Agent
+    class AgentAlert
+    class CreateAgentAlertRequest
+    class CreateAgentAlertResponse
+    class CreateTestRequest
+    class CreateTestResponse
+    class DeleteAgentAlertResponse
+    class DeleteAgentResponse
+    class DeleteTestResponse
+    class GetAgentAlertResponse
+    class GetAgentResponse
+    class GetResultsForTestsCsvRequest
+    class GetResultsForTestsCsvResponse
+    class GetResultsForTestsRequest
+    class GetResultsForTestsResponse
+    class GetTestResponse
+    class GetTraceForTestRequest
+    class GetTraceForTestResponse
+    class ListAgentAlertsResponse
+    class ListAgentsResponse
+    class ListTestsResponse
+    class Path
+    class SetTestStatusResponse
     class SyntheticsAdminServiceSetTestStatusBody
     class SyntheticsAdminServiceUpdateAgentAlertBody
     class SyntheticsAdminServiceUpdateAgentBody
     class SyntheticsAdminServiceUpdateTestBody
+    class Test
+    class TestResults
     class TestStatus
-    class protobufAny
-    class rpcStatus
+    CreateAgentAlertResponse --> AgentAlert
+    CreateTestRequest --> Test
+    CreateTestResponse --> Test
+    GetAgentAlertResponse --> AgentAlert
+    GetAgentResponse --> Agent
+    GetResultsForTestsResponse --> TestResults
+    GetTestResponse --> Test
+    GetTraceForTestResponse --> Path
+    ListAgentAlertsResponse --> AgentAlert
+    ListAgentsResponse --> Agent
+    ListTestsResponse --> Test
     SyntheticsAdminServiceSetTestStatusBody --> TestStatus
-    rpcStatus --> protobufAny
+    Test --> TestStatus
 ```
 
 </details>

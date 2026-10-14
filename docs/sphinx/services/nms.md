@@ -40,8 +40,8 @@ sequenceDiagram
     C->>W: metrics_schema_service__get_metrics_schema()
     W->>API: GET /nms/v202505/metrics_schema
     alt success
-        API-->>W: v202505GetMetricsSchemaResponse (JSON)
-        W-->>C: v202505GetMetricsSchemaResponse
+        API-->>W: GetMetricsSchemaResponse (JSON)
+        W-->>C: GetMetricsSchemaResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -65,7 +65,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505GetMetricsSchemaResponse
+        W-->>C: GetMetricsSchemaResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -76,7 +76,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505GetMetricsSchemaResponse` |
+| 200 | A successful response. | `GetMetricsSchemaResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -92,12 +92,15 @@ response = client.nms.metrics_schema_service__get_metrics_schema()
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 9 models)</summary>
+<summary>Model relationships (4 of 9 models)</summary>
 
 ```mermaid
 classDiagram
+    class GetMetricsSchemaResponse
+    class MetricsSchema
     class protobufAny
     class rpcStatus
+    GetMetricsSchemaResponse --> MetricsSchema
     rpcStatus --> protobufAny
 ```
 

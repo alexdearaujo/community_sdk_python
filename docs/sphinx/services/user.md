@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_users()
     W->>API: GET /user/v202211/users
     alt success
-        API-->>W: v202211ListUsersResponse (JSON)
-        W-->>C: v202211ListUsersResponse
+        API-->>W: ListUsersResponse (JSON)
+        W-->>C: ListUsersResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202211ListUsersResponse
+        W-->>C: ListUsersResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202211ListUsersResponse` |
+| 200 | A successful response. | `ListUsersResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: create_user(data=CreateUserRequest(...))
     W->>API: POST /user/v202211/users
     alt success
-        API-->>W: v202211CreateUserResponse (JSON)
-        W-->>C: v202211CreateUserResponse
+        API-->>W: CreateUserResponse (JSON)
+        W-->>C: CreateUserResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202211CreateUserResponse
+        W-->>C: CreateUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,13 +148,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202211CreateUserRequest` | Yes |
+| `data` | body | `CreateUserRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202211CreateUserResponse` |
+| 200 | A successful response. | `CreateUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -188,8 +188,8 @@ sequenceDiagram
     C->>W: get_user(id="id-example")
     W->>API: GET /user/v202211/users/{id}
     alt success
-        API-->>W: v202211GetUserResponse (JSON)
-        W-->>C: v202211GetUserResponse
+        API-->>W: GetUserResponse (JSON)
+        W-->>C: GetUserResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -213,7 +213,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202211GetUserResponse
+        W-->>C: GetUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -230,7 +230,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202211GetUserResponse` |
+| 200 | A successful response. | `GetUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -264,8 +264,8 @@ sequenceDiagram
     C->>W: update_user(id="id-example", data=UserServiceUpdateUserBody(...))
     W->>API: PUT /user/v202211/users/{id}
     alt success
-        API-->>W: v202211UpdateUserResponse (JSON)
-        W-->>C: v202211UpdateUserResponse
+        API-->>W: UpdateUserResponse (JSON)
+        W-->>C: UpdateUserResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -289,7 +289,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202211UpdateUserResponse
+        W-->>C: UpdateUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -307,7 +307,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202211UpdateUserResponse` |
+| 200 | A successful response. | `UpdateUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -342,8 +342,8 @@ sequenceDiagram
     C->>W: delete_user(id="id-example")
     W->>API: DELETE /user/v202211/users/{id}
     alt success
-        API-->>W: v202211DeleteUserResponse (JSON)
-        W-->>C: v202211DeleteUserResponse
+        API-->>W: DeleteUserResponse (JSON)
+        W-->>C: DeleteUserResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -367,7 +367,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202211DeleteUserResponse
+        W-->>C: DeleteUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -384,7 +384,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202211DeleteUserResponse` |
+| 200 | A successful response. | `DeleteUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -418,8 +418,8 @@ sequenceDiagram
     C->>W: reset_active_sessions(id="id-example")
     W->>API: PUT /user/v202211/users/{id}/reset_active_sessions
     alt success
-        API-->>W: v202211ResetActiveSessionsResponse (JSON)
-        W-->>C: v202211ResetActiveSessionsResponse
+        API-->>W: ResetActiveSessionsResponse (JSON)
+        W-->>C: ResetActiveSessionsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -443,7 +443,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202211ResetActiveSessionsResponse
+        W-->>C: ResetActiveSessionsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -460,7 +460,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202211ResetActiveSessionsResponse` |
+| 200 | A successful response. | `ResetActiveSessionsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -494,8 +494,8 @@ sequenceDiagram
     C->>W: reset_api_token(id="id-example")
     W->>API: PUT /user/v202211/users/{id}/reset_api_token
     alt success
-        API-->>W: v202211ResetApiTokenResponse (JSON)
-        W-->>C: v202211ResetApiTokenResponse
+        API-->>W: ResetApiTokenResponse (JSON)
+        W-->>C: ResetApiTokenResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -519,7 +519,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202211ResetApiTokenResponse
+        W-->>C: ResetApiTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -536,7 +536,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202211ResetApiTokenResponse` |
+| 200 | A successful response. | `ResetApiTokenResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -554,13 +554,27 @@ response = client.user.reset_api_token(
 ## Data Models
 
 <details>
-<summary>Model relationships (3 of 15 models)</summary>
+<summary>Model relationships (12 of 15 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateUserRequest
+    class CreateUserResponse
+    class DeleteUserResponse
+    class GetUserResponse
+    class ListUsersResponse
+    class ResetActiveSessionsResponse
+    class ResetApiTokenResponse
+    class UpdateUserResponse
+    class User
     class UserServiceUpdateUserBody
     class protobufAny
     class rpcStatus
+    CreateUserRequest --> User
+    CreateUserResponse --> User
+    GetUserResponse --> User
+    ListUsersResponse --> User
+    UpdateUserResponse --> User
     rpcStatus --> protobufAny
 ```
 

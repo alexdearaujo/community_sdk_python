@@ -46,8 +46,8 @@ sequenceDiagram
     C->>W: alert_list(data=AlertServiceListRequest(...))
     W->>API: POST /v202505/alerts
     alt success
-        API-->>W: v202505AlertServiceListResponse (JSON)
-        W-->>C: v202505AlertServiceListResponse
+        API-->>W: AlertServiceListResponse (JSON)
+        W-->>C: AlertServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -71,7 +71,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertServiceListResponse
+        W-->>C: AlertServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -82,13 +82,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505AlertServiceListRequest` | Yes |
+| `data` | body | `AlertServiceListRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertServiceListResponse` |
+| 200 | A successful response. | `AlertServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -122,8 +122,8 @@ sequenceDiagram
     C->>W: clear(data=AlertServiceClearRequest(...))
     W->>API: POST /v202505/alerts/clear
     alt success
-        API-->>W: v202505AlertServiceClearResponse (JSON)
-        W-->>C: v202505AlertServiceClearResponse
+        API-->>W: AlertServiceClearResponse (JSON)
+        W-->>C: AlertServiceClearResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -147,7 +147,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertServiceClearResponse
+        W-->>C: AlertServiceClearResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -158,13 +158,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505AlertServiceClearRequest` | Yes |
+| `data` | body | `AlertServiceClearRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertServiceClearResponse` |
+| 200 | A successful response. | `AlertServiceClearResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -198,8 +198,8 @@ sequenceDiagram
     C->>W: list_comments(alertId="alertId-example")
     W->>API: GET /v202505/alerts/{alertId}/comments
     alt success
-        API-->>W: v202505AlertServiceListCommentsResponse (JSON)
-        W-->>C: v202505AlertServiceListCommentsResponse
+        API-->>W: AlertServiceListCommentsResponse (JSON)
+        W-->>C: AlertServiceListCommentsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -223,7 +223,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertServiceListCommentsResponse
+        W-->>C: AlertServiceListCommentsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -240,7 +240,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertServiceListCommentsResponse` |
+| 200 | A successful response. | `AlertServiceListCommentsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -274,8 +274,8 @@ sequenceDiagram
     C->>W: add_comment(alertId="alertId-example", data=AlertServiceAddCommentBody(...))
     W->>API: POST /v202505/alerts/{alertId}/comments
     alt success
-        API-->>W: v202505AlertServiceAddCommentResponse (JSON)
-        W-->>C: v202505AlertServiceAddCommentResponse
+        API-->>W: AlertServiceAddCommentResponse (JSON)
+        W-->>C: AlertServiceAddCommentResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -299,7 +299,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertServiceAddCommentResponse
+        W-->>C: AlertServiceAddCommentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -317,7 +317,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertServiceAddCommentResponse` |
+| 200 | A successful response. | `AlertServiceAddCommentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -352,8 +352,8 @@ sequenceDiagram
     C->>W: set_external_context(alertId="alertId-example", data=AlertServiceSetExternalContextBody(...))
     W->>API: PUT /v202505/alerts/{alertId}/external-context
     alt success
-        API-->>W: v202505AlertServiceSetExternalContextResponse (JSON)
-        W-->>C: v202505AlertServiceSetExternalContextResponse
+        API-->>W: AlertServiceSetExternalContextResponse (JSON)
+        W-->>C: AlertServiceSetExternalContextResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -377,7 +377,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertServiceSetExternalContextResponse
+        W-->>C: AlertServiceSetExternalContextResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -395,7 +395,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertServiceSetExternalContextResponse` |
+| 200 | A successful response. | `AlertServiceSetExternalContextResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -430,8 +430,8 @@ sequenceDiagram
     C->>W: alert_get(id="id-example")
     W->>API: GET /v202505/alerts/{id}
     alt success
-        API-->>W: v202505AlertServiceGetResponse (JSON)
-        W-->>C: v202505AlertServiceGetResponse
+        API-->>W: AlertServiceGetResponse (JSON)
+        W-->>C: AlertServiceGetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -455,7 +455,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertServiceGetResponse
+        W-->>C: AlertServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -472,7 +472,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertServiceGetResponse` |
+| 200 | A successful response. | `AlertServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -506,8 +506,8 @@ sequenceDiagram
     C->>W: ack(id="id-example", data=AlertServiceAckBody(...))
     W->>API: POST /v202505/alerts/{id}/ack
     alt success
-        API-->>W: v202505AlertServiceAckResponse (JSON)
-        W-->>C: v202505AlertServiceAckResponse
+        API-->>W: AlertServiceAckResponse (JSON)
+        W-->>C: AlertServiceAckResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -531,7 +531,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertServiceAckResponse
+        W-->>C: AlertServiceAckResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -549,7 +549,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertServiceAckResponse` |
+| 200 | A successful response. | `AlertServiceAckResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -584,8 +584,8 @@ sequenceDiagram
     C->>W: un_ack(id="id-example", data=AlertServiceUnAckBody(...))
     W->>API: POST /v202505/alerts/{id}/unack
     alt success
-        API-->>W: v202505AlertServiceUnAckResponse (JSON)
-        W-->>C: v202505AlertServiceUnAckResponse
+        API-->>W: AlertServiceUnAckResponse (JSON)
+        W-->>C: AlertServiceUnAckResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -609,7 +609,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertServiceUnAckResponse
+        W-->>C: AlertServiceUnAckResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -627,7 +627,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertServiceUnAckResponse` |
+| 200 | A successful response. | `AlertServiceUnAckResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -662,8 +662,8 @@ sequenceDiagram
     C->>W: auto_ack_create(data=AlertAutoAckServiceCreateRequest(...))
     W->>API: POST /v202505/alerts/ack/auto
     alt success
-        API-->>W: v202505AlertAutoAckServiceCreateResponse (JSON)
-        W-->>C: v202505AlertAutoAckServiceCreateResponse
+        API-->>W: AlertAutoAckServiceCreateResponse (JSON)
+        W-->>C: AlertAutoAckServiceCreateResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -687,7 +687,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertAutoAckServiceCreateResponse
+        W-->>C: AlertAutoAckServiceCreateResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -698,13 +698,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505AlertAutoAckServiceCreateRequest` | Yes |
+| `data` | body | `AlertAutoAckServiceCreateRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertAutoAckServiceCreateResponse` |
+| 200 | A successful response. | `AlertAutoAckServiceCreateResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -738,8 +738,8 @@ sequenceDiagram
     C->>W: auto_ack_list(data=AlertAutoAckServiceListRequest(...))
     W->>API: POST /v202505/alerts/ack/auto/list
     alt success
-        API-->>W: v202505AlertAutoAckServiceListResponse (JSON)
-        W-->>C: v202505AlertAutoAckServiceListResponse
+        API-->>W: AlertAutoAckServiceListResponse (JSON)
+        W-->>C: AlertAutoAckServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -763,7 +763,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertAutoAckServiceListResponse
+        W-->>C: AlertAutoAckServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -774,13 +774,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505AlertAutoAckServiceListRequest` | Yes |
+| `data` | body | `AlertAutoAckServiceListRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertAutoAckServiceListResponse` |
+| 200 | A successful response. | `AlertAutoAckServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -814,8 +814,8 @@ sequenceDiagram
     C->>W: auto_ack_get(autoAckid="autoAckid-example")
     W->>API: GET /v202505/alerts/ack/auto/{autoAck.id}
     alt success
-        API-->>W: v202505AlertAutoAckServiceGetResponse (JSON)
-        W-->>C: v202505AlertAutoAckServiceGetResponse
+        API-->>W: AlertAutoAckServiceGetResponse (JSON)
+        W-->>C: AlertAutoAckServiceGetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -839,7 +839,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertAutoAckServiceGetResponse
+        W-->>C: AlertAutoAckServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -856,7 +856,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertAutoAckServiceGetResponse` |
+| 200 | A successful response. | `AlertAutoAckServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -890,8 +890,8 @@ sequenceDiagram
     C->>W: auto_ack_replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
     W->>API: PATCH /v202505/alerts/ack/auto/{autoAck.id}
     alt success
-        API-->>W: v202505AlertAutoAckServiceReplaceResponse (JSON)
-        W-->>C: v202505AlertAutoAckServiceReplaceResponse
+        API-->>W: AlertAutoAckServiceReplaceResponse (JSON)
+        W-->>C: AlertAutoAckServiceReplaceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -915,7 +915,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertAutoAckServiceReplaceResponse
+        W-->>C: AlertAutoAckServiceReplaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -927,13 +927,13 @@ sequenceDiagram
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
 | `autoAckid` | path | `string` | Yes |
-| `data` | body | `v202505AlertAutoAckServiceReplaceBody` | Yes |
+| `data` | body | `AlertAutoAckServiceReplaceBody` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertAutoAckServiceReplaceResponse` |
+| 200 | A successful response. | `AlertAutoAckServiceReplaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -968,8 +968,8 @@ sequenceDiagram
     C->>W: auto_ack_delete(autoAckid="autoAckid-example")
     W->>API: DELETE /v202505/alerts/ack/auto/{autoAck.id}
     alt success
-        API-->>W: v202505AlertAutoAckServiceDeleteResponse (JSON)
-        W-->>C: v202505AlertAutoAckServiceDeleteResponse
+        API-->>W: AlertAutoAckServiceDeleteResponse (JSON)
+        W-->>C: AlertAutoAckServiceDeleteResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -993,7 +993,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertAutoAckServiceDeleteResponse
+        W-->>C: AlertAutoAckServiceDeleteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1010,7 +1010,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertAutoAckServiceDeleteResponse` |
+| 200 | A successful response. | `AlertAutoAckServiceDeleteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1044,8 +1044,8 @@ sequenceDiagram
     C->>W: mitigations_list()
     W->>API: GET /v202505/mitigations
     alt success
-        API-->>W: v202505MitigationsServiceListResponse (JSON)
-        W-->>C: v202505MitigationsServiceListResponse
+        API-->>W: MitigationsServiceListResponse (JSON)
+        W-->>C: MitigationsServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1069,7 +1069,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceListResponse
+        W-->>C: MitigationsServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1098,7 +1098,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationsServiceListResponse` |
+| 200 | A successful response. | `MitigationsServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1130,8 +1130,8 @@ sequenceDiagram
     C->>W: mitigations_create(data=MitigationsServiceCreateRequest(...))
     W->>API: POST /v202505/mitigations
     alt success
-        API-->>W: v202505MitigationsServiceCreateResponse (JSON)
-        W-->>C: v202505MitigationsServiceCreateResponse
+        API-->>W: MitigationsServiceCreateResponse (JSON)
+        W-->>C: MitigationsServiceCreateResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1155,7 +1155,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceCreateResponse
+        W-->>C: MitigationsServiceCreateResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1166,13 +1166,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505MitigationsServiceCreateRequest` | Yes |
+| `data` | body | `MitigationsServiceCreateRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationsServiceCreateResponse` |
+| 200 | A successful response. | `MitigationsServiceCreateResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1206,8 +1206,8 @@ sequenceDiagram
     C->>W: available_actions()
     W->>API: GET /v202505/mitigations/actions
     alt success
-        API-->>W: v202505MitigationsServiceAvailableActionsResponse (JSON)
-        W-->>C: v202505MitigationsServiceAvailableActionsResponse
+        API-->>W: MitigationsServiceAvailableActionsResponse (JSON)
+        W-->>C: MitigationsServiceAvailableActionsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1231,7 +1231,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceAvailableActionsResponse
+        W-->>C: MitigationsServiceAvailableActionsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1242,7 +1242,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationsServiceAvailableActionsResponse` |
+| 200 | A successful response. | `MitigationsServiceAvailableActionsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1274,8 +1274,8 @@ sequenceDiagram
     C->>W: mitigations_get(action="action-example")
     W->>API: GET /v202505/mitigations/{action}
     alt success
-        API-->>W: v202505MitigationsServiceGetResponse (JSON)
-        W-->>C: v202505MitigationsServiceGetResponse
+        API-->>W: MitigationsServiceGetResponse (JSON)
+        W-->>C: MitigationsServiceGetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1299,7 +1299,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceGetResponse
+        W-->>C: MitigationsServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1316,7 +1316,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationsServiceGetResponse` |
+| 200 | A successful response. | `MitigationsServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1350,8 +1350,8 @@ sequenceDiagram
     C->>W: act(action="action-example", data=MitigationsServiceActBody(...))
     W->>API: POST /v202505/mitigations/{action}
     alt success
-        API-->>W: v202505MitigationsServiceActResponse (JSON)
-        W-->>C: v202505MitigationsServiceActResponse
+        API-->>W: MitigationsServiceActResponse (JSON)
+        W-->>C: MitigationsServiceActResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1375,7 +1375,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceActResponse
+        W-->>C: MitigationsServiceActResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1393,7 +1393,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationsServiceActResponse` |
+| 200 | A successful response. | `MitigationsServiceActResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1428,8 +1428,8 @@ sequenceDiagram
     C->>W: available_actions_for_mitigation(id="id-example")
     W->>API: GET /v202505/mitigations/{id}/actions
     alt success
-        API-->>W: v202505MitigationsServiceAvailableActionsForMitigationResponse (JSON)
-        W-->>C: v202505MitigationsServiceAvailableActionsForMitigationResponse
+        API-->>W: MitigationsServiceAvailableActionsForMitigationResponse (JSON)
+        W-->>C: MitigationsServiceAvailableActionsForMitigationResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1453,7 +1453,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceAvailableActionsForMitigationResponse
+        W-->>C: MitigationsServiceAvailableActionsForMitigationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1470,7 +1470,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationsServiceAvailableActionsForMitigationResponse` |
+| 200 | A successful response. | `MitigationsServiceAvailableActionsForMitigationResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1504,8 +1504,8 @@ sequenceDiagram
     C->>W: mitigation_methods_list()
     W->>API: GET /v202505/mitigations/methods
     alt success
-        API-->>W: v202505MitigationMethodsServiceListResponse (JSON)
-        W-->>C: v202505MitigationMethodsServiceListResponse
+        API-->>W: MitigationMethodsServiceListResponse (JSON)
+        W-->>C: MitigationMethodsServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1529,7 +1529,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationMethodsServiceListResponse
+        W-->>C: MitigationMethodsServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1554,7 +1554,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationMethodsServiceListResponse` |
+| 200 | A successful response. | `MitigationMethodsServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1586,8 +1586,8 @@ sequenceDiagram
     C->>W: mitigation_methods_get(id="id-example")
     W->>API: GET /v202505/mitigations/methods/{id}
     alt success
-        API-->>W: v202505MitigationMethodsServiceGetResponse (JSON)
-        W-->>C: v202505MitigationMethodsServiceGetResponse
+        API-->>W: MitigationMethodsServiceGetResponse (JSON)
+        W-->>C: MitigationMethodsServiceGetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1611,7 +1611,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationMethodsServiceGetResponse
+        W-->>C: MitigationMethodsServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1628,7 +1628,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationMethodsServiceGetResponse` |
+| 200 | A successful response. | `MitigationMethodsServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1662,8 +1662,8 @@ sequenceDiagram
     C->>W: mitigation_platforms_list()
     W->>API: GET /v202505/mitigations/platforms
     alt success
-        API-->>W: v202505MitigationPlatformsServiceListResponse (JSON)
-        W-->>C: v202505MitigationPlatformsServiceListResponse
+        API-->>W: MitigationPlatformsServiceListResponse (JSON)
+        W-->>C: MitigationPlatformsServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1687,7 +1687,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationPlatformsServiceListResponse
+        W-->>C: MitigationPlatformsServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1712,7 +1712,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationPlatformsServiceListResponse` |
+| 200 | A successful response. | `MitigationPlatformsServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1744,8 +1744,8 @@ sequenceDiagram
     C->>W: mitigation_platforms_get(id="id-example")
     W->>API: GET /v202505/mitigations/platforms/{id}
     alt success
-        API-->>W: v202505MitigationPlatformsServiceGetResponse (JSON)
-        W-->>C: v202505MitigationPlatformsServiceGetResponse
+        API-->>W: MitigationPlatformsServiceGetResponse (JSON)
+        W-->>C: MitigationPlatformsServiceGetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1769,7 +1769,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationPlatformsServiceGetResponse
+        W-->>C: MitigationPlatformsServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1786,7 +1786,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505MitigationPlatformsServiceGetResponse` |
+| 200 | A successful response. | `MitigationPlatformsServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1820,8 +1820,8 @@ sequenceDiagram
     C->>W: policy_list(data=PolicyServiceListRequest(...))
     W->>API: POST /v202505/policies/list
     alt success
-        API-->>W: v202505PolicyServiceListResponse (JSON)
-        W-->>C: v202505PolicyServiceListResponse
+        API-->>W: PolicyServiceListResponse (JSON)
+        W-->>C: PolicyServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1845,7 +1845,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505PolicyServiceListResponse
+        W-->>C: PolicyServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1856,13 +1856,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505PolicyServiceListRequest` | Yes |
+| `data` | body | `PolicyServiceListRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505PolicyServiceListResponse` |
+| 200 | A successful response. | `PolicyServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1896,8 +1896,8 @@ sequenceDiagram
     C->>W: policy_get(policyType="policyType-example", id="id-example")
     W->>API: GET /v202505/policies/{policyType}/{id}
     alt success
-        API-->>W: v202505PolicyServiceGetResponse (JSON)
-        W-->>C: v202505PolicyServiceGetResponse
+        API-->>W: PolicyServiceGetResponse (JSON)
+        W-->>C: PolicyServiceGetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1921,7 +1921,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505PolicyServiceGetResponse
+        W-->>C: PolicyServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1939,7 +1939,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505PolicyServiceGetResponse` |
+| 200 | A successful response. | `PolicyServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1974,8 +1974,8 @@ sequenceDiagram
     C->>W: disable(policyType="policyType-example", id="id-example", data=PolicyServiceDisableBody(...))
     W->>API: POST /v202505/policies/{policyType}/{id}/disable
     alt success
-        API-->>W: v202505PolicyServiceDisableResponse (JSON)
-        W-->>C: v202505PolicyServiceDisableResponse
+        API-->>W: PolicyServiceDisableResponse (JSON)
+        W-->>C: PolicyServiceDisableResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1999,7 +1999,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505PolicyServiceDisableResponse
+        W-->>C: PolicyServiceDisableResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2018,7 +2018,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505PolicyServiceDisableResponse` |
+| 200 | A successful response. | `PolicyServiceDisableResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2054,8 +2054,8 @@ sequenceDiagram
     C->>W: enable(policyType="policyType-example", id="id-example", data=PolicyServiceEnableBody(...))
     W->>API: POST /v202505/policies/{policyType}/{id}/enable
     alt success
-        API-->>W: v202505PolicyServiceEnableResponse (JSON)
-        W-->>C: v202505PolicyServiceEnableResponse
+        API-->>W: PolicyServiceEnableResponse (JSON)
+        W-->>C: PolicyServiceEnableResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2079,7 +2079,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505PolicyServiceEnableResponse
+        W-->>C: PolicyServiceEnableResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2098,7 +2098,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505PolicyServiceEnableResponse` |
+| 200 | A successful response. | `PolicyServiceEnableResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2134,8 +2134,8 @@ sequenceDiagram
     C->>W: silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
     W->>API: POST /v202505/alerts/silence
     alt success
-        API-->>W: v202505AlertSilenceNotificationsServiceCreateResponse (JSON)
-        W-->>C: v202505AlertSilenceNotificationsServiceCreateResponse
+        API-->>W: AlertSilenceNotificationsServiceCreateResponse (JSON)
+        W-->>C: AlertSilenceNotificationsServiceCreateResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2159,7 +2159,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertSilenceNotificationsServiceCreateResponse
+        W-->>C: AlertSilenceNotificationsServiceCreateResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2170,13 +2170,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505AlertSilenceNotificationsServiceCreateRequest` | Yes |
+| `data` | body | `AlertSilenceNotificationsServiceCreateRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertSilenceNotificationsServiceCreateResponse` |
+| 200 | A successful response. | `AlertSilenceNotificationsServiceCreateResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2210,8 +2210,8 @@ sequenceDiagram
     C->>W: silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
     W->>API: POST /v202505/alerts/silence/list
     alt success
-        API-->>W: v202505AlertSilenceNotificationsServiceListResponse (JSON)
-        W-->>C: v202505AlertSilenceNotificationsServiceListResponse
+        API-->>W: AlertSilenceNotificationsServiceListResponse (JSON)
+        W-->>C: AlertSilenceNotificationsServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2235,7 +2235,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertSilenceNotificationsServiceListResponse
+        W-->>C: AlertSilenceNotificationsServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2246,13 +2246,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505AlertSilenceNotificationsServiceListRequest` | Yes |
+| `data` | body | `AlertSilenceNotificationsServiceListRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertSilenceNotificationsServiceListResponse` |
+| 200 | A successful response. | `AlertSilenceNotificationsServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2286,8 +2286,8 @@ sequenceDiagram
     C->>W: silence_notifications_get(id="id-example")
     W->>API: GET /v202505/alerts/silence/{id}
     alt success
-        API-->>W: v202505AlertSilenceNotificationsServiceGetResponse (JSON)
-        W-->>C: v202505AlertSilenceNotificationsServiceGetResponse
+        API-->>W: AlertSilenceNotificationsServiceGetResponse (JSON)
+        W-->>C: AlertSilenceNotificationsServiceGetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2311,7 +2311,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertSilenceNotificationsServiceGetResponse
+        W-->>C: AlertSilenceNotificationsServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2328,7 +2328,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertSilenceNotificationsServiceGetResponse` |
+| 200 | A successful response. | `AlertSilenceNotificationsServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2362,8 +2362,8 @@ sequenceDiagram
     C->>W: silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
     W->>API: PATCH /v202505/alerts/silence/{id}
     alt success
-        API-->>W: v202505AlertSilenceNotificationsServiceReplaceResponse (JSON)
-        W-->>C: v202505AlertSilenceNotificationsServiceReplaceResponse
+        API-->>W: AlertSilenceNotificationsServiceReplaceResponse (JSON)
+        W-->>C: AlertSilenceNotificationsServiceReplaceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2387,7 +2387,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertSilenceNotificationsServiceReplaceResponse
+        W-->>C: AlertSilenceNotificationsServiceReplaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2399,13 +2399,13 @@ sequenceDiagram
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
-| `data` | body | `v202505AlertSilenceNotificationsServiceReplaceBody` | Yes |
+| `data` | body | `AlertSilenceNotificationsServiceReplaceBody` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertSilenceNotificationsServiceReplaceResponse` |
+| 200 | A successful response. | `AlertSilenceNotificationsServiceReplaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2440,8 +2440,8 @@ sequenceDiagram
     C->>W: silence_notifications_delete(id="id-example")
     W->>API: DELETE /v202505/alerts/silence/{id}
     alt success
-        API-->>W: v202505AlertSilenceNotificationsServiceDeleteResponse (JSON)
-        W-->>C: v202505AlertSilenceNotificationsServiceDeleteResponse
+        API-->>W: AlertSilenceNotificationsServiceDeleteResponse (JSON)
+        W-->>C: AlertSilenceNotificationsServiceDeleteResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2465,7 +2465,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505AlertSilenceNotificationsServiceDeleteResponse
+        W-->>C: AlertSilenceNotificationsServiceDeleteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2482,7 +2482,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505AlertSilenceNotificationsServiceDeleteResponse` |
+| 200 | A successful response. | `AlertSilenceNotificationsServiceDeleteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2516,8 +2516,8 @@ sequenceDiagram
     C->>W: suppression_create(data=SuppressionServiceCreateRequest(...))
     W->>API: POST /v202505/suppressions
     alt success
-        API-->>W: v202505SuppressionServiceCreateResponse (JSON)
-        W-->>C: v202505SuppressionServiceCreateResponse
+        API-->>W: SuppressionServiceCreateResponse (JSON)
+        W-->>C: SuppressionServiceCreateResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2541,7 +2541,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505SuppressionServiceCreateResponse
+        W-->>C: SuppressionServiceCreateResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2552,13 +2552,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505SuppressionServiceCreateRequest` | Yes |
+| `data` | body | `SuppressionServiceCreateRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505SuppressionServiceCreateResponse` |
+| 200 | A successful response. | `SuppressionServiceCreateResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2592,8 +2592,8 @@ sequenceDiagram
     C->>W: suppression_list(data=SuppressionServiceListRequest(...))
     W->>API: POST /v202505/suppressions/list
     alt success
-        API-->>W: v202505SuppressionServiceListResponse (JSON)
-        W-->>C: v202505SuppressionServiceListResponse
+        API-->>W: SuppressionServiceListResponse (JSON)
+        W-->>C: SuppressionServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2617,7 +2617,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505SuppressionServiceListResponse
+        W-->>C: SuppressionServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2628,13 +2628,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505SuppressionServiceListRequest` | Yes |
+| `data` | body | `SuppressionServiceListRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505SuppressionServiceListResponse` |
+| 200 | A successful response. | `SuppressionServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2668,8 +2668,8 @@ sequenceDiagram
     C->>W: suppression_get(id="id-example")
     W->>API: GET /v202505/suppressions/{id}
     alt success
-        API-->>W: v202505SuppressionServiceGetResponse (JSON)
-        W-->>C: v202505SuppressionServiceGetResponse
+        API-->>W: SuppressionServiceGetResponse (JSON)
+        W-->>C: SuppressionServiceGetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2693,7 +2693,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505SuppressionServiceGetResponse
+        W-->>C: SuppressionServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2710,7 +2710,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505SuppressionServiceGetResponse` |
+| 200 | A successful response. | `SuppressionServiceGetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2744,8 +2744,8 @@ sequenceDiagram
     C->>W: suppression_replace(id="id-example", data=SuppressionServiceReplaceBody(...))
     W->>API: PATCH /v202505/suppressions/{id}
     alt success
-        API-->>W: v202505SuppressionServiceReplaceResponse (JSON)
-        W-->>C: v202505SuppressionServiceReplaceResponse
+        API-->>W: SuppressionServiceReplaceResponse (JSON)
+        W-->>C: SuppressionServiceReplaceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2769,7 +2769,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505SuppressionServiceReplaceResponse
+        W-->>C: SuppressionServiceReplaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2781,13 +2781,13 @@ sequenceDiagram
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
-| `data` | body | `v202505SuppressionServiceReplaceBody` | Yes |
+| `data` | body | `SuppressionServiceReplaceBody` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505SuppressionServiceReplaceResponse` |
+| 200 | A successful response. | `SuppressionServiceReplaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2822,8 +2822,8 @@ sequenceDiagram
     C->>W: suppression_delete(id="id-example")
     W->>API: DELETE /v202505/suppressions/{id}
     alt success
-        API-->>W: v202505SuppressionServiceDeleteResponse (JSON)
-        W-->>C: v202505SuppressionServiceDeleteResponse
+        API-->>W: SuppressionServiceDeleteResponse (JSON)
+        W-->>C: SuppressionServiceDeleteResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2847,7 +2847,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505SuppressionServiceDeleteResponse
+        W-->>C: SuppressionServiceDeleteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2864,7 +2864,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505SuppressionServiceDeleteResponse` |
+| 200 | A successful response. | `SuppressionServiceDeleteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2882,22 +2882,53 @@ response = client.alerting.suppression_delete(
 ## Data Models
 
 <details>
-<summary>Model relationships (10 of 186 models)</summary>
+<summary>Model relationships (30 of 186 models)</summary>
 
 ```mermaid
 classDiagram
+    class Alert
+    class AlertAutoAck
+    class AlertAutoAckFilters
+    class AlertAutoAckServiceCreateRequest
+    class AlertAutoAckServiceCreateResponse
+    class AlertAutoAckServiceDeleteResponse
+    class AlertAutoAckServiceGetResponse
+    class AlertAutoAckServiceListRequest
+    class AlertAutoAckServiceListResponse
+    class AlertAutoAckServiceReplaceBody
+    class AlertAutoAckServiceReplaceResponse
+    class AlertFilters
+    class AlertPhase
     class AlertServiceAckBody
+    class AlertServiceAckResponse
     class AlertServiceAddCommentBody
+    class AlertServiceAddCommentResponse
+    class AlertServiceClearRequest
+    class AlertServiceClearResponse
+    class AlertServiceGetResponse
+    class AlertServiceListCommentsResponse
+    class AlertServiceListRequest
+    class AlertServiceListResponse
     class AlertServiceSetExternalContextBody
+    class AlertServiceSetExternalContextResponse
     class AlertServiceUnAckBody
-    class ExternalContext
-    class MitigationsServiceActBody
-    class PolicyServiceDisableBody
-    class PolicyServiceEnableBody
-    class protobufAny
-    class rpcStatus
-    AlertServiceSetExternalContextBody --> ExternalContext
-    rpcStatus --> protobufAny
+    class AlertServiceUnAckResponse
+    class AlertSilenceNotificationFilters
+    class AlertSilenceNotificationsDefinition
+    class AlertSilenceNotificationsServiceCreateRequest
+    AlertAutoAckServiceCreateRequest --> AlertAutoAck
+    AlertAutoAckServiceCreateResponse --> AlertAutoAck
+    AlertAutoAckServiceGetResponse --> AlertAutoAck
+    AlertAutoAckServiceListRequest --> AlertAutoAckFilters
+    AlertAutoAckServiceListResponse --> AlertAutoAck
+    AlertAutoAckServiceReplaceResponse --> AlertAutoAck
+    AlertServiceAckResponse --> Alert
+    AlertServiceGetResponse --> Alert
+    AlertServiceGetResponse --> AlertPhase
+    AlertServiceListRequest --> AlertFilters
+    AlertServiceListResponse --> Alert
+    AlertServiceUnAckResponse --> Alert
+    AlertSilenceNotificationsServiceCreateRequest --> AlertSilenceNotificationsDefinition
 ```
 
 </details>

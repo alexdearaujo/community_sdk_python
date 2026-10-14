@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: get_nlq(prompt="prompt-example")
     W->>API: GET /journeys/v202406/GetJourneysNlq
     alt success
-        API-->>W: v202406GetJourneysNlqResponse (JSON)
-        W-->>C: v202406GetJourneysNlqResponse
+        API-->>W: GetJourneysNlqResponse (JSON)
+        W-->>C: GetJourneysNlqResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202406GetJourneysNlqResponse
+        W-->>C: GetJourneysNlqResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -86,7 +86,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202406GetJourneysNlqResponse` |
+| 200 | A successful response. | `GetJourneysNlqResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -104,12 +104,17 @@ response = client.journeys.get_nlq(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 5 models)</summary>
+<summary>Model relationships (5 of 5 models)</summary>
 
 ```mermaid
 classDiagram
+    class GetJourneysNlqResponse
+    class ResultFormat
+    class ResultType
     class protobufAny
     class rpcStatus
+    GetJourneysNlqResponse --> ResultFormat
+    GetJourneysNlqResponse --> ResultType
     rpcStatus --> protobufAny
 ```
 

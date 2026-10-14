@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_markets()
     W->>API: GET /site/v202509/site_markets
     alt success
-        API-->>W: v202509ListSiteMarketsResponse (JSON)
-        W-->>C: v202509ListSiteMarketsResponse
+        API-->>W: ListSiteMarketsResponse (JSON)
+        W-->>C: ListSiteMarketsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509ListSiteMarketsResponse
+        W-->>C: ListSiteMarketsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509ListSiteMarketsResponse` |
+| 200 | A successful response. | `ListSiteMarketsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: create_market(data=CreateSiteMarketRequest(...))
     W->>API: POST /site/v202509/site_markets
     alt success
-        API-->>W: v202509CreateSiteMarketResponse (JSON)
-        W-->>C: v202509CreateSiteMarketResponse
+        API-->>W: CreateSiteMarketResponse (JSON)
+        W-->>C: CreateSiteMarketResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509CreateSiteMarketResponse
+        W-->>C: CreateSiteMarketResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,13 +148,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202509CreateSiteMarketRequest` | Yes |
+| `data` | body | `CreateSiteMarketRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509CreateSiteMarketResponse` |
+| 200 | A successful response. | `CreateSiteMarketResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -188,8 +188,8 @@ sequenceDiagram
     C->>W: get_market(id="id-example")
     W->>API: GET /site/v202509/site_markets/{id}
     alt success
-        API-->>W: v202509GetSiteMarketResponse (JSON)
-        W-->>C: v202509GetSiteMarketResponse
+        API-->>W: GetSiteMarketResponse (JSON)
+        W-->>C: GetSiteMarketResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -213,7 +213,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509GetSiteMarketResponse
+        W-->>C: GetSiteMarketResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -230,7 +230,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509GetSiteMarketResponse` |
+| 200 | A successful response. | `GetSiteMarketResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -264,8 +264,8 @@ sequenceDiagram
     C->>W: update_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
     W->>API: PUT /site/v202509/site_markets/{id}
     alt success
-        API-->>W: v202509UpdateSiteMarketResponse (JSON)
-        W-->>C: v202509UpdateSiteMarketResponse
+        API-->>W: UpdateSiteMarketResponse (JSON)
+        W-->>C: UpdateSiteMarketResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -289,7 +289,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509UpdateSiteMarketResponse
+        W-->>C: UpdateSiteMarketResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -307,7 +307,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509UpdateSiteMarketResponse` |
+| 200 | A successful response. | `UpdateSiteMarketResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -342,8 +342,8 @@ sequenceDiagram
     C->>W: delete_market(id="id-example")
     W->>API: DELETE /site/v202509/site_markets/{id}
     alt success
-        API-->>W: v202509DeleteSiteMarketResponse (JSON)
-        W-->>C: v202509DeleteSiteMarketResponse
+        API-->>W: DeleteSiteMarketResponse (JSON)
+        W-->>C: DeleteSiteMarketResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -367,7 +367,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509DeleteSiteMarketResponse
+        W-->>C: DeleteSiteMarketResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -384,7 +384,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509DeleteSiteMarketResponse` |
+| 200 | A successful response. | `DeleteSiteMarketResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -418,8 +418,8 @@ sequenceDiagram
     C->>W: list_sites()
     W->>API: GET /site/v202509/sites
     alt success
-        API-->>W: v202509ListSitesResponse (JSON)
-        W-->>C: v202509ListSitesResponse
+        API-->>W: ListSitesResponse (JSON)
+        W-->>C: ListSitesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -443,7 +443,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509ListSitesResponse
+        W-->>C: ListSitesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -454,7 +454,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509ListSitesResponse` |
+| 200 | A successful response. | `ListSitesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -486,8 +486,8 @@ sequenceDiagram
     C->>W: create_site(data=CreateSiteRequest(...))
     W->>API: POST /site/v202509/sites
     alt success
-        API-->>W: v202509CreateSiteResponse (JSON)
-        W-->>C: v202509CreateSiteResponse
+        API-->>W: CreateSiteResponse (JSON)
+        W-->>C: CreateSiteResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -511,7 +511,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509CreateSiteResponse
+        W-->>C: CreateSiteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -522,13 +522,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202509CreateSiteRequest` | Yes |
+| `data` | body | `CreateSiteRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509CreateSiteResponse` |
+| 200 | A successful response. | `CreateSiteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -562,8 +562,8 @@ sequenceDiagram
     C->>W: get_site(id="id-example")
     W->>API: GET /site/v202509/sites/{id}
     alt success
-        API-->>W: v202509GetSiteResponse (JSON)
-        W-->>C: v202509GetSiteResponse
+        API-->>W: GetSiteResponse (JSON)
+        W-->>C: GetSiteResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -587,7 +587,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509GetSiteResponse
+        W-->>C: GetSiteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -604,7 +604,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509GetSiteResponse` |
+| 200 | A successful response. | `GetSiteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -638,8 +638,8 @@ sequenceDiagram
     C->>W: update_site(id="id-example", data=SiteServiceUpdateSiteBody(...))
     W->>API: PUT /site/v202509/sites/{id}
     alt success
-        API-->>W: v202509UpdateSiteResponse (JSON)
-        W-->>C: v202509UpdateSiteResponse
+        API-->>W: UpdateSiteResponse (JSON)
+        W-->>C: UpdateSiteResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -663,7 +663,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509UpdateSiteResponse
+        W-->>C: UpdateSiteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -681,7 +681,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509UpdateSiteResponse` |
+| 200 | A successful response. | `UpdateSiteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -716,8 +716,8 @@ sequenceDiagram
     C->>W: delete_site(id="id-example")
     W->>API: DELETE /site/v202509/sites/{id}
     alt success
-        API-->>W: v202509DeleteSiteResponse (JSON)
-        W-->>C: v202509DeleteSiteResponse
+        API-->>W: DeleteSiteResponse (JSON)
+        W-->>C: DeleteSiteResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -741,7 +741,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202509DeleteSiteResponse
+        W-->>C: DeleteSiteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -758,7 +758,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202509DeleteSiteResponse` |
+| 200 | A successful response. | `DeleteSiteResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -776,14 +776,39 @@ response = client.site.delete_site(
 ## Data Models
 
 <details>
-<summary>Model relationships (4 of 24 models)</summary>
+<summary>Model relationships (18 of 24 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateSiteMarketRequest
+    class CreateSiteMarketResponse
+    class CreateSiteRequest
+    class CreateSiteResponse
+    class DeleteSiteMarketResponse
+    class DeleteSiteResponse
+    class GetSiteMarketResponse
+    class GetSiteResponse
+    class ListSiteMarketsResponse
+    class ListSitesResponse
+    class Site
+    class SiteMarket
     class SiteServiceUpdateSiteBody
     class SiteServiceUpdateSiteMarketBody
+    class UpdateSiteMarketResponse
+    class UpdateSiteResponse
     class protobufAny
     class rpcStatus
+    CreateSiteMarketRequest --> SiteMarket
+    CreateSiteMarketResponse --> SiteMarket
+    CreateSiteRequest --> Site
+    CreateSiteResponse --> Site
+    GetSiteMarketResponse --> SiteMarket
+    GetSiteResponse --> Site
+    ListSiteMarketsResponse --> SiteMarket
+    ListSitesResponse --> Site
+    Site --> SiteMarket
+    UpdateSiteMarketResponse --> SiteMarket
+    UpdateSiteResponse --> Site
     rpcStatus --> protobufAny
 ```
 

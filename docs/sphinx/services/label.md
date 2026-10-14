@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_labels()
     W->>API: GET /label/v202210/labels
     alt success
-        API-->>W: v202210ListLabelsResponse (JSON)
-        W-->>C: v202210ListLabelsResponse
+        API-->>W: ListLabelsResponse (JSON)
+        W-->>C: ListLabelsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210ListLabelsResponse
+        W-->>C: ListLabelsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210ListLabelsResponse` |
+| 200 | A successful response. | `ListLabelsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: create_label(data=CreateLabelRequest(...))
     W->>API: POST /label/v202210/labels
     alt success
-        API-->>W: v202210CreateLabelResponse (JSON)
-        W-->>C: v202210CreateLabelResponse
+        API-->>W: CreateLabelResponse (JSON)
+        W-->>C: CreateLabelResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210CreateLabelResponse
+        W-->>C: CreateLabelResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,13 +148,13 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202210CreateLabelRequest` | Yes |
+| `data` | body | `CreateLabelRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210CreateLabelResponse` |
+| 200 | A successful response. | `CreateLabelResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -188,8 +188,8 @@ sequenceDiagram
     C->>W: update_label(id="id-example", data=LabelServiceUpdateLabelBody(...))
     W->>API: POST /label/v202210/labels/{id}
     alt success
-        API-->>W: v202210UpdateLabelResponse (JSON)
-        W-->>C: v202210UpdateLabelResponse
+        API-->>W: UpdateLabelResponse (JSON)
+        W-->>C: UpdateLabelResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -213,7 +213,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210UpdateLabelResponse
+        W-->>C: UpdateLabelResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -231,7 +231,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210UpdateLabelResponse` |
+| 200 | A successful response. | `UpdateLabelResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -266,8 +266,8 @@ sequenceDiagram
     C->>W: delete_label(id="id-example")
     W->>API: DELETE /label/v202210/labels/{id}
     alt success
-        API-->>W: v202210DeleteLabelResponse (JSON)
-        W-->>C: v202210DeleteLabelResponse
+        API-->>W: DeleteLabelResponse (JSON)
+        W-->>C: DeleteLabelResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -291,7 +291,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210DeleteLabelResponse
+        W-->>C: DeleteLabelResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -308,7 +308,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210DeleteLabelResponse` |
+| 200 | A successful response. | `DeleteLabelResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -326,13 +326,23 @@ response = client.label.delete_label(
 ## Data Models
 
 <details>
-<summary>Model relationships (3 of 9 models)</summary>
+<summary>Model relationships (9 of 9 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateLabelRequest
+    class CreateLabelResponse
+    class DeleteLabelResponse
     class LabelServiceUpdateLabelBody
+    class ListLabelsResponse
+    class UpdateLabelResponse
+    class labelv202210Label
     class protobufAny
     class rpcStatus
+    CreateLabelRequest --> labelv202210Label
+    CreateLabelResponse --> labelv202210Label
+    ListLabelsResponse --> labelv202210Label
+    UpdateLabelResponse --> labelv202210Label
     rpcStatus --> protobufAny
 ```
 
