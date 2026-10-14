@@ -63,7 +63,7 @@ This ledger records findings that are intentionally deferred.
 | K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K8 | release or docs | Needs a clean-venv wheel job in CI. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D1 | release or docs | Generator must run extract() on the patched swagger. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
-| D2 | release or docs | Generator example snippets need import fixes. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D2 | release or docs | Generator example snippets need import fixes. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | D3 | release or docs | CLAUDE.md rewrite needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D4 | release or docs | Constitution change needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D5 | release or docs | docs_rendering text needs a generator change. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -215,3 +215,8 @@ This ledger records findings that are intentionally deferred.
   10 required bodies show as required, and 21 of the 24 two-node model
   diagrams now show the operation models. A test fails when a committed page
   names a model the SDK does not define. 25 entries remain open.
+- D2 is resolved (2026-10-14). Each service page example imports the models
+  it constructs from `kentik_api.gen.<service>.models`, and a `Dict`
+  argument renders as `{}`. R16 had already removed the 4 `Dict` bodies. A
+  test parses every committed example and fails on a name it uses but does
+  not define, or an import that does not resolve. 24 entries remain open.

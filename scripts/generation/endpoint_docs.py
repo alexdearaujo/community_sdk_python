@@ -378,15 +378,21 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
     return mapping
 
 
-def _example_value_for_annotation(annotation_text: str, name: str) -> str:
-    """Builds a plausible Python source snippet for a parameter's example value."""
+def _example_value_for_annotation(
+    annotation_text: str, name: str, models: set[str] | None = None
+) -> str:
+    """Builds a plausible Python source snippet for a parameter's example value.
+
+    Adds each model class the snippet constructs to models, so the caller can
+    import it.
+    """
     text = annotation_text.strip()
     if text.startswith("Optional[") and text.endswith("]"):
         text = text[len("Optional[") : -1].strip()
     for list_prefix in ("List[", "list["):
         if text.startswith(list_prefix) and text.endswith("]"):
             inner = text[len(list_prefix) : -1].strip()
-            return f"[{_example_value_for_annotation(inner, name)}]"
+            return f"[{_example_value_for_annotation(inner, name, models)}]"
 
     if text == "str":
         return f'"{name}-example"'
@@ -400,9 +406,13 @@ def _example_value_for_annotation(annotation_text: str, name: str) -> str:
         return 'b"example"'
     if text in ("Any", ""):
         return "..."
+    if text.startswith(("Dict[", "dict[")):
+        return "{}"
 
     # Anything else is a model reference (e.g. rest_models.CreateASGroupRequest).
     class_name = text.rsplit(".", 1)[-1]
+    if models is not None:
+        models.add(class_name)
     return f"{class_name}(...)"
 
 
@@ -410,20 +420,24 @@ def _render_example_snippet(
     service: str, method_name: str, params: list[tuple[str, str, bool]]
 ) -> str:
     """Renders a runnable-looking usage example from a real wrapper method signature."""
-    required_params = [p for p in params if p[2]]
-    lines = [
-        "from kentik_api.client import KentikAPI",
+    models: set[str] = set()
+    arguments = [
+        f"    {param_name}={_example_value_for_annotation(annotation_text, param_name, models)},"
+        for param_name, annotation_text, required in params
+        if required
+    ]
+    lines = ["from kentik_api.client import KentikAPI"]
+    if models:
+        lines.append(
+            f"from kentik_api.gen.{service}.models import {', '.join(sorted(models))}"
+        )
+    lines += [
         "",
         '# Both transports work: protocol="rest" (default) or protocol="grpc".',
         'client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env',
     ]
-    if required_params:
-        lines.append(f"response = client.{service}.{method_name}(")
-        for param_name, annotation_text, _ in required_params:
-            lines.append(
-                f"    {param_name}={_example_value_for_annotation(annotation_text, param_name)},"
-            )
-        lines.append(")")
+    if arguments:
+        lines += [f"response = client.{service}.{method_name}(", *arguments, ")"]
     else:
         lines.append(f"response = client.{service}.{method_name}()")
     return "\n".join(lines)

@@ -169,6 +169,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import CreateAgentAlertRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -322,6 +323,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import SyntheticsAdminServiceUpdateAgentAlertBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -620,6 +622,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import SyntheticsAdminServiceUpdateAgentBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -841,6 +844,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import CreateTestRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -994,6 +998,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import SyntheticsAdminServiceUpdateTestBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1146,6 +1151,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import SyntheticsAdminServiceSetTestStatusBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1223,6 +1229,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import GetResultsForTestsRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1299,6 +1306,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import GetResultsForTestsCsvRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1375,6 +1383,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.synthetics.models import GetTraceForTestRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env

@@ -93,6 +93,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.connectivity_checker.models import CreateConnectivityReportRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env

@@ -163,6 +163,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import CreatePackageRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -316,6 +317,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import PackageServiceUpdatePackageBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -537,6 +539,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import CreateTenantRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -690,6 +693,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import TenantServiceUpdateTenantBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -920,6 +924,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import TenantUserServiceCreateTenantUserBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -999,6 +1004,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import TenantUserServiceUpdateTenantUserBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env

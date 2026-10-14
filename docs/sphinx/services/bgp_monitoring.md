@@ -95,6 +95,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import GetMetricsForTargetRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -171,6 +172,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import GetRoutesForTargetRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -315,6 +317,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import CreateMonitorRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -468,6 +471,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import BgpMonitoringAdminServiceUpdateMonitorBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -622,6 +626,7 @@ sequenceDiagram
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import BgpMonitoringAdminServiceSetMonitorStatusBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
