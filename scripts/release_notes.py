@@ -6,7 +6,7 @@ comparing two points in history costs one `git show`. That keeps this command
 idempotent: rerunning it never consumes or advances a baseline, unlike a snapshot
 file that gets overwritten as a side effect of generation.
 
-    uv run python scripts/release_notes.py                 # since newest tag with a record
+    uv run python scripts/release_notes.py                 # since the previous release
     uv run python scripts/release_notes.py --since v1.0.6
     uv run python scripts/release_notes.py --since HEAD    # just this working tree
     uv run python scripts/release_notes.py -o notes.md
@@ -23,6 +23,8 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+
+from packaging.version import InvalidVersion, Version
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -42,30 +44,57 @@ def _git(*args: str) -> str:
     return result.stdout.strip()
 
 
-def _tags_newest_first() -> list[str]:
+def _version(tag: str) -> Version | None:
     try:
-        tags = _git("tag", "--sort=-creatordate")
-    except RuntimeError:
-        return []
-    return [tag for tag in tags.splitlines() if tag.strip()]
+        return Version(tag)
+    except InvalidVersion:
+        return None
+
+
+def _earlier_releases_newest_first() -> list[str]:
+    """Release tags reachable from HEAD, highest version first, excluding HEAD's.
+
+    Reachability keeps a hotfix branch from comparing against a newer minor made
+    elsewhere, and version order beats tag date for the same reason. The release
+    workflow runs on the tag it describes, so HEAD's own tags are skipped. A
+    final release skips pre-releases, so `v1.1.0` compares against `v1.0.x`, not
+    `v1.1.0rc1`.
+    """
+    head_tags = set(_git("tag", "--points-at", "HEAD").split())
+    head_versions = [v for v in map(_version, head_tags) if v is not None]
+    allow_pre = bool(head_versions) and all(v.is_prerelease for v in head_versions)
+    releases = []
+    for tag in _git("tag", "--merged", "HEAD").split():
+        version = _version(tag)
+        if tag in head_tags or version is None:
+            continue
+        if version.is_prerelease and not allow_pre:
+            continue
+        releases.append((version, tag))
+    return [tag for _, tag in sorted(releases, reverse=True)]
 
 
 def _default_baseline() -> tuple[str, dict] | None:
-    """Finds the most recent tag that actually carries a surface record.
+    """Finds the previous release that actually carries a surface record.
 
-    Tags predating surface tracking have no record, so the newest tag is often not
-    a usable baseline. Skipping to the newest one that is beats failing outright.
-    A tag on HEAD is skipped too: the release workflow runs on the tag it is
-    describing, and comparing a release with itself lists nothing.
+    Tags predating surface tracking have no record, so skipping to the newest one
+    that has a record beats failing outright.
     """
-    head = _git("rev-parse", "HEAD")
-    for tag in _tags_newest_first():
-        if _git("rev-list", "-n", "1", tag) == head:
-            continue
+    for tag in _earlier_releases_newest_first():
         surface = api_surface.recorded_at(tag)
         if surface is not None:
             return tag, surface
     return None
+
+
+def _require_commit(ref: str) -> None:
+    try:
+        _git("rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}")
+    except RuntimeError:
+        raise SystemExit(
+            f"--since `{ref}` does not name a commit in this repository. Check "
+            "the spelling, or fetch it first: a shallow clone lacks older history."
+        ) from None
 
 
 def _unreleased_notes() -> str:
@@ -108,7 +137,7 @@ def main() -> None:
     parser.add_argument(
         "--since",
         metavar="REF",
-        help="git ref to compare against (default: newest tag carrying a surface record)",
+        help="git ref to compare against (default: previous release tag carrying a surface record)",
     )
     parser.add_argument(
         "-o",
@@ -129,6 +158,7 @@ def main() -> None:
     after = api_surface.read(surface_path)
 
     if args.since:
+        _require_commit(args.since)
         before = api_surface.recorded_at(args.since)
         baseline = None if before is None else (args.since, before)
     else:

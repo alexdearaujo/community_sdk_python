@@ -20,6 +20,11 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
+from packaging.requirements import Requirement
+from packaging.specifiers import SpecifierSet
+from packaging.utils import canonicalize_name
+from packaging.version import Version
+
 from ._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
@@ -31,9 +36,10 @@ from ._shared import (
 )
 
 SURFACE_FILE = PROJECT_ROOT / "api_surface.json"
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
-_TRACKED_REQUIREMENTS = ("grpcio", "protobuf", "httpx", "pydantic")
+# Before schema_version 6 a record held only these requirements.
+_LEGACY_REQUIREMENTS = ("grpcio", "protobuf", "httpx", "pydantic")
 _PROTOBUF_GENCODE_RE = re.compile(
     r"ValidateProtobufRuntimeVersion\(\s*_runtime_version\.Domain\.\w+,\s*(\d+),\s*(\d+),\s*(\d+),"
 )
@@ -50,14 +56,16 @@ def _operation_key(method: str, path: str) -> str:
 
 
 def _declared_requirements() -> dict[str, str]:
-    pyproject = tomllib.loads(
+    """Every runtime dependency, plus the Python floor as `python`."""
+    project = tomllib.loads(
         (PROJECT_ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    )
-    found = {}
-    for spec in pyproject["project"]["dependencies"]:
-        for package in _TRACKED_REQUIREMENTS:
-            if re.match(rf"^{re.escape(package)}\s*[<>=!~]", spec):
-                found[package] = spec
+    )["project"]
+    found: dict[str, str] = {
+        canonicalize_name(Requirement(spec).name): spec
+        for spec in project["dependencies"]
+    }
+    if "requires-python" in project:
+        found["python"] = f"python{project['requires-python']}"
     return dict(sorted(found.items()))
 
 
@@ -279,10 +287,55 @@ def diff(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
         "removed_services": removed,
         "changed_services": changed,
         "requirements": _diff_mapping(
-            before.get("requirements", {}), after.get("requirements", {})
+            before.get("requirements", {}), _comparable_requirements(before, after)
         ),
         "gencode": _diff_mapping(before.get("gencode", {}), after.get("gencode", {})),
     }
+
+
+def _comparable_requirements(
+    before: dict[str, Any], after: dict[str, Any]
+) -> dict[str, str]:
+    """After's requirements, minus ones an older record never tracked.
+
+    Without this, every untracked dependency would read as newly required.
+    """
+    requirements = after.get("requirements", {})
+    if before.get("schema_version", 0) >= 6:
+        return requirements
+    return {k: v for k, v in requirements.items() if k in _LEGACY_REQUIREMENTS}
+
+
+def _bounds(specifier: SpecifierSet) -> tuple[Version | None, Version | None, set[str]]:
+    """Approximate floor, cap, and excluded versions of a specifier set."""
+    low = high = None
+    excluded = set()
+    for spec in specifier:
+        if spec.operator == "!=":
+            excluded.add(spec.version)
+            continue
+        if spec.operator == "===":
+            continue
+        version = Version(spec.version.removesuffix(".*"))
+        if spec.operator in (">=", ">", "~=", "=="):
+            low = version if low is None else max(low, version)
+        if spec.operator in ("<", "<=", "=="):
+            high = version if high is None else min(high, version)
+    return low, high, excluded
+
+
+def _narrowed(before: str, after: str) -> bool:
+    """True when `after` can reject a version or environment `before` accepted."""
+    old, new = Requirement(before), Requirement(after)
+    if (old.extras, str(old.marker)) != (new.extras, str(new.marker)):
+        return True
+    old_low, old_high, old_excluded = _bounds(old.specifier)
+    new_low, new_high, new_excluded = _bounds(new.specifier)
+    return (
+        (new_low is not None and (old_low is None or new_low > old_low))
+        or (new_high is not None and (old_high is None or new_high < old_high))
+        or bool(new_excluded - old_excluded)
+    )
 
 
 def _changed_operations(
@@ -483,10 +536,13 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
             breaking.append(
                 (f"- New required dependency, `{change['after']}`", package)
             )
-        elif change["after"] is not None:
+        elif change["after"] is not None and _narrowed(
+            change["before"], change["after"]
+        ):
             breaking.append(
                 (
-                    f"- Dependency floor raised, `{change['before']}` to `{change['after']}`",
+                    f"- Dependency requirement narrowed, `{change['before']}` "
+                    f"to `{change['after']}`",
                     package,
                 )
             )

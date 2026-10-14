@@ -386,8 +386,9 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   warnings as errors. To build from the committed tree only, run
   `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`.
 - `make release-notes` (`SINCE=<ref>`): lists the API surface changes since
-  a ref (default: the newest tag with a surface record), field and enum level
-  included. `make check-changelog` fails when a breaking change in that list
+  a ref (default: the highest-versioned earlier release tag reachable from
+  HEAD that has a surface record), field and enum level
+  included. An unknown `SINCE` ref fails. `make check-changelog` fails when a breaking change in that list
   has no mention in `CHANGELOG.md`'s Unreleased section; CI runs it on every
   pull request against the merge base.
 - `make impact-report` (`SINCE=<ref>`, `CHECKS=0`): run by hand after a

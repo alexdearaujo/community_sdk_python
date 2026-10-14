@@ -76,10 +76,10 @@ lint: ## Run linter and formatter (Ruff)
 check-specs: ## Validate FR/SC/task cross-references in specs/
 	$(PYTHON) scripts/check_spec_refs.py
 
-release-notes: ## Render release notes from api_surface.json (SINCE=<ref>, default: latest tag)
+release-notes: ## Render release notes from api_surface.json (SINCE=<ref>, default: previous release tag)
 	uv run python scripts/release_notes.py $(if $(SINCE),--since $(SINCE),) $(if $(OUT),-o $(OUT),)
 
-check-changelog: ## Fail if CHANGELOG.md misses a breaking surface change (SINCE=<ref>, default: latest tag)
+check-changelog: ## Fail if CHANGELOG.md misses a breaking surface change (SINCE=<ref>, default: previous release tag)
 	uv run python scripts/release_notes.py --check-changelog $(if $(SINCE),--since $(SINCE),)
 
 impact-report: ## Report what the last regeneration changed (SINCE=<ref>, default: HEAD; CHECKS=0 skips tests)

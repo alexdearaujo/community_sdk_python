@@ -114,6 +114,61 @@ def test_surface_breaking_changes_include_operation_signature_breaks(tmp_path):
     )
 
 
+def test_unknown_since_ref_fails_with_a_clear_message(monkeypatch):
+    monkeypatch.setattr(
+        "sys.argv",
+        ["release_notes.py", "--check-changelog", "--since", "no-such-ref-p6"],
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        release_notes.main()
+
+    assert "`no-such-ref-p6` does not name a commit" in str(exc.value.code)
+
+
+def _fake_git(head_tags: list[str], merged: list[str]):
+    def git(*args: str) -> str:
+        if args == ("tag", "--points-at", "HEAD"):
+            return "\n".join(head_tags)
+        if args == ("tag", "--merged", "HEAD"):
+            return "\n".join(merged)
+        raise AssertionError(f"unexpected git call: {args}")
+
+    return git
+
+
+@pytest.mark.parametrize(
+    ("head_tags", "merged", "expected"),
+    [
+        # Version order, not tag date or name order.
+        ([], ["v1.0.9", "v1.0.10", "v1.0.2"], ["v1.0.10", "v1.0.9", "v1.0.2"]),
+        # A release skips its own tag. Unmerged newer tags never appear because
+        # `git tag --merged HEAD` already leaves them out.
+        (["v1.0.8"], ["v1.0.7", "v1.0.8"], ["v1.0.7"]),
+        # A final release skips its own pre-releases.
+        (["v1.1.0"], ["v1.0.7", "v1.1.0rc1", "v1.1.0"], ["v1.0.7"]),
+        # A pre-release may compare against an earlier pre-release.
+        (["v1.1.0rc2"], ["v1.0.7", "v1.1.0rc1", "v1.1.0rc2"], ["v1.1.0rc1", "v1.0.7"]),
+        # Tags that are not versions are ignored.
+        ([], ["nightly", "v1.0.7"], ["v1.0.7"]),
+    ],
+)
+def test_default_baseline_candidates(monkeypatch, head_tags, merged, expected):
+    monkeypatch.setattr(release_notes, "_git", _fake_git(head_tags, merged))
+
+    assert release_notes._earlier_releases_newest_first() == expected
+
+
+def test_default_baseline_skips_releases_without_a_record(monkeypatch):
+    monkeypatch.setattr(
+        release_notes, "_git", _fake_git([], ["v1.0.6", "v1.0.7", "v1.0.8"])
+    )
+    records = {"v1.0.7": {"services": {}}}
+    monkeypatch.setattr(release_notes.api_surface, "recorded_at", records.get)
+
+    assert release_notes._default_baseline() == ("v1.0.7", {"services": {}})
+
+
 def test_check_changelog_rejects_substring_only_mentions(tmp_path, monkeypatch, capsys):
     delta = release_notes.api_surface.diff(
         {
