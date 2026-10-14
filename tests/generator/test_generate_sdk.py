@@ -24,8 +24,8 @@ if str(_scripts_dir) not in sys.path:
     sys.path.insert(0, str(_scripts_dir))
 
 from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
-    _pb_stem,
     _fix_module_level_classvar,
+    _pb_stem,
     _proto_collisions,
     _qualify_colliding_imports,
     _rewrite_grpc_imports,
