@@ -2,7 +2,7 @@
 name = "kentik-api"
 dynamic = ["version"]
 description = "The modern Python SDK for the Kentik API v6"
-readme = "README.md"
+readme = "README.pypi.md"
 requires-python = ">=3.12"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
@@ -50,6 +50,7 @@ include = [
     "/src/kentik_api",
     "/tests",
     "/README.md",
+    "/README.pypi.md",
     "/LICENSE",
     "/CHANGELOG.md",
     "/pyproject.toml",

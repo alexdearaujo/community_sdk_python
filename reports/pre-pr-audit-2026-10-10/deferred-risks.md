@@ -59,8 +59,8 @@ This ledger records findings that are intentionally deferred.
 | T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K1 | release or docs | dist/ is local build output; the owner deletes it. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| K2 | release or docs | Trusted publishing needs PyPI-side setup. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| K2 | release or docs | Publishing keeps the legacy SDK's `PYPI_TOKEN` setup until the PR is accepted and a release validates it; the owner of the PyPI project and token is not yet known. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | unknown (under investigation) | Revisit once the PyPI owner is found and the first 2.0.0 release has run. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K8 | release or docs | Needs a clean-venv wheel job in CI. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D1 | release or docs | Generator must run extract() on the patched swagger. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D2 | release or docs | Generator example snippets need import fixes. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -199,3 +199,14 @@ This ledger records findings that are intentionally deferred.
 - L11 is resolved (2026-10-13). fixup tests for `pb` and `error` against the
   path parts below the service directory, so a checkout under a directory
   with either name no longer skips every fixup. 27 entries remain open.
+- K2 stays open (2026-10-14), by decision. `release.yml` already publishes
+  the way the legacy SDK's workflow does: on a published GitHub release, with
+  the `PYPI_TOKEN` secret. It keeps that setup until the PR is accepted and a
+  release validates it. Trusted publishing needs the PyPI project owner, who
+  is not yet known. The other K2 parts (`needs: publish`, the tag version
+  gate, the pre-release rule) are already in place.
+- K3 is resolved (2026-10-14). The package metadata now renders
+  `README.pypi.md`, a short README with absolute links only. A packaging test
+  fails on any relative link in it, or if the sdist leaves it out. The
+  repository `README.md` is unchanged. A docs site is not part of this fix.
+  26 entries remain open.
