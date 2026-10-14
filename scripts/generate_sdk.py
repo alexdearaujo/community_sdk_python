@@ -9,6 +9,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -41,22 +42,25 @@ def run_cmd(cmd: list[str]):
 def openapi_generator_cmd(swagger_path: Path, out_dir: Path) -> list[str]:
     """Builds the openapi generator command with optional fork and template overrides.
 
-    Environment variables:
+    By default it runs the version `uv.lock` pins, from this environment.
+
+    Environment variables (either one switches to `uvx`, for testing a fork):
     - OPENAPI_GENERATOR_FROM: uvx --from source, e.g. git+https://github.com/<org>/<repo>.git
     - OPENAPI_GENERATOR_CMD: executable name, defaults to openapi-python-generator
     """
     generator_from = os.getenv("OPENAPI_GENERATOR_FROM", "").strip()
-    generator_cmd = os.getenv(
-        "OPENAPI_GENERATOR_CMD", DEFAULT_OPENAPI_GENERATOR
-    ).strip()
+    generator_cmd = os.getenv("OPENAPI_GENERATOR_CMD", "").strip()
 
-    cmd = ["uvx"]
-    if generator_from:
-        cmd.extend(["--from", generator_from])
+    if generator_from or generator_cmd:
+        cmd = ["uvx"]
+        if generator_from:
+            cmd.extend(["--from", generator_from])
+        cmd.append(generator_cmd or DEFAULT_OPENAPI_GENERATOR)
+    else:
+        cmd = [sys.executable, "-m", "openapi_python_generator"]
 
     cmd.extend(
         [
-            generator_cmd,
             str(swagger_path),
             str(out_dir),
             "--library",
@@ -568,11 +572,7 @@ def _compile_proto_companions(schema_root: Path) -> None:
         "protoc-gen-openapiv2/options/openapiv2.proto",
     ]
     cmd = [
-        "uv",
-        "run",
-        "--with",
-        "grpcio-tools",
-        "python",
+        sys.executable,
         "-m",
         "grpc_tools.protoc",
         f"-I{vendor_path}",
@@ -704,11 +704,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
 
                             # Add the vendored paths to the protoc Include (-I) arguments
                             cmd = [
-                                "uv",
-                                "run",
-                                "--with",
-                                "grpcio-tools",
-                                "python",
+                                sys.executable,
                                 "-m",
                                 "grpc_tools.protoc",
                                 f"-I{proto_base}",

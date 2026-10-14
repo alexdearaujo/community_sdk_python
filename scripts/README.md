@@ -61,6 +61,9 @@ the full regeneration workflow.
 | [`make clean`](../Makefile) | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
 
 > [!NOTE]
+> Generation runs `openapi-python-generator` and `grpcio-tools` at the
+> versions `uv.lock` pins, from the project environment. To change either,
+> edit its `==` pin in the `dev` group and regenerate.
 > Two environment variables let you test a forked
 > `openapi-python-generator` build without editing this script:
 > `OPENAPI_GENERATOR_FROM` (a `uvx --from` source, for example

@@ -34,11 +34,37 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     hoist_inline_request_bodies,
     inline_request_body_refs,
     oneof_members_by_definition,
+    openapi_generator_cmd,
     patched_swagger,
     relax_oneof_required,
     relax_response_message_required,
 )
 from google.protobuf import descriptor_pb2  # noqa: E402
+
+
+def test_generator_runs_from_the_locked_environment_by_default(monkeypatch):
+    monkeypatch.delenv("OPENAPI_GENERATOR_FROM", raising=False)
+    monkeypatch.delenv("OPENAPI_GENERATOR_CMD", raising=False)
+
+    cmd = openapi_generator_cmd(Path("in.json"), Path("out"))
+
+    assert cmd[:4] == [sys.executable, "-m", "openapi_python_generator", "in.json"]
+
+
+def test_a_fork_source_runs_through_uvx(monkeypatch):
+    monkeypatch.setenv("OPENAPI_GENERATOR_FROM", "git+https://example.invalid/fork.git")
+    monkeypatch.delenv("OPENAPI_GENERATOR_CMD", raising=False)
+
+    cmd = openapi_generator_cmd(Path("in.json"), Path("out"))
+
+    assert cmd[:5] == [
+        "uvx",
+        "--from",
+        "git+https://example.invalid/fork.git",
+        "openapi-python-generator",
+        "in.json",
+    ]
+
 
 # ---------------------------------------------------------------------------
 # _rewrite_grpc_imports: three protoc output styles

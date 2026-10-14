@@ -67,6 +67,7 @@ dev = [
     "types-protobuf>=6.30.0",
     "ty>=0.0.73",
     "ruff==0.14.11",
+    "openapi-python-generator==2.1.2",
 ]
 
 test = [
