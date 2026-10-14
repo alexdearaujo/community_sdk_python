@@ -121,6 +121,18 @@ def validate_generated_service_parity(
 _REQUIRED_TOP_LEVEL_KEYS = ("paths", "info")
 
 
+def validate_selected_services_or_raise(
+    source_services: set[str], selected_services: set[str]
+) -> None:
+    """Fails before the wipe on a service that the post-run parity check would reject."""
+    empty = sorted(source_services - selected_services)
+    if empty:
+        raise RuntimeError(
+            "Schema service directories without a swagger file: "
+            f"{', '.join(empty)}. Generation would drop these services."
+        )
+
+
 def validate_schema_files(swagger_paths: list[Path]) -> list[SchemaValidationFailure]:
     """Checks each swagger file parses as JSON and has the expected top-level keys.
 

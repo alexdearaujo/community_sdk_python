@@ -13,6 +13,7 @@ from scripts.generation.parity import (
     validate_generated_service_parity,
     validate_schema_files,
     validate_schema_files_or_raise,
+    validate_selected_services_or_raise,
 )
 
 
@@ -168,6 +169,22 @@ def test_validate_schema_files_reports_all_failures_before_raising(
 def test_validate_schema_files_or_raise_rejects_empty_selection():
     with pytest.raises(RuntimeError, match="No swagger files selected"):
         validate_schema_files_or_raise([])
+
+
+def test_a_service_whose_swagger_files_were_renamed_away_fails_before_the_wipe(
+    tmp_path: Path,
+):
+    _write_swagger(tmp_path, "device", "v202308", "device.swagger.json")
+    (tmp_path / "user" / "v202211").mkdir(parents=True)
+    (tmp_path / "user" / "v202211" / "user.openapi.json").write_text("{}")
+    selected, _, _ = select_latest_swagger_files_by_service(tmp_path)
+
+    with pytest.raises(RuntimeError, match="without a swagger file: user"):
+        validate_selected_services_or_raise({"device", "user"}, set(selected))
+
+
+def test_every_service_with_a_swagger_file_passes_the_pre_wipe_check():
+    validate_selected_services_or_raise({"device"}, {"device"})
 
 
 def test_generate_modular_sdk_protoc_failure_handler_reraises():

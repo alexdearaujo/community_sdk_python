@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -42,6 +43,7 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     read_schema_pin,
     relax_oneof_required,
     relax_response_message_required,
+    restored_on_failure,
 )
 from google.protobuf import descriptor_pb2  # noqa: E402
 
@@ -606,8 +608,11 @@ def _function_by_name(source: str, name: str) -> ast.FunctionDef | None:
     )
 
 
-def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir():
-    """The corrupted-checkout gate must run before SDK_OUTPUT_DIR is touched.
+@pytest.mark.parametrize(
+    "check", ["validate_schema_files_or_raise", "validate_selected_services_or_raise"]
+)
+def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir(check):
+    """The corrupted-checkout gates must run before SDK_OUTPUT_DIR is touched.
 
     Regression test: an earlier version of this gate ran *after* the
     "Cleaning old modules" step, so a validation failure still left
@@ -627,15 +632,15 @@ def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir():
         if not isinstance(node, ast.Call):
             continue
         call_repr = ast.unparse(node.func)
-        if call_repr.endswith("validate_schema_files_or_raise"):
+        if call_repr.endswith(check):
             validate_lines.append(node.lineno)
         elif call_repr.endswith("rmtree"):
             rmtree_lines.append(node.lineno)
 
-    assert validate_lines, "validate_schema_files_or_raise(...) call not found"
+    assert validate_lines, f"{check}(...) call not found"
     assert rmtree_lines, "shutil.rmtree(...) call not found"
     assert max(validate_lines) < min(rmtree_lines), (
-        "validate_schema_files_or_raise() must run before shutil.rmtree() "
+        f"{check}() must run before shutil.rmtree() "
         "cleans SDK_OUTPUT_DIR, so a validation failure never leaves "
         "generated output partially wiped"
     )
@@ -780,3 +785,50 @@ def test_a_ref_with_a_local_schema_is_rejected(tmp_path):
     with pytest.raises(ValueError, match="remote repository only"):
         with get_schema_root(str(tmp_path), "HEAD"):
             pass
+
+
+# ---------------------------------------------------------------------------
+# restored_on_failure: a failed run leaves the previous output in place
+# ---------------------------------------------------------------------------
+
+
+def _outputs(tmp_path: Path) -> tuple[Path, Path, Path]:
+    gen = tmp_path / "gen"
+    (gen / "device").mkdir(parents=True)
+    (gen / "device" / "wrapper.py").write_text("old", encoding="utf-8")
+    mixin = tmp_path / "client_mixin.py"
+    mixin.write_text("old", encoding="utf-8")
+    return gen, mixin, tmp_path / "schema.lock"
+
+
+def _half_build(gen: Path, mixin: Path, pin: Path) -> None:
+    shutil.rmtree(gen)
+    (gen / "user").mkdir(parents=True)
+    mixin.write_text("new", encoding="utf-8")
+    pin.write_text("new", encoding="utf-8")
+
+
+@pytest.mark.parametrize("error", [RuntimeError, KeyboardInterrupt])
+def test_a_failed_run_restores_every_output(tmp_path, error):
+    gen, mixin, pin = _outputs(tmp_path)
+
+    with pytest.raises(error):
+        with restored_on_failure((gen, mixin, pin)):
+            _half_build(gen, mixin, pin)
+            raise error
+
+    assert sorted(p.name for p in gen.iterdir()) == ["device"]
+    assert (gen / "device" / "wrapper.py").read_text() == "old"
+    assert mixin.read_text() == "old"
+    assert not pin.exists()
+
+
+def test_a_completed_run_keeps_the_new_output(tmp_path):
+    gen, mixin, pin = _outputs(tmp_path)
+
+    with restored_on_failure((gen, mixin, pin)):
+        _half_build(gen, mixin, pin)
+
+    assert sorted(p.name for p in gen.iterdir()) == ["user"]
+    assert mixin.read_text() == "new"
+    assert pin.read_text() == "new"

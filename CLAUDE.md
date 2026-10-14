@@ -315,6 +315,9 @@ so no generator can currently act on it.
   create pull requests, and each of its pull requests needs a close and
   reopen to start CI (see "Automated update pull requests" in
   `docs/sphinx/guides/generation.md`).
+- A run that fails or is interrupted puts every generated output back
+  as it was (`restored_on_failure()` around `generate_modular_sdk()`).
+  Only a hard kill can leave a half-built tree; `git checkout` fixes it.
 - The generator uses only the newest version per swagger family (see
   CONTEXT.md) when multiple versioned swagger files exist.
 - See `docs/sphinx/local_generation_workflow.md` for full details,

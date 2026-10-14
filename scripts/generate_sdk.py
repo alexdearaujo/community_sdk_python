@@ -25,7 +25,7 @@ from generation._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
 )
-from generation.endpoint_docs import EndpointDocsCollector
+from generation.endpoint_docs import SCHEMA_RECORD_FILE, EndpointDocsCollector
 from google.protobuf import descriptor_pb2
 
 # Configuration
@@ -650,6 +650,44 @@ def _compile_proto_companions(schema_root: Path) -> None:
         print(f"    ❌ Proto companion compilation failed: {e.stderr or e.stdout}")
 
 
+# Everything a run rewrites. A failed run puts all of it back, so a half-built
+# gen/ never sits next to a client_mixin.py that imports the old one.
+GENERATED_PATHS = (
+    SDK_OUTPUT_DIR,
+    PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py",
+    PROJECT_ROOT / "docs" / "sphinx",
+    api_surface.SURFACE_FILE,
+    SCHEMA_RECORD_FILE,
+    SCHEMA_PIN,
+)
+
+
+@contextlib.contextmanager
+def restored_on_failure(paths: tuple[Path, ...]):
+    """Puts each path back as it was when the body raises, Ctrl-C included."""
+    with TemporaryDirectory() as tmp:
+        saved: list[tuple[Path, Path | None]] = []
+        for n, path in enumerate(paths):
+            copy = Path(tmp) / str(n)
+            if path.is_dir():
+                shutil.copytree(path, copy, symlinks=True)
+            elif path.exists():
+                shutil.copy2(path, copy)
+            saved.append((path, copy if path.exists() else None))
+        try:
+            yield
+        except BaseException:
+            for path, copy in saved:
+                if path.is_dir() and not path.is_symlink():
+                    shutil.rmtree(path)
+                else:
+                    path.unlink(missing_ok=True)
+                if copy is not None:
+                    shutil.move(copy, path)
+            print("\n↩️ Generation failed; restored the previous generated output.")
+            raise
+
+
 def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None):
     with get_schema_root(repo_source, schema_ref) as (schema_root, schema_commit):
         # Define base paths using the yielded root
@@ -682,6 +720,9 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                 for service_files in selected_swagger_files.values()
                 for metadata in service_files
             ]
+        )
+        parity.validate_selected_services_or_raise(
+            source_services, set(selected_swagger_files)
         )
 
         # Setup directories (only now, once the schema checkout is known-good)
@@ -992,4 +1033,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    generate_modular_sdk(args.local_repo, args.schema_ref)
+    with restored_on_failure(GENERATED_PATHS):
+        generate_modular_sdk(args.local_repo, args.schema_ref)
