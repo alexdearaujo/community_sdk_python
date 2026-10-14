@@ -126,6 +126,17 @@ def test_unknown_since_ref_fails_with_a_clear_message(monkeypatch):
     assert "`no-such-ref-p6` does not name a commit" in str(exc.value.code)
 
 
+def test_ref_without_a_record_passes_and_explains_why(monkeypatch, capsys):
+    monkeypatch.setattr(
+        "sys.argv", ["release_notes.py", "--check-changelog", "--since", "HEAD"]
+    )
+    monkeypatch.setattr(release_notes.api_surface, "recorded_at", lambda ref: None)
+
+    release_notes.main()
+
+    assert release_notes.NO_RECORD_REASON in capsys.readouterr().err
+
+
 def _fake_git(head_tags: list[str], merged: list[str]):
     def git(*args: str) -> str:
         if args == ("tag", "--points-at", "HEAD"):

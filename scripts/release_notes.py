@@ -33,6 +33,12 @@ from generation._shared import PROJECT_ROOT  # noqa: E402
 
 SURFACE_RELPATH = "api_surface.json"
 CHANGELOG = PROJECT_ROOT / "CHANGELOG.md"
+NO_RECORD_REASON = (
+    "Surface records start with the V6 rewrite. That rewrite replaces the "
+    "unmaintained kentik-api 1.x completely, so it starts from scratch: no "
+    "earlier revision has a record to compare with. CHANGELOG.md's Unreleased "
+    "section and docs/sphinx/guides/migrating-from-1x.md describe the change."
+)
 
 
 def _git(*args: str) -> str:
@@ -168,8 +174,8 @@ def main() -> None:
         if baseline is None:
             # Nothing to compare yet, which is not a missing CHANGELOG entry.
             print(
-                f"No surface record at `{args.since or 'any tag'}`, so there is "
-                "nothing to check.",
+                f"No surface record at `{args.since or 'any release tag'}`, so "
+                f"there is nothing to check.\n{NO_RECORD_REASON}",
                 file=sys.stderr,
             )
             return
@@ -195,6 +201,7 @@ def main() -> None:
         print(
             "No tagged release carries a surface record yet, so there is no "
             "baseline to diff against. Showing the current surface instead.\n"
+            f"{NO_RECORD_REASON}\n"
             "Future releases will produce a change list automatically.",
             file=sys.stderr,
         )
