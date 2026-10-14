@@ -216,6 +216,19 @@ def test_grpc_error_carries_quota_from_initial_metadata(rpc_error):
     assert rate_limit.remaining == 0
 
 
+def test_grpc_error_reads_quota_from_trailers_only_responses(rpc_error):
+    # A gRPC error with no body is "Trailers-Only": every header arrives as
+    # trailing metadata, and the initial metadata is empty.
+    error = rpc_error(grpc.StatusCode.RESOURCE_EXHAUSTED, "slow down")
+    error.initial_metadata = lambda: ()
+    error.trailing_metadata = lambda: [("x-ratelimit-remaining", "0")]
+
+    rate_limit = rate_limit_of_rpc(error)
+
+    assert rate_limit is not None
+    assert rate_limit.remaining == 0
+
+
 def _details(method="/svc.Service/Op"):
     return SimpleNamespace(
         method=method,

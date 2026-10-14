@@ -116,6 +116,16 @@ by a number. The Service word stays when it is the object of the call
 
 ### Fixed
 
+- **gRPC errors keep the server's error details.** gRPC dropped the
+  `google.rpc.Status` that the server sends in a trailer, so a `BadRequest`
+  did not say which field it rejected. It is now decoded into
+  `exc.details["rpc_status"]`. On REST, `exc.details["rpc_status"]` kept only
+  each detail's `@type`, and renamed it `type`. It now holds the full JSON
+  body. Both transports give the same dict.
+- **gRPC errors report quota from a trailers-only response.** An error with no
+  body sends every header as trailing metadata, and the SDK read quota only
+  from initial metadata, so a `429` on gRPC could carry no `rate_limit`. Both
+  are now read.
 - **A space in a REST query value goes out as `%20`.** httpx wrote it as `+`,
   which Envoy's gRPC transcoder does not decode by default, so a value such as
   a journeys `prompt` could reach the service with plus signs. `%20` means a

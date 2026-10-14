@@ -114,13 +114,17 @@ class RateLimit:
 def rate_limit_of_rpc(call_or_error: object) -> RateLimit | None:
     """Reads quota off a grpc.Call or a failed call's RpcError.
 
-    Kentik sends it in initial metadata; trailing metadata was measured empty.
+    Kentik sends it in initial metadata. An error with no body is sent
+    "Trailers-Only", which puts every header in the trailing metadata instead.
     """
-    try:
-        metadata = call_or_error.initial_metadata()  # ty: ignore[unresolved-attribute]
-    except Exception:
-        return None
-    return RateLimit.from_metadata(metadata)
+    for getter in ("initial_metadata", "trailing_metadata"):
+        try:
+            metadata = getattr(call_or_error, getter)()
+        except Exception:
+            continue
+        if (rate_limit := RateLimit.from_metadata(metadata)) is not None:
+            return rate_limit
+    return None
 
 
 def attach_rate_limit[T](result: T, rate_limit: RateLimit | None) -> T:

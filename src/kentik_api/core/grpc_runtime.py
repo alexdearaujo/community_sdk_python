@@ -5,10 +5,14 @@ Every generated gRPC wrapper method routes through call_grpc so error
 handling, status-code mapping, and transport failures stay in one place.
 """
 
-from typing import Any
+from collections.abc import Iterable
+from typing import Any, cast
 
 import grpc
-from google.protobuf.json_format import ParseDict, ParseError
+from google.protobuf.json_format import MessageToDict, ParseDict, ParseError
+from google.protobuf.message import DecodeError
+from google.rpc import error_details_pb2 as _error_details_pb2  # noqa: F401  registers the standard detail types
+from google.rpc import status_pb2
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
@@ -47,6 +51,31 @@ _NO_RESPONSE_CODES: frozenset[grpc.StatusCode] = frozenset(
     }
 )
 
+_STATUS_DETAILS_KEY = "grpc-status-details-bin"
+
+
+def _rpc_status(exc: grpc.RpcError) -> dict[str, Any] | None:
+    """The google.rpc.Status a server sent, in the JSON form REST's error body has."""
+    try:
+        trailers = cast(
+            Iterable[tuple[str, Any]],
+            exc.trailing_metadata() or (),  # ty: ignore[unresolved-attribute]
+        )
+        raw = next((v for k, v in trailers if k == _STATUS_DETAILS_KEY), None)
+        if not isinstance(raw, bytes):
+            return None
+        status = status_pb2.Status.FromString(raw)
+    except (AttributeError, DecodeError, TypeError, ValueError):
+        return None
+    details = []
+    for detail in status.details:
+        try:
+            details.append(MessageToDict(detail))
+        except (KeyError, TypeError):
+            # A detail type this process has no descriptor for.
+            details.append({"@type": detail.type_url})
+    return {"code": status.code, "message": status.message, "details": details}
+
 
 def map_grpc_error(
     exc: grpc.RpcError,
@@ -80,11 +109,15 @@ def map_grpc_error(
         return TransportError(
             f"{method} {path} failed with unrecognized gRPC status {code_name}: {details}"
         )
+    status = _rpc_status(exc)
     return HTTPException(
         status_code=http_status,
         message=details,
         method=method,
         path=path,
+        details=None
+        if status is None
+        else {"rpc_status": status, "rpc_status_code": status["code"]},
         grpc_status_code=code_name,
     )
 

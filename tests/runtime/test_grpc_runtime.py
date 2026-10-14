@@ -50,6 +50,56 @@ def test_unauthenticated_raises_auth_error(rpc_error):
     assert "bad token" in str(result)
 
 
+def test_google_rpc_status_details_reach_the_error(rpc_error):
+    # REST returns these details in the JSON error body; gRPC sends them in a trailer.
+    from google.protobuf.any_pb2 import Any as AnyMessage
+    from google.rpc import error_details_pb2, status_pb2
+
+    violation = error_details_pb2.BadRequest(
+        field_violations=[{"field": "device.name", "description": "required"}]
+    )
+    known, unknown = AnyMessage(), AnyMessage(type_url="type.googleapis.com/x.Y")
+    known.Pack(violation)
+    status = status_pb2.Status(code=3, message="bad", details=[known, unknown])
+    error = rpc_error(grpc.StatusCode.INVALID_ARGUMENT, "bad")
+    error.trailing_metadata = lambda: [
+        ("grpc-status-details-bin", status.SerializeToString())
+    ]
+
+    result = map_grpc_error(error)
+
+    assert isinstance(result, HTTPException)
+    assert result.details["rpc_status"] == {
+        "code": 3,
+        "message": "bad",
+        "details": [
+            {
+                "@type": "type.googleapis.com/google.rpc.BadRequest",
+                "fieldViolations": [
+                    {"field": "device.name", "description": "required"}
+                ],
+            },
+            {"@type": "type.googleapis.com/x.Y"},
+        ],
+    }
+    assert result.details["rpc_status_code"] == 3
+
+
+@pytest.mark.parametrize(
+    "trailers",
+    [None, [], [("grpc-status-details-bin", b"\xff\xff")]],
+    ids=["none", "empty", "corrupt"],
+)
+def test_missing_or_corrupt_status_details_leave_details_empty(rpc_error, trailers):
+    error = rpc_error(grpc.StatusCode.INVALID_ARGUMENT, "bad")
+    error.trailing_metadata = lambda: trailers
+
+    result = map_grpc_error(error)
+
+    assert isinstance(result, HTTPException)
+    assert result.details == {}
+
+
 @pytest.mark.parametrize(
     ("code", "http_status"), HTTP_MAPPED.items(), ids=lambda v: str(v)
 )

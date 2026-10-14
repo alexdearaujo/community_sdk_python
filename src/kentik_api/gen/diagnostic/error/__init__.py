@@ -40,7 +40,7 @@ class DiagnosticError(HTTPException):
             except Exception:
                 status = None
             if status is not None:
-                details["rpc_status"] = status.model_dump()
+                details["rpc_status"] = payload
                 if status.code is not None:
                     details["rpc_status_code"] = status.code
                 if status.message:

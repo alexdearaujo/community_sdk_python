@@ -196,7 +196,8 @@ def generate_service_error_package(
                 "            except Exception:",
                 "                status = None",
                 "            if status is not None:",
-                '                details["rpc_status"] = status.model_dump()',
+                # The JSON itself, as gRPC reports it: the model keeps only each detail's @type.
+                '                details["rpc_status"] = payload',
                 "                if status.code is not None:",
                 '                    details["rpc_status_code"] = status.code',
                 "                if status.message:",

@@ -75,6 +75,11 @@ except KentikError as exc:
     print(f"Other SDK error: {exc}")
 ```
 
+When the server explains an error with a `google.rpc.Status`, such as the
+fields a `BadRequest` rejects, `exc.details["rpc_status"]` holds it on either
+transport, with `code`, `message`, and `details`. Each entry in `details` names
+its type in `@type`.
+
 ## gRPC status codes
 
 [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) classifies every
