@@ -830,6 +830,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
     wrapper_generation.generate()
     docs_rendering.generate()
     endpoint_docs_collector.render()
+    endpoint_docs_collector.write_record()
 
     print("\nFinal formatting pass for generated code...")
     run_cmd(

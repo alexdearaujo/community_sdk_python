@@ -56,7 +56,7 @@ This ledger records findings that are intentionally deferred.
 | T2 | test gap | In-process grpc.server success-path test. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T3 | test gap | Needs gRPC routes recorded in api_surface.json. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T4 | test gap | Needs the real request builder run on populated bodies. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
-| T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | K1 | release or docs | dist/ is local build output; the owner deletes it. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K2 | release or docs | Publishing keeps the legacy SDK's `PYPI_TOKEN` setup until the PR is accepted and a release validates it; the owner of the PyPI project and token is not yet known. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | unknown (under investigation) | Revisit once the PyPI owner is found and the first 2.0.0 release has run. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
@@ -265,3 +265,11 @@ This ledger records findings that are intentionally deferred.
   routed call must reach the recorded RPC. A wrapper without gRPC code must
   have no `pb` stubs. Breaking the `get_device` route fails both tests. 18
   entries remain open.
+- T7 is resolved (2026-10-14). `make generate` writes
+  `schema_operations.json` from the patched swagger: each operation's
+  operationId, parameters, body, and response codes (234 operations in 42
+  services). CI's drift check keeps it in step with the schema.
+  `test_schema_operations.py` holds the generated REST modules to it without a
+  schema checkout, and replaces the test that always skipped in CI. A dropped
+  query argument and a dropped body both fail it. The respx routes still match
+  on method and path only. 17 entries remain open.

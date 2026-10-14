@@ -27,6 +27,7 @@ from ._shared import (
 )
 
 MD_FENCE = "`" * 3
+SCHEMA_RECORD_FILE = PROJECT_ROOT / "schema_operations.json"
 
 
 def _provenance(writer: FunctionType) -> str:
@@ -927,6 +928,27 @@ class EndpointDocsCollector:
 
     def extract(self, service: str, swagger_path: Path) -> None:
         self._docs.setdefault(service, []).extend(extract_endpoint_docs(swagger_path))
+
+    def write_record(self, path: Path = SCHEMA_RECORD_FILE) -> Path:
+        """Writes each service's operations as the swagger declares them.
+
+        Read straight from the schema, not from generated code, so a test can
+        hold the generated modules to it without a schema checkout.
+        """
+        record = {
+            service: {
+                f"{doc.method} {doc.path}": {
+                    "operation": doc.operation_id,
+                    "params": sorted(param.name for param in doc.parameters),
+                    "body": doc.request_body is not None,
+                    "responses": sorted(resp.status for resp in doc.responses),
+                }
+                for doc in sorted(docs, key=lambda d: (d.path, d.method))
+            }
+            for service, docs in sorted(self._docs.items())
+        }
+        path.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        return path
 
     def render(self) -> None:
         render_endpoint_docs(self._docs)

@@ -49,6 +49,9 @@ repo.
   architecture page, with an inline Mermaid dependency graph
 - `docs/sphinx/services/<service>.md` — one reference page per
   service, written by `endpoint_docs.EndpointDocsCollector.render()`
+- `schema_operations.json` — each service's operations as the patched
+  swagger declares them, written by
+  `EndpointDocsCollector.write_record()`
 - the `<!-- kentik-gen:... -->` marker blocks inside
   `docs/sphinx/guides/{quickstart,rest,grpc,generation}.md` and
   `docs/sphinx/README.md` — rewritten by
@@ -413,6 +416,11 @@ Mocked/offline layers (no network, safe to run anywhere, part of
   tests root, not inside one layer, since `tests/e2e/` imports it
   too). Every generated and e2e test file imports these helpers, so
   they can't drift apart.
+- `tests/generated/test_schema_operations.py` — holds the generated
+  REST modules to `schema_operations.json`: the same operations, a
+  `data` argument wherever the swagger has a body, an argument for
+  each swagger parameter, and a declared success status. Runs
+  without a schema checkout.
 - `tests/runtime/test_rest_runtime.py` — shared request/auth/error
   behavior in `src/kentik_api/core`.
 - `tests/smoke/test_client_mounts_and_calls.py` — lightweight
