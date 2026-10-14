@@ -61,7 +61,7 @@ This ledger records findings that are intentionally deferred.
 | K1 | release or docs | dist/ is local build output; the owner deletes it. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K2 | release or docs | Trusted publishing needs PyPI-side setup. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| K8 | release or docs | Needs a clean-venv wheel job in CI. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| K8 | release or docs | Needs a clean-venv wheel job in CI. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D1 | release or docs | Generator must run extract() on the patched swagger. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D2 | release or docs | Generator example snippets need import fixes. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D3 | release or docs | CLAUDE.md rewrite needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -191,3 +191,8 @@ This ledger records findings that are intentionally deferred.
 - D11 is resolved (2026-10-13). The spec 001 quickstart picks one file into
   `$target` before it truncates or restores, so a zsh redirect to a glob can
   no longer write to every device swagger version. 29 entries remain open.
+- K8 is resolved (2026-10-13). The `build` workflow installs the wheel into a
+  clean venv, runs from outside the checkout, imports every module (1317
+  today), and builds a gRPC client whose 36 mounted wrappers must all have
+  live stubs. Verified locally against a fresh `uv build`. 28 entries remain
+  open.
