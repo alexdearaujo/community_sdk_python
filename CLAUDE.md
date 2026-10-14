@@ -311,7 +311,10 @@ so no generator can currently act on it.
   local checkout with uncommitted changes to tracked files leaves the
   pin unchanged. The scheduled `schema-sync` workflow runs
   `make sync-schema` weekly and opens a pull request when the output
-  changes.
+  changes. It needs the repository setting that allows GitHub Actions to
+  create pull requests, and each of its pull requests needs a close and
+  reopen to start CI (see "Automated update pull requests" in
+  `docs/sphinx/guides/generation.md`).
 - The generator uses only the newest version per swagger family (see
   CONTEXT.md) when multiple versioned swagger files exist.
 - See `docs/sphinx/local_generation_workflow.md` for full details,
