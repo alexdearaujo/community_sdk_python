@@ -72,7 +72,8 @@ schema or with the schema from GitHub.
 
 `make generate` records the public API surface in
 [`api_surface.json`](../../../api_surface.json). The record holds every
-service, operation, model field, and enum value. At the end of the run, the
+service, operation, model field, and enum value, and the gRPC method each
+operation calls. At the end of the run, the
 generator compares the new record with the record committed at `HEAD`. It
 then prints one of three messages:
 

@@ -140,8 +140,9 @@ subpackage of independently testable phase modules (see
   `iter_service_dirs()` and `INTERNAL_GEN_DIRS` (the single answer to
   "is this directory a Service"), `discover_service_model_classes`,
   `service_to_pascal_case`, and the generated-source parsers
-  `parse_generated_rest_module` / `RestOperation` and
-  `parse_wrapper_methods` / `WrapperMethod`. Keep this list in step
+  `parse_generated_rest_module` / `RestOperation`,
+  `parse_wrapper_methods` / `WrapperMethod`, and `grpc_call` /
+  `grpc_stub_services` / `GrpcCall`. Keep this list in step
   with `scripts/generation/README.md`.
   Everything else stays local to the one phase module (or
   `generate_sdk.py` itself) that calls it. Resist the urge to move a

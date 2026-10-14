@@ -22,6 +22,7 @@ from _discovery import (
     proto_field,
     proto_sample_body,
     proto_sample_value,
+    recorded_grpc_route,
 )
 
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -64,7 +65,10 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
 ):
     module = importlib.import_module(case.module_path)
     if not hasattr(module, "build_grpc_request"):
-        pytest.skip("service has no gRPC stubs")
+        # A wrapper with no gRPC code is right only when nothing could route.
+        assert not (case.file_path.parents[1] / "pb").exists()
+        assert recorded_grpc_route(case) is None
+        return
     wrapper = _grpc_wrapper(module, case.wrapper_class)
     method = getattr(wrapper, case.method_name)
     kwargs = build_all_kwargs(method)
@@ -105,7 +109,12 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
         pass
     except NotImplementedError as exc:
         assert "not yet implemented" in str(exc)
+        assert recorded_grpc_route(case) is None, (
+            f"api_surface.json routes this method to {recorded_grpc_route(case)}"
+        )
         return
+
+    assert captured["rpc_path"].endswith(f".{recorded_grpc_route(case)}")
 
     request_descriptor = built["message_cls"].DESCRIPTOR
     # "/kentik.alerting.v202303.AlertAutoAckService/Delete"

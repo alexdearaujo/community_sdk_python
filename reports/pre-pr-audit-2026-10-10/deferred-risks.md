@@ -54,7 +54,7 @@ This ledger records findings that are intentionally deferred.
 | R16 | runtime | Generator does not hoist inline objects. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T2 | test gap | In-process grpc.server success-path test. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
-| T3 | test gap | Needs gRPC routes recorded in api_surface.json. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| T3 | test gap | Needs gRPC routes recorded in api_surface.json. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T4 | test gap | Needs the real request builder run on populated bodies. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
@@ -256,4 +256,12 @@ This ledger records findings that are intentionally deferred.
   `ParseDict`. The test checks that the body is the caller's data, at the root
   or under one field, and that every field it sends is set in the request.
   A dropped body and a body nested under the wrong field both fail it. 19
+  entries remain open.
+- T3 is resolved (2026-10-14). `api_surface.json` (schema version 5) records
+  the RPC each operation calls on gRPC, or `null`. All 234 operations route
+  today. A lost or moved route is a breaking change for
+  `make check-changelog`. The wrapper contract and request mapping tests
+  accept `NotImplementedError` only where the record has no route, and a
+  routed call must reach the recorded RPC. A wrapper without gRPC code must
+  have no `pb` stubs. Breaking the `get_device` route fails both tests. 18
   entries remain open.

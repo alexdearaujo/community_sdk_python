@@ -14,6 +14,7 @@ from _discovery import (
     discover_cases,
     print_case_result,
     print_case_start,
+    recorded_grpc_route,
 )
 
 from kentik_api.auth.credentials import KentikCredentials
@@ -195,7 +196,9 @@ def test_wrapper_raises_for_grpc_unimplemented(
             f"translation. See tests/generated/test_grpc_stub_wiring.py for the "
             f"underlying import error. Original message: {exc}"
         )
-        # Acceptable: this operation has no gRPC stub yet.
+        assert recorded_grpc_route(case) is None, (
+            f"api_surface.json routes this method to {recorded_grpc_route(case)}"
+        )
         assert not _grpc_was_called
         print_case_result(case, mode="grpc-not-implemented", result="PASS")
     except Exception:

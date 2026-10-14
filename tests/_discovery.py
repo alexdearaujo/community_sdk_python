@@ -15,8 +15,10 @@ of which subdirectory pytest is invoked against.
 from __future__ import annotations
 
 import ast
+import functools
 import importlib
 import inspect
+import json
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -58,6 +60,28 @@ def print_case_result(case: WrapperCase, mode: str, result: str) -> None:
 
 def generated_root() -> Path:
     return Path(__file__).resolve().parents[1] / "src" / "kentik_api" / "gen"
+
+
+@functools.cache
+def _recorded_routes() -> dict[tuple[str, str], str | None]:
+    surface = json.loads(
+        (Path(__file__).resolve().parents[1] / "api_surface.json").read_text("utf-8")
+    )
+    return {
+        (service, operation["method"]): operation.get("grpc")
+        for service, record in surface["services"].items()
+        for operation in record["operations"].values()
+    }
+
+
+def recorded_grpc_route(case: WrapperCase) -> str | None:
+    """The RPC api_surface.json records for this method; None means REST only.
+
+    Losing a route is a breaking change in that record, so a method may raise
+    NotImplementedError on gRPC only where the record says it has no route.
+    """
+    service = case.module_path.split(".")[2]
+    return _recorded_routes()[(service, case.method_name)]
 
 
 def _parse_wrapper_calls(file_path: Path) -> dict[str, tuple[str, str]]:

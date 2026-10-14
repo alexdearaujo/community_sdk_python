@@ -70,7 +70,9 @@ by a number. The Service word stays when it is the object of the call
 | `site` | `list_site_markets`, `get_site_market`, `create_site_market`, `update_site_market`, `delete_site_market` | `list_markets`, `get_market`, `create_market`, `update_market`, `delete_market` |
 
 `api_surface.json` now records the client method for each operation, so
-`make check-changelog` flags a renamed method as a breaking change.
+`make check-changelog` flags a renamed method as a breaking change. It also
+records the gRPC method each operation calls, so an operation that stops
+working over gRPC is a breaking change too.
 
 ### Added
 

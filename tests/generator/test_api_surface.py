@@ -194,6 +194,61 @@ def test_capture_reads_a_generated_tree(tmp_path: Path):
     assert operations["GET /demo/v1/{cid}/things"]["operation"] == "ListThings"
     assert operations["GET /demo/v1/{cid}/things"]["required_params"] == ["cid"]
     assert operations["GET /demo/v1/{cid}/things"]["method"] == "list_things"
+    assert operations["GET /demo/v1/{cid}/things"]["grpc"] is None
+
+
+def test_capture_records_the_rpc_each_wrapper_method_calls(tmp_path: Path):
+    service = tmp_path / "demo"
+    (service / "services").mkdir(parents=True)
+    (service / "services" / "DemoService.py").write_text(
+        "def ListThings() -> None:\n"
+        '    return request_json(method="get", path="/things", expected_status=200)\n'
+    )
+    (service / "services" / "demo.py").write_text(
+        "import kentik_api.gen.demo.services.DemoService as RestDemoModule1\n"
+        "class DemoServiceWrapper:\n"
+        "    def __init__(self, transport):\n"
+        "        self._grpc_stub_1 = pb2_grpc.DemoServiceStub(transport.channel)\n"
+        "    def list_things(self):\n"
+        "        if grpc:\n"
+        "            _req = build_grpc_request(self._grpc_pb2_1.ListThingsRequest, None, {})\n"
+        "            return call_grpc(self._grpc_stub_1.ListThings, _req)\n"
+        "        return RestDemoModule1.ListThings()\n"
+    )
+
+    surface = api_surface.capture(tmp_path)
+
+    operation = surface["services"]["demo"]["operations"]["GET /things"]
+    assert operation["grpc"] == "DemoService/ListThings"
+
+
+def _routed(route: str | None) -> dict:
+    surface = _surface({"demo": _service(["GET /thing"])})
+    surface["services"]["demo"]["operations"]["GET /thing"]["grpc"] = route
+    return surface
+
+
+def test_a_lost_grpc_route_is_breaking_and_a_new_one_is_not():
+    routed, unrouted = _routed("DemoService/Get"), _routed(None)
+
+    lost = api_surface.breaking_changes(api_surface.diff(routed, unrouted))
+    gained = api_surface.breaking_changes(api_surface.diff(unrouted, routed))
+
+    assert lost == [
+        (
+            "- `demo`: `GET /thing` no longer routes to gRPC `DemoService/Get`",
+            "DemoService/Get",
+        )
+    ]
+    assert gained == []
+    assert "`GET /thing` routes to gRPC `DemoService/Get`" in _render(unrouted, routed)
+
+
+def test_a_record_without_grpc_routes_compares_as_unchanged():
+    """Records written before schema_version 5 carry no gRPC routes."""
+    before = _surface({"demo": _service(["GET /thing"])})
+
+    assert api_surface.is_empty(api_surface.diff(before, _routed("DemoService/Get")))
 
 
 def test_write_then_read_round_trips(tmp_path: Path):

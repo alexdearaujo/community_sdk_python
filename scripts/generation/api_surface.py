@@ -24,12 +24,14 @@ from ._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
     discover_service_model_classes,
+    grpc_call,
+    grpc_stub_services,
     iter_service_dirs,
     parse_generated_rest_module,
 )
 
 SURFACE_FILE = PROJECT_ROOT / "api_surface.json"
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 _TRACKED_REQUIREMENTS = ("grpcio", "protobuf", "httpx", "pydantic")
 _PROTOBUF_GENCODE_RE = re.compile(
@@ -124,8 +126,13 @@ def _model_shapes(service_dir: Path) -> tuple[dict[str, Any], dict[str, list[str
     return dict(sorted(fields.items())), dict(sorted(enums.items()))
 
 
-def _wrapper_method_by_rest_call(service_dir: Path) -> dict[tuple[str, str], str]:
-    """Maps (REST module, REST function) to the client method that calls it."""
+def _wrapper_method_by_rest_call(
+    service_dir: Path,
+) -> dict[tuple[str, str], tuple[str, str | None]]:
+    """Maps (REST module, REST function) to the client method and its gRPC route.
+
+    The route is None when the method raises NotImplementedError on gRPC.
+    """
     wrapper = service_dir / "services" / f"{service_dir.name}.py"
     if not wrapper.exists():
         return {}
@@ -137,11 +144,21 @@ def _wrapper_method_by_rest_call(service_dir: Path) -> dict[tuple[str, str], str
         for alias in node.names
         if alias.asname
     }
-    methods: dict[tuple[str, str], str] = {}
+    methods: dict[tuple[str, str], tuple[str, str | None]] = {}
     for cls in (node for node in tree.body if isinstance(node, ast.ClassDef)):
+        init = next(
+            (
+                fn
+                for fn in cls.body
+                if isinstance(fn, ast.FunctionDef) and fn.name == "__init__"
+            ),
+            None,
+        )
+        stubs = grpc_stub_services(init) if init else {}
         for fn in cls.body:
             if not isinstance(fn, ast.FunctionDef) or fn.name.startswith("_"):
                 continue
+            route = grpc_call(fn, stubs)
             for call in ast.walk(fn):
                 if (
                     isinstance(call, ast.Call)
@@ -149,7 +166,10 @@ def _wrapper_method_by_rest_call(service_dir: Path) -> dict[tuple[str, str], str
                     and isinstance(call.func.value, ast.Name)
                     and call.func.value.id in modules
                 ):
-                    methods[(modules[call.func.value.id], call.func.attr)] = fn.name
+                    methods[(modules[call.func.value.id], call.func.attr)] = (
+                        fn.name,
+                        route.rpc if route else None,
+                    )
     return methods
 
 
@@ -164,9 +184,13 @@ def capture(output_dir: Path | None = None) -> dict[str, Any]:
         operations: dict[str, Any] = {}
         for module in sorted((service_dir / "services").glob("*.py")):
             for op in parse_generated_rest_module(module):
+                method, route = wrapper_methods.get(
+                    (module.stem, op.name), (None, None)
+                )
                 operations[_operation_key(op.http_method, op.path)] = {
                     "operation": op.operation_name,
-                    "method": wrapper_methods.get((module.stem, op.name)),
+                    "method": method,
+                    "grpc": route,
                     "status": op.expected_status,
                     "required_params": sorted(
                         name for name, _, required in op.params if required
@@ -290,6 +314,11 @@ def _changed_operations(
             if old_method and new_method and old_method != new_method
             else None
         )
+        # Before schema_version 5 a record has no route key.
+        old_route, new_route = old.get("grpc"), new.get("grpc")
+        grpc_change = (
+            [old_route, new_route] if "grpc" in old and old_route != new_route else None
+        )
         if (
             old.get("status") == new.get("status")
             and old_required == new_required
@@ -297,6 +326,7 @@ def _changed_operations(
             and not retyped_params
             and return_change is None
             and method_change is None
+            and grpc_change is None
         ):
             continue
         changes.append(
@@ -309,6 +339,7 @@ def _changed_operations(
                 "retyped_params": retyped_params,
                 "return_change": return_change,
                 "method_change": method_change,
+                "grpc_change": grpc_change,
             }
         )
     return changes
@@ -381,6 +412,15 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
                     (
                         f"- `{name}`: `{change['operation']}` is now "
                         f"`client.{name}.{after}`, not `{before}`",
+                        before,
+                    )
+                )
+            if change.get("grpc_change") and change["grpc_change"][0]:
+                before, after = change["grpc_change"]
+                breaking.append(
+                    (
+                        f"- `{name}`: `{change['operation']}` no longer routes to "
+                        f"gRPC `{before}`" + (f", now `{after}`" if after else ""),
                         before,
                     )
                 )
@@ -484,6 +524,13 @@ def _service_bullets(entry: dict[str, Any]) -> list[str]:
             before, after = change["method_change"]
             bullets.append(
                 f"  - **`{change['operation']}` renamed**: `{before}` to `{after}`"
+            )
+        if change.get("grpc_change"):
+            before, after = change["grpc_change"]
+            bullets.append(
+                f"  - `{change['operation']}` routes to gRPC `{after}`"
+                if before is None
+                else f"  - **`{change['operation']}` gRPC route**: `{before}` to `{after}`"
             )
         old_status, new_status = change["status"]
         if old_status != new_status:

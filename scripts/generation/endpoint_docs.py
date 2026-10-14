@@ -18,7 +18,10 @@ from types import FunctionType
 
 from ._shared import (
     PROJECT_ROOT,
+    GrpcCall,
     discover_service_model_classes,
+    grpc_call,
+    grpc_stub_services,
     iter_service_dirs,
     parse_wrapper_methods,
 )
@@ -223,55 +226,9 @@ def _rest_function_path_and_method(
     return None
 
 
-@dataclass(frozen=True)
-class GrpcCall:
-    """The RPC a wrapper method calls on GrpcTransport, read from its source."""
-
-    rpc: str  # "DeviceService/GetDevice"
-    request: str  # "GetDeviceRequest"
-
-
 WrapperSignatures = dict[
     tuple[str, str], tuple[str, list[tuple[str, str, bool]], GrpcCall | None]
 ]
-
-
-def _grpc_stub_services(init: ast.FunctionDef) -> dict[str, str]:
-    """Maps each `self._grpc_stub_N` to its proto service, from `XStub(channel)`."""
-    services = {}
-    for sub in ast.walk(init):
-        if (
-            isinstance(sub, ast.Assign)
-            and isinstance(sub.value, ast.Call)
-            and isinstance(sub.value.func, ast.Attribute)
-            and sub.value.func.attr.endswith("Stub")
-        ):
-            for target in sub.targets:
-                if isinstance(target, ast.Attribute):
-                    services[target.attr] = sub.value.func.attr.removesuffix("Stub")
-    return services
-
-
-def _grpc_call(
-    method: ast.FunctionDef, stub_services: dict[str, str]
-) -> GrpcCall | None:
-    """Reads `build_grpc_request(self._grpc_pb2_N.Req, ...)` and `call_grpc(self._grpc_stub_N.Rpc, ...)`."""
-    request = rpc = None
-    for sub in ast.walk(method):
-        if not (
-            isinstance(sub, ast.Call) and isinstance(sub.func, ast.Name) and sub.args
-        ):
-            continue
-        first = sub.args[0]
-        if not (
-            isinstance(first, ast.Attribute) and isinstance(first.value, ast.Attribute)
-        ):
-            continue
-        if sub.func.id == "build_grpc_request":
-            request = first.attr
-        elif sub.func.id == "call_grpc" and first.value.attr in stub_services:
-            rpc = f"{stub_services[first.value.attr]}/{first.attr}"
-    return GrpcCall(rpc=rpc, request=request) if rpc and request else None
 
 
 def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
@@ -334,7 +291,7 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
         ),
         None,
     )
-    stub_services = _grpc_stub_services(init) if init else {}
+    stub_services = grpc_stub_services(init) if init else {}
 
     mapping: WrapperSignatures = {}
     for node in wrapper_class.body:
@@ -372,7 +329,7 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
         mapping[(http_method, _normalize_path_for_matching(path_template))] = (
             node.name,
             params,
-            _grpc_call(node, stub_services),
+            grpc_call(node, stub_services),
         )
 
     return mapping
