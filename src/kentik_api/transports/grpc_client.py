@@ -11,7 +11,6 @@ from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
 from kentik_api.errors import ConfigurationError
 from kentik_api.transports.base import BaseTransport
 
-
 # grpcio keeps a 4 MiB receive limit, which a large account's list call exceeds.
 # 1.0.7 allowed 40 MiB, and REST has no such limit.
 _MAX_RECEIVE_BYTES = 40 * 1024 * 1024

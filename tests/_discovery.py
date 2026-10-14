@@ -29,7 +29,6 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from pydantic import BaseModel
 
 from kentik_api.core.api_config import APIConfig
-
 from scripts.generation._shared import iter_service_dirs, service_to_pascal_case
 
 

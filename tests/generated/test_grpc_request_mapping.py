@@ -14,7 +14,6 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
-from pydantic import BaseModel
 from _discovery import (
     WrapperCase,
     build_all_kwargs,
@@ -24,6 +23,7 @@ from _discovery import (
     proto_sample_value,
     recorded_grpc_route,
 )
+from pydantic import BaseModel
 
 from kentik_api.transports.grpc_client import GrpcTransport
 
