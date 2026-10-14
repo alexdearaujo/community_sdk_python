@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: DeviceService/ListDevices (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListDevicesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -143,7 +143,7 @@ sequenceDiagram
     R->>API: DeviceService/CreateDevice (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateDeviceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -220,7 +220,7 @@ sequenceDiagram
     R->>API: DeviceService/CreateDevices (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateDevicesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -297,7 +297,7 @@ sequenceDiagram
     R->>API: DeviceService/DeleteDevices (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteDevicesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -374,7 +374,7 @@ sequenceDiagram
     R->>API: DeviceService/UpdateDevices (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateDevicesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -451,7 +451,7 @@ sequenceDiagram
     R->>API: DeviceService/GetDeviceByName (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetDeviceByNameResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -528,7 +528,7 @@ sequenceDiagram
     R->>API: DeviceService/GetDevice (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetDeviceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -605,7 +605,7 @@ sequenceDiagram
     R->>API: DeviceService/UpdateDevice (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateDeviceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -684,7 +684,7 @@ sequenceDiagram
     R->>API: DeviceService/DeleteDevice (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteDeviceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -760,7 +760,7 @@ sequenceDiagram
     R->>API: DeviceService/UpdateDeviceLabels (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateDeviceLabelsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

@@ -1,12 +1,13 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.bgp_monitoring.services.BgpMonitoringAdminService as RestBgpMonitoringModule1
 import kentik_api.gen.bgp_monitoring.services.BgpMonitoringDataService as RestBgpMonitoringModule2
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.bgp_monitoring import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -68,11 +69,12 @@ class BgpMonitoringServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestBgpMonitoringModule1.ListMonitorsError,
             )
-            return attach_rate_limit(
-                rest_models.ListMonitorsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListMonitorsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListMonitors,
+                operation_name="ListMonitors",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -111,11 +113,12 @@ class BgpMonitoringServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestBgpMonitoringModule1.CreateMonitorError,
             )
-            return attach_rate_limit(
-                rest_models.CreateMonitorResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateMonitorResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateMonitor,
+                operation_name="CreateMonitor",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -150,11 +153,12 @@ class BgpMonitoringServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestBgpMonitoringModule1.GetMonitorError,
             )
-            return attach_rate_limit(
-                rest_models.GetMonitorResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetMonitorResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetMonitor,
+                operation_name="GetMonitor",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -195,11 +199,12 @@ class BgpMonitoringServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestBgpMonitoringModule1.UpdateMonitorError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateMonitorResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateMonitorResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateMonitor,
+                operation_name="UpdateMonitor",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -235,11 +240,12 @@ class BgpMonitoringServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestBgpMonitoringModule1.DeleteMonitorError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteMonitorResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteMonitorResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteMonitor,
+                operation_name="DeleteMonitor",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -280,11 +286,12 @@ class BgpMonitoringServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestBgpMonitoringModule1.SetMonitorStatusError,
             )
-            return attach_rate_limit(
-                rest_models.SetMonitorStatusResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SetMonitorStatusResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.SetMonitorStatus,
+                operation_name="SetMonitorStatus",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -325,11 +332,12 @@ class BgpMonitoringServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestBgpMonitoringModule2.GetMetricsForTargetError,
             )
-            return attach_rate_limit(
-                rest_models.GetMetricsForTargetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetMetricsForTargetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.GetMetricsForTarget,
+                operation_name="GetMetricsForTarget",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -369,11 +377,12 @@ class BgpMonitoringServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestBgpMonitoringModule2.GetRoutesForTargetError,
             )
-            return attach_rate_limit(
-                rest_models.GetRoutesForTargetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetRoutesForTargetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.GetRoutesForTarget,
+                operation_name="GetRoutesForTarget",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

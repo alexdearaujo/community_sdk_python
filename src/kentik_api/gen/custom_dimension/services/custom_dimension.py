@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.custom_dimension.services.CustomDimensionService as RestCustomDimensionModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.custom_dimension import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -56,11 +57,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.ListCustomDimensionsError,
             )
-            return attach_rate_limit(
-                rest_models.ListCustomDimensionsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListCustomDimensionsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListCustomDimensions,
+                operation_name="ListCustomDimensions",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -96,11 +98,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.GetCustomDimensionInfoError,
             )
-            return attach_rate_limit(
-                rest_models.GetCustomDimensionInfoResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCustomDimensionInfoResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetCustomDimensionInfo,
+                operation_name="GetCustomDimensionInfo",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -141,11 +144,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.UpdateCustomDimensionError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateCustomDimensionResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateCustomDimensionResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateCustomDimension,
+                operation_name="UpdateCustomDimension",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -183,11 +187,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.DeleteCustomDimensionError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteCustomDimensionResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteCustomDimensionResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteCustomDimension,
+                operation_name="DeleteCustomDimension",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -228,11 +233,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.CreatePopulatorError,
             )
-            return attach_rate_limit(
-                rest_models.CreatePopulatorResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreatePopulatorResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreatePopulator,
+                operation_name="CreatePopulator",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -279,11 +285,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.GetPopulatorError,
             )
-            return attach_rate_limit(
-                rest_models.GetPopulatorResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetPopulatorResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetPopulator,
+                operation_name="GetPopulator",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -327,11 +334,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.UpdatePopulatorError,
             )
-            return attach_rate_limit(
-                rest_models.UpdatePopulatorResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdatePopulatorResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdatePopulator,
+                operation_name="UpdatePopulator",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -374,11 +382,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.DeletePopulatorError,
             )
-            return attach_rate_limit(
-                rest_models.DeletePopulatorResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeletePopulatorResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeletePopulator,
+                operation_name="DeletePopulator",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -429,11 +438,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.GetPopulatorFieldError,
             )
-            return attach_rate_limit(
-                rest_models.GetPopulatorFieldResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetPopulatorFieldResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetPopulatorField,
+                operation_name="GetPopulatorField",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -477,11 +487,12 @@ class CustomDimensionServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCustomDimensionModule1.CreateCustomDimensionError,
             )
-            return attach_rate_limit(
-                rest_models.CreateCustomDimensionResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateCustomDimensionResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateCustomDimension,
+                operation_name="CreateCustomDimension",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

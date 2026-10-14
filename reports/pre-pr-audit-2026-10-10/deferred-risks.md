@@ -52,7 +52,7 @@ This ledger records findings that are intentionally deferred.
 | R14 | runtime | Wrapper generation hides the import cause. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R15 | runtime | Model output step must relax REQUIRED on message fields. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R16 | runtime | Generator does not hoist inline objects. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T2 | test gap | In-process grpc.server success-path test. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T3 | test gap | Needs gRPC routes recorded in api_surface.json. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | T4 | test gap | Needs the real request builder run on populated bodies. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
@@ -273,3 +273,13 @@ This ledger records findings that are intentionally deferred.
   schema checkout, and replaces the test that always skipped in CI. A dropped
   query argument and a dropped body both fail it. The respx routes still match
   on method and path only. 17 entries remain open.
+- T1 is resolved (2026-10-14). Success responses come from the proto
+  descriptors, not the SDK's models: `sample_grpc_response` sets every field
+  of the recorded RPC's output, except `INTERNAL` fields that the published
+  schema omits. The REST coverage test and the gRPC contract test both parse
+  it and require the model to dump back to the same message, so a wrong type
+  or a dropped field fails. Restoring B2 fails all four alert operations on
+  both transports. Decision (option A): an unknown enum value stays strict.
+  gRPC now validates through REST's `parse_response_model`, so it raises the
+  same `HTTPException` 502, not a raw `ValidationError`, and a test pins that
+  on both transports. 16 entries remain open.

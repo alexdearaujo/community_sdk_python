@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: SiteService/ListSiteMarkets (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListSiteMarketsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: SiteService/CreateSiteMarket (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateSiteMarketResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -213,7 +213,7 @@ sequenceDiagram
     R->>API: SiteService/GetSiteMarket (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetSiteMarketResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -289,7 +289,7 @@ sequenceDiagram
     R->>API: SiteService/UpdateSiteMarket (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateSiteMarketResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -368,7 +368,7 @@ sequenceDiagram
     R->>API: SiteService/DeleteSiteMarket (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteSiteMarketResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -444,7 +444,7 @@ sequenceDiagram
     R->>API: SiteService/ListSites (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListSitesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -512,7 +512,7 @@ sequenceDiagram
     R->>API: SiteService/CreateSite (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateSiteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -589,7 +589,7 @@ sequenceDiagram
     R->>API: SiteService/GetSite (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetSiteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -665,7 +665,7 @@ sequenceDiagram
     R->>API: SiteService/UpdateSite (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateSiteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -744,7 +744,7 @@ sequenceDiagram
     R->>API: SiteService/DeleteSite (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteSiteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

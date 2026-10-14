@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: ASGroupService/ListASGroups (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListASGroupsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: ASGroupService/CreateASGroup (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateASGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -213,7 +213,7 @@ sequenceDiagram
     R->>API: ASGroupService/GetASGroup (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetASGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -289,7 +289,7 @@ sequenceDiagram
     R->>API: ASGroupService/UpdateASGroup (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateASGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -368,7 +368,7 @@ sequenceDiagram
     R->>API: ASGroupService/DeleteASGroup (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteASGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

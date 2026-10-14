@@ -70,7 +70,7 @@ sequenceDiagram
     R->>API: AlertService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -147,7 +147,7 @@ sequenceDiagram
     R->>API: AlertService/Clear (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertServiceClearResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -224,7 +224,7 @@ sequenceDiagram
     R->>API: AlertService/ListComments (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertServiceListCommentsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -300,7 +300,7 @@ sequenceDiagram
     R->>API: AlertService/AddComment (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertServiceAddCommentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -379,7 +379,7 @@ sequenceDiagram
     R->>API: AlertService/SetExternalContext (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertServiceSetExternalContextResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -458,7 +458,7 @@ sequenceDiagram
     R->>API: AlertService/Get (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -534,7 +534,7 @@ sequenceDiagram
     R->>API: AlertService/Ack (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertServiceAckResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -613,7 +613,7 @@ sequenceDiagram
     R->>API: AlertService/UnAck (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertServiceUnAckResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -692,7 +692,7 @@ sequenceDiagram
     R->>API: AlertAutoAckService/Create (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertAutoAckServiceCreateResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -769,7 +769,7 @@ sequenceDiagram
     R->>API: AlertAutoAckService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertAutoAckServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -846,7 +846,7 @@ sequenceDiagram
     R->>API: AlertAutoAckService/Get (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertAutoAckServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -922,7 +922,7 @@ sequenceDiagram
     R->>API: AlertAutoAckService/Replace (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertAutoAckServiceReplaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1001,7 +1001,7 @@ sequenceDiagram
     R->>API: AlertAutoAckService/Delete (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertAutoAckServiceDeleteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1077,7 +1077,7 @@ sequenceDiagram
     R->>API: MitigationsService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationsServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1163,7 +1163,7 @@ sequenceDiagram
     R->>API: MitigationsService/Create (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationsServiceCreateResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1240,7 +1240,7 @@ sequenceDiagram
     R->>API: MitigationsService/AvailableActions (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationsServiceAvailableActionsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1308,7 +1308,7 @@ sequenceDiagram
     R->>API: MitigationsService/Get (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationsServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1384,7 +1384,7 @@ sequenceDiagram
     R->>API: MitigationsService/Act (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationsServiceActResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1463,7 +1463,7 @@ sequenceDiagram
     R->>API: MitigationsService/AvailableActionsForMitigation (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationsServiceAvailableActionsForMitigationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1539,7 +1539,7 @@ sequenceDiagram
     R->>API: MitigationMethodsService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationMethodsServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1621,7 +1621,7 @@ sequenceDiagram
     R->>API: MitigationMethodsService/Get (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationMethodsServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1697,7 +1697,7 @@ sequenceDiagram
     R->>API: MitigationPlatformsService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationPlatformsServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1779,7 +1779,7 @@ sequenceDiagram
     R->>API: MitigationPlatformsService/Get (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: MitigationPlatformsServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1855,7 +1855,7 @@ sequenceDiagram
     R->>API: PolicyService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: PolicyServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1932,7 +1932,7 @@ sequenceDiagram
     R->>API: PolicyService/Get (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: PolicyServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2010,7 +2010,7 @@ sequenceDiagram
     R->>API: PolicyService/Disable (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: PolicyServiceDisableResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2091,7 +2091,7 @@ sequenceDiagram
     R->>API: PolicyService/Enable (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: PolicyServiceEnableResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2172,7 +2172,7 @@ sequenceDiagram
     R->>API: AlertSilenceNotificationsService/Create (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertSilenceNotificationsServiceCreateResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2249,7 +2249,7 @@ sequenceDiagram
     R->>API: AlertSilenceNotificationsService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertSilenceNotificationsServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2326,7 +2326,7 @@ sequenceDiagram
     R->>API: AlertSilenceNotificationsService/Get (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertSilenceNotificationsServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2402,7 +2402,7 @@ sequenceDiagram
     R->>API: AlertSilenceNotificationsService/Replace (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertSilenceNotificationsServiceReplaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2481,7 +2481,7 @@ sequenceDiagram
     R->>API: AlertSilenceNotificationsService/Delete (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AlertSilenceNotificationsServiceDeleteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2557,7 +2557,7 @@ sequenceDiagram
     R->>API: SuppressionService/Create (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SuppressionServiceCreateResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2634,7 +2634,7 @@ sequenceDiagram
     R->>API: SuppressionService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SuppressionServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2711,7 +2711,7 @@ sequenceDiagram
     R->>API: SuppressionService/Get (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SuppressionServiceGetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2787,7 +2787,7 @@ sequenceDiagram
     R->>API: SuppressionService/Replace (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SuppressionServiceReplaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2866,7 +2866,7 @@ sequenceDiagram
     R->>API: SuppressionService/Delete (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SuppressionServiceDeleteResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

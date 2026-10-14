@@ -19,12 +19,16 @@ import functools
 import importlib
 import inspect
 import json
+import pkgutil
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Union, get_args, get_origin
 
+from google.api import visibility_pb2
+from google.protobuf import message_factory
 from google.protobuf.descriptor import FieldDescriptor
+from google.protobuf.json_format import ParseDict
 from google.protobuf.timestamp_pb2 import Timestamp
 from pydantic import BaseModel
 
@@ -393,6 +397,97 @@ def _proto_sample_item(field: Any, value: Any) -> Any:
         # A wrapper type (Int64Value, StringValue, ...) is its `value` field in JSON.
         return proto_sample_value(message_type.fields_by_name["value"], value)
     return proto_sample_body(message_type, value)
+
+
+@functools.cache
+def _proto_services(service: str) -> dict[str, Any]:
+    """Maps each proto service name in a Service's pb package to its descriptor."""
+    package = importlib.import_module(f"kentik_api.gen.{service}.pb")
+    services: dict[str, Any] = {}
+    for module in pkgutil.iter_modules(package.__path__):
+        if module.name.endswith("_pb2"):
+            descriptor = importlib.import_module(
+                f"{package.__name__}.{module.name}"
+            ).DESCRIPTOR
+            services.update(descriptor.services_by_name)
+    return services
+
+
+def sample_grpc_response(case: WrapperCase) -> Any:
+    """A response message for the method's recorded RPC with every field set.
+
+    Built from the proto descriptor, not from the SDK's models, so a model whose
+    field type or name disagrees with the wire fails to parse or round-trip.
+    Each oneof gets its first member, and a message type already on the path is
+    left unset so recursion ends.
+    """
+    service_name, rpc = (recorded_grpc_route(case) or "").split("/")
+    service = case.module_path.split(".")[2]
+    output = _proto_services(service)[service_name].methods_by_name[rpc].output_type
+    message_cls = message_factory.GetMessageClass(output)
+    return ParseDict(_filled_message(output, frozenset()), message_cls())
+
+
+def _filled_message(descriptor: Any, seen: frozenset) -> dict[str, Any]:
+    seen = seen | {descriptor.full_name}
+    filled: dict[str, Any] = {}
+    oneofs_seen: set[str] = set()
+    for field in descriptor.fields:
+        if _is_internal(field):
+            continue
+        oneof = field.containing_oneof
+        if oneof is not None and not oneof.name.startswith("_"):
+            if oneof.name in oneofs_seen:
+                continue
+            oneofs_seen.add(oneof.name)
+        value = _filled_value(field, seen)
+        if value is None:
+            continue
+        message_type = field.message_type
+        is_map = message_type is not None and message_type.GetOptions().map_entry
+        filled[field.json_name] = [value] if field.is_repeated and not is_map else value
+    return filled
+
+
+def _is_internal(field: Any) -> bool:
+    """Upstream keeps an INTERNAL field out of the published schema, and so the SDK."""
+    options = field.GetOptions()
+    return (
+        options.HasExtension(visibility_pb2.field_visibility)
+        and options.Extensions[visibility_pb2.field_visibility].restriction
+        == "INTERNAL"
+    )
+
+
+def _filled_value(field: Any, seen: frozenset) -> Any:
+    message_type = field.message_type
+    if message_type is not None:
+        if message_type.GetOptions().map_entry:
+            value = _filled_value(message_type.fields_by_name["value"], seen)
+            key = _filled_value(message_type.fields_by_name["key"], seen)
+            return None if value is None else {str(key).lower(): value}
+        if message_type.full_name in _WELL_KNOWN_SAMPLES:
+            return _WELL_KNOWN_SAMPLES[message_type.full_name]
+        if message_type.full_name.startswith("google.protobuf."):
+            return _filled_value(message_type.fields_by_name["value"], seen)
+        if message_type.full_name in seen:
+            return None
+        return _filled_message(message_type, seen)
+    if field.enum_type is not None:
+        values = field.enum_type.values
+        return next((v.name for v in values if v.number != 0), values[0].name)
+    if field.type == FieldDescriptor.TYPE_BOOL:
+        return True
+    if field.type == FieldDescriptor.TYPE_STRING:
+        return f"{field.name}-value"
+    if field.type == FieldDescriptor.TYPE_BYTES:
+        return "Ynl0ZXM="
+    if field.cpp_type in (
+        FieldDescriptor.CPPTYPE_DOUBLE,
+        FieldDescriptor.CPPTYPE_FLOAT,
+    ):
+        return 1.5
+    return "7" if field.cpp_type in _PROTO_INT_TYPES else 7
 
 
 def sample_value_for_annotation(

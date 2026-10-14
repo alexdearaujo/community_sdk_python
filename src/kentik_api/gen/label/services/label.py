@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.label.services.LabelService as RestLabelModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.label import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -54,11 +55,12 @@ class LabelServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestLabelModule1.ListLabelsError,
             )
-            return attach_rate_limit(
-                rest_models.ListLabelsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListLabelsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListLabels,
+                operation_name="ListLabels",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -97,11 +99,12 @@ class LabelServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestLabelModule1.CreateLabelError,
             )
-            return attach_rate_limit(
-                rest_models.CreateLabelResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateLabelResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateLabel,
+                operation_name="CreateLabel",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -142,11 +145,12 @@ class LabelServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestLabelModule1.UpdateLabelError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateLabelResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateLabelResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateLabel,
+                operation_name="UpdateLabel",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -182,11 +186,12 @@ class LabelServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestLabelModule1.DeleteLabelError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteLabelResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteLabelResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteLabel,
+                operation_name="DeleteLabel",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

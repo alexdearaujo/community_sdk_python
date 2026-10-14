@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: VaultService/ListSecret (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListSecretResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -144,7 +144,7 @@ sequenceDiagram
     R->>API: VaultService/GetSecret (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetSecretResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

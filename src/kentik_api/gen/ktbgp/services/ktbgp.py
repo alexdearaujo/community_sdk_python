@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.ktbgp.services.RouteService as RestKtbgpModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.ktbgp import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -59,11 +60,12 @@ class KtbgpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKtbgpModule1.RouteService_AnnounceError,
             )
-            return attach_rate_limit(
-                rest_models.RouteServiceAnnounceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.RouteServiceAnnounceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.Announce,
+                operation_name="RouteService_Announce",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -101,11 +103,12 @@ class KtbgpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKtbgpModule1.RouteService_ListError,
             )
-            return attach_rate_limit(
-                rest_models.RouteServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.RouteServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.List,
+                operation_name="RouteService_List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -143,11 +146,12 @@ class KtbgpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKtbgpModule1.RouteService_WithdrawError,
             )
-            return attach_rate_limit(
-                rest_models.RouteServiceWithdrawResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.RouteServiceWithdrawResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.Withdraw,
+                operation_name="RouteService_Withdraw",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

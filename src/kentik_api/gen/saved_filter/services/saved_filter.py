@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.saved_filter.services.SavedFilterService as RestSavedFilterModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.saved_filter import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -61,11 +62,12 @@ class SavedFilterServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSavedFilterModule1.CreateSavedFilterError,
             )
-            return attach_rate_limit(
-                rest_models.CreateSavedFilterResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateSavedFilterResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateSavedFilter,
+                operation_name="CreateSavedFilter",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -100,11 +102,12 @@ class SavedFilterServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSavedFilterModule1.GetSavedFilterError,
             )
-            return attach_rate_limit(
-                rest_models.GetSavedFilterResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetSavedFilterResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetSavedFilter,
+                operation_name="GetSavedFilter",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -145,11 +148,12 @@ class SavedFilterServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSavedFilterModule1.UpdateSavedFilterError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateSavedFilterResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateSavedFilterResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateSavedFilter,
+                operation_name="UpdateSavedFilter",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -185,11 +189,12 @@ class SavedFilterServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSavedFilterModule1.DeleteSavedFilterError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteSavedFilterResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteSavedFilterResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteSavedFilter,
+                operation_name="DeleteSavedFilter",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -224,11 +229,12 @@ class SavedFilterServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSavedFilterModule1.ListSavedFiltersError,
             )
-            return attach_rate_limit(
-                rest_models.ListSavedFiltersResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListSavedFiltersResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListSavedFilters,
+                operation_name="ListSavedFilters",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -262,11 +268,12 @@ class SavedFilterServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSavedFilterModule1.ListSavedFiltersAllError,
             )
-            return attach_rate_limit(
-                rest_models.ListSavedFiltersAllResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListSavedFiltersAllResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListSavedFiltersAll,
+                operation_name="ListSavedFiltersAll",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

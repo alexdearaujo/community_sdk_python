@@ -303,7 +303,6 @@ def _generate_service_wrappers():
             "from typing import Union, cast",
             f"from kentik_api.gen.{service} import models as rest_models",
             "from kentik_api.core.api_config import APIConfig",
-            "from kentik_api.core.rate_limit import attach_rate_limit",
             "from kentik_api.transports.grpc_client import GrpcTransport",
             "from kentik_api.transports.rest_client import RestTransport",
             "",
@@ -375,12 +374,11 @@ def _generate_service_wrappers():
                 if "from kentik_api.transports.rest_client import RestTransport" in line
             )
             grpc_import_lines = [
-                "from google.protobuf.json_format import MessageToDict",
-                "from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc",
+                "from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc, parse_grpc_response",
             ]
-            # Only json_format helpers go at module level; pb2 modules are loaded
-            # lazily inside __init__ to avoid proto descriptor errors at import
-            # time when googleapis-common-protos is not installed.
+            # pb2 modules are loaded lazily inside __init__ to avoid proto
+            # descriptor errors at import time when googleapis-common-protos is
+            # not installed.
             for offset, imp_line in enumerate(grpc_import_lines):
                 wrapper_code.insert(rest_transport_line_idx + 1 + offset, imp_line)
 
@@ -504,12 +502,9 @@ def _generate_service_wrappers():
                     if is_none_return:
                         grpc_lines.append("            return None")
                     else:
-                        # always_print_fields_with_no_presence: without it, MessageToDict
-                        # omits scalar fields left at their zero value (empty string, 0,
-                        # false), which then fails model_validate() against a Pydantic
-                        # model where the schema marks that field required.
                         grpc_lines.append(
-                            f"            return attach_rate_limit({return_type}.model_validate(MessageToDict(_resp, always_print_fields_with_no_presence=True)), _rate_limit)"
+                            f"            return parse_grpc_response({return_type}, _resp, _rate_limit, "
+                            f'stub_method=self._grpc_stub_{stub_idx}.{grpc_method.name}, operation_name="{func_name_pascal}")'
                         )
                 else:
                     grpc_lines = [

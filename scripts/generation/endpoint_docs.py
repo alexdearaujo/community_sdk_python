@@ -470,7 +470,7 @@ def _render_operation_sequence_diagram(
         f"    R->>API: {grpc_call.rpc} (gRPC/TLS)",
         "    alt success",
         "        API-->>R: response message",
-        "        R-->>W: MessageToDict(response)",
+        "        R-->>W: parse_grpc_response(response)",
         f"        W-->>C: {success_model}",
         "    else gRPC error, deadline, or unreachable",
         "        R-->>W: map_grpc_error()",

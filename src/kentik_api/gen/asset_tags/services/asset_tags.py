@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.asset_tags.services.AssetTagsService as RestAssetTagsModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.asset_tags import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -62,11 +63,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.GetTagValuesError,
             )
-            return attach_rate_limit(
-                rest_models.GetTagValuesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetTagValuesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetTagValues,
+                operation_name="GetTagValues",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -100,11 +102,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.ListTagKeysError,
             )
-            return attach_rate_limit(
-                rest_models.ListTagKeysResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListTagKeysResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListTagKeys,
+                operation_name="ListTagKeys",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -143,11 +146,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.CreateTagKeyError,
             )
-            return attach_rate_limit(
-                rest_models.CreateTagKeyResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateTagKeyResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateTagKey,
+                operation_name="CreateTagKey",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -182,11 +186,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.GetTagKeyError,
             )
-            return attach_rate_limit(
-                rest_models.GetTagKeyResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetTagKeyResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetTagKey,
+                operation_name="GetTagKey",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -227,11 +232,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.UpdateTagKeyError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateTagKeyResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateTagKeyResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateTagKey,
+                operation_name="UpdateTagKey",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -267,11 +273,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.DeleteTagKeyError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteTagKeyResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteTagKeyResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteTagKey,
+                operation_name="DeleteTagKey",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -312,11 +319,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.ListTagValuesError,
             )
-            return attach_rate_limit(
-                rest_models.ListTagValuesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListTagValuesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListTagValues,
+                operation_name="ListTagValues",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -357,11 +365,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.SetTagValuesError,
             )
-            return attach_rate_limit(
-                rest_models.SetTagValuesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SetTagValuesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.SetTagValues,
+                operation_name="SetTagValues",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -401,11 +410,12 @@ class AssetTagsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAssetTagsModule1.DeleteTagValuesError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteTagValuesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteTagValuesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteTagValues,
+                operation_name="DeleteTagValues",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

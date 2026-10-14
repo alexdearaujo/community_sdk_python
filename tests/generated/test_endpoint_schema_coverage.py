@@ -25,6 +25,7 @@ import importlib
 import inspect
 from dataclasses import dataclass
 from typing import Any, Optional
+from unittest.mock import MagicMock
 
 import httpx
 import pytest
@@ -36,15 +37,17 @@ from _discovery import (
     discover_cases,
     error_module_for,
     parse_rest_call_metadata,
-    sample_model_instance,
+    sample_grpc_response,
 )
-from pydantic import BaseModel
+from google.protobuf.json_format import MessageToDict, ParseDict
+from pydantic import BaseModel, ValidationError
 
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.client import KentikAPI
 from kentik_api.errors import AuthenticationError, HTTPException, KentikError
 from kentik_api.gen.alerting.models import PolicyType
 from kentik_api.gen.device.models import DeviceView
+from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 
 
@@ -155,15 +158,10 @@ def _status_case_id(case: StatusCase) -> str:
     return f"{case.wrapper.wrapper_class}.{case.wrapper.method_name}:{kind}"
 
 
-def _success_body_for(method: Any) -> Any:
-    return_annotation = inspect.signature(method).return_annotation
-    if isinstance(return_annotation, type) and issubclass(return_annotation, BaseModel):
-        try:
-            instance = sample_model_instance(return_annotation)
-        except Exception:
-            return {}
-        return instance.model_dump(mode="json")
-    return {}
+def _assert_round_trips(result: BaseModel, message: Any) -> None:
+    """Every value the server sent survives parsing; a dropped field fails here."""
+    dumped = result.model_dump(mode="json", by_alias=True, exclude_none=True)
+    assert ParseDict(dumped, type(message)()) == message
 
 
 _ERROR_BODY = {"code": 7, "message": "simulated failure", "details": []}
@@ -195,13 +193,16 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
         pytest.skip(f"Could not build sample arguments for this operation: {exc}")
 
     try:
+        message: Any = None
         with respx.mock:
             if case.status_code == 204:
                 respx.route().mock(return_value=httpx.Response(204))
             elif case.is_success:
-                body = _success_body_for(method)
+                message = sample_grpc_response(wrapper_case)
                 respx.route().mock(
-                    return_value=httpx.Response(case.status_code, json=body)
+                    return_value=httpx.Response(
+                        case.status_code, json=MessageToDict(message)
+                    )
                 )
             else:
                 respx.route().mock(
@@ -217,6 +218,7 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
                     return_annotation, BaseModel
                 ):
                     assert isinstance(result, return_annotation)
+                    _assert_round_trips(result, message)
             elif case.runtime_error is not None:
                 with pytest.raises(KentikError) as exc_info:
                     method(**kwargs)
@@ -245,7 +247,16 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
         raise
 
 
-def test_unknown_enum_from_server_stays_inside_kentik_error_hierarchy():
+def _assert_unknown_enum_error(exc: KentikError) -> None:
+    # Strict by decision (T1, option A): a value newer than this SDK fails the
+    # response, as the same clear 502 on both transports, until regeneration.
+    assert type(exc) is HTTPException
+    assert exc.status_code == 502
+    assert exc.details["model"] == "ListUsersResponse"
+    assert isinstance(exc.__cause__, ValidationError)
+
+
+def test_an_unknown_enum_value_over_rest_is_a_502():
     unknown_enum_payload = {
         "users": [
             {
@@ -271,7 +282,24 @@ def test_unknown_enum_from_server_stays_inside_kentik_error_hierarchy():
                 api.user.list_users()
 
     assert route.called
-    assert type(exc_info.value).__name__ != "ValidationError"
+    _assert_unknown_enum_error(exc_info.value)
+
+
+def test_an_unknown_enum_value_over_grpc_is_the_same_502(monkeypatch):
+    from kentik_api.gen.user.pb import user_pb2
+    from kentik_api.gen.user.services import user as user_wrapper
+
+    response = user_pb2.ListUsersResponse()
+    # gRPC carries an enum number this SDK's descriptor does not name.
+    response.users.add(id="1", default_landing_page_type=99)
+    monkeypatch.setattr(user_wrapper, "call_grpc", lambda *a, **kw: (response, None))
+    transport = MagicMock(spec=GrpcTransport)
+    transport.channel = MagicMock()
+
+    with pytest.raises(KentikError) as exc_info:
+        user_wrapper.UserServiceWrapper(transport).list_users()
+
+    _assert_unknown_enum_error(exc_info.value)
 
 
 def test_enum_values_use_wire_representation_for_path_and_query_parameters():

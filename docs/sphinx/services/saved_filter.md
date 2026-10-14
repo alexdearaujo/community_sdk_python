@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: SavedFilterService/CreateSavedFilter (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateSavedFilterResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -145,7 +145,7 @@ sequenceDiagram
     R->>API: SavedFilterService/GetSavedFilter (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetSavedFilterResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -221,7 +221,7 @@ sequenceDiagram
     R->>API: SavedFilterService/UpdateSavedFilter (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateSavedFilterResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -300,7 +300,7 @@ sequenceDiagram
     R->>API: SavedFilterService/DeleteSavedFilter (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteSavedFilterResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -376,7 +376,7 @@ sequenceDiagram
     R->>API: SavedFilterService/ListSavedFilters (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListSavedFiltersResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -444,7 +444,7 @@ sequenceDiagram
     R->>API: SavedFilterService/ListSavedFiltersAll (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListSavedFiltersAllResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

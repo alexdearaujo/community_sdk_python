@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: CostService/ListCostProviders (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCostProvidersResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: CostService/ListCostProviderSummaries (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCostProviderSummariesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -210,7 +210,7 @@ sequenceDiagram
     R->>API: CostService/GetCostProviderSummary (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCostProviderSummaryResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

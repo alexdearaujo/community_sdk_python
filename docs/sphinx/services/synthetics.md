@@ -70,7 +70,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/ListAgentAlerts (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListAgentAlertsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -144,7 +144,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/CreateAgentAlert (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateAgentAlertResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -221,7 +221,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/GetAgentAlert (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetAgentAlertResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -297,7 +297,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/UpdateAgentAlert (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateAgentAlertResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -376,7 +376,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/DeleteAgentAlert (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteAgentAlertResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -452,7 +452,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/ListAgents (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListAgentsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -520,7 +520,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/GetAgent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -596,7 +596,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/UpdateAgent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -675,7 +675,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/DeleteAgent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -751,7 +751,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/ListTests (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListTestsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -819,7 +819,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/CreateTest (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -896,7 +896,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/GetTest (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -972,7 +972,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/UpdateTest (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1051,7 +1051,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/DeleteTest (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1125,7 +1125,7 @@ sequenceDiagram
     R->>API: SyntheticsAdminService/SetTestStatus (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SetTestStatusResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1204,7 +1204,7 @@ sequenceDiagram
     R->>API: SyntheticsDataService/GetResultsForTests (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetResultsForTestsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1281,7 +1281,7 @@ sequenceDiagram
     R->>API: SyntheticsDataService/GetResultsForTestsCsv (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetResultsForTestsCsvResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1358,7 +1358,7 @@ sequenceDiagram
     R->>API: SyntheticsDataService/GetTraceForTest (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetTraceForTestResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

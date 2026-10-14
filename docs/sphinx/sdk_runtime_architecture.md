@@ -63,7 +63,6 @@ flowchart TB
     Generated_Service_Wrappers -->|"x36"| API_Config
     Generated_Service_Wrappers -->|"x52"| Generated_REST_Services
     Generated_Service_Wrappers -->|"x36"| REST_Transport
-    Generated_Service_Wrappers -->|"x36"| Rate_Limit
     Generated_Service_Wrappers -->|"x36"| gRPC_Runtime
     Generated_Service_Wrappers -->|"x36"| gRPC_Transport
     REST_Runtime --> API_Config
@@ -76,6 +75,7 @@ flowchart TB
     REST_Transport --> Transport_Base
     gRPC_Runtime --> API_Config
     gRPC_Runtime --> Error_Types
+    gRPC_Runtime --> REST_Runtime
     gRPC_Runtime --> Rate_Limit
     gRPC_Transport --> API_Config
     gRPC_Transport --> Auth_Credentials

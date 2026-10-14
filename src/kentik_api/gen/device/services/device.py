@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.device.services.DeviceService as RestDeviceModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.device import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -62,11 +63,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.ListDevicesError,
             )
-            return attach_rate_limit(
-                rest_models.ListDevicesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListDevicesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListDevices,
+                operation_name="ListDevices",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -107,11 +109,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.CreateDeviceError,
             )
-            return attach_rate_limit(
-                rest_models.CreateDeviceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateDeviceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateDevice,
+                operation_name="CreateDevice",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -151,11 +154,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.CreateDevicesError,
             )
-            return attach_rate_limit(
-                rest_models.CreateDevicesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateDevicesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateDevices,
+                operation_name="CreateDevices",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -195,11 +199,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.DeleteDevicesError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteDevicesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteDevicesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteDevices,
+                operation_name="DeleteDevices",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -239,11 +244,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.UpdateDevicesError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateDevicesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateDevicesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateDevices,
+                operation_name="UpdateDevices",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -287,11 +293,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.GetDeviceByNameError,
             )
-            return attach_rate_limit(
-                rest_models.GetDeviceByNameResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetDeviceByNameResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetDeviceByName,
+                operation_name="GetDeviceByName",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -333,11 +340,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.GetDeviceError,
             )
-            return attach_rate_limit(
-                rest_models.GetDeviceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetDeviceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetDevice,
+                operation_name="GetDevice",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -379,11 +387,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.UpdateDeviceError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateDeviceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateDeviceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateDevice,
+                operation_name="UpdateDevice",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -419,11 +428,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.DeleteDeviceError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteDeviceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteDeviceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteDevice,
+                operation_name="DeleteDevice",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -464,11 +474,12 @@ class DeviceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestDeviceModule1.UpdateDeviceLabelsError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateDeviceLabelsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateDeviceLabelsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateDeviceLabels,
+                operation_name="UpdateDeviceLabels",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

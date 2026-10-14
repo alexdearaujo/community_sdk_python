@@ -1,11 +1,12 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.kmi.services.KmiService as RestKmiModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.kmi import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -73,11 +74,12 @@ class KmiServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmiModule1.GetGlobalInsightsError,
             )
-            return attach_rate_limit(
-                rest_models.GetGlobalInsightsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetGlobalInsightsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetGlobalInsights,
+                operation_name="GetGlobalInsights",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -136,11 +138,12 @@ class KmiServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmiModule1.GetASNInsightsError,
             )
-            return attach_rate_limit(
-                rest_models.GetASNInsightsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetASNInsightsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetASNInsights,
+                operation_name="GetASNInsights",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -189,11 +192,12 @@ class KmiServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmiModule1.GetASNDetailsError,
             )
-            return attach_rate_limit(
-                rest_models.GetASNDetailsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetASNDetailsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetASNDetails,
+                operation_name="GetASNDetails",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -239,11 +243,12 @@ class KmiServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmiModule1.GetRankingsError,
             )
-            return attach_rate_limit(
-                rest_models.GetRankingsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetRankingsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetRankings,
+                operation_name="GetRankings",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -279,11 +284,12 @@ class KmiServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmiModule1.ListMarketsError,
             )
-            return attach_rate_limit(
-                rest_models.ListMarketsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListMarketsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListMarkets,
+                operation_name="ListMarkets",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

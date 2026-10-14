@@ -1,11 +1,12 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.flow_tag.services.FlowTagService as RestFlowTagModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.flow_tag import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -71,11 +72,12 @@ class FlowTagServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestFlowTagModule1.SearchFlowTagError,
             )
-            return attach_rate_limit(
-                rest_models.SearchFlowTagResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SearchFlowTagResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.SearchFlowTag,
+                operation_name="SearchFlowTag",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -119,11 +121,12 @@ class FlowTagServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestFlowTagModule1.CreateFlowTagError,
             )
-            return attach_rate_limit(
-                rest_models.CreateFlowTagResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateFlowTagResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateFlowTag,
+                operation_name="CreateFlowTag",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -158,11 +161,12 @@ class FlowTagServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestFlowTagModule1.GetFlowTagError,
             )
-            return attach_rate_limit(
-                rest_models.GetFlowTagResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetFlowTagResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetFlowTag,
+                operation_name="GetFlowTag",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -203,11 +207,12 @@ class FlowTagServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestFlowTagModule1.UpdateFlowTagError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateFlowTagResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateFlowTagResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateFlowTag,
+                operation_name="UpdateFlowTag",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -243,11 +248,12 @@ class FlowTagServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestFlowTagModule1.DeleteFlowTagError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteFlowTagResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteFlowTagResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteFlowTag,
+                operation_name="DeleteFlowTag",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

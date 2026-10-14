@@ -74,7 +74,8 @@ RPC name alone is wrong, because `alerting` declares `Delete` on
 several proto services. The generator reads each RPC's rule from the
 descriptor protoc serialized into its `_pb2.py`. The bridge runs
 `build_grpc_request()` (in `core/grpc_runtime.py`) → `call_grpc()` →
-`MessageToDict` → `model_validate()` against proto companions
+`parse_grpc_response()` (`MessageToDict`, then REST's own
+`parse_response_model()`) against proto companions
 compiled into `gen/pb_companions/`. `build_grpc_request()` transcodes
 the way grpc-gateway does: each URL placeholder sets the field its
 HTTP rule names at that position (GetDevice's `deviceid` sets `id`),

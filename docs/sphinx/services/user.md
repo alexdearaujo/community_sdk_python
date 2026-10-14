@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: UserService/ListUsers (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListUsersResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: UserService/CreateUser (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -213,7 +213,7 @@ sequenceDiagram
     R->>API: UserService/GetUser (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -289,7 +289,7 @@ sequenceDiagram
     R->>API: UserService/UpdateUser (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -368,7 +368,7 @@ sequenceDiagram
     R->>API: UserService/DeleteUser (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -444,7 +444,7 @@ sequenceDiagram
     R->>API: UserService/ResetActiveSessions (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ResetActiveSessionsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -520,7 +520,7 @@ sequenceDiagram
     R->>API: UserService/ResetApiToken (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ResetApiTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

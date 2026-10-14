@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/ListCustomDimensions (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCustomDimensionsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/GetCustomDimensionInfo (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCustomDimensionInfoResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -212,7 +212,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/UpdateCustomDimension (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateCustomDimensionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -291,7 +291,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/DeleteCustomDimension (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteCustomDimensionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -367,7 +367,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/CreatePopulator (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreatePopulatorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -446,7 +446,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/GetPopulator (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetPopulatorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -525,7 +525,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/UpdatePopulator (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdatePopulatorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -606,7 +606,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/DeletePopulator (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeletePopulatorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -684,7 +684,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/GetPopulatorField (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetPopulatorFieldResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -766,7 +766,7 @@ sequenceDiagram
     R->>API: CustomDimensionService/CreateCustomDimension (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateCustomDimensionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

@@ -70,7 +70,7 @@ sequenceDiagram
     R->>API: PackageService/ListPackage (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListPackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -138,7 +138,7 @@ sequenceDiagram
     R->>API: PackageService/CreatePackage (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreatePackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -215,7 +215,7 @@ sequenceDiagram
     R->>API: PackageService/GetPackage (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetPackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -291,7 +291,7 @@ sequenceDiagram
     R->>API: PackageService/UpdatePackage (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdatePackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -370,7 +370,7 @@ sequenceDiagram
     R->>API: PackageService/DeletePackage (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeletePackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -446,7 +446,7 @@ sequenceDiagram
     R->>API: TenantService/ListTenant (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -514,7 +514,7 @@ sequenceDiagram
     R->>API: TenantService/CreateTenant (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -591,7 +591,7 @@ sequenceDiagram
     R->>API: TenantService/GetTenant (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -667,7 +667,7 @@ sequenceDiagram
     R->>API: TenantService/UpdateTenant (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -746,7 +746,7 @@ sequenceDiagram
     R->>API: TenantService/DeleteTenant (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -822,7 +822,7 @@ sequenceDiagram
     R->>API: TenantUserService/ListTenantUser (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListTenantUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -898,7 +898,7 @@ sequenceDiagram
     R->>API: TenantUserService/CreateTenantUser (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateTenantUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -977,7 +977,7 @@ sequenceDiagram
     R->>API: TenantUserService/UpdateTenantUser (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateTenantUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1058,7 +1058,7 @@ sequenceDiagram
     R->>API: TenantUserService/DeleteTenantUser (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteTenantUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

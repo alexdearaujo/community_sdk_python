@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.notification_channel.services.NotificationChannelService as RestNotificationChannelModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.notification_channel import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -56,11 +57,12 @@ class NotificationChannelServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestNotificationChannelModule1.ListNotificationChannelsError,
             )
-            return attach_rate_limit(
-                rest_models.ListNotificationChannelsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListNotificationChannelsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListNotificationChannels,
+                operation_name="ListNotificationChannels",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -99,11 +101,12 @@ class NotificationChannelServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestNotificationChannelModule1.SearchNotificationChannelsError,
             )
-            return attach_rate_limit(
-                rest_models.SearchNotificationChannelsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SearchNotificationChannelsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.SearchNotificationChannels,
+                operation_name="SearchNotificationChannels",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -138,11 +141,12 @@ class NotificationChannelServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestNotificationChannelModule1.GetNotificationChannelError,
             )
-            return attach_rate_limit(
-                rest_models.GetNotificationChannelResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetNotificationChannelResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetNotificationChannel,
+                operation_name="GetNotificationChannel",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

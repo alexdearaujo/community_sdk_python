@@ -203,6 +203,11 @@ working over gRPC is a breaking change too.
   "failed with status code: 200". A JSON `null` body returned an empty model
   that nothing validated. Both now raise `HTTPException` with status 502 and
   a message that names the problem, as a body of the wrong shape already did.
+- **A gRPC response that does not match its model raises the same 502 as
+  REST.** It raised pydantic's `ValidationError`, outside `KentikError`. One
+  cause is an enum value newer than this SDK: the response fails on both
+  transports until you upgrade. Catch `HTTPException` (or `KentikError`) for
+  it, not `ValidationError`.
 - **Responses parse when the server leaves a message field unset.** A proto
   `REQUIRED` field binds the request, not the response, and an unset message
   field is absent from a response. So a policy without a baseline failed

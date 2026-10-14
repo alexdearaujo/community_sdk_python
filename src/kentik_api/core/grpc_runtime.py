@@ -15,9 +15,11 @@ from google.rpc import (
     error_details_pb2 as _error_details_pb2,  # noqa: F401  registers the standard detail types
 )
 from google.rpc import status_pb2
+from pydantic import BaseModel
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
+from kentik_api.core.rate_limit import RateLimit, attach_rate_limit, rate_limit_of_rpc
+from kentik_api.core.rest_runtime import parse_response_model
 from kentik_api.errors import (
     AuthenticationError,
     ConfigurationError,
@@ -233,6 +235,32 @@ def _as_operation_error(
         details=error.details,
         grpc_status_code=error.grpc_status_code,
     )
+
+
+def parse_grpc_response[T: BaseModel](
+    model_cls: type[T],
+    response: Any,
+    rate_limit: RateLimit | None,
+    *,
+    stub_method: Any,
+    operation_name: str,
+) -> T:
+    """Validates a gRPC response into the REST model, as REST validates its body.
+
+    A response the model rejects, such as an enum value newer than this SDK,
+    raises the same HTTPException 502 on both transports.
+    """
+    # Without always_print_fields_with_no_presence, a scalar at its zero value
+    # is omitted and then fails a model that marks the field required.
+    body = MessageToDict(response, always_print_fields_with_no_presence=True)
+    parsed = parse_response_model(
+        model_cls,
+        body,
+        operation_name=operation_name,
+        method="gRPC",
+        path=_method_label(stub_method),
+    )
+    return attach_rate_limit(parsed, rate_limit)
 
 
 def call_grpc(

@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: FlowTagService/SearchFlowTag (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SearchFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -146,7 +146,7 @@ sequenceDiagram
     R->>API: FlowTagService/CreateFlowTag (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -223,7 +223,7 @@ sequenceDiagram
     R->>API: FlowTagService/GetFlowTag (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -299,7 +299,7 @@ sequenceDiagram
     R->>API: FlowTagService/UpdateFlowTag (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -378,7 +378,7 @@ sequenceDiagram
     R->>API: FlowTagService/DeleteFlowTag (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

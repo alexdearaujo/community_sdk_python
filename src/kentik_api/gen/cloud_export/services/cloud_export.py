@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.cloud_export.services.CloudExportAdminService as RestCloudExportModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.cloud_export import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -56,11 +57,12 @@ class CloudExportServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCloudExportModule1.ListCloudExportsError,
             )
-            return attach_rate_limit(
-                rest_models.ListCloudExportsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListCloudExportsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListCloudExports,
+                operation_name="ListCloudExports",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -99,11 +101,12 @@ class CloudExportServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCloudExportModule1.CreateCloudExportError,
             )
-            return attach_rate_limit(
-                rest_models.CreateCloudExportResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateCloudExportResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateCloudExport,
+                operation_name="CreateCloudExport",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -138,11 +141,12 @@ class CloudExportServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCloudExportModule1.GetCloudExportError,
             )
-            return attach_rate_limit(
-                rest_models.GetCloudExportResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCloudExportResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetCloudExport,
+                operation_name="GetCloudExport",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -183,11 +187,12 @@ class CloudExportServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCloudExportModule1.UpdateCloudExportError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateCloudExportResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateCloudExportResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateCloudExport,
+                operation_name="UpdateCloudExport",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -223,11 +228,12 @@ class CloudExportServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCloudExportModule1.DeleteCloudExportError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteCloudExportResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteCloudExportResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteCloudExport,
+                operation_name="DeleteCloudExport",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: CustomApplicationService/ListCustomApplications (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCustomApplicationsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: CustomApplicationService/CreateCustomApplication (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateCustomApplicationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -213,7 +213,7 @@ sequenceDiagram
     R->>API: CustomApplicationService/GetCustomApplication (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCustomApplicationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -289,7 +289,7 @@ sequenceDiagram
     R->>API: CustomApplicationService/UpdateCustomApplication (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateCustomApplicationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -368,7 +368,7 @@ sequenceDiagram
     R->>API: CustomApplicationService/DeleteCustomApplication (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteCustomApplicationResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

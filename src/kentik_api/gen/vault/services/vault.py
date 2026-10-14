@@ -1,11 +1,12 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.vault.services.VaultService as RestVaultModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.vault import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -56,11 +57,12 @@ class VaultServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestVaultModule1.ListSecretError,
             )
-            return attach_rate_limit(
-                rest_models.ListSecretResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListSecretResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListSecret,
+                operation_name="ListSecret",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -95,11 +97,12 @@ class VaultServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestVaultModule1.GetSecretError,
             )
-            return attach_rate_limit(
-                rest_models.GetSecretResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetSecretResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetSecret,
+                operation_name="GetSecret",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

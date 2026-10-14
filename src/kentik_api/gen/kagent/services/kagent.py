@@ -1,7 +1,5 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.kagent.services.AgentCapabilityService as RestKagentModule1
 import kentik_api.gen.kagent.services.AgentService as RestKagentModule2
 import kentik_api.gen.kagent.services.CapabilityAdminService as RestKagentModule3
@@ -9,8 +7,11 @@ import kentik_api.gen.kagent.services.CapabilityReleaseService as RestKagentModu
 import kentik_api.gen.kagent.services.ConfigService as RestKagentModule5
 import kentik_api.gen.kagent.services.ProvisioningTokenService as RestKagentModule6
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.kagent import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -128,11 +129,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule1.ListAgentCapabilitiesError,
             )
-            return attach_rate_limit(
-                rest_models.ListAgentCapabilitiesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListAgentCapabilitiesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListAgentCapabilities,
+                operation_name="ListAgentCapabilities",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -173,11 +175,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule1.GetAgentCapabilityError,
             )
-            return attach_rate_limit(
-                rest_models.GetAgentCapabilityResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetAgentCapabilityResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetAgentCapability,
+                operation_name="GetAgentCapability",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -219,11 +222,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule1.DeleteAgentCapabilityError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteAgentCapabilityResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteAgentCapabilityResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteAgentCapability,
+                operation_name="DeleteAgentCapability",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -267,11 +271,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule1.UpsertAgentCapabilityError,
             )
-            return attach_rate_limit(
-                rest_models.UpsertAgentCapabilityResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpsertAgentCapabilityResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpsertAgentCapability,
+                operation_name="UpsertAgentCapability",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -322,11 +327,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule2.ListAgentsError,
             )
-            return attach_rate_limit(
-                rest_models.ListAgentsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListAgentsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.ListAgents,
+                operation_name="ListAgents",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -369,11 +375,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule2.CreateAgentError,
             )
-            return attach_rate_limit(
-                rest_models.CreateAgentResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateAgentResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.CreateAgent,
+                operation_name="CreateAgent",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -408,11 +415,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule2.AuthorizeError,
             )
-            return attach_rate_limit(
-                rest_models.AuthorizeResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AuthorizeResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.Authorize,
+                operation_name="Authorize",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -452,11 +460,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule2.GenerateInstallCommandsError,
             )
-            return attach_rate_limit(
-                rest_models.GenerateInstallCommandsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GenerateInstallCommandsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.GenerateInstallCommands,
+                operation_name="GenerateInstallCommands",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -497,11 +506,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule2.GetAgentError,
             )
-            return attach_rate_limit(
-                rest_models.GetAgentResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetAgentResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.GetAgent,
+                operation_name="GetAgent",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -543,11 +553,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule2.DeleteAgentError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteAgentResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteAgentResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.DeleteAgent,
+                operation_name="DeleteAgent",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -590,11 +601,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule2.UpdateAgentError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateAgentResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateAgentResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.UpdateAgent,
+                operation_name="UpdateAgent",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -629,11 +641,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule3.CapabilityAdminService_ListCapabilitiesError,
             )
-            return attach_rate_limit(
-                rest_models.ListCapabilitiesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListCapabilitiesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_4.ListCapabilities,
+                operation_name="CapabilityAdminService_ListCapabilities",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -670,11 +683,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule3.CapabilityAdminService_CreateCapabilityError,
             )
-            return attach_rate_limit(
-                rest_models.CreateCapabilityResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateCapabilityResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_4.CreateCapability,
+                operation_name="CapabilityAdminService_CreateCapability",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -707,11 +721,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule3.CapabilityAdminService_GetCapabilityError,
             )
-            return attach_rate_limit(
-                rest_models.GetCapabilityResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCapabilityResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_4.GetCapability,
+                operation_name="CapabilityAdminService_GetCapability",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -744,11 +759,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule3.CapabilityAdminService_DeleteCapabilityError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteCapabilityResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteCapabilityResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_4.DeleteCapability,
+                operation_name="CapabilityAdminService_DeleteCapability",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -788,11 +804,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule3.CapabilityAdminService_UpdateCapabilityError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateCapabilityResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateCapabilityResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_4.UpdateCapability,
+                operation_name="CapabilityAdminService_UpdateCapability",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -843,11 +860,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilityReleaseError,
             )
-            return attach_rate_limit(
-                rest_models.GetCapabilityReleaseResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCapabilityReleaseResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.GetCapabilityRelease,
+                operation_name="CapabilityReleaseService_GetCapabilityRelease",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -902,11 +920,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilityLatestReleasesError,
             )
-            return attach_rate_limit(
-                rest_models.GetCapabilityLatestReleasesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCapabilityLatestReleasesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.GetCapabilityLatestReleases,
+                operation_name="CapabilityReleaseService_GetCapabilityLatestReleases",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -949,11 +968,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilitySupportedDistrosError,
             )
-            return attach_rate_limit(
-                rest_models.GetCapabilitySupportedDistrosResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCapabilitySupportedDistrosResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.GetCapabilitySupportedDistros,
+                operation_name="CapabilityReleaseService_GetCapabilitySupportedDistros",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -993,11 +1013,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule5.CreateConfigError,
             )
-            return attach_rate_limit(
-                rest_models.CreateConfigResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateConfigResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.CreateConfig,
+                operation_name="CreateConfig",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1032,11 +1053,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule5.GetConfigError,
             )
-            return attach_rate_limit(
-                rest_models.GetConfigResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetConfigResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.GetConfig,
+                operation_name="GetConfig",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1071,11 +1093,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule5.DeleteConfigError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteConfigResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteConfigResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.DeleteConfig,
+                operation_name="DeleteConfig",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1116,11 +1139,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule5.UpdateConfigError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateConfigResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateConfigResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.UpdateConfig,
+                operation_name="UpdateConfig",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1156,11 +1180,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule6.ListProvisioningTokensError,
             )
-            return attach_rate_limit(
-                rest_models.ListProvisioningTokensResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListProvisioningTokensResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.ListProvisioningTokens,
+                operation_name="ListProvisioningTokens",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1199,11 +1224,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule6.CreateProvisioningTokenError,
             )
-            return attach_rate_limit(
-                rest_models.CreateProvisioningTokenResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateProvisioningTokenResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.CreateProvisioningToken,
+                operation_name="CreateProvisioningToken",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1238,11 +1264,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule6.GetProvisioningTokenError,
             )
-            return attach_rate_limit(
-                rest_models.GetProvisioningTokenResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetProvisioningTokenResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.GetProvisioningToken,
+                operation_name="GetProvisioningToken",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1279,11 +1306,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule6.ListAgentsByProvisioningTokenError,
             )
-            return attach_rate_limit(
-                rest_models.ListAgentsByProvisioningTokenResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListAgentsByProvisioningTokenResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.ListAgentsByProvisioningToken,
+                operation_name="ListAgentsByProvisioningToken",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1324,11 +1352,12 @@ class KagentServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKagentModule6.RevokeProvisioningTokenError,
             )
-            return attach_rate_limit(
-                rest_models.RevokeProvisioningTokenResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.RevokeProvisioningTokenResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.RevokeProvisioningToken,
+                operation_name="RevokeProvisioningToken",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

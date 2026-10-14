@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.kmeta.services.KmetaService as RestKmetaModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.kmeta import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -56,11 +57,12 @@ class KmetaServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmetaModule1.ListServiceNowConfigsError,
             )
-            return attach_rate_limit(
-                rest_models.ListServiceNowConfigsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListServiceNowConfigsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListServiceNowConfigs,
+                operation_name="ListServiceNowConfigs",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -101,11 +103,12 @@ class KmetaServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmetaModule1.CreateServiceNowConfigError,
             )
-            return attach_rate_limit(
-                rest_models.CreateServiceNowConfigResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateServiceNowConfigResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateServiceNowConfig,
+                operation_name="CreateServiceNowConfig",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -143,11 +146,12 @@ class KmetaServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmetaModule1.GetServiceNowConfigError,
             )
-            return attach_rate_limit(
-                rest_models.GetServiceNowConfigResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetServiceNowConfigResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetServiceNowConfig,
+                operation_name="GetServiceNowConfig",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -190,11 +194,12 @@ class KmetaServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmetaModule1.UpdateServiceNowConfigError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateServiceNowConfigResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateServiceNowConfigResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateServiceNowConfig,
+                operation_name="UpdateServiceNowConfig",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -233,11 +238,12 @@ class KmetaServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestKmetaModule1.DeleteServiceNowConfigError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteServiceNowConfigResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteServiceNowConfigResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteServiceNowConfig,
+                operation_name="DeleteServiceNowConfig",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: CloudExportAdminService/ListCloudExports (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCloudExportsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: CloudExportAdminService/CreateCloudExport (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateCloudExportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -213,7 +213,7 @@ sequenceDiagram
     R->>API: CloudExportAdminService/GetCloudExport (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCloudExportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -289,7 +289,7 @@ sequenceDiagram
     R->>API: CloudExportAdminService/UpdateCloudExport (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateCloudExportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -368,7 +368,7 @@ sequenceDiagram
     R->>API: CloudExportAdminService/DeleteCloudExport (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteCloudExportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
