@@ -64,11 +64,11 @@ This ledger records findings that are intentionally deferred.
 | K8 | release or docs | Needs a clean-venv wheel job in CI. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D1 | release or docs | Generator must run extract() on the patched swagger. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D2 | release or docs | Generator example snippets need import fixes. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D3 | release or docs | CLAUDE.md rewrite needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D4 | release or docs | Constitution change needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D5 | release or docs | docs_rendering text needs a generator change. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D3 | release or docs | CLAUDE.md rewrite needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D4 | release or docs | Constitution change needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D5 | release or docs | docs_rendering text needs a generator change. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D6 | release or docs | Waits for B4. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D11 | release or docs | Spec 001 quickstart commands need a rewrite. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D11 | release or docs | Spec 001 quickstart commands need a rewrite. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D12 | release or docs | Needs template changes for docstrings. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 
 ## Closure notes
@@ -174,3 +174,20 @@ This ledger records findings that are intentionally deferred.
   `NotImplementedError` naming it, chained with `from`. The import still
   degrades instead of failing the client, so REST keeps working. 33 entries
   remain open.
+- D3 is resolved (2026-10-13). CLAUDE.md now says: `make generate` clones
+  and `local` reads the sibling checkout, with no fallback; `make all` builds
+  no docs, and `make docs` regenerates from GitHub first; the guarded
+  couplings name the template sentinel and `_fix_path_parameters`;
+  `api_surface.py` is listed; the commit hashes that only the local
+  `refactor` branch has are gone; the pre-PR steps list the five other CI
+  gates. Owner review happens in the PR. 32 entries remain open.
+- D4 is resolved (2026-10-13). Constitution 1.4.0: Principle VI states the
+  real resolution order and forbids `load_dotenv`. The same revision fixes
+  the schema-source, `make all`, gRPC-routing, and guarded-coupling drift.
+  31 entries remain open.
+- D5 is resolved (2026-10-13). `docs_rendering` and the regenerated
+  `gen/README.md` say gRPC routing matches by HTTP rule. 30 entries remain
+  open.
+- D11 is resolved (2026-10-13). The spec 001 quickstart picks one file into
+  `$target` before it truncates or restores, so a zsh redirect to a glob can
+  no longer write to every device swagger version. 29 entries remain open.

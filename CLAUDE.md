@@ -105,7 +105,7 @@ subpackage of independently testable phase modules (see
 - `error_package.py` — per-service error class generation
   (`generate_service_error_package()`) and the error-dispatch
   injection (`inject_service_error_handling()`; see the
-  fragile-coupling note below).
+  guarded-coupling note below).
 - `fixup.py` — generated-code post-processing, called once per
   service directory after the schema availability window closes.
   Single public entrypoint: `fix_generated_service(service_dir)`.
@@ -131,6 +131,10 @@ subpackage of independently testable phase modules (see
   generated wrapper method signatures off disk. The two-method
   interface makes this ordering constraint visible instead of
   relying on caller discipline.
+- `api_surface.py` — records the public API surface into
+  `api_surface.json` on every run, and diffs two recordings. `make
+  release-notes`, `make check-changelog`, and the end-of-run
+  `API SURFACE CHANGED` alert all read it.
 - `_shared.py` — `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, and the helpers
   that more than one phase module genuinely uses:
   `iter_service_dirs()` and `INTERNAL_GEN_DIRS` (the single answer to
@@ -210,15 +214,10 @@ code confirms it directly:
   thin transport-selection and credential-wiring code, not
   per-endpoint logic.
 
-This design took several dedicated commits to get right:
-
-- `264cf74`, `713d4e5`, `da92874` — introduced and refined error
-  handling inside `request_json`, including `TransportError` and
-  `_raise_http_error`
-- `8f262ae` — added `.env`-based auth
-- `90e65c6` — added `scripts/sample_consume_sdk.py`, which proves
-  the whole path end-to-end against both a mocked and a real API
-  call
+This design took several dedicated changes to get right: error
+handling inside `request_json` (`TransportError`, `_raise_http_error`),
+`.env`-based auth, and `scripts/sample_consume_sdk.py`, which proves
+the whole path end-to-end against both a mocked and a real API call.
 
 **Never regress this pattern.** Don't generate, hand-write, or
 suggest per-endpoint connection, auth, or retry code. Don't
@@ -250,18 +249,22 @@ structurally, not just by convention or discipline.
   only *inserts* a toctree line into it if missing — a
   non-destructive append, not an overwrite.
 
-### A guarded coupling worth knowing about
+### Guarded couplings worth knowing about
 
 `error_package.inject_service_error_handling()` wires each freshly
-generated per-service REST module to the shared runtime. It does
-this by string-matching the line `from kentik_api.core.rest_runtime
-import request_json` in the generated file content. It then inserts
-the corresponding `from ..error import ...` line right after it. If
-`request_json` is ever renamed or relocated, or if that exact import
-line's text changes, the function now raises `ValueError` immediately
-(when there are operations to inject), rather than silently skipping
-injection. Update `scripts/generation/error_package.py` in lockstep
-with any such rename.
+generated per-service REST module to its error classes. It replaces
+the `# __ERROR_IMPORTS_PLACEHOLDER__` sentinel that
+`scripts/openapi_templates/service.jinja2` emits with a
+`from ..error import ...` line. For a file without the sentinel it
+falls back to inserting that line after
+`from kentik_api.core.rest_runtime import request_json`. With neither
+anchor present, it raises `ValueError` (when there are operations to
+inject) rather than silently skipping.
+
+`fixup._fix_path_parameters()` matches that same `request_json`
+import line to add the `path_segment` import next to it, and raises
+`ValueError` when the line is missing. Rename or move `request_json`
+only together with both functions and the template.
 
 ### Services without a wrapper: out of scope, on purpose
 
@@ -291,10 +294,11 @@ so no generator can currently act on it.
 
 ## Generation pipeline
 
-- Schema source defaults to the local sibling repo
-  `../api-schema-public/`. If that repo is not present, the
-  generator falls back to cloning
-  `https://github.com/kentik/api-schema-public.git`.
+- `make generate` clones
+  `https://github.com/kentik/api-schema-public.git` (schema HEAD).
+  `make generate local` reads the sibling checkout
+  `../api-schema-public/` instead, and fails if it is absent. There
+  is no automatic fallback between the two.
 - The generator uses only the newest version per swagger family (see
   CONTEXT.md) when multiple versioned swagger files exist.
 - See `docs/sphinx/local_generation_workflow.md` for full details,
@@ -349,14 +353,17 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
 
 ## Key commands
 
-- `make` / `make all` — full pipeline: `services docs tests`
+- `make` / `make all` — `services tests`. Docs are opt-in.
 - `make services` (alias for `make generate`) — regenerate SDK from
-  schema
+  schema HEAD on GitHub
 - `make generate local` — regenerate from the local
   `../api-schema-public/` checkout
 - `make generate LOCAL_REPO=/path/to/api-schema-public` —
   regenerate from an arbitrary local schema path
-- `make docs` — build Sphinx docs (`docs/sphinx` → `docs/build/html`)
+- `make docs` — regenerate from GitHub (it depends on `generate`),
+  then build Sphinx docs (`docs/sphinx` → `docs/build/html`) with
+  warnings as errors. To build from the committed tree only, run
+  `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`.
 - `make release-notes` (`SINCE=<ref>`): lists the API surface changes since
   a ref (default: the newest tag with a surface record), field and enum level
   included. `make check-changelog` fails when a breaking change in that list
@@ -429,6 +436,17 @@ Mocked/offline layers (no network, safe to run anywhere, part of
      regeneration" in `docs/sphinx/guides/generation.md`.
   3. Run the relevant focused suite.
   4. Run `make test`.
+
+  CI also runs these gates on every pull request. Run them locally
+  first:
+
+  - `make typecheck`
+  - `uv run ruff check .` and `uv run ruff format --check .`
+  - `make check-specs`
+  - the Sphinx build with `-W` (see `make docs` above)
+  - generated-output drift: CI runs `make generate` from schema HEAD
+    and fails if the tree differs from what is committed. Output
+    generated with `local` from a stale checkout fails this gate.
 
 Live layer (real network, opt-in only, **not** part of `make test`):
 
