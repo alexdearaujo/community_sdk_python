@@ -44,7 +44,7 @@ This ledger records findings that are intentionally deferred.
 | R5 | runtime | Total-deadline timeout needs a transport design. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R6 | runtime | Fork safety needs client pool lifecycle work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R7 | runtime | Empty-string credentials need a resolution-order decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R9 | runtime | Mutability rules for config objects need a design decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R9 | runtime | Mutability rules for config objects need a design decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R10 | runtime | Needs one live call to settle. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R11 | runtime | Free-form bodies need schema-aware gRPC encoding. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R12 | runtime | The missing update_mask argument needs generator work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -151,3 +151,9 @@ This ledger records findings that are intentionally deferred.
   `"<METHOD> <path template>"`, so the map holds one entry per endpoint. The
   guide reads the public `client.api_config.rate_limits`. 37 entries remain
   open.
+- R9 is resolved (2026-10-13). Decision: settings are read-only after
+  construction. `APIConfig` refuses assignment to its eight settings, and
+  `KentikCredentials` exposes `email` and `api_token` as properties.
+  `rate_limits` stays a shared, mutable map. The gRPC override check no longer
+  compares fields, since a `with_timeout()` copy cannot change them. 36
+  entries remain open.

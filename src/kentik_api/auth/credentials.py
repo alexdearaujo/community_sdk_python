@@ -24,11 +24,23 @@ class _KentikAuthPlugin(grpc.AuthMetadataPlugin):
 
 
 class KentikCredentials:
-    """Unified credentials for both REST and gRPC."""
+    """Unified credentials for both REST and gRPC.
+
+    Read-only: the gRPC channel binds them once, so a change would reach only
+    some calls.
+    """
 
     def __init__(self, email: str, api_token: str):
-        self.email = email
-        self.api_token = api_token
+        self._email = email
+        self._api_token = api_token
+
+    @property
+    def email(self) -> str:
+        return self._email
+
+    @property
+    def api_token(self) -> str:
+        return self._api_token
 
     def get_grpc_plugin(self) -> grpc.AuthMetadataPlugin:
         """Returns the auth plugin required for the gRPC channel."""

@@ -331,19 +331,13 @@ def test_call_grpc_allows_with_timeout_override_for_deadline_only():
     assert seen_timeout == 7.5
 
 
-def test_call_grpc_rejects_tampered_with_timeout_override():
-    class _Stub:
-        _method = "/svc.Service/Op"
+def test_a_timeout_override_cannot_be_tampered_with():
+    override = APIConfig(auth_email="dev@example.com", auth_token="token").with_timeout(
+        grpc_deadline=7.5
+    )
 
-        def __call__(self, _request, **_kwargs):
-            return b"ok"
-
-    base = APIConfig(auth_email="dev@example.com", auth_token="token")
-    override = base.with_timeout(grpc_deadline=7.5)
-    override.base_path = "https://127.0.0.1:1"
-
-    with pytest.raises(ConfigurationError, match="only change timeouts"):
-        call_grpc(_Stub(), object(), api_config=override)
+    with pytest.raises(AttributeError, match="read-only"):
+        override.base_path = "https://127.0.0.1:1"
 
 
 def test_call_grpc_raises_the_operation_error_class_like_rest(rpc_error):

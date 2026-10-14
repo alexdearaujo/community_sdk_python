@@ -171,23 +171,12 @@ def _method_label(stub_method) -> str:
 
 def _validate_grpc_override(api_config: APIConfig) -> None:
     # gRPC auth metadata and target are bound to the channel at transport setup.
-    # A direct APIConfig(...) passed per call cannot change them safely.
-    source = getattr(api_config, "_shares_client_of", None)
-    if source is None:
+    # A direct APIConfig(...) passed per call cannot change them safely; a
+    # with_timeout() copy cannot change them at all.
+    if getattr(api_config, "_shares_client_of", None) is None:
         raise ConfigurationError(
             "gRPC api_config_override must come from client.api_config.with_timeout(...). "
             "Per-call credential, host, or verify overrides are not supported on gRPC."
-        )
-
-    if (
-        api_config.base_path != source.base_path
-        or api_config.auth_email != source.auth_email
-        or api_config.auth_token != source.auth_token
-        or api_config.verify != source.verify
-    ):
-        raise ConfigurationError(
-            "gRPC api_config_override can only change timeouts. "
-            "Credential, host, and verify changes require a new KentikAPI client."
         )
 
 

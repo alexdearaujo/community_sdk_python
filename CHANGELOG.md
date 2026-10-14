@@ -116,6 +116,12 @@ by a number. The Service word stays when it is the object of the call
 
 ### Fixed
 
+- **`APIConfig` and `KentikCredentials` settings are read-only.** The SDK reads
+  each setting at a different time: `verify` and `base_path` when the REST
+  connection opens, the credentials when the gRPC channel opens, a timeout on
+  every call. So a change after construction reached some calls, or none. Each
+  assignment now raises `AttributeError`. Use `with_timeout()` for timeouts, or
+  build a new `KentikAPI` for anything else.
 - **A forked process opens its own REST connection.** After `os.fork()`, for
   example in a multiprocessing worker, the child reused the parent's pooled
   connection, so both processes wrote to one socket. The child now opens a new

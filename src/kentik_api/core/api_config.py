@@ -100,6 +100,22 @@ def _require_positive(field: str, value: float) -> None:
         )
 
 
+# Read at different times (client creation, each call, gRPC channel setup), so a
+# later change would apply to some calls and not others.
+_READ_ONLY = frozenset(
+    {
+        "base_path",
+        "auth_email",
+        "auth_token",
+        "verify",
+        "timeout",
+        "rest_timeout",
+        "rest_deadline",
+        "grpc_deadline",
+    }
+)
+
+
 class APIConfig:
     """Centralized API Configuration for all generated REST services.
 
@@ -109,7 +125,17 @@ class APIConfig:
     A number bounds the whole call on either transport. A `rest_timeout`
     given as an `httpx.Timeout` keeps httpx's meaning instead: it bounds
     each phase, and each read, separately, with no total deadline.
+
+    The settings are read-only. Use with_timeout(), or build a new APIConfig.
     """
+
+    def __setattr__(self, name: str, value: object) -> None:
+        if name in _READ_ONLY and name in self.__dict__:
+            raise AttributeError(
+                f"APIConfig.{name} is read-only. Use with_timeout(), or build "
+                "a new APIConfig or KentikAPI."
+            )
+        super().__setattr__(name, value)
 
     def __init__(
         self,
@@ -131,9 +157,10 @@ class APIConfig:
 
         if rest_timeout is None:
             rest_timeout = timeout
-        self.rest_deadline: float | None = None
+        self.rest_deadline: float | None = (
+            None if isinstance(rest_timeout, httpx.Timeout) else rest_timeout
+        )
         if not isinstance(rest_timeout, httpx.Timeout):
-            self.rest_deadline = rest_timeout
             rest_timeout = httpx.Timeout(rest_timeout)
         for phase in ("connect", "read", "write", "pool"):
             bound = getattr(rest_timeout, phase)
