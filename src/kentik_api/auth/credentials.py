@@ -7,7 +7,7 @@ AUTH_EMAIL_KEY = "X-CH-Auth-Email"
 AUTH_TOKEN_KEY = "X-CH-Auth-API-Token"
 
 
-def auth_headers(email: str | None, api_token: str | None) -> dict[str, str | None]:
+def auth_headers(email: str, api_token: str) -> dict[str, str]:
     """The auth headers for one credential pair, as REST sends them."""
     return {AUTH_EMAIL_KEY: email, AUTH_TOKEN_KEY: api_token}
 

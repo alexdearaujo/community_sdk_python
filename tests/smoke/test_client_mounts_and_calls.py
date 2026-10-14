@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 from unittest.mock import MagicMock
 
 import httpx
@@ -137,7 +138,11 @@ def test_an_explicit_empty_credential_is_refused(no_env_credentials, field, valu
     (no_env_credentials / ".env").write_text(
         "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN=file-token\n"
     )
-    args = {"email": "arg@example.com", "api_token": "arg-token", field: value}
+    args: dict[str, Any] = {
+        "email": "arg@example.com",
+        "api_token": "arg-token",
+        field: value,
+    }
 
     with pytest.raises(ConfigurationError, match=field):
         KentikAPI(**args)

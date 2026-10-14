@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from typing import Any
 
 import grpc
 import httpx
@@ -78,7 +79,7 @@ def test_parser_never_raises_on_hostile_input():
 
     assert RateLimit.from_headers(Exploding(a="b")) is None
     # A one-element tuple is the malformed input under test.
-    assert RateLimit.from_metadata([("x-ratelimit-limit",)]) is None  # ty: ignore[invalid-argument-type]
+    assert RateLimit.from_metadata([("x-ratelimit-limit",)]) is None  # ty: ignore[invalid-argument-type]  # pyright: ignore[reportArgumentType]
 
 
 def test_grpc_metadata_parses_like_headers_including_bytes_values():
@@ -229,7 +230,7 @@ def test_grpc_error_reads_quota_from_trailers_only_responses(rpc_error):
     assert rate_limit.remaining == 0
 
 
-def _details(method="/svc.Service/Op"):
+def _details(method: str | bytes = "/svc.Service/Op") -> Any:
     return SimpleNamespace(
         method=method,
         timeout=None,
@@ -242,7 +243,7 @@ def _details(method="/svc.Service/Op"):
 
 def test_interceptor_records_quota_per_method_on_success():
     config = APIConfig()
-    outcome = SimpleNamespace(
+    outcome: Any = SimpleNamespace(
         exception=lambda: None,
         initial_metadata=lambda: [("x-ratelimit-remaining", "41")],
     )
@@ -260,7 +261,9 @@ def test_interceptor_records_quota_from_a_failed_calls_error(rpc_error):
     error = rpc_error(grpc.StatusCode.RESOURCE_EXHAUSTED)
     error.initial_metadata = lambda: [("x-ratelimit-remaining", "0")]
     # grpcio's failure outcome reports no metadata of its own.
-    outcome = SimpleNamespace(exception=lambda: error, initial_metadata=lambda: None)
+    outcome: Any = SimpleNamespace(
+        exception=lambda: error, initial_metadata=lambda: None
+    )
 
     _DefaultDeadlineInterceptor(config, lambda: False).intercept_unary_unary(
         lambda details, request: outcome, _details(b"/svc.Service/Op"), object()
@@ -271,7 +274,9 @@ def test_interceptor_records_quota_from_a_failed_calls_error(rpc_error):
 
 def test_interceptor_ignores_calls_without_quota():
     config = APIConfig()
-    outcome = SimpleNamespace(exception=lambda: None, initial_metadata=lambda: None)
+    outcome: Any = SimpleNamespace(
+        exception=lambda: None, initial_metadata=lambda: None
+    )
 
     _DefaultDeadlineInterceptor(config, lambda: False).intercept_unary_unary(
         lambda details, request: outcome, _details(), object()

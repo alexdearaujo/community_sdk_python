@@ -7,6 +7,8 @@ wrong token, so these keys are asserted verbatim rather than loosely.
 
 from __future__ import annotations
 
+from typing import Any
+
 from kentik_api.auth.credentials import KentikCredentials, auth_headers
 
 CREDENTIALS = KentikCredentials(email="dev@example.com", api_token="secret-token")
@@ -14,10 +16,10 @@ CREDENTIALS = KentikCredentials(email="dev@example.com", api_token="secret-token
 
 def test_grpc_plugin_emits_exact_auth_metadata():
     received = []
+    # grpcio passes a real context and callback; the plugin reads neither type.
+    plugin: Any = CREDENTIALS.get_grpc_plugin()
 
-    CREDENTIALS.get_grpc_plugin()(
-        context=None, callback=lambda md, err: received.append((md, err))
-    )
+    plugin(context=None, callback=lambda md, err: received.append((md, err)))
 
     assert received == [
         (

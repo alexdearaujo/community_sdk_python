@@ -125,6 +125,26 @@ def _rewrite_grpc_imports(content: str) -> str:
     return content
 
 
+# grpcio's typeshed stubs omit grpc.experimental, which every protoc-generated
+# service helper calls, so Pylance flags each call site.
+_GRPC_PYRIGHT_DIRECTIVE = "# pyright: reportAttributeAccessIssue=false\n"
+
+
+def _silence_grpc_experimental(content: str) -> str:
+    if _GRPC_PYRIGHT_DIRECTIVE in content:
+        return content
+    return _GRPC_PYRIGHT_DIRECTIVE + content
+
+
+# protoc types a module-level extension field number as ClassVar, which is
+# only legal in a class body.
+_MODULE_LEVEL_CLASSVAR = re.compile(r"^(\w+_FIELD_NUMBER): _ClassVar\[int\]$", re.M)
+
+
+def _fix_module_level_classvar(stub: str) -> str:
+    return _MODULE_LEVEL_CLASSVAR.sub(r"\1: int", stub)
+
+
 def _relink_pb2_dependency_imports(output_dir: Path) -> int:
     """Repoints protoc's dependency imports at the flattened gen/<service>/pb/ layout.
 
@@ -737,7 +757,15 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                 for pb_file in pb_dir.rglob("*_grpc.py"):
                                     content = pb_file.read_text(encoding="utf-8")
                                     content = _rewrite_grpc_imports(content)
+                                    content = _silence_grpc_experimental(content)
                                     pb_file.write_text(content, encoding="utf-8")
+                                for stub_file in pb_dir.rglob("*.pyi"):
+                                    stub_file.write_text(
+                                        _fix_module_level_classvar(
+                                            stub_file.read_text(encoding="utf-8")
+                                        ),
+                                        encoding="utf-8",
+                                    )
 
                                 oneof_members = oneof_members_by_definition(
                                     descriptor_pb2.FileDescriptorSet.FromString(

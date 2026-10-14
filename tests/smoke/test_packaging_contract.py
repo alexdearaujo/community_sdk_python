@@ -66,6 +66,7 @@ def test_pypi_readme_links_resolve_on_pypi():
     links = re.findall(r"\]\(([^)]+)\)", (ROOT / readme).read_text("utf-8"))
     assert links
     assert [link for link in links if not link.startswith("https://")] == []
-    assert f"/{readme}" in PYPROJECT["tool"]["hatch"]["build"]["targets"]["sdist"][
-        "include"
-    ]
+    assert (
+        f"/{readme}"
+        in PYPROJECT["tool"]["hatch"]["build"]["targets"]["sdist"]["include"]
+    )

@@ -150,7 +150,7 @@ def test_with_timeout_copies_the_security_fields_and_cannot_change_them():
     params = set(inspect.signature(APIConfig.with_timeout).parameters) - {"self"}
     assert params == {"timeout", "rest_timeout", "grpc_deadline"}
     with pytest.raises(TypeError):
-        base.with_timeout(300, base_path="https://attacker.example")  # ty: ignore[unknown-argument]
+        base.with_timeout(300, base_path="https://attacker.example")  # ty: ignore[unknown-argument]  # pyright: ignore[reportCallIssue]
 
 
 def test_no_test_fixture_disables_tls_verification():

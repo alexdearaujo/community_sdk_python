@@ -25,9 +25,11 @@ if str(_scripts_dir) not in sys.path:
 
 from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _pb_stem,
+    _fix_module_level_classvar,
     _proto_collisions,
     _qualify_colliding_imports,
     _rewrite_grpc_imports,
+    _silence_grpc_experimental,
     clean_schema_names,
     hoist_inline_request_bodies,
     inline_request_body_refs,
@@ -65,6 +67,27 @@ def test_rewrite_unparenthesised_from_import():
 def test_rewrite_leaves_non_pb2_imports_unchanged():
     content = "from kentik_api.core.api_config import APIConfig\n"
     assert _rewrite_grpc_imports(content) == content
+
+
+def test_grpc_directive_is_added_once():
+    once = _silence_grpc_experimental("import grpc\n")
+
+    assert once.startswith("# pyright: reportAttributeAccessIssue=false\n")
+    assert _silence_grpc_experimental(once) == once
+
+
+def test_module_level_classvar_becomes_int_and_class_body_keeps_it():
+    stub = (
+        "VISIBILITY_FIELD_NUMBER: _ClassVar[int]\n"
+        "class Device(_message.Message):\n"
+        "    ID_FIELD_NUMBER: _ClassVar[int]\n"
+    )
+
+    assert _fix_module_level_classvar(stub) == (
+        "VISIBILITY_FIELD_NUMBER: int\n"
+        "class Device(_message.Message):\n"
+        "    ID_FIELD_NUMBER: _ClassVar[int]\n"
+    )
 
 
 # ---------------------------------------------------------------------------
