@@ -8,9 +8,13 @@ from pydantic import BaseModel, Field
 
 class HostnameTest(BaseModel):
     """
-    HostnameTest model
+    HostnameTest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    target: Optional[str] = Field(validation_alias="target", default=None)
+    target: Optional[str] = Field(
+        validation_alias="target",
+        default=None,
+        description="Fully qualified DNS name of the target host",
+    )

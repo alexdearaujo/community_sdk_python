@@ -517,9 +517,27 @@ def _generate_service_wrappers():
                         f'            raise NotImplementedError("gRPC translation for {func_name_pascal} is not yet implemented.")',
                     ]
 
+                # Escape back to source: ast.get_docstring returned the runtime text.
+                doc_source = op.docstring.replace("\\", "\\\\").replace(
+                    '"""', '\\"\\"\\"'
+                )
+                doc_lines = (
+                    [
+                        '        """',
+                        *(
+                            f"        {line}".rstrip()
+                            for line in doc_source.split("\n")
+                        ),
+                        '        """',
+                    ]
+                    if op.docstring
+                    else []
+                )
+
                 wrapper_code.extend(
                     [
                         f"    def {unique_method_name}(self, {sig_args}) -> {return_type}:",
+                        *doc_lines,
                         *grpc_lines,
                         "        elif isinstance(self._transport, RestTransport):",
                         "            rest_transport = cast(RestTransport, self._transport)",

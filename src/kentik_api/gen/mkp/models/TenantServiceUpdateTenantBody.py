@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 class TenantServiceUpdateTenantBody(BaseModel):
     """
-    UpdateTenantRequest model
+    UpdateTenantRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    tenant: Optional[Dict[str, Any]] = Field(validation_alias="tenant", default=None)
+    tenant: Optional[Dict[str, Any]] = Field(
+        validation_alias="tenant", default=None, description="Tenant"
+    )

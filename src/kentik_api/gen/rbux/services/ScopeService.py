@@ -40,6 +40,11 @@ from ..models import (  # noqa: F401
 
 
 def ListScopes(api_config_override: Optional[APIConfig] = None) -> ListScopesResponse:
+    """
+    List Focus Scopes
+
+    Returns all Focus Scopes for the user's company.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -68,6 +73,11 @@ def ListScopes(api_config_override: Optional[APIConfig] = None) -> ListScopesRes
 def CreateScope(
     api_config_override: Optional[APIConfig] = None, *, data: Scope
 ) -> CreateScopeResponse:
+    """
+    Create Focus Scope
+
+    Creates and returns a new Focus Scope.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -97,6 +107,11 @@ def CreateScope(
 def GetScope(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetScopeResponse:
+    """
+    Get Focus Scope
+
+    Returns a single Focus Scope by id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -128,6 +143,11 @@ def UpdateScope(
     id: str,
     data: ScopeServiceUpdateScopeBody,
 ) -> UpdateScopeResponse:
+    """
+    Update Focus Scope
+
+    Updates and returns an existing Focus Scope.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -157,6 +177,11 @@ def UpdateScope(
 def DeleteScope(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteScopeResponse:
+    """
+    Delete Focus Scope
+
+    Deletes a Focus Scope.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

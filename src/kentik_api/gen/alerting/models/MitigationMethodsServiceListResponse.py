@@ -21,5 +21,7 @@ class MitigationMethodsServiceListResponse(BaseModel):
     )
 
     methods: Optional[List[Optional[MitigationMethod]]] = Field(
-        validation_alias="methods", default=None
+        validation_alias="methods",
+        default=None,
+        description="The mitigation methods that were found matching the filters.",
     )

@@ -37,6 +37,11 @@ class DictionaryServiceWrapper:
     def get_dictionary(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.GetDictionaryResponse:
+        """
+        Get Dictionary
+
+        Returns the full UDE dictionary for the authenticated company, including all measurements with their dimension and metric fields, operator sets, and metric family definitions.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

@@ -10,13 +10,19 @@ from .ASGroupDetailed import ASGroupDetailed
 
 class ListASGroupsResponse(BaseModel):
     """
-    ListASGroupsResponse model
+    ListASGroupsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     asGroups: Optional[List[Optional[ASGroupDetailed]]] = Field(
-        validation_alias="asGroups", default=None
+        validation_alias="asGroups",
+        default=None,
+        description="List of configurations of requested AS groups",
     )
 
-    invalidCount: Optional[int] = Field(validation_alias="invalidCount", default=None)
+    invalidCount: Optional[int] = Field(
+        validation_alias="invalidCount",
+        default=None,
+        description="Number of invalid entries encountered while collecting data",
+    )

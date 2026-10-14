@@ -37,6 +37,11 @@ class AsGroupServiceWrapper:
     def list_as_groups(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListASGroupsResponse:
+        """
+        List all AS groups.
+
+        Returns list of configured AS groups.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -71,6 +76,11 @@ class AsGroupServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateASGroupRequest,
     ) -> rest_models.CreateASGroupResponse:
+        """
+        Configure a new AS group.
+
+        Create configuration for a new AS group. Returns the newly created configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -107,6 +117,11 @@ class AsGroupServiceWrapper:
     def get_as_group(
         self, *, api_config_override: Optional[APIConfig] = None, asGroupid: str
     ) -> rest_models.GetASGroupResponse:
+        """
+        Retrieve configuration of a AS group.
+
+        Returns configuration of a AS group specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -145,6 +160,11 @@ class AsGroupServiceWrapper:
         asGroupid: str,
         data: rest_models.ASGroupServiceUpdateASGroupBody,
     ) -> rest_models.UpdateASGroupResponse:
+        """
+        Updates configuration of a AS group.
+
+        Replaces configuration of a AS group with attributes in the request. Returns the updated configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -182,6 +202,11 @@ class AsGroupServiceWrapper:
     def delete_as_group(
         self, *, api_config_override: Optional[APIConfig] = None, asGroupid: str
     ) -> rest_models.DeleteASGroupResponse:
+        """
+        Delete configuration of a AS group.
+
+        Deletes configuration of a AS group with specific ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

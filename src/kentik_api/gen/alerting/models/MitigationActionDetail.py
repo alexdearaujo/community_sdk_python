@@ -16,14 +16,20 @@ class MitigationActionDetail(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    eventName: Optional[str] = Field(validation_alias="eventName", default=None)
+    eventName: Optional[str] = Field(
+        validation_alias="eventName",
+        default=None,
+        description="The name of the event that triggers this action.",
+    )
 
     action: Optional[MitigationUserAction] = Field(
         validation_alias="action", default=None
     )
 
     actionDescription: Optional[str] = Field(
-        validation_alias="actionDescription", default=None
+        validation_alias="actionDescription",
+        default=None,
+        description="The description of the action.",
     )
 
     fromState: Optional[MitigationState] = Field(
@@ -31,5 +37,7 @@ class MitigationActionDetail(BaseModel):
     )
 
     toStates: Optional[List[Optional[MitigationState]]] = Field(
-        validation_alias="toStates", default=None
+        validation_alias="toStates",
+        default=None,
+        description="The possible states the mitigation can transition to.",
     )

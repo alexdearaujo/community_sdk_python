@@ -1,6 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import logging
 import os
+import re
 import sys
 
 # Point Sphinx directly at the generated SDK so autodoc can read the code
@@ -76,10 +77,23 @@ class SuppressDocutilsFilter(logging.Filter):
         return True
 
 
+_RST_INLINE_MARKUP = re.compile(r"([\\*`|_])")
+
+
 def setup(app):
     """Sphinx hook to inject our custom logger filter."""
     from sphinx.util.logging import getLogger
+    from sphinxcontrib.autodoc_pydantic.directives.autodocumenters import (
+        PydanticFieldDocumenter,
+    )
 
+    class SchemaTextFieldDocumenter(PydanticFieldDocumenter):
+        def _get_field_description(self) -> str:
+            # Field descriptions are schema prose: `c_` or `*.` is not RST markup.
+            text = super()._get_field_description() or ""
+            return _RST_INLINE_MARKUP.sub(r"\\\1", text)
+
+    app.add_autodocumenter(SchemaTextFieldDocumenter, override=True)
     logger = getLogger("sphinx")
     # Dig into the underlying standard python logger to add the filter
     logger.logger.addFilter(SuppressDocutilsFilter())

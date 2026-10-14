@@ -13,6 +13,14 @@ class FetchParameters(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    fetchInterval: Optional[str] = Field(validation_alias="fetchInterval", default=None)
+    fetchInterval: Optional[str] = Field(
+        validation_alias="fetchInterval",
+        default=None,
+        description="How often the device should be fetched.",
+    )
 
-    fetchTimeout: Optional[str] = Field(validation_alias="fetchTimeout", default=None)
+    fetchTimeout: Optional[str] = Field(
+        validation_alias="fetchTimeout",
+        default=None,
+        description="Maximum time allowed for a single fetch attempt.\nIf unset or set to 0s, the server default timeout is used.\nThis value should be less than or equal to fetch_interval.",
+    )

@@ -8,19 +8,25 @@ from pydantic import BaseModel, Field
 
 class SiteIpAddressClassification(BaseModel):
     """
-    SiteIpAddressClassification model
+    SiteIpAddressClassification
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     infrastructureNetworks: Optional[List[str]] = Field(
-        validation_alias="infrastructureNetworks", default=None
+        validation_alias="infrastructureNetworks",
+        default=None,
+        description="List of IP address prefixes (in standard CIDR notation) used in infrastructure networks",
     )
 
     userAccessNetworks: Optional[List[str]] = Field(
-        validation_alias="userAccessNetworks", default=None
+        validation_alias="userAccessNetworks",
+        default=None,
+        description="List of IP address prefixes (in standard CIDR notation) used in access networks",
     )
 
     otherNetworks: Optional[List[str]] = Field(
-        validation_alias="otherNetworks", default=None
+        validation_alias="otherNetworks",
+        default=None,
+        description="List of IP address prefixes (in standard CIDR notation) used in other networks",
     )

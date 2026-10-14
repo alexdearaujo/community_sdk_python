@@ -16,21 +16,27 @@ class NetworkClass(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     internalAsns: Optional[List[str]] = Field(
-        validation_alias="internalAsns", default=None
+        validation_alias="internalAsns", default=None, description="Internal ASNs"
     )
 
     internalIps: Optional[List[str]] = Field(
-        validation_alias="internalIps", default=None
+        validation_alias="internalIps", default=None, description="Internal IPs"
     )
 
     usePrivateAsns: Optional[bool] = Field(
-        validation_alias="usePrivateAsns", default=None
+        validation_alias="usePrivateAsns",
+        default=None,
+        description="Specify to use internal ASNs",
     )
 
     usePrivateSubnets: Optional[bool] = Field(
-        validation_alias="usePrivateSubnets", default=None
+        validation_alias="usePrivateSubnets",
+        default=None,
+        description="Specify to use internal IPs",
     )
 
     cloudSubnets: Optional[List[Optional[CloudSubnet]]] = Field(
-        validation_alias="cloudSubnets", default=None
+        validation_alias="cloudSubnets",
+        default=None,
+        description="Cloud provider and subnet info.",
     )

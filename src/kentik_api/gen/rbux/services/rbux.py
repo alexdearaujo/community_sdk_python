@@ -37,6 +37,11 @@ class RbuxServiceWrapper:
     def list_scopes(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListScopesResponse:
+        """
+        List Focus Scopes
+
+        Returns all Focus Scopes for the user's company.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -71,6 +76,11 @@ class RbuxServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.Scope,
     ) -> rest_models.CreateScopeResponse:
+        """
+        Create Focus Scope
+
+        Creates and returns a new Focus Scope.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -107,6 +117,11 @@ class RbuxServiceWrapper:
     def get_scope(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetScopeResponse:
+        """
+        Get Focus Scope
+
+        Returns a single Focus Scope by id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -145,6 +160,11 @@ class RbuxServiceWrapper:
         id: str,
         data: rest_models.ScopeServiceUpdateScopeBody,
     ) -> rest_models.UpdateScopeResponse:
+        """
+        Update Focus Scope
+
+        Updates and returns an existing Focus Scope.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -182,6 +202,11 @@ class RbuxServiceWrapper:
     def delete_scope(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteScopeResponse:
+        """
+        Delete Focus Scope
+
+        Deletes a Focus Scope.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

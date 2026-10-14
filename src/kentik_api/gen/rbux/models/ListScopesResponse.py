@@ -10,11 +10,13 @@ from .Scope import Scope
 
 class ListScopesResponse(BaseModel):
     """
-    ListScopesResponse model
+    ListScopesResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     scopes: Optional[List[Optional[Scope]]] = Field(
-        validation_alias="scopes", default=None
+        validation_alias="scopes",
+        default=None,
+        description="The company's Focus Scopes.",
     )

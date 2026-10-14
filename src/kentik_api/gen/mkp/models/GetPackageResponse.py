@@ -10,7 +10,7 @@ from .Package import Package
 
 class GetPackageResponse(BaseModel):
     """
-    GetPackageResponse model
+    GetPackageResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

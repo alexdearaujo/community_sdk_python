@@ -8,15 +8,25 @@ from pydantic import BaseModel, Field
 
 class DeviceNmsSnmpConfig(BaseModel):
     """
-    DeviceNmsSnmpConfig model
+    DeviceNmsSnmpConfig
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     credentialName: Optional[str] = Field(
-        validation_alias="credentialName", default=None
+        validation_alias="credentialName",
+        default=None,
+        description="Name of the SNMP credentials from the credential vault.",
     )
 
-    port: Optional[int] = Field(validation_alias="port", default=None)
+    port: Optional[int] = Field(
+        validation_alias="port",
+        default=None,
+        description="SNMP port, to override default of 161.",
+    )
 
-    timeout: Optional[str] = Field(validation_alias="timeout", default=None)
+    timeout: Optional[str] = Field(
+        validation_alias="timeout",
+        default=None,
+        description="Timeout, to override default of 2s.",
+    )

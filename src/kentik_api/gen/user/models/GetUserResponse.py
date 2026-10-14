@@ -10,7 +10,7 @@ from .User import User
 
 class GetUserResponse(BaseModel):
     """
-    GetUserResponse model
+    GetUserResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 class SiteServiceUpdateSiteMarketBody(BaseModel):
     """
-    UpdateSiteMarketRequest model
+    UpdateSiteMarketRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    siteMarket: Dict[str, Any] = Field(validation_alias="siteMarket")
+    siteMarket: Dict[str, Any] = Field(
+        validation_alias="siteMarket", description="SiteMarket"
+    )

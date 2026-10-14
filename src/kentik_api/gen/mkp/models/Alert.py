@@ -10,7 +10,7 @@ from .Threshold import Threshold
 
 class Alert(BaseModel):
     """
-    Alert model
+    Alert
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -11,12 +11,16 @@ from .PacketLossData import PacketLossData
 
 class PingResults(BaseModel):
     """
-    PingResults model
+    PingResults
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    target: Optional[str] = Field(validation_alias="target", default=None)
+    target: Optional[str] = Field(
+        validation_alias="target",
+        default=None,
+        description="Hostname or address of the probed target",
+    )
 
     packetLoss: Optional[PacketLossData] = Field(
         validation_alias="packetLoss", default=None
@@ -26,4 +30,8 @@ class PingResults(BaseModel):
 
     jitter: Optional[MetricData] = Field(validation_alias="jitter", default=None)
 
-    dstIp: Optional[str] = Field(validation_alias="dstIp", default=None)
+    dstIp: Optional[str] = Field(
+        validation_alias="dstIp",
+        default=None,
+        description="IP address of probed target",
+    )

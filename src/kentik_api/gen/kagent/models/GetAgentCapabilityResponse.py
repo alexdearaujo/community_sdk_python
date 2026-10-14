@@ -10,7 +10,7 @@ from .AgentCapability import AgentCapability
 
 class GetAgentCapabilityResponse(BaseModel):
     """
-    GetAgentCapabilityResponse model
+    GetAgentCapabilityResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

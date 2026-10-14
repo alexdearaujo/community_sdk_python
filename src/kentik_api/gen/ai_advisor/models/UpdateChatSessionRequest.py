@@ -6,11 +6,14 @@ from pydantic import BaseModel, Field
 
 class UpdateChatSessionRequest(BaseModel):
     """
-    UpdateChatSessionRequest model
+    UpdateChatSessionRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    prompt: str = Field(validation_alias="prompt")
+    prompt: str = Field(validation_alias="prompt", description="The user question")
 
-    id: str = Field(validation_alias="id")
+    id: str = Field(
+        validation_alias="id",
+        description="The unique identifier (UUID) for the chat session",
+    )

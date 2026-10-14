@@ -23,9 +23,17 @@ class PolicyPolicyLevel(BaseModel):
         validation_alias="severity", default=None
     )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="The description of the policy level.",
+    )
 
-    ackRequired: Optional[bool] = Field(validation_alias="ackRequired", default=None)
+    ackRequired: Optional[bool] = Field(
+        validation_alias="ackRequired",
+        default=None,
+        description="Whether acknowledgment is required for alerts that match this policy level.",
+    )
 
     nms: Optional[NmsPolicyLevelSettings] = Field(validation_alias="nms", default=None)
 
@@ -38,5 +46,7 @@ class PolicyPolicyLevel(BaseModel):
     )
 
     notifications: Optional[List[Optional[NotificationChannelAssociation]]] = Field(
-        validation_alias="notifications", default=None
+        validation_alias="notifications",
+        default=None,
+        description="The notification channel associations for this policy level. When the alert is triggered at this level, the channels are used to send the alert notification.",
     )

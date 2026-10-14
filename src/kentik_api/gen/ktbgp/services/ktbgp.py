@@ -40,6 +40,9 @@ class KtbgpServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.RouteServiceAnnounceRequest,
     ) -> rest_models.RouteServiceAnnounceResponse:
+        """
+        Announce a BGP route to a specified set of devices
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -79,6 +82,9 @@ class KtbgpServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.RouteServiceListRequest,
     ) -> rest_models.RouteServiceListResponse:
+        """
+        List active BGP updates for a specified set of devices
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -118,6 +124,9 @@ class KtbgpServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.RouteServiceWithdrawRequest,
     ) -> rest_models.RouteServiceWithdrawResponse:
+        """
+        Withdraw active BGP updates from devices
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

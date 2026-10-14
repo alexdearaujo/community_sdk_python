@@ -12,7 +12,6 @@ from .TCPFlagsFormula import TCPFlagsFormula
 
 class FlowspecMatch(BaseModel):
     """
-    FlowspecMatch model
     FlowspecMatch represents the traffic filtering criteria encoded
     as Flow Specification NLRI as per RFC 8955:
     https://datatracker.ietf.org/doc/html/rfc8955#name-dissemination-of-ipv4-flow-
@@ -21,9 +20,17 @@ class FlowspecMatch(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    dstPrefix: Optional[str] = Field(validation_alias="dstPrefix", default=None)
+    dstPrefix: Optional[str] = Field(
+        validation_alias="dstPrefix",
+        default=None,
+        description="IPv4 or IPv6 CIDR prefix to match",
+    )
 
-    srcPrefix: Optional[str] = Field(validation_alias="srcPrefix", default=None)
+    srcPrefix: Optional[str] = Field(
+        validation_alias="srcPrefix",
+        default=None,
+        description="IPv4 or IPv6 CIDR prefix to match",
+    )
 
     ipProtocol: Optional[NumericFormula] = Field(
         validation_alias="ipProtocol", default=None

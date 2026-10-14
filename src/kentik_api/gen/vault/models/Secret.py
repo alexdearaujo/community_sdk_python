@@ -10,19 +10,25 @@ from .SecretType import SecretType
 
 class Secret(BaseModel):
     """
-    Secret model
+    Secret
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    name: str = Field(validation_alias="name")
+    name: str = Field(validation_alias="name", description="The secret's name")
 
-    value: str = Field(validation_alias="value")
+    value: str = Field(
+        validation_alias="value", description="The secret's actual value"
+    )
 
-    version: int = Field(validation_alias="version")
+    version: int = Field(validation_alias="version", description="The secret's version")
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="Purpose of this secret",
+    )
 
     type: Optional[SecretType] = Field(validation_alias="type", default=None)
 
-    id: str = Field(validation_alias="id")
+    id: str = Field(validation_alias="id", description="The secret's identifier")

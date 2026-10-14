@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class DeleteDeviceResponse(BaseModel):
     """
-    DeleteDeviceResponse model
+    DeleteDeviceResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

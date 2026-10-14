@@ -45,6 +45,11 @@ class KmiServiceWrapper:
         types: Optional[List[str]] = None,
         magnitude: Optional[int] = None,
     ) -> rest_models.GetGlobalInsightsResponse:
+        """
+        List global KMI insights.
+
+        Returns list of global KMI insights.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -102,6 +107,11 @@ class KmiServiceWrapper:
         types: Optional[List[str]] = None,
         magnitude: Optional[int] = None,
     ) -> rest_models.GetASNInsightsResponse:
+        """
+        List ASN-specific KMI insights.
+
+        Returns list of KMI insights for a specific Autonomous System.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -158,6 +168,11 @@ class KmiServiceWrapper:
         type: str,
         data: rest_models.KmiServiceGetASNDetailsBody,
     ) -> rest_models.GetASNDetailsResponse:
+        """
+        List metadata and list of customers, providers, and peers for an Autonomous System.
+
+        Returns metadata and list of customers, providers, and peers for an Autonomous System.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -203,6 +218,11 @@ class KmiServiceWrapper:
         ip: str,
         data: rest_models.KmiServiceGetRankingsBody,
     ) -> rest_models.GetRankingsResponse:
+        """
+        List KMI rankings by geo market and rank type.
+
+        Returns list of KMI rankings.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -242,6 +262,11 @@ class KmiServiceWrapper:
     def list_markets(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListMarketsResponse:
+        """
+        List all geo markets for KMI.
+
+        Returns list of geo markets for KMI.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

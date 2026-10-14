@@ -13,4 +13,8 @@ class GetLatestDeviceConfigurationsResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    configs: Optional[Dict[str, Any]] = Field(validation_alias="configs", default=None)
+    configs: Optional[Dict[str, Any]] = Field(
+        validation_alias="configs",
+        default=None,
+        description="Map from device ID to latest configuration.",
+    )

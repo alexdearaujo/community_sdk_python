@@ -8,7 +8,7 @@ from .User import User
 
 class CreateUserRequest(BaseModel):
     """
-    CreateUserRequest model
+    CreateUserRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

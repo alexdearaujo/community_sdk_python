@@ -24,16 +24,30 @@ class SavedFilterFilter(BaseModel):
         validation_alias="operator", default=None
     )
 
-    filterValue: Optional[str] = Field(validation_alias="filterValue", default=None)
-
-    filterFieldString: Optional[str] = Field(
-        validation_alias="filterFieldString", default=None
+    filterValue: Optional[str] = Field(
+        validation_alias="filterValue",
+        default=None,
+        description="Value to perform equality comparisons.",
     )
 
-    metric: Optional[str] = Field(validation_alias="metric", default=None)
+    filterFieldString: Optional[str] = Field(
+        validation_alias="filterFieldString",
+        default=None,
+        description="String representation of filter field.",
+    )
 
-    aggregate: Optional[str] = Field(validation_alias="aggregate", default=None)
+    metric: Optional[str] = Field(
+        validation_alias="metric",
+        default=None,
+        description="Filter field as metric for data series.",
+    )
+
+    aggregate: Optional[str] = Field(
+        validation_alias="aggregate", default=None, description="Aggregating function."
+    )
 
     rightFilterField: Optional[str] = Field(
-        validation_alias="rightFilterField", default=None
+        validation_alias="rightFilterField",
+        default=None,
+        description="Right field operand.",
     )

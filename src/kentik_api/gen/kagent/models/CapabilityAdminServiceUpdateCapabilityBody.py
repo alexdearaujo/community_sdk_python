@@ -13,10 +13,24 @@ class CapabilityAdminServiceUpdateCapabilityBody(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    displayName: Optional[str] = Field(validation_alias="displayName", default=None)
+    displayName: Optional[str] = Field(
+        validation_alias="displayName",
+        default=None,
+        description="The capability display name",
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="The capability description",
+    )
 
-    seedBundleId: Optional[str] = Field(validation_alias="seedBundleId", default=None)
+    seedBundleId: Optional[str] = Field(
+        validation_alias="seedBundleId", default=None, description="The seed bundle ID"
+    )
 
-    seedConfig: Optional[str] = Field(validation_alias="seedConfig", default=None)
+    seedConfig: Optional[str] = Field(
+        validation_alias="seedConfig",
+        default=None,
+        description="The seed config for the capability",
+    )

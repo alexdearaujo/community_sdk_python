@@ -17,10 +17,16 @@ class PolicyListFilters(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     sources: Optional[List[Optional[Source]]] = Field(
-        validation_alias="sources", default=None
+        validation_alias="sources",
+        default=None,
+        description="The source policies to list.",
     )
 
-    userIds: Optional[List[str]] = Field(validation_alias="userIds", default=None)
+    userIds: Optional[List[str]] = Field(
+        validation_alias="userIds",
+        default=None,
+        description="The IDs of the users who created the policies to filter by.",
+    )
 
     createdAt: Optional[v202303TimeRange] = Field(
         validation_alias="createdAt", default=None

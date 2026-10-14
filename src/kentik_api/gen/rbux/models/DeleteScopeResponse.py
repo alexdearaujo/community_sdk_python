@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class DeleteScopeResponse(BaseModel):
     """
-    DeleteScopeResponse model
+    DeleteScopeResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

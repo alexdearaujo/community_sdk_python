@@ -43,4 +43,8 @@ class FieldSchema(BaseModel):
 
     display: Optional[FieldDisplay] = Field(validation_alias="display", default=None)
 
-    isPrimaryKey: Optional[bool] = Field(validation_alias="isPrimaryKey", default=None)
+    isPrimaryKey: Optional[bool] = Field(
+        validation_alias="isPrimaryKey",
+        default=None,
+        description="note - only dimensions can be primary keys, not metrics",
+    )

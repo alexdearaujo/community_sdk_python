@@ -10,7 +10,7 @@ from .Package import Package
 
 class ListPackageResponse(BaseModel):
     """
-    ListPackageResponse model
+    ListPackageResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
@@ -19,4 +19,8 @@ class ListPackageResponse(BaseModel):
         validation_alias="packages", default=None
     )
 
-    invalidCount: Optional[int] = Field(validation_alias="invalidCount", default=None)
+    invalidCount: Optional[int] = Field(
+        validation_alias="invalidCount",
+        default=None,
+        description="The number of invalid packages, for troubleshooting. Should be zero.",
+    )

@@ -13,14 +13,24 @@ class PeeringDBSiteMapping(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: str = Field(validation_alias="id")
+    id: str = Field(validation_alias="id", description="Peering DB id")
 
-    siteId: str = Field(validation_alias="siteId")
+    siteId: str = Field(validation_alias="siteId", description="Peering DB site id")
 
-    peeringdbFacId: str = Field(validation_alias="peeringdbFacId")
+    peeringdbFacId: str = Field(
+        validation_alias="peeringdbFacId", description="Peering DB facility id"
+    )
 
-    edate: Optional[str] = Field(validation_alias="edate", default=None)
+    edate: Optional[str] = Field(
+        validation_alias="edate",
+        default=None,
+        description="Last modification timestamp (UTC)",
+    )
 
-    cdate: Optional[str] = Field(validation_alias="cdate", default=None)
+    cdate: Optional[str] = Field(
+        validation_alias="cdate", default=None, description="Creation timestamp (UTC)"
+    )
 
-    companyId: Optional[str] = Field(validation_alias="companyId", default=None)
+    companyId: Optional[str] = Field(
+        validation_alias="companyId", default=None, description="Company ID"
+    )

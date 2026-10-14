@@ -17,4 +17,8 @@ class DeviceSSHCreds(BaseModel):
 
     privateKey: Optional[str] = Field(validation_alias="privateKey", default=None)
 
-    passphrase: Optional[str] = Field(validation_alias="passphrase", default=None)
+    passphrase: Optional[str] = Field(
+        validation_alias="passphrase",
+        default=None,
+        description="used as password if private_key is empty",
+    )

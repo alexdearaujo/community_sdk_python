@@ -18,13 +18,21 @@ class Snapshot(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    agentId: Optional[str] = Field(validation_alias="agentId", default=None)
+    agentId: Optional[str] = Field(
+        validation_alias="agentId",
+        default=None,
+        description="Agent that fetched the configuration",
+    )
 
     deviceId: Optional[str] = Field(validation_alias="deviceId", default=None)
 
     revision: Optional[Revision] = Field(validation_alias="revision", default=None)
 
-    fetchError: Optional[bool] = Field(validation_alias="fetchError", default=None)
+    fetchError: Optional[bool] = Field(
+        validation_alias="fetchError",
+        default=None,
+        description="error message is in config_data if true",
+    )
 
     encoding: Optional[ConfigEncoding] = Field(
         validation_alias="encoding", default=None
@@ -32,7 +40,11 @@ class Snapshot(BaseModel):
 
     configData: Optional[str] = Field(validation_alias="configData", default=None)
 
-    digest: Optional[str] = Field(validation_alias="digest", default=None)
+    digest: Optional[str] = Field(
+        validation_alias="digest",
+        default=None,
+        description="SHA256 digest of config_data",
+    )
 
     diffData: Optional[str] = Field(validation_alias="diffData", default=None)
 
@@ -40,7 +52,11 @@ class Snapshot(BaseModel):
         validation_alias="diffRevision", default=None
     )
 
-    firstFetched: Optional[str] = Field(validation_alias="firstFetched", default=None)
+    firstFetched: Optional[str] = Field(
+        validation_alias="firstFetched",
+        default=None,
+        description="Deprecated: use revision.first_fetched instead",
+    )
 
     commitDetails: Optional[CommitDetails] = Field(
         validation_alias="commitDetails", default=None

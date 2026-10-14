@@ -13,4 +13,6 @@ class MitigationsServiceActBody(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    ids: List[str] = Field(validation_alias="ids")
+    ids: List[str] = Field(
+        validation_alias="ids", description="The IDs of the mitigations to act on."
+    )

@@ -24,6 +24,11 @@ from ..models import (  # noqa: F401
 def ListSecret(
     api_config_override: Optional[APIConfig] = None, *, names: List[str]
 ) -> ListSecretResponse:
+    """
+    List secrets.
+
+    Returns list of secret values stored in Kentik vault.
+    """
     query_params: Dict[str, Any] = {"names": names}
 
     header_params: Dict[str, Any] = {}
@@ -52,6 +57,11 @@ def ListSecret(
 def GetSecret(
     api_config_override: Optional[APIConfig] = None, *, name: str
 ) -> GetSecretResponse:
+    """
+    Get a secret by name.
+
+    Returns a secret value stored in Kentik vault.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

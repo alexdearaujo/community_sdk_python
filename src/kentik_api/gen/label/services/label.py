@@ -37,6 +37,11 @@ class LabelServiceWrapper:
     def list_labels(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListLabelsResponse:
+        """
+        List all configured labels
+
+        Returns list of all labels configured in the account.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -71,6 +76,11 @@ class LabelServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateLabelRequest,
     ) -> rest_models.CreateLabelResponse:
+        """
+        Create a new label.
+
+        Creates a new label based on data in the request.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -111,6 +121,11 @@ class LabelServiceWrapper:
         id: str,
         data: rest_models.LabelServiceUpdateLabelBody,
     ) -> rest_models.UpdateLabelResponse:
+        """
+        Update an existing label.
+
+        Updates configuration of a label.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -148,6 +163,11 @@ class LabelServiceWrapper:
     def delete_label(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteLabelResponse:
+        """
+        Delete a label.
+
+        Deletes label with specified with id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

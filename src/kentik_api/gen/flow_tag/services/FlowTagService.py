@@ -45,6 +45,11 @@ def SearchFlowTag(
     searchlookupValues: Optional[List[str]] = None,
     searchfieldLimit: Optional[int] = None,
 ) -> SearchFlowTagResponse:
+    """
+    Search flow tag configuration.
+
+    Returns configuration of flow tag with search parameters.
+    """
     query_params: Dict[str, Any] = {
         "search.limit": searchlimit,
         "search.offset": searchoffset,
@@ -79,6 +84,11 @@ def SearchFlowTag(
 def CreateFlowTag(
     api_config_override: Optional[APIConfig] = None, *, data: CreateFlowTagRequest
 ) -> CreateFlowTagResponse:
+    """
+    Create flow tag configuration.
+
+    Create a flow tag configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -108,6 +118,11 @@ def CreateFlowTag(
 def GetFlowTag(
     api_config_override: Optional[APIConfig] = None, *, flowTagid: str
 ) -> GetFlowTagResponse:
+    """
+    Get flow tag configuration.
+
+    Returns configuration of flow tag with specified ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -139,6 +154,11 @@ def UpdateFlowTag(
     flowTagid: str,
     data: FlowTagServiceUpdateFlowTagBody,
 ) -> UpdateFlowTagResponse:
+    """
+    Update flow tag configuration.
+
+    Update a flow tag configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -168,6 +188,11 @@ def UpdateFlowTag(
 def DeleteFlowTag(
     api_config_override: Optional[APIConfig] = None, *, flowTagid: str
 ) -> DeleteFlowTagResponse:
+    """
+    Delete flow tag configuration.
+
+    Delete a flow tag configuration with id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

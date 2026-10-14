@@ -64,6 +64,11 @@ from ..models import (  # noqa: F401
 
 
 def TenantList(api_config_override: Optional[APIConfig] = None) -> ListTenantResponse:
+    """
+    List MKP tenants.
+
+    Returns a list of MKP tenants.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -92,6 +97,11 @@ def TenantList(api_config_override: Optional[APIConfig] = None) -> ListTenantRes
 def TenantCreate(
     api_config_override: Optional[APIConfig] = None, *, data: CreateTenantRequest
 ) -> CreateTenantResponse:
+    """
+    Create a tenant.
+
+    Create tenant from request. returns created tenant.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -121,6 +131,11 @@ def TenantCreate(
 def TenantGet(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetTenantResponse:
+    """
+    Get information aboout a tenant.
+
+    Returns information about package specified with ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -152,6 +167,11 @@ def TenantUpdate(
     id: str,
     data: TenantServiceUpdateTenantBody,
 ) -> UpdateTenantResponse:
+    """
+    Update a tenant.
+
+    Update tenant attributes specified with id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -181,6 +201,11 @@ def TenantUpdate(
 def TenantDelete(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteTenantResponse:
+    """
+    Delete a tenant.
+
+    Deletes the tenant specified with id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

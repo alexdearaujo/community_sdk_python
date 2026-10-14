@@ -54,6 +54,11 @@ class SyntheticsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         agentIds: Optional[List[str]] = None,
     ) -> rest_models.ListAgentAlertsResponse:
+        """
+        List agent alert configurations
+
+        Lists all agent alert configurations, optionally filtered by a list of agent ids.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -91,6 +96,11 @@ class SyntheticsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateAgentAlertRequest,
     ) -> rest_models.CreateAgentAlertResponse:
+        """
+        Create an agent alert configuration
+
+        Creates a new agent alert configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -127,6 +137,11 @@ class SyntheticsServiceWrapper:
     def get_agent_alert(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetAgentAlertResponse:
+        """
+        Get an agent alert configuration
+
+        Retrieves an existing agent alert configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -165,6 +180,11 @@ class SyntheticsServiceWrapper:
         id: str,
         data: rest_models.SyntheticsAdminServiceUpdateAgentAlertBody,
     ) -> rest_models.UpdateAgentAlertResponse:
+        """
+        Update an agent alert configuration
+
+        Updates an existing agent alert configuration with the time threshold and notification channels provided.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -202,6 +222,11 @@ class SyntheticsServiceWrapper:
     def delete_agent_alert(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteAgentAlertResponse:
+        """
+        Delete an agent alert configuration
+
+        Deletes an existing agent alert configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -236,6 +261,11 @@ class SyntheticsServiceWrapper:
     def list_agents(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListAgentsResponse:
+        """
+        List available agents
+
+        Returns list of all synthetic agents available in the account.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -267,6 +297,11 @@ class SyntheticsServiceWrapper:
     def get_agent(
         self, *, api_config_override: Optional[APIConfig] = None, agentid: str
     ) -> rest_models.GetAgentResponse:
+        """
+        Get information about an agent
+
+        Returns information about the requested synthetic agent.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -305,6 +340,11 @@ class SyntheticsServiceWrapper:
         agentid: str,
         data: rest_models.SyntheticsAdminServiceUpdateAgentBody,
     ) -> rest_models.UpdateAgentResponse:
+        """
+        Update configuration of an agent
+
+        Update configuration of a synthetic agent.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -342,6 +382,11 @@ class SyntheticsServiceWrapper:
     def delete_agent(
         self, *, api_config_override: Optional[APIConfig] = None, agentid: str
     ) -> rest_models.DeleteAgentResponse:
+        """
+        Delete an agent
+
+        Deletes the requested agent. The deleted agent is removed from configuration of all tests.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -376,6 +421,11 @@ class SyntheticsServiceWrapper:
     def list_tests(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListTestsResponse:
+        """
+        List all tests
+
+        Returns a list of all configured active and paused synthetic tests.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -410,6 +460,11 @@ class SyntheticsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateTestRequest,
     ) -> rest_models.CreateTestResponse:
+        """
+        Create a test
+
+        Create synthetic test based on configuration provided in the request.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -446,6 +501,11 @@ class SyntheticsServiceWrapper:
     def get_test(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetTestResponse:
+        """
+        Get information about a test
+
+        Returns configuration and status for the requested synthetic test.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -482,6 +542,11 @@ class SyntheticsServiceWrapper:
         id: str,
         data: rest_models.SyntheticsAdminServiceUpdateTestBody,
     ) -> rest_models.UpdateTestResponse:
+        """
+        Update configuration of a test
+
+        Updates configuration of a synthetic test.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -519,6 +584,11 @@ class SyntheticsServiceWrapper:
     def delete_test(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteTestResponse:
+        """
+        Delete a synthetic test.
+
+        Deletes the synthetics test. All accumulated results for the test cease to be accessible.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -557,6 +627,9 @@ class SyntheticsServiceWrapper:
         id: str,
         data: rest_models.SyntheticsAdminServiceSetTestStatusBody,
     ) -> rest_models.SetTestStatusResponse:
+        """
+        Update status of a synthetic test
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -597,6 +670,11 @@ class SyntheticsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.GetResultsForTestsRequest,
     ) -> rest_models.GetResultsForTestsResponse:
+        """
+        Get results for tests
+
+        Returns probe results for a set of tests for specified period of time.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -636,6 +714,11 @@ class SyntheticsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.GetResultsForTestsCsvRequest,
     ) -> rest_models.GetResultsForTestsCsvResponse:
+        """
+        Get test results in CSV format
+
+        Returns probe results for tests in CSV format.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -675,6 +758,11 @@ class SyntheticsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.GetTraceForTestRequest,
     ) -> rest_models.GetTraceForTestResponse:
+        """
+        Get network trace data for a test
+
+        Get network trace data for a specific synthetic test. The test must have traceroute task configured.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

@@ -13,4 +13,8 @@ class MitigationsServiceCreateResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="The ID of the created mitigation.",
+    )

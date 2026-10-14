@@ -43,6 +43,11 @@ from ..models import (  # noqa: F401
 def ListCloudExports(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListCloudExportsResponse:
+    """
+    List cloud exports.
+
+    Returns a list of all cloud exports in the account.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -71,6 +76,11 @@ def ListCloudExports(
 def CreateCloudExport(
     api_config_override: Optional[APIConfig] = None, *, data: CreateCloudExportRequest
 ) -> CreateCloudExportResponse:
+    """
+    Create Cloud Export.
+
+    Create new cloud export based on configuration in the request.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -100,6 +110,11 @@ def CreateCloudExport(
 def GetCloudExport(
     api_config_override: Optional[APIConfig] = None, *, exportid: str
 ) -> GetCloudExportResponse:
+    """
+    Get cloud export configuration and status.
+
+    Returns configuration and status of cloud export with specified ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -131,6 +146,11 @@ def UpdateCloudExport(
     exportid: str,
     data: CloudExportAdminServiceUpdateCloudExportBody,
 ) -> UpdateCloudExportResponse:
+    """
+    Update configuration of cloud export.
+
+    Replace complete configuration of a cloud export with data in the request.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -160,6 +180,11 @@ def UpdateCloudExport(
 def DeleteCloudExport(
     api_config_override: Optional[APIConfig] = None, *, exportid: str
 ) -> DeleteCloudExportResponse:
+    """
+    Delete a cloud export.
+
+    Delete cloud export with specified ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

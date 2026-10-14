@@ -8,13 +8,19 @@ from pydantic import BaseModel, Field
 
 class Stats(BaseModel):
     """
-    Stats model
+    Stats
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    average: Optional[int] = Field(validation_alias="average", default=None)
+    average: Optional[int] = Field(
+        validation_alias="average", default=None, description="Average value"
+    )
 
-    min: Optional[int] = Field(validation_alias="min", default=None)
+    min: Optional[int] = Field(
+        validation_alias="min", default=None, description="Minimum value"
+    )
 
-    max: Optional[int] = Field(validation_alias="max", default=None)
+    max: Optional[int] = Field(
+        validation_alias="max", default=None, description="Maximum value"
+    )

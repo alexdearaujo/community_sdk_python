@@ -8,13 +8,23 @@ from pydantic import BaseModel, Field
 
 class ConfigRunoutConfig(BaseModel):
     """
-    RunoutConfig model
+    RunoutConfig
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    strategy: Optional[str] = Field(validation_alias="strategy", default=None)
+    strategy: Optional[str] = Field(
+        validation_alias="strategy", default=None, description="Strategy for runout"
+    )
 
-    warnQty: Optional[int] = Field(validation_alias="warnQty", default=None)
+    warnQty: Optional[int] = Field(
+        validation_alias="warnQty",
+        default=None,
+        description="Warning quantity for runout",
+    )
 
-    critQty: Optional[int] = Field(validation_alias="critQty", default=None)
+    critQty: Optional[int] = Field(
+        validation_alias="critQty",
+        default=None,
+        description="Critical quantity for runout",
+    )

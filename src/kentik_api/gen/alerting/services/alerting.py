@@ -140,6 +140,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.AlertAutoAckServiceCreateRequest,
     ) -> rest_models.AlertAutoAckServiceCreateResponse:
+        """
+        Create Auto-Ack
+
+        Creates a new auto-ack configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -179,6 +184,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.AlertAutoAckServiceListRequest,
     ) -> rest_models.AlertAutoAckServiceListResponse:
+        """
+        List Auto-Acks
+
+        Returns a list of auto-ack configurations.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -215,6 +225,11 @@ class AlertingServiceWrapper:
     def auto_ack_get(
         self, *, api_config_override: Optional[APIConfig] = None, autoAckid: str
     ) -> rest_models.AlertAutoAckServiceGetResponse:
+        """
+        Get Auto-Ack
+
+        Returns an auto-ack configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -249,6 +264,11 @@ class AlertingServiceWrapper:
     def auto_ack_delete(
         self, *, api_config_override: Optional[APIConfig] = None, autoAckid: str
     ) -> rest_models.AlertAutoAckServiceDeleteResponse:
+        """
+        Delete Auto-Ack
+
+        Deletes an auto-ack configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -289,6 +309,11 @@ class AlertingServiceWrapper:
         autoAckid: str,
         data: rest_models.AlertAutoAckServiceReplaceBody,
     ) -> rest_models.AlertAutoAckServiceReplaceResponse:
+        """
+        Replace Auto-Ack
+
+        Replaces an auto-ack configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -329,6 +354,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.AlertServiceListRequest,
     ) -> rest_models.AlertServiceListResponse:
+        """
+        List Alerts
+
+        Returns an array of alert objects that contain information about individual alerts.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -368,6 +398,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.AlertServiceClearRequest,
     ) -> rest_models.AlertServiceClearResponse:
+        """
+        Clear Alerts
+
+        Clears alerts.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -404,6 +439,11 @@ class AlertingServiceWrapper:
     def list_comments(
         self, *, api_config_override: Optional[APIConfig] = None, alertId: str
     ) -> rest_models.AlertServiceListCommentsResponse:
+        """
+        List Alert Comments
+
+        Returns all comments for an alert.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -444,6 +484,11 @@ class AlertingServiceWrapper:
         alertId: str,
         data: rest_models.AlertServiceAddCommentBody,
     ) -> rest_models.AlertServiceAddCommentResponse:
+        """
+        Add Alert Comment
+
+        Adds a comment to an alert.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -485,6 +530,11 @@ class AlertingServiceWrapper:
         alertId: str,
         data: rest_models.AlertServiceSetExternalContextBody,
     ) -> rest_models.AlertServiceSetExternalContextResponse:
+        """
+        Set External Context for Alert
+
+        Add or replace external context
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -522,6 +572,11 @@ class AlertingServiceWrapper:
     def alert_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertServiceGetResponse:
+        """
+        Get Alert
+
+        Returns an alert object that contains information about an individual alert.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -560,6 +615,11 @@ class AlertingServiceWrapper:
         id: str,
         data: rest_models.AlertServiceAckBody,
     ) -> rest_models.AlertServiceAckResponse:
+        """
+        Ack Alert
+
+        Acknowledges an alert.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -601,6 +661,11 @@ class AlertingServiceWrapper:
         id: str,
         data: rest_models.AlertServiceUnAckBody,
     ) -> rest_models.AlertServiceUnAckResponse:
+        """
+        UnAck Alert
+
+        Unacknowledges an alert (removes the acknowledgement).
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -641,6 +706,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.AlertSilenceNotificationsServiceCreateRequest,
     ) -> rest_models.AlertSilenceNotificationsServiceCreateResponse:
+        """
+        Create Alert Silence Notifications
+
+        Creates a new alert silence notifications configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
@@ -680,6 +750,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.AlertSilenceNotificationsServiceListRequest,
     ) -> rest_models.AlertSilenceNotificationsServiceListResponse:
+        """
+        List Alert Notification Silences
+
+        Returns a list of alert silence notifications configurations.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
@@ -716,6 +791,11 @@ class AlertingServiceWrapper:
     def silence_notifications_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertSilenceNotificationsServiceGetResponse:
+        """
+        Get Alert Silence Notifications
+
+        Returns an alert silence notifications configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
@@ -752,6 +832,11 @@ class AlertingServiceWrapper:
     def silence_notifications_delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertSilenceNotificationsServiceDeleteResponse:
+        """
+        Delete Alert Notification Silence
+
+        Deletes an alert silence notifications configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
@@ -792,6 +877,11 @@ class AlertingServiceWrapper:
         id: str,
         data: rest_models.AlertSilenceNotificationsServiceReplaceBody,
     ) -> rest_models.AlertSilenceNotificationsServiceReplaceResponse:
+        """
+        Replace Alert Notification Silence
+
+        Replaces an alert silence notifications configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
@@ -840,6 +930,11 @@ class AlertingServiceWrapper:
         filtersmodifiedAtstart: Optional[str] = None,
         filtersmodifiedAtend: Optional[str] = None,
     ) -> rest_models.MitigationMethodsServiceListResponse:
+        """
+        List Mitigation Methods
+
+        Returns a list of mitigation methods.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
@@ -894,6 +989,11 @@ class AlertingServiceWrapper:
     def mitigation_methods_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.MitigationMethodsServiceGetResponse:
+        """
+        Get Mitigation Method
+
+        Returns a mitigation method.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
@@ -939,6 +1039,11 @@ class AlertingServiceWrapper:
         filtersmodifiedAtstart: Optional[str] = None,
         filtersmodifiedAtend: Optional[str] = None,
     ) -> rest_models.MitigationPlatformsServiceListResponse:
+        """
+        List Mitigation Platforms
+
+        Returns a list of mitigation platforms.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
@@ -993,6 +1098,11 @@ class AlertingServiceWrapper:
     def mitigation_platforms_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.MitigationPlatformsServiceGetResponse:
+        """
+        Get Mitigation Platform
+
+        Returns a mitigation platform.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
@@ -1042,6 +1152,11 @@ class AlertingServiceWrapper:
         filtersipCidrPattern: Optional[str] = None,
         filterstypes: Optional[List[str]] = None,
     ) -> rest_models.MitigationsServiceListResponse:
+        """
+        List Mitigations
+
+        Returns a list of mitigations.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -1107,6 +1222,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.MitigationsServiceCreateRequest,
     ) -> rest_models.MitigationsServiceCreateResponse:
+        """
+        Create Mitigation
+
+        Creates a new manual mitigation.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -1143,6 +1263,11 @@ class AlertingServiceWrapper:
     def available_actions(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.MitigationsServiceAvailableActionsResponse:
+        """
+        Get Available Actions
+
+        Returns available actions for mitigations.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -1176,6 +1301,11 @@ class AlertingServiceWrapper:
     def mitigations_get(
         self, *, api_config_override: Optional[APIConfig] = None, action: str
     ) -> rest_models.MitigationsServiceGetResponse:
+        """
+        Get Mitigation
+
+        Returns a mitigation.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -1214,6 +1344,11 @@ class AlertingServiceWrapper:
         action: str,
         data: rest_models.MitigationsServiceActBody,
     ) -> rest_models.MitigationsServiceActResponse:
+        """
+        Act on Mitigation
+
+        Performs an action on one or more mitigations.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -1251,6 +1386,11 @@ class AlertingServiceWrapper:
     def available_actions_for_mitigation(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.MitigationsServiceAvailableActionsForMitigationResponse:
+        """
+        Get Available Actions for Mitigation
+
+        Returns available actions for a specific mitigation.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -1290,6 +1430,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.PolicyServiceListRequest,
     ) -> rest_models.PolicyServiceListResponse:
+        """
+        List Policies
+
+        Returns a list of alerting policies.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
@@ -1330,6 +1475,11 @@ class AlertingServiceWrapper:
         policyType: str,
         id: str,
     ) -> rest_models.PolicyServiceGetResponse:
+        """
+        Get Policy
+
+        Returns an alerting policy.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
@@ -1372,6 +1522,11 @@ class AlertingServiceWrapper:
         id: str,
         data: rest_models.PolicyServiceDisableBody,
     ) -> rest_models.PolicyServiceDisableResponse:
+        """
+        Disable Policy
+
+        Disables an alerting policy.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
@@ -1415,6 +1570,11 @@ class AlertingServiceWrapper:
         id: str,
         data: rest_models.PolicyServiceEnableBody,
     ) -> rest_models.PolicyServiceEnableResponse:
+        """
+        Enable Policy
+
+        Enables an alerting policy.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
@@ -1456,6 +1616,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.SuppressionServiceCreateRequest,
     ) -> rest_models.SuppressionServiceCreateResponse:
+        """
+        Create Suppression
+
+        Creates a new suppression configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
@@ -1495,6 +1660,11 @@ class AlertingServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.SuppressionServiceListRequest,
     ) -> rest_models.SuppressionServiceListResponse:
+        """
+        List Suppressions
+
+        Returns a list of suppression configurations.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
@@ -1531,6 +1701,11 @@ class AlertingServiceWrapper:
     def suppression_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.SuppressionServiceGetResponse:
+        """
+        Get Suppression
+
+        Returns a suppression configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
@@ -1565,6 +1740,11 @@ class AlertingServiceWrapper:
     def suppression_delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.SuppressionServiceDeleteResponse:
+        """
+        Delete Suppression
+
+        Deletes a suppression configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
@@ -1603,6 +1783,11 @@ class AlertingServiceWrapper:
         id: str,
         data: rest_models.SuppressionServiceReplaceBody,
     ) -> rest_models.SuppressionServiceReplaceResponse:
+        """
+        Replace Suppression
+
+        Replaces a suppression configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(

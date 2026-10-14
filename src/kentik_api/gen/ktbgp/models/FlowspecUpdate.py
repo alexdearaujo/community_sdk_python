@@ -32,11 +32,19 @@ class FlowspecUpdate(BaseModel):
 
     creationTime: Optional[str] = Field(validation_alias="creationTime", default=None)
 
-    inet: Optional[str] = Field(validation_alias="inet", default=None)
+    inet: Optional[str] = Field(
+        validation_alias="inet",
+        default=None,
+        description="deprecated: use inet_type instead",
+    )
 
     inetType: Optional[InetType] = Field(validation_alias="inetType", default=None)
 
-    key: Optional[str] = Field(validation_alias="key", default=None)
+    key: Optional[str] = Field(
+        validation_alias="key",
+        default=None,
+        description="mainly used for internal purposes",
+    )
 
     rateBytes: Optional[FlowspecActionTrafficRateBytes] = Field(
         validation_alias="rateBytes", default=None
@@ -86,6 +94,14 @@ class FlowspecUpdate(BaseModel):
         validation_alias="actions", default=None
     )
 
-    terminal: Optional[bool] = Field(validation_alias="terminal", default=None)
+    terminal: Optional[bool] = Field(
+        validation_alias="terminal",
+        default=None,
+        description="true if this is a terminal action",
+    )
 
-    sample: Optional[bool] = Field(validation_alias="sample", default=None)
+    sample: Optional[bool] = Field(
+        validation_alias="sample",
+        default=None,
+        description="true to enable traffic sampling and logging",
+    )

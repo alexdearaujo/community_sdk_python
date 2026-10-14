@@ -8,9 +8,13 @@ from pydantic import BaseModel, Field
 
 class ProvisioningTokenAgentConfig(BaseModel):
     """
-    AgentConfig model
+    AgentConfig
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    siteId: Optional[str] = Field(validation_alias="siteId", default=None)
+    siteId: Optional[str] = Field(
+        validation_alias="siteId",
+        default=None,
+        description="ID of the site to assign to agents registered with this token.",
+    )

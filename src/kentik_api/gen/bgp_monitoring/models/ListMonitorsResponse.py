@@ -10,13 +10,19 @@ from .BgpMonitor import BgpMonitor
 
 class ListMonitorsResponse(BaseModel):
     """
-    ListMonitorsResponse model
+    ListMonitorsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     monitors: Optional[List[Optional[BgpMonitor]]] = Field(
-        validation_alias="monitors", default=None
+        validation_alias="monitors",
+        default=None,
+        description="List of BGP monitors configured in the account",
     )
 
-    invalidCount: Optional[int] = Field(validation_alias="invalidCount", default=None)
+    invalidCount: Optional[int] = Field(
+        validation_alias="invalidCount",
+        default=None,
+        description="Number of invalid objects (should be always zero)",
+    )

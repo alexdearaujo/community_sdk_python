@@ -10,13 +10,17 @@ from .Ranking import Ranking
 
 class GetRankingsResponse(BaseModel):
     """
-    GetRankingsResponse model
+    GetRankingsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     rankings: Optional[List[Optional[Ranking]]] = Field(
-        validation_alias="rankings", default=None
+        validation_alias="rankings", default=None, description="List of rankings"
     )
 
-    invalidCount: Optional[int] = Field(validation_alias="invalidCount", default=None)
+    invalidCount: Optional[int] = Field(
+        validation_alias="invalidCount",
+        default=None,
+        description="Number of invalid entries encountered while collecting data",
+    )

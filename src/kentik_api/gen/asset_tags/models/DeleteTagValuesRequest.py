@@ -10,13 +10,13 @@ from .AssetType import AssetType
 
 class DeleteTagValuesRequest(BaseModel):
     """
-    DeleteTagValuesRequest model
+    DeleteTagValuesRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    tagId: str = Field(validation_alias="tagId")
+    tagId: str = Field(validation_alias="tagId", description="Tag key id")
 
     assetType: AssetType = Field(validation_alias="assetType")
 
-    assetIds: List[str] = Field(validation_alias="assetIds")
+    assetIds: List[str] = Field(validation_alias="assetIds", description="Asset ids")

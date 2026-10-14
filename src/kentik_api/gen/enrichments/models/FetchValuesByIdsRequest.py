@@ -8,9 +8,12 @@ from pydantic import BaseModel, Field
 
 class FetchValuesByIdsRequest(BaseModel):
     """
-    FetchValuesByIdsRequest model
+    FetchValuesByIdsRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    ids: List[str] = Field(validation_alias="ids")
+    ids: List[str] = Field(
+        validation_alias="ids",
+        description="Enumeration lookup IDs to resolve, as decimal strings. Must be non-empty.",
+    )

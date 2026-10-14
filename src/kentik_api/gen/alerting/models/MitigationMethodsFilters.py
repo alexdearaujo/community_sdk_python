@@ -16,10 +16,16 @@ class MitigationMethodsFilters(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    methodIds: Optional[List[str]] = Field(validation_alias="methodIds", default=None)
+    methodIds: Optional[List[str]] = Field(
+        validation_alias="methodIds",
+        default=None,
+        description="The IDs of the mitigation methods to list.",
+    )
 
     platformTypes: Optional[List[Optional[MitigationPlatformType]]] = Field(
-        validation_alias="platformTypes", default=None
+        validation_alias="platformTypes",
+        default=None,
+        description="The platform types the mitigation methods are associated with.",
     )
 
     createdAt: Optional[v202303TimeRange] = Field(

@@ -29,5 +29,5 @@ class NmsConditionGroup(BaseModel):
     )
 
     conditionGroups: Optional[List[Optional["NmsConditionGroup"]]] = Field(
-        validation_alias="conditionGroups", default=None
+        validation_alias="conditionGroups", default=None, description="recursive"
     )

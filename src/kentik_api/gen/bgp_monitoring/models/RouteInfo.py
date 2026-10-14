@@ -12,16 +12,24 @@ from .v202303VantagePoint import v202303VantagePoint
 
 class RouteInfo(BaseModel):
     """
-    RouteInfo model
+    RouteInfo
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     nlri: Optional[Nlri] = Field(validation_alias="nlri", default=None)
 
-    originAsn: Optional[int] = Field(validation_alias="originAsn", default=None)
+    originAsn: Optional[int] = Field(
+        validation_alias="originAsn",
+        default=None,
+        description="The autonomous system number originating the NLRI",
+    )
 
-    asPath: Optional[List[str]] = Field(validation_alias="asPath", default=None)
+    asPath: Optional[List[str]] = Field(
+        validation_alias="asPath",
+        default=None,
+        description="AS path observed at the vantage point for the NLRI",
+    )
 
     vantagePoint: Optional[v202303VantagePoint] = Field(
         validation_alias="vantagePoint", default=None
@@ -31,4 +39,8 @@ class RouteInfo(BaseModel):
         validation_alias="rpkiStatus", default=None
     )
 
-    nexthop: Optional[str] = Field(validation_alias="nexthop", default=None)
+    nexthop: Optional[str] = Field(
+        validation_alias="nexthop",
+        default=None,
+        description="IP address of the first route hop from the vantage point toward the target",
+    )

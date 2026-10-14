@@ -10,11 +10,11 @@ from .TagValue import TagValue
 
 class GetTagValuesResponse(BaseModel):
     """
-    GetTagValuesResponse model
+    GetTagValuesResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     tagValues: Optional[List[Optional[TagValue]]] = Field(
-        validation_alias="tagValues", default=None
+        validation_alias="tagValues", default=None, description="Tag values response"
     )

@@ -17,11 +17,15 @@ class MitigationPlatformsFilters(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     platformIds: Optional[List[str]] = Field(
-        validation_alias="platformIds", default=None
+        validation_alias="platformIds",
+        default=None,
+        description="The IDs of the mitigation platforms to list.",
     )
 
     platformTypes: Optional[List[Optional[MitigationPlatformType]]] = Field(
-        validation_alias="platformTypes", default=None
+        validation_alias="platformTypes",
+        default=None,
+        description="The types of mitigation platforms to filter by.",
     )
 
     createdAt: Optional[v202303TimeRange] = Field(

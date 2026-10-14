@@ -11,7 +11,7 @@ from .ConfigUtilConfig import ConfigUtilConfig
 
 class Config(BaseModel):
     """
-    Config model
+    Config
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

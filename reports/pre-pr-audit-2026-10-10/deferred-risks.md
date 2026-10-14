@@ -69,7 +69,7 @@ This ledger records findings that are intentionally deferred.
 | D5 | release or docs | docs_rendering text needs a generator change. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D6 | release or docs | Waits for B4. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D11 | release or docs | Spec 001 quickstart commands need a rewrite. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D12 | release or docs | Needs template changes for docstrings. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D12 | release or docs | Needs template changes for docstrings. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 
 ## Closure notes
 
@@ -220,3 +220,13 @@ This ledger records findings that are intentionally deferred.
   argument renders as `{}`. R16 had already removed the 4 `Dict` bodies. A
   test parses every committed example and fails on a name it uses but does
   not define, or an import that does not resolve. 24 entries remain open.
+- D12 is resolved (2026-10-14). The generator renders with `autoescape=True`,
+  which caused the `&#34;` and `&#39;` in 5 model docstrings. Custom templates
+  now escape schema text for Python instead. Each REST function and its
+  wrapper method get the operation summary and description (232 of 234; two
+  operations have neither). A custom model template adds
+  `Field(description=...)` to 1447 of 2421 fields, every field the v3 schema
+  describes. The v3 schema drops the description next to a `$ref`, so about
+  390 such fields stay undescribed until upstream keeps it. The Sphinx
+  build escapes RST markup in field descriptions, so text like `c_` renders
+  as written. 23 entries remain open.

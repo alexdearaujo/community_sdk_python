@@ -21,5 +21,7 @@ class PolicyServiceListResponse(BaseModel):
     )
 
     policies: Optional[List[Optional[Policy]]] = Field(
-        validation_alias="policies", default=None
+        validation_alias="policies",
+        default=None,
+        description="The alerting policies that were found matching the filters.",
     )

@@ -213,6 +213,11 @@ from ..models import (  # noqa: F401
 def List(
     api_config_override: Optional[APIConfig] = None, *, data: AlertServiceListRequest
 ) -> AlertServiceListResponse:
+    """
+    List Alerts
+
+    Returns an array of alert objects that contain information about individual alerts.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -242,6 +247,11 @@ def List(
 def Clear(
     api_config_override: Optional[APIConfig] = None, *, data: AlertServiceClearRequest
 ) -> AlertServiceClearResponse:
+    """
+    Clear Alerts
+
+    Clears alerts.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -271,6 +281,11 @@ def Clear(
 def ListComments(
     api_config_override: Optional[APIConfig] = None, *, alertId: str
 ) -> AlertServiceListCommentsResponse:
+    """
+    List Alert Comments
+
+    Returns all comments for an alert.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -302,6 +317,11 @@ def AddComment(
     alertId: str,
     data: AlertServiceAddCommentBody,
 ) -> AlertServiceAddCommentResponse:
+    """
+    Add Alert Comment
+
+    Adds a comment to an alert.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -334,6 +354,11 @@ def SetExternalContext(
     alertId: str,
     data: AlertServiceSetExternalContextBody,
 ) -> AlertServiceSetExternalContextResponse:
+    """
+    Set External Context for Alert
+
+    Add or replace external context
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -363,6 +388,11 @@ def SetExternalContext(
 def Get(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> AlertServiceGetResponse:
+    """
+    Get Alert
+
+    Returns an alert object that contains information about an individual alert.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -394,6 +424,11 @@ def Ack(
     id: str,
     data: AlertServiceAckBody,
 ) -> AlertServiceAckResponse:
+    """
+    Ack Alert
+
+    Acknowledges an alert.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -426,6 +461,11 @@ def UnAck(
     id: str,
     data: AlertServiceUnAckBody,
 ) -> AlertServiceUnAckResponse:
+    """
+    UnAck Alert
+
+    Unacknowledges an alert (removes the acknowledgement).
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

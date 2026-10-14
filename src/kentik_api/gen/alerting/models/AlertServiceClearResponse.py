@@ -14,5 +14,7 @@ class AlertServiceClearResponse(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     clearedAlertIds: Optional[List[str]] = Field(
-        validation_alias="clearedAlertIds", default=None
+        validation_alias="clearedAlertIds",
+        default=None,
+        description="The IDs of the alerts that have been cleared.",
     )

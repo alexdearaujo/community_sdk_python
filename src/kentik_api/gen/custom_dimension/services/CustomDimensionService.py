@@ -44,6 +44,11 @@ from ..models import (  # noqa: F401
 def ListCustomDimensions(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListCustomDimensionsResponse:
+    """
+    List Custom Dimensions
+
+    Returns an array of custom dimension objects that each contain information about an individual custom dimension.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -72,6 +77,11 @@ def ListCustomDimensions(
 def GetCustomDimensionInfo(
     api_config_override: Optional[APIConfig] = None, *, customDimensionId: str
 ) -> GetCustomDimensionInfoResponse:
+    """
+    Custom Dimension Info
+
+    Returns a custom dimension object containing information about an individual custom dimension.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -103,6 +113,11 @@ def UpdateCustomDimension(
     customDimensionId: str,
     data: CustomDimension,
 ) -> UpdateCustomDimensionResponse:
+    """
+    Update Custom Dimension
+
+    Updates and returns a custom dimension object containing information about an individual custom dimension (see About Custom Dimensions). Populators are not sent back in the response body. To get them use 'Custom Dimension info' API instead.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -132,6 +147,11 @@ def UpdateCustomDimension(
 def DeleteCustomDimension(
     api_config_override: Optional[APIConfig] = None, *, customDimensionId: str
 ) -> DeleteCustomDimensionResponse:
+    """
+    Delete Custom Dimension
+
+    Deletes a custom dimension.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -163,6 +183,11 @@ def CreatePopulator(
     customDimensionId: str,
     data: Populator,
 ) -> CreatePopulatorResponse:
+    """
+    Create Populator
+
+    Creates and returns a populator object containing information about an individual populator.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -196,6 +221,11 @@ def GetPopulator(
     populatorId: str,
     fieldLimit: Optional[int] = None,
 ) -> GetPopulatorResponse:
+    """
+    Get Populator
+
+    Get Populator by Dimension and Populator ID.
+    """
     query_params: Dict[str, Any] = {"fieldLimit": fieldLimit}
 
     header_params: Dict[str, Any] = {}
@@ -228,6 +258,11 @@ def UpdatePopulator(
     populatorId: str,
     data: Populator,
 ) -> UpdatePopulatorResponse:
+    """
+    Update Populator
+
+    Updates and returns a populator object containing information about an individual populator.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -260,6 +295,11 @@ def DeletePopulator(
     customDimensionId: str,
     populatorId: str,
 ) -> DeletePopulatorResponse:
+    """
+    Delete Populator
+
+    Deletes a populator.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -294,6 +334,11 @@ def GetPopulatorField(
     offset: Optional[int] = None,
     limit: Optional[int] = None,
 ) -> GetPopulatorFieldResponse:
+    """
+    Get Populator Field
+
+    Get Populator field by Dimension, Populator ID, and field name.
+    """
     query_params: Dict[str, Any] = {"offset": offset, "limit": limit}
 
     header_params: Dict[str, Any] = {}
@@ -322,6 +367,11 @@ def GetPopulatorField(
 def CreateCustomDimension(
     api_config_override: Optional[APIConfig] = None, *, data: CustomDimension
 ) -> CreateCustomDimensionResponse:
+    """
+    Create Custom Dimension
+
+    Creates and returns a custom dimension object containing information about an individual custom dimension
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

@@ -10,11 +10,13 @@ from .AgentCapability import AgentCapability
 
 class ListAgentCapabilitiesResponse(BaseModel):
     """
-    ListAgentCapabilitiesResponse model
+    ListAgentCapabilitiesResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     capabilities: Optional[List[Optional[AgentCapability]]] = Field(
-        validation_alias="capabilities", default=None
+        validation_alias="capabilities",
+        default=None,
+        description="List of agent capability objects.",
     )

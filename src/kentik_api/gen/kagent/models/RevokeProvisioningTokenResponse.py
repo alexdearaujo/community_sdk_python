@@ -10,7 +10,6 @@ from .TokenRevoked import TokenRevoked
 
 class RevokeProvisioningTokenResponse(BaseModel):
     """
-    RevokeProvisioningTokenResponse model
     RevokeProvisioningTokenResponse
     Response message for revoking a provisioning token.
     """

@@ -19,6 +19,11 @@ from ..models import (  # noqa: F401
 def GetJourneysNlq(
     api_config_override: Optional[APIConfig] = None, *, prompt: str
 ) -> GetJourneysNlqResponse:
+    """
+    Journeys AI NLQ Service
+
+    Perform Natural Language (NLQ) to query object translation
+    """
     query_params: Dict[str, Any] = {"prompt": prompt}
 
     header_params: Dict[str, Any] = {}

@@ -1,5 +1,10 @@
 {# HAND-WRITTEN: not modified by `make generate`. Edit directly. #}
+{% from "_macros.jinja2" import docstring %}
 {%  if async_client %}async {% endif %}def {{ operation_id }}(api_config_override : Optional[APIConfig] = None{% if params.strip() %}, *, {{ params.rstrip(', ') }}{% endif %}) -> {% if return_type.type is none or return_type.type.converted_type is none %}None{% else %}{{ return_type.type.converted_type}}{% endif %}:
+{% set summary = [operation.summary, operation.description if operation.description != operation.summary] | select | join("\n\n") %}
+{% if summary %}
+    {{ docstring(summary, "    ") }}
+{% endif %}
     query_params : Dict[str,Any] = {
     {% if query_params|length > 0 %}
         {{ query_params | join(',\n') | safe }}

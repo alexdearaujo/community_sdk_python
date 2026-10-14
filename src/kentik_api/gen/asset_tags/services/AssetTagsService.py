@@ -46,6 +46,11 @@ from ..models import (  # noqa: F401
 def GetTagValues(
     api_config_override: Optional[APIConfig] = None, *, assetType: str, assetId: str
 ) -> GetTagValuesResponse:
+    """
+    Gets tag values by asset id and type.
+
+    Returns a list of tag values.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -72,6 +77,11 @@ def GetTagValues(
 
 
 def ListTagKeys(api_config_override: Optional[APIConfig] = None) -> ListTagKeysResponse:
+    """
+    Lists all tag keys.
+
+    Returns a list of tag keys.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -100,6 +110,11 @@ def ListTagKeys(api_config_override: Optional[APIConfig] = None) -> ListTagKeysR
 def CreateTagKey(
     api_config_override: Optional[APIConfig] = None, *, data: CreateTagKeyRequest
 ) -> CreateTagKeyResponse:
+    """
+    Creates a new tag key.
+
+    Returns the created tag key.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -129,6 +144,11 @@ def CreateTagKey(
 def GetTagKey(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetTagKeyResponse:
+    """
+    Get a single tag key by id.
+
+    Returns a single tag key.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -160,6 +180,11 @@ def UpdateTagKey(
     id: str,
     data: AssetTagsServiceUpdateTagKeyBody,
 ) -> UpdateTagKeyResponse:
+    """
+    Updates the display name of a tag key.
+
+    Returns the updated tag key.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -189,6 +214,11 @@ def UpdateTagKey(
 def DeleteTagKey(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteTagKeyResponse:
+    """
+    Deletes a tag key by id.
+
+    Returns an empty response
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -217,6 +247,11 @@ def DeleteTagKey(
 def ListTagValues(
     api_config_override: Optional[APIConfig] = None, *, tagId: str, assetType: str
 ) -> ListTagValuesResponse:
+    """
+    Lists all tag values by id, optionally filtered by asset type.
+
+    Returns a list of tag values.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -245,6 +280,11 @@ def ListTagValues(
 def SetTagValues(
     api_config_override: Optional[APIConfig] = None, *, data: SetTagValuesRequest
 ) -> SetTagValuesResponse:
+    """
+    Bulk upserts a tag value for a list of asset ids of a given type.
+
+    Returns a list of tag values.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -274,6 +314,11 @@ def SetTagValues(
 def DeleteTagValues(
     api_config_override: Optional[APIConfig] = None, *, data: DeleteTagValuesRequest
 ) -> DeleteTagValuesResponse:
+    """
+    Bulk deletes a tag values for a list of asset ids of a given type.
+
+    Returns an empty response.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

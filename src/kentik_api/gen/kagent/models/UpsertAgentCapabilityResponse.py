@@ -10,7 +10,7 @@ from .AgentCapability import AgentCapability
 
 class UpsertAgentCapabilityResponse(BaseModel):
     """
-    UpsertAgentCapabilityResponse model
+    UpsertAgentCapabilityResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

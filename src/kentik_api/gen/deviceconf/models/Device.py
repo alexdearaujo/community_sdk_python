@@ -21,7 +21,9 @@ class Device(BaseModel):
 
     name: Optional[str] = Field(validation_alias="name", default=None)
 
-    hostname: Optional[str] = Field(validation_alias="hostname", default=None)
+    hostname: Optional[str] = Field(
+        validation_alias="hostname", default=None, description="or IP address"
+    )
 
     platform: Optional[DevicePlatform] = Field(
         validation_alias="platform", default=None

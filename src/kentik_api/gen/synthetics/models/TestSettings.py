@@ -24,7 +24,7 @@ from .UrlTest import UrlTest
 
 class TestSettings(BaseModel):
     """
-    TestSettings model
+    TestSettings
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
@@ -51,9 +51,17 @@ class TestSettings(BaseModel):
         validation_alias="networkMesh", default=None
     )
 
-    agentIds: Optional[List[str]] = Field(validation_alias="agentIds", default=None)
+    agentIds: Optional[List[str]] = Field(
+        validation_alias="agentIds",
+        default=None,
+        description="IDs of agents assigned to run tasks on behalf of the test",
+    )
 
-    tasks: Optional[List[str]] = Field(validation_alias="tasks", default=None)
+    tasks: Optional[List[str]] = Field(
+        validation_alias="tasks",
+        default=None,
+        description="List of task names to run for the test",
+    )
 
     healthSettings: Optional[HealthSettings] = Field(
         validation_alias="healthSettings", default=None
@@ -63,15 +71,25 @@ class TestSettings(BaseModel):
 
     trace: Optional[TestTraceSettings] = Field(validation_alias="trace", default=None)
 
-    period: Optional[int] = Field(validation_alias="period", default=None)
+    period: Optional[int] = Field(
+        validation_alias="period",
+        default=None,
+        description="Test evaluation period (in seconds)",
+    )
 
     family: Optional[IPFamily] = Field(validation_alias="family", default=None)
 
     notificationChannels: Optional[List[str]] = Field(
-        validation_alias="notificationChannels", default=None
+        validation_alias="notificationChannels",
+        default=None,
+        description="List of IDs of notification channels for alarms triggered by the test",
     )
 
-    notes: Optional[str] = Field(validation_alias="notes", default=None)
+    notes: Optional[str] = Field(
+        validation_alias="notes",
+        default=None,
+        description="Add a note or comment for this test",
+    )
 
     throughput: Optional[TestThroughputSettings] = Field(
         validation_alias="throughput", default=None

@@ -15,4 +15,7 @@ class Source(BaseModel):
 
     policyType: PolicyType = Field(validation_alias="policyType")
 
-    id: str = Field(validation_alias="id")
+    id: str = Field(
+        validation_alias="id",
+        description="The ID of the policy, can be integer ID, UUID or any other format.",
+    )

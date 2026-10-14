@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 class Activate(BaseModel):
     """
-    Activate model
+    Activate
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

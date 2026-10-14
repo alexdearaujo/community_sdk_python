@@ -11,4 +11,7 @@ class AlertServiceAddCommentBody(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    text: str = Field(validation_alias="text")
+    text: str = Field(
+        validation_alias="text",
+        description="The text content of the comment. Maximum length is 5000 characters.",
+    )

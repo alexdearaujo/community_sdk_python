@@ -10,15 +10,19 @@ from .CloudExport import CloudExport
 
 class ListCloudExportsResponse(BaseModel):
     """
-    ListCloudExportsResponse model
+    ListCloudExportsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     exports: Optional[List[Optional[CloudExport]]] = Field(
-        validation_alias="exports", default=None
+        validation_alias="exports",
+        default=None,
+        description="List of cloud export objects.",
     )
 
     invalidExportsCount: Optional[int] = Field(
-        validation_alias="invalidExportsCount", default=None
+        validation_alias="invalidExportsCount",
+        default=None,
+        description="Number of objects with invalid data (which are not returned in the response).",
     )

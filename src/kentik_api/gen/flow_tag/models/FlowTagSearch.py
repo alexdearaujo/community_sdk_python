@@ -11,25 +11,41 @@ from .OrderField import OrderField
 
 class FlowTagSearch(BaseModel):
     """
-    FlowTagSearch model
+    FlowTagSearch
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    limit: Optional[int] = Field(validation_alias="limit", default=None)
+    limit: Optional[int] = Field(
+        validation_alias="limit",
+        default=None,
+        description="Limit the number of rows to fetch",
+    )
 
-    offset: Optional[int] = Field(validation_alias="offset", default=None)
+    offset: Optional[int] = Field(
+        validation_alias="offset",
+        default=None,
+        description="The number rows to skip before returning",
+    )
 
     lookupFields: Optional[List[Optional[LookupField]]] = Field(
-        validation_alias="lookupFields", default=None
+        validation_alias="lookupFields",
+        default=None,
+        description="List of lookup fields",
     )
 
     lookupValues: Optional[List[str]] = Field(
-        validation_alias="lookupValues", default=None
+        validation_alias="lookupValues",
+        default=None,
+        description="List of lookup values",
     )
 
     orderBy: Optional[List[Optional[OrderField]]] = Field(
-        validation_alias="orderBy", default=None
+        validation_alias="orderBy", default=None, description="Sort order"
     )
 
-    fieldLimit: Optional[int] = Field(validation_alias="fieldLimit", default=None)
+    fieldLimit: Optional[int] = Field(
+        validation_alias="fieldLimit",
+        default=None,
+        description="Limit the number of record to return for nested fields",
+    )

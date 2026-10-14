@@ -16,5 +16,7 @@ class MitigationsServiceActResponse(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     results: Optional[List[Optional[MitigationsActResult]]] = Field(
-        validation_alias="results", default=None
+        validation_alias="results",
+        default=None,
+        description="The results of the mitigation actions.",
     )

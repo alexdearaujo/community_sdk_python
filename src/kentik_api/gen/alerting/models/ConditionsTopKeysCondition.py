@@ -15,4 +15,7 @@ class ConditionsTopKeysCondition(BaseModel):
 
     event: TopKeysConditionTopKeysEvent = Field(validation_alias="event")
 
-    count: str = Field(validation_alias="count")
+    count: str = Field(
+        validation_alias="count",
+        description="The count of the top keys used for the policy level condition.",
+    )

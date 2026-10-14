@@ -107,6 +107,11 @@ class KagentServiceWrapper:
     def list_agent_capabilities(
         self, *, api_config_override: Optional[APIConfig] = None, agentId: str
     ) -> rest_models.ListAgentCapabilitiesResponse:
+        """
+        List agent capabilities.
+
+        Returns a list of all capabilities of the specified agent.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -147,6 +152,11 @@ class KagentServiceWrapper:
         agentId: str,
         capabilityname: str,
     ) -> rest_models.GetAgentCapabilityResponse:
+        """
+        Get an agent capability.
+
+        Returns configuration of the named capability of the specified agent.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -188,6 +198,11 @@ class KagentServiceWrapper:
         agentId: str,
         capabilityname: str,
     ) -> rest_models.DeleteAgentCapabilityResponse:
+        """
+        Delete an agent capability.
+
+        Removes the named capability from the specified agent.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -231,6 +246,11 @@ class KagentServiceWrapper:
         data: rest_models.AgentCapabilityServiceUpsertAgentCapabilityBody,
         mask: Optional[str] = None,
     ) -> rest_models.UpsertAgentCapabilityResponse:
+        """
+        Create or update an agent capability.
+
+        Adds the capability to the agent, or updates it if already present.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -276,6 +296,11 @@ class KagentServiceWrapper:
         capabilities: Optional[List[str]] = None,
         includeDesiredState: Optional[bool] = None,
     ) -> rest_models.ListAgentsResponse:
+        """
+        List agents.
+
+        Returns a list of agents in the account, optionally filtered by registration state, IDs or capabilities.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -323,6 +348,11 @@ class KagentServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateAgentRequest,
     ) -> rest_models.CreateAgentResponse:
+        """
+        Create an agent.
+
+        Registers a new agent based on configuration in the request and returns it together with the commands for installing it on the target host.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -359,6 +389,11 @@ class KagentServiceWrapper:
     def authorize(
         self, *, api_config_override: Optional[APIConfig] = None, installId: str
     ) -> rest_models.AuthorizeResponse:
+        """
+        Authorize an unregistered agent.
+
+        Approves the agent installed under the specified install ID and returns the ID assigned to it.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -396,6 +431,11 @@ class KagentServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.GenerateInstallCommandsRequest,
     ) -> rest_models.GenerateInstallCommandsResponse:
+        """
+        Generate agent install commands.
+
+        Returns commands for deploying an agent. The commands embed a provisioning token and are ready to execute on the target host.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -436,6 +476,11 @@ class KagentServiceWrapper:
         agentid: str,
         unregistered: Optional[bool] = None,
     ) -> rest_models.GetAgentResponse:
+        """
+        Get agent configuration and state.
+
+        Returns configuration and state of the agent with the specified ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -477,6 +522,11 @@ class KagentServiceWrapper:
         agentid: str,
         unregistered: Optional[bool] = None,
     ) -> rest_models.DeleteAgentResponse:
+        """
+        Delete an agent.
+
+        Deletes the agent with the specified ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -519,6 +569,11 @@ class KagentServiceWrapper:
         data: rest_models.AgentServiceUpdateAgentBody,
         mask: Optional[str] = None,
     ) -> rest_models.UpdateAgentResponse:
+        """
+        Update configuration of an agent.
+
+        Updates the attributes of an agent selected by the field mask in the request.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -557,6 +612,9 @@ class KagentServiceWrapper:
     def capability_admin_service__list_capabilities(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCapabilitiesResponse:
+        """
+        List all capabilities
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
@@ -593,6 +651,9 @@ class KagentServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.Capability,
     ) -> rest_models.CreateCapabilityResponse:
+        """
+        Create a new capability
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
@@ -629,6 +690,9 @@ class KagentServiceWrapper:
     def capability_admin_service__get_capability(
         self, *, api_config_override: Optional[APIConfig] = None, capabilityname: str
     ) -> rest_models.GetCapabilityResponse:
+        """
+        Get a capabilities
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
@@ -663,6 +727,9 @@ class KagentServiceWrapper:
     def capability_admin_service__delete_capability(
         self, *, api_config_override: Optional[APIConfig] = None, capabilityname: str
     ) -> rest_models.DeleteCapabilityResponse:
+        """
+        Delete a capability
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
@@ -701,6 +768,9 @@ class KagentServiceWrapper:
         capabilityname: str,
         data: rest_models.CapabilityAdminServiceUpdateCapabilityBody,
     ) -> rest_models.UpdateCapabilityResponse:
+        """
+        Update an existing capability
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
@@ -747,6 +817,9 @@ class KagentServiceWrapper:
         semver: Optional[str] = None,
         distro: Optional[str] = None,
     ) -> rest_models.GetCapabilityReleaseResponse:
+        """
+        GetCapabilityRelease can be used by install/upgrade modules to fetch a single release.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
@@ -803,6 +876,9 @@ class KagentServiceWrapper:
         capabilities: Optional[List[str]] = None,
         distro: Optional[str] = None,
     ) -> rest_models.GetCapabilityLatestReleasesResponse:
+        """
+        GetCapabilityLatestReleases can be used by install/upgrade modules to fetch the latest available releases.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
@@ -896,6 +972,11 @@ class KagentServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.Config,
     ) -> rest_models.CreateConfigResponse:
+        """
+        Create a config.
+
+        Creates a new config based on the request and returns it.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -932,6 +1013,11 @@ class KagentServiceWrapper:
     def get_config(
         self, *, api_config_override: Optional[APIConfig] = None, configname: str
     ) -> rest_models.GetConfigResponse:
+        """
+        Get a config.
+
+        Returns the config with the specified name.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -966,6 +1052,11 @@ class KagentServiceWrapper:
     def delete_config(
         self, *, api_config_override: Optional[APIConfig] = None, configname: str
     ) -> rest_models.DeleteConfigResponse:
+        """
+        Delete a config.
+
+        Deletes the config with the specified name.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -1004,6 +1095,11 @@ class KagentServiceWrapper:
         configname: str,
         data: rest_models.ConfigServiceUpdateConfigBody,
     ) -> rest_models.UpdateConfigResponse:
+        """
+        Update a config.
+
+        Updates the attributes of a config selected by the field mask in the request.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
@@ -1041,6 +1137,11 @@ class KagentServiceWrapper:
     def list_provisioning_tokens(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListProvisioningTokensResponse:
+        """
+        List provisioning tokens.
+
+        Returns a list of all provisioning tokens in the account.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
@@ -1077,6 +1178,11 @@ class KagentServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.ProvisioningToken,
     ) -> rest_models.CreateProvisioningTokenResponse:
+        """
+        Create a provisioning token.
+
+        Creates a new provisioning token based on configuration in the request and returns it, including its secret value.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
@@ -1113,6 +1219,11 @@ class KagentServiceWrapper:
     def get_provisioning_token(
         self, *, api_config_override: Optional[APIConfig] = None, token: str
     ) -> rest_models.GetProvisioningTokenResponse:
+        """
+        Get provisioning token configuration and status.
+
+        Returns configuration, usage and revocation status of the provisioning token with the specified value.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
@@ -1147,6 +1258,11 @@ class KagentServiceWrapper:
     def list_agents_by_provisioning_token(
         self, *, api_config_override: Optional[APIConfig] = None, token: str
     ) -> rest_models.ListAgentsByProvisioningTokenResponse:
+        """
+        List agents registered with a provisioning token.
+
+        Returns the IDs of all agents that have registered with the provisioning token with the specified value.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
@@ -1187,6 +1303,11 @@ class KagentServiceWrapper:
         token: str,
         data: rest_models.ProvisioningTokenServiceRevokeProvisioningTokenBody,
     ) -> rest_models.RevokeProvisioningTokenResponse:
+        """
+        Revoke a provisioning token.
+
+        Revokes the provisioning token with the specified value. Agents already registered with the token are not affected, but the token can no longer be used for new registrations.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(

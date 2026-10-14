@@ -13,6 +13,14 @@ class PolicyPolicyErrorInfo(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    timestamp: Optional[str] = Field(validation_alias="timestamp", default=None)
+    timestamp: Optional[str] = Field(
+        validation_alias="timestamp",
+        default=None,
+        description="The timestamp when the error occurred.",
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="The description of the error.",
+    )

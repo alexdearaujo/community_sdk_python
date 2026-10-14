@@ -10,7 +10,7 @@ from .labelv202210Label import labelv202210Label
 
 class CreateLabelResponse(BaseModel):
     """
-    CreateLabelResponse model
+    CreateLabelResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

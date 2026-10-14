@@ -40,6 +40,11 @@ class SavedFilterServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.SavedFilter,
     ) -> rest_models.CreateSavedFilterResponse:
+        """
+        Create Saved Filter
+
+        Creates and returns a saved filter object containing information about an individual saved filter.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -76,6 +81,11 @@ class SavedFilterServiceWrapper:
     def get_saved_filter(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetSavedFilterResponse:
+        """
+        Custom Saved Filter Info
+
+        Returns a saved filter object containing information about an individual saved filter.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -114,6 +124,11 @@ class SavedFilterServiceWrapper:
         id: str,
         data: rest_models.SavedFilter,
     ) -> rest_models.UpdateSavedFilterResponse:
+        """
+        Update Saved Filter
+
+        Updates and returns a saved filter object containing information about an individual saved filter.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -151,6 +166,11 @@ class SavedFilterServiceWrapper:
     def delete_saved_filter(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteSavedFilterResponse:
+        """
+        Delete Saved Filter
+
+        Deletes a saved filter.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -185,6 +205,11 @@ class SavedFilterServiceWrapper:
     def list_saved_filters(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSavedFiltersResponse:
+        """
+        List Saved Filters
+
+        Returns all custom saved filters created by the user's company.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -218,6 +243,11 @@ class SavedFilterServiceWrapper:
     def list_saved_filters_all(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSavedFiltersAllResponse:
+        """
+        List All Saved Filters
+
+        Returns all saved filters, including system default filters.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

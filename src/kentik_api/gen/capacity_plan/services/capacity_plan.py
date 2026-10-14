@@ -37,6 +37,11 @@ class CapacityPlanServiceWrapper:
     def list_capacity_plans(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCapacityPlansResponse:
+        """
+        List all capacity plans.
+
+        Returns list of capacity plans.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -70,6 +75,11 @@ class CapacityPlanServiceWrapper:
     def list_capacity_summaries(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCapacitySummariesResponse:
+        """
+        List all capacity summaries.
+
+        Returns list of capacity summaries.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -103,6 +113,11 @@ class CapacityPlanServiceWrapper:
     def get_capacity_plan(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetCapacityPlanResponse:
+        """
+        Retrieve capacity plan.
+
+        Returns capacity plan specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -137,6 +152,11 @@ class CapacityPlanServiceWrapper:
     def get_capacity_summary(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetCapacitySummaryResponse:
+        """
+        Retrieve capacity plan summary.
+
+        Returns capacity plan summary specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

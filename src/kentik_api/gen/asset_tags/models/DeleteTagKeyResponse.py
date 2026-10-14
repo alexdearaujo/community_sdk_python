@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class DeleteTagKeyResponse(BaseModel):
     """
-    {.Name} model
+    {.Name}
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

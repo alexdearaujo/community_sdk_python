@@ -14,5 +14,7 @@ class GetNetworkRangeAssignmentsResponse(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     networkRanges: Optional[List[str]] = Field(
-        validation_alias="networkRanges", default=None
+        validation_alias="networkRanges",
+        default=None,
+        description="IP prefixes (e.g., 10.0.0.0/8) that this agent is responsible for performing lookups for",
     )

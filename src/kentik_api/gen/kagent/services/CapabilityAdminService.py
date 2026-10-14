@@ -84,6 +84,9 @@ from ..models import (  # noqa: F401
 def CapabilityAdminService_ListCapabilities(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListCapabilitiesResponse:
+    """
+    List all capabilities
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -112,6 +115,9 @@ def CapabilityAdminService_ListCapabilities(
 def CapabilityAdminService_CreateCapability(
     api_config_override: Optional[APIConfig] = None, *, data: Capability
 ) -> CreateCapabilityResponse:
+    """
+    Create a new capability
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -141,6 +147,9 @@ def CapabilityAdminService_CreateCapability(
 def CapabilityAdminService_GetCapability(
     api_config_override: Optional[APIConfig] = None, *, capabilityname: str
 ) -> GetCapabilityResponse:
+    """
+    Get a capabilities
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -169,6 +178,9 @@ def CapabilityAdminService_GetCapability(
 def CapabilityAdminService_DeleteCapability(
     api_config_override: Optional[APIConfig] = None, *, capabilityname: str
 ) -> DeleteCapabilityResponse:
+    """
+    Delete a capability
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -200,6 +212,9 @@ def CapabilityAdminService_UpdateCapability(
     capabilityname: str,
     data: CapabilityAdminServiceUpdateCapabilityBody,
 ) -> UpdateCapabilityResponse:
+    """
+    Update an existing capability
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

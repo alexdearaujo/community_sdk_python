@@ -15,10 +15,18 @@ class PolicyFiltersFieldFilter(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    field: Optional[str] = Field(validation_alias="field", default=None)
+    field: Optional[str] = Field(
+        validation_alias="field",
+        default=None,
+        description="The field the filter is applied to.",
+    )
 
     operator: Optional[PolicyFiltersOperator] = Field(
         validation_alias="operator", default=None
     )
 
-    value: Optional[str] = Field(validation_alias="value", default=None)
+    value: Optional[str] = Field(
+        validation_alias="value",
+        default=None,
+        description="The right-hand value used for the filter operation.",
+    )

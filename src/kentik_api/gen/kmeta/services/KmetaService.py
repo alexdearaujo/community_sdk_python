@@ -32,6 +32,11 @@ from ..models import (  # noqa: F401
 def ListServiceNowConfigs(
     api_config_override: Optional[APIConfig] = None, *, cid: str
 ) -> ListServiceNowConfigsResponse:
+    """
+    List ServiceNow Configs
+
+    Returns all ServiceNow integration configurations for the specified company.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -60,6 +65,11 @@ def ListServiceNowConfigs(
 def CreateServiceNowConfig(
     api_config_override: Optional[APIConfig] = None, *, cid: str, data: ServiceNowConfig
 ) -> CreateServiceNowConfigResponse:
+    """
+    Create ServiceNow Config
+
+    Creates a new ServiceNow integration configuration for the specified company.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -89,6 +99,11 @@ def CreateServiceNowConfig(
 def GetServiceNowConfig(
     api_config_override: Optional[APIConfig] = None, *, cid: str, id: str
 ) -> GetServiceNowConfigResponse:
+    """
+    Get ServiceNow Config
+
+    Returns a single ServiceNow integration configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -121,6 +136,11 @@ def UpdateServiceNowConfig(
     id: str,
     data: ServiceNowConfig,
 ) -> UpdateServiceNowConfigResponse:
+    """
+    Update ServiceNow Config
+
+    Updates an existing ServiceNow integration configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -150,6 +170,11 @@ def UpdateServiceNowConfig(
 def DeleteServiceNowConfig(
     api_config_override: Optional[APIConfig] = None, *, cid: str, id: str
 ) -> DeleteServiceNowConfigResponse:
+    """
+    Delete ServiceNow Config
+
+    Deletes a ServiceNow integration configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

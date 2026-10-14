@@ -40,6 +40,11 @@ class PathfinderServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreatePathfinderReportRequest,
     ) -> rest_models.CreatePathfinderReportResponse:
+        """
+        Create a Pathfinder Report.
+
+        Create a pathfinder report based on configuration provided in the request.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

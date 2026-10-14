@@ -10,7 +10,7 @@ from .NotificationChannel import NotificationChannel
 
 class GetNotificationChannelResponse(BaseModel):
     """
-    GetNotificationChannelResponse model
+    GetNotificationChannelResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

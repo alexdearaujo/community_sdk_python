@@ -14,5 +14,7 @@ class MitigationsServiceAvailableActionsForMitigationResponse(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     availableActions: Optional[List[str]] = Field(
-        validation_alias="availableActions", default=None
+        validation_alias="availableActions",
+        default=None,
+        description="The available actions for the mitigation.",
     )

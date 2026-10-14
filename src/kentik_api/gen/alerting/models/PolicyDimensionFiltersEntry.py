@@ -18,10 +18,17 @@ class PolicyDimensionFiltersEntry(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     not_: Optional[bool] = Field(
-        validation_alias="not", serialization_alias="not", default=None
+        validation_alias="not",
+        serialization_alias="not",
+        default=None,
+        description="If true, the entry will be negated.",
     )
 
-    dimension: Optional[str] = Field(validation_alias="dimension", default=None)
+    dimension: Optional[str] = Field(
+        validation_alias="dimension",
+        default=None,
+        description="The dimension the filter entry is applied to.",
+    )
 
     equalsAny: Optional[PolicyDimensionFiltersEntryStringArray] = Field(
         validation_alias="equalsAny", default=None

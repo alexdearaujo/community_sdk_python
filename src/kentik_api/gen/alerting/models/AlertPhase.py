@@ -21,9 +21,17 @@ class AlertPhase(BaseModel):
         validation_alias="severity", default=None
     )
 
-    startTimeAt: Optional[str] = Field(validation_alias="startTimeAt", default=None)
+    startTimeAt: Optional[str] = Field(
+        validation_alias="startTimeAt",
+        default=None,
+        description="The start time of the alert phase.",
+    )
 
-    endTimeAt: Optional[str] = Field(validation_alias="endTimeAt", default=None)
+    endTimeAt: Optional[str] = Field(
+        validation_alias="endTimeAt",
+        default=None,
+        description="The end time of the alert phase.",
+    )
 
     flow: Optional[FlowContext] = Field(validation_alias="flow", default=None)
 

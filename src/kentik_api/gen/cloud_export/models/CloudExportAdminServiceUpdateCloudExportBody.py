@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 class CloudExportAdminServiceUpdateCloudExportBody(BaseModel):
     """
-    UpdateCloudExportRequest model
+    UpdateCloudExportRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    export: Optional[Dict[str, Any]] = Field(validation_alias="export", default=None)
+    export: Optional[Dict[str, Any]] = Field(
+        validation_alias="export", default=None, description="CloudExport"
+    )

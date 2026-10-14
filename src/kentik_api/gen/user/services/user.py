@@ -37,6 +37,11 @@ class UserServiceWrapper:
     def list_users(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListUsersResponse:
+        """
+        List all users.
+
+        Returns a list of all user accounts in the company.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -71,6 +76,11 @@ class UserServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateUserRequest,
     ) -> rest_models.CreateUserResponse:
+        """
+        Create new user account.
+
+        Creates new user account based on attributes in the request. Returns attributes of the newly created account.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -107,6 +117,11 @@ class UserServiceWrapper:
     def get_user(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetUserResponse:
+        """
+        Get attributes of a user account.
+
+        Returns attributes of a user account specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -143,6 +158,11 @@ class UserServiceWrapper:
         id: str,
         data: rest_models.UserServiceUpdateUserBody,
     ) -> rest_models.UpdateUserResponse:
+        """
+        Update attributes of a user account.
+
+        Replaces all attributes of a user account specified by ID with attributes in the request. Returns updated attributes.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -180,6 +200,11 @@ class UserServiceWrapper:
     def delete_user(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteUserResponse:
+        """
+        Delete a user account.
+
+        Deletes user account specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -214,6 +239,11 @@ class UserServiceWrapper:
     def reset_active_sessions(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.ResetActiveSessionsResponse:
+        """
+        Resets active sessions for a user.
+
+        Resets active sessions for a user specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -248,6 +278,11 @@ class UserServiceWrapper:
     def reset_api_token(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.ResetApiTokenResponse:
+        """
+        Reset API token for a user.
+
+        Resets API token for a user specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

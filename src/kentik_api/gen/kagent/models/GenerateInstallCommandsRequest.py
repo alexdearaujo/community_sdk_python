@@ -6,7 +6,6 @@ from pydantic import BaseModel
 
 class GenerateInstallCommandsRequest(BaseModel):
     """
-    GenerateInstallCommandsRequest model
     GenerateInstallCommandsRequest
     Request for GenerateInstallCommands.
     """

@@ -65,6 +65,11 @@ def ListDevices(
     querynoCustomColumns: Optional[bool] = None,
     view: Optional[str] = None,
 ) -> ListDevicesResponse:
+    """
+    List all devices.
+
+    Returns list of configured devices. Use the 'view' parameter to control response detail: FULL (default), BASIC (id, name, status), or ID_ONLY (id only). See [About Devices](https://kb.kentik.com/v4/Cb01.htm).
+    """
     query_params: Dict[str, Any] = {
         "query.noCustomColumns": querynoCustomColumns,
         "view": view,
@@ -96,6 +101,11 @@ def ListDevices(
 def CreateDevice(
     api_config_override: Optional[APIConfig] = None, *, data: CreateDeviceRequest
 ) -> CreateDeviceResponse:
+    """
+    Configure a new device.
+
+    Create configuration for a new device. Returns the newly created configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -125,6 +135,11 @@ def CreateDevice(
 def CreateDevices(
     api_config_override: Optional[APIConfig] = None, *, data: CreateDevicesRequest
 ) -> CreateDevicesResponse:
+    """
+    Configure multiple devices (max 100).
+
+    Create configuration for multiple devices. Returns the newly created configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -154,6 +169,11 @@ def CreateDevices(
 def DeleteDevices(
     api_config_override: Optional[APIConfig] = None, *, data: DeleteDevicesRequest
 ) -> DeleteDevicesResponse:
+    """
+    Delete configuration of multiple devices.
+
+    Deletes configuration of multiple devices with specific IDs (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -183,6 +203,11 @@ def DeleteDevices(
 def UpdateDevices(
     api_config_override: Optional[APIConfig] = None, *, data: UpdateDevicesRequest
 ) -> UpdateDevicesResponse:
+    """
+    Updates configuration of multiple devices (max 100).
+
+    Replaces configuration of multiple devices with attributes in the request. Returns the updated configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -215,6 +240,11 @@ def GetDeviceByName(
     deviceName: str,
     querynoCustomColumns: Optional[bool] = None,
 ) -> GetDeviceByNameResponse:
+    """
+    Retrieve configuration of a device by name.
+
+    Returns configuration of a device specified by name (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+    """
     query_params: Dict[str, Any] = {"query.noCustomColumns": querynoCustomColumns}
 
     header_params: Dict[str, Any] = {}
@@ -246,6 +276,11 @@ def GetDevice(
     deviceid: str,
     querynoCustomColumns: Optional[bool] = None,
 ) -> GetDeviceResponse:
+    """
+    Retrieve configuration of a device.
+
+    Returns configuration of a device specified by ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+    """
     query_params: Dict[str, Any] = {"query.noCustomColumns": querynoCustomColumns}
 
     header_params: Dict[str, Any] = {}
@@ -277,6 +312,11 @@ def UpdateDevice(
     deviceid: str,
     data: DeviceServiceUpdateDeviceBody,
 ) -> UpdateDeviceResponse:
+    """
+    Updates configuration of a device.
+
+    Replaces configuration of a device with attributes in the request. Returns the updated configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -306,6 +346,11 @@ def UpdateDevice(
 def DeleteDevice(
     api_config_override: Optional[APIConfig] = None, *, deviceid: str
 ) -> DeleteDeviceResponse:
+    """
+    Delete configuration of a device.
+
+    Deletes configuration of a device with specific ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -337,6 +382,11 @@ def UpdateDeviceLabels(
     id: str,
     data: DeviceServiceUpdateDeviceLabelsBody,
 ) -> UpdateDeviceLabelsResponse:
+    """
+    Updates labels of a device.
+
+    Removes all existing labels from the device and applies the device labels (see [About Device Labels](https://kb.kentik.com/v4/Cb16.htm)) specified by id. Returns the updated configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

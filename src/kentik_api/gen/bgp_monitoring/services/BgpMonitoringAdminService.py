@@ -53,6 +53,11 @@ from ..models import (  # noqa: F401
 def ListMonitors(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListMonitorsResponse:
+    """
+    List BGP Monitors.
+
+    Returns list of all BGP monitors present in the account.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -81,6 +86,11 @@ def ListMonitors(
 def CreateMonitor(
     api_config_override: Optional[APIConfig] = None, *, data: CreateMonitorRequest
 ) -> CreateMonitorResponse:
+    """
+    Create new BGP Monitor instance.
+
+    Creates new BGP Monitor and if successful returns its configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -110,6 +120,11 @@ def CreateMonitor(
 def GetMonitor(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetMonitorResponse:
+    """
+    Get BGP Monitor configuration.
+
+    Returns configuration of existing BGP monitor with specific ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -141,6 +156,11 @@ def UpdateMonitor(
     id: str,
     data: BgpMonitoringAdminServiceUpdateMonitorBody,
 ) -> UpdateMonitorResponse:
+    """
+    Update configuration of a BGP monitor.
+
+    Updates configuration of BGP monitor with specific ID and returns updated  configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -170,6 +190,11 @@ def UpdateMonitor(
 def DeleteMonitor(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteMonitorResponse:
+    """
+    Delete existing BGP Monitor.
+
+    Delete BGP monitor with with specific ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -201,6 +226,11 @@ def SetMonitorStatus(
     id: str,
     data: BgpMonitoringAdminServiceSetMonitorStatusBody,
 ) -> SetMonitorStatusResponse:
+    """
+    Sets administrative status of a BGP monitor.
+
+    Sets administrative status of BGP monitor with specific ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

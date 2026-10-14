@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 class BgpMonitoringAdminServiceUpdateMonitorBody(BaseModel):
     """
-    UpdateMonitorRequest model
+    UpdateMonitorRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    monitor: Dict[str, Any] = Field(validation_alias="monitor")
+    monitor: Dict[str, Any] = Field(
+        validation_alias="monitor", description="BgpMonitor"
+    )

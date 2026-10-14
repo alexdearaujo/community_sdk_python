@@ -21,5 +21,7 @@ class SuppressionServiceListResponse(BaseModel):
     )
 
     suppressions: Optional[List[Optional[Suppression]]] = Field(
-        validation_alias="suppressions", default=None
+        validation_alias="suppressions",
+        default=None,
+        description="The suppression configurations that were found matching the filters.",
     )

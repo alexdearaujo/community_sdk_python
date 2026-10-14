@@ -14,7 +14,7 @@ class FlowspecActionLargeCommunity(BaseModel):
     Administrator field and two four-octet operator-defined fields, each
     of which can be used to denote properties or actions significant to
     the operator of the AS assigning the values.
-    https://datatracker.ietf.org/doc/html/rfc8092 model
+    https://datatracker.ietf.org/doc/html/rfc8092
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

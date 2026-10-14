@@ -11,25 +11,37 @@ from .Peer import Peer
 
 class ASNDetails(BaseModel):
     """
-    ASNDetails model
+    ASNDetails
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    asn: Optional[int] = Field(validation_alias="asn", default=None)
+    asn: Optional[int] = Field(
+        validation_alias="asn",
+        default=None,
+        description="Autonomous System Number (ASN)",
+    )
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name",
+        default=None,
+        description="Name of the Autonomous System",
+    )
 
-    countryName: Optional[str] = Field(validation_alias="countryName", default=None)
+    countryName: Optional[str] = Field(
+        validation_alias="countryName",
+        default=None,
+        description="Country Name of the Autonomous System",
+    )
 
     customers: Optional[List[Optional[CustomerProvider]]] = Field(
-        validation_alias="customers", default=None
+        validation_alias="customers", default=None, description="List of Customers"
     )
 
     providers: Optional[List[Optional[CustomerProvider]]] = Field(
-        validation_alias="providers", default=None
+        validation_alias="providers", default=None, description="List of Providers"
     )
 
     peers: Optional[List[Optional[Peer]]] = Field(
-        validation_alias="peers", default=None
+        validation_alias="peers", default=None, description="List of Peers"
     )

@@ -8,15 +8,29 @@ from pydantic import BaseModel, Field
 
 class v202303VantagePoint(BaseModel):
     """
-    VantagePoint model
+    VantagePoint
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    dataset: Optional[str] = Field(validation_alias="dataset", default=None)
+    dataset: Optional[str] = Field(
+        validation_alias="dataset",
+        default=None,
+        description="Name of the collector data set",
+    )
 
-    collector: Optional[str] = Field(validation_alias="collector", default=None)
+    collector: Optional[str] = Field(
+        validation_alias="collector", default=None, description="Name of the collector"
+    )
 
-    peerAsn: Optional[int] = Field(validation_alias="peerAsn", default=None)
+    peerAsn: Optional[int] = Field(
+        validation_alias="peerAsn",
+        default=None,
+        description="ASN of the peer from which the collector receives BGP data",
+    )
 
-    peerIp: Optional[str] = Field(validation_alias="peerIp", default=None)
+    peerIp: Optional[str] = Field(
+        validation_alias="peerIp",
+        default=None,
+        description="IP address of the peer from which the collector receives BGP data",
+    )

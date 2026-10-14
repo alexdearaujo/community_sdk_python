@@ -226,6 +226,11 @@ def List(
     filtersipCidrPattern: Optional[str] = None,
     filterstypes: Optional[TypingList[str]] = None,
 ) -> MitigationsServiceListResponse:
+    """
+    List Mitigations
+
+    Returns a list of mitigations.
+    """
     query_params: Dict[str, Any] = {
         "pagination.limit": paginationlimit,
         "pagination.offset": paginationoffset,
@@ -270,6 +275,11 @@ def Create(
     *,
     data: MitigationsServiceCreateRequest,
 ) -> MitigationsServiceCreateResponse:
+    """
+    Create Mitigation
+
+    Creates a new manual mitigation.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -299,6 +309,11 @@ def Create(
 def AvailableActions(
     api_config_override: Optional[APIConfig] = None,
 ) -> MitigationsServiceAvailableActionsResponse:
+    """
+    Get Available Actions
+
+    Returns available actions for mitigations.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -327,6 +342,11 @@ def AvailableActions(
 def Get(
     api_config_override: Optional[APIConfig] = None, *, action: str
 ) -> MitigationsServiceGetResponse:
+    """
+    Get Mitigation
+
+    Returns a mitigation.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -358,6 +378,11 @@ def Act(
     action: str,
     data: MitigationsServiceActBody,
 ) -> MitigationsServiceActResponse:
+    """
+    Act on Mitigation
+
+    Performs an action on one or more mitigations.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -387,6 +412,11 @@ def Act(
 def AvailableActionsForMitigation(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> MitigationsServiceAvailableActionsForMitigationResponse:
+    """
+    Get Available Actions for Mitigation
+
+    Returns available actions for a specific mitigation.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

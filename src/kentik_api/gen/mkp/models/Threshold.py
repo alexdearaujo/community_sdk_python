@@ -13,7 +13,7 @@ from .NotificationChannel import NotificationChannel
 
 class Threshold(BaseModel):
     """
-    Threshold model
+    Threshold
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

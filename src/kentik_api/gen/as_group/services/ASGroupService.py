@@ -36,6 +36,11 @@ from ..models import (  # noqa: F401
 def ListASGroups(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListASGroupsResponse:
+    """
+    List all AS groups.
+
+    Returns list of configured AS groups.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -64,6 +69,11 @@ def ListASGroups(
 def CreateASGroup(
     api_config_override: Optional[APIConfig] = None, *, data: CreateASGroupRequest
 ) -> CreateASGroupResponse:
+    """
+    Configure a new AS group.
+
+    Create configuration for a new AS group. Returns the newly created configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -93,6 +103,11 @@ def CreateASGroup(
 def GetASGroup(
     api_config_override: Optional[APIConfig] = None, *, asGroupid: str
 ) -> GetASGroupResponse:
+    """
+    Retrieve configuration of a AS group.
+
+    Returns configuration of a AS group specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -124,6 +139,11 @@ def UpdateASGroup(
     asGroupid: str,
     data: ASGroupServiceUpdateASGroupBody,
 ) -> UpdateASGroupResponse:
+    """
+    Updates configuration of a AS group.
+
+    Replaces configuration of a AS group with attributes in the request. Returns the updated configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -153,6 +173,11 @@ def UpdateASGroup(
 def DeleteASGroup(
     api_config_override: Optional[APIConfig] = None, *, asGroupid: str
 ) -> DeleteASGroupResponse:
+    """
+    Delete configuration of a AS group.
+
+    Deletes configuration of a AS group with specific ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

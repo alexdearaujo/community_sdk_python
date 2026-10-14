@@ -215,6 +215,11 @@ def List(
     filtersmodifiedAtstart: Optional[str] = None,
     filtersmodifiedAtend: Optional[str] = None,
 ) -> MitigationPlatformsServiceListResponse:
+    """
+    List Mitigation Platforms
+
+    Returns a list of mitigation platforms.
+    """
     query_params: Dict[str, Any] = {
         "pagination.limit": paginationlimit,
         "pagination.offset": paginationoffset,
@@ -253,6 +258,11 @@ def List(
 def Get(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> MitigationPlatformsServiceGetResponse:
+    """
+    Get Mitigation Platform
+
+    Returns a mitigation platform.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

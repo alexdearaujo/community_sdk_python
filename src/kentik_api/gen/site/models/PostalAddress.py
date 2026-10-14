@@ -8,17 +8,25 @@ from pydantic import BaseModel, Field
 
 class PostalAddress(BaseModel):
     """
-    PostalAddress model
+    PostalAddress
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    address: str = Field(validation_alias="address")
+    address: str = Field(validation_alias="address", description="Street address")
 
-    city: str = Field(validation_alias="city")
+    city: str = Field(validation_alias="city", description="City (full name)")
 
-    region: Optional[str] = Field(validation_alias="region", default=None)
+    region: Optional[str] = Field(
+        validation_alias="region", default=None, description="Geographical region"
+    )
 
-    postalCode: Optional[str] = Field(validation_alias="postalCode", default=None)
+    postalCode: Optional[str] = Field(
+        validation_alias="postalCode",
+        default=None,
+        description="Country specific postal code",
+    )
 
-    country: str = Field(validation_alias="country")
+    country: str = Field(
+        validation_alias="country", description="Country (full name or country code)"
+    )

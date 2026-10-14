@@ -11,7 +11,7 @@ from .BootstrapInfo import BootstrapInfo
 
 class CreateAgentResponse(BaseModel):
     """
-    CreateAgentResponse model
+    CreateAgentResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

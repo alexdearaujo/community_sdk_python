@@ -113,6 +113,11 @@ def ListAgentAlerts(
     *,
     agentIds: Optional[List[str]] = None,
 ) -> ListAgentAlertsResponse:
+    """
+    List agent alert configurations
+
+    Lists all agent alert configurations, optionally filtered by a list of agent ids.
+    """
     query_params: Dict[str, Any] = {"agentIds": agentIds}
 
     header_params: Dict[str, Any] = {}
@@ -141,6 +146,11 @@ def ListAgentAlerts(
 def CreateAgentAlert(
     api_config_override: Optional[APIConfig] = None, *, data: CreateAgentAlertRequest
 ) -> CreateAgentAlertResponse:
+    """
+    Create an agent alert configuration
+
+    Creates a new agent alert configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -170,6 +180,11 @@ def CreateAgentAlert(
 def GetAgentAlert(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetAgentAlertResponse:
+    """
+    Get an agent alert configuration
+
+    Retrieves an existing agent alert configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -201,6 +216,11 @@ def UpdateAgentAlert(
     id: str,
     data: SyntheticsAdminServiceUpdateAgentAlertBody,
 ) -> UpdateAgentAlertResponse:
+    """
+    Update an agent alert configuration
+
+    Updates an existing agent alert configuration with the time threshold and notification channels provided.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -230,6 +250,11 @@ def UpdateAgentAlert(
 def DeleteAgentAlert(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteAgentAlertResponse:
+    """
+    Delete an agent alert configuration
+
+    Deletes an existing agent alert configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -256,6 +281,11 @@ def DeleteAgentAlert(
 
 
 def ListAgents(api_config_override: Optional[APIConfig] = None) -> ListAgentsResponse:
+    """
+    List available agents
+
+    Returns list of all synthetic agents available in the account.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -284,6 +314,11 @@ def ListAgents(api_config_override: Optional[APIConfig] = None) -> ListAgentsRes
 def GetAgent(
     api_config_override: Optional[APIConfig] = None, *, agentid: str
 ) -> GetAgentResponse:
+    """
+    Get information about an agent
+
+    Returns information about the requested synthetic agent.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -315,6 +350,11 @@ def UpdateAgent(
     agentid: str,
     data: SyntheticsAdminServiceUpdateAgentBody,
 ) -> UpdateAgentResponse:
+    """
+    Update configuration of an agent
+
+    Update configuration of a synthetic agent.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -344,6 +384,11 @@ def UpdateAgent(
 def DeleteAgent(
     api_config_override: Optional[APIConfig] = None, *, agentid: str
 ) -> DeleteAgentResponse:
+    """
+    Delete an agent
+
+    Deletes the requested agent. The deleted agent is removed from configuration of all tests.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -370,6 +415,11 @@ def DeleteAgent(
 
 
 def ListTests(api_config_override: Optional[APIConfig] = None) -> ListTestsResponse:
+    """
+    List all tests
+
+    Returns a list of all configured active and paused synthetic tests.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -398,6 +448,11 @@ def ListTests(api_config_override: Optional[APIConfig] = None) -> ListTestsRespo
 def CreateTest(
     api_config_override: Optional[APIConfig] = None, *, data: CreateTestRequest
 ) -> CreateTestResponse:
+    """
+    Create a test
+
+    Create synthetic test based on configuration provided in the request.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -427,6 +482,11 @@ def CreateTest(
 def GetTest(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetTestResponse:
+    """
+    Get information about a test
+
+    Returns configuration and status for the requested synthetic test.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -458,6 +518,11 @@ def UpdateTest(
     id: str,
     data: SyntheticsAdminServiceUpdateTestBody,
 ) -> UpdateTestResponse:
+    """
+    Update configuration of a test
+
+    Updates configuration of a synthetic test.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -487,6 +552,11 @@ def UpdateTest(
 def DeleteTest(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteTestResponse:
+    """
+    Delete a synthetic test.
+
+    Deletes the synthetics test. All accumulated results for the test cease to be accessible.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -518,6 +588,9 @@ def SetTestStatus(
     id: str,
     data: SyntheticsAdminServiceSetTestStatusBody,
 ) -> SetTestStatusResponse:
+    """
+    Update status of a synthetic test
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

@@ -10,13 +10,19 @@ from .Test import Test
 
 class ListTestsResponse(BaseModel):
     """
-    ListTestsResponse model
+    ListTestsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     tests: Optional[List[Optional[Test]]] = Field(
-        validation_alias="tests", default=None
+        validation_alias="tests",
+        default=None,
+        description="List of configured active or paused tests",
     )
 
-    invalidCount: Optional[int] = Field(validation_alias="invalidCount", default=None)
+    invalidCount: Optional[int] = Field(
+        validation_alias="invalidCount",
+        default=None,
+        description="Number of invalid entries encountered while collecting data",
+    )

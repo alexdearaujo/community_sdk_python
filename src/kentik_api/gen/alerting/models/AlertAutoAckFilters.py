@@ -17,17 +17,29 @@ class AlertAutoAckFilters(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    autoAckIds: Optional[List[str]] = Field(validation_alias="autoAckIds", default=None)
+    autoAckIds: Optional[List[str]] = Field(
+        validation_alias="autoAckIds",
+        default=None,
+        description="The IDs of the auto-ack configurations to list.",
+    )
 
     sources: Optional[List[Optional[Source]]] = Field(
-        validation_alias="sources", default=None
+        validation_alias="sources",
+        default=None,
+        description="The source policies the auto-ack configurations are applied to.",
     )
 
     keys: Optional[List[Optional[v202303KeyValue]]] = Field(
-        validation_alias="keys", default=None
+        validation_alias="keys",
+        default=None,
+        description="The alert keys the auto-ack configurations are applied to.",
     )
 
-    userIds: Optional[List[str]] = Field(validation_alias="userIds", default=None)
+    userIds: Optional[List[str]] = Field(
+        validation_alias="userIds",
+        default=None,
+        description="The IDs of the users who created the auto-ack configurations.",
+    )
 
     createdAt: Optional[v202303TimeRange] = Field(
         validation_alias="createdAt", default=None

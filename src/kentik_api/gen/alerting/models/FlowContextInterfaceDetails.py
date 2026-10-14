@@ -13,10 +13,26 @@ class FlowContextInterfaceDetails(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    snmpId: Optional[str] = Field(validation_alias="snmpId", default=None)
+    snmpId: Optional[str] = Field(
+        validation_alias="snmpId",
+        default=None,
+        description="The SNMP ID of the interface.",
+    )
 
-    snmpAlias: Optional[str] = Field(validation_alias="snmpAlias", default=None)
+    snmpAlias: Optional[str] = Field(
+        validation_alias="snmpAlias",
+        default=None,
+        description="The SNMP alias of the interface (e.g. 'eth0').",
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="The description of the interface.",
+    )
 
-    snmpSpeedMbps: Optional[str] = Field(validation_alias="snmpSpeedMbps", default=None)
+    snmpSpeedMbps: Optional[str] = Field(
+        validation_alias="snmpSpeedMbps",
+        default=None,
+        description="The SNMP speed of the interface in Mbps.",
+    )

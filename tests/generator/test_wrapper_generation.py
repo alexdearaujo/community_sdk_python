@@ -177,6 +177,39 @@ def test_generate_writes_wrapper_and_mounts_it_in_client_mixin(
     assert "self.device = DeviceServiceWrapper(self._transport)" in mixin_content
 
 
+def test_wrapper_method_keeps_the_rest_function_docstring_exactly(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setattr(wrapper_generation, "SDK_OUTPUT_DIR", tmp_path / "gen")
+    monkeypatch.setattr(wrapper_generation, "PROJECT_ROOT", tmp_path)
+    services_dir = tmp_path / "gen" / "device" / "services"
+    services_dir.mkdir(parents=True)
+    (tmp_path / "src" / "kentik_api").mkdir(parents=True)
+    # Escaped and indented as the REST template writes it.
+    doc = '    List "all" devices.\n\n' + r"    Matches \\d+ and \"\"\" quotes."
+    (services_dir / "DeviceService.py").write_text(
+        "from kentik_api.core.rest_runtime import request_json\n\n"
+        "def ListDevices(api_config_override=None) -> str:\n"
+        f'    """\n{doc}\n    """\n'
+        "    return request_json(method='get', path='/device/v1/device',\n"
+        "        expected_status=200, operation_name='ListDevices', error_cls=E)\n",
+        encoding="utf-8",
+    )
+
+    wrapper_generation.generate()
+
+    tree = ast.parse((services_dir / "device.py").read_text(encoding="utf-8"))
+    method = next(
+        n
+        for n in ast.walk(tree)
+        if isinstance(n, ast.FunctionDef) and n.name == "list_devices"
+    )
+    assert (
+        ast.get_docstring(method)
+        == 'List "all" devices.\n\nMatches \\d+ and """ quotes.'
+    )
+
+
 @pytest.mark.parametrize(
     ("versions", "expected"),
     [

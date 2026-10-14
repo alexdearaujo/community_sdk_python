@@ -37,6 +37,11 @@ class CloudExportServiceWrapper:
     def list_cloud_exports(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCloudExportsResponse:
+        """
+        List cloud exports.
+
+        Returns a list of all cloud exports in the account.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -73,6 +78,11 @@ class CloudExportServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateCloudExportRequest,
     ) -> rest_models.CreateCloudExportResponse:
+        """
+        Create Cloud Export.
+
+        Create new cloud export based on configuration in the request.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -109,6 +119,11 @@ class CloudExportServiceWrapper:
     def get_cloud_export(
         self, *, api_config_override: Optional[APIConfig] = None, exportid: str
     ) -> rest_models.GetCloudExportResponse:
+        """
+        Get cloud export configuration and status.
+
+        Returns configuration and status of cloud export with specified ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -147,6 +162,11 @@ class CloudExportServiceWrapper:
         exportid: str,
         data: rest_models.CloudExportAdminServiceUpdateCloudExportBody,
     ) -> rest_models.UpdateCloudExportResponse:
+        """
+        Update configuration of cloud export.
+
+        Replace complete configuration of a cloud export with data in the request.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -184,6 +204,11 @@ class CloudExportServiceWrapper:
     def delete_cloud_export(
         self, *, api_config_override: Optional[APIConfig] = None, exportid: str
     ) -> rest_models.DeleteCloudExportResponse:
+        """
+        Delete a cloud export.
+
+        Delete cloud export with specified ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

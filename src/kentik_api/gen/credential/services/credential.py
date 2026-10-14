@@ -37,6 +37,11 @@ class CredentialServiceWrapper:
     def list_group(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCredentialGroupResponse:
+        """
+        List credential groups.
+
+        Returns list of credential group information in Kentik vault.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -70,6 +75,11 @@ class CredentialServiceWrapper:
     def get_group(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetCredentialGroupResponse:
+        """
+        Get a credential group by id.
+
+        Returns specific credential group information in Kentik vault.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

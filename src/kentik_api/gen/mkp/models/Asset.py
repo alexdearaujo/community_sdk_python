@@ -10,7 +10,7 @@ from .AssetReport import AssetReport
 
 class Asset(BaseModel):
     """
-    Asset model
+    Asset
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

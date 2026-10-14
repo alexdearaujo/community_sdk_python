@@ -10,11 +10,11 @@ from .Insight import Insight
 
 class GetGlobalInsightsResponse(BaseModel):
     """
-    GetGlobalInsightsResponse model
+    GetGlobalInsightsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     insights: Optional[List[Optional[Insight]]] = Field(
-        validation_alias="insights", default=None
+        validation_alias="insights", default=None, description="List of global insights"
     )

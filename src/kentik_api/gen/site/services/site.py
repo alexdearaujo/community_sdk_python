@@ -37,6 +37,11 @@ class SiteServiceWrapper:
     def list_markets(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSiteMarketsResponse:
+        """
+        List all site markets.
+
+        Returns list of configured site markets.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -71,6 +76,11 @@ class SiteServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateSiteMarketRequest,
     ) -> rest_models.CreateSiteMarketResponse:
+        """
+        Configure a new site market.
+
+        Create configuration for a new site market. Returns the newly created configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -107,6 +117,11 @@ class SiteServiceWrapper:
     def get_market(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetSiteMarketResponse:
+        """
+        Retrieve configuration of a site market.
+
+        Returns configuration of a site market specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -145,6 +160,11 @@ class SiteServiceWrapper:
         id: str,
         data: rest_models.SiteServiceUpdateSiteMarketBody,
     ) -> rest_models.UpdateSiteMarketResponse:
+        """
+        Updates configuration of a site market.
+
+        Replaces configuration of a site market with attributes in the request. Returns the updated configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -182,6 +202,11 @@ class SiteServiceWrapper:
     def delete_market(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteSiteMarketResponse:
+        """
+        Delete configuration of a site market.
+
+        Deletes configuration of a site market with specific ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -216,6 +241,11 @@ class SiteServiceWrapper:
     def list_sites(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSitesResponse:
+        """
+        List all sites.
+
+        Returns list of configured sites.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -250,6 +280,11 @@ class SiteServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateSiteRequest,
     ) -> rest_models.CreateSiteResponse:
+        """
+        Configure a new site.
+
+        Create configuration for a new site. Returns the newly created configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -286,6 +321,11 @@ class SiteServiceWrapper:
     def get_site(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetSiteResponse:
+        """
+        Retrieve configuration of a site.
+
+        Returns configuration of a site specified by ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -322,6 +362,11 @@ class SiteServiceWrapper:
         id: str,
         data: rest_models.SiteServiceUpdateSiteBody,
     ) -> rest_models.UpdateSiteResponse:
+        """
+        Updates configuration of a site.
+
+        Replaces configuration of a site with attributes in the request. Returns the updated configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -359,6 +404,11 @@ class SiteServiceWrapper:
     def delete_site(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteSiteResponse:
+        """
+        Delete configuration of a site.
+
+        Deletes configuration of a site with specific ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

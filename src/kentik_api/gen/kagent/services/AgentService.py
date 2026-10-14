@@ -91,6 +91,11 @@ def ListAgents(
     capabilities: Optional[List[str]] = None,
     includeDesiredState: Optional[bool] = None,
 ) -> ListAgentsResponse:
+    """
+    List agents.
+
+    Returns a list of agents in the account, optionally filtered by registration state, IDs or capabilities.
+    """
     query_params: Dict[str, Any] = {
         "unregistered": unregistered,
         "ids": ids,
@@ -124,6 +129,11 @@ def ListAgents(
 def CreateAgent(
     api_config_override: Optional[APIConfig] = None, *, data: CreateAgentRequest
 ) -> CreateAgentResponse:
+    """
+    Create an agent.
+
+    Registers a new agent based on configuration in the request and returns it together with the commands for installing it on the target host.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -153,6 +163,11 @@ def CreateAgent(
 def Authorize(
     api_config_override: Optional[APIConfig] = None, *, installId: str
 ) -> AuthorizeResponse:
+    """
+    Authorize an unregistered agent.
+
+    Approves the agent installed under the specified install ID and returns the ID assigned to it.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -183,6 +198,11 @@ def GenerateInstallCommands(
     *,
     data: GenerateInstallCommandsRequest,
 ) -> GenerateInstallCommandsResponse:
+    """
+    Generate agent install commands.
+
+    Returns commands for deploying an agent. The commands embed a provisioning token and are ready to execute on the target host.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -215,6 +235,11 @@ def GetAgent(
     agentid: str,
     unregistered: Optional[bool] = None,
 ) -> GetAgentResponse:
+    """
+    Get agent configuration and state.
+
+    Returns configuration and state of the agent with the specified ID.
+    """
     query_params: Dict[str, Any] = {"unregistered": unregistered}
 
     header_params: Dict[str, Any] = {}
@@ -246,6 +271,11 @@ def DeleteAgent(
     agentid: str,
     unregistered: Optional[bool] = None,
 ) -> DeleteAgentResponse:
+    """
+    Delete an agent.
+
+    Deletes the agent with the specified ID.
+    """
     query_params: Dict[str, Any] = {"unregistered": unregistered}
 
     header_params: Dict[str, Any] = {}
@@ -278,6 +308,11 @@ def UpdateAgent(
     data: AgentServiceUpdateAgentBody,
     mask: Optional[str] = None,
 ) -> UpdateAgentResponse:
+    """
+    Update configuration of an agent.
+
+    Updates the attributes of an agent selected by the field mask in the request.
+    """
     query_params: Dict[str, Any] = {"mask": mask}
 
     header_params: Dict[str, Any] = {}

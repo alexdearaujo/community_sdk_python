@@ -11,7 +11,7 @@ from .ResultType import ResultType
 
 class GetJourneysNlqResponse(BaseModel):
     """
-    GetJourneysNlqResponse model
+    GetJourneysNlqResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

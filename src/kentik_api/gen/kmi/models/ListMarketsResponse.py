@@ -10,11 +10,11 @@ from .Market import Market
 
 class ListMarketsResponse(BaseModel):
     """
-    ListMarketsResponse model
+    ListMarketsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     markets: Optional[List[Optional[Market]]] = Field(
-        validation_alias="markets", default=None
+        validation_alias="markets", default=None, description="Markets"
     )

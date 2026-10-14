@@ -8,7 +8,7 @@ from .BgpMonitor import BgpMonitor
 
 class CreateMonitorRequest(BaseModel):
     """
-    CreateMonitorRequest model
+    CreateMonitorRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -51,6 +51,11 @@ class BgpMonitoringServiceWrapper:
     def list_monitors(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListMonitorsResponse:
+        """
+        List BGP Monitors.
+
+        Returns list of all BGP monitors present in the account.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -85,6 +90,11 @@ class BgpMonitoringServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateMonitorRequest,
     ) -> rest_models.CreateMonitorResponse:
+        """
+        Create new BGP Monitor instance.
+
+        Creates new BGP Monitor and if successful returns its configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -121,6 +131,11 @@ class BgpMonitoringServiceWrapper:
     def get_monitor(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetMonitorResponse:
+        """
+        Get BGP Monitor configuration.
+
+        Returns configuration of existing BGP monitor with specific ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -159,6 +174,11 @@ class BgpMonitoringServiceWrapper:
         id: str,
         data: rest_models.BgpMonitoringAdminServiceUpdateMonitorBody,
     ) -> rest_models.UpdateMonitorResponse:
+        """
+        Update configuration of a BGP monitor.
+
+        Updates configuration of BGP monitor with specific ID and returns updated  configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -196,6 +216,11 @@ class BgpMonitoringServiceWrapper:
     def delete_monitor(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteMonitorResponse:
+        """
+        Delete existing BGP Monitor.
+
+        Delete BGP monitor with with specific ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -234,6 +259,11 @@ class BgpMonitoringServiceWrapper:
         id: str,
         data: rest_models.BgpMonitoringAdminServiceSetMonitorStatusBody,
     ) -> rest_models.SetMonitorStatusResponse:
+        """
+        Sets administrative status of a BGP monitor.
+
+        Sets administrative status of BGP monitor with specific ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -274,6 +304,11 @@ class BgpMonitoringServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.GetMetricsForTargetRequest,
     ) -> rest_models.GetMetricsForTargetResponse:
+        """
+        Get metrics for a BGP prefix.
+
+        Retrieve metric data for single BGP prefix and time interval.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -313,6 +348,11 @@ class BgpMonitoringServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.GetRoutesForTargetRequest,
     ) -> rest_models.GetRoutesForTargetResponse:
+        """
+        Get routes for a BGP prefix.
+
+        Retrieve snapshot of route information for single BGP prefix at specific time.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(

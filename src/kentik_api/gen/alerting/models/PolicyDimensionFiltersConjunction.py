@@ -16,5 +16,7 @@ class PolicyDimensionFiltersConjunction(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     entries: Optional[List[Optional[PolicyDimensionFiltersEntry]]] = Field(
-        validation_alias="entries", default=None
+        validation_alias="entries",
+        default=None,
+        description="The entries of the conjunction.",
     )

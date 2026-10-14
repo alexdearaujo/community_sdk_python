@@ -37,6 +37,11 @@ class KmetaServiceWrapper:
     def list_service_now_configs(
         self, *, api_config_override: Optional[APIConfig] = None, cid: str
     ) -> rest_models.ListServiceNowConfigsResponse:
+        """
+        List ServiceNow Configs
+
+        Returns all ServiceNow integration configurations for the specified company.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -75,6 +80,11 @@ class KmetaServiceWrapper:
         cid: str,
         data: rest_models.ServiceNowConfig,
     ) -> rest_models.CreateServiceNowConfigResponse:
+        """
+        Create ServiceNow Config
+
+        Creates a new ServiceNow integration configuration for the specified company.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -112,6 +122,11 @@ class KmetaServiceWrapper:
     def get_service_now_config(
         self, *, api_config_override: Optional[APIConfig] = None, cid: str, id: str
     ) -> rest_models.GetServiceNowConfigResponse:
+        """
+        Get ServiceNow Config
+
+        Returns a single ServiceNow integration configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -154,6 +169,11 @@ class KmetaServiceWrapper:
         id: str,
         data: rest_models.ServiceNowConfig,
     ) -> rest_models.UpdateServiceNowConfigResponse:
+        """
+        Update ServiceNow Config
+
+        Updates an existing ServiceNow integration configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -192,6 +212,11 @@ class KmetaServiceWrapper:
     def delete_service_now_config(
         self, *, api_config_override: Optional[APIConfig] = None, cid: str, id: str
     ) -> rest_models.DeleteServiceNowConfigResponse:
+        """
+        Delete ServiceNow Config
+
+        Deletes a ServiceNow integration configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

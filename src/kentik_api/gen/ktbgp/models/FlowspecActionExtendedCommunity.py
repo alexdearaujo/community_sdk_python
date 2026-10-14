@@ -11,10 +11,10 @@ from .ExtendedCommunityRouteType import ExtendedCommunityRouteType
 class FlowspecActionExtendedCommunity(BaseModel):
     """
     FlowspecActionExtendedCommunity
-    The attribute consists of a set of &#34;extended communities&#34;.
+    The attribute consists of a set of "extended communities".
     All routes with the Extended Communities attribute belong to
     the communities listed in the attribute.
-    https://datatracker.ietf.org/doc/html/rfc4360 model
+    https://datatracker.ietf.org/doc/html/rfc4360
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

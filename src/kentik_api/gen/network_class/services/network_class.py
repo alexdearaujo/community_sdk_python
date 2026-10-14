@@ -37,6 +37,11 @@ class NetworkClassServiceWrapper:
     def network_class_get(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.GetNetworkClassResponse:
+        """
+        Get a network classification.
+
+        Returns information about a network classification for the company.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -71,6 +76,11 @@ class NetworkClassServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.UpdateNetworkClassRequest,
     ) -> rest_models.UpdateNetworkClassResponse:
+        """
+        Update a network classification.
+
+        Replaces the entire network classification attributes for the company.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

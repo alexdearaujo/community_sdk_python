@@ -8,7 +8,7 @@ from .BgpMonitorStatus import BgpMonitorStatus
 
 class BgpMonitoringAdminServiceSetMonitorStatusBody(BaseModel):
     """
-    SetMonitorStatusRequest model
+    SetMonitorStatusRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

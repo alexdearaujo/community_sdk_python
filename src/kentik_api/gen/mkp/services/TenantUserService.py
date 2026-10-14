@@ -65,6 +65,11 @@ from ..models import (  # noqa: F401
 def TenantUserList(
     api_config_override: Optional[APIConfig] = None, *, tenantId: str
 ) -> ListTenantUserResponse:
+    """
+    List users for a tenant.
+
+    Returns a list of users associated with the specified tenant.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -96,6 +101,11 @@ def TenantUserCreate(
     tenantId: str,
     data: TenantUserServiceCreateTenantUserBody,
 ) -> CreateTenantUserResponse:
+    """
+    Add a user to a tenant.
+
+    Creates a user association with the specified tenant.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -129,6 +139,11 @@ def TenantUserUpdate(
     id: str,
     data: TenantUserServiceUpdateTenantUserBody,
 ) -> UpdateTenantUserResponse:
+    """
+    Update a tenant user.
+
+    Updates the user associated with the specified tenant and user ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -158,6 +173,11 @@ def TenantUserUpdate(
 def TenantUserDelete(
     api_config_override: Optional[APIConfig] = None, *, tenantId: str, id: str
 ) -> DeleteTenantUserResponse:
+    """
+    Remove a user from a tenant.
+
+    Deletes the user association with the specified tenant.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

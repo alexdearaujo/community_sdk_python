@@ -29,6 +29,11 @@ from ..models import (  # noqa: F401
 def GetDictionary(
     api_config_override: Optional[APIConfig] = None,
 ) -> GetDictionaryResponse:
+    """
+    Get Dictionary
+
+    Returns the full UDE dictionary for the authenticated company, including all measurements with their dimension and metric fields, operator sets, and metric family definitions.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

@@ -27,6 +27,11 @@ from ..models import (  # noqa: F401
 def CreateChatSession(
     api_config_override: Optional[APIConfig] = None, *, data: CreateChatSessionRequest
 ) -> CreateChatSessionResponse:
+    """
+    Create AI Advisor Chat Session
+
+    Create a new AI Advisor Chat session with a prompt
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -56,6 +61,11 @@ def CreateChatSession(
 def UpdateChatSession(
     api_config_override: Optional[APIConfig] = None, *, data: UpdateChatSessionRequest
 ) -> UpdateChatSessionResponse:
+    """
+    Update AI Advisor Chat Session
+
+    Update AI Advisor Chat session with a prompt
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -85,6 +95,11 @@ def UpdateChatSession(
 def GetChatSession(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetChatSessionResponse:
+    """
+    Get AI Advisor Chat Session
+
+    Retrieve the status and results of an AI Advisor chat session
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

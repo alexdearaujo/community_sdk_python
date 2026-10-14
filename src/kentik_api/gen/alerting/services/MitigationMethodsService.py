@@ -215,6 +215,11 @@ def List(
     filtersmodifiedAtstart: Optional[str] = None,
     filtersmodifiedAtend: Optional[str] = None,
 ) -> MitigationMethodsServiceListResponse:
+    """
+    List Mitigation Methods
+
+    Returns a list of mitigation methods.
+    """
     query_params: Dict[str, Any] = {
         "pagination.limit": paginationlimit,
         "pagination.offset": paginationoffset,
@@ -253,6 +258,11 @@ def List(
 def Get(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> MitigationMethodsServiceGetResponse:
+    """
+    Get Mitigation Method
+
+    Returns a mitigation method.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

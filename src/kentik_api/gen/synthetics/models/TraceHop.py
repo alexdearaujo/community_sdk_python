@@ -8,11 +8,19 @@ from pydantic import BaseModel, Field
 
 class TraceHop(BaseModel):
     """
-    TraceHop model
+    TraceHop
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    latency: Optional[int] = Field(validation_alias="latency", default=None)
+    latency: Optional[int] = Field(
+        validation_alias="latency",
+        default=None,
+        description="Round-trip packet latency to the node (in microseconds) - 0 if no response was received",
+    )
 
-    nodeId: Optional[str] = Field(validation_alias="nodeId", default=None)
+    nodeId: Optional[str] = Field(
+        validation_alias="nodeId",
+        default=None,
+        description="ID of the node for this hop in the Nodes map  - empty if no response was received",
+    )

@@ -8,9 +8,9 @@ from pydantic import BaseModel, Field
 
 class SiteServiceUpdateSiteBody(BaseModel):
     """
-    UpdateSiteRequest model
+    UpdateSiteRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    site: Dict[str, Any] = Field(validation_alias="site")
+    site: Dict[str, Any] = Field(validation_alias="site", description="Site")

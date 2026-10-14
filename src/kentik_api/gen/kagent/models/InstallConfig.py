@@ -12,12 +12,16 @@ from .InstallerType import InstallerType
 class InstallConfig(BaseModel):
     """
     InstallConfig
-    Describes an individual agent install configuration model
+    Describes an individual agent install configuration
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="Unique identifier of the install.",
+    )
 
     type: Optional[InstallerType] = Field(validation_alias="type", default=None)
 

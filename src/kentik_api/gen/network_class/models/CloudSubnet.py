@@ -17,4 +17,6 @@ class CloudSubnet(BaseModel):
 
     type: Optional[CloudType] = Field(validation_alias="type", default=None)
 
-    subnets: Optional[List[str]] = Field(validation_alias="subnets", default=None)
+    subnets: Optional[List[str]] = Field(
+        validation_alias="subnets", default=None, description="Subnet masks"
+    )

@@ -32,6 +32,11 @@ from ..models import (  # noqa: F401
 def ListCustomApplications(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListCustomApplicationsResponse:
+    """
+    List Custom Applications
+
+    Returns an array of custom application objects that each contain information about an individual custom application.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -60,6 +65,11 @@ def ListCustomApplications(
 def CreateCustomApplication(
     api_config_override: Optional[APIConfig] = None, *, data: CustomApplication
 ) -> CreateCustomApplicationResponse:
+    """
+    Create Custom Application
+
+    Creates and returns a custom application object containing information about an individual custom application.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -89,6 +99,11 @@ def CreateCustomApplication(
 def GetCustomApplication(
     api_config_override: Optional[APIConfig] = None, *, customApplicationId: str
 ) -> GetCustomApplicationResponse:
+    """
+    Custom Application Info
+
+    Returns a custom application object containing information about an individual custom application.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -120,6 +135,11 @@ def UpdateCustomApplication(
     customApplicationId: str,
     data: CustomApplication,
 ) -> UpdateCustomApplicationResponse:
+    """
+    Update Custom Application
+
+    Updates and returns a custom application object containing information about an individual custom application.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -149,6 +169,11 @@ def UpdateCustomApplication(
 def DeleteCustomApplication(
     api_config_override: Optional[APIConfig] = None, *, customApplicationId: str
 ) -> DeleteCustomApplicationResponse:
+    """
+    Delete Custom Application
+
+    Deletes a custom application.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

@@ -10,7 +10,7 @@ from .Config import Config
 
 class GetConfigResponse(BaseModel):
     """
-    GetConfigResponse model
+    GetConfigResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

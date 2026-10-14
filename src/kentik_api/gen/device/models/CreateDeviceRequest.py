@@ -8,7 +8,7 @@ from .DeviceConcise import DeviceConcise
 
 class CreateDeviceRequest(BaseModel):
     """
-    CreateDeviceRequest model
+    CreateDeviceRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

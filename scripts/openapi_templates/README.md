@@ -13,8 +13,14 @@ hand-rolled HTTP code.
 
 | Template | Replaces | Purpose |
 | --- | --- | --- |
-| `httpx.jinja2` | Per-operation function body | Builds `query_params`/`header_params`, calls `request_json(...)`, and converts the raw JSON body into the declared Pydantic model or list. |
+| `httpx.jinja2` | Per-operation function body | Writes the operation summary and description as the docstring, builds `query_params`/`header_params`, calls `request_json(...)`, and converts the raw JSON body into the declared Pydantic model or list. The service wrapper copies that docstring. |
 | `service.jinja2` | Per-service module header | Imports `request_json` and the wildcard model/`typing` imports every generated operation needs. |
+| `models_pydantic_2.jinja2` | Per-model class | Writes the schema title and description as the docstring, and each field's schema text as `Field(description=...)`. |
+| `_macros.jinja2` | Nothing (imported) | `docstring()` and `string()` turn schema text into Python literals. |
+
+The generator renders with `autoescape=True`, which writes `"` as `&#34;`.
+Schema text must go through a `_macros.jinja2` macro, which escapes it for
+Python and marks it `safe`.
 
 ## Why these exist
 

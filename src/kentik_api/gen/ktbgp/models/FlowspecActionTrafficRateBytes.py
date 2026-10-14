@@ -8,7 +8,6 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionTrafficRateBytes(BaseModel):
     """
-    FlowspecActionTrafficRateBytes model
     FlowspecActionTrafficRateBytes specifies the maximum traffic rate
     in bytes per second.
 
@@ -19,5 +18,7 @@ class FlowspecActionTrafficRateBytes(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     bytesPerSecond: Optional[float] = Field(
-        validation_alias="bytesPerSecond", default=None
+        validation_alias="bytesPerSecond",
+        default=None,
+        description="bytes_per_second must be greater than 0.\n\nSee FlowspecActionDiscard for discarding traffic.",
     )

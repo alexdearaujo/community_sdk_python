@@ -41,6 +41,11 @@ from ..models import (  # noqa: F401
 def CreateSavedFilter(
     api_config_override: Optional[APIConfig] = None, *, data: SavedFilter
 ) -> CreateSavedFilterResponse:
+    """
+    Create Saved Filter
+
+    Creates and returns a saved filter object containing information about an individual saved filter.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -70,6 +75,11 @@ def CreateSavedFilter(
 def GetSavedFilter(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetSavedFilterResponse:
+    """
+    Custom Saved Filter Info
+
+    Returns a saved filter object containing information about an individual saved filter.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -98,6 +108,11 @@ def GetSavedFilter(
 def UpdateSavedFilter(
     api_config_override: Optional[APIConfig] = None, *, id: str, data: SavedFilter
 ) -> UpdateSavedFilterResponse:
+    """
+    Update Saved Filter
+
+    Updates and returns a saved filter object containing information about an individual saved filter.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -127,6 +142,11 @@ def UpdateSavedFilter(
 def DeleteSavedFilter(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteSavedFilterResponse:
+    """
+    Delete Saved Filter
+
+    Deletes a saved filter.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -155,6 +175,11 @@ def DeleteSavedFilter(
 def ListSavedFilters(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListSavedFiltersResponse:
+    """
+    List Saved Filters
+
+    Returns all custom saved filters created by the user's company.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -183,6 +208,11 @@ def ListSavedFilters(
 def ListSavedFiltersAll(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListSavedFiltersAllResponse:
+    """
+    List All Saved Filters
+
+    Returns all saved filters, including system default filters.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

@@ -8,7 +8,7 @@ from .TestStatus import TestStatus
 
 class SyntheticsAdminServiceSetTestStatusBody(BaseModel):
     """
-    SetTestStatusRequest model
+    SetTestStatusRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

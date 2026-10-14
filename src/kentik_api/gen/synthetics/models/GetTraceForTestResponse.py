@@ -10,13 +10,19 @@ from .Path import Path
 
 class GetTraceForTestResponse(BaseModel):
     """
-    GetTraceForTestResponse model
+    GetTraceForTestResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    nodes: Optional[Dict[str, Any]] = Field(validation_alias="nodes", default=None)
+    nodes: Optional[Dict[str, Any]] = Field(
+        validation_alias="nodes",
+        default=None,
+        description="Map of network node information keyed by node IDs",
+    )
 
     paths: Optional[List[Optional[Path]]] = Field(
-        validation_alias="paths", default=None
+        validation_alias="paths",
+        default=None,
+        description="List of retrieved network path data",
     )

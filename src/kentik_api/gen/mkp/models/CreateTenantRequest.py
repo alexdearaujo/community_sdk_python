@@ -10,7 +10,7 @@ from .Tenant import Tenant
 
 class CreateTenantRequest(BaseModel):
     """
-    CreateTenantRequest model
+    CreateTenantRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

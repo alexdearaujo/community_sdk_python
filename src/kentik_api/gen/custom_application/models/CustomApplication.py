@@ -13,22 +13,56 @@ class CustomApplication(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="Unique identifier for the custom application.",
+    )
 
-    name: str = Field(validation_alias="name")
+    name: str = Field(
+        validation_alias="name", description="A unique name for the custom application."
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="An optional description for the custom application.",
+    )
 
-    ipRange: Optional[List[str]] = Field(validation_alias="ipRange", default=None)
+    ipRange: Optional[List[str]] = Field(
+        validation_alias="ipRange",
+        default=None,
+        description="List of IP addresses in IP/CIDR format.",
+    )
 
-    protocol: Optional[List[int]] = Field(validation_alias="protocol", default=None)
+    protocol: Optional[List[int]] = Field(
+        validation_alias="protocol",
+        default=None,
+        description="List of Protocol numbers.",
+    )
 
-    port: Optional[List[int]] = Field(validation_alias="port", default=None)
+    port: Optional[List[int]] = Field(
+        validation_alias="port", default=None, description="List of Port numbers."
+    )
 
-    asn: Optional[List[int]] = Field(validation_alias="asn", default=None)
+    asn: Optional[List[int]] = Field(
+        validation_alias="asn", default=None, description="List of ASNs."
+    )
 
-    createdDate: Optional[str] = Field(validation_alias="createdDate", default=None)
+    createdDate: Optional[str] = Field(
+        validation_alias="createdDate",
+        default=None,
+        description="Date-time of custom application creation, in UTC.",
+    )
 
-    updatedDate: Optional[str] = Field(validation_alias="updatedDate", default=None)
+    updatedDate: Optional[str] = Field(
+        validation_alias="updatedDate",
+        default=None,
+        description="Date-time of most-recent custom application edit, in UTC.",
+    )
 
-    userId: Optional[str] = Field(validation_alias="userId", default=None)
+    userId: Optional[str] = Field(
+        validation_alias="userId",
+        default=None,
+        description="User ID associated with this custom application.",
+    )

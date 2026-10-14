@@ -18,6 +18,11 @@ from ..models import (  # noqa: F401
 
 
 def ListPlans(api_config_override: Optional[APIConfig] = None) -> ListPlansResponse:
+    """
+    List Plans
+
+    Returns all plans configured for the user's company.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

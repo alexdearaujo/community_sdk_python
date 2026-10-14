@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 class GnmiV1Conf(BaseModel):
     """
-    GnmiV1Conf model
+    GnmiV1Conf
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    dialoutServer: Optional[str] = Field(validation_alias="dialoutServer", default=None)
+    dialoutServer: Optional[str] = Field(
+        validation_alias="dialoutServer", default=None, description="Dialout server"
+    )

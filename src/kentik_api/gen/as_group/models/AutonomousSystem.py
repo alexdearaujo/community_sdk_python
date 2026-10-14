@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 class AutonomousSystem(BaseModel):
     """
-    AutonomousSystem model
+    AutonomousSystem
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

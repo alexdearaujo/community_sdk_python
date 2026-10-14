@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 class SyntheticsAdminServiceUpdateTestBody(BaseModel):
     """
-    UpdateTestRequest model
+    UpdateTestRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    test: Optional[Dict[str, Any]] = Field(validation_alias="test", default=None)
+    test: Optional[Dict[str, Any]] = Field(
+        validation_alias="test", default=None, description="Test"
+    )
