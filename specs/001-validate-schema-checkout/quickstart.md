@@ -23,12 +23,14 @@ truncated to a single line/character).
 
 ## Manual end-to-end check (optional, exercises the real `make` target)
 
-1. Duplicate a small swagger file from a scratch copy of the schema
-   checkout and truncate it to confirm the gate fires:
+1. Truncate one swagger file in the schema checkout to confirm the gate
+   fires. The glob matches more than one version, so pick one file first:
+   in zsh, a redirect to a glob writes to every match.
 
    ```sh
-   cp ../api-schema-public/gen/openapiv3/kentik/device/*/device.swagger.json /tmp/device.swagger.json.bak
-   echo -n "x" > ../api-schema-public/gen/openapiv3/kentik/device/*/device.swagger.json
+   target=$(ls ../api-schema-public/gen/openapiv3/kentik/device/*/device.swagger.json | sort | tail -n 1)
+   cp "$target" /tmp/device.swagger.json.bak
+   printf x > "$target"
    make generate local
    ```
 
@@ -36,10 +38,11 @@ truncated to a single line/character).
    naming the truncated file and the reason (invalid JSON), before
    anything under `src/kentik_api/gen/` changes.
 
-2. Restore the file and confirm a clean run proceeds normally:
+2. Restore the file, from the same shell, and confirm a clean run proceeds
+   normally:
 
    ```sh
-   cp /tmp/device.swagger.json.bak ../api-schema-public/gen/openapiv3/kentik/device/*/device.swagger.json
+   cp /tmp/device.swagger.json.bak "$target"
    make generate local
    ```
 
