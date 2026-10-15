@@ -12,10 +12,10 @@ import pytest
 
 from scripts.generation._shared import normalize_symbol
 from scripts.generation.fixup import (
+    _alias_shadowed_typing_names,
     _cleanup_service_files,
     _dedupe_top_level_function_names,
     _fix_import_aliases,
-    _alias_shadowed_typing_names,
     _fix_model_field_names,
     _fix_path_parameters,
     _fix_pydantic_construct,

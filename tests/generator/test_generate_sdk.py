@@ -32,6 +32,7 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _relink_pb2_dependency_imports,
     _rewrite_grpc_imports,
     _silence_grpc_experimental,
+    check_model_name_case,
     clean_schema_names,
     fetch_schema,
     get_schema_root,
@@ -591,6 +592,26 @@ def test_qualify_colliding_imports_resolves_by_package_not_name():
     assert "import mitigation_public_v202505_pb2 as _public" in _rewrite_grpc_imports(
         result
     )
+
+
+def _schemas(*names: str) -> dict:
+    return {"components": {"schemas": {name: {} for name in names}}}
+
+
+def test_models_differing_only_by_case_fail_across_files_of_a_service():
+    seen: dict[str, str] = {}
+    check_model_name_case(_schemas("DeviceLabel", "Device"), seen, "a.json")
+
+    with pytest.raises(
+        RuntimeError, match="`deviceLabel` differs from model `DeviceLabel`"
+    ):
+        check_model_name_case(_schemas("deviceLabel"), seen, "b.json")
+
+
+def test_same_model_name_in_two_files_is_not_a_case_collision():
+    seen: dict[str, str] = {}
+    check_model_name_case(_schemas("rpcStatus", "Device"), seen, "a.json")
+    check_model_name_case(_schemas("rpcStatus"), seen, "b.json")
 
 
 def test_rewrite_grpc_imports_keeps_google_imports_absolute():
