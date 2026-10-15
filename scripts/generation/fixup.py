@@ -228,15 +228,16 @@ def _inject_data_body(content: str) -> str:
             fixed_funcs.append(func)
             continue
         sig_part = func.split("->")[0] if "->" in func else func.split(":\n")[0]
-        has_data_param = "data:" in sig_part or "data :" in sig_part
+        # A whole word: `includeMetadata: bool` is not a body.
+        has_data_param = re.search(r"\bdata\s*:", sig_part) is not None
         has_json_kwarg = "json=" in func
         has_json_body_kwarg = "json_body=" in func
 
         if has_data_param and not (has_json_kwarg or has_json_body_kwarg):
             if "request_json(" in func:
                 func = re.sub(
-                    r"(query_params=query_params)(,?)(\s*)",
-                    rf"\1,\n                json_body={_BODY_DUMP}\3",
+                    r"(query_params=query_params),?(\s*)",
+                    rf"\1,\n                json_body={_BODY_DUMP},\2",
                     func,
                     count=1,
                 )

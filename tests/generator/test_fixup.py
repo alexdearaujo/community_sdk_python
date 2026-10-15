@@ -4,6 +4,7 @@
 All tests use tmp_path — no schema download or full generation run required.
 """
 
+import ast
 import textwrap
 from pathlib import Path
 
@@ -414,3 +415,31 @@ def test_inject_data_body_adds_json_body_param():
         """)
     result = _inject_data_body(content)
     assert "json_body=data.model_dump(by_alias=True, exclude_unset=True)" in result
+    ast.parse(result)
+
+
+@pytest.mark.parametrize("last", [True, False])
+def test_inject_data_body_output_parses_wherever_query_params_sits(last):
+    tail = "" if last else "\n        expected_status=201,"
+    content = (
+        "def Create(*, data: Req) -> Resp:\n"
+        "    body = request_json(\n"
+        f"        query_params=query_params{'' if last else ','}{tail}\n"
+        "    )\n"
+    )
+    result = _inject_data_body(content)
+
+    ast.parse(result)
+    assert "json_body=data.model_dump" in result
+
+
+def test_inject_data_body_ignores_a_parameter_ending_in_data():
+    content = textwrap.dedent("""\
+        def ListDevices(*, includeMetadata: bool) -> Resp:
+            body = request_json(
+                query_params=query_params,
+                expected_status=200,
+            )
+        """)
+
+    assert _inject_data_body(content) == content
