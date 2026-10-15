@@ -115,6 +115,11 @@ def test_routes_that_cannot_be_told_apart_fail_generation():
         _names({"XService": [_op("Get", "/a/{id}"), _op("Get_2", "/b/{id}")]})
 
 
+def test_keyword_operation_names_get_a_trailing_underscore():
+    names = _names({"XService": [_op("Import", "/import"), _op("Return", "/return")]})
+    assert names == {"XService.Import": "import_", "XService.Return": "return_"}
+
+
 def test_qualify_wrapper_annotation_types_qualifies_known_model_names():
     result = qualify_wrapper_annotation_types(
         "data: CreateDeviceRequest", {"CreateDeviceRequest"}

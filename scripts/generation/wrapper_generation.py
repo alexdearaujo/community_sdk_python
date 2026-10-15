@@ -2,6 +2,7 @@
 """Client mixin and dual-transport service wrapper generation."""
 
 import ast
+import keyword
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -266,7 +267,9 @@ def _wrapper_method_names(
         if len(declared_by[name]) > 1:
             prefix = _to_snake_case(re.sub(r"Service$", "", rest_file.stem))
             name = f"{prefix}_{name}"
-        names[(rest_file, op_name)] = _drop_service_word(service, name)
+        name = _drop_service_word(service, name)
+        # PEP 8: `Import` becomes `import_`, never the statement `def import(`.
+        names[(rest_file, op_name)] = name + "_" if keyword.iskeyword(name) else name
 
     duplicates = {n for n in names.values() if list(names.values()).count(n) > 1}
     if duplicates:
