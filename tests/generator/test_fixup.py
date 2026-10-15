@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from scripts.generation.fixup import (
+    _argument_name,
     _cleanup_service_files,
     _dedupe_top_level_function_names,
     _fix_import_aliases,
@@ -276,6 +277,25 @@ def test_fix_path_parameters_encodes_each_placeholder():
         "from kentik_api.core.rest_runtime import request_json\n"
         "path=f'/v1/device/{path_segment(deviceid)}/{path_segment(tagId)}'"
     )
+
+
+def test_fix_path_parameters_names_keyword_placeholders_as_their_argument():
+    result = _fix_path_parameters(
+        "from kentik_api.core.rest_runtime import request_json\n"
+        "path=f'/v1/range/{from}/{class.id}'"
+    )
+    assert "path=f'/v1/range/{path_segment(from_)}/{path_segment(classid)}'" in result
+
+
+@pytest.mark.parametrize(
+    "placeholder", ["id", "device.id", "from", "class.id", "device-id", "2fa"]
+)
+def test_path_argument_matches_the_rest_generator_parameter_name(placeholder):
+    from openapi_python_generator.language_converters.python.common import (
+        normalize_symbol,
+    )
+
+    assert _argument_name(placeholder) == normalize_symbol(placeholder)
 
 
 def test_fix_path_parameters_leaves_a_module_without_placeholders_alone():
