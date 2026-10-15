@@ -32,7 +32,7 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _relink_pb2_dependency_imports,
     _rewrite_grpc_imports,
     _silence_grpc_experimental,
-    check_model_name_case,
+    check_model_names,
     clean_schema_names,
     fetch_schema,
     get_schema_root,
@@ -594,24 +594,41 @@ def test_qualify_colliding_imports_resolves_by_package_not_name():
     )
 
 
-def _schemas(*names: str) -> dict:
-    return {"components": {"schemas": {name: {} for name in names}}}
+def _schemas(*names: str, **definitions: dict) -> dict:
+    return {
+        "components": {"schemas": {name: definitions.get(name, {}) for name in names}}
+    }
 
 
 def test_models_differing_only_by_case_fail_across_files_of_a_service():
-    seen: dict[str, str] = {}
-    check_model_name_case(_schemas("DeviceLabel", "Device"), seen, "a.json")
+    seen: dict = {}
+    check_model_names(_schemas("DeviceLabel", "Device"), seen, "a.json")
 
     with pytest.raises(
         RuntimeError, match="`deviceLabel` differs from model `DeviceLabel`"
     ):
-        check_model_name_case(_schemas("deviceLabel"), seen, "b.json")
+        check_model_names(_schemas("deviceLabel"), seen, "b.json")
 
 
-def test_same_model_name_in_two_files_is_not_a_case_collision():
-    seen: dict[str, str] = {}
-    check_model_name_case(_schemas("rpcStatus", "Device"), seen, "a.json")
-    check_model_name_case(_schemas("rpcStatus"), seen, "b.json")
+def test_same_model_with_the_same_definition_in_two_files_passes():
+    seen: dict = {}
+    status = {"type": "object", "properties": {"code": {"type": "integer"}}}
+    check_model_names(_schemas("rpcStatus", "Device", rpcStatus=status), seen, "a.json")
+    check_model_names(_schemas("rpcStatus", rpcStatus=dict(status)), seen, "b.json")
+
+
+def test_same_model_with_a_different_definition_fails():
+    seen: dict = {}
+    check_model_names(
+        _schemas("Mitigation", Mitigation={"properties": {"id": {}}}), seen, "a.json"
+    )
+
+    with pytest.raises(RuntimeError, match="defined differently in a.json"):
+        check_model_names(
+            _schemas("Mitigation", Mitigation={"properties": {"name": {}}}),
+            seen,
+            "b.json",
+        )
 
 
 def test_rewrite_grpc_imports_keeps_google_imports_absolute():

@@ -546,20 +546,30 @@ def _definition_sections(schema: dict) -> list[dict]:
     return sections
 
 
-def check_model_name_case(schema: dict, seen: dict[str, str], source: str) -> None:
-    """Fails on a model whose file name differs from another's only by case.
+def check_model_names(
+    schema: dict, seen: dict[str, tuple[str, str, str]], source: str
+) -> None:
+    """Fails on two models of a Service that would write one models/<Name>.py.
 
-    Each model is written to models/<Name>.py. A case-insensitive file system
-    (macOS, Windows) keeps one of the two, while Linux keeps both, so the SDK
-    would differ by the machine that generated it. `seen` spans a Service.
+    A name that differs only by case collides on macOS and Windows but not on
+    Linux. The same name with a different definition is overwritten by
+    whichever swagger file generates last. `seen` spans a Service.
     """
-    for name in schema.get("components", {}).get("schemas", {}):
+    for name, definition in schema.get("components", {}).get("schemas", {}).items():
         file_name = normalize_symbol(name)
-        other = seen.setdefault(file_name.casefold(), file_name)
+        body = json.dumps(definition, sort_keys=True)
+        other, other_body, other_source = seen.setdefault(
+            file_name.casefold(), (file_name, body, source)
+        )
         if other != file_name:
             raise RuntimeError(
                 f"{source}: model `{file_name}` differs from model `{other}` "
                 "only by case, so their files collide on macOS and Windows."
+            )
+        if other_body != body:
+            raise RuntimeError(
+                f"{source}: model `{file_name}` is defined differently in "
+                f"{other_source}, and both write models/{file_name}.py."
             )
 
 
@@ -568,7 +578,7 @@ def patched_swagger(
     swagger_path: Path,
     version: str,
     oneof_members: dict[str, set[str]] | None = None,
-    model_names: dict[str, str] | None = None,
+    model_names: dict[str, tuple[str, str, str]] | None = None,
 ):
     """Yields a temp-file path containing the schema with clean names and inlined request bodies.
 
@@ -584,7 +594,7 @@ def patched_swagger(
     schema = inline_request_body_refs(schema)
     schema = hoist_inline_request_bodies(schema)
     if model_names is not None:
-        check_model_name_case(schema, model_names, swagger_path.name)
+        check_model_names(schema, model_names, swagger_path.name)
     with NamedTemporaryFile(
         mode="w",
         suffix=".json",
@@ -797,7 +807,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             (pb_dir / "__init__.py").touch(exist_ok=True)
 
             service_swagger_paths[service] = []
-            model_names: dict[str, str] = {}
+            model_names: dict[str, tuple[str, str, str]] = {}
 
             for metadata in selected_swagger_files[service]:
                 swagger_path = Path(metadata["path"])
