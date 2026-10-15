@@ -103,7 +103,9 @@ subpackage of independently testable phase modules (see
 `tests/generator/`):
 
 - `parity.py` — swagger file selection (latest version per service,
-  namespace, and filename) and the directory parity check between
+  namespace, and filename), dropping a file whose REST modules newer
+  files in its service all write (an upstream rename), and the
+  directory parity check between
   generated output and the schema. Fully independent of the other
   phase modules.
 - `error_package.py` — per-service error class generation

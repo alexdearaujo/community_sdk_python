@@ -93,6 +93,63 @@ def select_latest_swagger_files_by_service(
     return by_service, selected_count, ignored_count
 
 
+_HTTP_METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
+
+
+def _rest_modules(swagger_path: Path) -> set[str]:
+    """REST modules a swagger file writes: one per operation's first tag, else `default`."""
+    paths = json.loads(swagger_path.read_text(encoding="utf-8")).get("paths", {})
+    return {
+        (op.get("tags") or ["default"])[0].replace("-", "_").replace(" ", "_")
+        for item in paths.values()
+        for method, op in item.items()
+        if method in _HTTP_METHODS
+    }
+
+
+def drop_superseded_swagger_files(
+    by_service: dict[str, list[SwaggerFileMetadata]],
+) -> tuple[dict[str, list[SwaggerFileMetadata]], list[SwaggerFileMetadata]]:
+    """Drops each file whose REST modules newer files in its service all write.
+
+    Two files that write one module overwrite each other, and the last one
+    generated wins. An upstream file rename does this: the old version stays
+    selected under its old name. Any other shared module raises, because
+    neither file can be dropped safely.
+    """
+    kept_by_service: dict[str, list[SwaggerFileMetadata]] = {}
+    dropped: list[SwaggerFileMetadata] = []
+    for service, files in by_service.items():
+        modules = [_rest_modules(f["path"]) for f in files]
+        kept = []
+        for i, metadata in enumerate(files):
+            newer: set[str] = set().union(
+                *(
+                    modules[j]
+                    for j, other in enumerate(files)
+                    if _version_key(other["version"])
+                    > _version_key(metadata["version"])
+                )
+            )
+            if modules[i] and modules[i] <= newer:
+                dropped.append(metadata)
+            else:
+                kept.append(i)
+
+        writer: dict[str, Path] = {}
+        for i in kept:
+            for module in sorted(modules[i]):
+                if module in writer:
+                    raise RuntimeError(
+                        f"{service}: {writer[module]} and {files[i]['path']} both "
+                        f"write REST module `{module}`, so one would overwrite the "
+                        "other. Neither is fully replaced by a newer file."
+                    )
+                writer[module] = files[i]["path"]
+        kept_by_service[service] = [files[i] for i in kept]
+    return kept_by_service, dropped
+
+
 def validate_generated_service_parity(
     source_services: set[str], generated_root: Path
 ) -> None:

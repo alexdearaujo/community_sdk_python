@@ -10,7 +10,7 @@ package owns one concern of SDK generation.
 
 | Module | Owns | Public interface |
 | --- | --- | --- |
-| [`parity.py`](parity.py) | Swagger file selection, schema structural validation, and directory parity checks | `select_latest_swagger_files_by_service()`, `validate_schema_files_or_raise()`, `validate_generated_service_parity()` |
+| [`parity.py`](parity.py) | Swagger file selection, dropping files that newer files fully replace, schema structural validation, and directory parity checks | `select_latest_swagger_files_by_service()`, `drop_superseded_swagger_files()`, `validate_schema_files_or_raise()`, `validate_generated_service_parity()` |
 | [`error_package.py`](error_package.py) | Error class generation and error dispatch | `generate_service_error_package()`, `inject_service_error_handling()` |
 | [`fixup.py`](fixup.py) | Generated-code post-processing: import patching, model init rebuild, file cleanup | `fix_generated_service()` |
 | [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation | `generate()` |
@@ -30,7 +30,7 @@ modules in this order:
 
 ```mermaid
 flowchart TD
-    A["1. parity.select_latest_swagger_files_by_service()"] --> A2["2. parity.validate_schema_files_or_raise()"]
+    A["1. parity.select_latest_swagger_files_by_service()"] --> A2["2. parity.validate_schema_files_or_raise()<br/>parity.drop_superseded_swagger_files()"]
     A2 --> B["3. Generate REST code per swagger file<br/>(endpoint_docs_collector.extract() runs here)"]
     B --> C["4. error_package.generate_service_error_package()<br/>(once per service)"]
     C --> D["5. parity.validate_generated_service_parity()"]

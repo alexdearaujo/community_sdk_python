@@ -724,6 +724,14 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         parity.validate_selected_services_or_raise(
             source_services, set(selected_swagger_files)
         )
+        selected_swagger_files, superseded = parity.drop_superseded_swagger_files(
+            selected_swagger_files
+        )
+        for metadata in superseded:
+            print(
+                f"Skipping {metadata['path'].relative_to(openapi_base)}: "
+                "newer files in its service write all of its REST modules."
+            )
 
         # Setup directories (only now, once the schema checkout is known-good)
         SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
