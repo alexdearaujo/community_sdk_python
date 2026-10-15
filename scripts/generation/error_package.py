@@ -267,7 +267,7 @@ def generate_service_error_package(
         for status_code, response in sorted(
             metadata["responses"].items(), key=lambda item: item[0]
         ):
-            description = response["description"] or ""
+            description = " ".join((response["description"] or "").split())
             schema_ref = response["schema_ref"] or ""
             leaf_class = service_error_response_class_name(operation_id, status_code)
             leaf_class_names.append(leaf_class)
@@ -277,6 +277,8 @@ def generate_service_error_package(
                 if response_bits
                 else f"Operation-local response error for {operation_id}."
             )
+            # Schema text: escaped like the templates' docstring macro.
+            leaf_doc = leaf_doc.replace("\\", "\\\\").replace('"""', '\\"\\"\\"')
             lines.extend(
                 [
                     "",
