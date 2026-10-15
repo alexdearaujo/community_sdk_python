@@ -30,11 +30,16 @@ class GrpcMethod:
     path_fields: tuple[str, ...]  # request field path per URL placeholder, in order
     body: str  # HTTP rule body: "" (none), "*" (whole request), or one field name
     update_mask_from: str = ""  # body field grpc-gateway derives update_mask from
+    request_module: str = (
+        ""  # google.protobuf module holding request_class; "" is the service's pb2
+    )
 
 
 GrpcRuleKey = tuple[str, str, str]  # (proto service, HTTP verb, normalized path)
 
 _PLACEHOLDER = re.compile(r"\{([^}]*)\}")
+# Well-known request types an RPC may take instead of its own message.
+_WELL_KNOWN_REQUESTS = {".google.protobuf.Empty": ("empty_pb2", "Empty")}
 
 
 def _normalize_path(path: str) -> str:
@@ -96,15 +101,21 @@ def _discover_grpc_methods(
                 (pb2_file.stem, pb2_grpc_stem, f"{service.name}Stub", idx)
             )
             for method in service.method:
-                if method.input_type not in local_messages:
+                if method.input_type in _WELL_KNOWN_REQUESTS:
+                    request_module, request_class = _WELL_KNOWN_REQUESTS[
+                        method.input_type
+                    ]
+                elif method.input_type in local_messages:
+                    request_module = ""
+                    request_class = method.input_type.rsplit(".", 1)[1]
+                else:
                     # The wrapper reaches request classes through this one module.
                     raise ValueError(
                         f"{service.name}.{method.name} takes {method.input_type}, "
                         f"which {pb2_file.name} does not define"
                     )
                 rule = method.options.Extensions[annotations_pb2.http]  # pyright: ignore[reportArgumentType]  # ty: ignore[invalid-argument-type]  -- stubs type the handle loosely
-                request_class = method.input_type.rsplit(".", 1)[1]
-                has_update_mask = any(
+                has_update_mask = not request_module and any(
                     field.name == "update_mask"
                     and field.type_name == ".google.protobuf.FieldMask"
                     for field in messages[request_class].field
@@ -130,6 +141,7 @@ def _discover_grpc_methods(
                             and has_update_mask
                             and binding.body not in ("", "*")
                             else "",
+                            request_module=request_module,
                         )
                     )
 
@@ -367,20 +379,24 @@ def _generate_service_wrappers():
             )
 
         # After REST imports are inserted, inject gRPC imports if stubs were found.
+        grpc_runtime_symbols = {
+            "build_grpc_request",
+            "call_grpc",
+            "parse_grpc_response",
+        }
+        well_known_modules: set[str] = set()
+        grpc_import_idx = 0
         if grpc_stubs_info:
             rest_transport_line_idx = next(
                 i
                 for i, line in enumerate(wrapper_code)
                 if "from kentik_api.transports.rest_client import RestTransport" in line
             )
-            grpc_import_lines = [
-                "from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc, parse_grpc_response",
-            ]
             # pb2 modules are loaded lazily inside __init__ to avoid proto
             # descriptor errors at import time when googleapis-common-protos is
-            # not installed.
-            for offset, imp_line in enumerate(grpc_import_lines):
-                wrapper_code.insert(rest_transport_line_idx + 1 + offset, imp_line)
+            # not installed. The import line is filled in once the methods are known.
+            grpc_import_idx = rest_transport_line_idx + 1
+            wrapper_code.insert(grpc_import_idx, "")
 
         ops_by_file = {f: parse_generated_rest_module(f) for f in rest_files}
         method_names = _wrapper_method_names(service, ops_by_file)
@@ -490,17 +506,32 @@ def _generate_service_wrappers():
                         if grpc_method.update_mask_from
                         else ""
                     )
+                    if grpc_method.request_module:
+                        well_known_modules.add(grpc_method.request_module)
+                        request_ref = (
+                            f"{grpc_method.request_module}.{grpc_method.request_class}"
+                        )
+                    else:
+                        request_ref = (
+                            f"self._grpc_pb2_{stub_idx}.{grpc_method.request_class}"
+                        )
                     grpc_lines = [
                         "        if isinstance(self._transport, GrpcTransport):",
                         # Guard: if proto deps weren't available at init, fall back.
                         f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
                         f'                raise NotImplementedError(f"gRPC proto modules for {service} service failed to import: {{self._grpc_import_error_{stub_idx}!r}}") from self._grpc_import_error_{stub_idx}',
-                        f"            _req = build_grpc_request(self._grpc_pb2_{stub_idx}.{grpc_method.request_class}, {body_arg}, {{{fields_arg}}}{mask_arg})",
+                        f"            _req = build_grpc_request({request_ref}, {body_arg}, {{{fields_arg}}}{mask_arg})",
                         f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
                         f"api_config=api_config_override, error_cls={module_alias}.{op.error_cls_name})",
                     ]
                     if is_none_return:
                         grpc_lines.append("            return None")
+                    elif re.match(r"(Dict|dict)\[|Any$", return_type.strip()):
+                        # REST returns a free-form body, such as google.protobuf.Empty's, as is.
+                        grpc_runtime_symbols.add("grpc_response_body")
+                        grpc_lines.append(
+                            "            return grpc_response_body(_resp)"
+                        )
                     else:
                         grpc_lines.append(
                             f"            return parse_grpc_response({return_type}, _resp, _rate_limit, "
@@ -561,6 +592,15 @@ def _generate_service_wrappers():
             symbol for symbol in preferred_order if symbol in required_typing_symbols
         ]
         wrapper_code[0] = f"from typing import {', '.join(ordered_symbols)}"
+        if grpc_stubs_info:
+            wrapper_code[grpc_import_idx : grpc_import_idx + 1] = [
+                "from kentik_api.core.grpc_runtime import "
+                + ", ".join(sorted(grpc_runtime_symbols)),
+                *(
+                    f"from google.protobuf import {m}"
+                    for m in sorted(well_known_modules)
+                ),
+            ]
 
         # Write to gen/<service>/services/<service>.py
         wrapper_file = services_folder / f"{service}.py"

@@ -100,13 +100,16 @@ def grpc_call(
         ):
             continue
         first = sub.args[0]
-        if not (
-            isinstance(first, ast.Attribute) and isinstance(first.value, ast.Attribute)
-        ):
+        if not isinstance(first, ast.Attribute):
             continue
         if sub.func.id == "build_grpc_request":
+            # self._grpc_pb2_N.Req, or empty_pb2.Empty for a well-known type
             request = first.attr
-        elif sub.func.id == "call_grpc" and first.value.attr in stub_services:
+        elif (
+            sub.func.id == "call_grpc"
+            and isinstance(first.value, ast.Attribute)
+            and first.value.attr in stub_services
+        ):
             rpc = f"{stub_services[first.value.attr]}/{first.attr}"
     return GrpcCall(rpc=rpc, request=request) if rpc and request else None
 

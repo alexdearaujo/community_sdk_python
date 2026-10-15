@@ -237,6 +237,11 @@ def _as_operation_error(
     )
 
 
+def grpc_response_body(response: Any) -> dict[str, Any]:
+    """The proto3 JSON a REST call returns for the same message."""
+    return MessageToDict(response, always_print_fields_with_no_presence=True)
+
+
 def parse_grpc_response[T: BaseModel](
     model_cls: type[T],
     response: Any,
@@ -252,7 +257,7 @@ def parse_grpc_response[T: BaseModel](
     """
     # Without always_print_fields_with_no_presence, a scalar at its zero value
     # is omitted and then fails a model that marks the field required.
-    body = MessageToDict(response, always_print_fields_with_no_presence=True)
+    body = grpc_response_body(response)
     parsed = parse_response_model(
         model_cls,
         body,

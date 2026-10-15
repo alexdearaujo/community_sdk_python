@@ -593,6 +593,13 @@ def test_qualify_colliding_imports_resolves_by_package_not_name():
     )
 
 
+def test_rewrite_grpc_imports_keeps_google_imports_absolute():
+    line = (
+        "from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2\n"
+    )
+    assert _rewrite_grpc_imports(line) == line
+
+
 def _pb_module(root: Path, service: str, name: str, *imports: str) -> Path:
     path = root / service / "pb" / f"{name}.py"
     path.parent.mkdir(parents=True, exist_ok=True)

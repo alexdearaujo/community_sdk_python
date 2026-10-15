@@ -5,7 +5,12 @@ import grpc
 import pytest
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc, map_grpc_error
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    grpc_response_body,
+    map_grpc_error,
+)
 from kentik_api.errors import (
     AuthenticationError,
     ConfigurationError,
@@ -431,3 +436,13 @@ def test_call_grpc_raises_the_operation_error_class_like_rest(rpc_error):
         call_grpc(
             failing(grpc.StatusCode.UNAVAILABLE), object(), error_cls=GetThingError
         )
+
+
+def test_empty_request_and_response_match_rest():
+    """An RPC on google.protobuf.Empty sends `{}` and returns `{}`, as REST does."""
+    from google.protobuf import empty_pb2
+
+    request = build_grpc_request(empty_pb2.Empty, {}, {})
+
+    assert isinstance(request, empty_pb2.Empty)
+    assert grpc_response_body(empty_pb2.Empty()) == {}

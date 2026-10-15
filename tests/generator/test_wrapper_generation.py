@@ -210,6 +210,62 @@ def test_wrapper_method_keeps_the_rest_function_docstring_exactly(
     )
 
 
+def test_rpc_taking_and_returning_empty_gets_a_working_grpc_branch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    from google.api import annotations_pb2
+    from google.protobuf import descriptor_pb2
+
+    from scripts.generation._shared import grpc_call, grpc_stub_services
+
+    monkeypatch.setattr(wrapper_generation, "SDK_OUTPUT_DIR", tmp_path / "gen")
+    monkeypatch.setattr(wrapper_generation, "PROJECT_ROOT", tmp_path)
+    (tmp_path / "src" / "kentik_api").mkdir(parents=True)
+    services_dir = tmp_path / "gen" / "ping" / "services"
+    services_dir.mkdir(parents=True)
+    (services_dir / "PingService.py").write_text(
+        "from typing import Any, Dict\n"
+        "from kentik_api.core.rest_runtime import request_json\n\n"
+        "def Ping(api_config_override=None, *, data: Dict[str, Any]) -> Dict[str, Any]:\n"
+        "    return request_json(method='post', path='/ping/v1/ping',\n"
+        "        expected_status=200, operation_name='Ping', error_cls=PingError)\n",
+        encoding="utf-8",
+    )
+    fd = descriptor_pb2.FileDescriptorProto(name="kentik/ping/v1/ping.proto")
+    fd.package = "kentik.ping.v1"
+    method = fd.service.add(name="PingService").method.add(
+        name="Ping",
+        input_type=".google.protobuf.Empty",
+        output_type=".google.protobuf.Empty",
+    )
+    rule = method.options.Extensions[annotations_pb2.http]  # pyright: ignore[reportArgumentType]  # ty: ignore[invalid-argument-type]
+    rule.post, rule.body = "/ping/v1/ping", "*"
+    pb_dir = tmp_path / "gen" / "ping" / "pb"
+    pb_dir.mkdir()
+    (pb_dir / "ping_pb2.py").write_text(
+        f"DESCRIPTOR = _pool.AddSerializedFile({fd.SerializeToString()!r})\n"
+    )
+    (pb_dir / "ping_pb2_grpc.py").write_text("")
+
+    wrapper_generation.generate()
+
+    source = (services_dir / "ping.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    assert "from google.protobuf import empty_pb2" in source
+    assert "return grpc_response_body(_resp)" in source
+    init, ping = (
+        next(
+            n
+            for n in ast.walk(tree)
+            if isinstance(n, ast.FunctionDef) and n.name == name
+        )
+        for name in ("__init__", "ping")
+    )
+    call = grpc_call(ping, grpc_stub_services(init))
+    assert call is not None
+    assert (call.rpc, call.request) == ("PingService/Ping", "Empty")
+
+
 @pytest.mark.parametrize(
     ("versions", "expected"),
     [

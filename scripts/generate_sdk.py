@@ -168,15 +168,16 @@ def _rewrite_grpc_imports(content: str) -> str:
         r"^import (\w+_pb2)", r"from . import \1", content, flags=re.MULTILINE
     )
     # parenthesised from-import: `from pkg import (foo_pb2 as alias,)`
+    # google.* stays absolute: googleapis-common-protos and protobuf provide it.
     content = re.sub(
-        r"^from [\w\.]+ import \(\s*(\w+_pb2) as ([\w_]+),\s*\)$",
+        r"^from (?!google\.)[\w\.]+ import \(\s*(\w+_pb2) as ([\w_]+),\s*\)$",
         r"from . import \1 as \2",
         content,
         flags=re.MULTILINE,
     )
     # unparenthesised from-import: `from pkg import foo_pb2 as alias`
     content = re.sub(
-        r"^from [\w\.]+ import (\w+_pb2) as ([\w_]+)$",
+        r"^from (?!google\.)[\w\.]+ import (\w+_pb2) as ([\w_]+)$",
         r"from . import \1 as \2",
         content,
         flags=re.MULTILINE,
