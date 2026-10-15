@@ -15,7 +15,7 @@ from scripts.generation.fixup import (
     _cleanup_service_files,
     _dedupe_top_level_function_names,
     _fix_import_aliases,
-    _fix_list_collision,
+    _alias_shadowed_typing_names,
     _fix_model_field_names,
     _fix_path_parameters,
     _fix_pydantic_construct,
@@ -345,18 +345,36 @@ def test_fix_typing_wildcard_noop_without_star():
     assert _fix_typing_wildcard(content) == content
 
 
-def test_fix_list_collision_aliases_list():
+def test_operation_named_list_aliases_typing_list():
+    content = "from typing import Optional, List\n\ndef List(x: List[str]) -> str:\n    pass\n"
+    result = _alias_shadowed_typing_names(content)
+    assert result.startswith("from typing import Optional, List as TypingList\n")
+    assert "def List(x: TypingList[str])" in result
+
+
+@pytest.mark.parametrize("name", ["Optional", "Set", "Dict"])
+def test_imported_model_named_like_a_typing_name_is_aliased(name):
     content = (
-        "from typing import Optional, List\n\ndef List(x: str) -> str:\n    pass\n"
+        f"from typing import Dict, Optional, Set\n"
+        f"from ..models import Device, {name}  # noqa: F401\n\n"
+        f"def Get(x: {name}[str], m: {name}) -> Device:\n    pass\n"
     )
-    result = _fix_list_collision(content)
-    assert "TypingList" in result
-    assert "List as TypingList" in result
+    result = _alias_shadowed_typing_names(content)
+
+    namespace: dict = {name: type(name, (), {}), "Device": object}
+    exec(compile(result.replace("from ..models", "# "), "m", "exec"), namespace)
+    assert f"def Get(x: Typing{name}[str], m: {name})" in result
 
 
-def test_fix_list_collision_noop_without_list_function():
+def test_model_named_any_fails_generation():
+    content = "from typing import Any\nfrom .Any import Any\n"
+    with pytest.raises(ValueError, match="Any"):
+        _alias_shadowed_typing_names(content)
+
+
+def test_alias_shadowed_typing_names_noop_without_a_collision():
     content = "from typing import List\n\ndef Foo() -> List[str]:\n    pass\n"
-    assert _fix_list_collision(content) == content
+    assert _alias_shadowed_typing_names(content) == content
 
 
 def test_make_models_import_transform_replaces_wildcard():

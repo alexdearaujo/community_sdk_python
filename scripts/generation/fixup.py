@@ -99,8 +99,9 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         _inject_data_body,
         _fix_typing_wildcard,
         _fix_model_field_names,
-        _fix_list_collision,
         _make_models_import_transform(model_classes),
+        # After the models import is explicit, so a model's name is visible.
+        _alias_shadowed_typing_names,
         _dedupe_top_level_function_names,
         _normalize_triple_quoted_docstrings,
     ]
@@ -290,17 +291,44 @@ def _fix_typing_wildcard(content: str) -> str:
     )
 
 
-def _fix_list_collision(content: str) -> str:
-    """Aliases typing.List as TypingList when the service has an operation named `List`."""
-    if not re.search(r"^def\s+List\s*\(", content, flags=re.MULTILINE):
+_TYPING_IMPORT = re.compile(r"^from typing import ([^\n(]+)$", re.MULTILINE)
+_LOCAL_BINDING = re.compile(
+    r"^(?:def|class)\s+(\w+)|^from \.+\w* import ([^\n(]+)", re.MULTILINE
+)
+
+
+def _alias_shadowed_typing_names(content: str) -> str:
+    """Aliases each typing name the module also binds: `List` -> `TypingList`.
+
+    An operation named `List` or a model named `Optional` would otherwise
+    replace the typing name, and the next `List[...]` fails at import.
+    """
+    typing_import = _TYPING_IMPORT.search(content)
+    if typing_import is None:
         return content
-    content = re.sub(
-        r"from typing import ([^\n]*)\bList\b([^\n]*)",
-        lambda m: f"from typing import {m.group(1)}List as TypingList{m.group(2)}",
-        content,
-        count=1,
+    imported = [name.strip() for name in typing_import.group(1).split(",")]
+    bound: set[str] = set()
+    for match in _LOCAL_BINDING.finditer(content):
+        if match.group(1):
+            bound.add(match.group(1))
+        else:
+            names = match.group(2).split("#")[0].split(",")
+            bound |= {name.split(" as ")[-1].strip() for name in names}
+    shadowed = sorted(set(imported) & bound)
+    if not shadowed:
+        return content
+    if "Any" in shadowed:
+        # Used bare (Dict[str, Any]), so no rewrite can tell the two apart.
+        raise ValueError("A model or operation named `Any` shadows typing.Any")
+    aliased = ", ".join(
+        f"{name} as Typing{name}" if name in shadowed else name for name in imported
     )
-    return re.sub(r"\bList\[", "TypingList[", content)
+    content = (
+        content[: typing_import.start()]
+        + f"from typing import {aliased}"
+        + content[typing_import.end() :]
+    )
+    return re.sub(rf"(?<![.\w])({'|'.join(shadowed)})\[", r"Typing\1[", content)
 
 
 def _make_models_import_transform(model_classes: set[str]) -> Callable[[str], str]:

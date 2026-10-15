@@ -41,6 +41,10 @@ GrpcRuleKey = tuple[str, str, str]  # (proto service, HTTP verb, normalized path
 _PLACEHOLDER = re.compile(r"\{([^}]*)\}")
 # Well-known request types an RPC may take instead of its own message.
 _WELL_KNOWN_REQUESTS = {".google.protobuf.Empty": ("empty_pb2", "Empty")}
+# fixup aliases a shadowed typing name (TypingList); wrappers qualify models instead.
+_TYPING_ALIAS = re.compile(
+    r"\bTyping(Callable|Dict|List|Optional|Set|Tuple|Type|Union)\b"
+)
 
 
 def _normalize_path(path: str) -> str:
@@ -413,7 +417,7 @@ def _generate_service_wrappers():
                 return_type = qualify_wrapper_annotation_types(
                     op.return_type, model_classes
                 )
-                return_type = re.sub(r"\bTypingList\b", "List", return_type)
+                return_type = _TYPING_ALIAS.sub(r"\1", return_type)
 
                 unique_method_name = method_names[(service_py, op.name)]
 
@@ -421,9 +425,8 @@ def _generate_service_wrappers():
                 # api_config_override is re-added below as keyword-only, so it
                 # sits with the other options), with model types qualified.
                 def _qualify_annotation(annotation: str) -> str:
-                    return re.sub(
-                        r"\bTypingList\b",
-                        "List",
+                    return _TYPING_ALIAS.sub(
+                        r"\1",
                         qualify_wrapper_annotation_types(annotation, model_classes),
                     )
 
