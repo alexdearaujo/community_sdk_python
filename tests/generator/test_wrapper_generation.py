@@ -115,6 +115,25 @@ def test_routes_that_cannot_be_told_apart_fail_generation():
         _names({"XService": [_op("Get", "/a/{id}"), _op("Get_2", "/b/{id}")]})
 
 
+def test_protoc_default_operation_ids_drop_the_module_prefix():
+    names = _names(
+        {
+            "RouteService": [
+                _op("RouteService_List", "/routes"),
+                _op("RouteService_Announce", "/routes/announce"),
+            ],
+            "CapabilityAdminService": [
+                _op("CapabilityAdminService_GetCapability", "/capabilities/{id}")
+            ],
+        }
+    )
+    assert names == {
+        "RouteService.RouteService_List": "route_list",
+        "RouteService.RouteService_Announce": "route_announce",
+        "CapabilityAdminService.CapabilityAdminService_GetCapability": "get_capability",
+    }
+
+
 def test_keyword_operation_names_get_a_trailing_underscore():
     names = _names({"XService": [_op("Import", "/import"), _op("Return", "/return")]})
     assert names == {"XService.Import": "import_", "XService.Return": "return_"}

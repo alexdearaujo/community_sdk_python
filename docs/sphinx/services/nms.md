@@ -37,7 +37,7 @@ sequenceDiagram
     participant W as client.nms
     participant API as Kentik REST API
 
-    C->>W: metrics_schema_service__get_metrics_schema()
+    C->>W: get_metrics_schema()
     W->>API: GET /nms/v202505/metrics_schema
     alt success
         API-->>W: GetMetricsSchemaResponse (JSON)
@@ -59,7 +59,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: metrics_schema_service__get_metrics_schema()
+    C->>W: get_metrics_schema()
     W->>R: build_grpc_request(GetMetricsSchemaRequest, arguments)
     R->>API: MetricsSchemaService/GetMetricsSchema (gRPC/TLS)
     alt success
@@ -86,7 +86,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.nms.metrics_schema_service__get_metrics_schema()
+response = client.nms.get_metrics_schema()
 ```
 
 ## Data Models

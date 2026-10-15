@@ -9298,7 +9298,7 @@
         },
         "DELETE /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_DeleteCapability",
-          "method": "capability_admin_service__delete_capability",
+          "method": "delete_capability",
           "grpc": "CapabilityAdminService/DeleteCapability",
           "status": 200,
           "required_params": [
@@ -9386,7 +9386,7 @@
         },
         "GET /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_ListCapabilities",
-          "method": "capability_admin_service__list_capabilities",
+          "method": "list_capabilities",
           "grpc": "CapabilityAdminService/ListCapabilities",
           "status": 200,
           "required_params": [],
@@ -9397,7 +9397,7 @@
         },
         "GET /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_GetCapability",
-          "method": "capability_admin_service__get_capability",
+          "method": "get_capability",
           "grpc": "CapabilityAdminService/GetCapability",
           "status": 200,
           "required_params": [
@@ -9464,7 +9464,7 @@
         },
         "GET /kagent/v202401/releases": {
           "operation": "CapabilityReleaseService_GetCapabilityRelease",
-          "method": "capability_release_service__get_capability_release",
+          "method": "get_capability_release",
           "grpc": "CapabilityReleaseService/GetCapabilityRelease",
           "status": 200,
           "required_params": [],
@@ -9481,7 +9481,7 @@
         },
         "GET /kagent/v202401/releases/latest": {
           "operation": "CapabilityReleaseService_GetCapabilityLatestReleases",
-          "method": "capability_release_service__get_capability_latest_releases",
+          "method": "get_capability_latest_releases",
           "grpc": "CapabilityReleaseService/GetCapabilityLatestReleases",
           "status": 200,
           "required_params": [],
@@ -9498,7 +9498,7 @@
         },
         "GET /kagent/v202401/releases/supported_distros": {
           "operation": "CapabilityReleaseService_GetCapabilitySupportedDistros",
-          "method": "capability_release_service__get_capability_supported_distros",
+          "method": "get_capability_supported_distros",
           "grpc": "CapabilityReleaseService/GetCapabilitySupportedDistros",
           "status": 200,
           "required_params": [],
@@ -9546,7 +9546,7 @@
         },
         "PATCH /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_UpdateCapability",
-          "method": "capability_admin_service__update_capability",
+          "method": "update_capability",
           "grpc": "CapabilityAdminService/UpdateCapability",
           "status": 200,
           "required_params": [
@@ -9606,7 +9606,7 @@
         },
         "POST /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_CreateCapability",
-          "method": "capability_admin_service__create_capability",
+          "method": "create_capability",
           "grpc": "CapabilityAdminService/CreateCapability",
           "status": 200,
           "required_params": [
@@ -11060,7 +11060,7 @@
       "operations": {
         "POST /routes/announce": {
           "operation": "RouteService_Announce",
-          "method": "route_service__announce",
+          "method": "route_announce",
           "grpc": "RouteService/Announce",
           "status": 200,
           "required_params": [
@@ -11074,7 +11074,7 @@
         },
         "POST /routes/list": {
           "operation": "RouteService_List",
-          "method": "route_service__list",
+          "method": "route_list",
           "grpc": "RouteService/List",
           "status": 200,
           "required_params": [
@@ -11088,7 +11088,7 @@
         },
         "POST /routes/withdraw": {
           "operation": "RouteService_Withdraw",
-          "method": "route_service__withdraw",
+          "method": "route_withdraw",
           "grpc": "RouteService/Withdraw",
           "status": 200,
           "required_params": [
@@ -12920,7 +12920,7 @@
       "operations": {
         "GET /nms/v202505/metrics_schema": {
           "operation": "MetricsSchemaService_GetMetricsSchema",
-          "method": "metrics_schema_service__get_metrics_schema",
+          "method": "get_metrics_schema",
           "grpc": "MetricsSchemaService/GetMetricsSchema",
           "status": 200,
           "required_params": [],

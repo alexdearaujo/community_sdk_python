@@ -307,3 +307,10 @@ This ledger records findings that are intentionally deferred.
   can leave a half-built tree. A run against a schema with a broken
   `user/v202211/user.proto` failed after the wipe, restored the tree with no
   differences, and `import kentik_api` still worked. 15 entries remain open.
+- 2026-10-15: B11's second rule is fixed. An audit of all 234 client methods
+  found 12 that broke snake_case, all with a double underscore from protoc's
+  default operationId `<Module>_<Method>`. The wrapper now drops the module
+  prefix; if one word is left, the module noun stays (`ktbgp.route_list`).
+  Renamed: 8 in kagent, 3 in ktbgp, 1 in nms. Every other name is already
+  snake_case. B11's third rule (version strings in 50 model class names) is
+  still open.

@@ -39,7 +39,7 @@ sequenceDiagram
     participant W as client.ktbgp
     participant API as Kentik REST API
 
-    C->>W: route_service__announce(data=RouteServiceAnnounceRequest(...))
+    C->>W: route_announce(data=RouteServiceAnnounceRequest(...))
     W->>API: POST /routes/announce
     alt success
         API-->>W: RouteServiceAnnounceResponse (JSON)
@@ -61,7 +61,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: route_service__announce(data=RouteServiceAnnounceRequest(...))
+    C->>W: route_announce(data=RouteServiceAnnounceRequest(...))
     W->>R: build_grpc_request(RouteServiceAnnounceRequest, arguments)
     R->>API: RouteService/Announce (gRPC/TLS)
     alt success
@@ -95,7 +95,7 @@ from kentik_api.gen.ktbgp.models import RouteServiceAnnounceRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.ktbgp.route_service__announce(
+response = client.ktbgp.route_announce(
     data=RouteServiceAnnounceRequest(...),
 )
 ```
@@ -114,7 +114,7 @@ sequenceDiagram
     participant W as client.ktbgp
     participant API as Kentik REST API
 
-    C->>W: route_service__list(data=RouteServiceListRequest(...))
+    C->>W: route_list(data=RouteServiceListRequest(...))
     W->>API: POST /routes/list
     alt success
         API-->>W: RouteServiceListResponse (JSON)
@@ -136,7 +136,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: route_service__list(data=RouteServiceListRequest(...))
+    C->>W: route_list(data=RouteServiceListRequest(...))
     W->>R: build_grpc_request(RouteServiceListRequest, arguments)
     R->>API: RouteService/List (gRPC/TLS)
     alt success
@@ -170,7 +170,7 @@ from kentik_api.gen.ktbgp.models import RouteServiceListRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.ktbgp.route_service__list(
+response = client.ktbgp.route_list(
     data=RouteServiceListRequest(...),
 )
 ```
@@ -189,7 +189,7 @@ sequenceDiagram
     participant W as client.ktbgp
     participant API as Kentik REST API
 
-    C->>W: route_service__withdraw(data=RouteServiceWithdrawRequest(...))
+    C->>W: route_withdraw(data=RouteServiceWithdrawRequest(...))
     W->>API: POST /routes/withdraw
     alt success
         API-->>W: RouteServiceWithdrawResponse (JSON)
@@ -211,7 +211,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: route_service__withdraw(data=RouteServiceWithdrawRequest(...))
+    C->>W: route_withdraw(data=RouteServiceWithdrawRequest(...))
     W->>R: build_grpc_request(RouteServiceWithdrawRequest, arguments)
     R->>API: RouteService/Withdraw (gRPC/TLS)
     alt success
@@ -245,7 +245,7 @@ from kentik_api.gen.ktbgp.models import RouteServiceWithdrawRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.ktbgp.route_service__withdraw(
+response = client.ktbgp.route_withdraw(
     data=RouteServiceWithdrawRequest(...),
 )
 ```

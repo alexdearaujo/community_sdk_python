@@ -621,7 +621,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__list_capabilities(
+    def list_capabilities(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCapabilitiesResponse:
         """
@@ -658,7 +658,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__create_capability(
+    def create_capability(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -701,7 +701,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__get_capability(
+    def get_capability(
         self, *, api_config_override: Optional[APIConfig] = None, capabilityname: str
     ) -> rest_models.GetCapabilityResponse:
         """
@@ -739,7 +739,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__delete_capability(
+    def delete_capability(
         self, *, api_config_override: Optional[APIConfig] = None, capabilityname: str
     ) -> rest_models.DeleteCapabilityResponse:
         """
@@ -777,7 +777,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__update_capability(
+    def update_capability(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -823,7 +823,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_release_service__get_capability_release(
+    def get_capability_release(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -883,7 +883,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_release_service__get_capability_latest_releases(
+    def get_capability_latest_releases(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -946,7 +946,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_release_service__get_capability_supported_distros(
+    def get_capability_supported_distros(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,

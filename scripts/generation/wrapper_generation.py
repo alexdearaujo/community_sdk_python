@@ -247,7 +247,18 @@ def _wrapper_method_names(
         routes: dict[str, list[RestOperation]] = {}
         for op in ops:
             # fixup suffixes a repeated operationId: GetAuditEvent, GetAuditEvent_2.
-            routes.setdefault(re.sub(r"_\d+$", "", op.name), []).append(op)
+            base = re.sub(r"_\d+$", "", op.name)
+            # protoc's default operationId is `<Module>_<Method>`; the Module is noise,
+            # unless only one word is left (`RouteService_List` -> `route_list`).
+            method = base.removeprefix(f"{rest_file.stem}_")
+            if method != base:
+                one_word = re.fullmatch(r"[A-Z][a-z0-9]*", method)
+                base = (
+                    rest_file.stem.removesuffix("Service") + method
+                    if one_word
+                    else method
+                )
+            routes.setdefault(base, []).append(op)
         for base, group in routes.items():
             fewest = min(len(_PLACEHOLDER.findall(op.path)) for op in group)
             shortest = [

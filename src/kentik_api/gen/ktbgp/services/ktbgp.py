@@ -35,7 +35,7 @@ class KtbgpServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def route_service__announce(
+    def route_announce(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -78,7 +78,7 @@ class KtbgpServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def route_service__list(
+    def route_list(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -121,7 +121,7 @@ class KtbgpServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def route_service__withdraw(
+    def route_withdraw(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,

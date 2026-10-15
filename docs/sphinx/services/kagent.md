@@ -896,7 +896,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_admin_service__list_capabilities()
+    C->>W: list_capabilities()
     W->>API: GET /kagent/v202401/capabilities
     alt success
         API-->>W: ListCapabilitiesResponse (JSON)
@@ -918,7 +918,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_admin_service__list_capabilities()
+    C->>W: list_capabilities()
     W->>R: build_grpc_request(ListCapabilitiesRequest, arguments)
     R->>API: CapabilityAdminService/ListCapabilities (gRPC/TLS)
     alt success
@@ -945,7 +945,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.kagent.capability_admin_service__list_capabilities()
+response = client.kagent.list_capabilities()
 ```
 
 ---
@@ -962,7 +962,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_admin_service__create_capability(data=Capability(...))
+    C->>W: create_capability(data=Capability(...))
     W->>API: POST /kagent/v202401/capabilities
     alt success
         API-->>W: CreateCapabilityResponse (JSON)
@@ -984,7 +984,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_admin_service__create_capability(data=Capability(...))
+    C->>W: create_capability(data=Capability(...))
     W->>R: build_grpc_request(CreateCapabilityRequest, arguments)
     R->>API: CapabilityAdminService/CreateCapability (gRPC/TLS)
     alt success
@@ -1018,7 +1018,7 @@ from kentik_api.gen.kagent.models import Capability
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.kagent.capability_admin_service__create_capability(
+response = client.kagent.create_capability(
     data=Capability(...),
 )
 ```
@@ -1037,7 +1037,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_admin_service__get_capability(capabilityname="capabilityname-example")
+    C->>W: get_capability(capabilityname="capabilityname-example")
     W->>API: GET /kagent/v202401/capabilities/{capability.name}
     alt success
         API-->>W: GetCapabilityResponse (JSON)
@@ -1059,7 +1059,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_admin_service__get_capability(capabilityname="capabilityname-example")
+    C->>W: get_capability(capabilityname="capabilityname-example")
     W->>R: build_grpc_request(GetCapabilityRequest, arguments)
     R->>API: CapabilityAdminService/GetCapability (gRPC/TLS)
     alt success
@@ -1092,7 +1092,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.kagent.capability_admin_service__get_capability(
+response = client.kagent.get_capability(
     capabilityname="capabilityname-example",
 )
 ```
@@ -1111,7 +1111,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_admin_service__update_capability(capabilityname="capabilityname-example", data=CapabilityAdminServiceUpdateCapabilityBody(...))
+    C->>W: update_capability(capabilityname="capabilityname-example", data=CapabilityAdminServiceUpdateCapabilityBody(...))
     W->>API: PATCH /kagent/v202401/capabilities/{capability.name}
     alt success
         API-->>W: UpdateCapabilityResponse (JSON)
@@ -1133,7 +1133,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_admin_service__update_capability(capabilityname="capabilityname-example", data=CapabilityAdminServiceUpdateCapabilityBody(...))
+    C->>W: update_capability(capabilityname="capabilityname-example", data=CapabilityAdminServiceUpdateCapabilityBody(...))
     W->>R: build_grpc_request(UpdateCapabilityRequest, arguments)
     R->>API: CapabilityAdminService/UpdateCapability (gRPC/TLS)
     alt success
@@ -1168,7 +1168,7 @@ from kentik_api.gen.kagent.models import CapabilityAdminServiceUpdateCapabilityB
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.kagent.capability_admin_service__update_capability(
+response = client.kagent.update_capability(
     capabilityname="capabilityname-example",
     data=CapabilityAdminServiceUpdateCapabilityBody(...),
 )
@@ -1188,7 +1188,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_admin_service__delete_capability(capabilityname="capabilityname-example")
+    C->>W: delete_capability(capabilityname="capabilityname-example")
     W->>API: DELETE /kagent/v202401/capabilities/{capability.name}
     alt success
         API-->>W: DeleteCapabilityResponse (JSON)
@@ -1210,7 +1210,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_admin_service__delete_capability(capabilityname="capabilityname-example")
+    C->>W: delete_capability(capabilityname="capabilityname-example")
     W->>R: build_grpc_request(DeleteCapabilityRequest, arguments)
     R->>API: CapabilityAdminService/DeleteCapability (gRPC/TLS)
     alt success
@@ -1243,7 +1243,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.kagent.capability_admin_service__delete_capability(
+response = client.kagent.delete_capability(
     capabilityname="capabilityname-example",
 )
 ```
@@ -1262,7 +1262,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_release_service__get_capability_release()
+    C->>W: get_capability_release()
     W->>API: GET /kagent/v202401/releases
     alt success
         API-->>W: GetCapabilityReleaseResponse (JSON)
@@ -1284,7 +1284,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_release_service__get_capability_release()
+    C->>W: get_capability_release()
     W->>R: build_grpc_request(GetCapabilityReleaseRequest, arguments)
     R->>API: CapabilityReleaseService/GetCapabilityRelease (gRPC/TLS)
     alt success
@@ -1322,7 +1322,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.kagent.capability_release_service__get_capability_release()
+response = client.kagent.get_capability_release()
 ```
 
 ---
@@ -1339,7 +1339,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_release_service__get_capability_latest_releases()
+    C->>W: get_capability_latest_releases()
     W->>API: GET /kagent/v202401/releases/latest
     alt success
         API-->>W: GetCapabilityLatestReleasesResponse (JSON)
@@ -1361,7 +1361,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_release_service__get_capability_latest_releases()
+    C->>W: get_capability_latest_releases()
     W->>R: build_grpc_request(GetCapabilityLatestReleasesRequest, arguments)
     R->>API: CapabilityReleaseService/GetCapabilityLatestReleases (gRPC/TLS)
     alt success
@@ -1399,7 +1399,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.kagent.capability_release_service__get_capability_latest_releases()
+response = client.kagent.get_capability_latest_releases()
 ```
 
 ---
@@ -1414,7 +1414,7 @@ sequenceDiagram
     participant W as client.kagent
     participant API as Kentik REST API
 
-    C->>W: capability_release_service__get_capability_supported_distros()
+    C->>W: get_capability_supported_distros()
     W->>API: GET /kagent/v202401/releases/supported_distros
     alt success
         API-->>W: GetCapabilitySupportedDistrosResponse (JSON)
@@ -1436,7 +1436,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: capability_release_service__get_capability_supported_distros()
+    C->>W: get_capability_supported_distros()
     W->>R: build_grpc_request(GetCapabilitySupportedDistrosRequest, arguments)
     R->>API: CapabilityReleaseService/GetCapabilitySupportedDistros (gRPC/TLS)
     alt success
@@ -1469,7 +1469,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.kagent.capability_release_service__get_capability_supported_distros()
+response = client.kagent.get_capability_supported_distros()
 ```
 
 ### ConfigService

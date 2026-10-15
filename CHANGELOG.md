@@ -54,7 +54,10 @@ in every module, so a client method name never moves to another operation. A
 second HTTP route of one operation is named by its extra path parameters, not
 by a number. The Service word stays when it is the object of the call
 (`client.device.get_device`) or when removing it would leave one word
-(`client.alerting.alert_list`).
+(`client.alerting.alert_list`). A protoc default operationId
+(`RouteService_List`) loses its module prefix, so no name holds a double
+underscore; if one word is left, the module noun stays
+(`client.ktbgp.route_list`).
 
 | Service | Before | After |
 | --- | --- | --- |
@@ -66,6 +69,10 @@ by a number. The Service word stays when it is the object of the call
 | `custom_dimension` | `get_custom_dimension_info` | `get_info` |
 | `device` | `update_device_labels` | `update_labels` |
 | `journeys` | `get_journeys_nlq` | `get_nlq` |
+| `kagent` | `capability_admin_service__list_capabilities`, `capability_admin_service__get_capability`, `capability_admin_service__create_capability`, `capability_admin_service__update_capability`, `capability_admin_service__delete_capability` | `list_capabilities`, `get_capability`, `create_capability`, `update_capability`, `delete_capability` |
+| `kagent` | `capability_release_service__get_capability_release`, `capability_release_service__get_capability_latest_releases`, `capability_release_service__get_capability_supported_distros` | `get_capability_release`, `get_capability_latest_releases`, `get_capability_supported_distros` |
+| `ktbgp` | `route_service__list`, `route_service__announce`, `route_service__withdraw` | `route_list`, `route_announce`, `route_withdraw` |
+| `nms` | `metrics_schema_service__get_metrics_schema` | `get_metrics_schema` |
 | `pathfinder` | `create_pathfinder_report` | `create_report` |
 | `site` | `list_site_markets`, `get_site_market`, `create_site_market`, `update_site_market`, `delete_site_market` | `list_markets`, `get_market`, `create_market`, `update_market`, `delete_market` |
 
@@ -79,7 +86,7 @@ working over gRPC is a breaking change too.
 - **`kmeta` service.** `client.kmeta` manages ServiceNow configurations: list,
   get, create, update, and delete. It predates `api_surface.json`, so
   `make release-notes` does not list it.
-- **`nms` service.** `client.nms.metrics_schema_service__get_metrics_schema()`
+- **`nms` service.** `client.nms.get_metrics_schema()`
   returns the NMS metrics schema: each measurement and its fields, on REST
   and gRPC. The response's `schema` field is `schema_` in Python, because
   `schema` is a `BaseModel` attribute.
@@ -182,7 +189,7 @@ working over gRPC is a breaking change too.
   now takes a typed model:
   - `kagent` `upsert_agent_capability`: `AgentCapabilityServiceUpsertAgentCapabilityBody`
   - `kagent` `update_agent`: `AgentServiceUpdateAgentBody`
-  - `kagent` `capability_admin_service__update_capability`:
+  - `kagent` `update_capability`:
     `CapabilityAdminServiceUpdateCapabilityBody`
   - `rbux` `update_scope`: `ScopeServiceUpdateScopeBody`
 - **A misspelled key or enum value in a gRPC body raises an error.** gRPC
@@ -197,7 +204,7 @@ working over gRPC is a breaking change too.
   one field, grpc-gateway builds the request's `update_mask` from the keys in
   the REST body. The gRPC call sent an empty mask instead, which updates every
   field and can clear the ones you left out. gRPC now builds the same mask.
-  This applies to `client.kagent.capability_admin_service__update_capability`.
+  This applies to `client.kagent.update_capability`.
 - **A success status with an unusable body raises a 502.** A REST success
   whose body is not JSON raised the operation's error class with the message
   "failed with status code: 200". A JSON `null` body returned an empty model
