@@ -204,7 +204,9 @@ def _fix_module_level_classvar(stub: str) -> str:
     return _MODULE_LEVEL_CLASSVAR.sub(r"\1: int", stub)
 
 
-def _relink_pb2_dependency_imports(output_dir: Path) -> int:
+def _relink_pb2_dependency_imports(
+    output_dir: Path, owners: dict[tuple[str, str], str]
+) -> int:
     """Repoints protoc's dependency imports at the flattened gen/<service>/pb/ layout.
 
     protoc writes these against the original proto package tree (`from
@@ -213,16 +215,21 @@ def _relink_pb2_dependency_imports(output_dir: Path) -> int:
     dependency in the descriptor pool, so an unresolved one makes
     AddSerializedFile raise TypeError at import and silently disables the whole
     service's gRPC transport. In a .pyi stub the same imports carry the types.
+
+    `owners` maps each compiled (proto package, module) to its service. Matching
+    on the package, not the module name alone, keeps an import of an older proto
+    version from linking to the newer one a service compiled.
     """
     pattern = re.compile(
         r"^from ([\w\.]+) import (\w+_pb2) as ([\w_]+)$", flags=re.MULTILINE
     )
     rewritten = 0
+    unresolved: list[str] = []
 
     for pb_dir in sorted(output_dir.glob("*/pb")):
-        siblings = {path.stem for path in pb_dir.glob("*_pb2.py")}
+        service = pb_dir.parent.name
 
-        def _replace(match: re.Match, siblings=siblings) -> str:
+        def _replace(match: re.Match, pb_file: Path, service=service) -> str:
             package, module, alias = match.groups()
             if package.startswith("google."):
                 return match.group(0)  # resolved by googleapis-common-protos
@@ -231,24 +238,27 @@ def _relink_pb2_dependency_imports(output_dir: Path) -> int:
                     f"from kentik_api.gen.pb_companions.{package} "
                     f"import {module} as {alias}"
                 )
-            if module in siblings:
+            owner = owners.get((package, module))
+            if owner == service:
                 return f"from . import {module} as {alias}"
-            parts = package.split(".")
-            if parts[0] == "kentik" and len(parts) > 1:
-                target = output_dir / parts[1] / "pb" / f"{module}.py"
-                if target.exists():
-                    return (
-                        f"from kentik_api.gen.{parts[1]}.pb import {module} as {alias}"
-                    )
+            if owner is not None:
+                return f"from kentik_api.gen.{owner}.pb import {module} as {alias}"
+            unresolved.append(f"{pb_file.relative_to(output_dir)}: {package}.{module}")
             return match.group(0)
 
         for pb_file in sorted([*pb_dir.glob("*_pb2.py"), *pb_dir.glob("*.pyi")]):
             content = pb_file.read_text(encoding="utf-8")
-            patched = pattern.sub(_replace, content)
+            patched = pattern.sub(lambda m, f=pb_file: _replace(m, f), content)
             if patched != content:
                 pb_file.write_text(patched, encoding="utf-8")
                 rewritten += 1
 
+    if unresolved:
+        raise RuntimeError(
+            "These pb modules import a proto that no selected swagger file "
+            "compiles, usually an older version of a proto that its own service "
+            "has moved past:\n  " + "\n  ".join(unresolved)
+        )
     return rewritten
 
 
@@ -751,6 +761,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         )
 
         service_swagger_paths: dict[str, list[Path]] = {}
+        pb_owners: dict[tuple[str, str], str] = {}
         endpoint_docs_collector = EndpointDocsCollector()
 
         for service in sorted(selected_swagger_files):
@@ -841,11 +852,12 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                                         gen_py.relative_to(tmp_pb_path).parent.parts
                                     )
                                     stem, _, suffix = gen_py.name.partition("_pb2")
-                                    target = pb_dir / (
+                                    module = (
                                         _pb_stem(package, stem, proto_collisions)
                                         + "_pb2"
-                                        + suffix
                                     )
+                                    pb_owners[(package, module)] = service
+                                    target = pb_dir / (module + suffix)
                                     target.write_text(
                                         _qualify_colliding_imports(
                                             gen_py.read_text(encoding="utf-8"),
@@ -921,7 +933,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             fixup.fix_generated_service(service_dir)
 
     # Runs once every pb/ directory exists, so cross-service targets resolve.
-    relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR)
+    relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR, pb_owners)
     print(f"    ✅ Relinked descriptor dependency imports in {relinked} pb2 modules.")
 
     print("\nFormatting...")
