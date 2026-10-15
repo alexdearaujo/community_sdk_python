@@ -414,6 +414,37 @@ def test_discover_grpc_methods_without_pb_dir_is_empty(tmp_path):
     assert wrapper_generation._discover_grpc_methods(tmp_path) == ([], {})
 
 
+def test_streaming_rpcs_and_response_body_rules_stay_rest_only(tmp_path):
+    from google.api import annotations_pb2
+    from google.protobuf import descriptor_pb2
+
+    fd = descriptor_pb2.FileDescriptorProto(name="kentik/x/v1/x.proto", package="x")
+    fd.message_type.add(name="Req")
+    service = fd.service.add(name="XService")
+    for name, verb, extra in [
+        ("Get", "get", {}),
+        ("Watch", "get", {"server_streaming": True}),
+        ("Send", "post", {"client_streaming": True}),
+        ("Fetch", "get", {}),
+    ]:
+        method = service.method.add(
+            name=name, input_type=".x.Req", output_type=".x.Req", **extra
+        )
+        rule = method.options.Extensions[annotations_pb2.http]  # pyright: ignore[reportArgumentType]  # ty: ignore[invalid-argument-type]
+        setattr(rule, verb, f"/x/{name.lower()}")
+        if name == "Fetch":
+            rule.response_body = "items"
+    (tmp_path / "pb").mkdir()
+    (tmp_path / "pb" / "x_pb2.py").write_text(
+        f"DESCRIPTOR = _pool.AddSerializedFile({fd.SerializeToString()!r})\n"
+    )
+    (tmp_path / "pb" / "x_pb2_grpc.py").write_text("")
+
+    _, methods = wrapper_generation._discover_grpc_methods(tmp_path)
+
+    assert [m.name for m in methods.values()] == ["Get"]
+
+
 def test_discover_grpc_methods_skips_unparseable_files(tmp_path):
     (tmp_path / "pb").mkdir()
     (tmp_path / "pb" / "broken_pb2.py").write_text("def (:\n")

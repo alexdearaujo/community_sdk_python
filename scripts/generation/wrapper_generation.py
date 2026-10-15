@@ -106,6 +106,9 @@ def _discover_grpc_methods(
                 (pb2_file.stem, pb2_grpc_stem, f"{service.name}Stub", idx)
             )
             for method in service.method:
+                # call_grpc makes one unary call; a stream needs an iterator protocol.
+                if method.client_streaming or method.server_streaming:
+                    continue
                 if method.input_type in _WELL_KNOWN_REQUESTS:
                     request_module, request_class = _WELL_KNOWN_REQUESTS[
                         method.input_type
@@ -128,6 +131,9 @@ def _discover_grpc_methods(
                 for binding in (rule, *rule.additional_bindings):
                     verb = binding.WhichOneof("pattern")
                     if verb is None or verb == "custom":
+                        continue
+                    if binding.response_body:
+                        # REST returns that one field, gRPC the whole message.
                         continue
                     template = getattr(binding, verb)
                     methods[(service.name, verb, _normalize_path(template))] = (
