@@ -5,7 +5,6 @@ Called once per service directory by generate_modular_sdk() after all swagger
 files for the service have been generated, outside the schema availability window.
 """
 
-import keyword
 import re
 import textwrap
 from pathlib import Path
@@ -13,7 +12,7 @@ from typing import Callable
 
 from pydantic import BaseModel
 
-from ._shared import discover_service_model_classes
+from ._shared import discover_service_model_classes, normalize_symbol
 from .error_package import inject_service_error_handling
 
 
@@ -176,14 +175,6 @@ _PATH_PLACEHOLDER = re.compile(r"\{([^{}]+)\}")
 _REQUEST_JSON_IMPORT = "from kentik_api.core.rest_runtime import request_json\n"
 
 
-def _argument_name(placeholder: str) -> str:
-    """The argument openapi-python-generator names after a placeholder (its normalize_symbol)."""
-    name = re.sub(r"\W", "", placeholder.replace("-", "_").replace(" ", "_"))
-    if keyword.iskeyword(name):
-        name += "_"
-    return "_" + name if name[:1].isdigit() else name
-
-
 def _fix_path_parameters(content: str) -> str:
     """Encodes each path placeholder: {device.id} -> {path_segment(deviceid)}.
 
@@ -193,7 +184,7 @@ def _fix_path_parameters(content: str) -> str:
     fixed = re.sub(
         r"path\s*=\s*f[\"'].*?[\"']",
         lambda m: _PATH_PLACEHOLDER.sub(
-            lambda p: f"{{path_segment({_argument_name(p.group(1))})}}", m.group(0)
+            lambda p: f"{{path_segment({normalize_symbol(p.group(1))})}}", m.group(0)
         ),
         content,
     )

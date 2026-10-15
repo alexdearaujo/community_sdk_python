@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.generation._shared import normalize_symbol
 from scripts.generation.fixup import (
-    _argument_name,
     _cleanup_service_files,
     _dedupe_top_level_function_names,
     _fix_import_aliases,
@@ -289,14 +289,13 @@ def test_fix_path_parameters_names_keyword_placeholders_as_their_argument():
 
 
 @pytest.mark.parametrize(
-    "placeholder", ["id", "device.id", "from", "class.id", "device-id", "2fa"]
+    "name",
+    ["id", "device.id", "from", "class.id", "device-id", "2fa", "Get-Thing", "café"],
 )
-def test_path_argument_matches_the_rest_generator_parameter_name(placeholder):
-    from openapi_python_generator.language_converters.python.common import (
-        normalize_symbol,
-    )
+def test_normalize_symbol_matches_the_rest_generator(name):
+    from openapi_python_generator.language_converters.python import common
 
-    assert _argument_name(placeholder) == normalize_symbol(placeholder)
+    assert normalize_symbol(name) == common.normalize_symbol(name)
 
 
 def test_fix_path_parameters_leaves_a_module_without_placeholders_alone():

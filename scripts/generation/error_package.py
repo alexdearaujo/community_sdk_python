@@ -6,7 +6,11 @@ import re
 from pathlib import Path
 from typing import TypedDict
 
-from ._shared import discover_service_model_classes, service_to_pascal_case
+from ._shared import (
+    discover_service_model_classes,
+    normalize_symbol,
+    service_to_pascal_case,
+)
 
 
 def service_error_class_name(operation_id: str) -> str:
@@ -67,9 +71,11 @@ def collect_operation_error_responses(
             if not isinstance(operation, dict):
                 continue
 
-            operation_id = operation.get("operationId")
-            if not isinstance(operation_id, str) or not operation_id:
-                continue
+            # Named as the REST module names it, which `error_cls=` refers to.
+            raw_id = operation.get("operationId")
+            operation_id = normalize_symbol(
+                raw_id if isinstance(raw_id, str) and raw_id else f"{method}_{path}"
+            )
 
             responses_obj = operation.get("responses", {})
             error_responses: dict[str, ErrorResponseMetadata] = {}
@@ -102,12 +108,12 @@ def collect_operation_error_responses(
                         "schema_ref": schema_ref,
                     }
 
-            if error_responses:
-                operation_errors[operation_id] = {
-                    "path": path,
-                    "method": str(method).upper(),
-                    "responses": error_responses,
-                }
+            # Every operation: its REST module imports <Operation>Error regardless.
+            operation_errors[operation_id] = {
+                "path": path,
+                "method": str(method).upper(),
+                "responses": error_responses,
+            }
 
     return operation_errors
 

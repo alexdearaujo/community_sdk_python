@@ -145,7 +145,8 @@ subpackage of independently testable phase modules (see
   that more than one phase module genuinely uses:
   `iter_service_dirs()` and `INTERNAL_GEN_DIRS` (the single answer to
   "is this directory a Service"), `discover_service_model_classes`,
-  `service_to_pascal_case`, and the generated-source parsers
+  `service_to_pascal_case`, `normalize_symbol` (the REST generator's
+  own naming rule), and the generated-source parsers
   `parse_generated_rest_module` / `RestOperation`,
   `parse_wrapper_methods` / `WrapperMethod`, and `grpc_call` /
   `grpc_stub_services` / `GrpcCall`. Keep this list in step
