@@ -9,6 +9,7 @@ import pytest
 
 from scripts.generation._shared import INTERNAL_GEN_DIRS, iter_service_dirs
 from scripts.generation.parity import (
+    drop_superseded_swagger_files,
     select_latest_swagger_files_by_service,
     validate_generated_service_parity,
     validate_schema_files,
@@ -80,6 +81,61 @@ def test_select_latest_swagger_files_by_service_groups_multiple_files_per_servic
     assert len(by_service["alerting"]) == 2
     assert selected_count == 2
     assert ignored_count == 0
+
+
+def _tagged_swagger(
+    base: Path, service: str, version: str, filename: str, *tags: str
+) -> None:
+    path = _write_swagger(base, service, version, filename)
+    paths = {f"/{tag}/{i}": {"get": {"tags": [tag]}} for i, tag in enumerate(tags)}
+    path.write_text(json.dumps({"paths": paths}), encoding="utf-8")
+
+
+def _drop(base: Path) -> tuple[dict[str, list[str]], list[str]]:
+    selected, _, _ = select_latest_swagger_files_by_service(base)
+    kept, dropped = drop_superseded_swagger_files(selected)
+    return (
+        {s: [f["filename"] for f in files] for s, files in kept.items()},
+        [f["filename"] for f in dropped],
+    )
+
+
+def test_renamed_file_drops_the_old_version_whichever_name_sorts_last(
+    tmp_path: Path,
+):
+    # The old name sorts last, so without the drop it would be generated last and win.
+    _tagged_swagger(tmp_path, "foo", "v202401beta1", "z_foo.swagger.json", "FooService")
+    _tagged_swagger(tmp_path, "foo", "v202501", "a_foo.swagger.json", "FooService")
+
+    assert _drop(tmp_path) == ({"foo": ["a_foo.swagger.json"]}, ["z_foo.swagger.json"])
+
+
+def test_files_with_distinct_modules_and_no_operations_are_kept(tmp_path: Path):
+    _tagged_swagger(tmp_path, "alerting", "v202303", "alert.swagger.json", "Alerts")
+    _tagged_swagger(tmp_path, "alerting", "v202505", "mitig.swagger.json", "Mitig")
+    _tagged_swagger(tmp_path, "alerting", "v202101", "types.swagger.json")
+
+    kept, dropped = _drop(tmp_path)
+
+    assert len(kept["alerting"]) == 3
+    assert dropped == []
+
+
+@pytest.mark.parametrize(
+    ("old_tags", "new_version"),
+    [
+        (("FooService", "BarService"), "v202501"),  # old file not fully replaced
+        (("FooService",), "v202401beta1"),  # same version, no newer file
+    ],
+)
+def test_shared_module_without_a_full_replacement_fails(
+    tmp_path: Path, old_tags: tuple[str, ...], new_version: str
+):
+    _tagged_swagger(tmp_path, "foo", "v202401beta1", "old.swagger.json", *old_tags)
+    _tagged_swagger(tmp_path, "foo", new_version, "new.swagger.json", "FooService")
+
+    with pytest.raises(RuntimeError, match="both write REST module `FooService`"):
+        _drop(tmp_path)
 
 
 def test_validate_generated_service_parity_passes_when_sets_match(tmp_path: Path):

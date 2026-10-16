@@ -29,8 +29,10 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _pb_stem,
     _proto_collisions,
     _qualify_colliding_imports,
+    _relink_pb2_dependency_imports,
     _rewrite_grpc_imports,
     _silence_grpc_experimental,
+    check_model_names,
     clean_schema_names,
     fetch_schema,
     get_schema_root,
@@ -590,6 +592,97 @@ def test_qualify_colliding_imports_resolves_by_package_not_name():
     assert "import mitigation_public_v202505_pb2 as _public" in _rewrite_grpc_imports(
         result
     )
+
+
+def _schemas(*names: str, **definitions: dict) -> dict:
+    return {
+        "components": {"schemas": {name: definitions.get(name, {}) for name in names}}
+    }
+
+
+def test_models_differing_only_by_case_fail_across_files_of_a_service():
+    seen: dict = {}
+    check_model_names(_schemas("DeviceLabel", "Device"), seen, "a.json")
+
+    with pytest.raises(
+        RuntimeError, match="`deviceLabel` differs from model `DeviceLabel`"
+    ):
+        check_model_names(_schemas("deviceLabel"), seen, "b.json")
+
+
+def test_same_model_with_the_same_definition_in_two_files_passes():
+    seen: dict = {}
+    status = {"type": "object", "properties": {"code": {"type": "integer"}}}
+    check_model_names(_schemas("rpcStatus", "Device", rpcStatus=status), seen, "a.json")
+    check_model_names(_schemas("rpcStatus", rpcStatus=dict(status)), seen, "b.json")
+
+
+def test_same_model_with_a_different_definition_fails():
+    seen: dict = {}
+    check_model_names(
+        _schemas("Mitigation", Mitigation={"properties": {"id": {}}}), seen, "a.json"
+    )
+
+    with pytest.raises(RuntimeError, match="defined differently in a.json"):
+        check_model_names(
+            _schemas("Mitigation", Mitigation={"properties": {"name": {}}}),
+            seen,
+            "b.json",
+        )
+
+
+def test_rewrite_grpc_imports_keeps_google_imports_absolute():
+    line = (
+        "from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2\n"
+    )
+    assert _rewrite_grpc_imports(line) == line
+
+
+def _pb_module(root: Path, service: str, name: str, *imports: str) -> Path:
+    path = root / service / "pb" / f"{name}.py"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(f"{line}\n" for line in imports), encoding="utf-8")
+    return path
+
+
+def test_relink_points_each_import_at_the_service_that_compiled_it(tmp_path: Path):
+    owners = {
+        ("kentik.user.v202405", "user_pb2"): "user",
+        ("kentik.device.v202308", "device_pb2"): "device",
+        ("kentik.device.v202308", "common_pb2"): "device",
+    }
+    _pb_module(tmp_path, "user", "user_pb2")
+    module = _pb_module(
+        tmp_path,
+        "device",
+        "device_pb2",
+        "from kentik.user.v202405 import user_pb2 as _user",
+        "from kentik.device.v202308 import common_pb2 as _common",
+        "from google.api import annotations_pb2 as _ann",
+    )
+
+    _relink_pb2_dependency_imports(tmp_path, owners)
+
+    assert module.read_text(encoding="utf-8").splitlines() == [
+        "from kentik_api.gen.user.pb import user_pb2 as _user",
+        "from . import common_pb2 as _common",
+        "from google.api import annotations_pb2 as _ann",
+    ]
+
+
+def test_relink_fails_on_a_proto_version_nobody_compiled(tmp_path: Path):
+    """Linking by module name alone would pick the user service's newer user_pb2."""
+    owners = {("kentik.user.v202405", "user_pb2"): "user"}
+    _pb_module(tmp_path, "user", "user_pb2")
+    _pb_module(
+        tmp_path,
+        "device",
+        "device_pb2",
+        "from kentik.user.v202211 import user_pb2 as _user",
+    )
+
+    with pytest.raises(RuntimeError, match=r"kentik\.user\.v202211\.user_pb2"):
+        _relink_pb2_dependency_imports(tmp_path, owners)
 
 
 # ---------------------------------------------------------------------------

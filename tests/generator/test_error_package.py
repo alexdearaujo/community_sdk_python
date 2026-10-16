@@ -65,7 +65,7 @@ def test_collect_operation_error_responses_ignores_2xx(tmp_path: Path):
     assert errors["ListDevices"]["method"] == "GET"
 
 
-def test_collect_operation_error_responses_skips_operations_without_errors(
+def test_collect_operation_error_responses_keeps_operations_without_errors(
     tmp_path: Path,
 ):
     swagger_path = _write_swagger(
@@ -76,7 +76,36 @@ def test_collect_operation_error_responses_skips_operations_without_errors(
 
     errors = collect_operation_error_responses(swagger_path)
 
-    assert errors == {}
+    assert errors["ListDevices"]["responses"] == {}
+
+
+@pytest.mark.parametrize(
+    ("operation", "expected"),
+    [
+        ({"operationId": "Get-Thing"}, "Get_Thing"),
+        ({"operationId": "import"}, "import_"),
+        ({}, "get_thingsid"),  # no operationId: the REST generator's fallback
+    ],
+)
+def test_error_classes_are_named_as_the_rest_module_names_them(
+    tmp_path: Path, operation: dict, expected: str
+):
+    swagger_path = _write_swagger(
+        tmp_path,
+        "x.swagger.json",
+        {"/things/{id}": {"get": {**operation, "responses": {"404": {}}}}},
+    )
+    service_dir = tmp_path / "x"
+    service_dir.mkdir()
+
+    assert set(collect_operation_error_responses(swagger_path)) == {expected}
+    generate_service_error_package(service_dir, [swagger_path])
+
+    source = (service_dir / "error" / "__init__.py").read_text(encoding="utf-8")
+    namespace: dict = {}
+    exec(compile(source, "error", "exec"), namespace)
+    assert f"{expected}Error" in namespace
+    assert f"{expected}NotFoundError" in namespace
 
 
 def test_merge_operation_error_responses_combines_responses_across_files():
@@ -125,6 +154,32 @@ def test_generate_service_error_package_writes_operation_and_leaf_classes(
     assert "class ListDevicesError(DeviceError):" in content
     assert "class ListDevicesNotFoundError(ListDevicesError):" in content
     assert '"ListDevices": ListDevicesError,' in content
+
+
+def test_response_description_is_kept_verbatim_in_the_docstring(tmp_path: Path):
+    description = 'Bad \\u00zz path C:\\bin, """quoted"""\nsecond line'
+    swagger_path = _write_swagger(
+        tmp_path,
+        "device.swagger.json",
+        {
+            "/devices": {
+                "get": {
+                    "operationId": "ListDevices",
+                    "responses": {"404": {"description": description}},
+                }
+            }
+        },
+    )
+    service_dir = tmp_path / "device"
+    service_dir.mkdir()
+
+    generate_service_error_package(service_dir, [swagger_path])
+
+    source = (service_dir / "error" / "__init__.py").read_text(encoding="utf-8")
+    namespace: dict = {}
+    exec(compile(source, "error", "exec"), namespace)
+    doc = namespace["ListDevicesNotFoundError"].__doc__
+    assert 'Bad \\u00zz path C:\\bin, """quoted""" second line' in doc
 
 
 def test_a_raised_response_error_is_caught_by_its_operation_class(tmp_path: Path):

@@ -12,7 +12,7 @@ from typing import Callable
 
 from pydantic import BaseModel
 
-from ._shared import discover_service_model_classes
+from ._shared import discover_service_model_classes, normalize_symbol
 from .error_package import inject_service_error_handling
 
 
@@ -99,8 +99,9 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         _inject_data_body,
         _fix_typing_wildcard,
         _fix_model_field_names,
-        _fix_list_collision,
         _make_models_import_transform(model_classes),
+        # After the models import is explicit, so a model's name is visible.
+        _alias_shadowed_typing_names,
         _dedupe_top_level_function_names,
         _normalize_triple_quoted_docstrings,
     ]
@@ -171,7 +172,7 @@ def _fix_pydantic_construct(content: str) -> str:
     )
 
 
-_PATH_PLACEHOLDER = re.compile(r"\{([a-zA-Z0-9_.]+)\}")
+_PATH_PLACEHOLDER = re.compile(r"\{([^{}]+)\}")
 _REQUEST_JSON_IMPORT = "from kentik_api.core.rest_runtime import request_json\n"
 
 
@@ -179,12 +180,12 @@ def _fix_path_parameters(content: str) -> str:
     """Encodes each path placeholder: {device.id} -> {path_segment(deviceid)}.
 
     The swagger names a placeholder by its proto field path; the generated
-    argument is that path without the dots.
+    argument is that path made a Python name, so `{from}` is `from_`.
     """
     fixed = re.sub(
         r"path\s*=\s*f[\"'].*?[\"']",
         lambda m: _PATH_PLACEHOLDER.sub(
-            lambda p: f"{{path_segment({p.group(1).replace('.', '')})}}", m.group(0)
+            lambda p: f"{{path_segment({normalize_symbol(p.group(1))})}}", m.group(0)
         ),
         content,
     )
@@ -219,15 +220,16 @@ def _inject_data_body(content: str) -> str:
             fixed_funcs.append(func)
             continue
         sig_part = func.split("->")[0] if "->" in func else func.split(":\n")[0]
-        has_data_param = "data:" in sig_part or "data :" in sig_part
+        # A whole word: `includeMetadata: bool` is not a body.
+        has_data_param = re.search(r"\bdata\s*:", sig_part) is not None
         has_json_kwarg = "json=" in func
         has_json_body_kwarg = "json_body=" in func
 
         if has_data_param and not (has_json_kwarg or has_json_body_kwarg):
             if "request_json(" in func:
                 func = re.sub(
-                    r"(query_params=query_params)(,?)(\s*)",
-                    rf"\1,\n                json_body={_BODY_DUMP}\3",
+                    r"(query_params=query_params),?(\s*)",
+                    rf"\1,\n                json_body={_BODY_DUMP},\2",
                     func,
                     count=1,
                 )
@@ -289,17 +291,44 @@ def _fix_typing_wildcard(content: str) -> str:
     )
 
 
-def _fix_list_collision(content: str) -> str:
-    """Aliases typing.List as TypingList when the service has an operation named `List`."""
-    if not re.search(r"^def\s+List\s*\(", content, flags=re.MULTILINE):
+_TYPING_IMPORT = re.compile(r"^from typing import ([^\n(]+)$", re.MULTILINE)
+_LOCAL_BINDING = re.compile(
+    r"^(?:def|class)\s+(\w+)|^from \.+\w* import ([^\n(]+)", re.MULTILINE
+)
+
+
+def _alias_shadowed_typing_names(content: str) -> str:
+    """Aliases each typing name the module also binds: `List` -> `TypingList`.
+
+    An operation named `List` or a model named `Optional` would otherwise
+    replace the typing name, and the next `List[...]` fails at import.
+    """
+    typing_import = _TYPING_IMPORT.search(content)
+    if typing_import is None:
         return content
-    content = re.sub(
-        r"from typing import ([^\n]*)\bList\b([^\n]*)",
-        lambda m: f"from typing import {m.group(1)}List as TypingList{m.group(2)}",
-        content,
-        count=1,
+    imported = [name.strip() for name in typing_import.group(1).split(",")]
+    bound: set[str] = set()
+    for match in _LOCAL_BINDING.finditer(content):
+        if match.group(1):
+            bound.add(match.group(1))
+        else:
+            names = match.group(2).split("#")[0].split(",")
+            bound |= {name.split(" as ")[-1].strip() for name in names}
+    shadowed = sorted(set(imported) & bound)
+    if not shadowed:
+        return content
+    if "Any" in shadowed:
+        # Used bare (Dict[str, Any]), so no rewrite can tell the two apart.
+        raise ValueError("A model or operation named `Any` shadows typing.Any")
+    aliased = ", ".join(
+        f"{name} as Typing{name}" if name in shadowed else name for name in imported
     )
-    return re.sub(r"\bList\[", "TypingList[", content)
+    content = (
+        content[: typing_import.start()]
+        + f"from typing import {aliased}"
+        + content[typing_import.end() :]
+    )
+    return re.sub(rf"(?<![.\w])({'|'.join(shadowed)})\[", r"Typing\1[", content)
 
 
 def _make_models_import_transform(model_classes: set[str]) -> Callable[[str], str]:

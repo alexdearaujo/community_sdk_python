@@ -24,6 +24,7 @@ from generation import (
 from generation._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
+    normalize_symbol,
 )
 from generation.endpoint_docs import SCHEMA_RECORD_FILE, EndpointDocsCollector
 from google.protobuf import descriptor_pb2
@@ -168,15 +169,16 @@ def _rewrite_grpc_imports(content: str) -> str:
         r"^import (\w+_pb2)", r"from . import \1", content, flags=re.MULTILINE
     )
     # parenthesised from-import: `from pkg import (foo_pb2 as alias,)`
+    # google.* stays absolute: googleapis-common-protos and protobuf provide it.
     content = re.sub(
-        r"^from [\w\.]+ import \(\s*(\w+_pb2) as ([\w_]+),\s*\)$",
+        r"^from (?!google\.)[\w\.]+ import \(\s*(\w+_pb2) as ([\w_]+),\s*\)$",
         r"from . import \1 as \2",
         content,
         flags=re.MULTILINE,
     )
     # unparenthesised from-import: `from pkg import foo_pb2 as alias`
     content = re.sub(
-        r"^from [\w\.]+ import (\w+_pb2) as ([\w_]+)$",
+        r"^from (?!google\.)[\w\.]+ import (\w+_pb2) as ([\w_]+)$",
         r"from . import \1 as \2",
         content,
         flags=re.MULTILINE,
@@ -204,7 +206,9 @@ def _fix_module_level_classvar(stub: str) -> str:
     return _MODULE_LEVEL_CLASSVAR.sub(r"\1: int", stub)
 
 
-def _relink_pb2_dependency_imports(output_dir: Path) -> int:
+def _relink_pb2_dependency_imports(
+    output_dir: Path, owners: dict[tuple[str, str], str]
+) -> int:
     """Repoints protoc's dependency imports at the flattened gen/<service>/pb/ layout.
 
     protoc writes these against the original proto package tree (`from
@@ -213,16 +217,21 @@ def _relink_pb2_dependency_imports(output_dir: Path) -> int:
     dependency in the descriptor pool, so an unresolved one makes
     AddSerializedFile raise TypeError at import and silently disables the whole
     service's gRPC transport. In a .pyi stub the same imports carry the types.
+
+    `owners` maps each compiled (proto package, module) to its service. Matching
+    on the package, not the module name alone, keeps an import of an older proto
+    version from linking to the newer one a service compiled.
     """
     pattern = re.compile(
         r"^from ([\w\.]+) import (\w+_pb2) as ([\w_]+)$", flags=re.MULTILINE
     )
     rewritten = 0
+    unresolved: list[str] = []
 
     for pb_dir in sorted(output_dir.glob("*/pb")):
-        siblings = {path.stem for path in pb_dir.glob("*_pb2.py")}
+        service = pb_dir.parent.name
 
-        def _replace(match: re.Match, siblings=siblings) -> str:
+        def _replace(match: re.Match, pb_file: Path, service=service) -> str:
             package, module, alias = match.groups()
             if package.startswith("google."):
                 return match.group(0)  # resolved by googleapis-common-protos
@@ -231,24 +240,27 @@ def _relink_pb2_dependency_imports(output_dir: Path) -> int:
                     f"from kentik_api.gen.pb_companions.{package} "
                     f"import {module} as {alias}"
                 )
-            if module in siblings:
+            owner = owners.get((package, module))
+            if owner == service:
                 return f"from . import {module} as {alias}"
-            parts = package.split(".")
-            if parts[0] == "kentik" and len(parts) > 1:
-                target = output_dir / parts[1] / "pb" / f"{module}.py"
-                if target.exists():
-                    return (
-                        f"from kentik_api.gen.{parts[1]}.pb import {module} as {alias}"
-                    )
+            if owner is not None:
+                return f"from kentik_api.gen.{owner}.pb import {module} as {alias}"
+            unresolved.append(f"{pb_file.relative_to(output_dir)}: {package}.{module}")
             return match.group(0)
 
         for pb_file in sorted([*pb_dir.glob("*_pb2.py"), *pb_dir.glob("*.pyi")]):
             content = pb_file.read_text(encoding="utf-8")
-            patched = pattern.sub(_replace, content)
+            patched = pattern.sub(lambda m, f=pb_file: _replace(m, f), content)
             if patched != content:
                 pb_file.write_text(patched, encoding="utf-8")
                 rewritten += 1
 
+    if unresolved:
+        raise RuntimeError(
+            "These pb modules import a proto that no selected swagger file "
+            "compiles, usually an older version of a proto that its own service "
+            "has moved past:\n  " + "\n  ".join(unresolved)
+        )
     return rewritten
 
 
@@ -534,11 +546,39 @@ def _definition_sections(schema: dict) -> list[dict]:
     return sections
 
 
+def check_model_names(
+    schema: dict, seen: dict[str, tuple[str, str, str]], source: str
+) -> None:
+    """Fails on two models of a Service that would write one models/<Name>.py.
+
+    A name that differs only by case collides on macOS and Windows but not on
+    Linux. The same name with a different definition is overwritten by
+    whichever swagger file generates last. `seen` spans a Service.
+    """
+    for name, definition in schema.get("components", {}).get("schemas", {}).items():
+        file_name = normalize_symbol(name)
+        body = json.dumps(definition, sort_keys=True)
+        other, other_body, other_source = seen.setdefault(
+            file_name.casefold(), (file_name, body, source)
+        )
+        if other != file_name:
+            raise RuntimeError(
+                f"{source}: model `{file_name}` differs from model `{other}` "
+                "only by case, so their files collide on macOS and Windows."
+            )
+        if other_body != body:
+            raise RuntimeError(
+                f"{source}: model `{file_name}` is defined differently in "
+                f"{other_source}, and both write models/{file_name}.py."
+            )
+
+
 @contextlib.contextmanager
 def patched_swagger(
     swagger_path: Path,
     version: str,
     oneof_members: dict[str, set[str]] | None = None,
+    model_names: dict[str, tuple[str, str, str]] | None = None,
 ):
     """Yields a temp-file path containing the schema with clean names and inlined request bodies.
 
@@ -553,6 +593,8 @@ def patched_swagger(
     schema = clean_schema_names(schema, version)
     schema = inline_request_body_refs(schema)
     schema = hoist_inline_request_bodies(schema)
+    if model_names is not None:
+        check_model_names(schema, model_names, swagger_path.name)
     with NamedTemporaryFile(
         mode="w",
         suffix=".json",
@@ -724,6 +766,14 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         parity.validate_selected_services_or_raise(
             source_services, set(selected_swagger_files)
         )
+        selected_swagger_files, superseded = parity.drop_superseded_swagger_files(
+            selected_swagger_files
+        )
+        for metadata in superseded:
+            print(
+                f"Skipping {metadata['path'].relative_to(openapi_base)}: "
+                "newer files in its service write all of its REST modules."
+            )
 
         # Setup directories (only now, once the schema checkout is known-good)
         SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -743,6 +793,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         )
 
         service_swagger_paths: dict[str, list[Path]] = {}
+        pb_owners: dict[tuple[str, str], str] = {}
         endpoint_docs_collector = EndpointDocsCollector()
 
         for service in sorted(selected_swagger_files):
@@ -756,6 +807,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             (pb_dir / "__init__.py").touch(exist_ok=True)
 
             service_swagger_paths[service] = []
+            model_names: dict[str, tuple[str, str, str]] = {}
 
             for metadata in selected_swagger_files[service]:
                 swagger_path = Path(metadata["path"])
@@ -833,11 +885,12 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                                         gen_py.relative_to(tmp_pb_path).parent.parts
                                     )
                                     stem, _, suffix = gen_py.name.partition("_pb2")
-                                    target = pb_dir / (
+                                    module = (
                                         _pb_stem(package, stem, proto_collisions)
                                         + "_pb2"
-                                        + suffix
                                     )
+                                    pb_owners[(package, module)] = service
+                                    target = pb_dir / (module + suffix)
                                     target.write_text(
                                         _qualify_colliding_imports(
                                             gen_py.read_text(encoding="utf-8"),
@@ -889,7 +942,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                 # 2. GENERATE OPENAPI (REST)
                 # -----------------------------------------------------------------
                 with patched_swagger(
-                    swagger_path, version, oneof_members
+                    swagger_path, version, oneof_members, model_names
                 ) as tmp_swagger:
                     run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
                     # The patched swagger, so pages name the models the SDK defines.
@@ -913,7 +966,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             fixup.fix_generated_service(service_dir)
 
     # Runs once every pb/ directory exists, so cross-service targets resolve.
-    relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR)
+    relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR, pb_owners)
     print(f"    ✅ Relinked descriptor dependency imports in {relinked} pb2 modules.")
 
     print("\nFormatting...")

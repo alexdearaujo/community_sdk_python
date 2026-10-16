@@ -2,6 +2,7 @@
 """Constants and helpers used by more than one generation phase module."""
 
 import ast
+import keyword
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -38,6 +39,18 @@ def iter_service_dirs(root: Path | None = None) -> list[Path]:
 def service_to_pascal_case(service: str) -> str:
     """Converts a snake_case service name to PascalCase."""
     return "".join(part.capitalize() for part in service.split("_") if part)
+
+
+def normalize_symbol(symbol: str) -> str:
+    """The Python name openapi-python-generator makes of a schema name.
+
+    Mirrors its own normalize_symbol, so names derived here (path arguments,
+    error classes) match the ones it writes into the REST modules.
+    """
+    name = re.sub(r"[^A-Za-z0-9_]", "", symbol.replace("-", "_").replace(" ", "_"))
+    if keyword.iskeyword(name):
+        name += "_"
+    return "_" + name if name[:1].isdigit() else name
 
 
 def discover_service_model_classes(service_dir: Path) -> set[str]:
@@ -100,13 +113,16 @@ def grpc_call(
         ):
             continue
         first = sub.args[0]
-        if not (
-            isinstance(first, ast.Attribute) and isinstance(first.value, ast.Attribute)
-        ):
+        if not isinstance(first, ast.Attribute):
             continue
         if sub.func.id == "build_grpc_request":
+            # self._grpc_pb2_N.Req, or empty_pb2.Empty for a well-known type
             request = first.attr
-        elif sub.func.id == "call_grpc" and first.value.attr in stub_services:
+        elif (
+            sub.func.id == "call_grpc"
+            and isinstance(first.value, ast.Attribute)
+            and first.value.attr in stub_services
+        ):
             rpc = f"{stub_services[first.value.attr]}/{first.attr}"
     return GrpcCall(rpc=rpc, request=request) if rpc and request else None
 

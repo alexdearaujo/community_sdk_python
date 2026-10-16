@@ -4,16 +4,18 @@
 All tests use tmp_path — no schema download or full generation run required.
 """
 
+import ast
 import textwrap
 from pathlib import Path
 
 import pytest
 
+from scripts.generation._shared import normalize_symbol
 from scripts.generation.fixup import (
+    _alias_shadowed_typing_names,
     _cleanup_service_files,
     _dedupe_top_level_function_names,
     _fix_import_aliases,
-    _fix_list_collision,
     _fix_model_field_names,
     _fix_path_parameters,
     _fix_pydantic_construct,
@@ -278,6 +280,24 @@ def test_fix_path_parameters_encodes_each_placeholder():
     )
 
 
+def test_fix_path_parameters_names_keyword_placeholders_as_their_argument():
+    result = _fix_path_parameters(
+        "from kentik_api.core.rest_runtime import request_json\n"
+        "path=f'/v1/range/{from}/{class.id}'"
+    )
+    assert "path=f'/v1/range/{path_segment(from_)}/{path_segment(classid)}'" in result
+
+
+@pytest.mark.parametrize(
+    "name",
+    ["id", "device.id", "from", "class.id", "device-id", "2fa", "Get-Thing", "café"],
+)
+def test_normalize_symbol_matches_the_rest_generator(name):
+    from openapi_python_generator.language_converters.python import common
+
+    assert normalize_symbol(name) == common.normalize_symbol(name)
+
+
 def test_fix_path_parameters_leaves_a_module_without_placeholders_alone():
     content = (
         "from kentik_api.core.rest_runtime import request_json\npath=f'/v1/devices'"
@@ -325,18 +345,36 @@ def test_fix_typing_wildcard_noop_without_star():
     assert _fix_typing_wildcard(content) == content
 
 
-def test_fix_list_collision_aliases_list():
+def test_operation_named_list_aliases_typing_list():
+    content = "from typing import Optional, List\n\ndef List(x: List[str]) -> str:\n    pass\n"
+    result = _alias_shadowed_typing_names(content)
+    assert result.startswith("from typing import Optional, List as TypingList\n")
+    assert "def List(x: TypingList[str])" in result
+
+
+@pytest.mark.parametrize("name", ["Optional", "Set", "Dict"])
+def test_imported_model_named_like_a_typing_name_is_aliased(name):
     content = (
-        "from typing import Optional, List\n\ndef List(x: str) -> str:\n    pass\n"
+        f"from typing import Dict, Optional, Set\n"
+        f"from ..models import Device, {name}  # noqa: F401\n\n"
+        f"def Get(x: {name}[str], m: {name}) -> Device:\n    pass\n"
     )
-    result = _fix_list_collision(content)
-    assert "TypingList" in result
-    assert "List as TypingList" in result
+    result = _alias_shadowed_typing_names(content)
+
+    namespace: dict = {name: type(name, (), {}), "Device": object}
+    exec(compile(result.replace("from ..models", "# "), "m", "exec"), namespace)
+    assert f"def Get(x: Typing{name}[str], m: {name})" in result
 
 
-def test_fix_list_collision_noop_without_list_function():
+def test_model_named_any_fails_generation():
+    content = "from typing import Any\nfrom .Any import Any\n"
+    with pytest.raises(ValueError, match="Any"):
+        _alias_shadowed_typing_names(content)
+
+
+def test_alias_shadowed_typing_names_noop_without_a_collision():
     content = "from typing import List\n\ndef Foo() -> List[str]:\n    pass\n"
-    assert _fix_list_collision(content) == content
+    assert _alias_shadowed_typing_names(content) == content
 
 
 def test_make_models_import_transform_replaces_wildcard():
@@ -394,3 +432,31 @@ def test_inject_data_body_adds_json_body_param():
         """)
     result = _inject_data_body(content)
     assert "json_body=data.model_dump(by_alias=True, exclude_unset=True)" in result
+    ast.parse(result)
+
+
+@pytest.mark.parametrize("last", [True, False])
+def test_inject_data_body_output_parses_wherever_query_params_sits(last):
+    tail = "" if last else "\n        expected_status=201,"
+    content = (
+        "def Create(*, data: Req) -> Resp:\n"
+        "    body = request_json(\n"
+        f"        query_params=query_params{'' if last else ','}{tail}\n"
+        "    )\n"
+    )
+    result = _inject_data_body(content)
+
+    ast.parse(result)
+    assert "json_body=data.model_dump" in result
+
+
+def test_inject_data_body_ignores_a_parameter_ending_in_data():
+    content = textwrap.dedent("""\
+        def ListDevices(*, includeMetadata: bool) -> Resp:
+            body = request_json(
+                query_params=query_params,
+                expected_status=200,
+            )
+        """)
+
+    assert _inject_data_body(content) == content
