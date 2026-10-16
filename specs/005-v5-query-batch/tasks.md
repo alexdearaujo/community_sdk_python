@@ -32,16 +32,16 @@ and checked on its own.
 **Purpose**: Confirm the three open generator behaviors before any design
 depends on them.
 
-- [ ] T001 Write a throwaway OpenAPI 3 file in $TMPDIR with one dict-row response (`additionalProperties: true`), one string response, and one 202 response, run `openapi-python-generator` on it with `scripts/openapi_templates/`, and record in specs/005-v5-query-batch/research.md (R5, R6) whether the output is usable (FR-003)
+- [ ] T001 Write a throwaway OpenAPI 3 file in $TMPDIR with one dict-row response (`additionalProperties: true`), one string response, one 202 response, and one request object with `additionalProperties: true`, run `openapi-python-generator` on it with `scripts/openapi_templates/`, and record in specs/005-v5-query-batch/research.md (R5, R5a, R6) whether the output is usable and whether the request model keeps unknown fields (FR-002, FR-003)
 - [ ] T002 Add a runtime test in tests/runtime/test_rest_runtime.py that a response with no `X-RateLimit-*` headers gives an empty `RateLimit` on the result and on an error, and record the result under R14 in specs/005-v5-query-batch/research.md (FR-006)
-- [ ] T003 If T001 shows a gap, fix the template in scripts/openapi_templates/ or the post-processing in scripts/generation/fixup.py, with a generator test in tests/generator/test_fixup.py, so dict rows and a string body generate correctly (FR-003)
-- [ ] T004 [P] Add the `analytics` optional extra (pandas>=2.3, pyarrow>=21, pyyaml>=6.0.2) to pyproject.toml, add it to the dev dependency group so `make test` can run analytics tests, and run `uv lock` to update uv.lock (FR-015)
+- [ ] T003 Add `"extra": "allow"` to `model_config` in scripts/openapi_templates/models_pydantic_2.jinja2 when a schema sets `additionalProperties` to the literal `true`, and fix any other gap T001 found in the template or in scripts/generation/fixup.py; test in tests/generator/test_fixup.py that such a model keeps and sends unknown fields, and confirm that `make generate local` gives no diff in upstream services (contracts/generator.md item 8; FR-002, FR-003)
+- [ ] T004 [P] Add the `analytics` optional extra (pandas>=2.3, pyarrow>=21, pyyaml>=6.0.2) to pyproject.toml, add it to the dev dependency group, run `uv lock` to update uv.lock, and add a `test-analytics` target to the Makefile that `make test` also runs, so CI never skips tests/analytics/ (FR-015)
 
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Teach the generator a second, repo-local schema base, mount its
+**Purpose**: Teach the generator the local schema base, mount its
 services on a V5 REST transport, and give the client a V5 host. US1 and US2
 both need this.
 
@@ -49,18 +49,20 @@ both need this.
 
 ### Tests for the foundation
 
-- [ ] T005 [P] Add generator tests in tests/generator/test_parity.py: two bases with different services give the union and pass the parity check, the same service in both bases raises `RuntimeError`, and a broken local file fails `validate_schema_files_or_raise()` (FR-007)
+- [ ] T005 [P] Add generator tests in tests/generator/test_parity.py: the upstream base and the local schema base with different services give the union and pass the parity check, the same service in both bases raises `RuntimeError`, and a broken local file fails `validate_schema_files_or_raise()` (FR-007)
 - [ ] T006 [P] Add generator tests in tests/generator/test_wrapper_generation.py: a local service gets no gRPC branch and the mixin mounts it as `V5ServiceWrapper(self._v5_transport)` (FR-005, FR-007)
 - [ ] T007 [P] Add generator tests in tests/generator/test_api_surface.py: `rest_only` is written for a local service, `SCHEMA_VERSION` is 8, and a version 7 record reads as `rest_only: false` (FR-008)
-- [ ] T008 [P] Add client tests in tests/runtime/test_client_v5.py: region `us` and `eu` give the V5 base URLs, `v5_base_url` overrides them, a non-`https` URL raises `ConfigurationError`, `v5_api_config` shares credentials and timeouts, `close()` closes both transports, and httpx joins `https://api.kentik.com/api/v5` with `/query/topXdata` correctly (FR-006, FR-006a)
+- [ ] T008 [P] Add client tests in tests/runtime/test_client_v5.py: region `us` and `eu` give the V5 base URLs, `v5_base_url` overrides them, a non-`https` URL raises `ConfigurationError`, `v5_api_config` shares credentials and timeouts, `close()` closes both transports, httpx joins `https://api.kentik.com/api/v5` with `/query/topXdata` correctly, and with `HTTPS_PROXY` set the V5 client routes through the proxy while `NO_PROXY=api.kentik.com` skips it (FR-006, FR-006a)
+- [ ] T008a Amend the Architecture section of .specify/memory/constitution.md (PATCH 1.4.2): the generator reads the upstream schema and the local schema base `schema/openapi/`, which holds only hand-maintained descriptions of endpoints that upstream does not publish, and every service from it is REST-only; record it in the Sync Impact Report (plan.md Complexity Tracking; FR-007)
 
 ### Implementation for the foundation
 
-- [ ] T009 Read a second OpenAPI base, `PROJECT_ROOT / "schema" / "openapi"`, in scripts/generate_sdk.py: validate it, select its files, take the union of services, raise on a duplicate service, skip proto lookup for it, and pass the local service set on (contracts/generator.md; FR-007)
+- [ ] T009 Read the local schema base, `PROJECT_ROOT / "schema" / "openapi"`, in scripts/generate_sdk.py: validate it, select its files, take the union of services, raise on a duplicate service, skip proto lookup for it, and pass the local service set on (contracts/generator.md; FR-007)
 - [ ] T010 Accept a list of bases in scripts/generation/parity.py where selection and validation need it, with relative imports only (FR-007)
 - [ ] T011 Mount local services on `self._v5_transport` in the generated mixin in scripts/generation/wrapper_generation.py (FR-005)
 - [ ] T012 [P] Record `rest_only` and bump `SCHEMA_VERSION` to 8 in scripts/generation/api_surface.py, reading older records as `rest_only: false` (FR-008)
-- [ ] T013 [P] Write the REST-only example text for local services in scripts/generation/endpoint_docs.py, and mark them REST-only and name the local schema source in scripts/generation/docs_rendering.py, with tests in tests/generator/test_endpoint_docs.py and tests/generator/test_docs_rendering.py (FR-005)
+- [ ] T013 [P] Write the REST-only example text for local services in scripts/generation/endpoint_docs.py, with a test in tests/generator/test_endpoint_docs.py (FR-005)
+- [ ] T013a [P] Mark local services as REST-only and name the local schema base as their source in scripts/generation/docs_rendering.py, with a test in tests/generator/test_docs_rendering.py (FR-005)
 - [ ] T014 Add `v5_base_url`, the V5 `APIConfig`, `self._v5_transport` (a `RestTransport` for every `protocol`), the `v5_api_config` property, and closing of both transports to src/kentik_api/client.py, with a regional V5 URL table next to `_REGION_ENDPOINTS` (contracts/client-config.md; FR-006, FR-006a)
 - [ ] T015 Exempt `rest_only` services in tests/generated/test_grpc_stub_wiring.py by reading the flag from api_surface.json, not by a hard-coded name (FR-027)
 
@@ -80,13 +82,14 @@ A client created with `protocol="grpc"` gets the same results.
 
 ### Tests for User Story 1
 
-- [ ] T016 [P] [US1] Add tests for `decode_chart()` in tests/runtime/test_v5_tools.py: SVG and PNG data URIs decode to bytes and type, and an invalid data URI raises `HTTPException` with status 502 and a clear message (FR-004)
+- [ ] T016 [P] [US1] Add tests for `decode_chart()` in tests/runtime/test_v5_chart.py: SVG and PNG data URIs decode to bytes and type, and an invalid data URI raises `HTTPException` with status 502 and a clear message (FR-004)
 - [ ] T017 [P] [US1] Add a smoke test in tests/smoke/test_client_mounts_and_calls.py that `client.v5` is mounted on REST and gRPC clients, uses a `RestTransport` on both, and sends a mocked `top_x_data` call to `https://api.kentik.com/api/v5/query/topXdata` (FR-005)
 - [ ] T018 [P] [US1] Add a test in tests/generator/test_v5_description.py that schema/openapi/v5/v5/v5.swagger.json declares exactly the six operations in contracts/v5-service.md, uses no `enum` keyword, and declares no SQL path (FR-001, FR-010, FR-010a)
+- [ ] T018a [P] [US1] Add a test in tests/runtime/test_v5_query_fields.py that builds a `Query` from every field name of the V5 SDK `Query` (the list from `origin/main:kentik_api/public/query_object.py`, stored as a fixture with the commit it came from), and asserts that `model_dump(by_alias=True)` gives every field back unchanged (FR-002)
 
 ### Implementation for User Story 1
 
-- [ ] T019 [US1] Write the query part of schema/openapi/v5/v5/v5.swagger.json: tag `QueryService`, operations for `POST /query/topXdata`, `POST /query/topXchart`, and `POST /query/url`, the models `QueryRequest`, `ChartRequest`, `QueryItem`, `Query`, `QueryFilters`, `FilterGroup`, `Filter`, `SavedFilterRef`, `Aggregate`, `TopXDataResponse`, `ResultBucket`, and `ChartResponse` from data-model.md, plain strings with documented values instead of enums, dict rows, and the statuses 400, 401, 403, 404, 429, and 500 on each operation (FR-001, FR-002, FR-003, FR-010)
+- [ ] T019 [US1] Write the query part of schema/openapi/v5/v5/v5.swagger.json: tag `QueryService`, operations for `POST /query/topXdata`, `POST /query/topXchart`, and `POST /query/url`, the models `QueryRequest`, `ChartRequest`, `QueryItem`, `Query`, `QueryFilters`, `FilterGroup`, `Filter`, `SavedFilterRef`, `Aggregate`, `TopXDataResponse`, `ResultBucket`, and `ChartResponse` from data-model.md, `additionalProperties: true` on `Query` and `QueryItem`, plain strings with documented values instead of enums, dict rows, and the statuses 400, 401, 403, 404, 429, and 500 on each operation (FR-001, FR-002, FR-003, FR-010)
 - [ ] T020 [US1] Run `make generate local`, then check that src/kentik_api/gen/v5/ exists and that the new public_names.json entries name the service `v5` and the methods `top_x_data`, `top_x_chart`, and `query_url`; set the keys by hand in public_names.json if the naming rule gave other names, and regenerate (FR-008, FR-009)
 - [ ] T021 [US1] Implement `ChartImage` and `decode_chart()` in src/kentik_api/v5_tools.py (contracts/helpers.md; FR-004)
 - [ ] T022 [US1] Run `make test-generated` and confirm that tests/generated/test_wrapper_contracts.py, tests/generated/test_endpoint_schema_coverage.py, and tests/generated/test_schema_operations.py cover every query operation, field, and declared status; fix gaps in the generator or tests/_discovery.py, never by narrowing a suite (FR-027, SC-007)
@@ -107,13 +110,14 @@ parts, waits for completion, and reads the final status.
 
 ### Tests for User Story 2
 
-- [ ] T025 [P] [US2] Add tests for `split_batch()` in tests/runtime/test_v5_tools.py: every part is at most `max_bytes`, only the last part is `complete`, deletes go in the last part, and one upsert larger than `max_bytes` raises `ValueError`; include 10,000 upserts in no more than 100 parts (FR-013, SC-004)
-- [ ] T026 [P] [US2] Add tests for `send_batch()` in tests/runtime/test_v5_tools.py: the first `guid` is copied into later parts, a failure in part 2 raises `BatchSendError` with `sent == 1` and the `guid`, and no part is sent twice (FR-014)
-- [ ] T027 [P] [US2] Add tests for `wait_for_batch()` in tests/runtime/test_v5_tools.py with a fake clock: it returns the status when `is_complete` becomes true, raises `BatchWaitTimeout` with the last status after `timeout`, and raises a status-call error at once (FR-012, FR-014)
+- [ ] T025 [P] [US2] Add tests for `split_batch()` in tests/runtime/test_v5_batch_split.py: every part is at most `max_bytes`, only the last part is `complete`, deletes go in the last part, and one upsert larger than `max_bytes` raises `ValueError`; include 10,000 upserts in no more than 100 parts (FR-013, SC-004)
+- [ ] T026 [P] [US2] Add tests for `send_batch()` in tests/runtime/test_v5_batch_send.py: the first `guid` is copied into later parts, a failure in part 2 raises `BatchSendError` with `sent == 1` and the `guid`, and no part is sent twice (FR-014)
+- [ ] T027 [P] [US2] Add tests for `wait_for_batch()` in tests/runtime/test_v5_batch_wait.py with a fake clock: it returns the status when `is_complete` becomes true, raises `BatchWaitTimeout` with the last status after `timeout`, and raises a status-call error at once (FR-012, FR-014)
+- [ ] T027a [P] [US2] Add a test in tests/smoke/test_helpers_no_direct_http.py that src/kentik_api/v5_tools.py, src/kentik_api/devices.py, and every module in src/kentik_api/analytics/ that exists import neither `httpx` nor `request_json`, so helpers reach the API only through generated operations (FR-007)
 
 ### Implementation for User Story 2
 
-- [ ] T028 [US2] Add the batch part of schema/openapi/v5/v5/v5.swagger.json: tag `BatchService`, operations for `POST /batch/tags` (202), `POST /batch/customdimensions/{dimensionName}/populators` (202), and `GET /batch/{guid}/status` (200), the models `BatchPart`, `BatchUpsert`, `BatchCriterion`, `BatchDelete`, `BatchResponse`, and `BatchStatus` with its nested counts from data-model.md, and the error statuses as in T019 (FR-011)
+- [ ] T028 [US2] Add the batch part of schema/openapi/v5/v5/v5.swagger.json: tag `BatchService`, operations for `POST /batch/tags` (202), `POST /batch/customdimensions/{dimensionName}/populators` (202), and `GET /batch/{guid}/status` (200), the models `BatchPart`, `BatchUpsert`, `BatchCriterion`, `BatchDelete`, `BatchResponse`, and `BatchStatus` with its nested counts from data-model.md, `additionalProperties: true` on `BatchCriterion` with only `direction` and `addr` typed, and the error statuses as in T019 (FR-011)
 - [ ] T029 [US2] Run `make generate local`, confirm the method names `batch_tags`, `batch_populators`, and `batch_status` in public_names.json, and rerun `make test-generated` for full coverage of the batch operations (FR-008, FR-027)
 - [ ] T030 [US2] Implement `split_batch()`, `send_batch()`, `wait_for_batch()`, `BatchSendError`, and `BatchWaitTimeout` in src/kentik_api/v5_tools.py (contracts/helpers.md; FR-012, FR-013, FR-014)
 - [ ] T031 [US2] Add tests/e2e/test_v5_batch_e2e.py (marker `e2e`, mutating): upsert one disposable flow tag value, wait, then delete it in a second batch inside `finally`, and assert both statuses; call it out as mutating coverage in the pull request description (FR-028)
@@ -138,7 +142,7 @@ examples.
 
 ### Implementation for User Story 4
 
-- [ ] T034 [P] [US4] Write the V5 to 2.x map in docs/sphinx/guides/migrating-from-1x.md: every V5 call from reports/v5-feature-parity-audit.md (including the endpoints that already have a V6 equivalent), old and new field names, and a reason for each call with no equivalent, such as the retired SQL endpoint (FR-023, SC-001)
+- [ ] T034 [P] [US4] Write the V5 to 2.x map in docs/sphinx/guides/migrating-from-1x.md: every V5 call from reports/v5-feature-parity-audit.md (including the endpoints that already have a V6 equivalent), old and new field names, and a reason for each call with no equivalent, such as the retired SQL endpoint; list `analytics_example_sql.py` as "No port: the SQL endpoint was retired on 2025-05-01. See `examples/v5/analytics_topx.py`." (FR-023, FR-024, SC-001)
 - [ ] T035 [P] [US4] Write docs/sphinx/guides/v5.md: what `client.v5` covers, that it is a bridge until the V6 query service ships, the V5 host and `v5_base_url`, the chart call marked as not verified, and a section "Test the chart call by hand" with the steps, the timeout, and how to report the result; add it to the toctree in docs/sphinx/index.md (FR-004, FR-004a, FR-025, SC-008)
 - [ ] T036 [P] [US4] Update docs/sphinx/guides/rate_limiting.md: V5 calls report no quota, and a 429 retry recipe with a fixed backoff that does not need quota headers (FR-026)
 - [ ] T037 [US4] Port examples/queries_example.py and examples/batch_example.py from origin/main to examples/v5/query.py and examples/v5/batch.py, and list them in examples/README.md (FR-024, SC-002)
@@ -159,9 +163,9 @@ and runs the flat-traffic analysis.
 
 ### Tests for User Story 3
 
-- [ ] T038 [P] [US3] Add tests in tests/analytics/test_definitions.py: a V5 dict and YAML definition load and fill `{start}` and `{end}`, a top-X result becomes one DataFrame for each bucket with typed columns and a time index, an empty result gives an empty DataFrame with the expected columns, a SQL definition raises the retirement error, and an `@fixup:` mapping raises `ValueError` without running code (FR-016, FR-017, FR-018, SC-005)
+- [ ] T038 [P] [US3] Add tests in tests/analytics/test_definitions.py: a V5 dict and YAML definition load and fill `{start}` and `{end}`, a top-X result becomes one DataFrame for each bucket with typed columns and a time index that match the golden output in tests/analytics/fixtures/ (made once, offline, with the V5 `DataQueryDefinition.get_data` from `origin/main` on a fixed `topXdata` response; a README there names the commit and command), an empty result gives an empty DataFrame with the expected columns, a SQL definition raises the retirement error, and an `@fixup:` mapping raises `ValueError` without running code (FR-016, FR-017, FR-018, SC-003, SC-005)
 - [ ] T039 [P] [US3] Add tests in tests/analytics/test_cache.py: only missing time steps are fetched, duplicate rows are removed, a file the cache did not write is ignored, and the files are Parquet (FR-019, SC-005)
-- [ ] T040 [P] [US3] Add tests in tests/analytics/test_flatness.py that compare the output with the V5 `flatness_analysis` on the same input DataFrame (FR-020, SC-003)
+- [ ] T040 [P] [US3] Add tests in tests/analytics/test_flatness.py that compare the output with golden output in tests/analytics/fixtures/, made once with the V5 `flatness_analysis` from `origin/main` on the same input DataFrame (FR-020, SC-003)
 - [ ] T041 [P] [US3] Add tests in tests/runtime/test_device_lookup.py: lookup by ID and by name, link names, link speeds, and a JSON round trip with `save()` and `load()` (FR-021, SC-005)
 - [ ] T042 [P] [US3] Add a test in tests/smoke/test_analytics_extra.py that, with pandas hidden, `import kentik_api.analytics` raises `ImportError` naming `kentik-api[analytics]` and `import kentik_api` still works (FR-022)
 
@@ -197,7 +201,7 @@ schema, regenerates, and sees both services with no public name change.
 
 **Purpose**: Gates, project docs, and the audit trail.
 
-- [ ] T051 [P] Describe the second schema base, `rest_only` services, and `_v5_transport` in CLAUDE.md, docs/sphinx/guides/generation.md, scripts/generation/README.md, and tests/README.md (FR-007)
+- [ ] T051 [P] Describe the local schema base, `rest_only` services, and `_v5_transport` in CLAUDE.md, docs/sphinx/guides/generation.md, and scripts/generation/README.md; add the term "Local schema base" to CONTEXT.md; and describe the new tests/analytics/ layer and `make test-analytics` in tests/README.md (FR-007)
 - [ ] T052 [P] Mark follow-up item 1 and the query and batch rows as done in reports/v5-feature-parity-audit.md
 - [ ] T053 Check that the mocked suites still catch a regression: break the V5 host in src/kentik_api/client.py, confirm that `make test` fails, restore it, and record the result for the pull request (Principle IV; FR-027)
 - [ ] T054 Run `make lint`, `make typecheck`, `make check-specs`, `make check-changelog SINCE=HEAD`, `make test`, and `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`, and fix every failure (SC-007, SC-008)
@@ -211,6 +215,7 @@ schema, regenerates, and sees both services with no public name change.
 
 - Phase 1 (Setup): no dependency. T003 depends on T001.
 - Phase 2 (Foundational): depends on Phase 1. It blocks every user story.
+  T008a (the constitution amendment) comes before T009.
 - Phase 3 (US1): depends on Phase 2.
 - Phase 4 (US2): depends on Phase 2. T028 edits the same file as T019, so do
   it after T019.
@@ -245,19 +250,20 @@ flowchart LR
 ## Parallel Opportunities
 
 - Phase 1: T004 runs next to T001 to T003.
-- Phase 2: T005 to T008 run together. T012 and T013 run next to T009 to T011.
-- US1: T016, T017, and T018 run together.
-- US2: T025, T026, and T027 run together (one file, separate test
-  functions; merge with care).
+- Phase 2: T005 to T008 run together. T012, T013, and T013a run next to T009
+  to T011.
+- US1: T016, T017, T018, and T018a run together.
+- US2: T025, T026, T027, and T027a run together (one file each).
 - US4: T034, T035, and T036 run together.
 - US3: T038 to T042 run together. T043 runs next to T044.
 
 ### Parallel example: User Story 1
 
 ```text
-T016 tests for decode_chart in tests/runtime/test_v5_tools.py
+T016 tests for decode_chart in tests/runtime/test_v5_chart.py
 T017 smoke test for client.v5 in tests/smoke/test_client_mounts_and_calls.py
 T018 description file test in tests/generator/test_v5_description.py
+T018a V5 field pass-through test in tests/runtime/test_v5_query_fields.py
 ```
 
 ### Parallel example: User Story 3

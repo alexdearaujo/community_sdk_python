@@ -150,7 +150,8 @@ API, caches it, and runs the flat-traffic analysis on it.
    query result, **Then** the SDK returns a DataFrame with typed columns and
    a time index.
 2. **Given** a V5 YAML query definition, **When** the user loads it,
-   **Then** it runs without changes, except for options that executed code.
+   **Then** it runs without changes, except for SQL definitions, which
+   Kentik retired, and options that executed code.
 3. **Given** a definition that asks to execute code (the V5 `@fixup:`
    option), **When** the user loads it, **Then** the SDK refuses it with a
    clear error that names a safe alternative.
@@ -253,7 +254,10 @@ V5-backed calls are present and that no public name changed.
   (top-X data, top-X chart, and Data Explorer URL) on the `KentikAPI` client.
   It MUST NOT give the retired SQL operation.
 - **FR-002**: Each query operation MUST take a typed request model that
-  covers every field that the V5 SDK's query models covered.
+  types every field that the Kentik Query API documentation lists. The
+  model MUST keep and send every other field it gets, so that every field
+  of the V5 SDK's query models, and query JSON copied from Data Explorer,
+  reaches the API unchanged.
 - **FR-003**: The SDK MUST return query results as typed models. Result rows
   MUST keep columns that the request model did not predict.
 - **FR-004**: The chart operation MUST return the decoded image bytes and
@@ -271,12 +275,15 @@ V5-backed calls are present and that no public name changed.
 - **FR-006a**: The client MUST pick the V5 base URL from its region: `us`
   uses `https://api.kentik.com/api/v5`, and `eu` uses
   `https://api.kentik.eu/api/v5`. The client MUST also take an optional V5
-  base URL setting, separate from the V6 base URL, for custom hosts. The SDK
+  base URL setting, separate from the V6 base URL, for custom hosts. A
+  custom V5 base URL MUST use `https`, or the client raises
+  `ConfigurationError`. The SDK
   MUST NOT derive the V5 URL by rewriting the V6 URL.
-- **FR-007**: Query and batch operations MUST be produced by the same
-  generation pipeline as every other service. Their input MUST be a
-  machine-readable description of the V5 endpoints, kept in the repository.
-  No query or batch operation code is written by hand.
+- **FR-007**: The query and batch operations (the HTTP calls and their
+  models) MUST be produced by the same generation pipeline as every other
+  service. Their input MUST be a machine-readable description of the V5
+  endpoints, kept in the repository. Hand-written helpers MAY call the
+  generated operations, and MUST NOT send HTTP requests themselves.
 - **FR-008**: The public names of the `v5` service, its
   operations, and their models MUST be recorded and protected like every
   other public name, and they MUST appear in the recorded API surface.
@@ -316,13 +323,16 @@ V5-backed calls are present and that no public name changed.
   format that cannot execute code when it is read.
 - **FR-020**: The SDK MUST give the V5 flat-traffic analysis with the same
   inputs and outputs.
-- **FR-021**: The SDK MUST give a device lookup helper that loads devices
-  and interfaces once, finds them by ID or by name, builds link names, and
-  returns link speeds. It MUST save and load its data only in a format that
-  cannot execute code.
 - **FR-022**: When the analytics extra is not installed, an analytics
   helper MUST raise an error that names the extra. Other SDK functions MUST
   keep working.
+
+#### Helpers (base install)
+
+- **FR-021**: The SDK MUST give a device lookup helper that loads devices
+  and interfaces once, finds them by ID or by name, builds link names, and
+  returns link speeds. It MUST save and load its data only in a format that
+  cannot execute code. It needs no extra.
 
 #### Migration and documentation
 

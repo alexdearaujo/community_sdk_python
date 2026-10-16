@@ -3,7 +3,8 @@
 **Feature**: [../spec.md](../spec.md) | **Models**: [../data-model.md](../data-model.md)
 
 Every helper that calls the API calls the generated wrapper, so every request
-goes through `request_json()` (Principle II).
+goes through `request_json()` (Principle II). No helper module imports
+`httpx` or `request_json` (FR-007, checked by T027a).
 
 ## `kentik_api.v5_tools` (base install)
 

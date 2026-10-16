@@ -9,8 +9,8 @@
 Add the V5 endpoints that have no V6 equivalent (top-X data, top-X chart,
 Data Explorer URL, the two batch calls, and batch status) as one generated,
 REST-only service, `client.v5`. The input is a hand-maintained OpenAPI 3 file
-kept in this repository, which the generator reads as a second schema base
-next to the upstream schema. `KentikAPI` builds a second REST transport on the
+kept in this repository, which the generator reads from the local schema
+base (`schema/openapi/`) next to the upstream schema. `KentikAPI` builds a second REST transport on the
 regional V5 host, and the generated mixin mounts `v5` on it, so the calls
 work on gRPC clients too. Small hand-written helpers decode charts, split,
 send, and wait for batches, and look up devices. An optional `analytics`
@@ -62,7 +62,7 @@ R5 (dict rows), R6 (string body), and R14 (empty quota).
 
 | Principle | Status | How the design meets it |
 | --- | --- | --- |
-| I. Generated code is never hand-edited | Pass | `gen/v5/` and the mixin line come from the generator. The V5 description file is an input, like the upstream schema. Any output fix goes in a phase module or template. |
+| I. Generated code is never hand-edited | Pass, with an amendment | `gen/v5/` and the mixin line come from the generator. The V5 description file is an input, like the upstream schema. Any output fix goes in a phase module or template. The Architecture section says the SDK comes only from `api-schema-public`, so T008a amends it (see Complexity Tracking). |
 | II. One shared runtime | Pass | The generated `v5` functions call `request_json()`. The V5 host is a second `APIConfig`, not a second code path. The helpers call the wrapper. No retry code is added. |
 | III. Phase modules stay testable | Pass | Changes stay in `parity`, `wrapper_generation`, `api_surface`, `endpoint_docs`, and `docs_rendering`, each with unit tests. Imports stay relative. |
 | IV. Exhaustive coverage | Pass | The auto-discovered suites pick up `v5`. Every declared status of the six operations is asserted. The gRPC-stub test exempts `rest_only` services by a recorded flag, not by skipping cases. |
@@ -70,8 +70,8 @@ R5 (dict rows), R6 (string body), and R14 (empty quota).
 | VI. Credentials | Pass | The V5 config reuses the resolved credentials. `v5_base_url` must be `https`. The probe and docs never print `.env`. |
 | VII. Compatibility and scope | Pass | Additive only: a new service, a new keyword argument, a new property, and a new extra. `CHANGELOG.md` records them. `api_surface` schema version 8 reads version 7 records. |
 
-Re-check after Phase 1: all pass. No item needs the Complexity Tracking
-table.
+Re-check after Phase 1: all principles pass. One Architecture statement
+needs an amendment, recorded in Complexity Tracking.
 
 ## Project Structure
 
@@ -97,7 +97,7 @@ specs/005-v5-query-batch/
 
 ```text
 schema/openapi/v5/v5/v5.swagger.json      # new: hand-maintained V5 description
-scripts/generate_sdk.py                   # read the second base, pass the local set
+scripts/generate_sdk.py                   # read the local schema base, pass the local set
 scripts/generation/
 ├── parity.py                             # select and validate both bases
 ├── wrapper_generation.py                 # mount local services on _v5_transport
@@ -120,10 +120,11 @@ docs/sphinx/guides/
 ├── migrating-from-1x.md                  # full V5 to 2.x map
 └── rate_limiting.md                      # V5 has no quota, 429 recipe
 tests/
-├── generator/                            # second base, rest_only, mixin mount
+├── generator/                            # local schema base, rest_only, mixin mount
 ├── generated/test_grpc_stub_wiring.py    # exempt rest_only
-├── runtime/                              # V5 config, empty quota, URL join
-├── smoke/                                # helpers, analytics, device lookup
+├── runtime/                              # V5 config, empty quota, URL join, v5_tools, devices
+├── smoke/                                # client wiring, examples, no-extra import
+├── analytics/                            # new layer, needs the extra (make test-analytics)
 └── e2e/test_v5_query_e2e.py, test_v5_batch_e2e.py
 pyproject.toml                            # analytics extra
 CHANGELOG.md                              # Unreleased entries
@@ -133,14 +134,16 @@ CHANGELOG.md                              # Unreleased entries
 `src/kentik_api/gen/v5/`. Hand-written runtime additions go in `client.py` and
 two new top-level modules. The analytics package is separate so that the base
 install does not need pandas. Tests follow the existing layers in
-`tests/README.md`. Planning for tasks decides whether helper tests get their
-own layer or join `tests/smoke/`.
+`tests/README.md`: hand-written runtime helpers in `tests/runtime/`, wiring
+checks in `tests/smoke/`, and a new `tests/analytics/` layer that needs the
+extra. `make test` runs `tests/analytics/` too, because the dev group
+installs the extra. It never skips that layer silently.
 
 ## Phases after this plan
 
 1. Checks: render the V5 file through the generator once, and confirm R5,
    R6, and R14.
-2. Generator: second base, union, `rest_only`, mixin mount, docs text.
+2. Generator: local schema base, union, `rest_only`, mixin mount, docs text.
 3. Client: V5 config and transport, `v5_base_url`, `v5_api_config`, close.
 4. Description file: all six operations and models, then `make generate
    local` and commit `public_names.json` and `api_surface.json`.
@@ -162,4 +165,6 @@ own layer or join `tests/smoke/`.
 
 ## Complexity Tracking
 
-No constitution violations.
+| Deviation | Why needed | Simpler alternative rejected because |
+| --- | --- | --- |
+| A second schema input, the local schema base `schema/openapi/`, next to `api-schema-public`. The constitution's Architecture section says the SDK comes only from the upstream schema. | Upstream publishes no description of the V5 endpoints, and FR-007 requires generated code. | A hand-written client breaks Principles I and II. Waiting for upstream leaves V5 query users blocked. T008a amends the constitution (PATCH 1.4.2), and limits the local base to endpoints that upstream does not publish. |

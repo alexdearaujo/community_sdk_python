@@ -34,10 +34,10 @@ tree on 2026-10-16.
   - Paths with `/api/v5` and a host-only base URL: rejected. Spec FR-006a sets
     the base URL to include `/api/v5`, and the docs give it in that form.
 
-## R2. How the generator reads a second, repo-local schema root
+## R2. How the generator reads the local schema base
 
 - **Decision**: `generate_modular_sdk()` reads two OpenAPI bases: the upstream
-  `<schema_root>/gen/openapiv3/kentik` and a new local base
+  `<schema_root>/gen/openapiv3/kentik` and the local schema base
   `PROJECT_ROOT/schema/openapi`. `parity.select_latest_swagger_files_by_service()`
   runs on each base. The source service set, the parity check, the
   public-name resolution, and the per-file generation loop all use the union.
@@ -50,7 +50,7 @@ tree on 2026-10-16.
     directories: v5" (`parity.py` lines 154 to 176), and `public_names` raises
     `NameDriftError` because `v5` is not in the candidates
     (`public_names.py` lines 65 to 75).
-  - The local base has no `proto/` directory. The proto lookup already skips a
+  - The local schema base has no `proto/` directory. The proto lookup already skips a
     missing directory ("No proto directory found, skipping gRPC.",
     `generate_sdk.py` line 1005), and `_discover_grpc_methods()` returns
     nothing. So no gRPC code is made, and nothing crashes.
@@ -60,7 +60,8 @@ tree on 2026-10-16.
   - Copy the local file into the upstream checkout at run time: rejected. It
     hides the source of the file and breaks `make generate local` on a clean
     sibling checkout.
-  - A CLI flag for extra roots: rejected for now. One fixed local root is
+  - A CLI flag for extra schema bases: rejected for now. One fixed local
+    schema base is
     enough, and a flag adds a second way to get a different SDK.
 
 ## R3. The V5 host, and how V5 calls avoid gRPC
@@ -69,7 +70,8 @@ tree on 2026-10-16.
   `RestTransport` (`self._v5_transport`) on it, for every `protocol`. The V5
   base URL comes from the region (`us`: `https://api.kentik.com/api/v5`, `eu`:
   `https://api.kentik.eu/api/v5`) or from a new keyword argument,
-  `v5_base_url`. The generated mixin mounts every local-root service on
+  `v5_base_url`. The generated mixin mounts every service from the local
+  schema base on
   `self._v5_transport` instead of `self._transport`. `KentikAPI` gets a
   `v5_api_config` property, and `close()` closes both transports.
 - **Rationale**:
@@ -119,6 +121,24 @@ tree on 2026-10-16.
   `openapi-python-generator` renders `additionalProperties: true` as a dict
   field and that `parse_response_model()` accepts it. If it does not, fix it
   in the template or in `fixup.py`, never in `gen/`.
+
+### R5a. Request models that keep unknown fields
+
+- **Decision**: `Query`, `QueryItem`, and `BatchCriterion` declare
+  `additionalProperties: true`. The model template adds `"extra": "allow"`
+  to `model_config` when a schema sets `additionalProperties` to the literal
+  `true`, so the model keeps unknown fields and sends them back. The
+  description types only the fields that the Kentik documentation lists.
+- **Rationale**: The V5 SDK `Query` has about 40 more fields, most of them
+  portal display options (`generatorPanelMinHeight`, `cutFnRegex`). Users
+  copy query JSON from Data Explorer ("Show API Call"), which carries them.
+  Passing them through keeps V5 behavior without a large, fragile model
+  (FR-002). The template keeps Pydantic's default (drop unknown fields) for
+  every other schema. Upstream V6 schemas use `additionalProperties` only
+  with a type, for maps, so V6 output does not change. A generator test
+  pins that.
+- **Alternatives considered**: Type all 40 fields by hand: rejected. It
+  copies undocumented portal internals into a public model.
 
 ## R6. A response body that is a JSON string (`query/url`)
 
@@ -180,7 +200,7 @@ tree on 2026-10-16.
 ## R10. Tests that assume every mounted service has gRPC
 
 - **Decision**: `api_surface` records `"rest_only": true` for services from
-  the local root. `SCHEMA_VERSION` goes from 7 to 8, and older records read as
+  the local schema base. `SCHEMA_VERSION` goes from 7 to 8, and older records read as
   `rest_only: false`. `tests/generated/test_grpc_stub_wiring.py` skips
   `rest_only` services. A new test asserts that a `rest_only` wrapper works on
   a client built with `protocol="grpc"`.

@@ -4,7 +4,9 @@
 
 ## Input
 
-- `schema/openapi/` is a second OpenAPI base, kept in this repository. Its
+- `schema/openapi/` is the local schema base, kept in this repository. It
+  holds only hand-maintained descriptions of endpoints that upstream does
+  not publish. Its
   layout is `<service>/<version>/<file>.swagger.json`, the same as the
   upstream base below `gen/openapiv3/kentik/`.
 - The only file is `schema/openapi/v5/v5/v5.swagger.json`.
@@ -17,7 +19,7 @@
    that appears in both bases raises `RuntimeError` that names it.
 3. The source service set is the union. `public_names`, the parity check, the
    generation loop, and `EndpointDocsCollector` use the union.
-4. A service from the local base has no proto lookup, no `pb/` stubs, and no
+4. A service from the local schema base has no proto lookup, no `pb/` stubs, and no
    gRPC routes.
 5. `wrapper_generation.generate()` takes the local service set. The mixin
    mounts a local service as `V5ServiceWrapper(self._v5_transport)`.
@@ -27,6 +29,9 @@
 7. `endpoint_docs` writes the REST-only example text for a local service.
    `docs_rendering` names the local schema source in the `gen/` README and
    marks the service as REST-only on the architecture page.
+8. `models_pydantic_2.jinja2` adds `"extra": "allow"` to `model_config`
+   when a schema sets `additionalProperties` to the literal `true`. Every
+   other schema keeps the default.
 
 ## Unit tests (`tests/generator/`)
 
@@ -37,3 +42,5 @@
 - `api_surface` writes and reads `rest_only`, and a version 7 record reads as
   `rest_only: false`.
 - A broken local file fails `validate_schema_files_or_raise()`.
+- A schema with `additionalProperties: true` gives a model that keeps and
+  sends unknown fields. Regenerating the upstream schema gives no diff.

@@ -45,6 +45,12 @@ also:
 
 ### Query
 
+The model types the fields that the Kentik Query API documentation lists,
+and keeps every other field it gets (`additionalProperties: true`, research
+R5a). So every field of the V5 SDK's `Query`, and query JSON copied from
+Data Explorer, reaches the API unchanged. `QueryItem` keeps unknown fields
+in the same way.
+
 | Field | Type | Notes |
 | --- | --- | --- |
 | `metric` | string | Required. For example `bytes`, `packets`, `fps`, `unique_src_ip`. |
@@ -116,7 +122,7 @@ The request body of `batch_tags` and `batch_populators`.
 | Model | Fields |
 | --- | --- |
 | `BatchUpsert` | `value` (string, required), `criteria` (list of `BatchCriterion`) |
-| `BatchCriterion` | `direction` (string: `src`, `dst`, or `either`; populators only), plus the match fields of a tag or populator, each a list of string: `addr`, `port`, `protocol`, `tcp_flags`, `asn`, `lasthop_as_name`, `nexthop_asn`, `nexthop_as_name`, `nexthop`, `bgp_aspath`, `bgp_community`, `mac`, `country`, `vlans`, `device_name`, `device_type`, `site`, `interface_name`. Extra keys are kept. |
+| `BatchCriterion` | `direction` (string: `src`, `dst`, or `either`; populators only) and `addr` (list of string, as in the Kentik sample). Every other match field passes through as given (`additionalProperties: true`, research R5a). The description text lists the known match fields: `port`, `protocol`, `tcp_flags`, `asn`, `lasthop_as_name`, `nexthop_asn`, `nexthop_as_name`, `nexthop`, `bgp_aspath`, `bgp_community`, `mac`, `country`, `vlans`, `device_name`, `device_type`, `site`, `interface_name`. |
 | `BatchDelete` | `value` (string, required) |
 
 Validation: one serialized part is at most 4 MB (Knowledge Base limit).
