@@ -44,7 +44,7 @@ def GetThing(
 ) -> GetThingResponse:
     body = request_json(
         method="get",
-        path=f"/things/v1/thing/{thing_id}",
+        path=f"/things/v1/thing/{path_segment(thing_id)}",
         api_config_override=api_config_override,
         expected_status=200,
         operation_name="GetThing",

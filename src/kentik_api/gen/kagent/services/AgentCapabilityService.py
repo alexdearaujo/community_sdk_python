@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     DeleteAgentCapabilityError,
@@ -83,7 +83,7 @@ def ListAgentCapabilities(
 
     body = request_json(
         method="get",
-        path=f"/kagent/v202401/agents/{agentId}/capabilities",
+        path=f"/kagent/v202401/agents/{path_segment(agentId)}/capabilities",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -111,7 +111,7 @@ def GetAgentCapability(
 
     body = request_json(
         method="get",
-        path=f"/kagent/v202401/agents/{agentId}/capabilities/{capabilityname}",
+        path=f"/kagent/v202401/agents/{path_segment(agentId)}/capabilities/{path_segment(capabilityname)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -139,7 +139,7 @@ def DeleteAgentCapability(
 
     body = request_json(
         method="delete",
-        path=f"/kagent/v202401/agents/{agentId}/capabilities/{capabilityname}",
+        path=f"/kagent/v202401/agents/{path_segment(agentId)}/capabilities/{path_segment(capabilityname)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -169,7 +169,7 @@ def UpsertAgentCapability(
 
     body = request_json(
         method="patch",
-        path=f"/kagent/v202401/agents/{agentId}/capabilities/{capabilityname}",
+        path=f"/kagent/v202401/agents/{path_segment(agentId)}/capabilities/{path_segment(capabilityname)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data,

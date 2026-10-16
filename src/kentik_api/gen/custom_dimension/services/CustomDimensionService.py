@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     CreateCustomDimensionError,
@@ -72,7 +72,7 @@ def GetCustomDimensionInfo(
 
     body = request_json(
         method="get",
-        path=f"/custom_dimensions/v202411alpha1/{customDimensionId}",
+        path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -100,7 +100,7 @@ def UpdateCustomDimension(
 
     body = request_json(
         method="put",
-        path=f"/custom_dimensions/v202411alpha1/{customDimensionId}",
+        path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -126,7 +126,7 @@ def DeleteCustomDimension(
 
     body = request_json(
         method="delete",
-        path=f"/custom_dimensions/v202411alpha1/{customDimensionId}",
+        path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -154,7 +154,7 @@ def CreatePopulator(
 
     body = request_json(
         method="post",
-        path=f"/custom_dimensions/v202411alpha1/{customDimensionId}/populator",
+        path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -184,7 +184,7 @@ def GetPopulator(
 
     body = request_json(
         method="get",
-        path=f"/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
+        path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator/{path_segment(populatorId)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -213,7 +213,7 @@ def UpdatePopulator(
 
     body = request_json(
         method="put",
-        path=f"/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
+        path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator/{path_segment(populatorId)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -242,7 +242,7 @@ def DeletePopulator(
 
     body = request_json(
         method="delete",
-        path=f"/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
+        path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator/{path_segment(populatorId)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -273,7 +273,7 @@ def GetPopulatorField(
 
     body = request_json(
         method="get",
-        path=f"/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}",
+        path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator/{path_segment(populatorId)}/field/{path_segment(fieldName)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

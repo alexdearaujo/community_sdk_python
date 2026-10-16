@@ -7,7 +7,7 @@ import httpx
 import pytest
 
 from kentik_api.core.api_config import APIConfig, HTTPException
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 from kentik_api.errors import ConfigurationError
 
 
@@ -171,3 +171,23 @@ def test_default_timeout_absorbs_the_soft_limit_delay():
         config.close()
         server.shutdown()
         server.server_close()
+
+
+@pytest.mark.parametrize(
+    ("value", "segment"),
+    [
+        ("../../user/7", "..%2F..%2Fuser%2F7"),
+        ("a?b#c d%", "a%3Fb%23c%20d%25"),
+        # grpc-gateway leaves reserved characters encoded, so they must stay raw.
+        ("2024-01-01T00:00:00Z", "2024-01-01T00:00:00Z"),
+        (42, "42"),
+    ],
+)
+def test_path_segment_keeps_the_value_inside_its_segment(value, segment):
+    assert path_segment(value) == segment
+
+
+@pytest.mark.parametrize("value", ["", ".", ".."])
+def test_path_segment_refuses_values_that_change_the_route(value):
+    with pytest.raises(ValueError, match="path parameter"):
+        path_segment(value)

@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     CreateDeviceError,
@@ -203,7 +203,7 @@ def GetDeviceByName(
 
     body = request_json(
         method="get",
-        path=f"/device/v202504beta2/device/name/{deviceName}",
+        path=f"/device/v202504beta2/device/name/{path_segment(deviceName)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -231,7 +231,7 @@ def GetDevice(
 
     body = request_json(
         method="get",
-        path=f"/device/v202504beta2/device/{deviceid}",
+        path=f"/device/v202504beta2/device/{path_segment(deviceid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -259,7 +259,7 @@ def UpdateDevice(
 
     body = request_json(
         method="put",
-        path=f"/device/v202504beta2/device/{deviceid}",
+        path=f"/device/v202504beta2/device/{path_segment(deviceid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -285,7 +285,7 @@ def DeleteDevice(
 
     body = request_json(
         method="delete",
-        path=f"/device/v202504beta2/device/{deviceid}",
+        path=f"/device/v202504beta2/device/{path_segment(deviceid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -313,7 +313,7 @@ def UpdateDeviceLabels(
 
     body = request_json(
         method="put",
-        path=f"/device/v202504beta2/device/{id}/labels",
+        path=f"/device/v202504beta2/device/{path_segment(id)}/labels",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),

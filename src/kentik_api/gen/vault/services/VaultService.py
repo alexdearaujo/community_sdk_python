@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import GetSecretError, ListSecretError
 from ..models import (  # noqa: F401
@@ -52,7 +52,7 @@ def GetSecret(
 
     body = request_json(
         method="get",
-        path=f"/vault/v202312alpha1/secrets/{name}",
+        path=f"/vault/v202312alpha1/secrets/{path_segment(name)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

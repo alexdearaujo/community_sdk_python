@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     GetCapacityPlanError,
@@ -93,7 +93,7 @@ def GetCapacityPlan(
 
     body = request_json(
         method="get",
-        path=f"/capacity_plan/v202212/capacity_plan/{id}",
+        path=f"/capacity_plan/v202212/capacity_plan/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -118,7 +118,7 @@ def GetCapacitySummary(
 
     body = request_json(
         method="get",
-        path=f"/capacity_plan/v202212/capacity_plan/{id}/summary",
+        path=f"/capacity_plan/v202212/capacity_plan/{path_segment(id)}/summary",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

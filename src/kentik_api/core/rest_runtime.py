@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 from typing import Any, Dict, Optional
+from urllib.parse import quote
 
 import httpx
 from kentik_api.auth.credentials import auth_headers
@@ -15,6 +16,24 @@ from kentik_api.errors import (
     KentikError,
     TransportError,
 )
+
+# RFC 3986 pchar minus the unreserved set, which quote() never encodes. Leaving
+# these raw matters: grpc-gateway does not decode reserved characters in a path
+# parameter, so an encoded ":" in a timestamp would reach the server as "%3A".
+_PATH_SEGMENT_SAFE = "!$&'()*+,;=:@"
+
+
+def path_segment(value: Any) -> str:
+    """Encodes one path parameter so its value cannot leave its own segment.
+
+    "/", "?" and "#" are percent-encoded, and the dot segments, which encoding
+    cannot neutralize, are refused: `delete_device(deviceid="../../user/7")`
+    must not delete a user.
+    """
+    segment = format(value)
+    if segment in ("", ".", ".."):
+        raise ValueError(f"{segment!r} is not a valid path parameter value")
+    return quote(segment, safe=_PATH_SEGMENT_SAFE)
 
 
 def request_json(

@@ -86,6 +86,12 @@ Each change below can stop an existing `except` clause or call from working.
 - **More operations work on gRPC.** 32 operations that raised
   `NotImplementedError` on gRPC now make the call, because their REST name
   differed from their RPC name.
+- **REST path arguments are encoded.** A path argument went into the URL
+  as is, so `client.device.delete_device(deviceid="../../user/7")` sent the
+  DELETE to another resource, and a `?` or `#` cut the path short. Each path
+  argument is now percent-encoded into its own segment. An empty string, `.`,
+  or `..`, which encoding cannot keep in place, raises `ValueError` before the
+  SDK sends a request.
 
 ### Dependencies
 

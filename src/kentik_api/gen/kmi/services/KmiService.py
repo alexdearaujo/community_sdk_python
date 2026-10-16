@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     GetASNDetailsError,
@@ -96,7 +96,7 @@ def GetASNInsights(
 
     body = request_json(
         method="get",
-        path=f"/kmi/v202212/insights/{asn}",
+        path=f"/kmi/v202212/insights/{path_segment(asn)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -126,7 +126,7 @@ def GetASNDetails(
 
     body = request_json(
         method="post",
-        path=f"/kmi/v202212/market/{marketId}/network/{asn}/{type}",
+        path=f"/kmi/v202212/market/{path_segment(marketId)}/network/{path_segment(asn)}/{path_segment(type)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -157,7 +157,7 @@ def GetRankings(
 
     body = request_json(
         method="post",
-        path=f"/kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}",
+        path=f"/kmi/v202212/market/{path_segment(marketId)}/rankings/{path_segment(rankType)}/ip/{path_segment(ip)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),

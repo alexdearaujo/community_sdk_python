@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     AckError,
@@ -267,7 +267,7 @@ def ListComments(
 
     body = request_json(
         method="get",
-        path=f"/v202505/alerts/{alertId}/comments",
+        path=f"/v202505/alerts/{path_segment(alertId)}/comments",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -295,7 +295,7 @@ def AddComment(
 
     body = request_json(
         method="post",
-        path=f"/v202505/alerts/{alertId}/comments",
+        path=f"/v202505/alerts/{path_segment(alertId)}/comments",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -324,7 +324,7 @@ def SetExternalContext(
 
     body = request_json(
         method="put",
-        path=f"/v202505/alerts/{alertId}/external-context",
+        path=f"/v202505/alerts/{path_segment(alertId)}/external-context",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -352,7 +352,7 @@ def Get(
 
     body = request_json(
         method="get",
-        path=f"/v202505/alerts/{id}",
+        path=f"/v202505/alerts/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -380,7 +380,7 @@ def Ack(
 
     body = request_json(
         method="post",
-        path=f"/v202505/alerts/{id}/ack",
+        path=f"/v202505/alerts/{path_segment(id)}/ack",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -409,7 +409,7 @@ def UnAck(
 
     body = request_json(
         method="post",
-        path=f"/v202505/alerts/{id}/unack",
+        path=f"/v202505/alerts/{path_segment(id)}/unack",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),

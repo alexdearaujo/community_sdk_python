@@ -167,7 +167,15 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
                             if isinstance(part, ast.Constant):
                                 parts.append(str(part.value))
                             elif isinstance(part, ast.FormattedValue):
-                                parts.append(f"{{{ast.unparse(part.value)}}}")
+                                arg = part.value
+                                # {path_segment(deviceid)} -> {deviceid}
+                                if (
+                                    isinstance(arg, ast.Call)
+                                    and isinstance(arg.func, ast.Name)
+                                    and arg.func.id == "path_segment"
+                                ):
+                                    arg = arg.args[0]
+                                parts.append(f"{{{ast.unparse(arg)}}}")
                         path_val = "".join(parts)
                 elif (
                     kw.arg == "expected_status"

@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     CreateTagKeyError,
@@ -49,7 +49,7 @@ def GetTagValues(
 
     body = request_json(
         method="get",
-        path=f"/asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values",
+        path=f"/asset_tags/v20260515beta1/assets/{path_segment(assetType)}/{path_segment(assetId)}/values",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -123,7 +123,7 @@ def GetTagKey(
 
     body = request_json(
         method="get",
-        path=f"/asset_tags/v20260515beta1/keys/{id}",
+        path=f"/asset_tags/v20260515beta1/keys/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -151,7 +151,7 @@ def UpdateTagKey(
 
     body = request_json(
         method="put",
-        path=f"/asset_tags/v20260515beta1/keys/{id}",
+        path=f"/asset_tags/v20260515beta1/keys/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -177,7 +177,7 @@ def DeleteTagKey(
 
     body = request_json(
         method="delete",
-        path=f"/asset_tags/v20260515beta1/keys/{id}",
+        path=f"/asset_tags/v20260515beta1/keys/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -202,7 +202,7 @@ def ListTagValues(
 
     body = request_json(
         method="get",
-        path=f"/asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values",
+        path=f"/asset_tags/v20260515beta1/keys/{path_segment(tagId)}/{path_segment(assetType)}/values",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

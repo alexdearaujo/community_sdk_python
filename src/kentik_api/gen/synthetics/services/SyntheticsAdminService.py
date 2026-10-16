@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     CreateAgentAlertError,
@@ -167,7 +167,7 @@ def GetAgentAlert(
 
     body = request_json(
         method="get",
-        path=f"/synthetics/v202309/agentAlerts/{id}",
+        path=f"/synthetics/v202309/agentAlerts/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -195,7 +195,7 @@ def UpdateAgentAlert(
 
     body = request_json(
         method="put",
-        path=f"/synthetics/v202309/agentAlerts/{id}",
+        path=f"/synthetics/v202309/agentAlerts/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -221,7 +221,7 @@ def DeleteAgentAlert(
 
     body = request_json(
         method="delete",
-        path=f"/synthetics/v202309/agentAlerts/{id}",
+        path=f"/synthetics/v202309/agentAlerts/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -269,7 +269,7 @@ def GetAgent(
 
     body = request_json(
         method="get",
-        path=f"/synthetics/v202309/agents/{agentid}",
+        path=f"/synthetics/v202309/agents/{path_segment(agentid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -297,7 +297,7 @@ def UpdateAgent(
 
     body = request_json(
         method="put",
-        path=f"/synthetics/v202309/agents/{agentid}",
+        path=f"/synthetics/v202309/agents/{path_segment(agentid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -323,7 +323,7 @@ def DeleteAgent(
 
     body = request_json(
         method="delete",
-        path=f"/synthetics/v202309/agents/{agentid}",
+        path=f"/synthetics/v202309/agents/{path_segment(agentid)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -397,7 +397,7 @@ def GetTest(
 
     body = request_json(
         method="get",
-        path=f"/synthetics/v202309/tests/{id}",
+        path=f"/synthetics/v202309/tests/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -425,7 +425,7 @@ def UpdateTest(
 
     body = request_json(
         method="put",
-        path=f"/synthetics/v202309/tests/{id}",
+        path=f"/synthetics/v202309/tests/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -451,7 +451,7 @@ def DeleteTest(
 
     body = request_json(
         method="delete",
-        path=f"/synthetics/v202309/tests/{id}",
+        path=f"/synthetics/v202309/tests/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -479,7 +479,7 @@ def SetTestStatus(
 
     body = request_json(
         method="put",
-        path=f"/synthetics/v202309/tests/{id}/status",
+        path=f"/synthetics/v202309/tests/{path_segment(id)}/status",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),

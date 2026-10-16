@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     CreateServiceNowConfigError,
@@ -35,7 +35,7 @@ def ListServiceNowConfigs(
 
     body = request_json(
         method="get",
-        path=f"/kmeta/v202607alpha1/{cid}/servicenow/config",
+        path=f"/kmeta/v202607alpha1/{path_segment(cid)}/servicenow/config",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -60,7 +60,7 @@ def CreateServiceNowConfig(
 
     body = request_json(
         method="post",
-        path=f"/kmeta/v202607alpha1/{cid}/servicenow/config",
+        path=f"/kmeta/v202607alpha1/{path_segment(cid)}/servicenow/config",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -86,7 +86,7 @@ def GetServiceNowConfig(
 
     body = request_json(
         method="get",
-        path=f"/kmeta/v202607alpha1/{cid}/servicenow/config/{id}",
+        path=f"/kmeta/v202607alpha1/{path_segment(cid)}/servicenow/config/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -115,7 +115,7 @@ def UpdateServiceNowConfig(
 
     body = request_json(
         method="put",
-        path=f"/kmeta/v202607alpha1/{cid}/servicenow/config/{id}",
+        path=f"/kmeta/v202607alpha1/{path_segment(cid)}/servicenow/config/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -141,7 +141,7 @@ def DeleteServiceNowConfig(
 
     body = request_json(
         method="delete",
-        path=f"/kmeta/v202607alpha1/{cid}/servicenow/config/{id}",
+        path=f"/kmeta/v202607alpha1/{path_segment(cid)}/servicenow/config/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

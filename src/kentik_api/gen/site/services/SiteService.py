@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import path_segment, request_json
 
 from ..error import (
     CreateSiteError,
@@ -107,7 +107,7 @@ def GetSiteMarket(
 
     body = request_json(
         method="get",
-        path=f"/site/v202509/site_markets/{id}",
+        path=f"/site/v202509/site_markets/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -135,7 +135,7 @@ def UpdateSiteMarket(
 
     body = request_json(
         method="put",
-        path=f"/site/v202509/site_markets/{id}",
+        path=f"/site/v202509/site_markets/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -161,7 +161,7 @@ def DeleteSiteMarket(
 
     body = request_json(
         method="delete",
-        path=f"/site/v202509/site_markets/{id}",
+        path=f"/site/v202509/site_markets/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -235,7 +235,7 @@ def GetSite(
 
     body = request_json(
         method="get",
-        path=f"/site/v202509/sites/{id}",
+        path=f"/site/v202509/sites/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -263,7 +263,7 @@ def UpdateSite(
 
     body = request_json(
         method="put",
-        path=f"/site/v202509/sites/{id}",
+        path=f"/site/v202509/sites/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(),
@@ -289,7 +289,7 @@ def DeleteSite(
 
     body = request_json(
         method="delete",
-        path=f"/site/v202509/sites/{id}",
+        path=f"/site/v202509/sites/{path_segment(id)}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
