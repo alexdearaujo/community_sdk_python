@@ -28,6 +28,7 @@ flowchart TB
     subgraph generated["Generated Layer"]
         Generated_Error_Classes["Generated Error Classes"]
         Generated_Models["Generated Models"]
+        Generated_Proto_Stubs["Generated Proto Stubs"]
         Generated_REST_Services["Generated REST Services"]
         Generated_Service_Wrappers["Generated Service Wrappers"]
     end
@@ -53,6 +54,7 @@ flowchart TB
     Client_API --> Error_Types
     Client_API --> REST_Transport
     Client_API --> gRPC_Transport
+    Client_Mixin -->|"x36"| Generated_REST_Services
     Client_Mixin -->|"x36"| Generated_Service_Wrappers
     Client_Mixin --> REST_Transport
     Client_Mixin --> gRPC_Transport
@@ -61,6 +63,8 @@ flowchart TB
     Generated_REST_Services -->|"x52"| Generated_Models
     Generated_REST_Services -->|"x52"| REST_Runtime
     Generated_Service_Wrappers -->|"x36"| API_Config
+    Generated_Service_Wrappers -->|"x36"| Generated_Models
+    Generated_Service_Wrappers -->|"x104"| Generated_Proto_Stubs
     Generated_Service_Wrappers -->|"x52"| Generated_REST_Services
     Generated_Service_Wrappers -->|"x36"| REST_Transport
     Generated_Service_Wrappers -->|"x36"| gRPC_Runtime
@@ -89,6 +93,7 @@ flowchart TB
 - `Client API` and `Client Mixin` are the orchestration entrypoints.
 - `Generated Service Wrappers` are transport-aware facades exposed as `client.<service>`.
 - `Generated REST Services` host operation functions generated from OpenAPI schemas.
+- `Generated Proto Stubs` are the protoc-compiled modules that wrappers call on a gRPC transport.
 - `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.
 
 ## Services Without A Wrapper

@@ -64,6 +64,7 @@ def test_group_config_covers_all_module_group_return_values():
         ("kentik_api.transports.grpc_client", None),
         ("kentik_api.gen.device.error", None),
         ("kentik_api.gen.device.models.Device", None),
+        ("kentik_api.gen.device.pb.device_pb2", None),
     ]
     for module_name, source_file in sample_modules:
         label = _module_group(module_name, source_file)
@@ -150,6 +151,14 @@ def test_architecture_page_lists_every_layer(sandbox):
     page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
     for layer in docs_rendering._LAYER_NAMES.values():
         assert layer in page
+
+
+def test_architecture_graph_shows_wrappers_using_models_and_proto_stubs(sandbox):
+    docs_rendering.generate()
+
+    page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
+    assert re.search(r"Generated_Service_Wrappers -->\S* Generated_Models\n", page)
+    assert re.search(r"Generated_Service_Wrappers -->\S* Generated_Proto_Stubs\n", page)
 
 
 @pytest.mark.parametrize("guide", _GUIDES)
