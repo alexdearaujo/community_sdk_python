@@ -63,6 +63,55 @@ def discover_service_model_classes(service_dir: Path) -> set[str]:
 
 
 @dataclass(frozen=True)
+class GrpcCall:
+    """The RPC a wrapper method calls on GrpcTransport, read from its source."""
+
+    rpc: str  # "DeviceService/GetDevice"
+    request: str  # "GetDeviceRequest"
+
+
+def grpc_stub_services(init: ast.FunctionDef) -> dict[str, str]:
+    """Maps each `self._grpc_stub_N` to its proto service, from `XStub(channel)`."""
+    services = {}
+    for sub in ast.walk(init):
+        if (
+            isinstance(sub, ast.Assign)
+            and isinstance(sub.value, ast.Call)
+            and isinstance(sub.value.func, ast.Attribute)
+            and sub.value.func.attr.endswith("Stub")
+        ):
+            for target in sub.targets:
+                if isinstance(target, ast.Attribute):
+                    services[target.attr] = sub.value.func.attr.removesuffix("Stub")
+    return services
+
+
+def grpc_call(
+    method: ast.FunctionDef, stub_services: dict[str, str]
+) -> GrpcCall | None:
+    """Reads `build_grpc_request(self._grpc_pb2_N.Req, ...)` and `call_grpc(self._grpc_stub_N.Rpc, ...)`.
+
+    None means the method raises NotImplementedError on gRPC.
+    """
+    request = rpc = None
+    for sub in ast.walk(method):
+        if not (
+            isinstance(sub, ast.Call) and isinstance(sub.func, ast.Name) and sub.args
+        ):
+            continue
+        first = sub.args[0]
+        if not (
+            isinstance(first, ast.Attribute) and isinstance(first.value, ast.Attribute)
+        ):
+            continue
+        if sub.func.id == "build_grpc_request":
+            request = first.attr
+        elif sub.func.id == "call_grpc" and first.value.attr in stub_services:
+            rpc = f"{stub_services[first.value.attr]}/{first.attr}"
+    return GrpcCall(rpc=rpc, request=request) if rpc and request else None
+
+
+@dataclass(frozen=True)
 class RestOperation:
     """Parsed representation of one operation from a generated REST service module.
 

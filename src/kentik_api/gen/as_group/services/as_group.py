@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.as_group.services.ASGroupService as RestAsGroupModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.as_group import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -54,11 +55,12 @@ class AsGroupServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAsGroupModule1.ListASGroupsError,
             )
-            return attach_rate_limit(
-                rest_models.ListASGroupsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListASGroupsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListASGroups,
+                operation_name="ListASGroups",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -97,11 +99,12 @@ class AsGroupServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAsGroupModule1.CreateASGroupError,
             )
-            return attach_rate_limit(
-                rest_models.CreateASGroupResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateASGroupResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateASGroup,
+                operation_name="CreateASGroup",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -136,11 +139,12 @@ class AsGroupServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAsGroupModule1.GetASGroupError,
             )
-            return attach_rate_limit(
-                rest_models.GetASGroupResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetASGroupResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetASGroup,
+                operation_name="GetASGroup",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -181,11 +185,12 @@ class AsGroupServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAsGroupModule1.UpdateASGroupError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateASGroupResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateASGroupResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateASGroup,
+                operation_name="UpdateASGroup",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -221,11 +226,12 @@ class AsGroupServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAsGroupModule1.DeleteASGroupError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteASGroupResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteASGroupResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteASGroup,
+                operation_name="DeleteASGroup",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

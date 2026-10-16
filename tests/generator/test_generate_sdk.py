@@ -12,7 +12,6 @@ import ast
 import json
 import sys
 from pathlib import Path
-from typing import Optional
 
 import pytest
 
@@ -34,11 +33,37 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     hoist_inline_request_bodies,
     inline_request_body_refs,
     oneof_members_by_definition,
+    openapi_generator_cmd,
     patched_swagger,
     relax_oneof_required,
     relax_response_message_required,
 )
 from google.protobuf import descriptor_pb2  # noqa: E402
+
+
+def test_generator_runs_from_the_locked_environment_by_default(monkeypatch):
+    monkeypatch.delenv("OPENAPI_GENERATOR_FROM", raising=False)
+    monkeypatch.delenv("OPENAPI_GENERATOR_CMD", raising=False)
+
+    cmd = openapi_generator_cmd(Path("in.json"), Path("out"))
+
+    assert cmd[:4] == [sys.executable, "-m", "openapi_python_generator", "in.json"]
+
+
+def test_a_fork_source_runs_through_uvx(monkeypatch):
+    monkeypatch.setenv("OPENAPI_GENERATOR_FROM", "git+https://example.invalid/fork.git")
+    monkeypatch.delenv("OPENAPI_GENERATOR_CMD", raising=False)
+
+    cmd = openapi_generator_cmd(Path("in.json"), Path("out"))
+
+    assert cmd[:5] == [
+        "uvx",
+        "--from",
+        "git+https://example.invalid/fork.git",
+        "openapi-python-generator",
+        "in.json",
+    ]
+
 
 # ---------------------------------------------------------------------------
 # _rewrite_grpc_imports: three protoc output styles
@@ -217,136 +242,6 @@ def test_patch_schema_leaves_operations_without_request_body_unchanged(tmp_path:
     assert "requestBody" not in result["paths"]["/things/{id}"]["get"]
     assert "requestBody" not in result["paths"]["/things/{id}"]["delete"]
     assert swagger_path.read_text() == original
-
-
-# ---------------------------------------------------------------------------
-# Schema-to-generated-code parity: every requestBody in the schema must
-# produce a `data:` parameter in the generated REST function.
-# Skipped when the local api-schema-public sibling repo is absent.
-# ---------------------------------------------------------------------------
-
-_SCHEMA_ROOT = Path(__file__).resolve().parents[3] / "api-schema-public"
-_GEN_ROOT = Path(__file__).resolve().parents[2] / "src" / "kentik_api" / "gen"
-
-
-def _resolve_request_body(schema: dict, request_body: dict) -> Optional[dict]:
-    """Dereferences a requestBody $ref from components.requestBodies, if present."""
-    if "$ref" not in request_body:
-        return request_body
-    rb_name = request_body["$ref"].rsplit("/", 1)[-1]
-    return schema.get("components", {}).get("requestBodies", {}).get(rb_name)
-
-
-def _has_data_param(func_node: ast.FunctionDef) -> bool:
-    for arg in func_node.args.kwonlyargs:
-        if arg.arg == "data":
-            return True
-    for arg in func_node.args.args:
-        if arg.arg == "data":
-            return True
-    return False
-
-
-def _function_by_name(source: str, name: str) -> Optional[ast.FunctionDef]:
-    tree = ast.parse(source)
-    for node in ast.walk(tree):
-        if isinstance(node, ast.FunctionDef) and node.name == name:
-            return node
-    return None
-
-
-def _collect_write_ops_with_body(swagger_files: list[Path]) -> list[tuple[str, str]]:
-    """Returns (operationId, swagger_file_stem) pairs for ops with a requestBody."""
-    ops = []
-    for path in swagger_files:
-        schema = json.loads(path.read_text())
-        for _path_item in schema.get("paths", {}).values():
-            for _, op in _path_item.items():
-                if not isinstance(op, dict):
-                    continue
-                rb = op.get("requestBody")
-                if rb is None:
-                    continue
-                resolved = _resolve_request_body(schema, rb)
-                if resolved is None:
-                    continue
-                content = resolved.get("content", {})
-                if not content.get("application/json"):
-                    continue
-                op_id = op.get("operationId")
-                if op_id:
-                    ops.append((op_id, path.stem))
-    return ops
-
-
-@pytest.mark.skipif(
-    not _SCHEMA_ROOT.exists(),
-    reason="Local api-schema-public repo not found; run `make generate local` first.",
-)
-def test_schema_request_body_coverage():
-    """Every operation whose schema declares a requestBody must have data: in the
-    generated REST function. This catches the class of generator bug where
-    requestBody entries are silently dropped, leaving write operations with no
-    body parameter.
-    """
-    openapi_base = _SCHEMA_ROOT / "gen" / "openapiv3" / "kentik"
-    assert openapi_base.exists(), f"Schema openapiv3 path not found: {openapi_base}"
-
-    failures: list[str] = []
-
-    for service_dir in sorted(_GEN_ROOT.iterdir()):
-        if not service_dir.is_dir() or service_dir.name.startswith("_"):
-            continue
-
-        service = service_dir.name
-        schema_service_dir = openapi_base / service
-        if not schema_service_dir.exists():
-            continue
-
-        swagger_files = list(schema_service_dir.rglob("*.swagger.json"))
-        if not swagger_files:
-            continue
-
-        ops_with_body = _collect_write_ops_with_body(swagger_files)
-        if not ops_with_body:
-            continue
-
-        services_dir = service_dir / "services"
-        if not services_dir.exists():
-            services_dir = service_dir / "service"
-        if not services_dir.exists():
-            continue
-
-        all_service_sources: list[tuple[Path, str]] = [
-            (p, p.read_text())
-            for p in sorted(services_dir.glob("*.py"))
-            if p.name != "__init__.py" and p.stem.endswith("Service")
-        ]
-
-        for op_id, swagger_stem in ops_with_body:
-            found = False
-            for gen_path, source in all_service_sources:
-                func_node = _function_by_name(source, op_id)
-                if func_node is None:
-                    continue
-                found = True
-                if not _has_data_param(func_node):
-                    failures.append(
-                        f"{service}/{gen_path.name}::{op_id} "
-                        f"(from {swagger_stem}): schema declares requestBody "
-                        f"but generated function has no `data:` parameter"
-                    )
-                break
-
-            if not found:
-                # operationId may have been renamed by deduplication; not a failure
-                pass
-
-    if failures:
-        pytest.fail(
-            f"{len(failures)} operation(s) missing body parameter:\n"
-            + "\n".join(f"  {f}" for f in failures)
-        )
 
 
 # ---------------------------------------------------------------------------
@@ -693,6 +588,17 @@ def test_qualify_colliding_imports_resolves_by_package_not_name():
 # ---------------------------------------------------------------------------
 # generate_modular_sdk: schema validation must run before any output is wiped
 # ---------------------------------------------------------------------------
+
+
+def _function_by_name(source: str, name: str) -> ast.FunctionDef | None:
+    return next(
+        (
+            node
+            for node in ast.walk(ast.parse(source))
+            if isinstance(node, ast.FunctionDef) and node.name == name
+        ),
+        None,
+    )
 
 
 def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir():

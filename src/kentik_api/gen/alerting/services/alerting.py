@@ -1,7 +1,5 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.alerting.services.AlertAutoAckService as RestAlertingModule1
 import kentik_api.gen.alerting.services.AlertService as RestAlertingModule2
 import kentik_api.gen.alerting.services.AlertSilenceNotificationsService as RestAlertingModule3
@@ -11,8 +9,11 @@ import kentik_api.gen.alerting.services.MitigationsService as RestAlertingModule
 import kentik_api.gen.alerting.services.PolicyService as RestAlertingModule7
 import kentik_api.gen.alerting.services.SuppressionService as RestAlertingModule8
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.alerting import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -161,11 +162,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule1.CreateError,
             )
-            return attach_rate_limit(
-                rest_models.AlertAutoAckServiceCreateResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertAutoAckServiceCreateResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.Create,
+                operation_name="Create",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -205,11 +207,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule1.ListError,
             )
-            return attach_rate_limit(
-                rest_models.AlertAutoAckServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertAutoAckServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.List,
+                operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -244,11 +247,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule1.GetError,
             )
-            return attach_rate_limit(
-                rest_models.AlertAutoAckServiceGetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertAutoAckServiceGetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.Get,
+                operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -285,11 +289,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule1.DeleteError,
             )
-            return attach_rate_limit(
-                rest_models.AlertAutoAckServiceDeleteResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertAutoAckServiceDeleteResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.Delete,
+                operation_name="Delete",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -330,11 +335,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule1.ReplaceError,
             )
-            return attach_rate_limit(
-                rest_models.AlertAutoAckServiceReplaceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertAutoAckServiceReplaceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.Replace,
+                operation_name="Replace",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -375,11 +381,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule2.ListError,
             )
-            return attach_rate_limit(
-                rest_models.AlertServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.List,
+                operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -419,11 +426,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule2.ClearError,
             )
-            return attach_rate_limit(
-                rest_models.AlertServiceClearResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertServiceClearResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.Clear,
+                operation_name="Clear",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -460,11 +468,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule2.ListCommentsError,
             )
-            return attach_rate_limit(
-                rest_models.AlertServiceListCommentsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertServiceListCommentsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListComments,
+                operation_name="ListComments",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -505,11 +514,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule2.AddCommentError,
             )
-            return attach_rate_limit(
-                rest_models.AlertServiceAddCommentResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertServiceAddCommentResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.AddComment,
+                operation_name="AddComment",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -551,11 +561,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule2.SetExternalContextError,
             )
-            return attach_rate_limit(
-                rest_models.AlertServiceSetExternalContextResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertServiceSetExternalContextResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.SetExternalContext,
+                operation_name="SetExternalContext",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -591,11 +602,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule2.GetError,
             )
-            return attach_rate_limit(
-                rest_models.AlertServiceGetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertServiceGetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.Get,
+                operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -636,11 +648,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule2.AckError,
             )
-            return attach_rate_limit(
-                rest_models.AlertServiceAckResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertServiceAckResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.Ack,
+                operation_name="Ack",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -682,11 +695,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule2.UnAckError,
             )
-            return attach_rate_limit(
-                rest_models.AlertServiceUnAckResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertServiceUnAckResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UnAck,
+                operation_name="UnAck",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -727,11 +741,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule3.CreateError,
             )
-            return attach_rate_limit(
-                rest_models.AlertSilenceNotificationsServiceCreateResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertSilenceNotificationsServiceCreateResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_7.Create,
+                operation_name="Create",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -771,11 +786,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule3.ListError,
             )
-            return attach_rate_limit(
-                rest_models.AlertSilenceNotificationsServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertSilenceNotificationsServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_7.List,
+                operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -812,11 +828,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule3.GetError,
             )
-            return attach_rate_limit(
-                rest_models.AlertSilenceNotificationsServiceGetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertSilenceNotificationsServiceGetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_7.Get,
+                operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -853,11 +870,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule3.DeleteError,
             )
-            return attach_rate_limit(
-                rest_models.AlertSilenceNotificationsServiceDeleteResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertSilenceNotificationsServiceDeleteResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_7.Delete,
+                operation_name="Delete",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -898,11 +916,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule3.ReplaceError,
             )
-            return attach_rate_limit(
-                rest_models.AlertSilenceNotificationsServiceReplaceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.AlertSilenceNotificationsServiceReplaceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_7.Replace,
+                operation_name="Replace",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -961,11 +980,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule4.ListError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationMethodsServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationMethodsServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.List,
+                operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1008,11 +1028,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule4.GetError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationMethodsServiceGetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationMethodsServiceGetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.Get,
+                operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1070,11 +1091,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule5.ListError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationPlatformsServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationPlatformsServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_4.List,
+                operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1117,11 +1139,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule5.GetError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationPlatformsServiceGetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationPlatformsServiceGetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_4.Get,
+                operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1187,11 +1210,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule6.ListError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationsServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationsServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.List,
+                operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1243,11 +1267,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule6.CreateError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationsServiceCreateResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationsServiceCreateResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.Create,
+                operation_name="Create",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1282,11 +1307,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule6.AvailableActionsError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationsServiceAvailableActionsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationsServiceAvailableActionsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.AvailableActions,
+                operation_name="AvailableActions",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1320,11 +1346,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule6.GetError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationsServiceGetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationsServiceGetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.Get,
+                operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1365,11 +1392,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule6.ActError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationsServiceActResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationsServiceActResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.Act,
+                operation_name="Act",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1407,11 +1435,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule6.AvailableActionsForMitigationError,
             )
-            return attach_rate_limit(
-                rest_models.MitigationsServiceAvailableActionsForMitigationResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.MitigationsServiceAvailableActionsForMitigationResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_5.AvailableActionsForMitigation,
+                operation_name="AvailableActionsForMitigation",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1451,11 +1480,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule7.ListError,
             )
-            return attach_rate_limit(
-                rest_models.PolicyServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.PolicyServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.List,
+                operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1496,11 +1526,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule7.GetError,
             )
-            return attach_rate_limit(
-                rest_models.PolicyServiceGetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.PolicyServiceGetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.Get,
+                operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1543,11 +1574,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule7.DisableError,
             )
-            return attach_rate_limit(
-                rest_models.PolicyServiceDisableResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.PolicyServiceDisableResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.Disable,
+                operation_name="Disable",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1591,11 +1623,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule7.EnableError,
             )
-            return attach_rate_limit(
-                rest_models.PolicyServiceEnableResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.PolicyServiceEnableResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_6.Enable,
+                operation_name="Enable",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1637,11 +1670,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.CreateError,
             )
-            return attach_rate_limit(
-                rest_models.SuppressionServiceCreateResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SuppressionServiceCreateResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_8.Create,
+                operation_name="Create",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1681,11 +1715,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.ListError,
             )
-            return attach_rate_limit(
-                rest_models.SuppressionServiceListResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SuppressionServiceListResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_8.List,
+                operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1720,11 +1755,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.GetError,
             )
-            return attach_rate_limit(
-                rest_models.SuppressionServiceGetResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SuppressionServiceGetResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_8.Get,
+                operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1759,11 +1795,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.DeleteError,
             )
-            return attach_rate_limit(
-                rest_models.SuppressionServiceDeleteResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SuppressionServiceDeleteResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_8.Delete,
+                operation_name="Delete",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1804,11 +1841,12 @@ class AlertingServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.ReplaceError,
             )
-            return attach_rate_limit(
-                rest_models.SuppressionServiceReplaceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SuppressionServiceReplaceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_8.Replace,
+                operation_name="Replace",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

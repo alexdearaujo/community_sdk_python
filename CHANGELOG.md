@@ -70,7 +70,9 @@ by a number. The Service word stays when it is the object of the call
 | `site` | `list_site_markets`, `get_site_market`, `create_site_market`, `update_site_market`, `delete_site_market` | `list_markets`, `get_market`, `create_market`, `update_market`, `delete_market` |
 
 `api_surface.json` now records the client method for each operation, so
-`make check-changelog` flags a renamed method as a breaking change.
+`make check-changelog` flags a renamed method as a breaking change. It also
+records the gRPC method each operation calls, so an operation that stops
+working over gRPC is a breaking change too.
 
 ### Added
 
@@ -201,6 +203,11 @@ by a number. The Service word stays when it is the object of the call
   "failed with status code: 200". A JSON `null` body returned an empty model
   that nothing validated. Both now raise `HTTPException` with status 502 and
   a message that names the problem, as a body of the wrong shape already did.
+- **A gRPC response that does not match its model raises the same 502 as
+  REST.** It raised pydantic's `ValidationError`, outside `KentikError`. One
+  cause is an enum value newer than this SDK: the response fails on both
+  transports until you upgrade. Catch `HTTPException` (or `KentikError`) for
+  it, not `ValidationError`.
 - **Responses parse when the server leaves a message field unset.** A proto
   `REQUIRED` field binds the request, not the response, and an unset message
   field is absent from a response. So a policy without a baseline failed

@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: DictionaryService/GetDictionary (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetDictionaryResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

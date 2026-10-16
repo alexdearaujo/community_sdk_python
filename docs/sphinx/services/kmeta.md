@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: KmetaService/ListServiceNowConfigs (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListServiceNowConfigsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -144,7 +144,7 @@ sequenceDiagram
     R->>API: KmetaService/CreateServiceNowConfig (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -223,7 +223,7 @@ sequenceDiagram
     R->>API: KmetaService/GetServiceNowConfig (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -301,7 +301,7 @@ sequenceDiagram
     R->>API: KmetaService/UpdateServiceNowConfig (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -382,7 +382,7 @@ sequenceDiagram
     R->>API: KmetaService/DeleteServiceNowConfig (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteServiceNowConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

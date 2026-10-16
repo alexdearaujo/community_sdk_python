@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.cost.services.CostService as RestCostModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.cost import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -56,11 +57,12 @@ class CostServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCostModule1.ListCostProvidersError,
             )
-            return attach_rate_limit(
-                rest_models.ListCostProvidersResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListCostProvidersResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListCostProviders,
+                operation_name="ListCostProviders",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -97,11 +99,12 @@ class CostServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCostModule1.ListCostProviderSummariesError,
             )
-            return attach_rate_limit(
-                rest_models.ListCostProviderSummariesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListCostProviderSummariesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListCostProviderSummaries,
+                operation_name="ListCostProviderSummaries",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -142,11 +145,12 @@ class CostServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCostModule1.GetCostProviderSummaryError,
             )
-            return attach_rate_limit(
-                rest_models.GetCostProviderSummaryResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCostProviderSummaryResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetCostProviderSummary,
+                operation_name="GetCostProviderSummary",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

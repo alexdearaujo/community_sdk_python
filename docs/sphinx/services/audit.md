@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: AuditService/ListAuditEvents (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListAuditEventsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -145,7 +145,7 @@ sequenceDiagram
     R->>API: AuditService/GetAuditEvent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetAuditEventResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -222,7 +222,7 @@ sequenceDiagram
     R->>API: AuditService/GetAuditEvent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetAuditEventResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

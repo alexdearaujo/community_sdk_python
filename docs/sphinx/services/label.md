@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: LabelService/ListLabels (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListLabelsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: LabelService/CreateLabel (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateLabelResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -213,7 +213,7 @@ sequenceDiagram
     R->>API: LabelService/UpdateLabel (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateLabelResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -292,7 +292,7 @@ sequenceDiagram
     R->>API: LabelService/DeleteLabel (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteLabelResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

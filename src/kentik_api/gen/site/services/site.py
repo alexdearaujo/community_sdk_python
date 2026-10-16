@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.site.services.SiteService as RestSiteModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.site import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -54,11 +55,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.ListSiteMarketsError,
             )
-            return attach_rate_limit(
-                rest_models.ListSiteMarketsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListSiteMarketsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListSiteMarkets,
+                operation_name="ListSiteMarkets",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -97,11 +99,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.CreateSiteMarketError,
             )
-            return attach_rate_limit(
-                rest_models.CreateSiteMarketResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateSiteMarketResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateSiteMarket,
+                operation_name="CreateSiteMarket",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -136,11 +139,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.GetSiteMarketError,
             )
-            return attach_rate_limit(
-                rest_models.GetSiteMarketResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetSiteMarketResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetSiteMarket,
+                operation_name="GetSiteMarket",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -181,11 +185,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.UpdateSiteMarketError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateSiteMarketResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateSiteMarketResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateSiteMarket,
+                operation_name="UpdateSiteMarket",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -221,11 +226,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.DeleteSiteMarketError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteSiteMarketResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteSiteMarketResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteSiteMarket,
+                operation_name="DeleteSiteMarket",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -258,11 +264,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.ListSitesError,
             )
-            return attach_rate_limit(
-                rest_models.ListSitesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListSitesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListSites,
+                operation_name="ListSites",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -301,11 +308,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.CreateSiteError,
             )
-            return attach_rate_limit(
-                rest_models.CreateSiteResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateSiteResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateSite,
+                operation_name="CreateSite",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -338,11 +346,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.GetSiteError,
             )
-            return attach_rate_limit(
-                rest_models.GetSiteResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetSiteResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetSite,
+                operation_name="GetSite",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -383,11 +392,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.UpdateSiteError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateSiteResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateSiteResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateSite,
+                operation_name="UpdateSite",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -423,11 +433,12 @@ class SiteServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSiteModule1.DeleteSiteError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteSiteResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteSiteResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteSite,
+                operation_name="DeleteSite",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

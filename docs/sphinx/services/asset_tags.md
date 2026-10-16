@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: AssetTagsService/GetTagValues (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetTagValuesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -146,7 +146,7 @@ sequenceDiagram
     R->>API: AssetTagsService/ListTagKeys (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListTagKeysResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -214,7 +214,7 @@ sequenceDiagram
     R->>API: AssetTagsService/CreateTagKey (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateTagKeyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -291,7 +291,7 @@ sequenceDiagram
     R->>API: AssetTagsService/GetTagKey (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetTagKeyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -367,7 +367,7 @@ sequenceDiagram
     R->>API: AssetTagsService/UpdateTagKey (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateTagKeyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -446,7 +446,7 @@ sequenceDiagram
     R->>API: AssetTagsService/DeleteTagKey (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteTagKeyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -522,7 +522,7 @@ sequenceDiagram
     R->>API: AssetTagsService/ListTagValues (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListTagValuesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -600,7 +600,7 @@ sequenceDiagram
     R->>API: AssetTagsService/SetTagValues (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SetTagValuesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -677,7 +677,7 @@ sequenceDiagram
     R->>API: AssetTagsService/DeleteTagValues (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteTagValuesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

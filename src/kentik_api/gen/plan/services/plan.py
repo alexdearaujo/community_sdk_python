@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.plan.services.PlanService as RestPlanModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.plan import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -54,11 +55,12 @@ class PlanServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestPlanModule1.ListPlansError,
             )
-            return attach_rate_limit(
-                rest_models.ListPlansResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListPlansResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListPlans,
+                operation_name="ListPlans",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

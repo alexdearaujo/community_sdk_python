@@ -22,7 +22,7 @@ This ledger records findings that are intentionally deferred.
 | B9 | blocker | gRPC receive-size policy and RESOURCE_EXHAUSTED classification need deeper runtime change. | Large responses may fail with misleading quota-like errors. | Keep REST fallback guidance for large payload workflows and track gRPC response-size incidents. | sdk-runtime | Revisit when gRPC runtime sizing and error taxonomy tasks are active. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/packaging/scripts/grpc_maxsize.py](reports/pre-pr-audit-2026-10-10/evidence/packaging/scripts/grpc_maxsize.py) | 2026-10-11 |
 | B11 | blocker | Public-name stability requires generator naming policy redesign. | Minor schema evolution can cause user-facing API name drift across releases. | Continue publishing clear surface-change notes and avoid stability guarantees for pending name-policy areas. | sdk-generation | Revisit when wrapper naming strategy work enters implementation phase. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/gencode/wrapper_names.py](reports/pre-pr-audit-2026-10-10/evidence/gencode/wrapper_names.py) | 2026-10-11 |
 | B12 | blocker | Operation-specific error hierarchy alignment is incomplete across transports. | Catch clauses scoped to operation-specific classes may miss real raised exceptions. | Document current catch guidance and prefer broader KentikError handling at integration boundaries. | sdk-runtime | Revisit when transport-symmetry and error-hierarchy tasks are implemented. | resolved | [reports/pre-pr-audit-2026-10-10/evidence/tests/error_class_probe.py](reports/pre-pr-audit-2026-10-10/evidence/tests/error_class_probe.py) | 2026-10-11 |
-| P2 | latent | Pinning needs a dev-group dependency and CI changes. | A future upstream schema change can break generation or the release gate (generator toolchain unpinned). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| P2 | latent | Pinning needs a dev-group dependency and CI changes. | A future upstream schema change can break generation or the release gate (generator toolchain unpinned). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | P3 | latent | Needs a pinned schema commit and a scheduled sync job. | A future upstream schema change can break generation or the release gate (CI follows a moving schema). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | P4 | latent | Staging-directory swap is a larger generator change. | A future upstream schema change can break generation or the release gate (generation is not atomic). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | P6 | latent | Ancestor-tag baselines, ref failure, and requirement parsing remain. | A future upstream schema change can break generation or the release gate (changelog gate gaps). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -52,12 +52,12 @@ This ledger records findings that are intentionally deferred.
 | R14 | runtime | Wrapper generation hides the import cause. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R15 | runtime | Model output step must relax REQUIRED on message fields. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R16 | runtime | Generator does not hoist inline objects. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T2 | test gap | In-process grpc.server success-path test. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T3 | test gap | Needs gRPC routes recorded in api_surface.json. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T4 | test gap | Needs the real request builder run on populated bodies. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| T2 | test gap | In-process grpc.server success-path test. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| T3 | test gap | Needs gRPC routes recorded in api_surface.json. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| T4 | test gap | Needs the real request builder run on populated bodies. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | K1 | release or docs | dist/ is local build output; the owner deletes it. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K2 | release or docs | Publishing keeps the legacy SDK's `PYPI_TOKEN` setup until the PR is accepted and a release validates it; the owner of the PyPI project and token is not yet known. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | unknown (under investigation) | Revisit once the PyPI owner is found and the first 2.0.0 release has run. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 | K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -230,3 +230,56 @@ This ledger records findings that are intentionally deferred.
   390 such fields stay undescribed until upstream keeps it. The Sphinx
   build escapes RST markup in field descriptions, so text like `c_` renders
   as written. 23 entries remain open.
+- P2 is resolved (2026-10-14). `openapi-python-generator==2.1.2` is in the
+  `dev` group, so `uv.lock` pins it and its dependencies. Generation runs it
+  and `grpc_tools.protoc` with the project interpreter, instead of `uvx` and
+  `uv run --with grpcio-tools`, which resolved outside the lock. CI needed no
+  change: every job already runs `uv sync --locked`. A regeneration with the
+  pin changed no generated file. A fork still runs through `uvx` when
+  `OPENAPI_GENERATOR_FROM` or `OPENAPI_GENERATOR_CMD` is set. 22 entries
+  remain open.
+- T2 is resolved (2026-10-14). `test_grpc_end_to_end.py` calls
+  `device.get_device` through the real `GrpcTransport` to an in-process
+  server that runs the generated `DeviceService` servicer. Only the TLS
+  credentials are swapped, for gRPC local credentials. The server checks the
+  auth metadata, the deadline, and the path argument. The client checks a
+  populated nested response and a 404 error class. An auth plugin that sends
+  no metadata fails the test. 21 entries remain open.
+- T9 is resolved (2026-10-14). `build_all_kwargs` fills every field of a
+  request body, nested optional fields included, except one that would
+  recurse. All 339 top-level body fields now get a value (93 before). The
+  e2e tests keep required fields only, since they call a real account.
+- T4 is resolved (2026-10-14). The mapping test runs the real
+  `build_grpc_request` on those bodies. `proto_sample_body` first swaps each
+  sample the proto rejects (well-known types, int64 strings, zero enums, a
+  second oneof member) and keeps unknown keys, so wrong nesting still fails
+  `ParseDict`. The test checks that the body is the caller's data, at the root
+  or under one field, and that every field it sends is set in the request.
+  A dropped body and a body nested under the wrong field both fail it. 19
+  entries remain open.
+- T3 is resolved (2026-10-14). `api_surface.json` (schema version 5) records
+  the RPC each operation calls on gRPC, or `null`. All 234 operations route
+  today. A lost or moved route is a breaking change for
+  `make check-changelog`. The wrapper contract and request mapping tests
+  accept `NotImplementedError` only where the record has no route, and a
+  routed call must reach the recorded RPC. A wrapper without gRPC code must
+  have no `pb` stubs. Breaking the `get_device` route fails both tests. 18
+  entries remain open.
+- T7 is resolved (2026-10-14). `make generate` writes
+  `schema_operations.json` from the patched swagger: each operation's
+  operationId, parameters, body, and response codes (234 operations in 42
+  services). CI's drift check keeps it in step with the schema.
+  `test_schema_operations.py` holds the generated REST modules to it without a
+  schema checkout, and replaces the test that always skipped in CI. A dropped
+  query argument and a dropped body both fail it. The respx routes still match
+  on method and path only. 17 entries remain open.
+- T1 is resolved (2026-10-14). Success responses come from the proto
+  descriptors, not the SDK's models: `sample_grpc_response` sets every field
+  of the recorded RPC's output, except `INTERNAL` fields that the published
+  schema omits. The REST coverage test and the gRPC contract test both parse
+  it and require the model to dump back to the same message, so a wrong type
+  or a dropped field fails. Restoring B2 fails all four alert operations on
+  both transports. Decision (option A): an unknown enum value stays strict.
+  gRPC now validates through REST's `parse_response_model`, so it raises the
+  same `HTTPException` 502, not a raw `ValidationError`, and a test pins that
+  on both transports. 16 entries remain open.

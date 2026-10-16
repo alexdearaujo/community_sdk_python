@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: KmiService/GetGlobalInsights (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetGlobalInsightsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -147,7 +147,7 @@ sequenceDiagram
     R->>API: KmiService/GetASNInsights (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetASNInsightsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -229,7 +229,7 @@ sequenceDiagram
     R->>API: KmiService/GetASNDetails (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetASNDetailsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -312,7 +312,7 @@ sequenceDiagram
     R->>API: KmiService/GetRankings (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetRankingsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -395,7 +395,7 @@ sequenceDiagram
     R->>API: KmiService/ListMarkets (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListMarketsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: AiAdvisorDataService/CreateChatSession (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateChatSessionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -145,7 +145,7 @@ sequenceDiagram
     R->>API: AiAdvisorDataService/UpdateChatSession (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateChatSessionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -222,7 +222,7 @@ sequenceDiagram
     R->>API: AiAdvisorDataService/GetChatSession (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetChatSessionResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

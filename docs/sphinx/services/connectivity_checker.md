@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: ConnectivityCheckerAdminService/CreateConnectivityReport (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateConnectivityReportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

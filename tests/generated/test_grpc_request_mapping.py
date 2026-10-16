@@ -14,7 +14,16 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
-from _discovery import WrapperCase, build_all_kwargs, discover_cases, proto_field
+from _discovery import (
+    WrapperCase,
+    build_all_kwargs,
+    discover_cases,
+    proto_field,
+    proto_sample_body,
+    proto_sample_value,
+    recorded_grpc_route,
+)
+from pydantic import BaseModel
 
 from kentik_api.transports.grpc_client import GrpcTransport
 
@@ -56,21 +65,40 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
 ):
     module = importlib.import_module(case.module_path)
     if not hasattr(module, "build_grpc_request"):
-        pytest.skip("service has no gRPC stubs")
+        # A wrapper with no gRPC code is right only when nothing could route.
+        assert not (case.file_path.parents[1] / "pb").exists()
+        assert recorded_grpc_route(case) is None
+        return
     wrapper = _grpc_wrapper(module, case.wrapper_class)
     method = getattr(wrapper, case.method_name)
     kwargs = build_all_kwargs(method)
 
     built: dict[str, Any] = {}
+    real_build = module.build_grpc_request
 
     def _build(message_cls, body, fields, update_mask_from=None):
+        descriptor = message_cls.DESCRIPTOR
+        built["raw_body"] = body
+        body = proto_sample_body(descriptor, body)
         built.update(
             message_cls=message_cls,
             body=body,
             fields=fields,
             update_mask_from=update_mask_from,
         )
-        return message_cls()
+        # The real builder, so a body nested under the wrong field fails here.
+        built["request"] = real_build(
+            message_cls,
+            body,
+            {
+                path: proto_sample_value(proto_field(descriptor, path), value)
+                if proto_field(descriptor, path) is not None
+                else value
+                for path, value in fields.items()
+            },
+            update_mask_from,
+        )
+        return built["request"]
 
     monkeypatch.setattr(module, "build_grpc_request", _build)
     captured = _capture_rpc(monkeypatch, module)
@@ -81,7 +109,12 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
         pass
     except NotImplementedError as exc:
         assert "not yet implemented" in str(exc)
+        assert recorded_grpc_route(case) is None, (
+            f"api_surface.json routes this method to {recorded_grpc_route(case)}"
+        )
         return
+
+    assert captured["rpc_path"].endswith(f".{recorded_grpc_route(case)}")
 
     request_descriptor = built["message_cls"].DESCRIPTOR
     # "/kentik.alerting.v202303.AlertAutoAckService/Delete"
@@ -108,11 +141,50 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
     for name, value in arguments.items():
         assert any(v is value for v in fields.values()), f"{name} is not sent"
     assert (built["body"] is not None) == ("data" in kwargs)
+    if "data" in kwargs:
+        data = kwargs["data"]
+        if isinstance(data, BaseModel):
+            assert data.model_fields_set == set(type(data).model_fields)
+        sent = (
+            data.model_dump(by_alias=True, exclude_unset=True)
+            if isinstance(data, BaseModel)
+            else dict(data)
+        )
+        raw = built["raw_body"]
+        # At the root for a `*` body rule, else under the one field the rule names.
+        assert raw == sent or list(raw.values()) == [sent], "the body is not the data"
+    assert not _unset_paths(built["request"], built["body"] or {}), (
+        "body fields sent but not set in the request"
+    )
     if built["update_mask_from"]:
         mask = request_descriptor.fields_by_name["update_mask"]
         assert mask.message_type.full_name == "google.protobuf.FieldMask"
         assert built["update_mask_from"] in request_descriptor.fields_by_name
         assert set(built["body"]) == {built["update_mask_from"]}
+
+
+def _unset_paths(message: Any, body: dict[str, Any], prefix: str = "") -> list[str]:
+    """Lists the body keys with a value whose field the built message leaves unset."""
+    set_names = {field.name for field, _ in message.ListFields()}
+    unset: list[str] = []
+    for key, value in body.items():
+        if value in (None, [], {}):
+            continue
+        field = proto_field(message.DESCRIPTOR, key)
+        path = f"{prefix}{key}"
+        if field is None or field.name not in set_names:
+            unset.append(path)
+            continue
+        child = getattr(message, field.name)
+        if field.message_type is None or field.message_type.GetOptions().map_entry:
+            continue
+        if field.message_type.full_name.startswith("google.protobuf."):
+            continue
+        if isinstance(value, list):
+            child, value = child[0], value[0]
+        if isinstance(value, dict):
+            unset += _unset_paths(child, value, f"{path}.")
+    return unset
 
 
 def _sent_device_request(monkeypatch, method_name: str, **kwargs) -> Any:

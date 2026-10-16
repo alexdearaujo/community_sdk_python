@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: InterfaceService/ListInterface (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -148,7 +148,7 @@ sequenceDiagram
     R->>API: InterfaceService/CreateInterface (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -225,7 +225,7 @@ sequenceDiagram
     R->>API: InterfaceService/GetInterface (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -301,7 +301,7 @@ sequenceDiagram
     R->>API: InterfaceService/UpdateInterface (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -380,7 +380,7 @@ sequenceDiagram
     R->>API: InterfaceService/DeleteInterface (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -456,7 +456,7 @@ sequenceDiagram
     R->>API: InterfaceService/ManualClassify (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ManualClassifyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

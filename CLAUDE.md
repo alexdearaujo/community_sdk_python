@@ -49,6 +49,9 @@ repo.
   architecture page, with an inline Mermaid dependency graph
 - `docs/sphinx/services/<service>.md` — one reference page per
   service, written by `endpoint_docs.EndpointDocsCollector.render()`
+- `schema_operations.json` — each service's operations as the patched
+  swagger declares them, written by
+  `EndpointDocsCollector.write_record()`
 - the `<!-- kentik-gen:... -->` marker blocks inside
   `docs/sphinx/guides/{quickstart,rest,grpc,generation}.md` and
   `docs/sphinx/README.md` — rewritten by
@@ -71,7 +74,8 @@ RPC name alone is wrong, because `alerting` declares `Delete` on
 several proto services. The generator reads each RPC's rule from the
 descriptor protoc serialized into its `_pb2.py`. The bridge runs
 `build_grpc_request()` (in `core/grpc_runtime.py`) → `call_grpc()` →
-`MessageToDict` → `model_validate()` against proto companions
+`parse_grpc_response()` (`MessageToDict`, then REST's own
+`parse_response_model()`) against proto companions
 compiled into `gen/pb_companions/`. `build_grpc_request()` transcodes
 the way grpc-gateway does: each URL placeholder sets the field its
 HTTP rule names at that position (GetDevice's `deviceid` sets `id`),
@@ -140,8 +144,9 @@ subpackage of independently testable phase modules (see
   `iter_service_dirs()` and `INTERNAL_GEN_DIRS` (the single answer to
   "is this directory a Service"), `discover_service_model_classes`,
   `service_to_pascal_case`, and the generated-source parsers
-  `parse_generated_rest_module` / `RestOperation` and
-  `parse_wrapper_methods` / `WrapperMethod`. Keep this list in step
+  `parse_generated_rest_module` / `RestOperation`,
+  `parse_wrapper_methods` / `WrapperMethod`, and `grpc_call` /
+  `grpc_stub_services` / `GrpcCall`. Keep this list in step
   with `scripts/generation/README.md`.
   Everything else stays local to the one phase module (or
   `generate_sdk.py` itself) that calls it. Resist the urge to move a
@@ -412,6 +417,11 @@ Mocked/offline layers (no network, safe to run anywhere, part of
   tests root, not inside one layer, since `tests/e2e/` imports it
   too). Every generated and e2e test file imports these helpers, so
   they can't drift apart.
+- `tests/generated/test_schema_operations.py` — holds the generated
+  REST modules to `schema_operations.json`: the same operations, a
+  `data` argument wherever the swagger has a body, an argument for
+  each swagger parameter, and a declared success status. Runs
+  without a schema checkout.
 - `tests/runtime/test_rest_runtime.py` — shared request/auth/error
   behavior in `src/kentik_api/core`.
 - `tests/smoke/test_client_mounts_and_calls.py` — lightweight

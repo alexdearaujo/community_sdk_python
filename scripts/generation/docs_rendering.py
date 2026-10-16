@@ -698,7 +698,7 @@ sequenceDiagram
         API-->>S: serialized proto response
         S-->>CG: {primary["response_class"]} proto
         CG-->>W: proto response
-        W-->>C: {primary["response_class"]} (Pydantic)<br/>via MessageToDict + model_validate
+        W-->>C: {primary["response_class"]} (Pydantic)<br/>via parse_grpc_response(), the same check as REST
     else gRPC error, deadline, or unreachable
         S-->>CG: raise RpcError
         CG-->>C: map_grpc_error(): AuthenticationError,<br/>HTTPException, or TransportError

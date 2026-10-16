@@ -1,13 +1,14 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.mkp.services.PackageService as RestMkpModule1
 import kentik_api.gen.mkp.services.TenantService as RestMkpModule2
 import kentik_api.gen.mkp.services.TenantUserService as RestMkpModule3
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.mkp import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -82,11 +83,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule1.PackageListError,
             )
-            return attach_rate_limit(
-                rest_models.ListPackageResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListPackageResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListPackage,
+                operation_name="PackageList",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -125,11 +127,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule1.PackageCreateError,
             )
-            return attach_rate_limit(
-                rest_models.CreatePackageResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreatePackageResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreatePackage,
+                operation_name="PackageCreate",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -164,11 +167,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule1.PackageGetError,
             )
-            return attach_rate_limit(
-                rest_models.GetPackageResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetPackageResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetPackage,
+                operation_name="PackageGet",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -209,11 +213,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule1.PackageUpdateError,
             )
-            return attach_rate_limit(
-                rest_models.UpdatePackageResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdatePackageResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdatePackage,
+                operation_name="PackageUpdate",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -249,11 +254,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule1.PackageDeleteError,
             )
-            return attach_rate_limit(
-                rest_models.DeletePackageResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeletePackageResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeletePackage,
+                operation_name="PackageDelete",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -286,11 +292,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule2.TenantListError,
             )
-            return attach_rate_limit(
-                rest_models.ListTenantResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListTenantResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.ListTenant,
+                operation_name="TenantList",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -329,11 +336,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule2.TenantCreateError,
             )
-            return attach_rate_limit(
-                rest_models.CreateTenantResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateTenantResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.CreateTenant,
+                operation_name="TenantCreate",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -368,11 +376,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule2.TenantGetError,
             )
-            return attach_rate_limit(
-                rest_models.GetTenantResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetTenantResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.GetTenant,
+                operation_name="TenantGet",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -413,11 +422,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule2.TenantUpdateError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateTenantResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateTenantResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.UpdateTenant,
+                operation_name="TenantUpdate",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -453,11 +463,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule2.TenantDeleteError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteTenantResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteTenantResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.DeleteTenant,
+                operation_name="TenantDelete",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -492,11 +503,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule3.TenantUserListError,
             )
-            return attach_rate_limit(
-                rest_models.ListTenantUserResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListTenantUserResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.ListTenantUser,
+                operation_name="TenantUserList",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -537,11 +549,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule3.TenantUserCreateError,
             )
-            return attach_rate_limit(
-                rest_models.CreateTenantUserResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateTenantUserResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.CreateTenantUser,
+                operation_name="TenantUserCreate",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -584,11 +597,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule3.TenantUserUpdateError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateTenantUserResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateTenantUserResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.UpdateTenantUser,
+                operation_name="TenantUserUpdate",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -627,11 +641,12 @@ class MkpServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestMkpModule3.TenantUserDeleteError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteTenantUserResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteTenantUserResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_3.DeleteTenantUser,
+                operation_name="TenantUserDelete",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

@@ -55,7 +55,8 @@ def test_read_endpoint_against_real_api_grpc(
 ):
     service_client = getattr(grpc_real_client, service_attr(case))
     method = getattr(service_client, case.wrapper.method_name)
-    kwargs = build_all_kwargs(method)
+    # Read-only calls against a real account: required body fields only.
+    kwargs = build_all_kwargs(method, every_field=False)
     _send_samples_the_proto_accepts(monkeypatch, case)
 
     label = f"{case_label(case.wrapper)} ({case.operation_name})"

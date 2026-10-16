@@ -70,7 +70,7 @@ sequenceDiagram
     R->>API: AgentService/ListAgents (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListAgentsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -147,7 +147,7 @@ sequenceDiagram
     R->>API: AgentService/CreateAgent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -224,7 +224,7 @@ sequenceDiagram
     R->>API: AgentService/Authorize (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: AuthorizeResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -300,7 +300,7 @@ sequenceDiagram
     R->>API: AgentService/GenerateInstallCommands (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GenerateInstallCommandsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -377,7 +377,7 @@ sequenceDiagram
     R->>API: AgentService/GetAgent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -454,7 +454,7 @@ sequenceDiagram
     R->>API: AgentService/UpdateAgent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -534,7 +534,7 @@ sequenceDiagram
     R->>API: AgentService/DeleteAgent (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -611,7 +611,7 @@ sequenceDiagram
     R->>API: AgentCapabilityService/ListAgentCapabilities (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListAgentCapabilitiesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -687,7 +687,7 @@ sequenceDiagram
     R->>API: AgentCapabilityService/GetAgentCapability (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -765,7 +765,7 @@ sequenceDiagram
     R->>API: AgentCapabilityService/UpsertAgentCapability (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpsertAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -847,7 +847,7 @@ sequenceDiagram
     R->>API: AgentCapabilityService/DeleteAgentCapability (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -923,7 +923,7 @@ sequenceDiagram
     R->>API: CapabilityAdminService/ListCapabilities (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCapabilitiesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -989,7 +989,7 @@ sequenceDiagram
     R->>API: CapabilityAdminService/CreateCapability (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1064,7 +1064,7 @@ sequenceDiagram
     R->>API: CapabilityAdminService/GetCapability (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1138,7 +1138,7 @@ sequenceDiagram
     R->>API: CapabilityAdminService/UpdateCapability (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1215,7 +1215,7 @@ sequenceDiagram
     R->>API: CapabilityAdminService/DeleteCapability (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1289,7 +1289,7 @@ sequenceDiagram
     R->>API: CapabilityReleaseService/GetCapabilityRelease (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCapabilityReleaseResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1366,7 +1366,7 @@ sequenceDiagram
     R->>API: CapabilityReleaseService/GetCapabilityLatestReleases (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCapabilityLatestReleasesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1441,7 +1441,7 @@ sequenceDiagram
     R->>API: CapabilityReleaseService/GetCapabilitySupportedDistros (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCapabilitySupportedDistrosResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1515,7 +1515,7 @@ sequenceDiagram
     R->>API: ConfigService/CreateConfig (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1592,7 +1592,7 @@ sequenceDiagram
     R->>API: ConfigService/GetConfig (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1668,7 +1668,7 @@ sequenceDiagram
     R->>API: ConfigService/UpdateConfig (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1747,7 +1747,7 @@ sequenceDiagram
     R->>API: ConfigService/DeleteConfig (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1823,7 +1823,7 @@ sequenceDiagram
     R->>API: ProvisioningTokenService/ListProvisioningTokens (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListProvisioningTokensResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1891,7 +1891,7 @@ sequenceDiagram
     R->>API: ProvisioningTokenService/CreateProvisioningToken (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -1968,7 +1968,7 @@ sequenceDiagram
     R->>API: ProvisioningTokenService/GetProvisioningToken (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2044,7 +2044,7 @@ sequenceDiagram
     R->>API: ProvisioningTokenService/ListAgentsByProvisioningToken (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListAgentsByProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -2120,7 +2120,7 @@ sequenceDiagram
     R->>API: ProvisioningTokenService/RevokeProvisioningToken (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: RevokeProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

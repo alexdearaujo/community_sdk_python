@@ -61,7 +61,8 @@ MUTATING_CASES = [c for c in _ALL_ENDPOINT_CASES if c.method != "get"]
 def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
     service_client = getattr(real_client, service_attr(case))
     method = getattr(service_client, case.wrapper.method_name)
-    kwargs = build_all_kwargs(method)
+    # Read-only calls against a real account: required body fields only.
+    kwargs = build_all_kwargs(method, every_field=False)
     kwargs.pop("api_config_override", None)
 
     assert real_client.api_config.base_path != "https://api.example.com"

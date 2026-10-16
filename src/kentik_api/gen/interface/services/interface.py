@@ -1,11 +1,12 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.interface.services.InterfaceService as RestInterfaceModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.interface import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -75,11 +76,12 @@ class InterfaceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestInterfaceModule1.ListInterfaceError,
             )
-            return attach_rate_limit(
-                rest_models.ListInterfaceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListInterfaceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListInterface,
+                operation_name="ListInterface",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -125,11 +127,12 @@ class InterfaceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestInterfaceModule1.InterfaceCreateError,
             )
-            return attach_rate_limit(
-                rest_models.CreateInterfaceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateInterfaceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.CreateInterface,
+                operation_name="InterfaceCreate",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -164,11 +167,12 @@ class InterfaceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestInterfaceModule1.InterfaceGetError,
             )
-            return attach_rate_limit(
-                rest_models.GetInterfaceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetInterfaceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetInterface,
+                operation_name="InterfaceGet",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -209,11 +213,12 @@ class InterfaceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestInterfaceModule1.InterfaceUpdateError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateInterfaceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateInterfaceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateInterface,
+                operation_name="InterfaceUpdate",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -249,11 +254,12 @@ class InterfaceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestInterfaceModule1.InterfaceDeleteError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteInterfaceResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteInterfaceResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteInterface,
+                operation_name="InterfaceDelete",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -293,11 +299,12 @@ class InterfaceServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestInterfaceModule1.ManualClassifyError,
             )
-            return attach_rate_limit(
-                rest_models.ManualClassifyResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ManualClassifyResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ManualClassify,
+                operation_name="ManualClassify",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

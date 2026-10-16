@@ -70,7 +70,7 @@ sequenceDiagram
     R->>API: BgpMonitoringDataService/GetMetricsForTarget (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetMetricsForTargetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -147,7 +147,7 @@ sequenceDiagram
     R->>API: BgpMonitoringDataService/GetRoutesForTarget (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetRoutesForTargetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -224,7 +224,7 @@ sequenceDiagram
     R->>API: BgpMonitoringAdminService/ListMonitors (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListMonitorsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -292,7 +292,7 @@ sequenceDiagram
     R->>API: BgpMonitoringAdminService/CreateMonitor (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: CreateMonitorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -369,7 +369,7 @@ sequenceDiagram
     R->>API: BgpMonitoringAdminService/GetMonitor (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetMonitorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -445,7 +445,7 @@ sequenceDiagram
     R->>API: BgpMonitoringAdminService/UpdateMonitor (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: UpdateMonitorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -524,7 +524,7 @@ sequenceDiagram
     R->>API: BgpMonitoringAdminService/DeleteMonitor (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: DeleteMonitorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -600,7 +600,7 @@ sequenceDiagram
     R->>API: BgpMonitoringAdminService/SetMonitorStatus (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: SetMonitorStatusResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

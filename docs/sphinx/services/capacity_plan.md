@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: CapacityPlanService/ListCapacityPlans (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCapacityPlansResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: CapacityPlanService/ListCapacitySummaries (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCapacitySummariesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -204,7 +204,7 @@ sequenceDiagram
     R->>API: CapacityPlanService/GetCapacityPlan (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCapacityPlanResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -280,7 +280,7 @@ sequenceDiagram
     R->>API: CapacityPlanService/GetCapacitySummary (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCapacitySummaryResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

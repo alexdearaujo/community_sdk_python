@@ -1,11 +1,12 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.capacity_plan.services.CapacityPlanService as RestCapacityPlanModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.capacity_plan import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -56,11 +57,12 @@ class CapacityPlanServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCapacityPlanModule1.ListCapacityPlansError,
             )
-            return attach_rate_limit(
-                rest_models.ListCapacityPlansResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListCapacityPlansResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListCapacityPlans,
+                operation_name="ListCapacityPlans",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -94,11 +96,12 @@ class CapacityPlanServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCapacityPlanModule1.ListCapacitySummariesError,
             )
-            return attach_rate_limit(
-                rest_models.ListCapacitySummariesResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListCapacitySummariesResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.ListCapacitySummaries,
+                operation_name="ListCapacitySummaries",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -132,11 +135,12 @@ class CapacityPlanServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCapacityPlanModule1.GetCapacityPlanError,
             )
-            return attach_rate_limit(
-                rest_models.GetCapacityPlanResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCapacityPlanResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetCapacityPlan,
+                operation_name="GetCapacityPlan",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -171,11 +175,12 @@ class CapacityPlanServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestCapacityPlanModule1.GetCapacitySummaryError,
             )
-            return attach_rate_limit(
-                rest_models.GetCapacitySummaryResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetCapacitySummaryResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetCapacitySummary,
+                operation_name="GetCapacitySummary",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

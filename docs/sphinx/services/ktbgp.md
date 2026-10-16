@@ -66,7 +66,7 @@ sequenceDiagram
     R->>API: RouteService/Announce (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: RouteServiceAnnounceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -141,7 +141,7 @@ sequenceDiagram
     R->>API: RouteService/List (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: RouteServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -216,7 +216,7 @@ sequenceDiagram
     R->>API: RouteService/Withdraw (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: RouteServiceWithdrawResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

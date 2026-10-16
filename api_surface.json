@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "requirements": {
     "grpcio": "grpcio>=1.84.0",
     "httpx": "httpx>=0.28.1,<1",
@@ -17,6 +17,7 @@
         "GET /ai_advisor/v202511/chat/{id}": {
           "operation": "GetChatSession",
           "method": "get_chat_session",
+          "grpc": "AiAdvisorDataService/GetChatSession",
           "status": 200,
           "required_params": [
             "id"
@@ -30,6 +31,7 @@
         "POST /ai_advisor/v202511/chat": {
           "operation": "CreateChatSession",
           "method": "create_chat_session",
+          "grpc": "AiAdvisorDataService/CreateChatSession",
           "status": 200,
           "required_params": [
             "data"
@@ -43,6 +45,7 @@
         "PUT /ai_advisor/v202511/chat": {
           "operation": "UpdateChatSession",
           "method": "update_chat_session",
+          "grpc": "AiAdvisorDataService/UpdateChatSession",
           "status": 200,
           "required_params": [
             "data"
@@ -192,6 +195,7 @@
         "DELETE /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Delete",
           "method": "auto_ack_delete",
+          "grpc": "AlertAutoAckService/Delete",
           "status": 200,
           "required_params": [
             "autoAckid"
@@ -205,6 +209,7 @@
         "DELETE /v202505/alerts/silence/{id}": {
           "operation": "Delete",
           "method": "silence_notifications_delete",
+          "grpc": "AlertSilenceNotificationsService/Delete",
           "status": 200,
           "required_params": [
             "id"
@@ -218,6 +223,7 @@
         "DELETE /v202505/suppressions/{id}": {
           "operation": "Delete",
           "method": "suppression_delete",
+          "grpc": "SuppressionService/Delete",
           "status": 200,
           "required_params": [
             "id"
@@ -231,6 +237,7 @@
         "GET /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Get",
           "method": "auto_ack_get",
+          "grpc": "AlertAutoAckService/Get",
           "status": 200,
           "required_params": [
             "autoAckid"
@@ -244,6 +251,7 @@
         "GET /v202505/alerts/silence/{id}": {
           "operation": "Get",
           "method": "silence_notifications_get",
+          "grpc": "AlertSilenceNotificationsService/Get",
           "status": 200,
           "required_params": [
             "id"
@@ -257,6 +265,7 @@
         "GET /v202505/alerts/{alertId}/comments": {
           "operation": "ListComments",
           "method": "list_comments",
+          "grpc": "AlertService/ListComments",
           "status": 200,
           "required_params": [
             "alertId"
@@ -270,6 +279,7 @@
         "GET /v202505/alerts/{id}": {
           "operation": "Get",
           "method": "alert_get",
+          "grpc": "AlertService/Get",
           "status": 200,
           "required_params": [
             "id"
@@ -283,6 +293,7 @@
         "GET /v202505/mitigations": {
           "operation": "List",
           "method": "mitigations_list",
+          "grpc": "MitigationsService/List",
           "status": 200,
           "required_params": [],
           "params": {
@@ -306,6 +317,7 @@
         "GET /v202505/mitigations/actions": {
           "operation": "AvailableActions",
           "method": "available_actions",
+          "grpc": "MitigationsService/AvailableActions",
           "status": 200,
           "required_params": [],
           "params": {
@@ -316,6 +328,7 @@
         "GET /v202505/mitigations/methods": {
           "operation": "List",
           "method": "mitigation_methods_list",
+          "grpc": "MitigationMethodsService/List",
           "status": 200,
           "required_params": [],
           "params": {
@@ -335,6 +348,7 @@
         "GET /v202505/mitigations/methods/{id}": {
           "operation": "Get",
           "method": "mitigation_methods_get",
+          "grpc": "MitigationMethodsService/Get",
           "status": 200,
           "required_params": [
             "id"
@@ -348,6 +362,7 @@
         "GET /v202505/mitigations/platforms": {
           "operation": "List",
           "method": "mitigation_platforms_list",
+          "grpc": "MitigationPlatformsService/List",
           "status": 200,
           "required_params": [],
           "params": {
@@ -367,6 +382,7 @@
         "GET /v202505/mitigations/platforms/{id}": {
           "operation": "Get",
           "method": "mitigation_platforms_get",
+          "grpc": "MitigationPlatformsService/Get",
           "status": 200,
           "required_params": [
             "id"
@@ -380,6 +396,7 @@
         "GET /v202505/mitigations/{action}": {
           "operation": "Get",
           "method": "mitigations_get",
+          "grpc": "MitigationsService/Get",
           "status": 200,
           "required_params": [
             "action"
@@ -393,6 +410,7 @@
         "GET /v202505/mitigations/{id}/actions": {
           "operation": "AvailableActionsForMitigation",
           "method": "available_actions_for_mitigation",
+          "grpc": "MitigationsService/AvailableActionsForMitigation",
           "status": 200,
           "required_params": [
             "id"
@@ -406,6 +424,7 @@
         "GET /v202505/policies/{policyType}/{id}": {
           "operation": "Get",
           "method": "policy_get",
+          "grpc": "PolicyService/Get",
           "status": 200,
           "required_params": [
             "id",
@@ -421,6 +440,7 @@
         "GET /v202505/suppressions/{id}": {
           "operation": "Get",
           "method": "suppression_get",
+          "grpc": "SuppressionService/Get",
           "status": 200,
           "required_params": [
             "id"
@@ -434,6 +454,7 @@
         "PATCH /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Replace",
           "method": "auto_ack_replace",
+          "grpc": "AlertAutoAckService/Replace",
           "status": 200,
           "required_params": [
             "autoAckid",
@@ -449,6 +470,7 @@
         "PATCH /v202505/alerts/silence/{id}": {
           "operation": "Replace",
           "method": "silence_notifications_replace",
+          "grpc": "AlertSilenceNotificationsService/Replace",
           "status": 200,
           "required_params": [
             "data",
@@ -464,6 +486,7 @@
         "PATCH /v202505/suppressions/{id}": {
           "operation": "Replace",
           "method": "suppression_replace",
+          "grpc": "SuppressionService/Replace",
           "status": 200,
           "required_params": [
             "data",
@@ -479,6 +502,7 @@
         "POST /v202505/alerts": {
           "operation": "List",
           "method": "alert_list",
+          "grpc": "AlertService/List",
           "status": 200,
           "required_params": [
             "data"
@@ -492,6 +516,7 @@
         "POST /v202505/alerts/ack/auto": {
           "operation": "Create",
           "method": "auto_ack_create",
+          "grpc": "AlertAutoAckService/Create",
           "status": 200,
           "required_params": [
             "data"
@@ -505,6 +530,7 @@
         "POST /v202505/alerts/ack/auto/list": {
           "operation": "List",
           "method": "auto_ack_list",
+          "grpc": "AlertAutoAckService/List",
           "status": 200,
           "required_params": [
             "data"
@@ -518,6 +544,7 @@
         "POST /v202505/alerts/clear": {
           "operation": "Clear",
           "method": "clear",
+          "grpc": "AlertService/Clear",
           "status": 200,
           "required_params": [
             "data"
@@ -531,6 +558,7 @@
         "POST /v202505/alerts/silence": {
           "operation": "Create",
           "method": "silence_notifications_create",
+          "grpc": "AlertSilenceNotificationsService/Create",
           "status": 200,
           "required_params": [
             "data"
@@ -544,6 +572,7 @@
         "POST /v202505/alerts/silence/list": {
           "operation": "List",
           "method": "silence_notifications_list",
+          "grpc": "AlertSilenceNotificationsService/List",
           "status": 200,
           "required_params": [
             "data"
@@ -557,6 +586,7 @@
         "POST /v202505/alerts/{alertId}/comments": {
           "operation": "AddComment",
           "method": "add_comment",
+          "grpc": "AlertService/AddComment",
           "status": 200,
           "required_params": [
             "alertId",
@@ -572,6 +602,7 @@
         "POST /v202505/alerts/{id}/ack": {
           "operation": "Ack",
           "method": "ack",
+          "grpc": "AlertService/Ack",
           "status": 200,
           "required_params": [
             "data",
@@ -587,6 +618,7 @@
         "POST /v202505/alerts/{id}/unack": {
           "operation": "UnAck",
           "method": "un_ack",
+          "grpc": "AlertService/UnAck",
           "status": 200,
           "required_params": [
             "data",
@@ -602,6 +634,7 @@
         "POST /v202505/mitigations": {
           "operation": "Create",
           "method": "mitigations_create",
+          "grpc": "MitigationsService/Create",
           "status": 200,
           "required_params": [
             "data"
@@ -615,6 +648,7 @@
         "POST /v202505/mitigations/{action}": {
           "operation": "Act",
           "method": "act",
+          "grpc": "MitigationsService/Act",
           "status": 200,
           "required_params": [
             "action",
@@ -630,6 +664,7 @@
         "POST /v202505/policies/list": {
           "operation": "List",
           "method": "policy_list",
+          "grpc": "PolicyService/List",
           "status": 200,
           "required_params": [
             "data"
@@ -643,6 +678,7 @@
         "POST /v202505/policies/{policyType}/{id}/disable": {
           "operation": "Disable",
           "method": "disable",
+          "grpc": "PolicyService/Disable",
           "status": 200,
           "required_params": [
             "data",
@@ -660,6 +696,7 @@
         "POST /v202505/policies/{policyType}/{id}/enable": {
           "operation": "Enable",
           "method": "enable",
+          "grpc": "PolicyService/Enable",
           "status": 200,
           "required_params": [
             "data",
@@ -677,6 +714,7 @@
         "POST /v202505/suppressions": {
           "operation": "Create",
           "method": "suppression_create",
+          "grpc": "SuppressionService/Create",
           "status": 200,
           "required_params": [
             "data"
@@ -690,6 +728,7 @@
         "POST /v202505/suppressions/list": {
           "operation": "List",
           "method": "suppression_list",
+          "grpc": "SuppressionService/List",
           "status": 200,
           "required_params": [
             "data"
@@ -703,6 +742,7 @@
         "PUT /v202505/alerts/{alertId}/external-context": {
           "operation": "SetExternalContext",
           "method": "set_external_context",
+          "grpc": "AlertService/SetExternalContext",
           "status": 200,
           "required_params": [
             "alertId",
@@ -3446,6 +3486,7 @@
         "DELETE /as_group/v202212/as_group/{asGroupid}": {
           "operation": "DeleteASGroup",
           "method": "delete_as_group",
+          "grpc": "ASGroupService/DeleteASGroup",
           "status": 200,
           "required_params": [
             "asGroupid"
@@ -3459,6 +3500,7 @@
         "GET /as_group/v202212/as_group": {
           "operation": "ListASGroups",
           "method": "list_as_groups",
+          "grpc": "ASGroupService/ListASGroups",
           "status": 200,
           "required_params": [],
           "params": {
@@ -3469,6 +3511,7 @@
         "GET /as_group/v202212/as_group/{asGroupid}": {
           "operation": "GetASGroup",
           "method": "get_as_group",
+          "grpc": "ASGroupService/GetASGroup",
           "status": 200,
           "required_params": [
             "asGroupid"
@@ -3482,6 +3525,7 @@
         "POST /as_group/v202212/as_group": {
           "operation": "CreateASGroup",
           "method": "create_as_group",
+          "grpc": "ASGroupService/CreateASGroup",
           "status": 200,
           "required_params": [
             "data"
@@ -3495,6 +3539,7 @@
         "PUT /as_group/v202212/as_group/{asGroupid}": {
           "operation": "UpdateASGroup",
           "method": "update_as_group",
+          "grpc": "ASGroupService/UpdateASGroup",
           "status": 200,
           "required_params": [
             "asGroupid",
@@ -3647,6 +3692,7 @@
         "DELETE /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "DeleteTagKey",
           "method": "delete_tag_key",
+          "grpc": "AssetTagsService/DeleteTagKey",
           "status": 200,
           "required_params": [
             "id"
@@ -3660,6 +3706,7 @@
         "GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values": {
           "operation": "GetTagValues",
           "method": "get_tag_values",
+          "grpc": "AssetTagsService/GetTagValues",
           "status": 200,
           "required_params": [
             "assetId",
@@ -3675,6 +3722,7 @@
         "GET /asset_tags/v20260515beta1/keys": {
           "operation": "ListTagKeys",
           "method": "list_tag_keys",
+          "grpc": "AssetTagsService/ListTagKeys",
           "status": 200,
           "required_params": [],
           "params": {
@@ -3685,6 +3733,7 @@
         "GET /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "GetTagKey",
           "method": "get_tag_key",
+          "grpc": "AssetTagsService/GetTagKey",
           "status": 200,
           "required_params": [
             "id"
@@ -3698,6 +3747,7 @@
         "GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values": {
           "operation": "ListTagValues",
           "method": "list_tag_values",
+          "grpc": "AssetTagsService/ListTagValues",
           "status": 200,
           "required_params": [
             "assetType",
@@ -3713,6 +3763,7 @@
         "POST /asset_tags/v20260515beta1/keys": {
           "operation": "CreateTagKey",
           "method": "create_tag_key",
+          "grpc": "AssetTagsService/CreateTagKey",
           "status": 200,
           "required_params": [
             "data"
@@ -3726,6 +3777,7 @@
         "POST /asset_tags/v20260515beta1/values/delete": {
           "operation": "DeleteTagValues",
           "method": "delete_tag_values",
+          "grpc": "AssetTagsService/DeleteTagValues",
           "status": 200,
           "required_params": [
             "data"
@@ -3739,6 +3791,7 @@
         "PUT /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "UpdateTagKey",
           "method": "update_tag_key",
+          "grpc": "AssetTagsService/UpdateTagKey",
           "status": 200,
           "required_params": [
             "data",
@@ -3754,6 +3807,7 @@
         "PUT /asset_tags/v20260515beta1/values": {
           "operation": "SetTagValues",
           "method": "set_tag_values",
+          "grpc": "AssetTagsService/SetTagValues",
           "status": 200,
           "required_params": [
             "data"
@@ -3968,6 +4022,7 @@
         "GET /audit/v202601/events": {
           "operation": "ListAuditEvents",
           "method": "list_events",
+          "grpc": "AuditService/ListAuditEvents",
           "status": 200,
           "required_params": [],
           "params": {
@@ -3982,6 +4037,7 @@
         "GET /audit/v202601/events/{id}": {
           "operation": "GetAuditEvent",
           "method": "get_event",
+          "grpc": "AuditService/GetAuditEvent",
           "status": 200,
           "required_params": [
             "id"
@@ -3996,6 +4052,7 @@
         "GET /audit/v202601/events/{id}/{ctime}": {
           "operation": "GetAuditEvent",
           "method": "get_event_by_ctime",
+          "grpc": "AuditService/GetAuditEvent",
           "status": 200,
           "required_params": [
             "ctime",
@@ -4163,6 +4220,7 @@
         "DELETE /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "DeleteMonitor",
           "method": "delete_monitor",
+          "grpc": "BgpMonitoringAdminService/DeleteMonitor",
           "status": 200,
           "required_params": [
             "id"
@@ -4176,6 +4234,7 @@
         "GET /bgp_monitoring/v202210/monitors": {
           "operation": "ListMonitors",
           "method": "list_monitors",
+          "grpc": "BgpMonitoringAdminService/ListMonitors",
           "status": 200,
           "required_params": [],
           "params": {
@@ -4186,6 +4245,7 @@
         "GET /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "GetMonitor",
           "method": "get_monitor",
+          "grpc": "BgpMonitoringAdminService/GetMonitor",
           "status": 200,
           "required_params": [
             "id"
@@ -4199,6 +4259,7 @@
         "POST /bgp_monitoring/v202210/metrics": {
           "operation": "GetMetricsForTarget",
           "method": "get_metrics_for_target",
+          "grpc": "BgpMonitoringDataService/GetMetricsForTarget",
           "status": 200,
           "required_params": [
             "data"
@@ -4212,6 +4273,7 @@
         "POST /bgp_monitoring/v202210/monitors": {
           "operation": "CreateMonitor",
           "method": "create_monitor",
+          "grpc": "BgpMonitoringAdminService/CreateMonitor",
           "status": 200,
           "required_params": [
             "data"
@@ -4225,6 +4287,7 @@
         "POST /bgp_monitoring/v202210/routes": {
           "operation": "GetRoutesForTarget",
           "method": "get_routes_for_target",
+          "grpc": "BgpMonitoringDataService/GetRoutesForTarget",
           "status": 200,
           "required_params": [
             "data"
@@ -4238,6 +4301,7 @@
         "PUT /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "UpdateMonitor",
           "method": "update_monitor",
+          "grpc": "BgpMonitoringAdminService/UpdateMonitor",
           "status": 200,
           "required_params": [
             "data",
@@ -4253,6 +4317,7 @@
         "PUT /bgp_monitoring/v202210/monitors/{id}/status": {
           "operation": "SetMonitorStatus",
           "method": "set_monitor_status",
+          "grpc": "BgpMonitoringAdminService/SetMonitorStatus",
           "status": 200,
           "required_params": [
             "data",
@@ -4634,6 +4699,7 @@
         "GET /capacity_plan/v202212/capacity_plan": {
           "operation": "ListCapacityPlans",
           "method": "list_capacity_plans",
+          "grpc": "CapacityPlanService/ListCapacityPlans",
           "status": 200,
           "required_params": [],
           "params": {
@@ -4644,6 +4710,7 @@
         "GET /capacity_plan/v202212/capacity_plan/summary": {
           "operation": "ListCapacitySummaries",
           "method": "list_capacity_summaries",
+          "grpc": "CapacityPlanService/ListCapacitySummaries",
           "status": 200,
           "required_params": [],
           "params": {
@@ -4654,6 +4721,7 @@
         "GET /capacity_plan/v202212/capacity_plan/{id}": {
           "operation": "GetCapacityPlan",
           "method": "get_capacity_plan",
+          "grpc": "CapacityPlanService/GetCapacityPlan",
           "status": 200,
           "required_params": [
             "id"
@@ -4667,6 +4735,7 @@
         "GET /capacity_plan/v202212/capacity_plan/{id}/summary": {
           "operation": "GetCapacitySummary",
           "method": "get_capacity_summary",
+          "grpc": "CapacityPlanService/GetCapacitySummary",
           "status": 200,
           "required_params": [
             "id"
@@ -4989,6 +5058,7 @@
         "DELETE /cloud_export/v202506/exports/{exportid}": {
           "operation": "DeleteCloudExport",
           "method": "delete_cloud_export",
+          "grpc": "CloudExportAdminService/DeleteCloudExport",
           "status": 200,
           "required_params": [
             "exportid"
@@ -5002,6 +5072,7 @@
         "GET /cloud_export/v202506/exports": {
           "operation": "ListCloudExports",
           "method": "list_cloud_exports",
+          "grpc": "CloudExportAdminService/ListCloudExports",
           "status": 200,
           "required_params": [],
           "params": {
@@ -5012,6 +5083,7 @@
         "GET /cloud_export/v202506/exports/{exportid}": {
           "operation": "GetCloudExport",
           "method": "get_cloud_export",
+          "grpc": "CloudExportAdminService/GetCloudExport",
           "status": 200,
           "required_params": [
             "exportid"
@@ -5025,6 +5097,7 @@
         "POST /cloud_export/v202506/exports": {
           "operation": "CreateCloudExport",
           "method": "create_cloud_export",
+          "grpc": "CloudExportAdminService/CreateCloudExport",
           "status": 200,
           "required_params": [
             "data"
@@ -5038,6 +5111,7 @@
         "PUT /cloud_export/v202506/exports/{exportid}": {
           "operation": "UpdateCloudExport",
           "method": "update_cloud_export",
+          "grpc": "CloudExportAdminService/UpdateCloudExport",
           "status": 200,
           "required_params": [
             "data",
@@ -5403,6 +5477,7 @@
         "POST /connectivity_checker/v202410beta1/create": {
           "operation": "CreateConnectivityReport",
           "method": "create_connectivity_report",
+          "grpc": "ConnectivityCheckerAdminService/CreateConnectivityReport",
           "status": 200,
           "required_params": [
             "data"
@@ -5567,6 +5642,7 @@
         "GET /cost/v202308/cost/providers": {
           "operation": "ListCostProviders",
           "method": "list_providers",
+          "grpc": "CostService/ListCostProviders",
           "status": 200,
           "required_params": [],
           "params": {
@@ -5577,6 +5653,7 @@
         "GET /cost/v202308/cost/summary": {
           "operation": "ListCostProviderSummaries",
           "method": "list_provider_summaries",
+          "grpc": "CostService/ListCostProviderSummaries",
           "status": 200,
           "required_params": [],
           "params": {
@@ -5588,6 +5665,7 @@
         "GET /cost/v202308/cost/summary/{id}": {
           "operation": "GetCostProviderSummary",
           "method": "get_provider_summary",
+          "grpc": "CostService/GetCostProviderSummary",
           "status": 200,
           "required_params": [
             "id"
@@ -5760,6 +5838,7 @@
         "GET /credential/v202407alpha1/group": {
           "operation": "ListCredentialGroup",
           "method": "list_group",
+          "grpc": "CredentialService/ListCredentialGroup",
           "status": 200,
           "required_params": [],
           "params": {
@@ -5770,6 +5849,7 @@
         "GET /credential/v202407alpha1/group/{id}": {
           "operation": "GetCredentialGroup",
           "method": "get_group",
+          "grpc": "CredentialService/GetCredentialGroup",
           "status": 200,
           "required_params": [
             "id"
@@ -6007,6 +6087,7 @@
         "DELETE /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "DeleteCustomApplication",
           "method": "delete_custom_application",
+          "grpc": "CustomApplicationService/DeleteCustomApplication",
           "status": 200,
           "required_params": [
             "customApplicationId"
@@ -6020,6 +6101,7 @@
         "GET /custom_application/v202501alpha1": {
           "operation": "ListCustomApplications",
           "method": "list_custom_applications",
+          "grpc": "CustomApplicationService/ListCustomApplications",
           "status": 200,
           "required_params": [],
           "params": {
@@ -6030,6 +6112,7 @@
         "GET /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "GetCustomApplication",
           "method": "get_custom_application",
+          "grpc": "CustomApplicationService/GetCustomApplication",
           "status": 200,
           "required_params": [
             "customApplicationId"
@@ -6043,6 +6126,7 @@
         "POST /custom_application/v202501alpha1": {
           "operation": "CreateCustomApplication",
           "method": "create_custom_application",
+          "grpc": "CustomApplicationService/CreateCustomApplication",
           "status": 200,
           "required_params": [
             "data"
@@ -6056,6 +6140,7 @@
         "PUT /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "UpdateCustomApplication",
           "method": "update_custom_application",
+          "grpc": "CustomApplicationService/UpdateCustomApplication",
           "status": 200,
           "required_params": [
             "customApplicationId",
@@ -6176,6 +6261,7 @@
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "DeleteCustomDimension",
           "method": "delete_custom_dimension",
+          "grpc": "CustomDimensionService/DeleteCustomDimension",
           "status": 200,
           "required_params": [
             "customDimensionId"
@@ -6189,6 +6275,7 @@
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "DeletePopulator",
           "method": "delete_populator",
+          "grpc": "CustomDimensionService/DeletePopulator",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6204,6 +6291,7 @@
         "GET /custom_dimensions/v202411alpha1": {
           "operation": "ListCustomDimensions",
           "method": "list_custom_dimensions",
+          "grpc": "CustomDimensionService/ListCustomDimensions",
           "status": 200,
           "required_params": [],
           "params": {
@@ -6214,6 +6302,7 @@
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "GetCustomDimensionInfo",
           "method": "get_info",
+          "grpc": "CustomDimensionService/GetCustomDimensionInfo",
           "status": 200,
           "required_params": [
             "customDimensionId"
@@ -6227,6 +6316,7 @@
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "GetPopulator",
           "method": "get_populator",
+          "grpc": "CustomDimensionService/GetPopulator",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6243,6 +6333,7 @@
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}": {
           "operation": "GetPopulatorField",
           "method": "get_populator_field",
+          "grpc": "CustomDimensionService/GetPopulatorField",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6262,6 +6353,7 @@
         "POST /custom_dimensions/v202411alpha1/{customDimensionId}/populator": {
           "operation": "CreatePopulator",
           "method": "create_populator",
+          "grpc": "CustomDimensionService/CreatePopulator",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6277,6 +6369,7 @@
         "POST /v1/customdimension": {
           "operation": "CreateCustomDimension",
           "method": "create_custom_dimension",
+          "grpc": "CustomDimensionService/CreateCustomDimension",
           "status": 200,
           "required_params": [
             "data"
@@ -6290,6 +6383,7 @@
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "UpdateCustomDimension",
           "method": "update_custom_dimension",
+          "grpc": "CustomDimensionService/UpdateCustomDimension",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6305,6 +6399,7 @@
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "UpdatePopulator",
           "method": "update_populator",
+          "grpc": "CustomDimensionService/UpdatePopulator",
           "status": 200,
           "required_params": [
             "customDimensionId",
@@ -6579,6 +6674,7 @@
         "DELETE /device/v202504beta2/device/{deviceid}": {
           "operation": "DeleteDevice",
           "method": "delete_device",
+          "grpc": "DeviceService/DeleteDevice",
           "status": 200,
           "required_params": [
             "deviceid"
@@ -6592,6 +6688,7 @@
         "GET /device/v202504beta2/device": {
           "operation": "ListDevices",
           "method": "list_devices",
+          "grpc": "DeviceService/ListDevices",
           "status": 200,
           "required_params": [],
           "params": {
@@ -6604,6 +6701,7 @@
         "GET /device/v202504beta2/device/name/{deviceName}": {
           "operation": "GetDeviceByName",
           "method": "get_device_by_name",
+          "grpc": "DeviceService/GetDeviceByName",
           "status": 200,
           "required_params": [
             "deviceName"
@@ -6618,6 +6716,7 @@
         "GET /device/v202504beta2/device/{deviceid}": {
           "operation": "GetDevice",
           "method": "get_device",
+          "grpc": "DeviceService/GetDevice",
           "status": 200,
           "required_params": [
             "deviceid"
@@ -6632,6 +6731,7 @@
         "POST /device/v202504beta2/device": {
           "operation": "CreateDevice",
           "method": "create_device",
+          "grpc": "DeviceService/CreateDevice",
           "status": 200,
           "required_params": [
             "data"
@@ -6645,6 +6745,7 @@
         "POST /device/v202504beta2/device/batch_create": {
           "operation": "CreateDevices",
           "method": "create_devices",
+          "grpc": "DeviceService/CreateDevices",
           "status": 200,
           "required_params": [
             "data"
@@ -6658,6 +6759,7 @@
         "POST /device/v202504beta2/device/batch_delete": {
           "operation": "DeleteDevices",
           "method": "delete_devices",
+          "grpc": "DeviceService/DeleteDevices",
           "status": 200,
           "required_params": [
             "data"
@@ -6671,6 +6773,7 @@
         "PUT /device/v202504beta2/device/batch_update": {
           "operation": "UpdateDevices",
           "method": "update_devices",
+          "grpc": "DeviceService/UpdateDevices",
           "status": 200,
           "required_params": [
             "data"
@@ -6684,6 +6787,7 @@
         "PUT /device/v202504beta2/device/{deviceid}": {
           "operation": "UpdateDevice",
           "method": "update_device",
+          "grpc": "DeviceService/UpdateDevice",
           "status": 200,
           "required_params": [
             "data",
@@ -6699,6 +6803,7 @@
         "PUT /device/v202504beta2/device/{id}/labels": {
           "operation": "UpdateDeviceLabels",
           "method": "update_labels",
+          "grpc": "DeviceService/UpdateDeviceLabels",
           "status": 200,
           "required_params": [
             "data",
@@ -7935,6 +8040,7 @@
         "GET /dictionary/v20260604alpha1": {
           "operation": "GetDictionary",
           "method": "get_dictionary",
+          "grpc": "DictionaryService/GetDictionary",
           "status": 200,
           "required_params": [],
           "params": {
@@ -8281,6 +8387,7 @@
         "POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids": {
           "operation": "FetchValuesByIds",
           "method": "fetch_values_by_ids",
+          "grpc": "EnumerationsAdminService/FetchValuesByIds",
           "status": 200,
           "required_params": [
             "data"
@@ -8340,6 +8447,7 @@
         "DELETE /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "DeleteFlowTag",
           "method": "delete_flow_tag",
+          "grpc": "FlowTagService/DeleteFlowTag",
           "status": 200,
           "required_params": [
             "flowTagid"
@@ -8353,6 +8461,7 @@
         "GET /flow_tag/v202404alpha1/tag": {
           "operation": "SearchFlowTag",
           "method": "search_flow_tag",
+          "grpc": "FlowTagService/SearchFlowTag",
           "status": 200,
           "required_params": [],
           "params": {
@@ -8368,6 +8477,7 @@
         "GET /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "GetFlowTag",
           "method": "get_flow_tag",
+          "grpc": "FlowTagService/GetFlowTag",
           "status": 200,
           "required_params": [
             "flowTagid"
@@ -8381,6 +8491,7 @@
         "POST /flow_tag/v202404alpha1/tag": {
           "operation": "CreateFlowTag",
           "method": "create_flow_tag",
+          "grpc": "FlowTagService/CreateFlowTag",
           "status": 200,
           "required_params": [
             "data"
@@ -8394,6 +8505,7 @@
         "PUT /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "UpdateFlowTag",
           "method": "update_flow_tag",
+          "grpc": "FlowTagService/UpdateFlowTag",
           "status": 200,
           "required_params": [
             "data",
@@ -8653,6 +8765,7 @@
         "DELETE /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceDelete",
           "method": "interface_delete",
+          "grpc": "InterfaceService/DeleteInterface",
           "status": 200,
           "required_params": [
             "id"
@@ -8666,6 +8779,7 @@
         "GET /interface/v202108alpha1/interfaces": {
           "operation": "ListInterface",
           "method": "list_interface",
+          "grpc": "InterfaceService/ListInterface",
           "status": 200,
           "required_params": [],
           "params": {
@@ -8683,6 +8797,7 @@
         "GET /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceGet",
           "method": "interface_get",
+          "grpc": "InterfaceService/GetInterface",
           "status": 200,
           "required_params": [
             "id"
@@ -8696,6 +8811,7 @@
         "POST /interface/v202108alpha1/interfaces": {
           "operation": "InterfaceCreate",
           "method": "interface_create",
+          "grpc": "InterfaceService/CreateInterface",
           "status": 200,
           "required_params": [
             "data"
@@ -8709,6 +8825,7 @@
         "POST /interface/v202108alpha1/manual_classify": {
           "operation": "ManualClassify",
           "method": "manual_classify",
+          "grpc": "InterfaceService/ManualClassify",
           "status": 200,
           "required_params": [
             "data"
@@ -8722,6 +8839,7 @@
         "PUT /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceUpdate",
           "method": "interface_update",
+          "grpc": "InterfaceService/UpdateInterface",
           "status": 200,
           "required_params": [
             "data",
@@ -9069,6 +9187,7 @@
         "GET /journeys/v202406/GetJourneysNlq": {
           "operation": "GetJourneysNlq",
           "method": "get_nlq",
+          "grpc": "JourneysDataService/GetJourneysNlq",
           "status": 200,
           "required_params": [
             "prompt"
@@ -9146,6 +9265,7 @@
         "DELETE /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "DeleteAgentCapability",
           "method": "delete_agent_capability",
+          "grpc": "AgentCapabilityService/DeleteAgentCapability",
           "status": 200,
           "required_params": [
             "agentId",
@@ -9161,6 +9281,7 @@
         "DELETE /kagent/v202401/agents/{agentid}": {
           "operation": "DeleteAgent",
           "method": "delete_agent",
+          "grpc": "AgentService/DeleteAgent",
           "status": 200,
           "required_params": [
             "agentid"
@@ -9175,6 +9296,7 @@
         "DELETE /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_DeleteCapability",
           "method": "capability_admin_service__delete_capability",
+          "grpc": "CapabilityAdminService/DeleteCapability",
           "status": 200,
           "required_params": [
             "capabilityname"
@@ -9188,6 +9310,7 @@
         "DELETE /kagent/v202401/config/{configname}": {
           "operation": "DeleteConfig",
           "method": "delete_config",
+          "grpc": "ConfigService/DeleteConfig",
           "status": 200,
           "required_params": [
             "configname"
@@ -9201,6 +9324,7 @@
         "GET /kagent/v202401/agents": {
           "operation": "ListAgents",
           "method": "list_agents",
+          "grpc": "AgentService/ListAgents",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9215,6 +9339,7 @@
         "GET /kagent/v202401/agents/{agentId}/capabilities": {
           "operation": "ListAgentCapabilities",
           "method": "list_agent_capabilities",
+          "grpc": "AgentCapabilityService/ListAgentCapabilities",
           "status": 200,
           "required_params": [
             "agentId"
@@ -9228,6 +9353,7 @@
         "GET /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "GetAgentCapability",
           "method": "get_agent_capability",
+          "grpc": "AgentCapabilityService/GetAgentCapability",
           "status": 200,
           "required_params": [
             "agentId",
@@ -9243,6 +9369,7 @@
         "GET /kagent/v202401/agents/{agentid}": {
           "operation": "GetAgent",
           "method": "get_agent",
+          "grpc": "AgentService/GetAgent",
           "status": 200,
           "required_params": [
             "agentid"
@@ -9257,6 +9384,7 @@
         "GET /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_ListCapabilities",
           "method": "capability_admin_service__list_capabilities",
+          "grpc": "CapabilityAdminService/ListCapabilities",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9267,6 +9395,7 @@
         "GET /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_GetCapability",
           "method": "capability_admin_service__get_capability",
+          "grpc": "CapabilityAdminService/GetCapability",
           "status": 200,
           "required_params": [
             "capabilityname"
@@ -9280,6 +9409,7 @@
         "GET /kagent/v202401/config/{configname}": {
           "operation": "GetConfig",
           "method": "get_config",
+          "grpc": "ConfigService/GetConfig",
           "status": 200,
           "required_params": [
             "configname"
@@ -9293,6 +9423,7 @@
         "GET /kagent/v202401/provisioning-tokens": {
           "operation": "ListProvisioningTokens",
           "method": "list_provisioning_tokens",
+          "grpc": "ProvisioningTokenService/ListProvisioningTokens",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9303,6 +9434,7 @@
         "GET /kagent/v202401/provisioning-tokens/{token}": {
           "operation": "GetProvisioningToken",
           "method": "get_provisioning_token",
+          "grpc": "ProvisioningTokenService/GetProvisioningToken",
           "status": 200,
           "required_params": [
             "token"
@@ -9316,6 +9448,7 @@
         "GET /kagent/v202401/provisioning-tokens/{token}/agents": {
           "operation": "ListAgentsByProvisioningToken",
           "method": "list_agents_by_provisioning_token",
+          "grpc": "ProvisioningTokenService/ListAgentsByProvisioningToken",
           "status": 200,
           "required_params": [
             "token"
@@ -9329,6 +9462,7 @@
         "GET /kagent/v202401/releases": {
           "operation": "CapabilityReleaseService_GetCapabilityRelease",
           "method": "capability_release_service__get_capability_release",
+          "grpc": "CapabilityReleaseService/GetCapabilityRelease",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9345,6 +9479,7 @@
         "GET /kagent/v202401/releases/latest": {
           "operation": "CapabilityReleaseService_GetCapabilityLatestReleases",
           "method": "capability_release_service__get_capability_latest_releases",
+          "grpc": "CapabilityReleaseService/GetCapabilityLatestReleases",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9361,6 +9496,7 @@
         "GET /kagent/v202401/releases/supported_distros": {
           "operation": "CapabilityReleaseService_GetCapabilitySupportedDistros",
           "method": "capability_release_service__get_capability_supported_distros",
+          "grpc": "CapabilityReleaseService/GetCapabilitySupportedDistros",
           "status": 200,
           "required_params": [],
           "params": {
@@ -9372,6 +9508,7 @@
         "PATCH /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "UpsertAgentCapability",
           "method": "upsert_agent_capability",
+          "grpc": "AgentCapabilityService/UpsertAgentCapability",
           "status": 200,
           "required_params": [
             "agentId",
@@ -9390,6 +9527,7 @@
         "PATCH /kagent/v202401/agents/{agentid}": {
           "operation": "UpdateAgent",
           "method": "update_agent",
+          "grpc": "AgentService/UpdateAgent",
           "status": 200,
           "required_params": [
             "agentid",
@@ -9406,6 +9544,7 @@
         "PATCH /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_UpdateCapability",
           "method": "capability_admin_service__update_capability",
+          "grpc": "CapabilityAdminService/UpdateCapability",
           "status": 200,
           "required_params": [
             "capabilityname",
@@ -9421,6 +9560,7 @@
         "PATCH /kagent/v202401/config/{configname}": {
           "operation": "UpdateConfig",
           "method": "update_config",
+          "grpc": "ConfigService/UpdateConfig",
           "status": 200,
           "required_params": [
             "configname",
@@ -9436,6 +9576,7 @@
         "POST /kagent/v202401/agents": {
           "operation": "CreateAgent",
           "method": "create_agent",
+          "grpc": "AgentService/CreateAgent",
           "status": 200,
           "required_params": [
             "data"
@@ -9449,6 +9590,7 @@
         "POST /kagent/v202401/agents/install-commands": {
           "operation": "GenerateInstallCommands",
           "method": "generate_install_commands",
+          "grpc": "AgentService/GenerateInstallCommands",
           "status": 200,
           "required_params": [
             "data"
@@ -9462,6 +9604,7 @@
         "POST /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_CreateCapability",
           "method": "capability_admin_service__create_capability",
+          "grpc": "CapabilityAdminService/CreateCapability",
           "status": 200,
           "required_params": [
             "data"
@@ -9475,6 +9618,7 @@
         "POST /kagent/v202401/config": {
           "operation": "CreateConfig",
           "method": "create_config",
+          "grpc": "ConfigService/CreateConfig",
           "status": 200,
           "required_params": [
             "data"
@@ -9488,6 +9632,7 @@
         "POST /kagent/v202401/provisioning-tokens": {
           "operation": "CreateProvisioningToken",
           "method": "create_provisioning_token",
+          "grpc": "ProvisioningTokenService/CreateProvisioningToken",
           "status": 200,
           "required_params": [
             "data"
@@ -9501,6 +9646,7 @@
         "POST /kagent/v202401/provisioning-tokens/{token}/revoke": {
           "operation": "RevokeProvisioningToken",
           "method": "revoke_provisioning_token",
+          "grpc": "ProvisioningTokenService/RevokeProvisioningToken",
           "status": 200,
           "required_params": [
             "data",
@@ -9516,6 +9662,7 @@
         "PUT /kagent/v202401/agents/authorize/{installId}": {
           "operation": "Authorize",
           "method": "authorize",
+          "grpc": "AgentService/Authorize",
           "status": 200,
           "required_params": [
             "installId"
@@ -10334,6 +10481,7 @@
         "DELETE /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "DeleteServiceNowConfig",
           "method": "delete_service_now_config",
+          "grpc": "KmetaService/DeleteServiceNowConfig",
           "status": 200,
           "required_params": [
             "cid",
@@ -10349,6 +10497,7 @@
         "GET /kmeta/v202607alpha1/{cid}/servicenow/config": {
           "operation": "ListServiceNowConfigs",
           "method": "list_service_now_configs",
+          "grpc": "KmetaService/ListServiceNowConfigs",
           "status": 200,
           "required_params": [
             "cid"
@@ -10362,6 +10511,7 @@
         "GET /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "GetServiceNowConfig",
           "method": "get_service_now_config",
+          "grpc": "KmetaService/GetServiceNowConfig",
           "status": 200,
           "required_params": [
             "cid",
@@ -10377,6 +10527,7 @@
         "POST /kmeta/v202607alpha1/{cid}/servicenow/config": {
           "operation": "CreateServiceNowConfig",
           "method": "create_service_now_config",
+          "grpc": "KmetaService/CreateServiceNowConfig",
           "status": 200,
           "required_params": [
             "cid",
@@ -10392,6 +10543,7 @@
         "PUT /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "UpdateServiceNowConfig",
           "method": "update_service_now_config",
+          "grpc": "KmetaService/UpdateServiceNowConfig",
           "status": 200,
           "required_params": [
             "cid",
@@ -10514,6 +10666,7 @@
         "GET /kmi/v202212/insights": {
           "operation": "GetGlobalInsights",
           "method": "get_global_insights",
+          "grpc": "KmiService/GetGlobalInsights",
           "status": 200,
           "required_params": [],
           "params": {
@@ -10530,6 +10683,7 @@
         "GET /kmi/v202212/insights/{asn}": {
           "operation": "GetASNInsights",
           "method": "get_asn_insights",
+          "grpc": "KmiService/GetASNInsights",
           "status": 200,
           "required_params": [
             "asn"
@@ -10549,6 +10703,7 @@
         "GET /kmi/v202212/markets": {
           "operation": "ListMarkets",
           "method": "list_markets",
+          "grpc": "KmiService/ListMarkets",
           "status": 200,
           "required_params": [],
           "params": {
@@ -10559,6 +10714,7 @@
         "POST /kmi/v202212/market/{marketId}/network/{asn}/{type}": {
           "operation": "GetASNDetails",
           "method": "get_asn_details",
+          "grpc": "KmiService/GetASNDetails",
           "status": 200,
           "required_params": [
             "asn",
@@ -10578,6 +10734,7 @@
         "POST /kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}": {
           "operation": "GetRankings",
           "method": "get_rankings",
+          "grpc": "KmiService/GetRankings",
           "status": 200,
           "required_params": [
             "data",
@@ -10901,6 +11058,7 @@
         "POST /routes/announce": {
           "operation": "RouteService_Announce",
           "method": "route_service__announce",
+          "grpc": "RouteService/Announce",
           "status": 200,
           "required_params": [
             "data"
@@ -10914,6 +11072,7 @@
         "POST /routes/list": {
           "operation": "RouteService_List",
           "method": "route_service__list",
+          "grpc": "RouteService/List",
           "status": 200,
           "required_params": [
             "data"
@@ -10927,6 +11086,7 @@
         "POST /routes/withdraw": {
           "operation": "RouteService_Withdraw",
           "method": "route_service__withdraw",
+          "grpc": "RouteService/Withdraw",
           "status": 200,
           "required_params": [
             "data"
@@ -11525,6 +11685,7 @@
         "DELETE /label/v202210/labels/{id}": {
           "operation": "DeleteLabel",
           "method": "delete_label",
+          "grpc": "LabelService/DeleteLabel",
           "status": 200,
           "required_params": [
             "id"
@@ -11538,6 +11699,7 @@
         "GET /label/v202210/labels": {
           "operation": "ListLabels",
           "method": "list_labels",
+          "grpc": "LabelService/ListLabels",
           "status": 200,
           "required_params": [],
           "params": {
@@ -11548,6 +11710,7 @@
         "POST /label/v202210/labels": {
           "operation": "CreateLabel",
           "method": "create_label",
+          "grpc": "LabelService/CreateLabel",
           "status": 200,
           "required_params": [
             "data"
@@ -11561,6 +11724,7 @@
         "POST /label/v202210/labels/{id}": {
           "operation": "UpdateLabel",
           "method": "update_label",
+          "grpc": "LabelService/UpdateLabel",
           "status": 200,
           "required_params": [
             "data",
@@ -11676,6 +11840,7 @@
         "DELETE /mkp/v202407/packages/{id}": {
           "operation": "PackageDelete",
           "method": "package_delete",
+          "grpc": "PackageService/DeletePackage",
           "status": 200,
           "required_params": [
             "id"
@@ -11689,6 +11854,7 @@
         "DELETE /mkp/v202407/tenants/{id}": {
           "operation": "TenantDelete",
           "method": "tenant_delete",
+          "grpc": "TenantService/DeleteTenant",
           "status": 200,
           "required_params": [
             "id"
@@ -11702,6 +11868,7 @@
         "DELETE /mkp/v202407/tenants/{tenantId}/users/{id}": {
           "operation": "TenantUserDelete",
           "method": "tenant_user_delete",
+          "grpc": "TenantUserService/DeleteTenantUser",
           "status": 200,
           "required_params": [
             "id",
@@ -11717,6 +11884,7 @@
         "GET /mkp/v202407/packages": {
           "operation": "PackageList",
           "method": "package_list",
+          "grpc": "PackageService/ListPackage",
           "status": 200,
           "required_params": [],
           "params": {
@@ -11727,6 +11895,7 @@
         "GET /mkp/v202407/packages/{id}": {
           "operation": "PackageGet",
           "method": "package_get",
+          "grpc": "PackageService/GetPackage",
           "status": 200,
           "required_params": [
             "id"
@@ -11740,6 +11909,7 @@
         "GET /mkp/v202407/tenants": {
           "operation": "TenantList",
           "method": "tenant_list",
+          "grpc": "TenantService/ListTenant",
           "status": 200,
           "required_params": [],
           "params": {
@@ -11750,6 +11920,7 @@
         "GET /mkp/v202407/tenants/{id}": {
           "operation": "TenantGet",
           "method": "tenant_get",
+          "grpc": "TenantService/GetTenant",
           "status": 200,
           "required_params": [
             "id"
@@ -11763,6 +11934,7 @@
         "GET /mkp/v202407/tenants/{tenantId}/users": {
           "operation": "TenantUserList",
           "method": "tenant_user_list",
+          "grpc": "TenantUserService/ListTenantUser",
           "status": 200,
           "required_params": [
             "tenantId"
@@ -11776,6 +11948,7 @@
         "POST /mkp/v202407/packages": {
           "operation": "PackageCreate",
           "method": "package_create",
+          "grpc": "PackageService/CreatePackage",
           "status": 200,
           "required_params": [
             "data"
@@ -11789,6 +11962,7 @@
         "POST /mkp/v202407/tenants": {
           "operation": "TenantCreate",
           "method": "tenant_create",
+          "grpc": "TenantService/CreateTenant",
           "status": 200,
           "required_params": [
             "data"
@@ -11802,6 +11976,7 @@
         "POST /mkp/v202407/tenants/{tenantId}/users": {
           "operation": "TenantUserCreate",
           "method": "tenant_user_create",
+          "grpc": "TenantUserService/CreateTenantUser",
           "status": 200,
           "required_params": [
             "data",
@@ -11817,6 +11992,7 @@
         "PUT /mkp/v202407/packages/{id}": {
           "operation": "PackageUpdate",
           "method": "package_update",
+          "grpc": "PackageService/UpdatePackage",
           "status": 200,
           "required_params": [
             "data",
@@ -11832,6 +12008,7 @@
         "PUT /mkp/v202407/tenants/{id}": {
           "operation": "TenantUpdate",
           "method": "tenant_update",
+          "grpc": "TenantService/UpdateTenant",
           "status": 200,
           "required_params": [
             "data",
@@ -11847,6 +12024,7 @@
         "PUT /mkp/v202407/tenants/{tenantId}/users/{id}": {
           "operation": "TenantUserUpdate",
           "method": "tenant_user_update",
+          "grpc": "TenantUserService/UpdateTenantUser",
           "status": 200,
           "required_params": [
             "data",
@@ -12619,6 +12797,7 @@
         "GET /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassGet",
           "method": "network_class_get",
+          "grpc": "NetworkClassService/GetNetworkClass",
           "status": 200,
           "required_params": [],
           "params": {
@@ -12629,6 +12808,7 @@
         "POST /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassUpdate",
           "method": "network_class_update",
+          "grpc": "NetworkClassService/UpdateNetworkClass",
           "status": 200,
           "required_params": [
             "data"
@@ -12738,6 +12918,7 @@
         "GET /nms/v202505/metrics_schema": {
           "operation": "MetricsSchemaService_GetMetricsSchema",
           "method": "metrics_schema_service__get_metrics_schema",
+          "grpc": "MetricsSchemaService/GetMetricsSchema",
           "status": 200,
           "required_params": [],
           "params": {
@@ -12910,6 +13091,7 @@
         "GET /notification_channel/v202210/notification_channels": {
           "operation": "ListNotificationChannels",
           "method": "list_notification_channels",
+          "grpc": "NotificationChannelService/ListNotificationChannels",
           "status": 200,
           "required_params": [],
           "params": {
@@ -12920,6 +13102,7 @@
         "GET /notification_channel/v202210/notification_channels/{id}": {
           "operation": "GetNotificationChannel",
           "method": "get_notification_channel",
+          "grpc": "NotificationChannelService/GetNotificationChannel",
           "status": 200,
           "required_params": [
             "id"
@@ -12933,6 +13116,7 @@
         "POST /notification_channel/v202210/notification_channels/search": {
           "operation": "SearchNotificationChannels",
           "method": "search_notification_channels",
+          "grpc": "NotificationChannelService/SearchNotificationChannels",
           "status": 200,
           "required_params": [
             "data"
@@ -13066,6 +13250,7 @@
         "POST /pathfinder/v202505beta1/create": {
           "operation": "CreatePathfinderReport",
           "method": "create_report",
+          "grpc": "PathfinderAdminService/CreatePathfinderReport",
           "status": 200,
           "required_params": [
             "data"
@@ -13218,6 +13403,7 @@
         "GET /plans/v202501alpha1": {
           "operation": "ListPlans",
           "method": "list_plans",
+          "grpc": "PlanService/ListPlans",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13405,6 +13591,7 @@
         "DELETE /rbux/v202607alpha1/scopes/{id}": {
           "operation": "DeleteScope",
           "method": "delete_scope",
+          "grpc": "ScopeService/DeleteScope",
           "status": 200,
           "required_params": [
             "id"
@@ -13418,6 +13605,7 @@
         "GET /rbux/v202607alpha1/scopes": {
           "operation": "ListScopes",
           "method": "list_scopes",
+          "grpc": "ScopeService/ListScopes",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13428,6 +13616,7 @@
         "GET /rbux/v202607alpha1/scopes/{id}": {
           "operation": "GetScope",
           "method": "get_scope",
+          "grpc": "ScopeService/GetScope",
           "status": 200,
           "required_params": [
             "id"
@@ -13441,6 +13630,7 @@
         "POST /rbux/v202607alpha1/scopes": {
           "operation": "CreateScope",
           "method": "create_scope",
+          "grpc": "ScopeService/CreateScope",
           "status": 200,
           "required_params": [
             "data"
@@ -13454,6 +13644,7 @@
         "PUT /rbux/v202607alpha1/scopes/{id}": {
           "operation": "UpdateScope",
           "method": "update_scope",
+          "grpc": "ScopeService/UpdateScope",
           "status": 200,
           "required_params": [
             "data",
@@ -13767,6 +13958,7 @@
         "DELETE /saved-filter/v202501alpha1/{id}": {
           "operation": "DeleteSavedFilter",
           "method": "delete_saved_filter",
+          "grpc": "SavedFilterService/DeleteSavedFilter",
           "status": 200,
           "required_params": [
             "id"
@@ -13780,6 +13972,7 @@
         "GET /saved-filter/v202501alpha1/{id}": {
           "operation": "GetSavedFilter",
           "method": "get_saved_filter",
+          "grpc": "SavedFilterService/GetSavedFilter",
           "status": 200,
           "required_params": [
             "id"
@@ -13793,6 +13986,7 @@
         "GET /saved-filters/v202501alpha1": {
           "operation": "ListSavedFilters",
           "method": "list_saved_filters",
+          "grpc": "SavedFilterService/ListSavedFilters",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13803,6 +13997,7 @@
         "GET /saved-filters/v202501alpha1/all": {
           "operation": "ListSavedFiltersAll",
           "method": "list_saved_filters_all",
+          "grpc": "SavedFilterService/ListSavedFiltersAll",
           "status": 200,
           "required_params": [],
           "params": {
@@ -13813,6 +14008,7 @@
         "POST /saved-filter/v202501alpha1": {
           "operation": "CreateSavedFilter",
           "method": "create_saved_filter",
+          "grpc": "SavedFilterService/CreateSavedFilter",
           "status": 200,
           "required_params": [
             "data"
@@ -13826,6 +14022,7 @@
         "PUT /saved-filter/v202501alpha1/{id}": {
           "operation": "UpdateSavedFilter",
           "method": "update_saved_filter",
+          "grpc": "SavedFilterService/UpdateSavedFilter",
           "status": 200,
           "required_params": [
             "data",
@@ -14089,6 +14286,7 @@
         "DELETE /site/v202509/site_markets/{id}": {
           "operation": "DeleteSiteMarket",
           "method": "delete_market",
+          "grpc": "SiteService/DeleteSiteMarket",
           "status": 200,
           "required_params": [
             "id"
@@ -14102,6 +14300,7 @@
         "DELETE /site/v202509/sites/{id}": {
           "operation": "DeleteSite",
           "method": "delete_site",
+          "grpc": "SiteService/DeleteSite",
           "status": 200,
           "required_params": [
             "id"
@@ -14115,6 +14314,7 @@
         "GET /site/v202509/site_markets": {
           "operation": "ListSiteMarkets",
           "method": "list_markets",
+          "grpc": "SiteService/ListSiteMarkets",
           "status": 200,
           "required_params": [],
           "params": {
@@ -14125,6 +14325,7 @@
         "GET /site/v202509/site_markets/{id}": {
           "operation": "GetSiteMarket",
           "method": "get_market",
+          "grpc": "SiteService/GetSiteMarket",
           "status": 200,
           "required_params": [
             "id"
@@ -14138,6 +14339,7 @@
         "GET /site/v202509/sites": {
           "operation": "ListSites",
           "method": "list_sites",
+          "grpc": "SiteService/ListSites",
           "status": 200,
           "required_params": [],
           "params": {
@@ -14148,6 +14350,7 @@
         "GET /site/v202509/sites/{id}": {
           "operation": "GetSite",
           "method": "get_site",
+          "grpc": "SiteService/GetSite",
           "status": 200,
           "required_params": [
             "id"
@@ -14161,6 +14364,7 @@
         "POST /site/v202509/site_markets": {
           "operation": "CreateSiteMarket",
           "method": "create_market",
+          "grpc": "SiteService/CreateSiteMarket",
           "status": 200,
           "required_params": [
             "data"
@@ -14174,6 +14378,7 @@
         "POST /site/v202509/sites": {
           "operation": "CreateSite",
           "method": "create_site",
+          "grpc": "SiteService/CreateSite",
           "status": 200,
           "required_params": [
             "data"
@@ -14187,6 +14392,7 @@
         "PUT /site/v202509/site_markets/{id}": {
           "operation": "UpdateSiteMarket",
           "method": "update_market",
+          "grpc": "SiteService/UpdateSiteMarket",
           "status": 200,
           "required_params": [
             "data",
@@ -14202,6 +14408,7 @@
         "PUT /site/v202509/sites/{id}": {
           "operation": "UpdateSite",
           "method": "update_site",
+          "grpc": "SiteService/UpdateSite",
           "status": 200,
           "required_params": [
             "data",
@@ -14509,6 +14716,7 @@
         "DELETE /synthetics/v202309/agentAlerts/{id}": {
           "operation": "DeleteAgentAlert",
           "method": "delete_agent_alert",
+          "grpc": "SyntheticsAdminService/DeleteAgentAlert",
           "status": 200,
           "required_params": [
             "id"
@@ -14522,6 +14730,7 @@
         "DELETE /synthetics/v202309/agents/{agentid}": {
           "operation": "DeleteAgent",
           "method": "delete_agent",
+          "grpc": "SyntheticsAdminService/DeleteAgent",
           "status": 200,
           "required_params": [
             "agentid"
@@ -14535,6 +14744,7 @@
         "DELETE /synthetics/v202309/tests/{id}": {
           "operation": "DeleteTest",
           "method": "delete_test",
+          "grpc": "SyntheticsAdminService/DeleteTest",
           "status": 200,
           "required_params": [
             "id"
@@ -14548,6 +14758,7 @@
         "GET /synthetics/v202309/agentAlerts": {
           "operation": "ListAgentAlerts",
           "method": "list_agent_alerts",
+          "grpc": "SyntheticsAdminService/ListAgentAlerts",
           "status": 200,
           "required_params": [],
           "params": {
@@ -14559,6 +14770,7 @@
         "GET /synthetics/v202309/agentAlerts/{id}": {
           "operation": "GetAgentAlert",
           "method": "get_agent_alert",
+          "grpc": "SyntheticsAdminService/GetAgentAlert",
           "status": 200,
           "required_params": [
             "id"
@@ -14572,6 +14784,7 @@
         "GET /synthetics/v202309/agents": {
           "operation": "ListAgents",
           "method": "list_agents",
+          "grpc": "SyntheticsAdminService/ListAgents",
           "status": 200,
           "required_params": [],
           "params": {
@@ -14582,6 +14795,7 @@
         "GET /synthetics/v202309/agents/{agentid}": {
           "operation": "GetAgent",
           "method": "get_agent",
+          "grpc": "SyntheticsAdminService/GetAgent",
           "status": 200,
           "required_params": [
             "agentid"
@@ -14595,6 +14809,7 @@
         "GET /synthetics/v202309/tests": {
           "operation": "ListTests",
           "method": "list_tests",
+          "grpc": "SyntheticsAdminService/ListTests",
           "status": 200,
           "required_params": [],
           "params": {
@@ -14605,6 +14820,7 @@
         "GET /synthetics/v202309/tests/{id}": {
           "operation": "GetTest",
           "method": "get_test",
+          "grpc": "SyntheticsAdminService/GetTest",
           "status": 200,
           "required_params": [
             "id"
@@ -14618,6 +14834,7 @@
         "POST /synthetics/v202309/agentAlerts": {
           "operation": "CreateAgentAlert",
           "method": "create_agent_alert",
+          "grpc": "SyntheticsAdminService/CreateAgentAlert",
           "status": 200,
           "required_params": [
             "data"
@@ -14631,6 +14848,7 @@
         "POST /synthetics/v202309/results": {
           "operation": "GetResultsForTests",
           "method": "get_results_for_tests",
+          "grpc": "SyntheticsDataService/GetResultsForTests",
           "status": 200,
           "required_params": [
             "data"
@@ -14644,6 +14862,7 @@
         "POST /synthetics/v202309/results/csv": {
           "operation": "GetResultsForTestsCsv",
           "method": "get_results_for_tests_csv",
+          "grpc": "SyntheticsDataService/GetResultsForTestsCsv",
           "status": 200,
           "required_params": [
             "data"
@@ -14657,6 +14876,7 @@
         "POST /synthetics/v202309/tests": {
           "operation": "CreateTest",
           "method": "create_test",
+          "grpc": "SyntheticsAdminService/CreateTest",
           "status": 200,
           "required_params": [
             "data"
@@ -14670,6 +14890,7 @@
         "POST /synthetics/v202309/trace": {
           "operation": "GetTraceForTest",
           "method": "get_trace_for_test",
+          "grpc": "SyntheticsDataService/GetTraceForTest",
           "status": 200,
           "required_params": [
             "data"
@@ -14683,6 +14904,7 @@
         "PUT /synthetics/v202309/agentAlerts/{id}": {
           "operation": "UpdateAgentAlert",
           "method": "update_agent_alert",
+          "grpc": "SyntheticsAdminService/UpdateAgentAlert",
           "status": 200,
           "required_params": [
             "data",
@@ -14698,6 +14920,7 @@
         "PUT /synthetics/v202309/agents/{agentid}": {
           "operation": "UpdateAgent",
           "method": "update_agent",
+          "grpc": "SyntheticsAdminService/UpdateAgent",
           "status": 200,
           "required_params": [
             "agentid",
@@ -14713,6 +14936,7 @@
         "PUT /synthetics/v202309/tests/{id}": {
           "operation": "UpdateTest",
           "method": "update_test",
+          "grpc": "SyntheticsAdminService/UpdateTest",
           "status": 200,
           "required_params": [
             "data",
@@ -14728,6 +14952,7 @@
         "PUT /synthetics/v202309/tests/{id}/status": {
           "operation": "SetTestStatus",
           "method": "set_test_status",
+          "grpc": "SyntheticsAdminService/SetTestStatus",
           "status": 200,
           "required_params": [
             "data",
@@ -16171,6 +16396,7 @@
         "DELETE /user/v202211/users/{id}": {
           "operation": "DeleteUser",
           "method": "delete_user",
+          "grpc": "UserService/DeleteUser",
           "status": 200,
           "required_params": [
             "id"
@@ -16184,6 +16410,7 @@
         "GET /user/v202211/users": {
           "operation": "ListUsers",
           "method": "list_users",
+          "grpc": "UserService/ListUsers",
           "status": 200,
           "required_params": [],
           "params": {
@@ -16194,6 +16421,7 @@
         "GET /user/v202211/users/{id}": {
           "operation": "GetUser",
           "method": "get_user",
+          "grpc": "UserService/GetUser",
           "status": 200,
           "required_params": [
             "id"
@@ -16207,6 +16435,7 @@
         "POST /user/v202211/users": {
           "operation": "CreateUser",
           "method": "create_user",
+          "grpc": "UserService/CreateUser",
           "status": 200,
           "required_params": [
             "data"
@@ -16220,6 +16449,7 @@
         "PUT /user/v202211/users/{id}": {
           "operation": "UpdateUser",
           "method": "update_user",
+          "grpc": "UserService/UpdateUser",
           "status": 200,
           "required_params": [
             "data",
@@ -16235,6 +16465,7 @@
         "PUT /user/v202211/users/{id}/reset_active_sessions": {
           "operation": "ResetActiveSessions",
           "method": "reset_active_sessions",
+          "grpc": "UserService/ResetActiveSessions",
           "status": 200,
           "required_params": [
             "id"
@@ -16248,6 +16479,7 @@
         "PUT /user/v202211/users/{id}/reset_api_token": {
           "operation": "ResetApiToken",
           "method": "reset_api_token",
+          "grpc": "UserService/ResetApiToken",
           "status": 200,
           "required_params": [
             "id"
@@ -16437,6 +16669,7 @@
         "GET /vault/v202312alpha1/secrets": {
           "operation": "ListSecret",
           "method": "list_secret",
+          "grpc": "VaultService/ListSecret",
           "status": 200,
           "required_params": [
             "names"
@@ -16450,6 +16683,7 @@
         "GET /vault/v202312alpha1/secrets/{name}": {
           "operation": "GetSecret",
           "method": "get_secret",
+          "grpc": "VaultService/GetSecret",
           "status": 200,
           "required_params": [
             "name"

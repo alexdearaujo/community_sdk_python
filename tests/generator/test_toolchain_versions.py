@@ -10,6 +10,7 @@ gracefully. That makes `pyproject.toml` the only thing standing between a downst
 
 from __future__ import annotations
 
+import importlib.metadata
 import re
 import tomllib
 
@@ -144,4 +145,20 @@ def test_grpcio_tools_is_pinned_exactly(pyproject, grpc_gencode):
     assert _floor(requirement) == next(iter(grpc_gencode)), (
         f"pinned `{requirement}` does not match the gencode version stamped into the "
         "committed stubs. Re-run `make generate` after changing the pin."
+    )
+
+
+def test_openapi_generator_is_pinned_exactly(pyproject):
+    """The fixups and custom templates match one generator's exact output."""
+    requirement = _requirement(
+        pyproject["dependency-groups"]["dev"], "openapi-python-generator"
+    )
+    assert "==" in requirement, (
+        f"pyproject declares `{requirement}`; pin openapi-python-generator exactly "
+        "so `make generate` output depends on the schema, not the resolution date."
+    )
+    installed = _parse_version(importlib.metadata.version("openapi-python-generator"))
+    assert _floor(requirement) == installed, (
+        f"pinned `{requirement}` but this environment has "
+        f"{'.'.join(map(str, installed))}. Run `uv sync --locked`."
     )

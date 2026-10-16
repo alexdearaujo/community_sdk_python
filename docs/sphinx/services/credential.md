@@ -68,7 +68,7 @@ sequenceDiagram
     R->>API: CredentialService/ListCredentialGroup (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: ListCredentialGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
@@ -136,7 +136,7 @@ sequenceDiagram
     R->>API: CredentialService/GetCredentialGroup (gRPC/TLS)
     alt success
         API-->>R: response message
-        R-->>W: MessageToDict(response)
+        R-->>W: parse_grpc_response(response)
         W-->>C: GetCredentialGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()

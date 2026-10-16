@@ -1,12 +1,13 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict
-
 import kentik_api.gen.synthetics.services.SyntheticsAdminService as RestSyntheticsModule1
 import kentik_api.gen.synthetics.services.SyntheticsDataService as RestSyntheticsModule2
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
-from kentik_api.core.rate_limit import attach_rate_limit
+from kentik_api.core.grpc_runtime import (
+    build_grpc_request,
+    call_grpc,
+    parse_grpc_response,
+)
 from kentik_api.gen.synthetics import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -73,11 +74,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.ListAgentAlertsError,
             )
-            return attach_rate_limit(
-                rest_models.ListAgentAlertsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListAgentAlertsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.ListAgentAlerts,
+                operation_name="ListAgentAlerts",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -117,11 +119,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.CreateAgentAlertError,
             )
-            return attach_rate_limit(
-                rest_models.CreateAgentAlertResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateAgentAlertResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.CreateAgentAlert,
+                operation_name="CreateAgentAlert",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -156,11 +159,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.GetAgentAlertError,
             )
-            return attach_rate_limit(
-                rest_models.GetAgentAlertResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetAgentAlertResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.GetAgentAlert,
+                operation_name="GetAgentAlert",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -201,11 +205,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.UpdateAgentAlertError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateAgentAlertResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateAgentAlertResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.UpdateAgentAlert,
+                operation_name="UpdateAgentAlert",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -241,11 +246,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.DeleteAgentAlertError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteAgentAlertResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteAgentAlertResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.DeleteAgentAlert,
+                operation_name="DeleteAgentAlert",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -278,11 +284,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.ListAgentsError,
             )
-            return attach_rate_limit(
-                rest_models.ListAgentsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListAgentsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.ListAgents,
+                operation_name="ListAgents",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -316,11 +323,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.GetAgentError,
             )
-            return attach_rate_limit(
-                rest_models.GetAgentResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetAgentResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.GetAgent,
+                operation_name="GetAgent",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -361,11 +369,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.UpdateAgentError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateAgentResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateAgentResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.UpdateAgent,
+                operation_name="UpdateAgent",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -401,11 +410,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.DeleteAgentError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteAgentResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteAgentResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.DeleteAgent,
+                operation_name="DeleteAgent",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -438,11 +448,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.ListTestsError,
             )
-            return attach_rate_limit(
-                rest_models.ListTestsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.ListTestsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.ListTests,
+                operation_name="ListTests",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -481,11 +492,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.CreateTestError,
             )
-            return attach_rate_limit(
-                rest_models.CreateTestResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.CreateTestResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.CreateTest,
+                operation_name="CreateTest",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -518,11 +530,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.GetTestError,
             )
-            return attach_rate_limit(
-                rest_models.GetTestResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetTestResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.GetTest,
+                operation_name="GetTest",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -563,11 +576,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.UpdateTestError,
             )
-            return attach_rate_limit(
-                rest_models.UpdateTestResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.UpdateTestResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.UpdateTest,
+                operation_name="UpdateTest",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -603,11 +617,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.DeleteTestError,
             )
-            return attach_rate_limit(
-                rest_models.DeleteTestResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.DeleteTestResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.DeleteTest,
+                operation_name="DeleteTest",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -646,11 +661,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule1.SetTestStatusError,
             )
-            return attach_rate_limit(
-                rest_models.SetTestStatusResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.SetTestStatusResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_2.SetTestStatus,
+                operation_name="SetTestStatus",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -691,11 +707,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule2.GetResultsForTestsError,
             )
-            return attach_rate_limit(
-                rest_models.GetResultsForTestsResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetResultsForTestsResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetResultsForTests,
+                operation_name="GetResultsForTests",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -735,11 +752,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule2.GetResultsForTestsCsvError,
             )
-            return attach_rate_limit(
-                rest_models.GetResultsForTestsCsvResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetResultsForTestsCsvResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetResultsForTestsCsv,
+                operation_name="GetResultsForTestsCsv",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -779,11 +797,12 @@ class SyntheticsServiceWrapper:
                 api_config=api_config_override,
                 error_cls=RestSyntheticsModule2.GetTraceForTestError,
             )
-            return attach_rate_limit(
-                rest_models.GetTraceForTestResponse.model_validate(
-                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
-                ),
+            return parse_grpc_response(
+                rest_models.GetTraceForTestResponse,
+                _resp,
                 _rate_limit,
+                stub_method=self._grpc_stub_1.GetTraceForTest,
+                operation_name="GetTraceForTest",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
