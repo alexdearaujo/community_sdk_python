@@ -34,7 +34,7 @@ from kentik_api.gen.pb_companions.protoc_gen_openapiv2.options import (
 )
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n.kentik/kmeta/v202607alpha1/kmeta_message.proto\x12\x1akentik.kmeta.v202607alpha1\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc-gen-openapiv2/options/annotations.proto"\xf1\x06\n\x10ServiceNowConfig\x12G\n\x02id\x18\x01 \x01(\tB;\x92\x41\x35\x32\x33Unique identifier for the ServiceNow configuration.\xe0\x41\x03\x12\x44\n\ncompany_id\x18\x02 \x01(\tB0\x92\x41*2(Company ID that owns this configuration.\xe0\x41\x03\x12L\n\x04name\x18\x03 \x01(\tB>\x92\x41\x38\x32\x36Human-readable name for this ServiceNow configuration.\xe0\x41\x02\x12\x45\n\x0b\x64\x65scription\x18\x04 \x01(\tB0\x92\x41-2+Optional description of this configuration.\x12]\n\x19\x64\x65vice_staging_table_name\x18\x05 \x01(\tB:\x92\x41\x37\x32\x35ServiceNow staging table name for device data import.\x12`\n\x16push_frequency_seconds\x18\x06 \x01(\x05\x42@\x92\x41=2;Frequency in seconds at which data is pushed to ServiceNow.\x12T\n\x0eproxy_agent_id\x18\x07 \x01(\tB<\x92\x41\x39\x32\x37ID of the proxy agent used for ServiceNow connectivity.\x12h\n\x13\x63redential_vault_id\x18\x08 \x01(\tBK\x92\x41H2FID of the credential vault entry containing ServiceNow authentication.\x12Q\n\x07\x65nabled\x18\t \x01(\x08\x42@\x92\x41=2;Whether this configuration is actively polling and pushing.\x12\x65\n\x07\x61pi_url\x18\n \x01(\tBT\x92\x41N2LBase URL of the ServiceNow instance (e.g. https://instance.service-now.com).\xe0\x41\x02\x42MZKgithub.com/kentik/api-schema-public/gen/go/kentik/kmeta/v202607alpha1;kmetab\x06proto3'
+    b'\n.kentik/kmeta/v202607alpha1/kmeta_message.proto\x12\x1akentik.kmeta.v202607alpha1\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc-gen-openapiv2/options/annotations.proto"\xab\x07\n\x10ServiceNowConfig\x12G\n\x02id\x18\x01 \x01(\tB;\x92\x41\x35\x32\x33Unique identifier for the ServiceNow configuration.\xe0\x41\x03\x12\x44\n\ncompany_id\x18\x02 \x01(\tB0\x92\x41*2(Company ID that owns this configuration.\xe0\x41\x03\x12L\n\x04name\x18\x03 \x01(\tB>\x92\x41\x38\x32\x36Human-readable name for this ServiceNow configuration.\xe0\x41\x02\x12\x45\n\x0b\x64\x65scription\x18\x04 \x01(\tB0\x92\x41-2+Optional description of this configuration.\x12]\n\x19\x64\x65vice_staging_table_name\x18\x05 \x01(\tB:\x92\x41\x37\x32\x35ServiceNow staging table name for device data import.\x12`\n\x16push_frequency_seconds\x18\x06 \x01(\x05\x42@\x92\x41=2;Frequency in seconds at which data is pushed to ServiceNow.\x12T\n\x0eproxy_agent_id\x18\x07 \x01(\tB<\x92\x41\x39\x32\x37ID of the proxy agent used for ServiceNow connectivity.\x12\xa1\x01\n\x15\x63redential_vault_name\x18\x08 \x01(\tB\x81\x01\x92\x41~2|Name of the credential vault entry containing ServiceNow authentication. Always resolves to the latest version of this name.\x12Q\n\x07\x65nabled\x18\t \x01(\x08\x42@\x92\x41=2;Whether this configuration is actively polling and pushing.\x12\x65\n\x07\x61pi_url\x18\n \x01(\tBT\x92\x41N2LBase URL of the ServiceNow instance (e.g. https://instance.service-now.com).\xe0\x41\x02\x42MZKgithub.com/kentik/api-schema-public/gen/go/kentik/kmeta/v202607alpha1;kmetab\x06proto3'
 )
 
 _globals = globals()
@@ -94,11 +94,11 @@ if not _descriptor._USE_C_DESCRIPTORS:
         b"\222A927ID of the proxy agent used for ServiceNow connectivity."
     )
     _globals["_SERVICENOWCONFIG"].fields_by_name[
-        "credential_vault_id"
+        "credential_vault_name"
     ]._loaded_options = None
     _globals["_SERVICENOWCONFIG"].fields_by_name[
-        "credential_vault_id"
-    ]._serialized_options = b"\222AH2FID of the credential vault entry containing ServiceNow authentication."
+        "credential_vault_name"
+    ]._serialized_options = b"\222A~2|Name of the credential vault entry containing ServiceNow authentication. Always resolves to the latest version of this name."
     _globals["_SERVICENOWCONFIG"].fields_by_name["enabled"]._loaded_options = None
     _globals["_SERVICENOWCONFIG"].fields_by_name[
         "enabled"
@@ -110,5 +110,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
         "api_url"
     ]._serialized_options = b"\222AN2LBase URL of the ServiceNow instance (e.g. https://instance.service-now.com).\340A\002"
     _globals["_SERVICENOWCONFIG"]._serialized_start = 160
-    _globals["_SERVICENOWCONFIG"]._serialized_end = 1041
+    _globals["_SERVICENOWCONFIG"]._serialized_end = 1099
 # @@protoc_insertion_point(module_scope)
