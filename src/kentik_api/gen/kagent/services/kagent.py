@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.kagent.services.AgentCapabilityService as RestKagentModule1
 import kentik_api.gen.kagent.services.AgentService as RestKagentModule2
@@ -9,7 +9,7 @@ import kentik_api.gen.kagent.services.CapabilityReleaseService as RestKagentModu
 import kentik_api.gen.kagent.services.ConfigService as RestKagentModule5
 import kentik_api.gen.kagent.services.ProvisioningTokenService as RestKagentModule6
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.kagent import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -106,10 +106,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"agentId": agentId}.items() if v is not None},
-                self._grpc_pb2_1.ListAgentCapabilitiesRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListAgentCapabilitiesRequest,
+                None,
+                {"agent_id": agentId},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListAgentCapabilities,
@@ -145,17 +145,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {
-                        "agentId": agentId,
-                        "capabilityname": capabilityname,
-                    }.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.GetAgentCapabilityRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetAgentCapabilityRequest,
+                None,
+                {"agent_id": agentId, "capability": capabilityname},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetAgentCapability,
@@ -192,17 +185,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {
-                        "agentId": agentId,
-                        "capabilityname": capabilityname,
-                    }.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.DeleteAgentCapabilityRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteAgentCapabilityRequest,
+                None,
+                {"agent_id": agentId, "capability": capabilityname},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteAgentCapability,
@@ -241,22 +227,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req_dict = dict(data)
-            _req_dict.update(
-                {
-                    k: v
-                    for k, v in {
-                        "agentId": agentId,
-                        "capabilityname": capabilityname,
-                        "mask": mask,
-                    }.items()
-                    if v is not None
-                }
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpsertAgentCapabilityRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpsertAgentCapabilityRequest,
+                {"capability": dict(data)},
+                {"agent_id": agentId, "capability.name": capabilityname, "mask": mask},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpsertAgentCapability,
@@ -297,19 +271,15 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_2.ListAgentsRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "unregistered": unregistered,
-                        "ids": ids,
-                        "capabilities": capabilities,
-                        "includeDesiredState": includeDesiredState,
-                    }.items()
-                    if v is not None
+                    "unregistered": unregistered,
+                    "ids": ids,
+                    "capabilities": capabilities,
+                    "includeDesiredState": includeDesiredState,
                 },
-                self._grpc_pb2_2.ListAgentsRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.ListAgents, _req, api_config=api_config_override
@@ -345,10 +315,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_2.CreateAgentRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_2.CreateAgentRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.CreateAgent, _req, api_config=api_config_override
@@ -378,10 +348,8 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"installId": installId}.items() if v is not None},
-                self._grpc_pb2_2.AuthorizeRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.AuthorizeRequest, None, {"install_id": installId}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.Authorize, _req, api_config=api_config_override
@@ -414,10 +382,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_2.GenerateInstallCommandsRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_2.GenerateInstallCommandsRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.GenerateInstallCommands,
@@ -453,17 +421,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {
-                        "agentid": agentid,
-                        "unregistered": unregistered,
-                    }.items()
-                    if v is not None
-                },
-                self._grpc_pb2_2.GetAgentRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.GetAgentRequest,
+                None,
+                {"id": agentid, "unregistered": unregistered},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.GetAgent, _req, api_config=api_config_override
@@ -498,17 +459,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {
-                        "agentid": agentid,
-                        "unregistered": unregistered,
-                    }.items()
-                    if v is not None
-                },
-                self._grpc_pb2_2.DeleteAgentRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.DeleteAgentRequest,
+                None,
+                {"id": agentid, "unregistered": unregistered},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.DeleteAgent, _req, api_config=api_config_override
@@ -544,18 +498,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req_dict = dict(data)
-            _req_dict.update(
-                {
-                    k: v
-                    for k, v in {"agentid": agentid, "mask": mask}.items()
-                    if v is not None
-                }
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_2.UpdateAgentRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.UpdateAgentRequest,
+                {"agent": dict(data)},
+                {"agent.id": agentid, "mask": mask},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.UpdateAgent, _req, api_config=api_config_override
@@ -583,8 +529,21 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCapabilitiesResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CapabilityAdminService_ListCapabilities is not yet implemented."
+            if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for kagent service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_4.ListCapabilitiesRequest, None, {}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_4.ListCapabilities, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListCapabilitiesResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -603,8 +562,23 @@ class KagentServiceWrapper:
         data: rest_models.Capability,
     ) -> rest_models.CreateCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CapabilityAdminService_CreateCapability is not yet implemented."
+            if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for kagent service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_4.CreateCapabilityRequest,
+                {"capability": data.model_dump(by_alias=True, exclude_none=True)},
+                {},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_4.CreateCapability, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateCapabilityResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -621,8 +595,21 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, capabilityname: str
     ) -> rest_models.GetCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CapabilityAdminService_GetCapability is not yet implemented."
+            if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for kagent service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_4.GetCapabilityRequest, None, {"name": capabilityname}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_4.GetCapability, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetCapabilityResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -639,8 +626,21 @@ class KagentServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, capabilityname: str
     ) -> rest_models.DeleteCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CapabilityAdminService_DeleteCapability is not yet implemented."
+            if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for kagent service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_4.DeleteCapabilityRequest, None, {"name": capabilityname}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_4.DeleteCapability, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteCapabilityResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -661,8 +661,23 @@ class KagentServiceWrapper:
         data: Dict[str, Any],
     ) -> rest_models.UpdateCapabilityResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CapabilityAdminService_UpdateCapability is not yet implemented."
+            if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for kagent service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_4.UpdateCapabilityRequest,
+                {"capability": dict(data)},
+                {"capability.name": capabilityname},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_4.UpdateCapability, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateCapabilityResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -688,8 +703,32 @@ class KagentServiceWrapper:
         distro: Optional[str] = None,
     ) -> rest_models.GetCapabilityReleaseResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CapabilityReleaseService_GetCapabilityRelease is not yet implemented."
+            if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for kagent service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_3.GetCapabilityReleaseRequest,
+                None,
+                {
+                    "os": os,
+                    "arch": arch,
+                    "channel": channel,
+                    "capability": capability,
+                    "semver": semver,
+                    "distro": distro,
+                },
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_3.GetCapabilityRelease,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.GetCapabilityReleaseResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -719,8 +758,32 @@ class KagentServiceWrapper:
         distro: Optional[str] = None,
     ) -> rest_models.GetCapabilityLatestReleasesResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CapabilityReleaseService_GetCapabilityLatestReleases is not yet implemented."
+            if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for kagent service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_3.GetCapabilityLatestReleasesRequest,
+                None,
+                {
+                    "os": os,
+                    "arch": arch,
+                    "channel": channel,
+                    "installId": installId,
+                    "capabilities": capabilities,
+                    "distro": distro,
+                },
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_3.GetCapabilityLatestReleases,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.GetCapabilityLatestReleasesResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -748,8 +811,25 @@ class KagentServiceWrapper:
         capabilities: Optional[List[str]] = None,
     ) -> rest_models.GetCapabilitySupportedDistrosResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for CapabilityReleaseService_GetCapabilitySupportedDistros is not yet implemented."
+            if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for kagent service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_3.GetCapabilitySupportedDistrosRequest,
+                None,
+                {"capabilities": capabilities},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_3.GetCapabilitySupportedDistros,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.GetCapabilitySupportedDistrosResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -773,10 +853,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_5.CreateConfigRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_5.CreateConfigRequest,
+                {"config": data.model_dump(by_alias=True, exclude_none=True)},
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_5.CreateConfig, _req, api_config=api_config_override
@@ -806,10 +886,8 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"configname": configname}.items() if v is not None},
-                self._grpc_pb2_5.GetConfigRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_5.GetConfigRequest, None, {"name": configname}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_5.GetConfig, _req, api_config=api_config_override
@@ -839,10 +917,8 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"configname": configname}.items() if v is not None},
-                self._grpc_pb2_5.DeleteConfigRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_5.DeleteConfigRequest, None, {"name": configname}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_5.DeleteConfig, _req, api_config=api_config_override
@@ -876,14 +952,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {k: v for k, v in {"configname": configname}.items() if v is not None}
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_5.UpdateConfigRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_5.UpdateConfigRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"config.name": configname},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_5.UpdateConfig, _req, api_config=api_config_override
@@ -914,7 +986,9 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = self._grpc_pb2_6.ListProvisioningTokensRequest()
+            _req = build_grpc_request(
+                self._grpc_pb2_6.ListProvisioningTokensRequest, None, {}
+            )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_6.ListProvisioningTokens,
                 _req,
@@ -947,10 +1021,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_6.CreateProvisioningTokenRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_6.CreateProvisioningTokenRequest,
+                {"token": data.model_dump(by_alias=True, exclude_none=True)},
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_6.CreateProvisioningToken,
@@ -982,10 +1056,8 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"token": token}.items() if v is not None},
-                self._grpc_pb2_6.GetProvisioningTokenRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_6.GetProvisioningTokenRequest, None, {"token": token}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_6.GetProvisioningToken,
@@ -1017,10 +1089,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"token": token}.items() if v is not None},
-                self._grpc_pb2_6.ListAgentsByProvisioningTokenRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_6.ListAgentsByProvisioningTokenRequest,
+                None,
+                {"token": token},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_6.ListAgentsByProvisioningToken,
@@ -1056,14 +1128,10 @@ class KagentServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kagent service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {k: v for k, v in {"token": token}.items() if v is not None}
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_6.RevokeProvisioningTokenRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_6.RevokeProvisioningTokenRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"token": token},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_6.RevokeProvisioningToken,

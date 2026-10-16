@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.cloud_export.services.CloudExportAdminService as RestCloudExportModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.cloud_export import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,7 +41,9 @@ class CloudExportServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
-            _req = self._grpc_pb2_1.ListCloudExportsRequest()
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListCloudExportsRequest, None, {}
+            )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListCloudExports, _req, api_config=api_config_override
             )
@@ -72,10 +74,10 @@ class CloudExportServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateCloudExportRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateCloudExportRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateCloudExport,
@@ -107,10 +109,8 @@ class CloudExportServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"exportid": exportid}.items() if v is not None},
-                self._grpc_pb2_1.GetCloudExportRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetCloudExportRequest, None, {"id": exportid}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetCloudExport, _req, api_config=api_config_override
@@ -144,14 +144,10 @@ class CloudExportServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {k: v for k, v in {"exportid": exportid}.items() if v is not None}
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateCloudExportRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateCloudExportRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"export.id": exportid},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateCloudExport,
@@ -184,10 +180,8 @@ class CloudExportServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"exportid": exportid}.items() if v is not None},
-                self._grpc_pb2_1.DeleteCloudExportRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteCloudExportRequest, None, {"id": exportid}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteCloudExport,

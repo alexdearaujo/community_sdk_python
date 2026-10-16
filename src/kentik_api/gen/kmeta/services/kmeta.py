@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.kmeta.services.KmetaService as RestKmetaModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.kmeta import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,10 +41,8 @@ class KmetaServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"cid": cid}.items() if v is not None},
-                self._grpc_pb2_1.ListServiceNowConfigsRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListServiceNowConfigsRequest, None, {"cid": cid}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListServiceNowConfigs,
@@ -80,12 +78,10 @@ class KmetaServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"cid": cid}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.CreateServiceNowConfigRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateServiceNowConfigRequest,
+                {"config": data.model_dump(by_alias=True, exclude_none=True)},
+                {"cid": cid},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateServiceNowConfig,
@@ -118,10 +114,10 @@ class KmetaServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"cid": cid, "id": id}.items() if v is not None},
-                self._grpc_pb2_1.GetServiceNowConfigRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetServiceNowConfigRequest,
+                None,
+                {"cid": cid, "id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetServiceNowConfig,
@@ -159,14 +155,10 @@ class KmetaServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {k: v for k, v in {"cid": cid, "id": id}.items() if v is not None}
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateServiceNowConfigRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateServiceNowConfigRequest,
+                {"config": data.model_dump(by_alias=True, exclude_none=True)},
+                {"cid": cid, "id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateServiceNowConfig,
@@ -200,10 +192,10 @@ class KmetaServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmeta service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"cid": cid, "id": id}.items() if v is not None},
-                self._grpc_pb2_1.DeleteServiceNowConfigRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteServiceNowConfigRequest,
+                None,
+                {"cid": cid, "id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteServiceNowConfig,

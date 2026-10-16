@@ -69,7 +69,8 @@ class RestOperation:
     Consumers:
     - tests/_discovery.py: uses http_method, expected_status, error_cls_name, operation_name
     - generation/endpoint_docs.py: uses http_method, path
-    - generation/wrapper_generation.py: uses name, params, kwonly_start, return_type
+    - generation/wrapper_generation.py: uses name, http_method, path, params,
+      kwonly_start, return_type, query_params
     """
 
     name: str  # PascalCase function name
@@ -83,6 +84,7 @@ class RestOperation:
     ]  # (name, annotation, is_required) positional then kwonly
     kwonly_start: int  # params[:kwonly_start] are positional; the rest are keyword-only
     return_type: str  # annotation text as-is from the source
+    query_params: tuple[tuple[str, str], ...]  # (wire name, argument name)
 
 
 def parse_generated_rest_module(path: Path) -> list[RestOperation]:
@@ -120,6 +122,24 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
             )
             for arg, default in zip(node.args.kwonlyargs, node.args.kw_defaults)
         ]
+
+        # The wire name keeps the dotted field path ("pagination.limit") that the
+        # argument name ("paginationlimit") loses.
+        query_params = next(
+            (
+                tuple(
+                    (str(key.value), value.id)
+                    for key, value in zip(stmt.value.keys, stmt.value.values)
+                    if isinstance(key, ast.Constant) and isinstance(value, ast.Name)
+                )
+                for stmt in node.body
+                if isinstance(stmt, ast.AnnAssign)
+                and isinstance(stmt.target, ast.Name)
+                and stmt.target.id == "query_params"
+                and isinstance(stmt.value, ast.Dict)
+            ),
+            (),
+        )
 
         # Extract request_json() keyword arguments.
         http_method: str | None = None
@@ -175,6 +195,7 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
                 params=tuple(positional + kwonly),
                 kwonly_start=len(positional),
                 return_type=return_type,
+                query_params=query_params,
             )
         )
 

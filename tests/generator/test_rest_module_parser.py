@@ -181,3 +181,50 @@ def test_operation_is_frozen(tmp_path: Path) -> None:
     op = parse_generated_rest_module(f)[0]
     with pytest.raises((AttributeError, TypeError)):
         op.name = "changed"  # ty: ignore[invalid-assignment]
+
+
+_QUERY_PARAMS = """\
+from typing import Any, Dict, Optional
+from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rest_runtime import request_json
+from ..error import ListThingsError
+
+def ListThings(
+    api_config_override: Optional[APIConfig] = None,
+    *,
+    paginationlimit: Optional[int] = None,
+    view: Optional[str] = None,
+) -> ListThingsResponse:
+    query_params: Dict[str, Any] = {
+        "pagination.limit": paginationlimit,
+        "view": view,
+    }
+    body = request_json(
+        method="get",
+        path="/things/v1/thing",
+        api_config_override=api_config_override,
+        query_params=query_params,
+        expected_status=200,
+        operation_name="ListThings",
+        error_cls=ListThingsError,
+    )
+    return ListThingsResponse(**body)
+"""
+
+
+def test_query_params_map_wire_names_to_arguments(tmp_path: Path) -> None:
+    f = tmp_path / "ThingService.py"
+    f.write_text(_QUERY_PARAMS, encoding="utf-8")
+
+    op = parse_generated_rest_module(f)[0]
+    assert op.query_params == (
+        ("pagination.limit", "paginationlimit"),
+        ("view", "view"),
+    )
+
+
+def test_operation_without_query_params_has_none(tmp_path: Path) -> None:
+    f = tmp_path / "ThingService.py"
+    f.write_text(_KWONLY_PARAMS, encoding="utf-8")
+
+    assert parse_generated_rest_module(f)[0].query_params == ()

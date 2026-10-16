@@ -1,11 +1,11 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.bgp_monitoring.services.BgpMonitoringAdminService as RestBgpMonitoringModule1
 import kentik_api.gen.bgp_monitoring.services.BgpMonitoringDataService as RestBgpMonitoringModule2
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.bgp_monitoring import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -54,7 +54,7 @@ class BgpMonitoringServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
-            _req = self._grpc_pb2_1.ListMonitorsRequest()
+            _req = build_grpc_request(self._grpc_pb2_1.ListMonitorsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListMonitors, _req, api_config=api_config_override
             )
@@ -85,10 +85,10 @@ class BgpMonitoringServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateMonitorRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateMonitorRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateMonitor, _req, api_config=api_config_override
@@ -118,10 +118,8 @@ class BgpMonitoringServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.GetMonitorRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetMonitorRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetMonitor, _req, api_config=api_config_override
@@ -155,12 +153,10 @@ class BgpMonitoringServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateMonitorRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateMonitorRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"monitor.id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateMonitor, _req, api_config=api_config_override
@@ -191,10 +187,8 @@ class BgpMonitoringServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.DeleteMonitorRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteMonitorRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteMonitor, _req, api_config=api_config_override
@@ -228,12 +222,10 @@ class BgpMonitoringServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.SetMonitorStatusRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.SetMonitorStatusRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.SetMonitorStatus, _req, api_config=api_config_override
@@ -267,10 +259,10 @@ class BgpMonitoringServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_2.GetMetricsForTargetRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_2.GetMetricsForTargetRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.GetMetricsForTarget,
@@ -305,10 +297,10 @@ class BgpMonitoringServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_2.GetRoutesForTargetRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_2.GetRoutesForTargetRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.GetRoutesForTarget,

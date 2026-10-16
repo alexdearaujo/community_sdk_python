@@ -168,10 +168,10 @@ def test_wrapper_raises_for_grpc_unimplemented(
     # Patch call_grpc so the gRPC branch runs without a real server.
     if hasattr(module, "call_grpc"):
         monkeypatch.setattr(module, "call_grpc", _mock_call_grpc)
-    # Patch ParseDict so mock kwargs (e.g. "start_time-example") never hit
-    # real proto parsing, which would fail on Timestamp/Duration fields.
-    if hasattr(module, "ParseDict"):
-        monkeypatch.setattr(module, "ParseDict", lambda *a, **kw: MagicMock())
+    # Patch request building so sample kwargs (e.g. "view_value" for an enum)
+    # never hit real proto parsing; test_grpc_request_mapping.py covers that.
+    if hasattr(module, "build_grpc_request"):
+        monkeypatch.setattr(module, "build_grpc_request", lambda *a, **kw: MagicMock())
     # Return an empty dict from MessageToDict so model_validate gets {}.
     monkeypatch.setattr(
         "google.protobuf.json_format.MessageToDict",

@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.device.services.DeviceService as RestDeviceModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.device import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -45,17 +45,10 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {
-                        "querynoCustomColumns": querynoCustomColumns,
-                        "view": view,
-                    }.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.ListDevicesRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListDevicesRequest,
+                None,
+                {"query.noCustomColumns": querynoCustomColumns, "view": view},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListDevices, _req, api_config=api_config_override
@@ -89,10 +82,10 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateDeviceRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateDeviceRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateDevice, _req, api_config=api_config_override
@@ -125,10 +118,10 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateDevicesRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateDevicesRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateDevices, _req, api_config=api_config_override
@@ -161,10 +154,10 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteDevicesRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.DeleteDevicesRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteDevices, _req, api_config=api_config_override
@@ -197,10 +190,10 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateDevicesRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.UpdateDevicesRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateDevices, _req, api_config=api_config_override
@@ -234,17 +227,13 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetDeviceByNameRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "deviceName": deviceName,
-                        "querynoCustomColumns": querynoCustomColumns,
-                    }.items()
-                    if v is not None
+                    "device_name": deviceName,
+                    "query.noCustomColumns": querynoCustomColumns,
                 },
-                self._grpc_pb2_1.GetDeviceByNameRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetDeviceByName, _req, api_config=api_config_override
@@ -279,17 +268,10 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {
-                        "deviceid": deviceid,
-                        "querynoCustomColumns": querynoCustomColumns,
-                    }.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.GetDeviceRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetDeviceRequest,
+                None,
+                {"id": deviceid, "query.noCustomColumns": querynoCustomColumns},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetDevice, _req, api_config=api_config_override
@@ -324,14 +306,10 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {k: v for k, v in {"deviceid": deviceid}.items() if v is not None}
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateDeviceRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateDeviceRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"device.id": deviceid},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateDevice, _req, api_config=api_config_override
@@ -362,10 +340,8 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"deviceid": deviceid}.items() if v is not None},
-                self._grpc_pb2_1.DeleteDeviceRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteDeviceRequest, None, {"id": deviceid}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteDevice, _req, api_config=api_config_override
@@ -399,12 +375,10 @@ class DeviceServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateDeviceLabelsRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateDeviceLabelsRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateDeviceLabels,

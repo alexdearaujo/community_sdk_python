@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.asset_tags.services.AssetTagsService as RestAssetTagsModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.asset_tags import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -45,14 +45,10 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {"assetType": assetType, "assetId": assetId}.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.GetTagValuesRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetTagValuesRequest,
+                None,
+                {"asset_type": assetType, "asset_id": assetId},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetTagValues, _req, api_config=api_config_override
@@ -83,7 +79,7 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req = self._grpc_pb2_1.ListTagKeysRequest()
+            _req = build_grpc_request(self._grpc_pb2_1.ListTagKeysRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListTagKeys, _req, api_config=api_config_override
             )
@@ -114,10 +110,10 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateTagKeyRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateTagKeyRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateTagKey, _req, api_config=api_config_override
@@ -147,10 +143,8 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.GetTagKeyRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetTagKeyRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetTagKey, _req, api_config=api_config_override
@@ -184,12 +178,10 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateTagKeyRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateTagKeyRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateTagKey, _req, api_config=api_config_override
@@ -220,10 +212,8 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.DeleteTagKeyRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteTagKeyRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteTagKey, _req, api_config=api_config_override
@@ -257,14 +247,10 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {"tagId": tagId, "assetType": assetType}.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.ListTagValuesRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListTagValuesRequest,
+                None,
+                {"tag_id": tagId, "asset_type": assetType},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListTagValues, _req, api_config=api_config_override
@@ -298,10 +284,10 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.SetTagValuesRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.SetTagValuesRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.SetTagValues, _req, api_config=api_config_override
@@ -334,10 +320,10 @@ class AssetTagsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for asset_tags service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteTagValuesRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.DeleteTagValuesRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteTagValues, _req, api_config=api_config_override

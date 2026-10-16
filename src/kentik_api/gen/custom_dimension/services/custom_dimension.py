@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.custom_dimension.services.CustomDimensionService as RestCustomDimensionModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.custom_dimension import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,7 +41,9 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = self._grpc_pb2_1.ListCustomDimensionsRequest()
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListCustomDimensionsRequest, None, {}
+            )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListCustomDimensions,
                 _req,
@@ -71,14 +73,10 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {"customDimensionId": customDimensionId}.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.GetCustomDimensionInfoRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetCustomDimensionInfoRequest,
+                None,
+                {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetCustomDimensionInfo,
@@ -114,18 +112,10 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {
-                    k: v
-                    for k, v in {"customDimensionId": customDimensionId}.items()
-                    if v is not None
-                }
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateCustomDimensionRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateCustomDimensionRequest,
+                {"dimension": data.model_dump(by_alias=True, exclude_none=True)},
+                {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateCustomDimension,
@@ -158,14 +148,10 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {"customDimensionId": customDimensionId}.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.DeleteCustomDimensionRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteCustomDimensionRequest,
+                None,
+                {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteCustomDimension,
@@ -201,18 +187,10 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {
-                    k: v
-                    for k, v in {"customDimensionId": customDimensionId}.items()
-                    if v is not None
-                }
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.CreatePopulatorRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreatePopulatorRequest,
+                {"populator": data.model_dump(by_alias=True, exclude_none=True)},
+                {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreatePopulator, _req, api_config=api_config_override
@@ -248,18 +226,14 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetPopulatorRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "customDimensionId": customDimensionId,
-                        "populatorId": populatorId,
-                        "fieldLimit": fieldLimit,
-                    }.items()
-                    if v is not None
+                    "custom_dimension_id": customDimensionId,
+                    "populator_id": populatorId,
+                    "fieldLimit": fieldLimit,
                 },
-                self._grpc_pb2_1.GetPopulatorRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetPopulator, _req, api_config=api_config_override
@@ -296,21 +270,10 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {
-                    k: v
-                    for k, v in {
-                        "customDimensionId": customDimensionId,
-                        "populatorId": populatorId,
-                    }.items()
-                    if v is not None
-                }
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdatePopulatorRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdatePopulatorRequest,
+                {"populator": data.model_dump(by_alias=True, exclude_none=True)},
+                {"custom_dimension_id": customDimensionId, "populator_id": populatorId},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdatePopulator, _req, api_config=api_config_override
@@ -346,17 +309,10 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
-                {
-                    k: v
-                    for k, v in {
-                        "customDimensionId": customDimensionId,
-                        "populatorId": populatorId,
-                    }.items()
-                    if v is not None
-                },
-                self._grpc_pb2_1.DeletePopulatorRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeletePopulatorRequest,
+                None,
+                {"custom_dimension_id": customDimensionId, "populator_id": populatorId},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeletePopulator, _req, api_config=api_config_override
@@ -394,20 +350,16 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetPopulatorFieldRequest,
+                None,
                 {
-                    k: v
-                    for k, v in {
-                        "customDimensionId": customDimensionId,
-                        "populatorId": populatorId,
-                        "fieldName": fieldName,
-                        "offset": offset,
-                        "limit": limit,
-                    }.items()
-                    if v is not None
+                    "custom_dimension_id": customDimensionId,
+                    "populator_id": populatorId,
+                    "field_name": fieldName,
+                    "offset": offset,
+                    "limit": limit,
                 },
-                self._grpc_pb2_1.GetPopulatorFieldRequest(),
-                ignore_unknown_fields=True,
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetPopulatorField,
@@ -446,10 +398,10 @@ class CustomDimensionServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for custom_dimension service"
                 )
-            _req = ParseDict(
-                data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateCustomDimensionRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateCustomDimensionRequest,
+                {"dimension": data.model_dump(by_alias=True, exclude_none=True)},
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateCustomDimension,

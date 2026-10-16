@@ -65,15 +65,25 @@ don't survive this check.
 
 gRPC transport is fully implemented, not a stub. Every generated
 wrapper method routes a `GrpcTransport` call through `call_grpc()`
-when the generator found a gRPC method matching that REST
-operation's name, bridging via `ParseDict` → `call_grpc()` →
+when an RPC shares that REST operation's HTTP rule: the same proto
+service (the REST module's name), HTTP verb, and path. Matching by
+RPC name alone is wrong, because `alerting` declares `Delete` on
+several proto services. The generator reads each RPC's rule from the
+descriptor protoc serialized into its `_pb2.py`. The bridge runs
+`build_grpc_request()` (in `core/grpc_runtime.py`) → `call_grpc()` →
 `MessageToDict` → `model_validate()` against proto companions
-compiled into `gen/pb_companions/`. A wrapper method raises
+compiled into `gen/pb_companions/`. `build_grpc_request()` transcodes
+the way grpc-gateway does: each URL placeholder sets the field its
+HTTP rule names at that position (GetDevice's `deviceid` sets `id`),
+and each query parameter sets the dotted field path of its wire name
+(`querynoCustomColumns` sets `query.no_custom_columns`). A path or
+query argument that resolves to no field fails generation or raises
+`ParseError`, never drops silently. A wrapper method raises
 `NotImplementedError` for `GrpcTransport` in exactly two cases: the
 service's proto companions failed to import at wrapper `__init__`
 time ("gRPC proto dependencies not installed for `<service>`
-service"), or no matching gRPC method name was found for that REST
-operation ("gRPC translation for `<Operation>` is not yet
+service"), or no RPC shares that REST operation's HTTP rule
+("gRPC translation for `<Operation>` is not yet
 implemented"). Both REST and gRPC return identical Pydantic models
 for every operation gRPC covers, and raise the same exception type
 for the same failure. Every gRPC call carries a deadline:

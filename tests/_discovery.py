@@ -22,6 +22,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Union, get_args, get_origin
 
+from google.protobuf.descriptor import FieldDescriptor
+from google.protobuf.timestamp_pb2 import Timestamp
 from pydantic import BaseModel
 
 from kentik_api.core.api_config import APIConfig
@@ -230,6 +232,60 @@ def _sample_value_for_type(annotation: Any, name: str, seen: frozenset) -> Any:
         return b"sample-bytes"
 
     return sample_value_by_name(name)
+
+
+def proto_field(message_descriptor: Any, field_path: str) -> Any:
+    """Resolves a dotted request field path as ParseDict does: by name or JSON name."""
+    field = None
+    for segment in field_path.split("."):
+        if message_descriptor is None:
+            return None
+        field = message_descriptor.fields_by_name.get(segment) or next(
+            (f for f in message_descriptor.fields if f.json_name == segment), None
+        )
+        if field is None:
+            return None
+        message_descriptor = field.message_type
+    return field
+
+
+_PROTO_INT_TYPES = frozenset(
+    {
+        FieldDescriptor.CPPTYPE_INT32,
+        FieldDescriptor.CPPTYPE_INT64,
+        FieldDescriptor.CPPTYPE_UINT32,
+        FieldDescriptor.CPPTYPE_UINT64,
+    }
+)
+
+
+def proto_sample_value(field: Any, value: Any) -> Any:
+    """Swaps a sample the proto field rejects for one it accepts.
+
+    REST signatures type enum, int64, and Timestamp query parameters as `str`,
+    so a sample such as "view_value" is fine for REST but fails ParseDict on
+    gRPC.
+    """
+    if isinstance(value, list):
+        return [proto_sample_value(field, item) for item in value]
+    if field.enum_type is not None and value not in field.enum_type.values_by_name:
+        values = field.enum_type.values
+        return next((v.name for v in values if v.number != 0), values[0].name)
+    message_type = field.message_type
+    if (
+        message_type is not None
+        and message_type.full_name == "google.protobuf.Timestamp"
+    ):
+        try:
+            Timestamp().FromJsonString(value)
+        except (TypeError, ValueError):
+            return _SAMPLE_TIMESTAMP
+    if field.cpp_type in _PROTO_INT_TYPES:
+        try:
+            int(value)
+        except (TypeError, ValueError):
+            return "1"
+    return value
 
 
 def sample_value_for_annotation(annotation: Any, name: str) -> Any:

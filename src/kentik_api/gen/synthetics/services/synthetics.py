@@ -1,11 +1,11 @@
 from typing import List, Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.synthetics.services.SyntheticsAdminService as RestSyntheticsModule1
 import kentik_api.gen.synthetics.services.SyntheticsDataService as RestSyntheticsModule2
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.synthetics import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -57,10 +57,8 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"agentIds": agentIds}.items() if v is not None},
-                self._grpc_pb2_2.ListAgentAlertsRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.ListAgentAlertsRequest, None, {"agentIds": agentIds}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.ListAgentAlerts, _req, api_config=api_config_override
@@ -93,10 +91,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_2.CreateAgentAlertRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_2.CreateAgentAlertRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.CreateAgentAlert, _req, api_config=api_config_override
@@ -126,10 +124,8 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_2.GetAgentAlertRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.GetAgentAlertRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.GetAgentAlert, _req, api_config=api_config_override
@@ -163,12 +159,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_2.UpdateAgentAlertRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.UpdateAgentAlertRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.UpdateAgentAlert, _req, api_config=api_config_override
@@ -199,10 +193,8 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_2.DeleteAgentAlertRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.DeleteAgentAlertRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.DeleteAgentAlert, _req, api_config=api_config_override
@@ -232,7 +224,7 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = self._grpc_pb2_2.ListAgentsRequest()
+            _req = build_grpc_request(self._grpc_pb2_2.ListAgentsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.ListAgents, _req, api_config=api_config_override
             )
@@ -260,10 +252,8 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"agentid": agentid}.items() if v is not None},
-                self._grpc_pb2_2.GetAgentRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.GetAgentRequest, None, {"id": agentid}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.GetAgent, _req, api_config=api_config_override
@@ -297,14 +287,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update(
-                {k: v for k, v in {"agentid": agentid}.items() if v is not None}
-            )
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_2.UpdateAgentRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.UpdateAgentRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"agent.id": agentid},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.UpdateAgent, _req, api_config=api_config_override
@@ -335,10 +321,8 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"agentid": agentid}.items() if v is not None},
-                self._grpc_pb2_2.DeleteAgentRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.DeleteAgentRequest, None, {"id": agentid}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.DeleteAgent, _req, api_config=api_config_override
@@ -368,7 +352,7 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = self._grpc_pb2_2.ListTestsRequest()
+            _req = build_grpc_request(self._grpc_pb2_2.ListTestsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.ListTests, _req, api_config=api_config_override
             )
@@ -399,10 +383,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_2.CreateTestRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_2.CreateTestRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.CreateTest, _req, api_config=api_config_override
@@ -432,11 +416,7 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_2.GetTestRequest(),
-                ignore_unknown_fields=True,
-            )
+            _req = build_grpc_request(self._grpc_pb2_2.GetTestRequest, None, {"id": id})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.GetTest, _req, api_config=api_config_override
             )
@@ -469,12 +449,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_2.UpdateTestRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.UpdateTestRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"test.id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.UpdateTest, _req, api_config=api_config_override
@@ -505,10 +483,8 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_2.DeleteTestRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.DeleteTestRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.DeleteTest, _req, api_config=api_config_override
@@ -542,12 +518,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_2.SetTestStatusRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_2.SetTestStatusRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.SetTestStatus, _req, api_config=api_config_override
@@ -581,10 +555,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetResultsForTestsRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.GetResultsForTestsRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetResultsForTests,
@@ -619,10 +593,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetResultsForTestsCsvRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.GetResultsForTestsCsvRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetResultsForTestsCsv,
@@ -657,10 +631,10 @@ class SyntheticsServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for synthetics service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetTraceForTestRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.GetTraceForTestRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetTraceForTest, _req, api_config=api_config_override

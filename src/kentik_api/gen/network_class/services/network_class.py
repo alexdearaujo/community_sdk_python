@@ -1,7 +1,11 @@
 from typing import Optional, Union, cast
 
+from google.protobuf.json_format import MessageToDict
+
 import kentik_api.gen.network_class.services.NetworkClassService as RestNetworkClassModule1
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.network_class import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -33,8 +37,19 @@ class NetworkClassServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.GetNetworkClassResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for NetworkClassGet is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for network_class service"
+                )
+            _req = build_grpc_request(self._grpc_pb2_1.GetNetworkClassRequest, None, {})
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetNetworkClass, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetNetworkClassResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -53,8 +68,25 @@ class NetworkClassServiceWrapper:
         data: rest_models.UpdateNetworkClassRequest,
     ) -> rest_models.UpdateNetworkClassResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for NetworkClassUpdate is not yet implemented."
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for network_class service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateNetworkClassRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateNetworkClass,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.UpdateNetworkClassResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)

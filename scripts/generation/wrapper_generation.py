@@ -3,11 +3,16 @@
 
 import ast
 import re
+from dataclasses import dataclass
 from pathlib import Path
+
+from google.api import annotations_pb2
+from google.protobuf import descriptor_pb2
 
 from ._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
+    RestOperation,
     discover_service_model_classes,
     iter_service_dirs,
     parse_generated_rest_module,
@@ -15,69 +20,132 @@ from ._shared import (
 )
 
 
-def _discover_grpc_stubs(
-    service_dir: Path, service: str
-) -> tuple[list[tuple[str, str, str, str]], dict[str, tuple[int, str, str]]]:
-    """AST-parses pb2_grpc files to build a map from gRPC method name to stub info.
+@dataclass(frozen=True)
+class GrpcMethod:
+    """One RPC, as reached through the HTTP rule a REST operation shares with it."""
+
+    stub_idx: str
+    name: str
+    request_class: str
+    path_fields: tuple[str, ...]  # request field path per URL placeholder, in order
+    body: str  # HTTP rule body: "" (none), "*" (whole request), or one field name
+
+
+GrpcRuleKey = tuple[str, str, str]  # (proto service, HTTP verb, normalized path)
+
+_PLACEHOLDER = re.compile(r"\{([^}]*)\}")
+
+
+def _normalize_path(path: str) -> str:
+    # Placeholder names differ between the swagger and the proto: protoc-gen-openapiv2
+    # renames GetDevice's {id} to {device.id} to match UpdateDevice on the same path.
+    return _PLACEHOLDER.sub("{}", path)
+
+
+def _file_descriptor(pb2_file: Path) -> descriptor_pb2.FileDescriptorProto | None:
+    """Reads the descriptor protoc serialized into a _pb2 module, without importing it."""
+    try:
+        tree = ast.parse(pb2_file.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "AddSerializedFile"
+            and node.args
+            and isinstance(node.args[0], ast.Constant)
+            and isinstance(node.args[0].value, bytes)
+        ):
+            return descriptor_pb2.FileDescriptorProto.FromString(node.args[0].value)
+    return None
+
+
+def _discover_grpc_methods(
+    service_dir: Path,
+) -> tuple[list[tuple[str, str, str, str]], dict[GrpcRuleKey, GrpcMethod]]:
+    """Finds every RPC with an HTTP rule, keyed the way a REST operation can look it up.
+
+    Keyed by proto service as well as path: Services such as alerting declare an
+    RPC named `Delete` on several proto services, and only the REST module's own
+    service is the right one.
 
     Returns:
       stubs_info: list of (pb2_stem, pb2_grpc_stem, stub_class_name, str_idx)
-      method_map: method_name -> (stub_idx, req_class_name, resp_class_name)
+      methods: (proto service, HTTP verb, normalized path) -> GrpcMethod
     """
     pb_dir = service_dir / "pb"
     if not pb_dir.exists():
         return [], {}
 
     stubs_info: list[tuple[str, str, str, str]] = []
-    method_map: dict[str, tuple[int, str, str]] = {}
-    idx = 1
+    methods: dict[GrpcRuleKey, GrpcMethod] = {}
 
-    for pb2_grpc_file in sorted(pb_dir.glob("*_pb2_grpc.py")):
-        pb2_grpc_stem = pb2_grpc_file.stem  # e.g. "device_pb2_grpc"
-        pb2_stem = pb2_grpc_stem[: -len("_grpc")]  # e.g. "device_pb2"
-        try:
-            tree = ast.parse(pb2_grpc_file.read_text(encoding="utf-8"))
-        except Exception:
+    for pb2_file in sorted(pb_dir.glob("*_pb2.py")):
+        pb2_grpc_stem = f"{pb2_file.stem}_grpc"
+        fd = _file_descriptor(pb2_file)
+        if fd is None or not (pb_dir / f"{pb2_grpc_stem}.py").exists():
             continue
+        local_messages = {f".{fd.package}.{m.name}" for m in fd.message_type}
 
-        for ast_node in ast.walk(tree):
-            if not (
-                isinstance(ast_node, ast.ClassDef) and ast_node.name.endswith("Stub")
-            ):
-                continue
-            stub_class = ast_node.name
-            stubs_info.append((pb2_stem, pb2_grpc_stem, stub_class, str(idx)))
-
-            for body_node in ast_node.body:
-                if not (
-                    isinstance(body_node, ast.FunctionDef)
-                    and body_node.name == "__init__"
-                ):
-                    continue
-                for stmt in body_node.body:
-                    if not (
-                        isinstance(stmt, ast.Assign)
-                        and isinstance(stmt.targets[0], ast.Attribute)
-                        and isinstance(stmt.value, ast.Call)
-                    ):
+        for service in fd.service:
+            idx = str(len(stubs_info) + 1)
+            stubs_info.append(
+                (pb2_file.stem, pb2_grpc_stem, f"{service.name}Stub", idx)
+            )
+            for method in service.method:
+                if method.input_type not in local_messages:
+                    # The wrapper reaches request classes through this one module.
+                    raise ValueError(
+                        f"{service.name}.{method.name} takes {method.input_type}, "
+                        f"which {pb2_file.name} does not define"
+                    )
+                rule = method.options.Extensions[annotations_pb2.http]  # ty: ignore[invalid-argument-type]  -- stubs type the handle loosely
+                for binding in (rule, *rule.additional_bindings):
+                    verb = binding.WhichOneof("pattern")
+                    if verb is None or verb == "custom":
                         continue
-                    meth = stmt.targets[0].attr
-                    req_cls = resp_cls = None
-                    for kw in stmt.value.keywords:
-                        parts = ast.unparse(kw.value).split(".")
-                        if kw.arg == "request_serializer" and len(parts) >= 2:
-                            req_cls = parts[-2]
-                        if kw.arg == "response_deserializer" and len(parts) >= 2:
-                            resp_cls = parts[-2]
-                    if req_cls:
-                        method_map[meth] = (
-                            idx,
-                            req_cls,
-                            resp_cls or f"{meth}Response",
+                    template = getattr(binding, verb)
+                    methods[(service.name, verb, _normalize_path(template))] = (
+                        GrpcMethod(
+                            stub_idx=idx,
+                            name=method.name,
+                            request_class=method.input_type.rsplit(".", 1)[1],
+                            path_fields=tuple(
+                                p.split("=", 1)[0]
+                                for p in _PLACEHOLDER.findall(template)
+                            ),
+                            body=binding.body,
                         )
-            idx += 1
+                    )
 
-    return stubs_info, method_map
+    return stubs_info, methods
+
+
+def _grpc_request_fields(
+    op: RestOperation, grpc_method: GrpcMethod
+) -> list[tuple[str, str]]:
+    """Pairs each path and query argument with the request field it sets.
+
+    Mirrors grpc-gateway transcoding: a URL placeholder sets the field its HTTP
+    rule names at that position, and a query parameter's wire name is its field
+    path. Raises when an argument maps to nothing, rather than dropping it.
+    """
+    path_args = _PLACEHOLDER.findall(op.path)
+    if len(path_args) != len(grpc_method.path_fields):
+        raise ValueError(
+            f"{op.name}: path {op.path} does not match the placeholders of "
+            f"{grpc_method.name}'s HTTP rule {grpc_method.path_fields}"
+        )
+    fields = [*zip(grpc_method.path_fields, path_args), *op.query_params]
+    unmapped = {name for name, _, _ in op.params} - {
+        "api_config_override",
+        "data",
+        *(arg for _, arg in fields),
+    }
+    if unmapped:
+        raise ValueError(f"{op.name}: no gRPC request field for {sorted(unmapped)}")
+    return fields
 
 
 def qualify_wrapper_annotation_types(text: str, model_classes: set[str]) -> str:
@@ -142,7 +210,7 @@ def _generate_service_wrappers():
         required_typing_symbols = {"Union", "cast"}
 
         # Discover gRPC stubs before building wrapper code.
-        grpc_stubs_info, grpc_method_map = _discover_grpc_stubs(service_dir, service)
+        grpc_stubs_info, grpc_methods = _discover_grpc_methods(service_dir)
 
         wrapper_code = [
             "from typing import Union, cast",
@@ -215,8 +283,8 @@ def _generate_service_wrappers():
                 if "from kentik_api.transports.rest_client import RestTransport" in line
             )
             grpc_import_lines = [
-                "from google.protobuf.json_format import MessageToDict, ParseDict",
-                "from kentik_api.core.grpc_runtime import call_grpc",
+                "from google.protobuf.json_format import MessageToDict",
+                "from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc",
             ]
             # Only json_format helpers go at module level; pb2 modules are loaded
             # lazily inside __init__ to avoid proto descriptor errors at import
@@ -322,63 +390,37 @@ def _generate_service_wrappers():
                 call_args = [
                     f"{arg}={arg}" for arg in arg_names if arg != "api_config_override"
                 ]
-                grpc_call = (
-                    f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{{idx}}.{func_name_pascal}, _req, "
-                    "api_config=api_config_override)"
-                )
-
                 call_args_str = ", ".join(call_args)
                 if call_args_str:
                     call_args_str = ", " + call_args_str
 
-                # Build the gRPC branch: real call when a matching stub exists,
-                # otherwise keep the NotImplementedError placeholder.
-                non_data_args = [
-                    arg_name
-                    for arg_name in arg_names
-                    if arg_name not in ("api_config_override", "data")
-                ]
-                if func_name_pascal in grpc_method_map:
-                    stub_idx, req_class, _ = grpc_method_map[func_name_pascal]
+                # Build the gRPC branch: real call when an RPC shares this
+                # operation's HTTP rule, otherwise the NotImplementedError placeholder.
+                grpc_method = grpc_methods.get(
+                    (rest_module_name, op.http_method, _normalize_path(op.path))
+                )
+                if grpc_method is not None:
+                    stub_idx = grpc_method.stub_idx
                     is_none_return = return_type.strip() == "None"
-                    # Guard: if proto deps weren't available at init, fall back.
-                    stub_guard = [
+                    request_fields = _grpc_request_fields(op, grpc_method)
+                    if "data" not in arg_names:
+                        body_arg = "None"
+                    elif grpc_method.body in ("", "*"):
+                        body_arg = body_expr
+                    else:
+                        body_arg = f'{{"{grpc_method.body}": {body_expr}}}'
+                    fields_arg = ", ".join(
+                        f'"{field}": {arg}' for field, arg in request_fields
+                    )
+                    grpc_lines = [
                         "        if isinstance(self._transport, GrpcTransport):",
+                        # Guard: if proto deps weren't available at init, fall back.
                         f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
                         f'                raise NotImplementedError("gRPC proto dependencies not installed for {service} service")',
+                        f"            _req = build_grpc_request(self._grpc_pb2_{stub_idx}.{grpc_method.request_class}, {body_arg}, {{{fields_arg}}})",
+                        f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
+                        "api_config=api_config_override)",
                     ]
-                    if "data" in arg_names and non_data_args:
-                        # Body param + path/query params
-                        other_dict = ", ".join(f'"{a}": {a}' for a in non_data_args)
-                        grpc_lines = [
-                            *stub_guard,
-                            f"            _req_dict = {body_expr}",
-                            f"            _req_dict.update({{k: v for k, v in {{{other_dict}}}.items() if v is not None}})",
-                            f"            _req = ParseDict(_req_dict, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
-                            grpc_call.format(idx=stub_idx),
-                        ]
-                    elif "data" in arg_names:
-                        # Body param only
-                        grpc_lines = [
-                            *stub_guard,
-                            f"            _req = ParseDict({body_expr}, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
-                            grpc_call.format(idx=stub_idx),
-                        ]
-                    elif non_data_args:
-                        # Query/path params only
-                        kwarg_dict = ", ".join(f'"{a}": {a}' for a in non_data_args)
-                        grpc_lines = [
-                            *stub_guard,
-                            f"            _req = ParseDict({{k: v for k, v in {{{kwarg_dict}}}.items() if v is not None}}, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
-                            grpc_call.format(idx=stub_idx),
-                        ]
-                    else:
-                        # No params
-                        grpc_lines = [
-                            *stub_guard,
-                            f"            _req = self._grpc_pb2_{stub_idx}.{req_class}()",
-                            grpc_call.format(idx=stub_idx),
-                        ]
                     if is_none_return:
                         grpc_lines.append("            return None")
                     else:

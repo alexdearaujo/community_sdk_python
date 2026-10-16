@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.label.services.LabelService as RestLabelModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.label import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,7 +41,7 @@ class LabelServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for label service"
                 )
-            _req = self._grpc_pb2_1.ListLabelsRequest()
+            _req = build_grpc_request(self._grpc_pb2_1.ListLabelsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListLabels, _req, api_config=api_config_override
             )
@@ -72,10 +72,10 @@ class LabelServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for label service"
                 )
-            _req = ParseDict(
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateLabelRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
-                self._grpc_pb2_1.CreateLabelRequest(),
-                ignore_unknown_fields=True,
+                {},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.CreateLabel, _req, api_config=api_config_override
@@ -109,12 +109,10 @@ class LabelServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for label service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
-            _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
-            _req = ParseDict(
-                _req_dict,
-                self._grpc_pb2_1.UpdateLabelRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateLabelRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"label.id": id},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.UpdateLabel, _req, api_config=api_config_override
@@ -145,10 +143,8 @@ class LabelServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for label service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id}.items() if v is not None},
-                self._grpc_pb2_1.DeleteLabelRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteLabelRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.DeleteLabel, _req, api_config=api_config_override

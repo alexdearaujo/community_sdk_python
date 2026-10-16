@@ -1,10 +1,10 @@
 from typing import Optional, Union, cast
 
-from google.protobuf.json_format import MessageToDict, ParseDict
+from google.protobuf.json_format import MessageToDict
 
 import kentik_api.gen.cost.services.CostService as RestCostModule1
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.grpc_runtime import build_grpc_request, call_grpc
 from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.cost import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -41,7 +41,9 @@ class CostServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cost service"
                 )
-            _req = self._grpc_pb2_1.ListCostProvidersRequest()
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListCostProvidersRequest, None, {}
+            )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListCostProviders,
                 _req,
@@ -74,10 +76,8 @@ class CostServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cost service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"date": date}.items() if v is not None},
-                self._grpc_pb2_1.ListCostProviderSummariesRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListCostProviderSummariesRequest, None, {"date": date}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListCostProviderSummaries,
@@ -113,10 +113,10 @@ class CostServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cost service"
                 )
-            _req = ParseDict(
-                {k: v for k, v in {"id": id, "date": date}.items() if v is not None},
-                self._grpc_pb2_1.GetCostProviderSummaryRequest(),
-                ignore_unknown_fields=True,
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetCostProviderSummaryRequest,
+                None,
+                {"id": id, "date": date},
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetCostProviderSummary,
