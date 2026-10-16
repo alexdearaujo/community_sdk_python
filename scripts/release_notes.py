@@ -74,12 +74,22 @@ def _unreleased_notes() -> str:
     return match.group(1) if match else ""
 
 
+def _mentioned(name: str, notes: str) -> bool:
+    """True when a code span in the notes holds `name` as a whole token.
+
+    A bare substring would let prose such as "user credentials" satisfy a
+    removed `user` service.
+    """
+    token = re.compile(rf"(?<![\w]){re.escape(name)}(?![\w])")
+    return any(token.search(span) for span in re.findall(r"`([^`]+)`", notes))
+
+
 def _check_changelog(delta: dict, since: str) -> None:
     notes = _unreleased_notes()
     missing = [
         (message, name)
         for message, name in api_surface.breaking_changes(delta)
-        if name not in notes
+        if not _mentioned(name, notes)
     ]
     if not missing:
         return

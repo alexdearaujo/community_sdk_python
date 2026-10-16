@@ -4,8 +4,11 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     InterfaceCreateError,
@@ -70,10 +73,12 @@ def ListInterface(
         error_cls=ListInterfaceError,
     )
 
-    return (
-        attach_rate_limit(ListInterfaceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListInterfaceResponse.model_construct()
+    return parse_response_model(
+        ListInterfaceResponse,
+        body,
+        operation_name="ListInterface",
+        method="get",
+        path="/interface/v202108alpha1/interfaces",
     )
 
 
@@ -96,10 +101,12 @@ def InterfaceCreate(
         error_cls=InterfaceCreateError,
     )
 
-    return (
-        attach_rate_limit(CreateInterfaceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateInterfaceResponse.model_construct()
+    return parse_response_model(
+        CreateInterfaceResponse,
+        body,
+        operation_name="InterfaceCreate",
+        method="post",
+        path="/interface/v202108alpha1/interfaces",
     )
 
 
@@ -121,10 +128,12 @@ def InterfaceGet(
         error_cls=InterfaceGetError,
     )
 
-    return (
-        attach_rate_limit(GetInterfaceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetInterfaceResponse.model_construct()
+    return parse_response_model(
+        GetInterfaceResponse,
+        body,
+        operation_name="InterfaceGet",
+        method="get",
+        path="/interface/v202108alpha1/interfaces/{id}",
     )
 
 
@@ -150,10 +159,12 @@ def InterfaceUpdate(
         error_cls=InterfaceUpdateError,
     )
 
-    return (
-        attach_rate_limit(UpdateInterfaceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateInterfaceResponse.model_construct()
+    return parse_response_model(
+        UpdateInterfaceResponse,
+        body,
+        operation_name="InterfaceUpdate",
+        method="put",
+        path="/interface/v202108alpha1/interfaces/{id}",
     )
 
 
@@ -175,10 +186,12 @@ def InterfaceDelete(
         error_cls=InterfaceDeleteError,
     )
 
-    return (
-        attach_rate_limit(DeleteInterfaceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteInterfaceResponse.model_construct()
+    return parse_response_model(
+        DeleteInterfaceResponse,
+        body,
+        operation_name="InterfaceDelete",
+        method="delete",
+        path="/interface/v202108alpha1/interfaces/{id}",
     )
 
 
@@ -201,8 +214,10 @@ def ManualClassify(
         error_cls=ManualClassifyError,
     )
 
-    return (
-        attach_rate_limit(ManualClassifyResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ManualClassifyResponse.model_construct()
+    return parse_response_model(
+        ManualClassifyResponse,
+        body,
+        operation_name="ManualClassify",
+        method="post",
+        path="/interface/v202108alpha1/manual_classify",
     )

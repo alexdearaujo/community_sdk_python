@@ -20,6 +20,22 @@ jobs:
       - name: Build sdist and wheel
         run: uv build
 
+      - name: Check the built version matches the tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          built=$(ls dist/*.whl | sed -E 's|.*/kentik_api-([^-]+)-.*|\1|')
+          if [ "$built" != "${TAG#v}" ]; then
+            echo "Built version $built does not match tag $TAG" >&2
+            exit 1
+          fi
+          # A pre-release flag on a final-style tag would publish as final.
+          if [ "$PRERELEASE" = "true" ] && ! echo "$built" | grep -Eq '(a|b|rc)[0-9]+$'; then
+            echo "Release $TAG is marked pre-release but $built is a final version" >&2
+            exit 1
+          fi
+
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -44,6 +60,7 @@ jobs:
   # Appends the API surface changes since the previous release to the
   # hand-written release notes, so no release ships without them.
   notes:
+    needs: publish
     runs-on: ubuntu-latest
     permissions:
       contents: write

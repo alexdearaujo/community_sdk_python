@@ -2,13 +2,16 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, Optional
+from enum import Enum
+from typing import Any, Dict, Optional, TypeVar
 from urllib.parse import quote
 
 import httpx
+from pydantic import BaseModel, ValidationError
+
 from kentik_api.auth.credentials import auth_headers
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import RateLimit, attach_rate_limit
+from kentik_api.core.rate_limit import RateLimit, attach_rate_limit, rate_limit_of
 from kentik_api.errors import (
     AuthenticationError,
     ConfigurationError,
@@ -21,6 +24,138 @@ from kentik_api.errors import (
 # these raw matters: grpc-gateway does not decode reserved characters in a path
 # parameter, so an encoded ":" in a timestamp would reach the server as "%3A".
 _PATH_SEGMENT_SAFE = "!$&'()*+,;=:@"
+_MODEL_T = TypeVar("_MODEL_T", bound=BaseModel)
+
+
+def _wire_scalar(value: Any) -> Any:
+    if isinstance(value, Enum):
+        return value.value
+    return value
+
+
+def _wire_query_value(value: Any) -> Any:
+    value = _wire_scalar(value)
+    if isinstance(value, (list, tuple, set, frozenset)):
+        return [_wire_query_value(item) for item in value if item is not None]
+    return value
+
+
+def _normalize_credential(
+    field_name: str, value: str | None, *, operation_name: str
+) -> str:
+    if value is None:
+        raise ConfigurationError(
+            f"{operation_name}: missing required credential field {field_name}."
+        )
+
+    normalized = value.strip()
+    if not normalized:
+        raise ConfigurationError(
+            f"{operation_name}: credential field {field_name} is empty after trimming whitespace."
+        )
+
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in normalized):
+        raise ConfigurationError(
+            f"{operation_name}: credential field {field_name} contains control characters."
+        )
+
+    try:
+        normalized.encode("ascii")
+    except UnicodeEncodeError as exc:
+        raise ConfigurationError(
+            f"{operation_name}: credential field {field_name} must be ASCII."
+        ) from exc
+
+    return normalized
+
+
+def _payload_preview(payload: Any, *, max_chars: int = 200) -> str:
+    try:
+        rendered = json.dumps(payload, default=str)
+    except Exception:
+        rendered = repr(payload)
+    if len(rendered) <= max_chars:
+        return rendered
+    return f"{rendered[:max_chars]}..."
+
+
+def parse_response_model(
+    model_cls: type[_MODEL_T],
+    body: Any,
+    *,
+    operation_name: str,
+    method: str,
+    path: str,
+) -> _MODEL_T:
+    if body is None:
+        return model_cls.model_construct()
+
+    try:
+        parsed = model_cls.model_validate(body)
+    except ValidationError as exc:
+        raise HTTPException(
+            status_code=502,
+            message=(
+                f"{operation_name} returned data that does not match "
+                f"{model_cls.__name__}"
+            ),
+            method=method.upper(),
+            path=path,
+            details={
+                "model": model_cls.__name__,
+                "validation_error": str(exc).splitlines()[0],
+                "response_preview": _payload_preview(body),
+            },
+        ) from exc
+
+    return attach_rate_limit(parsed, rate_limit_of(body))
+
+
+def parse_response_model_list(
+    item_cls: type[_MODEL_T],
+    body: Any,
+    *,
+    operation_name: str,
+    method: str,
+    path: str,
+) -> list[_MODEL_T]:
+    if body is None:
+        return []
+
+    if not isinstance(body, list):
+        raise HTTPException(
+            status_code=502,
+            message=(
+                f"{operation_name} returned data that does not match "
+                "the expected list response"
+            ),
+            method=method.upper(),
+            path=path,
+            details={"response_preview": _payload_preview(body)},
+        )
+
+    parsed: list[_MODEL_T] = []
+    for index, item in enumerate(body):
+        try:
+            parsed.append(item_cls.model_validate(item))
+        except ValidationError as exc:
+            raise HTTPException(
+                status_code=502,
+                message=(
+                    f"{operation_name} returned an invalid item at index {index} "
+                    f"for {item_cls.__name__}"
+                ),
+                method=method.upper(),
+                path=path,
+                details={
+                    "model": item_cls.__name__,
+                    "index": index,
+                    "validation_error": str(exc).splitlines()[0],
+                    "item_preview": _payload_preview(item),
+                },
+            ) from exc
+
+    return parsed
 
 
 def path_segment(value: Any) -> str:
@@ -30,7 +165,7 @@ def path_segment(value: Any) -> str:
     cannot neutralize, are refused: `delete_device(deviceid="../../user/7")`
     must not delete a user.
     """
-    segment = format(value)
+    segment = format(_wire_scalar(value))
     if segment in ("", ".", ".."):
         raise ValueError(f"{segment!r} is not a valid path parameter value")
     return quote(segment, safe=_PATH_SEGMENT_SAFE)
@@ -60,10 +195,17 @@ def request_json(
             "with client.api_config.with_timeout(...) or pass auth_email and auth_token."
         )
 
+    auth_email = _normalize_credential(
+        "auth_email", api_config.auth_email, operation_name=operation_name
+    )
+    auth_token = _normalize_credential(
+        "auth_token", api_config.auth_token, operation_name=operation_name
+    )
+
     headers: Dict[str, Any] = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        **auth_headers(api_config.auth_email, api_config.auth_token),
+        **auth_headers(auth_email, auth_token),
     }
     if header_params:
         headers.update(
@@ -75,7 +217,9 @@ def request_json(
         )
 
     clean_query_params = {
-        key: value for (key, value) in (query_params or {}).items() if value is not None
+        key: _wire_query_value(value)
+        for (key, value) in (query_params or {}).items()
+        if value is not None
     }
 
     try:
@@ -90,7 +234,7 @@ def request_json(
         )
     except httpx.RequestError as exc:
         raise TransportError(
-            f"{operation_name} transport failed: {exc}",
+            f"{operation_name} transport failed ({type(exc).__name__}).",
         ) from exc
 
     rate_limit = RateLimit.from_headers(response.headers)
@@ -165,7 +309,8 @@ def _handle_response(
 
         try:
             payload = response.json()
-        except json.JSONDecodeError:
+        except ValueError:
+            # JSONDecodeError, or UnicodeDecodeError for a non-UTF-8 body.
             payload = None
 
         if isinstance(payload, dict):
@@ -191,7 +336,7 @@ def _handle_response(
 
     try:
         return response.json()
-    except json.JSONDecodeError:
+    except ValueError:
         preview = response.text[:200].replace("\n", " ")
         content_type = response.headers.get("content-type", "unknown")
         _raise_http_error(

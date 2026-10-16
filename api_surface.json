@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "requirements": {
     "grpcio": "grpcio>=1.84.0",
     "httpx": "httpx>=0.28.1",
@@ -19,21 +19,36 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetChatSessionResponse"
         },
         "POST /ai_advisor/v202511/chat": {
           "operation": "CreateChatSession",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateChatSessionRequest"
+          },
+          "returns": "CreateChatSessionResponse"
         },
         "PUT /ai_advisor/v202511/chat": {
           "operation": "UpdateChatSession",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "UpdateChatSessionRequest"
+          },
+          "returns": "UpdateChatSessionResponse"
         }
       },
       "models": [
@@ -176,97 +191,199 @@
           "status": 200,
           "required_params": [
             "autoAckid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "autoAckid": "str"
+          },
+          "returns": "AlertAutoAckServiceDeleteResponse"
         },
         "DELETE /v202505/alerts/silence/{id}": {
           "operation": "Delete",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "AlertSilenceNotificationsServiceDeleteResponse"
         },
         "DELETE /v202505/suppressions/{id}": {
           "operation": "Delete",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "SuppressionServiceDeleteResponse"
         },
         "GET /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Get",
           "status": 200,
           "required_params": [
             "autoAckid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "autoAckid": "str"
+          },
+          "returns": "AlertAutoAckServiceGetResponse"
         },
         "GET /v202505/alerts/silence/{id}": {
           "operation": "Get",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "AlertSilenceNotificationsServiceGetResponse"
         },
         "GET /v202505/alerts/{alertId}/comments": {
           "operation": "ListComments",
           "status": 200,
           "required_params": [
             "alertId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "alertId": "str"
+          },
+          "returns": "AlertServiceListCommentsResponse"
         },
         "GET /v202505/alerts/{id}": {
           "operation": "Get",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "AlertServiceGetResponse"
         },
         "GET /v202505/mitigations": {
           "operation": "List",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "paginationlimit": "Optional[str]",
+            "paginationoffset": "Optional[str]",
+            "paginationincludeTotalCount": "Optional[bool]",
+            "filterscreatedAtstart": "Optional[str]",
+            "filterscreatedAtend": "Optional[str]",
+            "filtersmitigationIds": "Optional[TypingList[str]]",
+            "filtersalarmIds": "Optional[TypingList[str]]",
+            "filtersstates": "Optional[TypingList[str]]",
+            "filtersplatformIds": "Optional[TypingList[str]]",
+            "filtersmethodIds": "Optional[TypingList[str]]",
+            "filtersipCidrs": "Optional[TypingList[str]]",
+            "filtersipCidrPattern": "Optional[str]",
+            "filterstypes": "Optional[TypingList[str]]"
+          },
+          "returns": "MitigationsServiceListResponse"
         },
         "GET /v202505/mitigations/actions": {
           "operation": "AvailableActions",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "MitigationsServiceAvailableActionsResponse"
         },
         "GET /v202505/mitigations/methods": {
           "operation": "List",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "paginationlimit": "Optional[str]",
+            "paginationoffset": "Optional[str]",
+            "paginationincludeTotalCount": "Optional[bool]",
+            "filtersmethodIds": "Optional[TypingList[str]]",
+            "filtersplatformTypes": "Optional[TypingList[str]]",
+            "filterscreatedAtstart": "Optional[str]",
+            "filterscreatedAtend": "Optional[str]",
+            "filtersmodifiedAtstart": "Optional[str]",
+            "filtersmodifiedAtend": "Optional[str]"
+          },
+          "returns": "MitigationMethodsServiceListResponse"
         },
         "GET /v202505/mitigations/methods/{id}": {
           "operation": "Get",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "MitigationMethodsServiceGetResponse"
         },
         "GET /v202505/mitigations/platforms": {
           "operation": "List",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "paginationlimit": "Optional[str]",
+            "paginationoffset": "Optional[str]",
+            "paginationincludeTotalCount": "Optional[bool]",
+            "filtersplatformIds": "Optional[TypingList[str]]",
+            "filtersplatformTypes": "Optional[TypingList[str]]",
+            "filterscreatedAtstart": "Optional[str]",
+            "filterscreatedAtend": "Optional[str]",
+            "filtersmodifiedAtstart": "Optional[str]",
+            "filtersmodifiedAtend": "Optional[str]"
+          },
+          "returns": "MitigationPlatformsServiceListResponse"
         },
         "GET /v202505/mitigations/platforms/{id}": {
           "operation": "Get",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "MitigationPlatformsServiceGetResponse"
         },
         "GET /v202505/mitigations/{action}": {
           "operation": "Get",
           "status": 200,
           "required_params": [
             "action"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "action": "str"
+          },
+          "returns": "MitigationsServiceGetResponse"
         },
         "GET /v202505/mitigations/{id}/actions": {
           "operation": "AvailableActionsForMitigation",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "MitigationsServiceAvailableActionsForMitigationResponse"
         },
         "GET /v202505/policies/{policyType}/{id}": {
           "operation": "Get",
@@ -274,14 +391,25 @@
           "required_params": [
             "id",
             "policyType"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "policyType": "str",
+            "id": "str"
+          },
+          "returns": "PolicyServiceGetResponse"
         },
         "GET /v202505/suppressions/{id}": {
           "operation": "Get",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "SuppressionServiceGetResponse"
         },
         "PATCH /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Replace",
@@ -289,7 +417,13 @@
           "required_params": [
             "autoAckid",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "autoAckid": "str",
+            "data": "AlertAutoAckServiceReplaceBody"
+          },
+          "returns": "AlertAutoAckServiceReplaceResponse"
         },
         "PATCH /v202505/alerts/silence/{id}": {
           "operation": "Replace",
@@ -297,7 +431,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "AlertSilenceNotificationsServiceReplaceBody"
+          },
+          "returns": "AlertSilenceNotificationsServiceReplaceResponse"
         },
         "PATCH /v202505/suppressions/{id}": {
           "operation": "Replace",
@@ -305,49 +445,85 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "SuppressionServiceReplaceBody"
+          },
+          "returns": "SuppressionServiceReplaceResponse"
         },
         "POST /v202505/alerts": {
           "operation": "List",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "AlertServiceListRequest"
+          },
+          "returns": "AlertServiceListResponse"
         },
         "POST /v202505/alerts/ack/auto": {
           "operation": "Create",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "AlertAutoAckServiceCreateRequest"
+          },
+          "returns": "AlertAutoAckServiceCreateResponse"
         },
         "POST /v202505/alerts/ack/auto/list": {
           "operation": "List",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "AlertAutoAckServiceListRequest"
+          },
+          "returns": "AlertAutoAckServiceListResponse"
         },
         "POST /v202505/alerts/clear": {
           "operation": "Clear",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "AlertServiceClearRequest"
+          },
+          "returns": "AlertServiceClearResponse"
         },
         "POST /v202505/alerts/silence": {
           "operation": "Create",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "AlertSilenceNotificationsServiceCreateRequest"
+          },
+          "returns": "AlertSilenceNotificationsServiceCreateResponse"
         },
         "POST /v202505/alerts/silence/list": {
           "operation": "List",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "AlertSilenceNotificationsServiceListRequest"
+          },
+          "returns": "AlertSilenceNotificationsServiceListResponse"
         },
         "POST /v202505/alerts/{alertId}/comments": {
           "operation": "AddComment",
@@ -355,7 +531,13 @@
           "required_params": [
             "alertId",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "alertId": "str",
+            "data": "AlertServiceAddCommentBody"
+          },
+          "returns": "AlertServiceAddCommentResponse"
         },
         "POST /v202505/alerts/{id}/ack": {
           "operation": "Ack",
@@ -363,7 +545,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "AlertServiceAckBody"
+          },
+          "returns": "AlertServiceAckResponse"
         },
         "POST /v202505/alerts/{id}/unack": {
           "operation": "UnAck",
@@ -371,14 +559,25 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "AlertServiceUnAckBody"
+          },
+          "returns": "AlertServiceUnAckResponse"
         },
         "POST /v202505/mitigations": {
           "operation": "Create",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "MitigationsServiceCreateRequest"
+          },
+          "returns": "MitigationsServiceCreateResponse"
         },
         "POST /v202505/mitigations/{action}": {
           "operation": "Act",
@@ -386,14 +585,25 @@
           "required_params": [
             "action",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "action": "str",
+            "data": "MitigationsServiceActBody"
+          },
+          "returns": "MitigationsServiceActResponse"
         },
         "POST /v202505/policies/list": {
           "operation": "List",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "PolicyServiceListRequest"
+          },
+          "returns": "PolicyServiceListResponse"
         },
         "POST /v202505/policies/{policyType}/{id}/disable": {
           "operation": "Disable",
@@ -402,7 +612,14 @@
             "data",
             "id",
             "policyType"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "policyType": "str",
+            "id": "str",
+            "data": "PolicyServiceDisableBody"
+          },
+          "returns": "PolicyServiceDisableResponse"
         },
         "POST /v202505/policies/{policyType}/{id}/enable": {
           "operation": "Enable",
@@ -411,21 +628,38 @@
             "data",
             "id",
             "policyType"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "policyType": "str",
+            "id": "str",
+            "data": "PolicyServiceEnableBody"
+          },
+          "returns": "PolicyServiceEnableResponse"
         },
         "POST /v202505/suppressions": {
           "operation": "Create",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "SuppressionServiceCreateRequest"
+          },
+          "returns": "SuppressionServiceCreateResponse"
         },
         "POST /v202505/suppressions/list": {
           "operation": "List",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "SuppressionServiceListRequest"
+          },
+          "returns": "SuppressionServiceListResponse"
         },
         "PUT /v202505/alerts/{alertId}/external-context": {
           "operation": "SetExternalContext",
@@ -433,7 +667,13 @@
           "required_params": [
             "alertId",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "alertId": "str",
+            "data": "AlertServiceSetExternalContextBody"
+          },
+          "returns": "AlertServiceSetExternalContextResponse"
         }
       },
       "models": [
@@ -3149,26 +3389,45 @@
           "status": 200,
           "required_params": [
             "asGroupid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "asGroupid": "str"
+          },
+          "returns": "DeleteASGroupResponse"
         },
         "GET /as_group/v202212/as_group": {
           "operation": "ListASGroups",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListASGroupsResponse"
         },
         "GET /as_group/v202212/as_group/{asGroupid}": {
           "operation": "GetASGroup",
           "status": 200,
           "required_params": [
             "asGroupid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "asGroupid": "str"
+          },
+          "returns": "GetASGroupResponse"
         },
         "POST /as_group/v202212/as_group": {
           "operation": "CreateASGroup",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateASGroupRequest"
+          },
+          "returns": "CreateASGroupResponse"
         },
         "PUT /as_group/v202212/as_group/{asGroupid}": {
           "operation": "UpdateASGroup",
@@ -3176,7 +3435,13 @@
           "required_params": [
             "asGroupid",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "asGroupid": "str",
+            "data": "ASGroupServiceUpdateASGroupBody"
+          },
+          "returns": "UpdateASGroupResponse"
         }
       },
       "models": [
@@ -3320,7 +3585,12 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteTagKeyResponse"
         },
         "GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values": {
           "operation": "GetTagValues",
@@ -3328,19 +3598,34 @@
           "required_params": [
             "assetId",
             "assetType"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "assetType": "str",
+            "assetId": "str"
+          },
+          "returns": "GetTagValuesResponse"
         },
         "GET /asset_tags/v20260515beta1/keys": {
           "operation": "ListTagKeys",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListTagKeysResponse"
         },
         "GET /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "GetTagKey",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetTagKeyResponse"
         },
         "GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values": {
           "operation": "ListTagValues",
@@ -3348,21 +3633,37 @@
           "required_params": [
             "assetType",
             "tagId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "tagId": "str",
+            "assetType": "str"
+          },
+          "returns": "ListTagValuesResponse"
         },
         "POST /asset_tags/v20260515beta1/keys": {
           "operation": "CreateTagKey",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateTagKeyRequest"
+          },
+          "returns": "CreateTagKeyResponse"
         },
         "POST /asset_tags/v20260515beta1/values/delete": {
           "operation": "DeleteTagValues",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "DeleteTagValuesRequest"
+          },
+          "returns": "DeleteTagValuesResponse"
         },
         "PUT /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "UpdateTagKey",
@@ -3370,14 +3671,25 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "AssetTagsServiceUpdateTagKeyBody"
+          },
+          "returns": "UpdateTagKeyResponse"
         },
         "PUT /asset_tags/v20260515beta1/values": {
           "operation": "SetTagValues",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "SetTagValuesRequest"
+          },
+          "returns": "SetTagValuesResponse"
         }
       },
       "models": [
@@ -3583,14 +3895,28 @@
         "GET /audit/v202601/events": {
           "operation": "ListAuditEvents",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "startTime": "Optional[str]",
+            "endTime": "Optional[str]",
+            "offset": "Optional[str]",
+            "limit": "Optional[str]"
+          },
+          "returns": "ListAuditEventsResponse"
         },
         "GET /audit/v202601/events/{id}": {
           "operation": "GetAuditEvent",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "ctime": "Optional[str]"
+          },
+          "returns": "GetAuditEventResponse"
         },
         "GET /audit/v202601/events/{id}/{ctime}": {
           "operation": "GetAuditEvent",
@@ -3598,7 +3924,13 @@
           "required_params": [
             "ctime",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "ctime": "str"
+          },
+          "returns": "GetAuditEventResponse"
         }
       },
       "models": [
@@ -3757,40 +4089,69 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteMonitorResponse"
         },
         "GET /bgp_monitoring/v202210/monitors": {
           "operation": "ListMonitors",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListMonitorsResponse"
         },
         "GET /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "GetMonitor",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetMonitorResponse"
         },
         "POST /bgp_monitoring/v202210/metrics": {
           "operation": "GetMetricsForTarget",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "GetMetricsForTargetRequest"
+          },
+          "returns": "GetMetricsForTargetResponse"
         },
         "POST /bgp_monitoring/v202210/monitors": {
           "operation": "CreateMonitor",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateMonitorRequest"
+          },
+          "returns": "CreateMonitorResponse"
         },
         "POST /bgp_monitoring/v202210/routes": {
           "operation": "GetRoutesForTarget",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "GetRoutesForTargetRequest"
+          },
+          "returns": "GetRoutesForTargetResponse"
         },
         "PUT /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "UpdateMonitor",
@@ -3798,7 +4159,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "BgpMonitoringAdminServiceUpdateMonitorBody"
+          },
+          "returns": "UpdateMonitorResponse"
         },
         "PUT /bgp_monitoring/v202210/monitors/{id}/status": {
           "operation": "SetMonitorStatus",
@@ -3806,7 +4173,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "BgpMonitoringAdminServiceSetMonitorStatusBody"
+          },
+          "returns": "SetMonitorStatusResponse"
         }
       },
       "models": [
@@ -4177,26 +4550,44 @@
         "GET /capacity_plan/v202212/capacity_plan": {
           "operation": "ListCapacityPlans",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCapacityPlansResponse"
         },
         "GET /capacity_plan/v202212/capacity_plan/summary": {
           "operation": "ListCapacitySummaries",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCapacitySummariesResponse"
         },
         "GET /capacity_plan/v202212/capacity_plan/{id}": {
           "operation": "GetCapacityPlan",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetCapacityPlanResponse"
         },
         "GET /capacity_plan/v202212/capacity_plan/{id}/summary": {
           "operation": "GetCapacitySummary",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetCapacitySummaryResponse"
         }
       },
       "models": [
@@ -4512,26 +4903,45 @@
           "status": 200,
           "required_params": [
             "exportid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "exportid": "str"
+          },
+          "returns": "DeleteCloudExportResponse"
         },
         "GET /cloud_export/v202506/exports": {
           "operation": "ListCloudExports",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCloudExportsResponse"
         },
         "GET /cloud_export/v202506/exports/{exportid}": {
           "operation": "GetCloudExport",
           "status": 200,
           "required_params": [
             "exportid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "exportid": "str"
+          },
+          "returns": "GetCloudExportResponse"
         },
         "POST /cloud_export/v202506/exports": {
           "operation": "CreateCloudExport",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateCloudExportRequest"
+          },
+          "returns": "CreateCloudExportResponse"
         },
         "PUT /cloud_export/v202506/exports/{exportid}": {
           "operation": "UpdateCloudExport",
@@ -4539,7 +4949,13 @@
           "required_params": [
             "data",
             "exportid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "exportid": "str",
+            "data": "CloudExportAdminServiceUpdateCloudExportBody"
+          },
+          "returns": "UpdateCloudExportResponse"
         }
       },
       "models": [
@@ -4896,7 +5312,12 @@
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateConnectivityReportRequest"
+          },
+          "returns": "CreateConnectivityReportResponse"
         }
       },
       "models": [
@@ -5052,19 +5473,34 @@
         "GET /cost/v202308/cost/providers": {
           "operation": "ListCostProviders",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCostProvidersResponse"
         },
         "GET /cost/v202308/cost/summary": {
           "operation": "ListCostProviderSummaries",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "date": "Optional[str]"
+          },
+          "returns": "ListCostProviderSummariesResponse"
         },
         "GET /cost/v202308/cost/summary/{id}": {
           "operation": "GetCostProviderSummary",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "date": "Optional[str]"
+          },
+          "returns": "GetCostProviderSummaryResponse"
         }
       },
       "models": [
@@ -5227,14 +5663,23 @@
         "GET /credential/v202407alpha1/group": {
           "operation": "ListCredentialGroup",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCredentialGroupResponse"
         },
         "GET /credential/v202407alpha1/group/{id}": {
           "operation": "GetCredentialGroup",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetCredentialGroupResponse"
         }
       },
       "models": [
@@ -5465,26 +5910,45 @@
           "status": 200,
           "required_params": [
             "customApplicationId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customApplicationId": "str"
+          },
+          "returns": "DeleteCustomApplicationResponse"
         },
         "GET /custom_application/v202501alpha1": {
           "operation": "ListCustomApplications",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCustomApplicationsResponse"
         },
         "GET /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "GetCustomApplication",
           "status": 200,
           "required_params": [
             "customApplicationId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customApplicationId": "str"
+          },
+          "returns": "GetCustomApplicationResponse"
         },
         "POST /custom_application/v202501alpha1": {
           "operation": "CreateCustomApplication",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CustomApplication"
+          },
+          "returns": "CreateCustomApplicationResponse"
         },
         "PUT /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "UpdateCustomApplication",
@@ -5492,7 +5956,13 @@
           "required_params": [
             "customApplicationId",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customApplicationId": "str",
+            "data": "CustomApplication"
+          },
+          "returns": "UpdateCustomApplicationResponse"
         }
       },
       "models": [
@@ -5604,7 +6074,12 @@
           "status": 200,
           "required_params": [
             "customDimensionId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customDimensionId": "str"
+          },
+          "returns": "DeleteCustomDimensionResponse"
         },
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "DeletePopulator",
@@ -5612,19 +6087,34 @@
           "required_params": [
             "customDimensionId",
             "populatorId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customDimensionId": "str",
+            "populatorId": "str"
+          },
+          "returns": "DeletePopulatorResponse"
         },
         "GET /custom_dimensions/v202411alpha1": {
           "operation": "ListCustomDimensions",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCustomDimensionsResponse"
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "GetCustomDimensionInfo",
           "status": 200,
           "required_params": [
             "customDimensionId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customDimensionId": "str"
+          },
+          "returns": "GetCustomDimensionInfoResponse"
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "GetPopulator",
@@ -5632,7 +6122,14 @@
           "required_params": [
             "customDimensionId",
             "populatorId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customDimensionId": "str",
+            "populatorId": "str",
+            "fieldLimit": "Optional[int]"
+          },
+          "returns": "GetPopulatorResponse"
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}": {
           "operation": "GetPopulatorField",
@@ -5641,7 +6138,16 @@
             "customDimensionId",
             "fieldName",
             "populatorId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customDimensionId": "str",
+            "populatorId": "str",
+            "fieldName": "str",
+            "offset": "Optional[int]",
+            "limit": "Optional[int]"
+          },
+          "returns": "GetPopulatorFieldResponse"
         },
         "POST /custom_dimensions/v202411alpha1/{customDimensionId}/populator": {
           "operation": "CreatePopulator",
@@ -5649,14 +6155,25 @@
           "required_params": [
             "customDimensionId",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customDimensionId": "str",
+            "data": "Populator"
+          },
+          "returns": "CreatePopulatorResponse"
         },
         "POST /v1/customdimension": {
           "operation": "CreateCustomDimension",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CustomDimension"
+          },
+          "returns": "CreateCustomDimensionResponse"
         },
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "UpdateCustomDimension",
@@ -5664,7 +6181,13 @@
           "required_params": [
             "customDimensionId",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customDimensionId": "str",
+            "data": "CustomDimension"
+          },
+          "returns": "UpdateCustomDimensionResponse"
         },
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "UpdatePopulator",
@@ -5673,7 +6196,14 @@
             "customDimensionId",
             "data",
             "populatorId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "customDimensionId": "str",
+            "populatorId": "str",
+            "data": "Populator"
+          },
+          "returns": "UpdatePopulatorResponse"
         }
       },
       "models": [
@@ -5937,54 +6467,97 @@
           "status": 200,
           "required_params": [
             "deviceid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "deviceid": "str"
+          },
+          "returns": "DeleteDeviceResponse"
         },
         "GET /device/v202504beta2/device": {
           "operation": "ListDevices",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "querynoCustomColumns": "Optional[bool]",
+            "view": "Optional[str]"
+          },
+          "returns": "ListDevicesResponse"
         },
         "GET /device/v202504beta2/device/name/{deviceName}": {
           "operation": "GetDeviceByName",
           "status": 200,
           "required_params": [
             "deviceName"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "deviceName": "str",
+            "querynoCustomColumns": "Optional[bool]"
+          },
+          "returns": "GetDeviceByNameResponse"
         },
         "GET /device/v202504beta2/device/{deviceid}": {
           "operation": "GetDevice",
           "status": 200,
           "required_params": [
             "deviceid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "deviceid": "str",
+            "querynoCustomColumns": "Optional[bool]"
+          },
+          "returns": "GetDeviceResponse"
         },
         "POST /device/v202504beta2/device": {
           "operation": "CreateDevice",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateDeviceRequest"
+          },
+          "returns": "CreateDeviceResponse"
         },
         "POST /device/v202504beta2/device/batch_create": {
           "operation": "CreateDevices",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateDevicesRequest"
+          },
+          "returns": "CreateDevicesResponse"
         },
         "POST /device/v202504beta2/device/batch_delete": {
           "operation": "DeleteDevices",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "DeleteDevicesRequest"
+          },
+          "returns": "DeleteDevicesResponse"
         },
         "PUT /device/v202504beta2/device/batch_update": {
           "operation": "UpdateDevices",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "UpdateDevicesRequest"
+          },
+          "returns": "UpdateDevicesResponse"
         },
         "PUT /device/v202504beta2/device/{deviceid}": {
           "operation": "UpdateDevice",
@@ -5992,7 +6565,13 @@
           "required_params": [
             "data",
             "deviceid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "deviceid": "str",
+            "data": "DeviceServiceUpdateDeviceBody"
+          },
+          "returns": "UpdateDeviceResponse"
         },
         "PUT /device/v202504beta2/device/{id}/labels": {
           "operation": "UpdateDeviceLabels",
@@ -6000,7 +6579,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "DeviceServiceUpdateDeviceLabelsBody"
+          },
+          "returns": "UpdateDeviceLabelsResponse"
         }
       },
       "models": [
@@ -7226,7 +7811,11 @@
         "GET /dictionary/v20260604alpha1": {
           "operation": "GetDictionary",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "GetDictionaryResponse"
         }
       },
       "models": [
@@ -7569,7 +8158,12 @@
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "FetchValuesByIdsRequest"
+          },
+          "returns": "FetchValuesByIdsResponse"
         }
       },
       "models": [
@@ -7622,26 +8216,50 @@
           "status": 200,
           "required_params": [
             "flowTagid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "flowTagid": "str"
+          },
+          "returns": "DeleteFlowTagResponse"
         },
         "GET /flow_tag/v202404alpha1/tag": {
           "operation": "SearchFlowTag",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "searchlimit": "Optional[int]",
+            "searchoffset": "Optional[int]",
+            "searchlookupFields": "Optional[List[str]]",
+            "searchlookupValues": "Optional[List[str]]",
+            "searchfieldLimit": "Optional[int]"
+          },
+          "returns": "SearchFlowTagResponse"
         },
         "GET /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "GetFlowTag",
           "status": 200,
           "required_params": [
             "flowTagid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "flowTagid": "str"
+          },
+          "returns": "GetFlowTagResponse"
         },
         "POST /flow_tag/v202404alpha1/tag": {
           "operation": "CreateFlowTag",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateFlowTagRequest"
+          },
+          "returns": "CreateFlowTagResponse"
         },
         "PUT /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "UpdateFlowTag",
@@ -7649,7 +8267,13 @@
           "required_params": [
             "data",
             "flowTagid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "flowTagid": "str",
+            "data": "FlowTagServiceUpdateFlowTagBody"
+          },
+          "returns": "UpdateFlowTagResponse"
         }
       },
       "models": [
@@ -7900,33 +8524,64 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteInterfaceResponse"
         },
         "GET /interface/v202108alpha1/interfaces": {
           "operation": "ListInterface",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "filterstext": "Optional[str]",
+            "filtersdeviceIds": "Optional[List[str]]",
+            "filtersconnectivityTypes": "Optional[List[str]]",
+            "filtersnetworkBoundaries": "Optional[List[str]]",
+            "filtersproviders": "Optional[List[str]]",
+            "filterssnmpSpeeds": "Optional[List[int]]",
+            "filtersipTypes": "Optional[List[str]]"
+          },
+          "returns": "ListInterfaceResponse"
         },
         "GET /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceGet",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetInterfaceResponse"
         },
         "POST /interface/v202108alpha1/interfaces": {
           "operation": "InterfaceCreate",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateInterfaceRequest"
+          },
+          "returns": "CreateInterfaceResponse"
         },
         "POST /interface/v202108alpha1/manual_classify": {
           "operation": "ManualClassify",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "ManualClassifyRequest"
+          },
+          "returns": "ManualClassifyResponse"
         },
         "PUT /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceUpdate",
@@ -7934,7 +8589,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "InterfaceServiceUpdateInterfaceBody"
+          },
+          "returns": "UpdateInterfaceResponse"
         }
       },
       "models": [
@@ -8273,7 +8934,12 @@
           "status": 200,
           "required_params": [
             "prompt"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "prompt": "str"
+          },
+          "returns": "GetJourneysNlqResponse"
         }
       },
       "models": [
@@ -8345,40 +9011,75 @@
           "required_params": [
             "agentId",
             "capabilityname"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentId": "str",
+            "capabilityname": "str"
+          },
+          "returns": "DeleteAgentCapabilityResponse"
         },
         "DELETE /kagent/v202401/agents/{agentid}": {
           "operation": "DeleteAgent",
           "status": 200,
           "required_params": [
             "agentid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentid": "str",
+            "unregistered": "Optional[bool]"
+          },
+          "returns": "DeleteAgentResponse"
         },
         "DELETE /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_DeleteCapability",
           "status": 200,
           "required_params": [
             "capabilityname"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "capabilityname": "str"
+          },
+          "returns": "DeleteCapabilityResponse"
         },
         "DELETE /kagent/v202401/config/{configname}": {
           "operation": "DeleteConfig",
           "status": 200,
           "required_params": [
             "configname"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "configname": "str"
+          },
+          "returns": "DeleteConfigResponse"
         },
         "GET /kagent/v202401/agents": {
           "operation": "ListAgents",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "unregistered": "Optional[bool]",
+            "ids": "Optional[List[str]]",
+            "capabilities": "Optional[List[str]]",
+            "includeDesiredState": "Optional[bool]"
+          },
+          "returns": "ListAgentsResponse"
         },
         "GET /kagent/v202401/agents/{agentId}/capabilities": {
           "operation": "ListAgentCapabilities",
           "status": 200,
           "required_params": [
             "agentId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentId": "str"
+          },
+          "returns": "ListAgentCapabilitiesResponse"
         },
         "GET /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "GetAgentCapability",
@@ -8386,67 +9087,132 @@
           "required_params": [
             "agentId",
             "capabilityname"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentId": "str",
+            "capabilityname": "str"
+          },
+          "returns": "GetAgentCapabilityResponse"
         },
         "GET /kagent/v202401/agents/{agentid}": {
           "operation": "GetAgent",
           "status": 200,
           "required_params": [
             "agentid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentid": "str",
+            "unregistered": "Optional[bool]"
+          },
+          "returns": "GetAgentResponse"
         },
         "GET /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_ListCapabilities",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCapabilitiesResponse"
         },
         "GET /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_GetCapability",
           "status": 200,
           "required_params": [
             "capabilityname"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "capabilityname": "str"
+          },
+          "returns": "GetCapabilityResponse"
         },
         "GET /kagent/v202401/config/{configname}": {
           "operation": "GetConfig",
           "status": 200,
           "required_params": [
             "configname"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "configname": "str"
+          },
+          "returns": "GetConfigResponse"
         },
         "GET /kagent/v202401/provisioning-tokens": {
           "operation": "ListProvisioningTokens",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListProvisioningTokensResponse"
         },
         "GET /kagent/v202401/provisioning-tokens/{token}": {
           "operation": "GetProvisioningToken",
           "status": 200,
           "required_params": [
             "token"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "token": "str"
+          },
+          "returns": "GetProvisioningTokenResponse"
         },
         "GET /kagent/v202401/provisioning-tokens/{token}/agents": {
           "operation": "ListAgentsByProvisioningToken",
           "status": 200,
           "required_params": [
             "token"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "token": "str"
+          },
+          "returns": "ListAgentsByProvisioningTokenResponse"
         },
         "GET /kagent/v202401/releases": {
           "operation": "CapabilityReleaseService_GetCapabilityRelease",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "os": "Optional[str]",
+            "arch": "Optional[str]",
+            "channel": "Optional[str]",
+            "capability": "Optional[str]",
+            "semver": "Optional[str]",
+            "distro": "Optional[str]"
+          },
+          "returns": "GetCapabilityReleaseResponse"
         },
         "GET /kagent/v202401/releases/latest": {
           "operation": "CapabilityReleaseService_GetCapabilityLatestReleases",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "os": "Optional[str]",
+            "arch": "Optional[str]",
+            "channel": "Optional[str]",
+            "installId": "Optional[str]",
+            "capabilities": "Optional[List[str]]",
+            "distro": "Optional[str]"
+          },
+          "returns": "GetCapabilityLatestReleasesResponse"
         },
         "GET /kagent/v202401/releases/supported_distros": {
           "operation": "CapabilityReleaseService_GetCapabilitySupportedDistros",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "capabilities": "Optional[List[str]]"
+          },
+          "returns": "GetCapabilitySupportedDistrosResponse"
         },
         "PATCH /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "UpsertAgentCapability",
@@ -8455,7 +9221,15 @@
             "agentId",
             "capabilityname",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentId": "str",
+            "capabilityname": "str",
+            "data": "Dict[str, Any]",
+            "mask": "Optional[str]"
+          },
+          "returns": "UpsertAgentCapabilityResponse"
         },
         "PATCH /kagent/v202401/agents/{agentid}": {
           "operation": "UpdateAgent",
@@ -8463,7 +9237,14 @@
           "required_params": [
             "agentid",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentid": "str",
+            "data": "Dict[str, Any]",
+            "mask": "Optional[str]"
+          },
+          "returns": "UpdateAgentResponse"
         },
         "PATCH /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_UpdateCapability",
@@ -8471,7 +9252,13 @@
           "required_params": [
             "capabilityname",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "capabilityname": "str",
+            "data": "Dict[str, Any]"
+          },
+          "returns": "UpdateCapabilityResponse"
         },
         "PATCH /kagent/v202401/config/{configname}": {
           "operation": "UpdateConfig",
@@ -8479,42 +9266,73 @@
           "required_params": [
             "configname",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "configname": "str",
+            "data": "ConfigServiceUpdateConfigBody"
+          },
+          "returns": "UpdateConfigResponse"
         },
         "POST /kagent/v202401/agents": {
           "operation": "CreateAgent",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateAgentRequest"
+          },
+          "returns": "CreateAgentResponse"
         },
         "POST /kagent/v202401/agents/install-commands": {
           "operation": "GenerateInstallCommands",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "GenerateInstallCommandsRequest"
+          },
+          "returns": "GenerateInstallCommandsResponse"
         },
         "POST /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_CreateCapability",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "Capability"
+          },
+          "returns": "CreateCapabilityResponse"
         },
         "POST /kagent/v202401/config": {
           "operation": "CreateConfig",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "Config"
+          },
+          "returns": "CreateConfigResponse"
         },
         "POST /kagent/v202401/provisioning-tokens": {
           "operation": "CreateProvisioningToken",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "ProvisioningToken"
+          },
+          "returns": "CreateProvisioningTokenResponse"
         },
         "POST /kagent/v202401/provisioning-tokens/{token}/revoke": {
           "operation": "RevokeProvisioningToken",
@@ -8522,14 +9340,25 @@
           "required_params": [
             "data",
             "token"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "token": "str",
+            "data": "ProvisioningTokenServiceRevokeProvisioningTokenBody"
+          },
+          "returns": "RevokeProvisioningTokenResponse"
         },
         "PUT /kagent/v202401/agents/authorize/{installId}": {
           "operation": "Authorize",
           "status": 200,
           "required_params": [
             "installId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "installId": "str"
+          },
+          "returns": "AuthorizeResponse"
         }
       },
       "models": [
@@ -9265,14 +10094,25 @@
           "required_params": [
             "cid",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "cid": "str",
+            "id": "str"
+          },
+          "returns": "DeleteServiceNowConfigResponse"
         },
         "GET /kmeta/v202607alpha1/{cid}/servicenow/config": {
           "operation": "ListServiceNowConfigs",
           "status": 200,
           "required_params": [
             "cid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "cid": "str"
+          },
+          "returns": "ListServiceNowConfigsResponse"
         },
         "GET /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "GetServiceNowConfig",
@@ -9280,7 +10120,13 @@
           "required_params": [
             "cid",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "cid": "str",
+            "id": "str"
+          },
+          "returns": "GetServiceNowConfigResponse"
         },
         "POST /kmeta/v202607alpha1/{cid}/servicenow/config": {
           "operation": "CreateServiceNowConfig",
@@ -9288,7 +10134,13 @@
           "required_params": [
             "cid",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "cid": "str",
+            "data": "ServiceNowConfig"
+          },
+          "returns": "CreateServiceNowConfigResponse"
         },
         "PUT /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "UpdateServiceNowConfig",
@@ -9297,7 +10149,14 @@
             "cid",
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "cid": "str",
+            "id": "str",
+            "data": "ServiceNowConfig"
+          },
+          "returns": "UpdateServiceNowConfigResponse"
         }
       },
       "models": [
@@ -9407,19 +10266,44 @@
         "GET /kmi/v202212/insights": {
           "operation": "GetGlobalInsights",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "limit": "Optional[int]",
+            "marketId": "Optional[str]",
+            "ip": "Optional[str]",
+            "lookback": "Optional[int]",
+            "types": "Optional[List[str]]",
+            "magnitude": "Optional[int]"
+          },
+          "returns": "GetGlobalInsightsResponse"
         },
         "GET /kmi/v202212/insights/{asn}": {
           "operation": "GetASNInsights",
           "status": 200,
           "required_params": [
             "asn"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "asn": "str",
+            "limit": "Optional[int]",
+            "marketId": "Optional[str]",
+            "ip": "Optional[str]",
+            "lookback": "Optional[int]",
+            "types": "Optional[List[str]]",
+            "magnitude": "Optional[int]"
+          },
+          "returns": "GetASNInsightsResponse"
         },
         "GET /kmi/v202212/markets": {
           "operation": "ListMarkets",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListMarketsResponse"
         },
         "POST /kmi/v202212/market/{marketId}/network/{asn}/{type}": {
           "operation": "GetASNDetails",
@@ -9429,7 +10313,15 @@
             "data",
             "marketId",
             "type"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "marketId": "str",
+            "asn": "str",
+            "type": "str",
+            "data": "KmiServiceGetASNDetailsBody"
+          },
+          "returns": "GetASNDetailsResponse"
         },
         "POST /kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}": {
           "operation": "GetRankings",
@@ -9439,7 +10331,15 @@
             "ip",
             "marketId",
             "rankType"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "marketId": "str",
+            "rankType": "str",
+            "ip": "str",
+            "data": "KmiServiceGetRankingsBody"
+          },
+          "returns": "GetRankingsResponse"
         }
       },
       "models": [
@@ -9750,21 +10650,36 @@
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "RouteServiceAnnounceRequest"
+          },
+          "returns": "RouteServiceAnnounceResponse"
         },
         "POST /routes/list": {
           "operation": "RouteService_List",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "RouteServiceListRequest"
+          },
+          "returns": "RouteServiceListResponse"
         },
         "POST /routes/withdraw": {
           "operation": "RouteService_Withdraw",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "RouteServiceWithdrawRequest"
+          },
+          "returns": "RouteServiceWithdrawResponse"
         }
       },
       "models": [
@@ -10356,19 +11271,33 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteLabelResponse"
         },
         "GET /label/v202210/labels": {
           "operation": "ListLabels",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListLabelsResponse"
         },
         "POST /label/v202210/labels": {
           "operation": "CreateLabel",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateLabelRequest"
+          },
+          "returns": "CreateLabelResponse"
         },
         "POST /label/v202210/labels/{id}": {
           "operation": "UpdateLabel",
@@ -10376,7 +11305,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "LabelServiceUpdateLabelBody"
+          },
+          "returns": "UpdateLabelResponse"
         }
       },
       "models": [
@@ -10483,14 +11418,24 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeletePackageResponse"
         },
         "DELETE /mkp/v202407/tenants/{id}": {
           "operation": "TenantDelete",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteTenantResponse"
         },
         "DELETE /mkp/v202407/tenants/{tenantId}/users/{id}": {
           "operation": "TenantUserDelete",
@@ -10498,52 +11443,91 @@
           "required_params": [
             "id",
             "tenantId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "tenantId": "str",
+            "id": "str"
+          },
+          "returns": "DeleteTenantUserResponse"
         },
         "GET /mkp/v202407/packages": {
           "operation": "PackageList",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListPackageResponse"
         },
         "GET /mkp/v202407/packages/{id}": {
           "operation": "PackageGet",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetPackageResponse"
         },
         "GET /mkp/v202407/tenants": {
           "operation": "TenantList",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListTenantResponse"
         },
         "GET /mkp/v202407/tenants/{id}": {
           "operation": "TenantGet",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetTenantResponse"
         },
         "GET /mkp/v202407/tenants/{tenantId}/users": {
           "operation": "TenantUserList",
           "status": 200,
           "required_params": [
             "tenantId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "tenantId": "str"
+          },
+          "returns": "ListTenantUserResponse"
         },
         "POST /mkp/v202407/packages": {
           "operation": "PackageCreate",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreatePackageRequest"
+          },
+          "returns": "CreatePackageResponse"
         },
         "POST /mkp/v202407/tenants": {
           "operation": "TenantCreate",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateTenantRequest"
+          },
+          "returns": "CreateTenantResponse"
         },
         "POST /mkp/v202407/tenants/{tenantId}/users": {
           "operation": "TenantUserCreate",
@@ -10551,7 +11535,13 @@
           "required_params": [
             "data",
             "tenantId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "tenantId": "str",
+            "data": "TenantUserServiceCreateTenantUserBody"
+          },
+          "returns": "CreateTenantUserResponse"
         },
         "PUT /mkp/v202407/packages/{id}": {
           "operation": "PackageUpdate",
@@ -10559,7 +11549,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "PackageServiceUpdatePackageBody"
+          },
+          "returns": "UpdatePackageResponse"
         },
         "PUT /mkp/v202407/tenants/{id}": {
           "operation": "TenantUpdate",
@@ -10567,7 +11563,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "TenantServiceUpdateTenantBody"
+          },
+          "returns": "UpdateTenantResponse"
         },
         "PUT /mkp/v202407/tenants/{tenantId}/users/{id}": {
           "operation": "TenantUserUpdate",
@@ -10576,7 +11578,14 @@
             "data",
             "id",
             "tenantId"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "tenantId": "str",
+            "id": "str",
+            "data": "TenantUserServiceUpdateTenantUserBody"
+          },
+          "returns": "UpdateTenantUserResponse"
         }
       },
       "models": [
@@ -11336,14 +12345,23 @@
         "GET /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassGet",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "GetNetworkClassResponse"
         },
         "POST /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassUpdate",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "UpdateNetworkClassRequest"
+          },
+          "returns": "UpdateNetworkClassResponse"
         }
       },
       "models": [
@@ -11444,7 +12462,11 @@
         "GET /nms/v202505/metrics_schema": {
           "operation": "MetricsSchemaService_GetMetricsSchema",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "GetMetricsSchemaResponse"
         }
       },
       "models": [
@@ -11611,21 +12633,35 @@
         "GET /notification_channel/v202210/notification_channels": {
           "operation": "ListNotificationChannels",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListNotificationChannelsResponse"
         },
         "GET /notification_channel/v202210/notification_channels/{id}": {
           "operation": "GetNotificationChannel",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetNotificationChannelResponse"
         },
         "POST /notification_channel/v202210/notification_channels/search": {
           "operation": "SearchNotificationChannels",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "SearchNotificationChannelsRequest"
+          },
+          "returns": "SearchNotificationChannelsResponse"
         }
       },
       "models": [
@@ -11752,7 +12788,12 @@
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreatePathfinderReportRequest"
+          },
+          "returns": "CreatePathfinderReportResponse"
         }
       },
       "models": [
@@ -11896,7 +12937,11 @@
         "GET /plans/v202501alpha1": {
           "operation": "ListPlans",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListPlansResponse"
         }
       },
       "models": [
@@ -12080,26 +13125,45 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteScopeResponse"
         },
         "GET /rbux/v202607alpha1/scopes": {
           "operation": "ListScopes",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListScopesResponse"
         },
         "GET /rbux/v202607alpha1/scopes/{id}": {
           "operation": "GetScope",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetScopeResponse"
         },
         "POST /rbux/v202607alpha1/scopes": {
           "operation": "CreateScope",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "Scope"
+          },
+          "returns": "CreateScopeResponse"
         },
         "PUT /rbux/v202607alpha1/scopes/{id}": {
           "operation": "UpdateScope",
@@ -12107,7 +13171,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "Dict[str, Any]"
+          },
+          "returns": "UpdateScopeResponse"
         }
       },
       "models": [
@@ -12385,31 +13455,54 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteSavedFilterResponse"
         },
         "GET /saved-filter/v202501alpha1/{id}": {
           "operation": "GetSavedFilter",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetSavedFilterResponse"
         },
         "GET /saved-filters/v202501alpha1": {
           "operation": "ListSavedFilters",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListSavedFiltersResponse"
         },
         "GET /saved-filters/v202501alpha1/all": {
           "operation": "ListSavedFiltersAll",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListSavedFiltersAllResponse"
         },
         "POST /saved-filter/v202501alpha1": {
           "operation": "CreateSavedFilter",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "SavedFilter"
+          },
+          "returns": "CreateSavedFilterResponse"
         },
         "PUT /saved-filter/v202501alpha1/{id}": {
           "operation": "UpdateSavedFilter",
@@ -12417,7 +13510,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "SavedFilter"
+          },
+          "returns": "UpdateSavedFilterResponse"
         }
       },
       "models": [
@@ -12672,52 +13771,90 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteSiteMarketResponse"
         },
         "DELETE /site/v202509/sites/{id}": {
           "operation": "DeleteSite",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteSiteResponse"
         },
         "GET /site/v202509/site_markets": {
           "operation": "ListSiteMarkets",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListSiteMarketsResponse"
         },
         "GET /site/v202509/site_markets/{id}": {
           "operation": "GetSiteMarket",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetSiteMarketResponse"
         },
         "GET /site/v202509/sites": {
           "operation": "ListSites",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListSitesResponse"
         },
         "GET /site/v202509/sites/{id}": {
           "operation": "GetSite",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetSiteResponse"
         },
         "POST /site/v202509/site_markets": {
           "operation": "CreateSiteMarket",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateSiteMarketRequest"
+          },
+          "returns": "CreateSiteMarketResponse"
         },
         "POST /site/v202509/sites": {
           "operation": "CreateSite",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateSiteRequest"
+          },
+          "returns": "CreateSiteResponse"
         },
         "PUT /site/v202509/site_markets/{id}": {
           "operation": "UpdateSiteMarket",
@@ -12725,7 +13862,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "SiteServiceUpdateSiteMarketBody"
+          },
+          "returns": "UpdateSiteMarketResponse"
         },
         "PUT /site/v202509/sites/{id}": {
           "operation": "UpdateSite",
@@ -12733,7 +13876,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "SiteServiceUpdateSiteBody"
+          },
+          "returns": "UpdateSiteResponse"
         }
       },
       "models": [
@@ -13032,92 +14181,160 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteAgentAlertResponse"
         },
         "DELETE /synthetics/v202309/agents/{agentid}": {
           "operation": "DeleteAgent",
           "status": 200,
           "required_params": [
             "agentid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentid": "str"
+          },
+          "returns": "DeleteAgentResponse"
         },
         "DELETE /synthetics/v202309/tests/{id}": {
           "operation": "DeleteTest",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteTestResponse"
         },
         "GET /synthetics/v202309/agentAlerts": {
           "operation": "ListAgentAlerts",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentIds": "Optional[List[str]]"
+          },
+          "returns": "ListAgentAlertsResponse"
         },
         "GET /synthetics/v202309/agentAlerts/{id}": {
           "operation": "GetAgentAlert",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetAgentAlertResponse"
         },
         "GET /synthetics/v202309/agents": {
           "operation": "ListAgents",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListAgentsResponse"
         },
         "GET /synthetics/v202309/agents/{agentid}": {
           "operation": "GetAgent",
           "status": 200,
           "required_params": [
             "agentid"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentid": "str"
+          },
+          "returns": "GetAgentResponse"
         },
         "GET /synthetics/v202309/tests": {
           "operation": "ListTests",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListTestsResponse"
         },
         "GET /synthetics/v202309/tests/{id}": {
           "operation": "GetTest",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetTestResponse"
         },
         "POST /synthetics/v202309/agentAlerts": {
           "operation": "CreateAgentAlert",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateAgentAlertRequest"
+          },
+          "returns": "CreateAgentAlertResponse"
         },
         "POST /synthetics/v202309/results": {
           "operation": "GetResultsForTests",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "GetResultsForTestsRequest"
+          },
+          "returns": "GetResultsForTestsResponse"
         },
         "POST /synthetics/v202309/results/csv": {
           "operation": "GetResultsForTestsCsv",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "GetResultsForTestsCsvRequest"
+          },
+          "returns": "GetResultsForTestsCsvResponse"
         },
         "POST /synthetics/v202309/tests": {
           "operation": "CreateTest",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateTestRequest"
+          },
+          "returns": "CreateTestResponse"
         },
         "POST /synthetics/v202309/trace": {
           "operation": "GetTraceForTest",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "GetTraceForTestRequest"
+          },
+          "returns": "GetTraceForTestResponse"
         },
         "PUT /synthetics/v202309/agentAlerts/{id}": {
           "operation": "UpdateAgentAlert",
@@ -13125,7 +14342,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "SyntheticsAdminServiceUpdateAgentAlertBody"
+          },
+          "returns": "UpdateAgentAlertResponse"
         },
         "PUT /synthetics/v202309/agents/{agentid}": {
           "operation": "UpdateAgent",
@@ -13133,7 +14356,13 @@
           "required_params": [
             "agentid",
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "agentid": "str",
+            "data": "SyntheticsAdminServiceUpdateAgentBody"
+          },
+          "returns": "UpdateAgentResponse"
         },
         "PUT /synthetics/v202309/tests/{id}": {
           "operation": "UpdateTest",
@@ -13141,7 +14370,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "SyntheticsAdminServiceUpdateTestBody"
+          },
+          "returns": "UpdateTestResponse"
         },
         "PUT /synthetics/v202309/tests/{id}/status": {
           "operation": "SetTestStatus",
@@ -13149,7 +14384,13 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "SyntheticsAdminServiceSetTestStatusBody"
+          },
+          "returns": "SetTestStatusResponse"
         }
       },
       "models": [
@@ -14584,26 +15825,45 @@
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "DeleteUserResponse"
         },
         "GET /user/v202211/users": {
           "operation": "ListUsers",
           "status": 200,
-          "required_params": []
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListUsersResponse"
         },
         "GET /user/v202211/users/{id}": {
           "operation": "GetUser",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "GetUserResponse"
         },
         "POST /user/v202211/users": {
           "operation": "CreateUser",
           "status": 200,
           "required_params": [
             "data"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateUserRequest"
+          },
+          "returns": "CreateUserResponse"
         },
         "PUT /user/v202211/users/{id}": {
           "operation": "UpdateUser",
@@ -14611,21 +15871,37 @@
           "required_params": [
             "data",
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str",
+            "data": "UserServiceUpdateUserBody"
+          },
+          "returns": "UpdateUserResponse"
         },
         "PUT /user/v202211/users/{id}/reset_active_sessions": {
           "operation": "ResetActiveSessions",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "ResetActiveSessionsResponse"
         },
         "PUT /user/v202211/users/{id}/reset_api_token": {
           "operation": "ResetApiToken",
           "status": 200,
           "required_params": [
             "id"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "id": "str"
+          },
+          "returns": "ResetApiTokenResponse"
         }
       },
       "models": [
@@ -14808,14 +16084,24 @@
           "status": 200,
           "required_params": [
             "names"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "names": "List[str]"
+          },
+          "returns": "ListSecretResponse"
         },
         "GET /vault/v202312alpha1/secrets/{name}": {
           "operation": "GetSecret",
           "status": 200,
           "required_params": [
             "name"
-          ]
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str"
+          },
+          "returns": "GetSecretResponse"
         }
       },
       "models": [

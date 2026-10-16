@@ -380,8 +380,8 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   generated `docs/sphinx/services/*.md` (preserves
   `scripts/openapi_templates/`, `src/kentik_api/core/`,
   `docs/sphinx/local_generation_workflow.md`)
-- `make deep-clean` — `clean` plus `.venv`, `uv.lock`,
-  `.pytest_cache/`, `.ruff_cache/`
+- `make deep-clean` — `clean` plus `.venv`, `.pytest_cache/`,
+  `.ruff_cache/`. It keeps the tracked `uv.lock`.
 
 ## Testing strategy (5 layers, see `tests/README.md`)
 

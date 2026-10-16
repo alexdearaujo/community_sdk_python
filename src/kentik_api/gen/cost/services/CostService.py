@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     GetCostProviderSummaryError,
@@ -42,10 +45,12 @@ def ListCostProviders(
         error_cls=ListCostProvidersError,
     )
 
-    return (
-        attach_rate_limit(ListCostProvidersResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListCostProvidersResponse.model_construct()
+    return parse_response_model(
+        ListCostProvidersResponse,
+        body,
+        operation_name="ListCostProviders",
+        method="get",
+        path="/cost/v202308/cost/providers",
     )
 
 
@@ -67,12 +72,12 @@ def ListCostProviderSummaries(
         error_cls=ListCostProviderSummariesError,
     )
 
-    return (
-        attach_rate_limit(
-            ListCostProviderSummariesResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else ListCostProviderSummariesResponse.model_construct()
+    return parse_response_model(
+        ListCostProviderSummariesResponse,
+        body,
+        operation_name="ListCostProviderSummaries",
+        method="get",
+        path="/cost/v202308/cost/summary",
     )
 
 
@@ -97,8 +102,10 @@ def GetCostProviderSummary(
         error_cls=GetCostProviderSummaryError,
     )
 
-    return (
-        attach_rate_limit(GetCostProviderSummaryResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetCostProviderSummaryResponse.model_construct()
+    return parse_response_model(
+        GetCostProviderSummaryResponse,
+        body,
+        operation_name="GetCostProviderSummary",
+        method="get",
+        path="/cost/v202308/cost/summary/{id}",
     )

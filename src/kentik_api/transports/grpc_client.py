@@ -1,11 +1,13 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import collections
+from collections.abc import Callable
 
 import grpc
 
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
+from kentik_api.errors import ConfigurationError
 from kentik_api.transports.base import BaseTransport
 
 
@@ -34,10 +36,16 @@ class _DefaultDeadlineInterceptor(grpc.UnaryUnaryClientInterceptor):
     per-call override takes precedence over the client-wide default.
     """
 
-    def __init__(self, api_config: APIConfig) -> None:
+    def __init__(self, api_config: APIConfig, is_closed: Callable[[], bool]) -> None:
         self._api_config = api_config
+        self._is_closed = is_closed
 
     def intercept_unary_unary(self, continuation, client_call_details, request):
+        if self._is_closed():
+            raise ConfigurationError(
+                "This client was closed with close(); create a new KentikAPI to make more calls."
+            )
+
         if client_call_details.timeout is None:
             client_call_details = _CallDetails(
                 method=client_call_details.method,
@@ -87,8 +95,9 @@ class GrpcTransport(BaseTransport):
 
         self.channel = grpc.intercept_channel(
             grpc.secure_channel(target, composite_creds),
-            _DefaultDeadlineInterceptor(self.api_config),
+            _DefaultDeadlineInterceptor(self.api_config, self._is_closed),
         )
+        self._closed = False
 
     @property
     def rate_limits(self) -> dict[str, RateLimit]:
@@ -96,4 +105,10 @@ class GrpcTransport(BaseTransport):
         return self.api_config.rate_limits
 
     def close(self):
+        if self._closed:
+            return
         self.channel.close()
+        self._closed = True
+
+    def _is_closed(self) -> bool:
+        return self._closed

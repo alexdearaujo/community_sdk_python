@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import NetworkClassGetError, NetworkClassUpdateError
 from ..models import (  # noqa: F401
@@ -38,10 +37,12 @@ def NetworkClassGet(
         error_cls=NetworkClassGetError,
     )
 
-    return (
-        attach_rate_limit(GetNetworkClassResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetNetworkClassResponse.model_construct()
+    return parse_response_model(
+        GetNetworkClassResponse,
+        body,
+        operation_name="NetworkClassGet",
+        method="get",
+        path="/network_class/v202109alpha1/network_class",
     )
 
 
@@ -64,8 +65,10 @@ def NetworkClassUpdate(
         error_cls=NetworkClassUpdateError,
     )
 
-    return (
-        attach_rate_limit(UpdateNetworkClassResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateNetworkClassResponse.model_construct()
+    return parse_response_model(
+        UpdateNetworkClassResponse,
+        body,
+        operation_name="NetworkClassUpdate",
+        method="post",
+        path="/network_class/v202109alpha1/network_class",
     )

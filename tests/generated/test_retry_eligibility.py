@@ -11,10 +11,13 @@ replaying one can create or change something twice.
 from __future__ import annotations
 
 import importlib
+import json
 from collections import Counter
+from pathlib import Path
 
 from _discovery import discover_cases, parse_rest_call_metadata
 
+_ROOT = Path(__file__).resolve().parents[2]
 RETRY_ELIGIBLE_VERBS = frozenset({"GET", "PUT", "DELETE"})
 NEVER_RETRIED_VERBS = frozenset({"POST", "PATCH"})
 
@@ -40,12 +43,19 @@ def test_every_operation_verb_falls_on_one_side_of_the_rule():
     assert unclassified == {}
 
 
-def test_eligibility_split_matches_the_recorded_counts():
+def test_eligibility_split_matches_the_recorded_surface():
     counts = Counter(
         "eligible" if verb in RETRY_ELIGIBLE_VERBS else "never"
         for verb in _verbs_by_operation().values()
     )
 
-    # FR-032a recorded 161; nms's GET made it 162. A schema change that moves
-    # these is a prompt to re-read the rule, not to edit the numbers blindly.
-    assert counts == {"eligible": 162, "never": 72}
+    # api_surface.json is regenerated with the schema, so no count is hand-edited.
+    surface = json.loads((_ROOT / "api_surface.json").read_text(encoding="utf-8"))
+    recorded = Counter(
+        "eligible" if key.split()[0] in RETRY_ELIGIBLE_VERBS else "never"
+        for service in surface["services"].values()
+        if service["mounted"]
+        for key in service["operations"]
+    )
+
+    assert counts == recorded

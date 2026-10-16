@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     TenantCreateError,
@@ -76,10 +79,12 @@ def TenantList(api_config_override: Optional[APIConfig] = None) -> ListTenantRes
         error_cls=TenantListError,
     )
 
-    return (
-        attach_rate_limit(ListTenantResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListTenantResponse.model_construct()
+    return parse_response_model(
+        ListTenantResponse,
+        body,
+        operation_name="TenantList",
+        method="get",
+        path="/mkp/v202407/tenants",
     )
 
 
@@ -102,10 +107,12 @@ def TenantCreate(
         error_cls=TenantCreateError,
     )
 
-    return (
-        attach_rate_limit(CreateTenantResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateTenantResponse.model_construct()
+    return parse_response_model(
+        CreateTenantResponse,
+        body,
+        operation_name="TenantCreate",
+        method="post",
+        path="/mkp/v202407/tenants",
     )
 
 
@@ -127,10 +134,12 @@ def TenantGet(
         error_cls=TenantGetError,
     )
 
-    return (
-        attach_rate_limit(GetTenantResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetTenantResponse.model_construct()
+    return parse_response_model(
+        GetTenantResponse,
+        body,
+        operation_name="TenantGet",
+        method="get",
+        path="/mkp/v202407/tenants/{id}",
     )
 
 
@@ -156,10 +165,12 @@ def TenantUpdate(
         error_cls=TenantUpdateError,
     )
 
-    return (
-        attach_rate_limit(UpdateTenantResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateTenantResponse.model_construct()
+    return parse_response_model(
+        UpdateTenantResponse,
+        body,
+        operation_name="TenantUpdate",
+        method="put",
+        path="/mkp/v202407/tenants/{id}",
     )
 
 
@@ -181,8 +192,10 @@ def TenantDelete(
         error_cls=TenantDeleteError,
     )
 
-    return (
-        attach_rate_limit(DeleteTenantResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteTenantResponse.model_construct()
+    return parse_response_model(
+        DeleteTenantResponse,
+        body,
+        operation_name="TenantDelete",
+        method="delete",
+        path="/mkp/v202407/tenants/{id}",
     )

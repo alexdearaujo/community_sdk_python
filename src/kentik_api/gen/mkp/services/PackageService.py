@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     PackageCreateError,
@@ -76,10 +79,12 @@ def PackageList(api_config_override: Optional[APIConfig] = None) -> ListPackageR
         error_cls=PackageListError,
     )
 
-    return (
-        attach_rate_limit(ListPackageResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListPackageResponse.model_construct()
+    return parse_response_model(
+        ListPackageResponse,
+        body,
+        operation_name="PackageList",
+        method="get",
+        path="/mkp/v202407/packages",
     )
 
 
@@ -102,10 +107,12 @@ def PackageCreate(
         error_cls=PackageCreateError,
     )
 
-    return (
-        attach_rate_limit(CreatePackageResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreatePackageResponse.model_construct()
+    return parse_response_model(
+        CreatePackageResponse,
+        body,
+        operation_name="PackageCreate",
+        method="post",
+        path="/mkp/v202407/packages",
     )
 
 
@@ -127,10 +134,12 @@ def PackageGet(
         error_cls=PackageGetError,
     )
 
-    return (
-        attach_rate_limit(GetPackageResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetPackageResponse.model_construct()
+    return parse_response_model(
+        GetPackageResponse,
+        body,
+        operation_name="PackageGet",
+        method="get",
+        path="/mkp/v202407/packages/{id}",
     )
 
 
@@ -156,10 +165,12 @@ def PackageUpdate(
         error_cls=PackageUpdateError,
     )
 
-    return (
-        attach_rate_limit(UpdatePackageResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdatePackageResponse.model_construct()
+    return parse_response_model(
+        UpdatePackageResponse,
+        body,
+        operation_name="PackageUpdate",
+        method="put",
+        path="/mkp/v202407/packages/{id}",
     )
 
 
@@ -181,8 +192,10 @@ def PackageDelete(
         error_cls=PackageDeleteError,
     )
 
-    return (
-        attach_rate_limit(DeletePackageResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeletePackageResponse.model_construct()
+    return parse_response_model(
+        DeletePackageResponse,
+        body,
+        operation_name="PackageDelete",
+        method="delete",
+        path="/mkp/v202407/packages/{id}",
     )

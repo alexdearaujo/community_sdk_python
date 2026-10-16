@@ -4,8 +4,7 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import (
     CapabilityReleaseService_GetCapabilityLatestReleasesError,
@@ -105,10 +104,12 @@ def CapabilityReleaseService_GetCapabilityRelease(
         error_cls=CapabilityReleaseService_GetCapabilityReleaseError,
     )
 
-    return (
-        attach_rate_limit(GetCapabilityReleaseResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetCapabilityReleaseResponse.model_construct()
+    return parse_response_model(
+        GetCapabilityReleaseResponse,
+        body,
+        operation_name="CapabilityReleaseService_GetCapabilityRelease",
+        method="get",
+        path="/kagent/v202401/releases",
     )
 
 
@@ -144,12 +145,12 @@ def CapabilityReleaseService_GetCapabilityLatestReleases(
         error_cls=CapabilityReleaseService_GetCapabilityLatestReleasesError,
     )
 
-    return (
-        attach_rate_limit(
-            GetCapabilityLatestReleasesResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else GetCapabilityLatestReleasesResponse.model_construct()
+    return parse_response_model(
+        GetCapabilityLatestReleasesResponse,
+        body,
+        operation_name="CapabilityReleaseService_GetCapabilityLatestReleases",
+        method="get",
+        path="/kagent/v202401/releases/latest",
     )
 
 
@@ -173,10 +174,10 @@ def CapabilityReleaseService_GetCapabilitySupportedDistros(
         error_cls=CapabilityReleaseService_GetCapabilitySupportedDistrosError,
     )
 
-    return (
-        attach_rate_limit(
-            GetCapabilitySupportedDistrosResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else GetCapabilitySupportedDistrosResponse.model_construct()
+    return parse_response_model(
+        GetCapabilitySupportedDistrosResponse,
+        body,
+        operation_name="CapabilityReleaseService_GetCapabilitySupportedDistros",
+        method="get",
+        path="/kagent/v202401/releases/supported_distros",
     )

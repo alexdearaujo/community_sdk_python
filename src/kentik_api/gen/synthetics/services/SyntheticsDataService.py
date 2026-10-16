@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import (
     GetResultsForTestsCsvError,
@@ -112,10 +111,12 @@ def GetResultsForTests(
         error_cls=GetResultsForTestsError,
     )
 
-    return (
-        attach_rate_limit(GetResultsForTestsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetResultsForTestsResponse.model_construct()
+    return parse_response_model(
+        GetResultsForTestsResponse,
+        body,
+        operation_name="GetResultsForTests",
+        method="post",
+        path="/synthetics/v202309/results",
     )
 
 
@@ -140,10 +141,12 @@ def GetResultsForTestsCsv(
         error_cls=GetResultsForTestsCsvError,
     )
 
-    return (
-        attach_rate_limit(GetResultsForTestsCsvResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetResultsForTestsCsvResponse.model_construct()
+    return parse_response_model(
+        GetResultsForTestsCsvResponse,
+        body,
+        operation_name="GetResultsForTestsCsv",
+        method="post",
+        path="/synthetics/v202309/results/csv",
     )
 
 
@@ -166,8 +169,10 @@ def GetTraceForTest(
         error_cls=GetTraceForTestError,
     )
 
-    return (
-        attach_rate_limit(GetTraceForTestResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetTraceForTestResponse.model_construct()
+    return parse_response_model(
+        GetTraceForTestResponse,
+        body,
+        operation_name="GetTraceForTest",
+        method="post",
+        path="/synthetics/v202309/trace",
     )

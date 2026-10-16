@@ -19,7 +19,7 @@ endif
 GENERATE_ARGS := $(if $(LOCAL_REPO),--local-repo $(LOCAL_REPO),)
 
 help: ## Show this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 all: services tests ## Generate services and run tests (docs is opt-in: run `make docs`)
 
@@ -93,8 +93,7 @@ clean: ## Remove generated SDK and build artifacts
 	rm -rf docs/sphinx/services/
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 
-deep-clean: clean ## Remove virtual environment and lock files
+deep-clean: clean ## Remove virtual environment and caches (uv.lock is tracked and kept)
 	rm -rf .venv
-	rm -f uv.lock
 	rm -rf .pytest_cache/
 	rm -rf .ruff_cache/

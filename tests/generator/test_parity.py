@@ -1,6 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from __future__ import annotations
 
+import ast
 import json
 from pathlib import Path
 
@@ -30,6 +31,23 @@ def _valid_schema_file(tmp_path: Path, name: str) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def _function_by_name(source: str, name: str) -> ast.FunctionDef | None:
+    tree = ast.parse(source)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef) and node.name == name:
+            return node
+    return None
+
+
+def _handler_contains_text(handler: ast.ExceptHandler, text: str) -> bool:
+    return any(
+        isinstance(node, ast.Constant)
+        and isinstance(node.value, str)
+        and text in node.value
+        for node in ast.walk(handler)
+    )
 
 
 def test_select_latest_swagger_files_by_service_picks_newest_version(tmp_path: Path):
@@ -145,6 +163,41 @@ def test_validate_schema_files_reports_all_failures_before_raising(
     assert str(empty) in printed
     assert str(broken) in printed
     assert str(valid) not in printed
+
+
+def test_validate_schema_files_or_raise_rejects_empty_selection():
+    with pytest.raises(RuntimeError, match="No swagger files selected"):
+        validate_schema_files_or_raise([])
+
+
+def test_generate_modular_sdk_protoc_failure_handler_reraises():
+    source = (
+        Path(__file__).resolve().parents[2] / "scripts" / "generate_sdk.py"
+    ).read_text(encoding="utf-8")
+    func = _function_by_name(source, "generate_modular_sdk")
+    assert func is not None
+
+    handlers = [
+        node
+        for node in ast.walk(func)
+        if isinstance(node, ast.ExceptHandler)
+        and node.type is not None
+        and "CalledProcessError" in ast.unparse(node.type)
+    ]
+    assert handlers
+
+    protoc_handler = next(
+        (
+            handler
+            for handler in handlers
+            if _handler_contains_text(handler, "Protobuf generation failed")
+        ),
+        None,
+    )
+    assert protoc_handler is not None
+    assert any(isinstance(node, ast.Raise) for node in ast.walk(protoc_handler)), (
+        "protoc failures must fail generation, not only print logs"
+    )
 
 
 def test_validate_schema_files_catches_truncated_file_like_2026_08_26_incident(

@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateScopeError,
@@ -51,10 +54,12 @@ def ListScopes(api_config_override: Optional[APIConfig] = None) -> ListScopesRes
         error_cls=ListScopesError,
     )
 
-    return (
-        attach_rate_limit(ListScopesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListScopesResponse.model_construct()
+    return parse_response_model(
+        ListScopesResponse,
+        body,
+        operation_name="ListScopes",
+        method="get",
+        path="/rbux/v202607alpha1/scopes",
     )
 
 
@@ -77,10 +82,12 @@ def CreateScope(
         error_cls=CreateScopeError,
     )
 
-    return (
-        attach_rate_limit(CreateScopeResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateScopeResponse.model_construct()
+    return parse_response_model(
+        CreateScopeResponse,
+        body,
+        operation_name="CreateScope",
+        method="post",
+        path="/rbux/v202607alpha1/scopes",
     )
 
 
@@ -102,10 +109,12 @@ def GetScope(
         error_cls=GetScopeError,
     )
 
-    return (
-        attach_rate_limit(GetScopeResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetScopeResponse.model_construct()
+    return parse_response_model(
+        GetScopeResponse,
+        body,
+        operation_name="GetScope",
+        method="get",
+        path="/rbux/v202607alpha1/scopes/{id}",
     )
 
 
@@ -128,10 +137,12 @@ def UpdateScope(
         error_cls=UpdateScopeError,
     )
 
-    return (
-        attach_rate_limit(UpdateScopeResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateScopeResponse.model_construct()
+    return parse_response_model(
+        UpdateScopeResponse,
+        body,
+        operation_name="UpdateScope",
+        method="put",
+        path="/rbux/v202607alpha1/scopes/{id}",
     )
 
 
@@ -153,8 +164,10 @@ def DeleteScope(
         error_cls=DeleteScopeError,
     )
 
-    return (
-        attach_rate_limit(DeleteScopeResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteScopeResponse.model_construct()
+    return parse_response_model(
+        DeleteScopeResponse,
+        body,
+        operation_name="DeleteScope",
+        method="delete",
+        path="/rbux/v202607alpha1/scopes/{id}",
     )

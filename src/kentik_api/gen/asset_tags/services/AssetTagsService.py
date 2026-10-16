@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateTagKeyError,
@@ -58,10 +61,12 @@ def GetTagValues(
         error_cls=GetTagValuesError,
     )
 
-    return (
-        attach_rate_limit(GetTagValuesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetTagValuesResponse.model_construct()
+    return parse_response_model(
+        GetTagValuesResponse,
+        body,
+        operation_name="GetTagValues",
+        method="get",
+        path="/asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values",
     )
 
 
@@ -81,10 +86,12 @@ def ListTagKeys(api_config_override: Optional[APIConfig] = None) -> ListTagKeysR
         error_cls=ListTagKeysError,
     )
 
-    return (
-        attach_rate_limit(ListTagKeysResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListTagKeysResponse.model_construct()
+    return parse_response_model(
+        ListTagKeysResponse,
+        body,
+        operation_name="ListTagKeys",
+        method="get",
+        path="/asset_tags/v20260515beta1/keys",
     )
 
 
@@ -107,10 +114,12 @@ def CreateTagKey(
         error_cls=CreateTagKeyError,
     )
 
-    return (
-        attach_rate_limit(CreateTagKeyResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateTagKeyResponse.model_construct()
+    return parse_response_model(
+        CreateTagKeyResponse,
+        body,
+        operation_name="CreateTagKey",
+        method="post",
+        path="/asset_tags/v20260515beta1/keys",
     )
 
 
@@ -132,10 +141,12 @@ def GetTagKey(
         error_cls=GetTagKeyError,
     )
 
-    return (
-        attach_rate_limit(GetTagKeyResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetTagKeyResponse.model_construct()
+    return parse_response_model(
+        GetTagKeyResponse,
+        body,
+        operation_name="GetTagKey",
+        method="get",
+        path="/asset_tags/v20260515beta1/keys/{id}",
     )
 
 
@@ -161,10 +172,12 @@ def UpdateTagKey(
         error_cls=UpdateTagKeyError,
     )
 
-    return (
-        attach_rate_limit(UpdateTagKeyResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateTagKeyResponse.model_construct()
+    return parse_response_model(
+        UpdateTagKeyResponse,
+        body,
+        operation_name="UpdateTagKey",
+        method="put",
+        path="/asset_tags/v20260515beta1/keys/{id}",
     )
 
 
@@ -186,10 +199,12 @@ def DeleteTagKey(
         error_cls=DeleteTagKeyError,
     )
 
-    return (
-        attach_rate_limit(DeleteTagKeyResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteTagKeyResponse.model_construct()
+    return parse_response_model(
+        DeleteTagKeyResponse,
+        body,
+        operation_name="DeleteTagKey",
+        method="delete",
+        path="/asset_tags/v20260515beta1/keys/{id}",
     )
 
 
@@ -211,10 +226,12 @@ def ListTagValues(
         error_cls=ListTagValuesError,
     )
 
-    return (
-        attach_rate_limit(ListTagValuesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListTagValuesResponse.model_construct()
+    return parse_response_model(
+        ListTagValuesResponse,
+        body,
+        operation_name="ListTagValues",
+        method="get",
+        path="/asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values",
     )
 
 
@@ -237,10 +254,12 @@ def SetTagValues(
         error_cls=SetTagValuesError,
     )
 
-    return (
-        attach_rate_limit(SetTagValuesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else SetTagValuesResponse.model_construct()
+    return parse_response_model(
+        SetTagValuesResponse,
+        body,
+        operation_name="SetTagValues",
+        method="put",
+        path="/asset_tags/v20260515beta1/values",
     )
 
 
@@ -263,8 +282,10 @@ def DeleteTagValues(
         error_cls=DeleteTagValuesError,
     )
 
-    return (
-        attach_rate_limit(DeleteTagValuesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteTagValuesResponse.model_construct()
+    return parse_response_model(
+        DeleteTagValuesResponse,
+        body,
+        operation_name="DeleteTagValues",
+        method="post",
+        path="/asset_tags/v20260515beta1/values/delete",
     )

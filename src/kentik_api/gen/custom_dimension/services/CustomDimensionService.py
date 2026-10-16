@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateCustomDimensionError,
@@ -56,10 +59,12 @@ def ListCustomDimensions(
         error_cls=ListCustomDimensionsError,
     )
 
-    return (
-        attach_rate_limit(ListCustomDimensionsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListCustomDimensionsResponse.model_construct()
+    return parse_response_model(
+        ListCustomDimensionsResponse,
+        body,
+        operation_name="ListCustomDimensions",
+        method="get",
+        path="/custom_dimensions/v202411alpha1",
     )
 
 
@@ -81,10 +86,12 @@ def GetCustomDimensionInfo(
         error_cls=GetCustomDimensionInfoError,
     )
 
-    return (
-        attach_rate_limit(GetCustomDimensionInfoResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetCustomDimensionInfoResponse.model_construct()
+    return parse_response_model(
+        GetCustomDimensionInfoResponse,
+        body,
+        operation_name="GetCustomDimensionInfo",
+        method="get",
+        path="/custom_dimensions/v202411alpha1/{customDimensionId}",
     )
 
 
@@ -110,10 +117,12 @@ def UpdateCustomDimension(
         error_cls=UpdateCustomDimensionError,
     )
 
-    return (
-        attach_rate_limit(UpdateCustomDimensionResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateCustomDimensionResponse.model_construct()
+    return parse_response_model(
+        UpdateCustomDimensionResponse,
+        body,
+        operation_name="UpdateCustomDimension",
+        method="put",
+        path="/custom_dimensions/v202411alpha1/{customDimensionId}",
     )
 
 
@@ -135,10 +144,12 @@ def DeleteCustomDimension(
         error_cls=DeleteCustomDimensionError,
     )
 
-    return (
-        attach_rate_limit(DeleteCustomDimensionResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteCustomDimensionResponse.model_construct()
+    return parse_response_model(
+        DeleteCustomDimensionResponse,
+        body,
+        operation_name="DeleteCustomDimension",
+        method="delete",
+        path="/custom_dimensions/v202411alpha1/{customDimensionId}",
     )
 
 
@@ -164,10 +175,12 @@ def CreatePopulator(
         error_cls=CreatePopulatorError,
     )
 
-    return (
-        attach_rate_limit(CreatePopulatorResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreatePopulatorResponse.model_construct()
+    return parse_response_model(
+        CreatePopulatorResponse,
+        body,
+        operation_name="CreatePopulator",
+        method="post",
+        path="/custom_dimensions/v202411alpha1/{customDimensionId}/populator",
     )
 
 
@@ -193,10 +206,12 @@ def GetPopulator(
         error_cls=GetPopulatorError,
     )
 
-    return (
-        attach_rate_limit(GetPopulatorResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetPopulatorResponse.model_construct()
+    return parse_response_model(
+        GetPopulatorResponse,
+        body,
+        operation_name="GetPopulator",
+        method="get",
+        path="/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
     )
 
 
@@ -223,10 +238,12 @@ def UpdatePopulator(
         error_cls=UpdatePopulatorError,
     )
 
-    return (
-        attach_rate_limit(UpdatePopulatorResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdatePopulatorResponse.model_construct()
+    return parse_response_model(
+        UpdatePopulatorResponse,
+        body,
+        operation_name="UpdatePopulator",
+        method="put",
+        path="/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
     )
 
 
@@ -251,10 +268,12 @@ def DeletePopulator(
         error_cls=DeletePopulatorError,
     )
 
-    return (
-        attach_rate_limit(DeletePopulatorResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeletePopulatorResponse.model_construct()
+    return parse_response_model(
+        DeletePopulatorResponse,
+        body,
+        operation_name="DeletePopulator",
+        method="delete",
+        path="/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
     )
 
 
@@ -282,10 +301,12 @@ def GetPopulatorField(
         error_cls=GetPopulatorFieldError,
     )
 
-    return (
-        attach_rate_limit(GetPopulatorFieldResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetPopulatorFieldResponse.model_construct()
+    return parse_response_model(
+        GetPopulatorFieldResponse,
+        body,
+        operation_name="GetPopulatorField",
+        method="get",
+        path="/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}",
     )
 
 
@@ -308,8 +329,10 @@ def CreateCustomDimension(
         error_cls=CreateCustomDimensionError,
     )
 
-    return (
-        attach_rate_limit(CreateCustomDimensionResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateCustomDimensionResponse.model_construct()
+    return parse_response_model(
+        CreateCustomDimensionResponse,
+        body,
+        operation_name="CreateCustomDimension",
+        method="post",
+        path="/v1/customdimension",
     )

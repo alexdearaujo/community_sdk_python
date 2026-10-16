@@ -14,7 +14,7 @@ There is no compatibility layer. Rewrite each call against the new client.
 
 | | 1.x | 2.x |
 | --- | --- | --- |
-| Python | Not declared | 3.12 and later |
+| Python | 3.8 and later | 3.12 and later |
 | API | V5 REST, plus V6 gRPC for synthetics and cloud export | V6, over REST or gRPC |
 | Import | `from kentik_api import KentikAPI` | `from kentik_api.client import KentikAPI` |
 | Credentials | `KentikAPI(email, token)`, or a profile in `~/.kentik/` | Arguments, `KENTIK_EMAIL` / `KENTIK_API_TOKEN`, or a `.env` file |

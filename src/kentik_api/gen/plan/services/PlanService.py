@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import ListPlansError
 from ..models import (  # noqa: F401
@@ -34,8 +33,10 @@ def ListPlans(api_config_override: Optional[APIConfig] = None) -> ListPlansRespo
         error_cls=ListPlansError,
     )
 
-    return (
-        attach_rate_limit(ListPlansResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListPlansResponse.model_construct()
+    return parse_response_model(
+        ListPlansResponse,
+        body,
+        operation_name="ListPlans",
+        method="get",
+        path="/plans/v202501alpha1",
     )

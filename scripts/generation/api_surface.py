@@ -29,7 +29,7 @@ from ._shared import (
 )
 
 SURFACE_FILE = PROJECT_ROOT / "api_surface.json"
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 _TRACKED_REQUIREMENTS = ("grpcio", "protobuf", "httpx", "pydantic")
 _PROTOBUF_GENCODE_RE = re.compile(
@@ -140,6 +140,8 @@ def capture(output_dir: Path | None = None) -> dict[str, Any]:
                     "required_params": sorted(
                         name for name, _, required in op.params if required
                     ),
+                    "params": {name: annotation for name, annotation, _ in op.params},
+                    "returns": op.return_type,
                 }
 
         fields, enums = _model_shapes(service_dir)
@@ -236,7 +238,26 @@ def _changed_operations(
         old, new = before[key], after[key]
         old_required = set(old.get("required_params", []))
         new_required = set(new.get("required_params", []))
-        if old.get("status") == new.get("status") and old_required == new_required:
+        # A record from before schema_version 3 has no signature, so it compares
+        # as unchanged rather than as every parameter added.
+        old_params, new_params = old.get("params"), new.get("params", {})
+        removed_params, retyped_params, return_change = [], [], None
+        if old_params is not None:
+            removed_params = sorted(set(old_params) - set(new_params))
+            retyped_params = [
+                {"name": p, "before": old_params[p], "after": new_params[p]}
+                for p in sorted(set(old_params) & set(new_params))
+                if old_params[p] != new_params[p]
+            ]
+            if old.get("returns") != new.get("returns"):
+                return_change = [old.get("returns"), new.get("returns")]
+        if (
+            old.get("status") == new.get("status")
+            and old_required == new_required
+            and not removed_params
+            and not retyped_params
+            and return_change is None
+        ):
             continue
         changes.append(
             {
@@ -244,6 +265,9 @@ def _changed_operations(
                 "status": [old.get("status"), new.get("status")],
                 "newly_required": sorted(new_required - old_required),
                 "no_longer_required": sorted(old_required - new_required),
+                "removed_params": removed_params,
+                "retyped_params": retyped_params,
+                "return_change": return_change,
             }
         )
     return changes
@@ -315,6 +339,31 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
                     (
                         f"- `{name}`: `{change['operation']}` now requires `{param}`",
                         param,
+                    )
+                )
+            for param in change.get("removed_params", []):
+                breaking.append(
+                    (
+                        f"- `{name}`: `{change['operation']}` no longer accepts `{param}`",
+                        param,
+                    )
+                )
+            for retyped in change.get("retyped_params", []):
+                breaking.append(
+                    (
+                        f"- `{name}`: `{change['operation']}` parameter "
+                        f"`{retyped['name']}` changed from `{retyped['before']}` "
+                        f"to `{retyped['after']}`",
+                        retyped["name"],
+                    )
+                )
+            if change.get("return_change"):
+                before, after = change["return_change"]
+                breaking.append(
+                    (
+                        f"- `{name}`: `{change['operation']}` now returns `{after}`, "
+                        f"not `{before}`",
+                        after,
                     )
                 )
         for field in entry.get("added_fields", []):
@@ -390,6 +439,20 @@ def _service_bullets(entry: dict[str, Any]) -> list[str]:
             bullets.append(f"  - `{change['operation']}` now requires `{param}`")
         for param in change["no_longer_required"]:
             bullets.append(f"  - `{change['operation']}` no longer requires `{param}`")
+        for param in change.get("removed_params", []):
+            bullets.append(
+                f"  - **`{change['operation']}` no longer accepts `{param}`**"
+            )
+        for retyped in change.get("retyped_params", []):
+            bullets.append(
+                f"  - **`{change['operation']}` parameter `{retyped['name']}`**: "
+                f"`{retyped['before']}` to `{retyped['after']}`"
+            )
+        if change.get("return_change"):
+            before, after = change["return_change"]
+            bullets.append(
+                f"  - **`{change['operation']}` now returns** `{after}`, not `{before}`"
+            )
     for field in entry.get("added_fields", []):
         bullets.append(f"  - field added, `{field['name']}` ({_describe(field)})")
     for field in entry.get("removed_fields", []):

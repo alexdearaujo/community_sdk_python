@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import GetMetricsForTargetError, GetRoutesForTargetError
 from ..models import (  # noqa: F401
@@ -59,10 +58,12 @@ def GetMetricsForTarget(
         error_cls=GetMetricsForTargetError,
     )
 
-    return (
-        attach_rate_limit(GetMetricsForTargetResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetMetricsForTargetResponse.model_construct()
+    return parse_response_model(
+        GetMetricsForTargetResponse,
+        body,
+        operation_name="GetMetricsForTarget",
+        method="post",
+        path="/bgp_monitoring/v202210/metrics",
     )
 
 
@@ -85,8 +86,10 @@ def GetRoutesForTarget(
         error_cls=GetRoutesForTargetError,
     )
 
-    return (
-        attach_rate_limit(GetRoutesForTargetResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetRoutesForTargetResponse.model_construct()
+    return parse_response_model(
+        GetRoutesForTargetResponse,
+        body,
+        operation_name="GetRoutesForTarget",
+        method="post",
+        path="/bgp_monitoring/v202210/routes",
     )

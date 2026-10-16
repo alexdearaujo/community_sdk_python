@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateDeviceError,
@@ -80,10 +83,12 @@ def ListDevices(
         error_cls=ListDevicesError,
     )
 
-    return (
-        attach_rate_limit(ListDevicesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListDevicesResponse.model_construct()
+    return parse_response_model(
+        ListDevicesResponse,
+        body,
+        operation_name="ListDevices",
+        method="get",
+        path="/device/v202504beta2/device",
     )
 
 
@@ -106,10 +111,12 @@ def CreateDevice(
         error_cls=CreateDeviceError,
     )
 
-    return (
-        attach_rate_limit(CreateDeviceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateDeviceResponse.model_construct()
+    return parse_response_model(
+        CreateDeviceResponse,
+        body,
+        operation_name="CreateDevice",
+        method="post",
+        path="/device/v202504beta2/device",
     )
 
 
@@ -132,10 +139,12 @@ def CreateDevices(
         error_cls=CreateDevicesError,
     )
 
-    return (
-        attach_rate_limit(CreateDevicesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateDevicesResponse.model_construct()
+    return parse_response_model(
+        CreateDevicesResponse,
+        body,
+        operation_name="CreateDevices",
+        method="post",
+        path="/device/v202504beta2/device/batch_create",
     )
 
 
@@ -158,10 +167,12 @@ def DeleteDevices(
         error_cls=DeleteDevicesError,
     )
 
-    return (
-        attach_rate_limit(DeleteDevicesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteDevicesResponse.model_construct()
+    return parse_response_model(
+        DeleteDevicesResponse,
+        body,
+        operation_name="DeleteDevices",
+        method="post",
+        path="/device/v202504beta2/device/batch_delete",
     )
 
 
@@ -184,10 +195,12 @@ def UpdateDevices(
         error_cls=UpdateDevicesError,
     )
 
-    return (
-        attach_rate_limit(UpdateDevicesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateDevicesResponse.model_construct()
+    return parse_response_model(
+        UpdateDevicesResponse,
+        body,
+        operation_name="UpdateDevices",
+        method="put",
+        path="/device/v202504beta2/device/batch_update",
     )
 
 
@@ -212,10 +225,12 @@ def GetDeviceByName(
         error_cls=GetDeviceByNameError,
     )
 
-    return (
-        attach_rate_limit(GetDeviceByNameResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetDeviceByNameResponse.model_construct()
+    return parse_response_model(
+        GetDeviceByNameResponse,
+        body,
+        operation_name="GetDeviceByName",
+        method="get",
+        path="/device/v202504beta2/device/name/{deviceName}",
     )
 
 
@@ -240,10 +255,12 @@ def GetDevice(
         error_cls=GetDeviceError,
     )
 
-    return (
-        attach_rate_limit(GetDeviceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetDeviceResponse.model_construct()
+    return parse_response_model(
+        GetDeviceResponse,
+        body,
+        operation_name="GetDevice",
+        method="get",
+        path="/device/v202504beta2/device/{device.id}",
     )
 
 
@@ -269,10 +286,12 @@ def UpdateDevice(
         error_cls=UpdateDeviceError,
     )
 
-    return (
-        attach_rate_limit(UpdateDeviceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateDeviceResponse.model_construct()
+    return parse_response_model(
+        UpdateDeviceResponse,
+        body,
+        operation_name="UpdateDevice",
+        method="put",
+        path="/device/v202504beta2/device/{device.id}",
     )
 
 
@@ -294,10 +313,12 @@ def DeleteDevice(
         error_cls=DeleteDeviceError,
     )
 
-    return (
-        attach_rate_limit(DeleteDeviceResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteDeviceResponse.model_construct()
+    return parse_response_model(
+        DeleteDeviceResponse,
+        body,
+        operation_name="DeleteDevice",
+        method="delete",
+        path="/device/v202504beta2/device/{device.id}",
     )
 
 
@@ -323,8 +344,10 @@ def UpdateDeviceLabels(
         error_cls=UpdateDeviceLabelsError,
     )
 
-    return (
-        attach_rate_limit(UpdateDeviceLabelsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateDeviceLabelsResponse.model_construct()
+    return parse_response_model(
+        UpdateDeviceLabelsResponse,
+        body,
+        operation_name="UpdateDeviceLabels",
+        method="put",
+        path="/device/v202504beta2/device/{id}/labels",
     )

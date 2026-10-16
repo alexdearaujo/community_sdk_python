@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import CreateChatSessionError, GetChatSessionError, UpdateChatSessionError
 from ..models import (  # noqa: F401
@@ -40,10 +43,12 @@ def CreateChatSession(
         error_cls=CreateChatSessionError,
     )
 
-    return (
-        attach_rate_limit(CreateChatSessionResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateChatSessionResponse.model_construct()
+    return parse_response_model(
+        CreateChatSessionResponse,
+        body,
+        operation_name="CreateChatSession",
+        method="post",
+        path="/ai_advisor/v202511/chat",
     )
 
 
@@ -66,10 +71,12 @@ def UpdateChatSession(
         error_cls=UpdateChatSessionError,
     )
 
-    return (
-        attach_rate_limit(UpdateChatSessionResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateChatSessionResponse.model_construct()
+    return parse_response_model(
+        UpdateChatSessionResponse,
+        body,
+        operation_name="UpdateChatSession",
+        method="put",
+        path="/ai_advisor/v202511/chat",
     )
 
 
@@ -91,8 +98,10 @@ def GetChatSession(
         error_cls=GetChatSessionError,
     )
 
-    return (
-        attach_rate_limit(GetChatSessionResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetChatSessionResponse.model_construct()
+    return parse_response_model(
+        GetChatSessionResponse,
+        body,
+        operation_name="GetChatSession",
+        method="get",
+        path="/ai_advisor/v202511/chat/{id}",
     )

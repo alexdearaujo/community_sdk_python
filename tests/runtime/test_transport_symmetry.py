@@ -106,3 +106,11 @@ def test_api_fault_reaches_the_same_except_branch_on_both_transports(
         _grpc_call(rpc_error, grpc.StatusCode.NOT_FOUND)
 
     assert rest_exc.value.status_code == grpc_exc.value.status_code == 404
+
+
+def test_a_non_region_value_is_a_configuration_error():
+    from kentik_api import KentikAPI
+    from kentik_api.errors import ConfigurationError
+
+    with pytest.raises(ConfigurationError):
+        KentikAPI("a@b.c", "token", region=None, env_file=None)  # ty: ignore[invalid-argument-type]

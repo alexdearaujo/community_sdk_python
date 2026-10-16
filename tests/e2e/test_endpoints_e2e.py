@@ -32,6 +32,8 @@ whole module if no real credentials are configured.
 
 from __future__ import annotations
 
+import inspect
+
 import pytest
 from _discovery import (
     EndpointCase,
@@ -40,8 +42,9 @@ from _discovery import (
     discover_endpoint_cases,
     service_attr,
 )
+from pydantic import BaseModel
 
-from kentik_api.errors import KentikError
+from kentik_api.errors import HTTPException, KentikError
 
 pytestmark = pytest.mark.e2e
 
@@ -59,21 +62,35 @@ def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
     service_client = getattr(real_client, service_attr(case))
     method = getattr(service_client, case.wrapper.method_name)
     kwargs = build_all_kwargs(method)
+    kwargs.pop("api_config_override", None)
+
+    assert real_client.api_config.base_path != "https://api.example.com"
+    assert "api_config_override" not in kwargs
 
     label = f"{case_label(case.wrapper)} ({case.operation_name})"
     print(f'E2E: calling "{label}" against the real API. START')
     try:
-        method(**kwargs)
-    except KentikError as exc:
+        result = method(**kwargs)
+    except HTTPException as exc:
         print(
             f'E2E: "{label}" raised {type(exc).__name__} '
-            f"(status={getattr(exc, 'status_code', 'n/a')}) -- a real, "
-            "generated error response is a valid outcome. RESULT=PASS"
+            f"(status={getattr(exc, 'status_code', 'n/a')}) -- a generated "
+            "HTTP error response is a valid outcome. RESULT=PASS"
         )
         return
+    except KentikError as exc:
+        pytest.fail(
+            "Expected a typed response or HTTPException from live REST e2e call, "
+            f"got unexpected KentikError subtype {type(exc).__name__}: {exc}"
+        )
     except Exception:
         print(f'E2E: "{label}" raised an UNEXPECTED exception. RESULT=FAIL')
         raise
+
+    return_annotation = inspect.signature(method).return_annotation
+    if isinstance(return_annotation, type) and issubclass(return_annotation, BaseModel):
+        assert isinstance(result, return_annotation)
+
     print(f'E2E: "{label}" returned a typed response. RESULT=PASS')
 
 

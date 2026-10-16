@@ -4,8 +4,11 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateAgentAlertError,
@@ -125,10 +128,12 @@ def ListAgentAlerts(
         error_cls=ListAgentAlertsError,
     )
 
-    return (
-        attach_rate_limit(ListAgentAlertsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListAgentAlertsResponse.model_construct()
+    return parse_response_model(
+        ListAgentAlertsResponse,
+        body,
+        operation_name="ListAgentAlerts",
+        method="get",
+        path="/synthetics/v202309/agentAlerts",
     )
 
 
@@ -151,10 +156,12 @@ def CreateAgentAlert(
         error_cls=CreateAgentAlertError,
     )
 
-    return (
-        attach_rate_limit(CreateAgentAlertResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateAgentAlertResponse.model_construct()
+    return parse_response_model(
+        CreateAgentAlertResponse,
+        body,
+        operation_name="CreateAgentAlert",
+        method="post",
+        path="/synthetics/v202309/agentAlerts",
     )
 
 
@@ -176,10 +183,12 @@ def GetAgentAlert(
         error_cls=GetAgentAlertError,
     )
 
-    return (
-        attach_rate_limit(GetAgentAlertResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetAgentAlertResponse.model_construct()
+    return parse_response_model(
+        GetAgentAlertResponse,
+        body,
+        operation_name="GetAgentAlert",
+        method="get",
+        path="/synthetics/v202309/agentAlerts/{id}",
     )
 
 
@@ -205,10 +214,12 @@ def UpdateAgentAlert(
         error_cls=UpdateAgentAlertError,
     )
 
-    return (
-        attach_rate_limit(UpdateAgentAlertResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateAgentAlertResponse.model_construct()
+    return parse_response_model(
+        UpdateAgentAlertResponse,
+        body,
+        operation_name="UpdateAgentAlert",
+        method="put",
+        path="/synthetics/v202309/agentAlerts/{id}",
     )
 
 
@@ -230,10 +241,12 @@ def DeleteAgentAlert(
         error_cls=DeleteAgentAlertError,
     )
 
-    return (
-        attach_rate_limit(DeleteAgentAlertResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteAgentAlertResponse.model_construct()
+    return parse_response_model(
+        DeleteAgentAlertResponse,
+        body,
+        operation_name="DeleteAgentAlert",
+        method="delete",
+        path="/synthetics/v202309/agentAlerts/{id}",
     )
 
 
@@ -253,10 +266,12 @@ def ListAgents(api_config_override: Optional[APIConfig] = None) -> ListAgentsRes
         error_cls=ListAgentsError,
     )
 
-    return (
-        attach_rate_limit(ListAgentsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListAgentsResponse.model_construct()
+    return parse_response_model(
+        ListAgentsResponse,
+        body,
+        operation_name="ListAgents",
+        method="get",
+        path="/synthetics/v202309/agents",
     )
 
 
@@ -278,10 +293,12 @@ def GetAgent(
         error_cls=GetAgentError,
     )
 
-    return (
-        attach_rate_limit(GetAgentResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetAgentResponse.model_construct()
+    return parse_response_model(
+        GetAgentResponse,
+        body,
+        operation_name="GetAgent",
+        method="get",
+        path="/synthetics/v202309/agents/{agent.id}",
     )
 
 
@@ -307,10 +324,12 @@ def UpdateAgent(
         error_cls=UpdateAgentError,
     )
 
-    return (
-        attach_rate_limit(UpdateAgentResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateAgentResponse.model_construct()
+    return parse_response_model(
+        UpdateAgentResponse,
+        body,
+        operation_name="UpdateAgent",
+        method="put",
+        path="/synthetics/v202309/agents/{agent.id}",
     )
 
 
@@ -332,10 +351,12 @@ def DeleteAgent(
         error_cls=DeleteAgentError,
     )
 
-    return (
-        attach_rate_limit(DeleteAgentResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteAgentResponse.model_construct()
+    return parse_response_model(
+        DeleteAgentResponse,
+        body,
+        operation_name="DeleteAgent",
+        method="delete",
+        path="/synthetics/v202309/agents/{agent.id}",
     )
 
 
@@ -355,10 +376,12 @@ def ListTests(api_config_override: Optional[APIConfig] = None) -> ListTestsRespo
         error_cls=ListTestsError,
     )
 
-    return (
-        attach_rate_limit(ListTestsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListTestsResponse.model_construct()
+    return parse_response_model(
+        ListTestsResponse,
+        body,
+        operation_name="ListTests",
+        method="get",
+        path="/synthetics/v202309/tests",
     )
 
 
@@ -381,10 +404,12 @@ def CreateTest(
         error_cls=CreateTestError,
     )
 
-    return (
-        attach_rate_limit(CreateTestResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateTestResponse.model_construct()
+    return parse_response_model(
+        CreateTestResponse,
+        body,
+        operation_name="CreateTest",
+        method="post",
+        path="/synthetics/v202309/tests",
     )
 
 
@@ -406,10 +431,12 @@ def GetTest(
         error_cls=GetTestError,
     )
 
-    return (
-        attach_rate_limit(GetTestResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetTestResponse.model_construct()
+    return parse_response_model(
+        GetTestResponse,
+        body,
+        operation_name="GetTest",
+        method="get",
+        path="/synthetics/v202309/tests/{id}",
     )
 
 
@@ -435,10 +462,12 @@ def UpdateTest(
         error_cls=UpdateTestError,
     )
 
-    return (
-        attach_rate_limit(UpdateTestResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateTestResponse.model_construct()
+    return parse_response_model(
+        UpdateTestResponse,
+        body,
+        operation_name="UpdateTest",
+        method="put",
+        path="/synthetics/v202309/tests/{id}",
     )
 
 
@@ -460,10 +489,12 @@ def DeleteTest(
         error_cls=DeleteTestError,
     )
 
-    return (
-        attach_rate_limit(DeleteTestResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteTestResponse.model_construct()
+    return parse_response_model(
+        DeleteTestResponse,
+        body,
+        operation_name="DeleteTest",
+        method="delete",
+        path="/synthetics/v202309/tests/{id}",
     )
 
 
@@ -489,8 +520,10 @@ def SetTestStatus(
         error_cls=SetTestStatusError,
     )
 
-    return (
-        attach_rate_limit(SetTestStatusResponse(**body), rate_limit_of(body))
-        if body is not None
-        else SetTestStatusResponse.model_construct()
+    return parse_response_model(
+        SetTestStatusResponse,
+        body,
+        operation_name="SetTestStatus",
+        method="put",
+        path="/synthetics/v202309/tests/{id}/status",
     )

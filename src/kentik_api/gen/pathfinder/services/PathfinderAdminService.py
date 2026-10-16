@@ -4,8 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import CreatePathfinderReportError
 from ..models import (  # noqa: F401
@@ -40,8 +39,10 @@ def CreatePathfinderReport(
         error_cls=CreatePathfinderReportError,
     )
 
-    return (
-        attach_rate_limit(CreatePathfinderReportResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreatePathfinderReportResponse.model_construct()
+    return parse_response_model(
+        CreatePathfinderReportResponse,
+        body,
+        operation_name="CreatePathfinderReport",
+        method="post",
+        path="/pathfinder/v202505beta1/create",
     )

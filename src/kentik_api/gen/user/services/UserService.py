@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateUserError,
@@ -51,10 +54,12 @@ def ListUsers(api_config_override: Optional[APIConfig] = None) -> ListUsersRespo
         error_cls=ListUsersError,
     )
 
-    return (
-        attach_rate_limit(ListUsersResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListUsersResponse.model_construct()
+    return parse_response_model(
+        ListUsersResponse,
+        body,
+        operation_name="ListUsers",
+        method="get",
+        path="/user/v202211/users",
     )
 
 
@@ -77,10 +82,12 @@ def CreateUser(
         error_cls=CreateUserError,
     )
 
-    return (
-        attach_rate_limit(CreateUserResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateUserResponse.model_construct()
+    return parse_response_model(
+        CreateUserResponse,
+        body,
+        operation_name="CreateUser",
+        method="post",
+        path="/user/v202211/users",
     )
 
 
@@ -102,10 +109,12 @@ def GetUser(
         error_cls=GetUserError,
     )
 
-    return (
-        attach_rate_limit(GetUserResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetUserResponse.model_construct()
+    return parse_response_model(
+        GetUserResponse,
+        body,
+        operation_name="GetUser",
+        method="get",
+        path="/user/v202211/users/{id}",
     )
 
 
@@ -131,10 +140,12 @@ def UpdateUser(
         error_cls=UpdateUserError,
     )
 
-    return (
-        attach_rate_limit(UpdateUserResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateUserResponse.model_construct()
+    return parse_response_model(
+        UpdateUserResponse,
+        body,
+        operation_name="UpdateUser",
+        method="put",
+        path="/user/v202211/users/{id}",
     )
 
 
@@ -156,10 +167,12 @@ def DeleteUser(
         error_cls=DeleteUserError,
     )
 
-    return (
-        attach_rate_limit(DeleteUserResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteUserResponse.model_construct()
+    return parse_response_model(
+        DeleteUserResponse,
+        body,
+        operation_name="DeleteUser",
+        method="delete",
+        path="/user/v202211/users/{id}",
     )
 
 
@@ -181,10 +194,12 @@ def ResetActiveSessions(
         error_cls=ResetActiveSessionsError,
     )
 
-    return (
-        attach_rate_limit(ResetActiveSessionsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ResetActiveSessionsResponse.model_construct()
+    return parse_response_model(
+        ResetActiveSessionsResponse,
+        body,
+        operation_name="ResetActiveSessions",
+        method="put",
+        path="/user/v202211/users/{id}/reset_active_sessions",
     )
 
 
@@ -206,8 +221,10 @@ def ResetApiToken(
         error_cls=ResetApiTokenError,
     )
 
-    return (
-        attach_rate_limit(ResetApiTokenResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ResetApiTokenResponse.model_construct()
+    return parse_response_model(
+        ResetApiTokenResponse,
+        body,
+        operation_name="ResetApiToken",
+        method="put",
+        path="/user/v202211/users/{id}/reset_api_token",
     )

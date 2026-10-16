@@ -30,9 +30,21 @@
     return None
 {% elif return_type.complex_type %}
     {%- if return_type.list_type is none %}
-    return attach_rate_limit({{ return_type.type.converted_type }}(**body), rate_limit_of(body)) if body is not None else {{ return_type.type.converted_type }}.model_construct()
+    return parse_response_model(
+        {{ return_type.type.converted_type }},
+        body,
+        operation_name='{{ operation_id }}',
+        method='{{ method }}',
+        path='{{ path_name }}',
+    )
     {%- else %}
-    return [{{ return_type.list_type }}(**item) for item in body]
+    return parse_response_model_list(
+        {{ return_type.list_type }},
+        body,
+        operation_name='{{ operation_id }}',
+        method='{{ method }}',
+        path='{{ path_name }}',
+    )
     {%- endif %}
 {% else %}
     return body

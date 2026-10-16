@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CapabilityAdminService_CreateCapabilityError,
@@ -93,10 +96,12 @@ def CapabilityAdminService_ListCapabilities(
         error_cls=CapabilityAdminService_ListCapabilitiesError,
     )
 
-    return (
-        attach_rate_limit(ListCapabilitiesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListCapabilitiesResponse.model_construct()
+    return parse_response_model(
+        ListCapabilitiesResponse,
+        body,
+        operation_name="CapabilityAdminService_ListCapabilities",
+        method="get",
+        path="/kagent/v202401/capabilities",
     )
 
 
@@ -119,10 +124,12 @@ def CapabilityAdminService_CreateCapability(
         error_cls=CapabilityAdminService_CreateCapabilityError,
     )
 
-    return (
-        attach_rate_limit(CreateCapabilityResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateCapabilityResponse.model_construct()
+    return parse_response_model(
+        CreateCapabilityResponse,
+        body,
+        operation_name="CapabilityAdminService_CreateCapability",
+        method="post",
+        path="/kagent/v202401/capabilities",
     )
 
 
@@ -144,10 +151,12 @@ def CapabilityAdminService_GetCapability(
         error_cls=CapabilityAdminService_GetCapabilityError,
     )
 
-    return (
-        attach_rate_limit(GetCapabilityResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetCapabilityResponse.model_construct()
+    return parse_response_model(
+        GetCapabilityResponse,
+        body,
+        operation_name="CapabilityAdminService_GetCapability",
+        method="get",
+        path="/kagent/v202401/capabilities/{capability.name}",
     )
 
 
@@ -169,10 +178,12 @@ def CapabilityAdminService_DeleteCapability(
         error_cls=CapabilityAdminService_DeleteCapabilityError,
     )
 
-    return (
-        attach_rate_limit(DeleteCapabilityResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteCapabilityResponse.model_construct()
+    return parse_response_model(
+        DeleteCapabilityResponse,
+        body,
+        operation_name="CapabilityAdminService_DeleteCapability",
+        method="delete",
+        path="/kagent/v202401/capabilities/{capability.name}",
     )
 
 
@@ -198,8 +209,10 @@ def CapabilityAdminService_UpdateCapability(
         error_cls=CapabilityAdminService_UpdateCapabilityError,
     )
 
-    return (
-        attach_rate_limit(UpdateCapabilityResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateCapabilityResponse.model_construct()
+    return parse_response_model(
+        UpdateCapabilityResponse,
+        body,
+        operation_name="CapabilityAdminService_UpdateCapability",
+        method="patch",
+        path="/kagent/v202401/capabilities/{capability.name}",
     )

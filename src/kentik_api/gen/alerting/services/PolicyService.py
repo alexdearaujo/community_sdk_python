@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import DisableError, EnableError, GetError, ListError
 from ..models import (  # noqa: F401
@@ -216,10 +219,12 @@ def List(
         error_cls=ListError,
     )
 
-    return (
-        attach_rate_limit(PolicyServiceListResponse(**body), rate_limit_of(body))
-        if body is not None
-        else PolicyServiceListResponse.model_construct()
+    return parse_response_model(
+        PolicyServiceListResponse,
+        body,
+        operation_name="List",
+        method="post",
+        path="/v202505/policies/list",
     )
 
 
@@ -241,10 +246,12 @@ def Get(
         error_cls=GetError,
     )
 
-    return (
-        attach_rate_limit(PolicyServiceGetResponse(**body), rate_limit_of(body))
-        if body is not None
-        else PolicyServiceGetResponse.model_construct()
+    return parse_response_model(
+        PolicyServiceGetResponse,
+        body,
+        operation_name="Get",
+        method="get",
+        path="/v202505/policies/{policyType}/{id}",
     )
 
 
@@ -271,10 +278,12 @@ def Disable(
         error_cls=DisableError,
     )
 
-    return (
-        attach_rate_limit(PolicyServiceDisableResponse(**body), rate_limit_of(body))
-        if body is not None
-        else PolicyServiceDisableResponse.model_construct()
+    return parse_response_model(
+        PolicyServiceDisableResponse,
+        body,
+        operation_name="Disable",
+        method="post",
+        path="/v202505/policies/{policyType}/{id}/disable",
     )
 
 
@@ -301,8 +310,10 @@ def Enable(
         error_cls=EnableError,
     )
 
-    return (
-        attach_rate_limit(PolicyServiceEnableResponse(**body), rate_limit_of(body))
-        if body is not None
-        else PolicyServiceEnableResponse.model_construct()
+    return parse_response_model(
+        PolicyServiceEnableResponse,
+        body,
+        operation_name="Enable",
+        method="post",
+        path="/v202505/policies/{policyType}/{id}/enable",
     )

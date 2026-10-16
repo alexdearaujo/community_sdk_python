@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateSavedFilterError,
@@ -54,10 +57,12 @@ def CreateSavedFilter(
         error_cls=CreateSavedFilterError,
     )
 
-    return (
-        attach_rate_limit(CreateSavedFilterResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateSavedFilterResponse.model_construct()
+    return parse_response_model(
+        CreateSavedFilterResponse,
+        body,
+        operation_name="CreateSavedFilter",
+        method="post",
+        path="/saved-filter/v202501alpha1",
     )
 
 
@@ -79,10 +84,12 @@ def GetSavedFilter(
         error_cls=GetSavedFilterError,
     )
 
-    return (
-        attach_rate_limit(GetSavedFilterResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetSavedFilterResponse.model_construct()
+    return parse_response_model(
+        GetSavedFilterResponse,
+        body,
+        operation_name="GetSavedFilter",
+        method="get",
+        path="/saved-filter/v202501alpha1/{id}",
     )
 
 
@@ -105,10 +112,12 @@ def UpdateSavedFilter(
         error_cls=UpdateSavedFilterError,
     )
 
-    return (
-        attach_rate_limit(UpdateSavedFilterResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateSavedFilterResponse.model_construct()
+    return parse_response_model(
+        UpdateSavedFilterResponse,
+        body,
+        operation_name="UpdateSavedFilter",
+        method="put",
+        path="/saved-filter/v202501alpha1/{id}",
     )
 
 
@@ -130,10 +139,12 @@ def DeleteSavedFilter(
         error_cls=DeleteSavedFilterError,
     )
 
-    return (
-        attach_rate_limit(DeleteSavedFilterResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteSavedFilterResponse.model_construct()
+    return parse_response_model(
+        DeleteSavedFilterResponse,
+        body,
+        operation_name="DeleteSavedFilter",
+        method="delete",
+        path="/saved-filter/v202501alpha1/{id}",
     )
 
 
@@ -155,10 +166,12 @@ def ListSavedFilters(
         error_cls=ListSavedFiltersError,
     )
 
-    return (
-        attach_rate_limit(ListSavedFiltersResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListSavedFiltersResponse.model_construct()
+    return parse_response_model(
+        ListSavedFiltersResponse,
+        body,
+        operation_name="ListSavedFilters",
+        method="get",
+        path="/saved-filters/v202501alpha1",
     )
 
 
@@ -180,8 +193,10 @@ def ListSavedFiltersAll(
         error_cls=ListSavedFiltersAllError,
     )
 
-    return (
-        attach_rate_limit(ListSavedFiltersAllResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListSavedFiltersAllResponse.model_construct()
+    return parse_response_model(
+        ListSavedFiltersAllResponse,
+        body,
+        operation_name="ListSavedFiltersAll",
+        method="get",
+        path="/saved-filters/v202501alpha1/all",
     )

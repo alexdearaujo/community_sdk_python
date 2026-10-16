@@ -5,8 +5,11 @@ from typing import Any, Dict, Optional
 from typing import List as TypingList
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     ActError,
@@ -251,10 +254,12 @@ def List(
         error_cls=ListError,
     )
 
-    return (
-        attach_rate_limit(MitigationsServiceListResponse(**body), rate_limit_of(body))
-        if body is not None
-        else MitigationsServiceListResponse.model_construct()
+    return parse_response_model(
+        MitigationsServiceListResponse,
+        body,
+        operation_name="List",
+        method="get",
+        path="/v202505/mitigations",
     )
 
 
@@ -279,10 +284,12 @@ def Create(
         error_cls=CreateError,
     )
 
-    return (
-        attach_rate_limit(MitigationsServiceCreateResponse(**body), rate_limit_of(body))
-        if body is not None
-        else MitigationsServiceCreateResponse.model_construct()
+    return parse_response_model(
+        MitigationsServiceCreateResponse,
+        body,
+        operation_name="Create",
+        method="post",
+        path="/v202505/mitigations",
     )
 
 
@@ -304,12 +311,12 @@ def AvailableActions(
         error_cls=AvailableActionsError,
     )
 
-    return (
-        attach_rate_limit(
-            MitigationsServiceAvailableActionsResponse(**body), rate_limit_of(body)
-        )
-        if body is not None
-        else MitigationsServiceAvailableActionsResponse.model_construct()
+    return parse_response_model(
+        MitigationsServiceAvailableActionsResponse,
+        body,
+        operation_name="AvailableActions",
+        method="get",
+        path="/v202505/mitigations/actions",
     )
 
 
@@ -331,10 +338,12 @@ def Get(
         error_cls=GetError,
     )
 
-    return (
-        attach_rate_limit(MitigationsServiceGetResponse(**body), rate_limit_of(body))
-        if body is not None
-        else MitigationsServiceGetResponse.model_construct()
+    return parse_response_model(
+        MitigationsServiceGetResponse,
+        body,
+        operation_name="Get",
+        method="get",
+        path="/v202505/mitigations/{action}",
     )
 
 
@@ -360,10 +369,12 @@ def Act(
         error_cls=ActError,
     )
 
-    return (
-        attach_rate_limit(MitigationsServiceActResponse(**body), rate_limit_of(body))
-        if body is not None
-        else MitigationsServiceActResponse.model_construct()
+    return parse_response_model(
+        MitigationsServiceActResponse,
+        body,
+        operation_name="Act",
+        method="post",
+        path="/v202505/mitigations/{action}",
     )
 
 
@@ -385,11 +396,10 @@ def AvailableActionsForMitigation(
         error_cls=AvailableActionsForMitigationError,
     )
 
-    return (
-        attach_rate_limit(
-            MitigationsServiceAvailableActionsForMitigationResponse(**body),
-            rate_limit_of(body),
-        )
-        if body is not None
-        else MitigationsServiceAvailableActionsForMitigationResponse.model_construct()
+    return parse_response_model(
+        MitigationsServiceAvailableActionsForMitigationResponse,
+        body,
+        operation_name="AvailableActionsForMitigation",
+        method="get",
+        path="/v202505/mitigations/{id}/actions",
     )

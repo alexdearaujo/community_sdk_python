@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     TenantUserCreateError,
@@ -77,10 +80,12 @@ def TenantUserList(
         error_cls=TenantUserListError,
     )
 
-    return (
-        attach_rate_limit(ListTenantUserResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListTenantUserResponse.model_construct()
+    return parse_response_model(
+        ListTenantUserResponse,
+        body,
+        operation_name="TenantUserList",
+        method="get",
+        path="/mkp/v202407/tenants/{tenantId}/users",
     )
 
 
@@ -106,10 +111,12 @@ def TenantUserCreate(
         error_cls=TenantUserCreateError,
     )
 
-    return (
-        attach_rate_limit(CreateTenantUserResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateTenantUserResponse.model_construct()
+    return parse_response_model(
+        CreateTenantUserResponse,
+        body,
+        operation_name="TenantUserCreate",
+        method="post",
+        path="/mkp/v202407/tenants/{tenantId}/users",
     )
 
 
@@ -136,10 +143,12 @@ def TenantUserUpdate(
         error_cls=TenantUserUpdateError,
     )
 
-    return (
-        attach_rate_limit(UpdateTenantUserResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateTenantUserResponse.model_construct()
+    return parse_response_model(
+        UpdateTenantUserResponse,
+        body,
+        operation_name="TenantUserUpdate",
+        method="put",
+        path="/mkp/v202407/tenants/{tenantId}/users/{id}",
     )
 
 
@@ -161,8 +170,10 @@ def TenantUserDelete(
         error_cls=TenantUserDeleteError,
     )
 
-    return (
-        attach_rate_limit(DeleteTenantUserResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteTenantUserResponse.model_construct()
+    return parse_response_model(
+        DeleteTenantUserResponse,
+        body,
+        operation_name="TenantUserDelete",
+        method="delete",
+        path="/mkp/v202407/tenants/{tenantId}/users/{id}",
     )

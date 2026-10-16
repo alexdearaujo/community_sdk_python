@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateSiteError,
@@ -65,10 +68,12 @@ def ListSiteMarkets(
         error_cls=ListSiteMarketsError,
     )
 
-    return (
-        attach_rate_limit(ListSiteMarketsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListSiteMarketsResponse.model_construct()
+    return parse_response_model(
+        ListSiteMarketsResponse,
+        body,
+        operation_name="ListSiteMarkets",
+        method="get",
+        path="/site/v202509/site_markets",
     )
 
 
@@ -91,10 +96,12 @@ def CreateSiteMarket(
         error_cls=CreateSiteMarketError,
     )
 
-    return (
-        attach_rate_limit(CreateSiteMarketResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateSiteMarketResponse.model_construct()
+    return parse_response_model(
+        CreateSiteMarketResponse,
+        body,
+        operation_name="CreateSiteMarket",
+        method="post",
+        path="/site/v202509/site_markets",
     )
 
 
@@ -116,10 +123,12 @@ def GetSiteMarket(
         error_cls=GetSiteMarketError,
     )
 
-    return (
-        attach_rate_limit(GetSiteMarketResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetSiteMarketResponse.model_construct()
+    return parse_response_model(
+        GetSiteMarketResponse,
+        body,
+        operation_name="GetSiteMarket",
+        method="get",
+        path="/site/v202509/site_markets/{id}",
     )
 
 
@@ -145,10 +154,12 @@ def UpdateSiteMarket(
         error_cls=UpdateSiteMarketError,
     )
 
-    return (
-        attach_rate_limit(UpdateSiteMarketResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateSiteMarketResponse.model_construct()
+    return parse_response_model(
+        UpdateSiteMarketResponse,
+        body,
+        operation_name="UpdateSiteMarket",
+        method="put",
+        path="/site/v202509/site_markets/{id}",
     )
 
 
@@ -170,10 +181,12 @@ def DeleteSiteMarket(
         error_cls=DeleteSiteMarketError,
     )
 
-    return (
-        attach_rate_limit(DeleteSiteMarketResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteSiteMarketResponse.model_construct()
+    return parse_response_model(
+        DeleteSiteMarketResponse,
+        body,
+        operation_name="DeleteSiteMarket",
+        method="delete",
+        path="/site/v202509/site_markets/{id}",
     )
 
 
@@ -193,10 +206,12 @@ def ListSites(api_config_override: Optional[APIConfig] = None) -> ListSitesRespo
         error_cls=ListSitesError,
     )
 
-    return (
-        attach_rate_limit(ListSitesResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListSitesResponse.model_construct()
+    return parse_response_model(
+        ListSitesResponse,
+        body,
+        operation_name="ListSites",
+        method="get",
+        path="/site/v202509/sites",
     )
 
 
@@ -219,10 +234,12 @@ def CreateSite(
         error_cls=CreateSiteError,
     )
 
-    return (
-        attach_rate_limit(CreateSiteResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateSiteResponse.model_construct()
+    return parse_response_model(
+        CreateSiteResponse,
+        body,
+        operation_name="CreateSite",
+        method="post",
+        path="/site/v202509/sites",
     )
 
 
@@ -244,10 +261,12 @@ def GetSite(
         error_cls=GetSiteError,
     )
 
-    return (
-        attach_rate_limit(GetSiteResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetSiteResponse.model_construct()
+    return parse_response_model(
+        GetSiteResponse,
+        body,
+        operation_name="GetSite",
+        method="get",
+        path="/site/v202509/sites/{id}",
     )
 
 
@@ -273,10 +292,12 @@ def UpdateSite(
         error_cls=UpdateSiteError,
     )
 
-    return (
-        attach_rate_limit(UpdateSiteResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateSiteResponse.model_construct()
+    return parse_response_model(
+        UpdateSiteResponse,
+        body,
+        operation_name="UpdateSite",
+        method="put",
+        path="/site/v202509/sites/{id}",
     )
 
 
@@ -298,8 +319,10 @@ def DeleteSite(
         error_cls=DeleteSiteError,
     )
 
-    return (
-        attach_rate_limit(DeleteSiteResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteSiteResponse.model_construct()
+    return parse_response_model(
+        DeleteSiteResponse,
+        body,
+        operation_name="DeleteSite",
+        method="delete",
+        path="/site/v202509/sites/{id}",
     )

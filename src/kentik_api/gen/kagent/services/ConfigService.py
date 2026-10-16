@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateConfigError,
@@ -93,10 +96,12 @@ def CreateConfig(
         error_cls=CreateConfigError,
     )
 
-    return (
-        attach_rate_limit(CreateConfigResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateConfigResponse.model_construct()
+    return parse_response_model(
+        CreateConfigResponse,
+        body,
+        operation_name="CreateConfig",
+        method="post",
+        path="/kagent/v202401/config",
     )
 
 
@@ -118,10 +123,12 @@ def GetConfig(
         error_cls=GetConfigError,
     )
 
-    return (
-        attach_rate_limit(GetConfigResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetConfigResponse.model_construct()
+    return parse_response_model(
+        GetConfigResponse,
+        body,
+        operation_name="GetConfig",
+        method="get",
+        path="/kagent/v202401/config/{config.name}",
     )
 
 
@@ -143,10 +150,12 @@ def DeleteConfig(
         error_cls=DeleteConfigError,
     )
 
-    return (
-        attach_rate_limit(DeleteConfigResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteConfigResponse.model_construct()
+    return parse_response_model(
+        DeleteConfigResponse,
+        body,
+        operation_name="DeleteConfig",
+        method="delete",
+        path="/kagent/v202401/config/{config.name}",
     )
 
 
@@ -172,8 +181,10 @@ def UpdateConfig(
         error_cls=UpdateConfigError,
     )
 
-    return (
-        attach_rate_limit(UpdateConfigResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateConfigResponse.model_construct()
+    return parse_response_model(
+        UpdateConfigResponse,
+        body,
+        operation_name="UpdateConfig",
+        method="patch",
+        path="/kagent/v202401/config/{config.name}",
     )

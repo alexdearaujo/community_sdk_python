@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+from unittest.mock import MagicMock
 
 import httpx
 import pytest
@@ -255,3 +256,26 @@ def test_result_carries_the_quota_of_the_call_that_produced_it(monkeypatch):
     assert rate_limit is not None
     assert rate_limit.remaining == 17
     assert "_kentik_rate_limit" not in result.model_dump()
+
+
+@pytest.mark.parametrize("region", ["us", "eu"])
+def test_region_selects_the_rest_and_grpc_hosts(
+    region, monkeypatch, no_env_credentials
+):
+    import grpc
+
+    targets = []
+    monkeypatch.setattr(
+        grpc,
+        "secure_channel",
+        lambda target, creds: targets.append(target) or MagicMock(),
+    )
+    monkeypatch.setattr(grpc, "intercept_channel", lambda channel, _: channel)
+    grpc_target, rest_url = _REGION_ENDPOINTS[region]
+
+    rest = KentikAPI("a@b.com", "t", region=region, env_file=None)
+    assert rest.api_config.base_path == rest_url
+
+    KentikAPI("a@b.com", "t", protocol="grpc", region=region, env_file=None)
+    assert targets == [grpc_target]
+    assert grpc_target.endswith(".eu:443") == (region == "eu")

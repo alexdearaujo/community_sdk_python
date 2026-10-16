@@ -6,10 +6,23 @@ from typing import Iterator
 import pytest
 
 from kentik_api.client import KentikAPI
+from kentik_api.errors import ConfigurationError
+
+
+def pytest_addoption(parser: pytest.Parser) -> None:
+    parser.addoption(
+        "--run-live-e2e",
+        action="store_true",
+        default=False,
+        help=(
+            "Run live end-to-end tests against the real Kentik API. "
+            "Disabled by default to avoid accidental credential use."
+        ),
+    )
 
 
 @pytest.fixture(scope="session")
-def real_client() -> Iterator[KentikAPI]:
+def real_client(request: pytest.FixtureRequest) -> Iterator[KentikAPI]:
     """A real KentikAPI client backed by whatever credentials are configured.
 
     Credential loading is delegated entirely to KentikAPI itself (project-root
@@ -18,9 +31,15 @@ def real_client() -> Iterator[KentikAPI]:
     fails, since these tests are opt-in and not everyone running the mocked
     suites has (or should need) a live Kentik account.
     """
+    if not request.config.getoption("--run-live-e2e"):
+        pytest.skip(
+            "Live e2e tests are disabled by default. Re-run with --run-live-e2e "
+            "to allow real API calls."
+        )
+
     try:
         client = KentikAPI(protocol="rest")
-    except ValueError:
+    except ConfigurationError:
         pytest.skip(
             "No KENTIK_EMAIL/KENTIK_API_TOKEN available -- end-to-end tests "
             "require real credentials in a project-root .env and are opt-in "
@@ -33,11 +52,17 @@ def real_client() -> Iterator[KentikAPI]:
 
 
 @pytest.fixture(scope="session")
-def grpc_real_client() -> Iterator[KentikAPI]:
+def grpc_real_client(request: pytest.FixtureRequest) -> Iterator[KentikAPI]:
     """Same as real_client, but over the gRPC transport (protocol="grpc")."""
+    if not request.config.getoption("--run-live-e2e"):
+        pytest.skip(
+            "Live e2e tests are disabled by default. Re-run with --run-live-e2e "
+            "to allow real API calls."
+        )
+
     try:
         client = KentikAPI(protocol="grpc")
-    except ValueError:
+    except ConfigurationError:
         pytest.skip(
             "No KENTIK_EMAIL/KENTIK_API_TOKEN available -- end-to-end tests "
             "require real credentials in a project-root .env and are opt-in "

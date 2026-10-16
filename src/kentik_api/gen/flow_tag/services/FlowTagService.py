@@ -4,8 +4,11 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateFlowTagError,
@@ -63,10 +66,12 @@ def SearchFlowTag(
         error_cls=SearchFlowTagError,
     )
 
-    return (
-        attach_rate_limit(SearchFlowTagResponse(**body), rate_limit_of(body))
-        if body is not None
-        else SearchFlowTagResponse.model_construct()
+    return parse_response_model(
+        SearchFlowTagResponse,
+        body,
+        operation_name="SearchFlowTag",
+        method="get",
+        path="/flow_tag/v202404alpha1/tag",
     )
 
 
@@ -89,10 +94,12 @@ def CreateFlowTag(
         error_cls=CreateFlowTagError,
     )
 
-    return (
-        attach_rate_limit(CreateFlowTagResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateFlowTagResponse.model_construct()
+    return parse_response_model(
+        CreateFlowTagResponse,
+        body,
+        operation_name="CreateFlowTag",
+        method="post",
+        path="/flow_tag/v202404alpha1/tag",
     )
 
 
@@ -114,10 +121,12 @@ def GetFlowTag(
         error_cls=GetFlowTagError,
     )
 
-    return (
-        attach_rate_limit(GetFlowTagResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetFlowTagResponse.model_construct()
+    return parse_response_model(
+        GetFlowTagResponse,
+        body,
+        operation_name="GetFlowTag",
+        method="get",
+        path="/flow_tag/v202404alpha1/tag/{flowTag.id}",
     )
 
 
@@ -143,10 +152,12 @@ def UpdateFlowTag(
         error_cls=UpdateFlowTagError,
     )
 
-    return (
-        attach_rate_limit(UpdateFlowTagResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateFlowTagResponse.model_construct()
+    return parse_response_model(
+        UpdateFlowTagResponse,
+        body,
+        operation_name="UpdateFlowTag",
+        method="put",
+        path="/flow_tag/v202404alpha1/tag/{flowTag.id}",
     )
 
 
@@ -168,8 +179,10 @@ def DeleteFlowTag(
         error_cls=DeleteFlowTagError,
     )
 
-    return (
-        attach_rate_limit(DeleteFlowTagResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteFlowTagResponse.model_construct()
+    return parse_response_model(
+        DeleteFlowTagResponse,
+        body,
+        operation_name="DeleteFlowTag",
+        method="delete",
+        path="/flow_tag/v202404alpha1/tag/{flowTag.id}",
     )

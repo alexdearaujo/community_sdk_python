@@ -2,7 +2,8 @@
 
 # Authentication
 
-The SDK takes Kentik API credentials from constructor arguments, environment\nvariables, or a `.env` file.
+The SDK takes Kentik API credentials from constructor arguments, environment
+variables, or a `.env` file.
 
 For a runtime-level dependency map that shows how credentials and transports
 connect to generated services, see

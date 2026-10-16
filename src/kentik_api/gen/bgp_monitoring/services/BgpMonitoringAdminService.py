@@ -4,8 +4,11 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
-from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
-from kentik_api.core.rest_runtime import path_segment, request_json
+from kentik_api.core.rest_runtime import (
+    parse_response_model,
+    path_segment,
+    request_json,
+)
 
 from ..error import (
     CreateMonitorError,
@@ -65,10 +68,12 @@ def ListMonitors(
         error_cls=ListMonitorsError,
     )
 
-    return (
-        attach_rate_limit(ListMonitorsResponse(**body), rate_limit_of(body))
-        if body is not None
-        else ListMonitorsResponse.model_construct()
+    return parse_response_model(
+        ListMonitorsResponse,
+        body,
+        operation_name="ListMonitors",
+        method="get",
+        path="/bgp_monitoring/v202210/monitors",
     )
 
 
@@ -91,10 +96,12 @@ def CreateMonitor(
         error_cls=CreateMonitorError,
     )
 
-    return (
-        attach_rate_limit(CreateMonitorResponse(**body), rate_limit_of(body))
-        if body is not None
-        else CreateMonitorResponse.model_construct()
+    return parse_response_model(
+        CreateMonitorResponse,
+        body,
+        operation_name="CreateMonitor",
+        method="post",
+        path="/bgp_monitoring/v202210/monitors",
     )
 
 
@@ -116,10 +123,12 @@ def GetMonitor(
         error_cls=GetMonitorError,
     )
 
-    return (
-        attach_rate_limit(GetMonitorResponse(**body), rate_limit_of(body))
-        if body is not None
-        else GetMonitorResponse.model_construct()
+    return parse_response_model(
+        GetMonitorResponse,
+        body,
+        operation_name="GetMonitor",
+        method="get",
+        path="/bgp_monitoring/v202210/monitors/{id}",
     )
 
 
@@ -145,10 +154,12 @@ def UpdateMonitor(
         error_cls=UpdateMonitorError,
     )
 
-    return (
-        attach_rate_limit(UpdateMonitorResponse(**body), rate_limit_of(body))
-        if body is not None
-        else UpdateMonitorResponse.model_construct()
+    return parse_response_model(
+        UpdateMonitorResponse,
+        body,
+        operation_name="UpdateMonitor",
+        method="put",
+        path="/bgp_monitoring/v202210/monitors/{id}",
     )
 
 
@@ -170,10 +181,12 @@ def DeleteMonitor(
         error_cls=DeleteMonitorError,
     )
 
-    return (
-        attach_rate_limit(DeleteMonitorResponse(**body), rate_limit_of(body))
-        if body is not None
-        else DeleteMonitorResponse.model_construct()
+    return parse_response_model(
+        DeleteMonitorResponse,
+        body,
+        operation_name="DeleteMonitor",
+        method="delete",
+        path="/bgp_monitoring/v202210/monitors/{id}",
     )
 
 
@@ -199,8 +212,10 @@ def SetMonitorStatus(
         error_cls=SetMonitorStatusError,
     )
 
-    return (
-        attach_rate_limit(SetMonitorStatusResponse(**body), rate_limit_of(body))
-        if body is not None
-        else SetMonitorStatusResponse.model_construct()
+    return parse_response_model(
+        SetMonitorStatusResponse,
+        body,
+        operation_name="SetMonitorStatus",
+        method="put",
+        path="/bgp_monitoring/v202210/monitors/{id}/status",
     )

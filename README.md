@@ -94,7 +94,7 @@ production.
 ## Installation
 
 ```bash
-pip install kentik-api
+pip install -U "kentik-api>=2"
 ```
 
 Requires Python 3.12 or later.
