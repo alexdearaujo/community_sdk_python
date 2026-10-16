@@ -5,27 +5,38 @@ on:
     types: [published]
 
 jobs:
-  build-packages:
-    uses: ./.github/workflows/build_packages.yml
-    with:
-      python_versions: "['${{ vars.RELEASE_PYTHON_VERSION }}']"
-
-  # Publish packages to PyPi
-  publish-packages:
-    needs: [ build-packages ]
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare python env
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
         with:
-          python-version: ${{ vars.RELEASE_PYTHON_VERSION }}
-          architecture: x64
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
+          fetch-depth: 0  # hatch-vcs needs full history to read the tag
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
         with:
-          name: artifacts.python${{ vars.RELEASE_PYTHON_VERSION }}
-          path: artifacts
-      - name: Push package to PyPi
-        run: |
-          python3 -m pip install --user --upgrade twine
-          python3 -m twine upload --repository pypi artifacts/dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+          python-version: "3.12"
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}

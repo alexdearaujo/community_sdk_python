@@ -1,0 +1,30 @@
+{
+  // Rule settings (was .markdownlint.json, consolidated here so there's one
+  // config file, read only by markdownlint-cli2 -- this repo has no other
+  // markdownlint invocation to stay compatible with).
+  "config": {
+    "MD013": {
+      "line_length": 200,
+      "code_blocks": false,
+      "tables": false
+    },
+    "MD024": {
+      "siblings_only": true
+    },
+    "MD033": {
+      "allowed_elements": ["details", "summary", "picture", "source", "img"]
+    }
+  },
+  "globs": ["**/*.md"],
+  // Spec Kit vendors these paths (specify init/upgrade rewrites them
+  // wholesale), so they aren't ours to hand-fix for markdownlint compliance --
+  // any fix here would just get overwritten by the next `specify upgrade` /
+  // `specify init --force`.
+  "ignores": [
+    ".venv/**",
+    "dist/**",
+    "docs/sphinx/services/**",
+    ".github/skills/**",
+    ".specify/templates/**"
+  ]
+}

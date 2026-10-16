@@ -1,108 +1,222 @@
-# Kentik API Python library
+<!-- HAND-WRITTEN: not modified by [`make generate`](Makefile). Edit directly. -->
 
-This is a Python client library for [Kentik APIs](https://kb.kentik.com/v0/Ab09.htm).
-It is distributed as [_kentik-api_ PyPI package](https://pypi.org/project/kentik-api/).
+# Kentik Community Python SDK
 
-## Installation with pip
+A type-safe Python client for the Kentik API v6, generated from
+Kentik's public OpenAPI v3 schema.
 
-1. Install the library using pip:  
-```pip3 install kentik-api```
-2. Check installation successful - no errors should be reported:
-```python3 -c "import kentik_api"```
-3. Run an example (optional):
-  ```bash
-  export KTAPI_AUTH_EMAIL=<your kentik api credentials email>
-  export KTAPI_AUTH_TOKEN=<your kentik api credentials token>
-  python3 examples/sites_example.py
-  ```
+## What this is
 
-## Getting started
+The SDK is generated, not hand-written.
+[`scripts/generate_sdk.py`](scripts/generate_sdk.py) builds it from the
+[Kentik API Public Schema](https://github.com/kentik/api-schema-public).
+The pipeline fixes common OpenAPI generator bugs, removes schema-version
+prefixes from class names, and generates architecture diagrams.
 
-The best way to get started coding with the SDK is to study provided [examples](examples).
+The diagram below shows the key split: hand-written code that survives
+every regeneration, and generated code that [`make generate`](Makefile) wipes and rebuilds.
 
-Interfaces for manipulating all Kentik API resources are available under the `KentikAPI` object.  
-Every Kentik API resource is represented by a public class, and all related data types are located in the same source
-file or directory as the implementation of the class:
-- [CustomApplication](kentik_api/public/custom_application.py)
-- [CustomDimension](kentik_api/public/custom_dimension.py)
-- [DeviceLabel](kentik_api/public/device_label.py)
-- [Device](kentik_api/public/device.py)
-- [ManualMitigation](kentik_api/public/manual_mitigation.py)
-- [Plan](kentik_api/public/plan.py)
-- [QueryObject](kentik_api/public/query_object.py)
-- [QuerySQL](kentik_api/public/query_sql.py)
-- [SavedFilter](kentik_api/public/saved_filter.py)
-- [Site](kentik_api/public/site.py)
-- [Synthetic Tests](kentik_api/synthetics)
-- [Tag](kentik_api/public/tag.py)
-- [Tenant](kentik_api/public/tenant.py)
-- [User](kentik_api/public/user.py)
+```mermaid
+flowchart TB
+    subgraph HW["Hand-written (survives every regeneration)"]
+        Client["client.py<br/>KentikAPI entrypoint"]
+        Auth["auth/<br/>Credentials"]
+        Core["core/<br/>APIConfig + rest_runtime + grpc_runtime"]
+        Errors["errors/<br/>Base exception hierarchy"]
+        Transports["transports/<br/>REST / gRPC transport base"]
+    end
 
-## Additional utilities available in the `utils` sub-module
+    subgraph GEN["Generated (wiped and rebuilt by make generate)"]
+        Mixin["client_mixin.py<br/>mounts every service wrapper"]
+        Wrappers["gen/{service}/services/<br/>ServiceWrapper classes"]
+        Models["gen/{service}/models/"]
+        GenErrors["gen/{service}/error/"]
+        Pb["gen/{service}/pb/<br/>compiled gRPC stubs"]
+        Companions["gen/pb_companions/<br/>shared proto descriptors"]
+    end
 
-### Authentication support
+    Client --> Mixin
+    Client --> Auth
+    Client --> Transports
+    Mixin --> Wrappers
+    Wrappers --> Models
+    Wrappers --> Core
+    Wrappers --> GenErrors
+    Wrappers --> Pb
+    Pb --> Companions
+    Core --> Errors
+    Transports --> Auth
 
-- `get_credentials`: function for retrieving authentication credentials from the environment or a profile stored on
-  the disk. API authentication credentials can be provided via environment variables `KTAPI_AUTH_EMAIL` and
-  `KTAPI_AUTH_TOKEN` or via named profile (specified as argument to the `get_credentials` functions, defaulting
-  to `default`) which is a JSON file with following format:
-```json
-{
-  "email": "<email address>",
-  "api-key": "<the API key>"
-}
+    classDef handwritten fill:#d7ecff,stroke:#1c6fb0,color:#0b3554
+    classDef generated fill:#fde9c8,stroke:#c8791a,color:#5a3506
+    class Client,Auth,Core,Errors,Transports handwritten
+    class Mixin,Wrappers,Models,GenErrors,Pb,Companions generated
 ```
-Path to the profile file can be provided in `KTAPI_CFG_FILE`. Otherwise, it is first searched in
-`${KTAPI_HOME}/<profile_name>` and then in `${HOME}/.kentik/<profile_name>`.
 
-### Support for caching of device data
+## Staying current with the Kentik API
 
-The `DeviceCache` class allows caching of device related data obtained from the Kentik API. It internally builds
-index of devices by `name` and by `id`. Devices are represented by the [Device](kentik_api/public/device.py) class which
-internally builds dictionary of device interfaces  (represented by the `DeviceInterface` class) by `name`.
+Kentik evolves its API continuously. Because this SDK is generated
+rather than hand-written, adopting a schema change is one command:
 
-## Analytic support
+```bash
+make generate   # regenerate from the latest published schema
+```
 
-The `analytics` package provides support for processing Kentik time series data using Pandas Dataframes.
-The [pandas](https://pandas.pydata.org) and [PyYAML](https://pyyaml.org/) modules are required by the `analytics`
-sub-module and are automatically installed with the `kentik-api[analytics]` option.
-See [analytics readme](kentik_api/analytics/README.md) for more details.
+One run propagates a change through every layer at once: models, REST
+functions, per-operation error classes, gRPC stubs, the typed client
+attribute, the reference docs, and the test suite. No endpoint is
+maintained by hand, so none is silently missed or left half-wired.
 
-## Available Examples
+The arrival of the RBUX Focus Scope API shows the shape of a typical
+run. It required one command and no hand-written code:
 
-- [alerting_example.py](examples/alerting_example.py) - create Manual Mitigation
-- [applications_example.py](examples/applications_example.py) - create/update/delete Custom Application
-- [bulk_user_create.py](examples/bulk_user_create.py) - create users from YAML file
-- [devices_example.py](examples/devices_example.py) - create/update/get/delete/list Devices
-- [dimensions_example.py](examples/dimensions_example.py) - create/update/get/delete/list Custom Dimensions,
-                                                            create/update/delete Populator
-- [labels_example.py](examples/labels_example.py) - create/update/get/delete/list Device Labels
-- [my_kentik_portal_example.py](examples/my_kentik_portal_example.py) - get/list Tenants, create/delete Tenant User
-- [plans_example.py](examples/plans_example.py) - list plans
-- [queries_example.py](examples/queries_example.py) - query for SQL/URL/data/chart
-- [saved_filters_example.py](examples/saved_filters_example.py) - create/update/get/delete/list Saved Filters
-- [sites_example.py](examples/sites_example.py) - create/update/get/delete/list Sites
-- [tags_example.py](examples/tags_example.py) - create/update/get/delete/list Tags
-- [users_example.py](examples/users_example.py) - create/update/get/delete/list Users
-- [error_handling_example.py](examples/error_handling_example.py) - handling errors raised by the library
-- [analytics_example_sql.py](examples/analytics_example_sql.py) - use of `SQLQueryDefinition`, `flatness_analysis`
-                                                                  methods and the`DeviceCache`
-- [analytics_example_topx.py](examples/analytics_example_sql.py) - use of `DataQueryDefinition`, `flatness_analysis`
-                                                                  methods and the`DeviceCache`
-  (see also [analytics readme](kentik_api/analytics/README.md))
-- [synthetics_example.py](examples/synthetics_example.py) - interact with synthetics API
-- [cloud_export_example.py](examples/cloud_export_example.py) - interact with cloud export API
+| Layer | Produced by the run |
+| --- | --- |
+| Models and services | 26 files under `gen/rbux/`, covering all five declared operations |
+| Client surface | `client.rbux` mounted on `KentikAPI`, fully typed and autocompleting |
+| Transports | Both REST and gRPC paths for every operation |
+| Errors | Per-operation error classes for each status code the schema declares |
+| Docs | A service reference page, plus service counts refreshed repo-wide |
+| Tests | 40 cases, auto-discovered rather than written (1855 to 1894 passing) |
 
-## Development
+That last row matters most. The generated and end-to-end suites derive
+their cases from the generated code itself
+([`tests/_discovery.py`](tests/_discovery.py)), so a new endpoint arrives
+already covered, exercised against every response status the schema
+declares. Coverage cannot drift behind the API.
 
-[Instructions for developers](docs/README.md)
+The same run also picked up a new optional field on an existing
+`deviceconf` response model, which is the quieter half of the benefit:
+additive changes land without a migration, and a breaking one would
+surface immediately as a failing test rather than a runtime surprise in
+production.
+
+## Installation
+
+```bash
+pip install kentik-api
+```
+
+Requires Python 3.12 or later.
+
+## Authentication
+
+Create `.env` in your project root:
+
+```bash
+KENTIK_EMAIL=you@example.com
+KENTIK_API_TOKEN=your_api_token
+```
+
+`KentikAPI()` loads these automatically. See
+[`docs/guides/quickstart.md`](docs/guides/quickstart.md) for all credential options.
+
+## Transport selection
+
+The SDK supports both REST and gRPC transports.
+
+```python
+from kentik_api.client import KentikAPI
+
+client = KentikAPI(protocol="rest")  # REST transport (default)
+client = KentikAPI(protocol="grpc")  # gRPC transport
+```
+
+Both transports return the same Pydantic response models. REST routes calls
+through [`src/kentik_api/core/rest_runtime.py`](src/kentik_api/core/rest_runtime.py).
+gRPC routes calls through the compiled proto stubs in `gen/<service>/pb/` and
+[`src/kentik_api/core/grpc_runtime.py`](src/kentik_api/core/grpc_runtime.py).
+See [`docs/guides/grpc.md`](docs/guides/grpc.md) for the full gRPC guide.
+
+## Documentation
+
+All documentation is in [`docs/`](docs/README.md):
+
+| Guide | Content |
+| --- | --- |
+| [`docs/guides/quickstart.md`](docs/guides/quickstart.md) | First call in 5 minutes |
+| [`docs/guides/rest.md`](docs/guides/rest.md) | REST transport deep-dive |
+| [`docs/guides/grpc.md`](docs/guides/grpc.md) | gRPC transport and sequence diagrams |
+| [`docs/guides/error_handling.md`](docs/guides/error_handling.md) | Exception hierarchy |
+| [`docs/guides/generation.md`](docs/guides/generation.md) | SDK regeneration workflow |
+
+Run [`make docs`](Makefile) to build the full Sphinx HTML reference from
+[`docs/sphinx/`](docs/sphinx/README.md).
+
+## Examples
+
+Runnable scripts are in [`examples/`](examples/README.md). Each service has
+a `rest.py` and a `grpc.py` side by side.
+
+```bash
+uv run python -m examples.device.rest   # REST
+uv run python -m examples.device.grpc   # gRPC
+```
+
+## Contributing
+
+### Prerequisites
+
+- **Python** 3.12 or later
+- **[uv](https://github.com/astral-sh/uv)** package manager
+
+### Development setup
+
+```bash
+git clone https://github.com/kentik/community_sdk_python.git
+cd community_sdk_python
+make install
+```
+
+### Generating the SDK
+
+```bash
+make generate local   # from local ../api-schema-public/ checkout
+make generate         # fetch latest schema from GitHub
+make                  # generate + test (default)
+```
+
+See [`scripts/README.md`](scripts/README.md) for generator internals and
+[`docs/guides/generation.md`](docs/guides/generation.md) for the full workflow.
+
+### Testing
+
+```bash
+make test           # full mocked suite
+make test-e2e       # opt-in live tests, REST transport (needs .env)
+make test-e2e-grpc  # opt-in live tests, gRPC transport (needs .env)
+```
+
+See [`tests/README.md`](tests/README.md) for the full test-layer breakdown.
+
+### Code quality
+
+```bash
+make lint          # ruff check + format
+```
 
 ## Open-source libraries
 
-This software uses the following open-source libraries:
-- [dacite](https://pypi.org/project/dacite/) by Konrad Hałas - MIT License
-- [requests](https://pypi.org/project/requests/) by Kenneth Reitz - Apache Software License (Apache 2.0)
-- [typing-extensions](https://pypi.org/project/typing-extensions/) by  Guido van Rossum, Jukka Lehtosalo, Lukasz Langa,
-                                                                   Michael Lee - PSFL License
-- [pandas](https://pandas.pydata.org) supported by NumFOCUS - BSD 3-Clause License
-- [pyyaml](https://pyyaml.org/) by Ingy döt Net and Kirill Simonov - MIT license
+This SDK is built on the following open-source libraries:
+
+| Library | License | Author / Maintainer |
+| --- | --- | --- |
+| [python-dotenv](https://github.com/theskumar/python-dotenv) | BSD-3-Clause | Saurabh Kumar, Bertrand Bonnefoy-Claudet |
+| [googleapis-common-protos](https://github.com/googleapis/google-cloud-python) | Apache 2.0 | Google LLC |
+| [grpcio](https://grpc.io) | Apache 2.0 | The gRPC Authors |
+| [httpx](https://www.python-httpx.org) | BSD-3-Clause | Tom Christie / encode |
+| [pydantic](https://docs.pydantic.dev) | MIT | Samuel Colvin et al. |
+
+The generated code in [`src/kentik_api/gen/`](src/kentik_api/gen/README.md) is produced by:
+
+| Tool | License | Author |
+| --- | --- | --- |
+| [openapi-python-generator](https://github.com/MarcoMuellner/openapi-python-generator) | MIT | Marco Müllner |
+| [grpcio-tools](https://grpc.io) | Apache 2.0 | The gRPC Authors |
+
+## Acknowledgements
+
+This project is a ground-up rewrite of the original
+[kentik-api v1.x SDK](https://github.com/kentik/community_sdk_python/tree/v1.0.7),
+which was created and maintained by [Martin Machacek](https://github.com/mmac-m3a)
+at Kentik.
