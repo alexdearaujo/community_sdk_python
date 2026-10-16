@@ -2,7 +2,7 @@
 
 # Authentication
 
-The SDK supports loading Kentik API credentials from a project-level `.env` file.
+The SDK takes Kentik API credentials from constructor arguments, environment\nvariables, or a `.env` file.
 
 For a runtime-level dependency map that shows how credentials and transports
 connect to generated services, see
@@ -29,31 +29,55 @@ client = KentikAPI(protocol="grpc", region="us")  # gRPC
 
 ## How Credentials Are Resolved
 
-When you initialize `KentikAPI`:
+`KentikAPI` takes each value from the first source that has it:
+
+1. The `email` and `api_token` arguments.
+2. The `KENTIK_EMAIL` and `KENTIK_API_TOKEN` environment variables.
+3. The `env_file` argument, `.env` by default. The client searches for it
+   from the current working directory upward.
+
+The client reads the file only when a value is still missing after steps 1
+and 2. It reads the file into memory and never writes its contents into
+`os.environ`, so subprocesses that your program starts do not inherit them.
+
+| `env_file` | Result |
+| --- | --- |
+| `".env"` (default) | Search for `.env` from the working directory upward. |
+| A `str` or `Path`, such as `Path.home() / ".kentik.env"` | An absolute path is read as is. A relative path is searched for like the default. |
+| `None` | Never read a file. |
+
+## Keeping credentials out of plaintext files
+
+Decrypt the credentials in your own code, then pass them as arguments. The
+client then reads no file and no environment variable:
 
 ```python
+import json
+import subprocess
+
 from kentik_api.client import KentikAPI
 
-client = KentikAPI(protocol="rest", region="us")
-```
-
-the client will:
-
-1. Load the nearest `.env` from the current working directory.
-2. Read `KENTIK_EMAIL` and `KENTIK_API_TOKEN`.
-
-You can also pass credentials directly:
-
-```python
-client = KentikAPI(
-    email="you@example.com",
-    api_token="your_api_token",
-    protocol="rest",
-    region="us",
+secrets = json.loads(
+    subprocess.run(
+        ["sops", "decrypt", "--output-type", "json", "kentik.sops.json"],
+        capture_output=True,
+        check=True,
+    ).stdout
 )
+client = KentikAPI(email=secrets["email"], api_token=secrets["api_token"])
 ```
 
-If both are provided, explicit constructor values are used.
+This works the same way for any secret store, for example a keyring, a
+password manager CLI, or a cloud secret manager.
+
+Without code changes, `sops exec-file` gives the decrypted file to your
+program as a named pipe, so no plaintext file is written to disk:
+
+```bash
+sops exec-file kentik.sops.env 'python my_script.py --env-file {}'
+```
+
+In `my_script.py`, pass that path as `KentikAPI(env_file=args.env_file)`.
 
 ## Required Variables
 

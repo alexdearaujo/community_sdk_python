@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -93,7 +94,7 @@ def ListProvisioningTokens(
     )
 
     return (
-        ListProvisioningTokensResponse(**body)
+        attach_rate_limit(ListProvisioningTokensResponse(**body), rate_limit_of(body))
         if body is not None
         else ListProvisioningTokensResponse.model_construct()
     )
@@ -119,7 +120,7 @@ def CreateProvisioningToken(
     )
 
     return (
-        CreateProvisioningTokenResponse(**body)
+        attach_rate_limit(CreateProvisioningTokenResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateProvisioningTokenResponse.model_construct()
     )
@@ -144,7 +145,7 @@ def GetProvisioningToken(
     )
 
     return (
-        GetProvisioningTokenResponse(**body)
+        attach_rate_limit(GetProvisioningTokenResponse(**body), rate_limit_of(body))
         if body is not None
         else GetProvisioningTokenResponse.model_construct()
     )
@@ -169,7 +170,9 @@ def ListAgentsByProvisioningToken(
     )
 
     return (
-        ListAgentsByProvisioningTokenResponse(**body)
+        attach_rate_limit(
+            ListAgentsByProvisioningTokenResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else ListAgentsByProvisioningTokenResponse.model_construct()
     )
@@ -198,7 +201,7 @@ def RevokeProvisioningToken(
     )
 
     return (
-        RevokeProvisioningTokenResponse(**body)
+        attach_rate_limit(RevokeProvisioningTokenResponse(**body), rate_limit_of(body))
         if body is not None
         else RevokeProvisioningTokenResponse.model_construct()
     )

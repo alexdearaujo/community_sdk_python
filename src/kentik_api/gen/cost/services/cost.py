@@ -3,7 +3,9 @@ from typing import Optional, Union, cast
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.cost.services.CostService as RestCostModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.cost import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -32,22 +34,29 @@ class CostServiceWrapper:
                 self._grpc_stub_1 = None
 
     def list_cost_providers(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCostProvidersResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cost service"
                 )
             _req = self._grpc_pb2_1.ListCostProvidersRequest()
-            _resp = call_grpc(self._grpc_stub_1.ListCostProviders, _req)
-            return rest_models.ListCostProvidersResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListCostProviders,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.ListCostProvidersResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCostModule1.ListCostProviders(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(
@@ -55,10 +64,13 @@ class CostServiceWrapper:
             )
 
     def list_cost_provider_summaries(
-        self, *, date: Optional[str] = None
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        date: Optional[str] = None,
     ) -> rest_models.ListCostProviderSummariesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cost service"
                 )
@@ -67,14 +79,22 @@ class CostServiceWrapper:
                 self._grpc_pb2_1.ListCostProviderSummariesRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.ListCostProviderSummaries, _req)
-            return rest_models.ListCostProviderSummariesResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListCostProviderSummaries,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.ListCostProviderSummariesResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCostModule1.ListCostProviderSummaries(
-                api_config_override=rest_transport.api_config, date=date
+                api_config_override=api_config_override or rest_transport.api_config,
+                date=date,
             )
         else:
             raise TypeError(
@@ -82,10 +102,14 @@ class CostServiceWrapper:
             )
 
     def get_cost_provider_summary(
-        self, *, id: str, date: Optional[str] = None
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        id: str,
+        date: Optional[str] = None,
     ) -> rest_models.GetCostProviderSummaryResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cost service"
                 )
@@ -94,14 +118,23 @@ class CostServiceWrapper:
                 self._grpc_pb2_1.GetCostProviderSummaryRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetCostProviderSummary, _req)
-            return rest_models.GetCostProviderSummaryResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetCostProviderSummary,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.GetCostProviderSummaryResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCostModule1.GetCostProviderSummary(
-                api_config_override=rest_transport.api_config, id=id, date=date
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                date=date,
             )
         else:
             raise TypeError(

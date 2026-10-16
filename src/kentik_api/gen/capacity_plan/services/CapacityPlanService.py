@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -52,7 +53,7 @@ def ListCapacityPlans(
     )
 
     return (
-        ListCapacityPlansResponse(**body)
+        attach_rate_limit(ListCapacityPlansResponse(**body), rate_limit_of(body))
         if body is not None
         else ListCapacityPlansResponse.model_construct()
     )
@@ -77,7 +78,7 @@ def ListCapacitySummaries(
     )
 
     return (
-        ListCapacitySummariesResponse(**body)
+        attach_rate_limit(ListCapacitySummariesResponse(**body), rate_limit_of(body))
         if body is not None
         else ListCapacitySummariesResponse.model_construct()
     )
@@ -102,7 +103,7 @@ def GetCapacityPlan(
     )
 
     return (
-        GetCapacityPlanResponse(**body)
+        attach_rate_limit(GetCapacityPlanResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCapacityPlanResponse.model_construct()
     )
@@ -127,7 +128,7 @@ def GetCapacitySummary(
     )
 
     return (
-        GetCapacitySummaryResponse(**body)
+        attach_rate_limit(GetCapacitySummaryResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCapacitySummaryResponse.model_construct()
     )

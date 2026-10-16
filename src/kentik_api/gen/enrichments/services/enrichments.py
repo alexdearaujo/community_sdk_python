@@ -1,9 +1,11 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.enrichments.services.EnumerationsAdminService as RestEnrichmentsModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.enrichments import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -32,10 +34,13 @@ class EnrichmentsServiceWrapper:
                 self._grpc_stub_1 = None
 
     def fetch_values_by_ids(
-        self, *, data: rest_models.FetchValuesByIdsRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.FetchValuesByIdsRequest,
     ) -> rest_models.FetchValuesByIdsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for enrichments service"
                 )
@@ -44,14 +49,20 @@ class EnrichmentsServiceWrapper:
                 self._grpc_pb2_1.FetchValuesByIdsRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.FetchValuesByIds, _req)
-            return rest_models.FetchValuesByIdsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.FetchValuesByIds, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.FetchValuesByIdsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestEnrichmentsModule1.FetchValuesByIds(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(

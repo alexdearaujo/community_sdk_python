@@ -3,7 +3,9 @@ from typing import Optional, Union, cast
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.device.services.DeviceService as RestDeviceModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.device import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -32,10 +34,14 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1 = None
 
     def list_devices(
-        self, *, querynoCustomColumns: Optional[bool] = None, view: Optional[str] = None
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        querynoCustomColumns: Optional[bool] = None,
+        view: Optional[str] = None,
     ) -> rest_models.ListDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -51,14 +57,19 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.ListDevicesRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.ListDevices, _req)
-            return rest_models.ListDevicesResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListDevices, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListDevicesResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.ListDevices(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 querynoCustomColumns=querynoCustomColumns,
                 view=view,
             )
@@ -68,10 +79,13 @@ class DeviceServiceWrapper:
             )
 
     def create_device(
-        self, *, data: rest_models.CreateDeviceRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateDeviceRequest,
     ) -> rest_models.CreateDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -80,14 +94,20 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.CreateDeviceRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateDevice, _req)
-            return rest_models.CreateDeviceResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateDevice, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateDeviceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.CreateDevice(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -95,10 +115,13 @@ class DeviceServiceWrapper:
             )
 
     def create_devices(
-        self, *, data: rest_models.CreateDevicesRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateDevicesRequest,
     ) -> rest_models.CreateDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -107,14 +130,20 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.CreateDevicesRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateDevices, _req)
-            return rest_models.CreateDevicesResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateDevices, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateDevicesResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.CreateDevices(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -122,10 +151,13 @@ class DeviceServiceWrapper:
             )
 
     def delete_devices(
-        self, *, data: rest_models.DeleteDevicesRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.DeleteDevicesRequest,
     ) -> rest_models.DeleteDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -134,14 +166,20 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.DeleteDevicesRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.DeleteDevices, _req)
-            return rest_models.DeleteDevicesResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteDevices, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteDevicesResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.DeleteDevices(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -149,10 +187,13 @@ class DeviceServiceWrapper:
             )
 
     def update_devices(
-        self, *, data: rest_models.UpdateDevicesRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.UpdateDevicesRequest,
     ) -> rest_models.UpdateDevicesResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -161,14 +202,20 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.UpdateDevicesRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateDevices, _req)
-            return rest_models.UpdateDevicesResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateDevices, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateDevicesResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.UpdateDevices(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -176,10 +223,14 @@ class DeviceServiceWrapper:
             )
 
     def get_device_by_name(
-        self, *, deviceName: str, querynoCustomColumns: Optional[bool] = None
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        deviceName: str,
+        querynoCustomColumns: Optional[bool] = None,
     ) -> rest_models.GetDeviceByNameResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -195,14 +246,19 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.GetDeviceByNameRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetDeviceByName, _req)
-            return rest_models.GetDeviceByNameResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetDeviceByName, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetDeviceByNameResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.GetDeviceByName(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 deviceName=deviceName,
                 querynoCustomColumns=querynoCustomColumns,
             )
@@ -212,10 +268,14 @@ class DeviceServiceWrapper:
             )
 
     def get_device(
-        self, *, deviceid: str, querynoCustomColumns: Optional[bool] = None
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        deviceid: str,
+        querynoCustomColumns: Optional[bool] = None,
     ) -> rest_models.GetDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -231,14 +291,19 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.GetDeviceRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetDevice, _req)
-            return rest_models.GetDeviceResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetDevice, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetDeviceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.GetDevice(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 deviceid=deviceid,
                 querynoCustomColumns=querynoCustomColumns,
             )
@@ -248,10 +313,14 @@ class DeviceServiceWrapper:
             )
 
     def update_device(
-        self, *, deviceid: str, data: rest_models.DeviceServiceUpdateDeviceBody
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        deviceid: str,
+        data: rest_models.DeviceServiceUpdateDeviceBody,
     ) -> rest_models.UpdateDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -264,14 +333,19 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.UpdateDeviceRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateDevice, _req)
-            return rest_models.UpdateDeviceResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateDevice, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateDeviceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.UpdateDevice(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 deviceid=deviceid,
                 data=data,
             )
@@ -280,9 +354,11 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_device(self, *, deviceid: str) -> rest_models.DeleteDeviceResponse:
+    def delete_device(
+        self, *, api_config_override: Optional[APIConfig] = None, deviceid: str
+    ) -> rest_models.DeleteDeviceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -291,14 +367,20 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.DeleteDeviceRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.DeleteDevice, _req)
-            return rest_models.DeleteDeviceResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteDevice, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteDeviceResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.DeleteDevice(
-                api_config_override=rest_transport.api_config, deviceid=deviceid
+                api_config_override=api_config_override or rest_transport.api_config,
+                deviceid=deviceid,
             )
         else:
             raise TypeError(
@@ -306,10 +388,14 @@ class DeviceServiceWrapper:
             )
 
     def update_device_labels(
-        self, *, id: str, data: rest_models.DeviceServiceUpdateDeviceLabelsBody
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        id: str,
+        data: rest_models.DeviceServiceUpdateDeviceLabelsBody,
     ) -> rest_models.UpdateDeviceLabelsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for device service"
                 )
@@ -320,14 +406,23 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.UpdateDeviceLabelsRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateDeviceLabels, _req)
-            return rest_models.UpdateDeviceLabelsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateDeviceLabels,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.UpdateDeviceLabelsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestDeviceModule1.UpdateDeviceLabels(
-                api_config_override=rest_transport.api_config, id=id, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                data=data,
             )
         else:
             raise TypeError(

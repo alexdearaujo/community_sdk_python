@@ -1,4 +1,4 @@
-.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck clean deep-clean
+.PHONY: all help install generate services local docs tests test test-generated test-runtime test-smoke test-generator test-e2e test-e2e-grpc lint typecheck impact-report release-notes check-specs clean deep-clean
 
 .DEFAULT_GOAL := all
 
@@ -39,7 +39,7 @@ local: ## Marker target for `make generate local`
 	fi
 
 docs: generate ## Build the HTML documentation (generates SDK and service stubs first)
-	$(SPHINX) -b html docs/sphinx docs/build/html
+	$(SPHINX) -W --keep-going -b html docs/sphinx docs/build/html
 
 tests: test ## Run the full test suite (alias)
 
@@ -68,13 +68,17 @@ lint: ## Run linter and formatter (Ruff)
 	$(RUFF) check --fix .
 	$(RUFF) format .
 
+check-specs: ## Validate FR/SC/task cross-references in specs/
+	$(PYTHON) scripts/check_spec_refs.py
+
 release-notes: ## Render release notes from api_surface.json (SINCE=<ref>, default: latest tag)
 	uv run python scripts/release_notes.py $(if $(SINCE),--since $(SINCE),) $(if $(OUT),-o $(OUT),)
 
-typecheck: ## Type-check hand-written source with ty
-	uv run ty check src/kentik_api/core src/kentik_api/auth src/kentik_api/errors \
-		src/kentik_api/transports src/kentik_api/client.py \
-		scripts/generation scripts/generate_sdk.py
+impact-report: ## Report what the last regeneration changed (SINCE=<ref>, default: HEAD; CHECKS=0 skips tests)
+	uv run python scripts/impact_report.py $(if $(SINCE),--since $(SINCE),) $(if $(filter 0,$(CHECKS)),--no-checks,) $(if $(OUT),-o $(OUT),)
+
+typecheck: ## Type-check the SDK (generated code included), scripts, and tests with ty
+	uv run ty check
 
 clean: ## Remove generated SDK and build artifacts
 	# Keep project-local customization code (do not remove):

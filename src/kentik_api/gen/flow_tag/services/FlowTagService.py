@@ -4,6 +4,7 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -63,7 +64,7 @@ def SearchFlowTag(
     )
 
     return (
-        SearchFlowTagResponse(**body)
+        attach_rate_limit(SearchFlowTagResponse(**body), rate_limit_of(body))
         if body is not None
         else SearchFlowTagResponse.model_construct()
     )
@@ -89,7 +90,7 @@ def CreateFlowTag(
     )
 
     return (
-        CreateFlowTagResponse(**body)
+        attach_rate_limit(CreateFlowTagResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateFlowTagResponse.model_construct()
     )
@@ -114,7 +115,7 @@ def GetFlowTag(
     )
 
     return (
-        GetFlowTagResponse(**body)
+        attach_rate_limit(GetFlowTagResponse(**body), rate_limit_of(body))
         if body is not None
         else GetFlowTagResponse.model_construct()
     )
@@ -143,7 +144,7 @@ def UpdateFlowTag(
     )
 
     return (
-        UpdateFlowTagResponse(**body)
+        attach_rate_limit(UpdateFlowTagResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateFlowTagResponse.model_construct()
     )
@@ -168,7 +169,7 @@ def DeleteFlowTag(
     )
 
     return (
-        DeleteFlowTagResponse(**body)
+        attach_rate_limit(DeleteFlowTagResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteFlowTagResponse.model_construct()
     )

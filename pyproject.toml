@@ -55,6 +55,7 @@ dev = [
     "grpcio-tools==1.84.0",
     "types-protobuf>=6.30.0",
     "ty>=0.0.73",
+    "ruff==0.14.11",
 ]
 
 test = [
@@ -69,6 +70,10 @@ docs = [
     "sphinx-book-theme>=1.1.0",
     "sphinxcontrib-mermaid>=1.0.0",
 ]
+
+[tool.ruff]
+# Spec Kit owns these scripts and rewrites them on every upgrade.
+extend-exclude = [".specify"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
@@ -86,6 +91,10 @@ markers = [
 ]
 addopts = "-m 'not e2e and not e2e_grpc'"
 
+[tool.ty.src]
+# Spec Kit's vendored scripts: upstream code that `specify` rewrites on upgrade.
+exclude = [".specify"]
+
 [tool.ty.environment]
 # scripts/ is on sys.path when generate_sdk.py runs as a direct script
 extra-paths = ["scripts"]
@@ -95,3 +104,13 @@ include = ["src/kentik_api/gen/**/*.pyi"]
 
 [tool.ty.overrides.rules]
 conflicting-metaclass = "ignore"
+# protoc declares extension fields as module-level ClassVar.
+invalid-type-form = "ignore"
+
+[[tool.ty.overrides]]
+# protoc's EXPERIMENTAL static helpers use grpc.experimental without importing
+# it. The SDK calls stubs through channels and never uses those helpers.
+include = ["src/kentik_api/gen/**/*_pb2_grpc.py"]
+
+[tool.ty.overrides.rules]
+possibly-missing-submodule = "ignore"

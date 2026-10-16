@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -65,7 +66,7 @@ def ListMonitors(
     )
 
     return (
-        ListMonitorsResponse(**body)
+        attach_rate_limit(ListMonitorsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListMonitorsResponse.model_construct()
     )
@@ -91,7 +92,7 @@ def CreateMonitor(
     )
 
     return (
-        CreateMonitorResponse(**body)
+        attach_rate_limit(CreateMonitorResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateMonitorResponse.model_construct()
     )
@@ -116,7 +117,7 @@ def GetMonitor(
     )
 
     return (
-        GetMonitorResponse(**body)
+        attach_rate_limit(GetMonitorResponse(**body), rate_limit_of(body))
         if body is not None
         else GetMonitorResponse.model_construct()
     )
@@ -145,7 +146,7 @@ def UpdateMonitor(
     )
 
     return (
-        UpdateMonitorResponse(**body)
+        attach_rate_limit(UpdateMonitorResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateMonitorResponse.model_construct()
     )
@@ -170,7 +171,7 @@ def DeleteMonitor(
     )
 
     return (
-        DeleteMonitorResponse(**body)
+        attach_rate_limit(DeleteMonitorResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteMonitorResponse.model_construct()
     )
@@ -199,7 +200,7 @@ def SetMonitorStatus(
     )
 
     return (
-        SetMonitorStatusResponse(**body)
+        attach_rate_limit(SetMonitorStatusResponse(**body), rate_limit_of(body))
         if body is not None
         else SetMonitorStatusResponse.model_construct()
     )

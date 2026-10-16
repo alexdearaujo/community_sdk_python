@@ -1,10 +1,12 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.bgp_monitoring.services.BgpMonitoringAdminService as RestBgpMonitoringModule1
 import kentik_api.gen.bgp_monitoring.services.BgpMonitoringDataService as RestBgpMonitoringModule2
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.bgp_monitoring import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -45,22 +47,27 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_stub_2 = None
 
     def list_monitors(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListMonitorsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
             _req = self._grpc_pb2_1.ListMonitorsRequest()
-            _resp = call_grpc(self._grpc_stub_1.ListMonitors, _req)
-            return rest_models.ListMonitorsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListMonitors, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListMonitorsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule1.ListMonitors(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(
@@ -68,10 +75,13 @@ class BgpMonitoringServiceWrapper:
             )
 
     def create_monitor(
-        self, *, data: rest_models.CreateMonitorRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateMonitorRequest,
     ) -> rest_models.CreateMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -80,23 +90,31 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_1.CreateMonitorRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateMonitor, _req)
-            return rest_models.CreateMonitorResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateMonitor, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateMonitorResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule1.CreateMonitor(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_monitor(self, *, id: str) -> rest_models.GetMonitorResponse:
+    def get_monitor(
+        self, *, api_config_override: Optional[APIConfig] = None, id: str
+    ) -> rest_models.GetMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -105,14 +123,20 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_1.GetMonitorRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetMonitor, _req)
-            return rest_models.GetMonitorResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetMonitor, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetMonitorResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule1.GetMonitor(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
             )
         else:
             raise TypeError(
@@ -120,10 +144,14 @@ class BgpMonitoringServiceWrapper:
             )
 
     def update_monitor(
-        self, *, id: str, data: rest_models.BgpMonitoringAdminServiceUpdateMonitorBody
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        id: str,
+        data: rest_models.BgpMonitoringAdminServiceUpdateMonitorBody,
     ) -> rest_models.UpdateMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -134,23 +162,32 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_1.UpdateMonitorRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateMonitor, _req)
-            return rest_models.UpdateMonitorResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateMonitor, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateMonitorResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule1.UpdateMonitor(
-                api_config_override=rest_transport.api_config, id=id, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_monitor(self, *, id: str) -> rest_models.DeleteMonitorResponse:
+    def delete_monitor(
+        self, *, api_config_override: Optional[APIConfig] = None, id: str
+    ) -> rest_models.DeleteMonitorResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -159,14 +196,20 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_1.DeleteMonitorRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.DeleteMonitor, _req)
-            return rest_models.DeleteMonitorResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteMonitor, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteMonitorResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule1.DeleteMonitor(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
             )
         else:
             raise TypeError(
@@ -176,11 +219,12 @@ class BgpMonitoringServiceWrapper:
     def set_monitor_status(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         id: str,
         data: rest_models.BgpMonitoringAdminServiceSetMonitorStatusBody,
     ) -> rest_models.SetMonitorStatusResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -191,14 +235,21 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_1.SetMonitorStatusRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.SetMonitorStatus, _req)
-            return rest_models.SetMonitorStatusResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.SetMonitorStatus, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.SetMonitorStatusResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule1.SetMonitorStatus(
-                api_config_override=rest_transport.api_config, id=id, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                data=data,
             )
         else:
             raise TypeError(
@@ -206,10 +257,13 @@ class BgpMonitoringServiceWrapper:
             )
 
     def get_metrics_for_target(
-        self, *, data: rest_models.GetMetricsForTargetRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.GetMetricsForTargetRequest,
     ) -> rest_models.GetMetricsForTargetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -218,14 +272,22 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_2.GetMetricsForTargetRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_2.GetMetricsForTarget, _req)
-            return rest_models.GetMetricsForTargetResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_2.GetMetricsForTarget,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.GetMetricsForTargetResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule2.GetMetricsForTarget(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -233,10 +295,13 @@ class BgpMonitoringServiceWrapper:
             )
 
     def get_routes_for_target(
-        self, *, data: rest_models.GetRoutesForTargetRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.GetRoutesForTargetRequest,
     ) -> rest_models.GetRoutesForTargetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_2 is None:
+            if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for bgp_monitoring service"
                 )
@@ -245,14 +310,22 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_2.GetRoutesForTargetRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_2.GetRoutesForTarget, _req)
-            return rest_models.GetRoutesForTargetResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_2.GetRoutesForTarget,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.GetRoutesForTargetResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestBgpMonitoringModule2.GetRoutesForTarget(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(

@@ -1,6 +1,7 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 import kentik_api.gen.ktbgp.services.RouteService as RestKtbgpModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.gen.ktbgp import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -29,7 +30,10 @@ class KtbgpServiceWrapper:
                 self._grpc_stub_1 = None
 
     def route_service__announce(
-        self, *, data: rest_models.RouteServiceAnnounceRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.RouteServiceAnnounceRequest,
     ) -> rest_models.RouteServiceAnnounceResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -38,7 +42,8 @@ class KtbgpServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKtbgpModule1.RouteService_Announce(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -46,7 +51,10 @@ class KtbgpServiceWrapper:
             )
 
     def route_service__list(
-        self, *, data: rest_models.RouteServiceListRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.RouteServiceListRequest,
     ) -> rest_models.RouteServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -55,7 +63,8 @@ class KtbgpServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKtbgpModule1.RouteService_List(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -63,7 +72,10 @@ class KtbgpServiceWrapper:
             )
 
     def route_service__withdraw(
-        self, *, data: rest_models.RouteServiceWithdrawRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.RouteServiceWithdrawRequest,
     ) -> rest_models.RouteServiceWithdrawResponse:
         if isinstance(self._transport, GrpcTransport):
             raise NotImplementedError(
@@ -72,7 +84,8 @@ class KtbgpServiceWrapper:
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKtbgpModule1.RouteService_Withdraw(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(

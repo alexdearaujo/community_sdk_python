@@ -13,6 +13,10 @@ schema grows.
 Status codes come from each service's generated `error/__init__.py`
 (`{Operation}Error.response_error_map`), which `scripts/generate_sdk.py`
 builds directly from the swagger files' declared non-2xx responses.
+
+Statuses in `RUNTIME_HANDLED` are asserted on every endpoint whether the
+schema declares them or not, because `request_json` intercepts them before
+any generated error class sees the response.
 """
 
 from __future__ import annotations
@@ -37,7 +41,7 @@ from _discovery import (
 from pydantic import BaseModel
 
 from kentik_api.auth.credentials import KentikCredentials
-from kentik_api.errors import HTTPException
+from kentik_api.errors import AuthenticationError, HTTPException, KentikError
 from kentik_api.transports.rest_client import RestTransport
 
 
@@ -48,6 +52,13 @@ class StatusCase:
     status_key: str
     is_success: bool
     error_class_name: Optional[str]
+    # Set when the shared runtime, not the generated error class, owns the status.
+    runtime_error: Optional[type[KentikError]] = None
+
+
+# Handled by `request_json` for every operation (FR-007), so no generated
+# `response_error_map` can take them over.
+RUNTIME_HANDLED: dict[int, type[KentikError]] = {401: AuthenticationError}
 
 
 def _rest_module_and_function(case: WrapperCase):
@@ -91,8 +102,23 @@ def _discover_status_cases() -> list[StatusCase]:
             getattr(error_cls, "response_error_map", {}) if error_cls else {}
         )
         explicit_codes = {key for key in response_error_map if key != "default"}
+        explicit_codes |= {str(code) for code in RUNTIME_HANDLED}
+
+        for code, runtime_error in RUNTIME_HANDLED.items():
+            cases.append(
+                StatusCase(
+                    wrapper=wrapper_case,
+                    status_code=code,
+                    status_key=str(code),
+                    is_success=False,
+                    error_class_name=None,
+                    runtime_error=runtime_error,
+                )
+            )
 
         for status_key, leaf_cls in sorted(response_error_map.items()):
+            if status_key.isdigit() and int(status_key) in RUNTIME_HANDLED:
+                continue  # already asserted above, with the runtime's expectation
             if status_key == "default":
                 simulated_code = _pick_default_simulated_code(explicit_codes)
                 cases.append(
@@ -188,6 +214,10 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
                     return_annotation, BaseModel
                 ):
                     assert isinstance(result, return_annotation)
+            elif case.runtime_error is not None:
+                with pytest.raises(KentikError) as exc_info:
+                    method(**kwargs)
+                assert type(exc_info.value) is case.runtime_error
             else:
                 error_module = error_module_for(
                     getattr(module, wrapper_case.rest_module_alias)

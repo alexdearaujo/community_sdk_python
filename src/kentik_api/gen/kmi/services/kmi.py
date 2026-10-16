@@ -3,7 +3,9 @@ from typing import List, Optional, Union, cast
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.kmi.services.KmiService as RestKmiModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.kmi import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -34,6 +36,7 @@ class KmiServiceWrapper:
     def get_global_insights(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         limit: Optional[int] = None,
         marketId: Optional[str] = None,
         ip: Optional[str] = None,
@@ -42,7 +45,7 @@ class KmiServiceWrapper:
         magnitude: Optional[int] = None,
     ) -> rest_models.GetGlobalInsightsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
@@ -62,14 +65,21 @@ class KmiServiceWrapper:
                 self._grpc_pb2_1.GetGlobalInsightsRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetGlobalInsights, _req)
-            return rest_models.GetGlobalInsightsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetGlobalInsights,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.GetGlobalInsightsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKmiModule1.GetGlobalInsights(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 limit=limit,
                 marketId=marketId,
                 ip=ip,
@@ -85,6 +95,7 @@ class KmiServiceWrapper:
     def get_asn_insights(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         asn: str,
         limit: Optional[int] = None,
         marketId: Optional[str] = None,
@@ -94,7 +105,7 @@ class KmiServiceWrapper:
         magnitude: Optional[int] = None,
     ) -> rest_models.GetASNInsightsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
@@ -115,14 +126,19 @@ class KmiServiceWrapper:
                 self._grpc_pb2_1.GetASNInsightsRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetASNInsights, _req)
-            return rest_models.GetASNInsightsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetASNInsights, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetASNInsightsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKmiModule1.GetASNInsights(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 asn=asn,
                 limit=limit,
                 marketId=marketId,
@@ -139,13 +155,14 @@ class KmiServiceWrapper:
     def get_asn_details(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         marketId: str,
         asn: str,
         type: str,
         data: rest_models.KmiServiceGetASNDetailsBody,
     ) -> rest_models.GetASNDetailsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
@@ -162,14 +179,19 @@ class KmiServiceWrapper:
                 self._grpc_pb2_1.GetASNDetailsRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetASNDetails, _req)
-            return rest_models.GetASNDetailsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetASNDetails, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetASNDetailsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKmiModule1.GetASNDetails(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 marketId=marketId,
                 asn=asn,
                 type=type,
@@ -183,13 +205,14 @@ class KmiServiceWrapper:
     def get_rankings(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         marketId: str,
         rankType: str,
         ip: str,
         data: rest_models.KmiServiceGetRankingsBody,
     ) -> rest_models.GetRankingsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
@@ -210,14 +233,19 @@ class KmiServiceWrapper:
                 self._grpc_pb2_1.GetRankingsRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetRankings, _req)
-            return rest_models.GetRankingsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetRankings, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetRankingsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKmiModule1.GetRankings(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 marketId=marketId,
                 rankType=rankType,
                 ip=ip,
@@ -229,22 +257,27 @@ class KmiServiceWrapper:
             )
 
     def list_markets(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListMarketsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for kmi service"
                 )
             _req = self._grpc_pb2_1.ListMarketsRequest()
-            _resp = call_grpc(self._grpc_stub_1.ListMarkets, _req)
-            return rest_models.ListMarketsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListMarkets, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListMarketsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestKmiModule1.ListMarkets(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(

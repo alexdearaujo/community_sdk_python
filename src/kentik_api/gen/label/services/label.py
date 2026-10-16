@@ -1,9 +1,11 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.label.services.LabelService as RestLabelModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.label import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -32,22 +34,27 @@ class LabelServiceWrapper:
                 self._grpc_stub_1 = None
 
     def list_labels(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListLabelsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for label service"
                 )
             _req = self._grpc_pb2_1.ListLabelsRequest()
-            _resp = call_grpc(self._grpc_stub_1.ListLabels, _req)
-            return rest_models.ListLabelsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListLabels, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListLabelsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestLabelModule1.ListLabels(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(
@@ -55,10 +62,13 @@ class LabelServiceWrapper:
             )
 
     def create_label(
-        self, *, data: rest_models.CreateLabelRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateLabelRequest,
     ) -> rest_models.CreateLabelResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for label service"
                 )
@@ -67,14 +77,20 @@ class LabelServiceWrapper:
                 self._grpc_pb2_1.CreateLabelRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateLabel, _req)
-            return rest_models.CreateLabelResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateLabel, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateLabelResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestLabelModule1.CreateLabel(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -82,10 +98,14 @@ class LabelServiceWrapper:
             )
 
     def update_label(
-        self, *, id: str, data: rest_models.LabelServiceUpdateLabelBody
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        id: str,
+        data: rest_models.LabelServiceUpdateLabelBody,
     ) -> rest_models.UpdateLabelResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for label service"
                 )
@@ -96,23 +116,32 @@ class LabelServiceWrapper:
                 self._grpc_pb2_1.UpdateLabelRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateLabel, _req)
-            return rest_models.UpdateLabelResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateLabel, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateLabelResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestLabelModule1.UpdateLabel(
-                api_config_override=rest_transport.api_config, id=id, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_label(self, *, id: str) -> rest_models.DeleteLabelResponse:
+    def delete_label(
+        self, *, api_config_override: Optional[APIConfig] = None, id: str
+    ) -> rest_models.DeleteLabelResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for label service"
                 )
@@ -121,14 +150,20 @@ class LabelServiceWrapper:
                 self._grpc_pb2_1.DeleteLabelRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.DeleteLabel, _req)
-            return rest_models.DeleteLabelResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteLabel, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteLabelResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestLabelModule1.DeleteLabel(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
             )
         else:
             raise TypeError(

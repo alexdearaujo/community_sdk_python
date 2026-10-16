@@ -21,7 +21,7 @@ forward it as `api_config_override`.
 
 `request_json()` (in [`rest_runtime.py`](rest_runtime.py)) is the **only** function that
 calls `httpx` for REST traffic in this SDK. Every generated operation,
-in every one of the ~39 services under
+in every one of the 35 services mounted on the client, under
 [`src/kentik_api/gen/`](../gen/README.md), calls this same function through the
 `httpx.jinja2` template. See
 [`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
@@ -45,6 +45,8 @@ sequenceDiagram
         HX-->>RJ: response
         alt status == expected
             RJ-->>Op: parsed JSON
+        else status == 401
+            RJ-->>Op: raise AuthenticationError
         else status mismatch
             RJ-->>Op: raise error_cls.from_response(...)
         end
@@ -55,8 +57,8 @@ sequenceDiagram
 
 `map_grpc_error()` (in [`grpc_runtime.py`](grpc_runtime.py)) is a pure function:
 no I/O, no side effects, testable without a gRPC channel. It maps a
-`grpc.RpcError` status code to the SDK exception hierarchy (`AuthenticationError`
-or `HTTPException`). `call_grpc()` is the thin caller that invokes the gRPC stub
+`grpc.RpcError` status code to the SDK exception hierarchy (`AuthenticationError`,
+`HTTPException`, or `TransportError`), classifying every non-OK code explicitly. `call_grpc()` is the thin caller that invokes the gRPC stub
 and delegates all error mapping to `map_grpc_error()`.
 
 ```mermaid
@@ -83,15 +85,33 @@ sequenceDiagram
 
 `request_json()` centralizes:
 
-- Kentik's auth header scheme (`X-CH-Auth-Email` /
-  `X-CH-Auth-API-Token`)
+- Kentik's auth headers, built by `auth_headers()` in
+  [`auth/credentials.py`](../auth/credentials.py), the scheme's single
+  definition
 - Query-param cleaning (drops `None` values)
-- The request itself, via a short-lived `httpx.Client`
+- The request itself, via the one `httpx.Client` its `APIConfig` owns, so
+  every call through a `KentikAPI` reuses a pooled connection instead of
+  opening a new TLS session each time. `KentikAPI.close()` releases it, and
+  a call after that raises `ConfigurationError`.
 - Transport-failure wrapping into `TransportError`
 - Status-code checking against each operation's `expected_status`
 - JSON error-body parsing (`code`, `message`, `details`)
 - Dispatch into the operation's generated error class via
   `error_cls.from_response`
+
+## Concurrency
+
+`httpx.Client` is thread-safe, so one `KentikAPI` can be shared across
+threads. That does not make parallel calls useful: Kentik allows **one
+concurrent request** for non-query APIs, where a request counts as concurrent
+if it arrives before the previous one is answered. No response header reports
+this limit. Throughput is capped by the API, not by this client, so calling
+from several threads mostly queues requests on the server.
+
+A caller that invokes a generated REST function directly with no
+`api_config_override` gets a fresh `APIConfig`, and therefore a fresh client,
+for that one call; `request_json()` closes it afterwards. The mounted
+`KentikAPI` wrappers always pass their shared config.
 
 ## Extending this layer
 

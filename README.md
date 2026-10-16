@@ -108,8 +108,11 @@ KENTIK_EMAIL=you@example.com
 KENTIK_API_TOKEN=your_api_token
 ```
 
-`KentikAPI()` loads these automatically. See
-[`docs/guides/quickstart.md`](docs/guides/quickstart.md) for all credential options.
+`KentikAPI()` reads these without writing them into the process
+environment. You can also pass credentials as arguments, which keeps them in
+an encrypted store such as sops. See
+[`docs/sphinx/authentication.md`](docs/sphinx/authentication.md) for all
+credential options.
 
 ## Transport selection
 
@@ -126,7 +129,7 @@ Both transports return the same Pydantic response models. REST routes calls
 through [`src/kentik_api/core/rest_runtime.py`](src/kentik_api/core/rest_runtime.py).
 gRPC routes calls through the compiled proto stubs in `gen/<service>/pb/` and
 [`src/kentik_api/core/grpc_runtime.py`](src/kentik_api/core/grpc_runtime.py).
-See [`docs/guides/grpc.md`](docs/guides/grpc.md) for the full gRPC guide.
+See [`docs/sphinx/guides/grpc.md`](docs/sphinx/guides/grpc.md) for the full gRPC guide.
 
 ## Documentation
 
@@ -134,11 +137,15 @@ All documentation is in [`docs/`](docs/README.md):
 
 | Guide | Content |
 | --- | --- |
-| [`docs/guides/quickstart.md`](docs/guides/quickstart.md) | First call in 5 minutes |
-| [`docs/guides/rest.md`](docs/guides/rest.md) | REST transport deep-dive |
-| [`docs/guides/grpc.md`](docs/guides/grpc.md) | gRPC transport and sequence diagrams |
-| [`docs/guides/error_handling.md`](docs/guides/error_handling.md) | Exception hierarchy |
-| [`docs/guides/generation.md`](docs/guides/generation.md) | SDK regeneration workflow |
+| [`docs/sphinx/guides/quickstart.md`](docs/sphinx/guides/quickstart.md) | First call in 5 minutes |
+| [`docs/sphinx/guides/rest.md`](docs/sphinx/guides/rest.md) | REST transport deep-dive |
+| [`docs/sphinx/guides/grpc.md`](docs/sphinx/guides/grpc.md) | gRPC transport and sequence diagrams |
+| [`docs/sphinx/authentication.md`](docs/sphinx/authentication.md) | Credential sources, and keeping them encrypted |
+| [`docs/sphinx/guides/error_handling.md`](docs/sphinx/guides/error_handling.md) | Exception hierarchy |
+| [`docs/sphinx/guides/rate_limiting.md`](docs/sphinx/guides/rate_limiting.md) | Quota headers and the limits no header shows |
+| [`docs/sphinx/guides/rest-vs-grpc.md`](docs/sphinx/guides/rest-vs-grpc.md) | Choosing a transport |
+| [`docs/sphinx/guides/migrating-from-1x.md`](docs/sphinx/guides/migrating-from-1x.md) | Moving from kentik-api 1.x |
+| [`docs/sphinx/guides/generation.md`](docs/sphinx/guides/generation.md) | SDK regeneration workflow |
 
 Run [`make docs`](Makefile) to build the full Sphinx HTML reference from
 [`docs/sphinx/`](docs/sphinx/README.md).
@@ -177,7 +184,7 @@ make                  # generate + test (default)
 ```
 
 See [`scripts/README.md`](scripts/README.md) for generator internals and
-[`docs/guides/generation.md`](docs/guides/generation.md) for the full workflow.
+[`docs/sphinx/guides/generation.md`](docs/sphinx/guides/generation.md) for the full workflow.
 
 ### Testing
 

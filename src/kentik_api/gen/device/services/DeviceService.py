@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -80,7 +81,7 @@ def ListDevices(
     )
 
     return (
-        ListDevicesResponse(**body)
+        attach_rate_limit(ListDevicesResponse(**body), rate_limit_of(body))
         if body is not None
         else ListDevicesResponse.model_construct()
     )
@@ -106,7 +107,7 @@ def CreateDevice(
     )
 
     return (
-        CreateDeviceResponse(**body)
+        attach_rate_limit(CreateDeviceResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateDeviceResponse.model_construct()
     )
@@ -132,7 +133,7 @@ def CreateDevices(
     )
 
     return (
-        CreateDevicesResponse(**body)
+        attach_rate_limit(CreateDevicesResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateDevicesResponse.model_construct()
     )
@@ -158,7 +159,7 @@ def DeleteDevices(
     )
 
     return (
-        DeleteDevicesResponse(**body)
+        attach_rate_limit(DeleteDevicesResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteDevicesResponse.model_construct()
     )
@@ -184,7 +185,7 @@ def UpdateDevices(
     )
 
     return (
-        UpdateDevicesResponse(**body)
+        attach_rate_limit(UpdateDevicesResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateDevicesResponse.model_construct()
     )
@@ -212,7 +213,7 @@ def GetDeviceByName(
     )
 
     return (
-        GetDeviceByNameResponse(**body)
+        attach_rate_limit(GetDeviceByNameResponse(**body), rate_limit_of(body))
         if body is not None
         else GetDeviceByNameResponse.model_construct()
     )
@@ -240,7 +241,7 @@ def GetDevice(
     )
 
     return (
-        GetDeviceResponse(**body)
+        attach_rate_limit(GetDeviceResponse(**body), rate_limit_of(body))
         if body is not None
         else GetDeviceResponse.model_construct()
     )
@@ -269,7 +270,7 @@ def UpdateDevice(
     )
 
     return (
-        UpdateDeviceResponse(**body)
+        attach_rate_limit(UpdateDeviceResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateDeviceResponse.model_construct()
     )
@@ -294,7 +295,7 @@ def DeleteDevice(
     )
 
     return (
-        DeleteDeviceResponse(**body)
+        attach_rate_limit(DeleteDeviceResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteDeviceResponse.model_construct()
     )
@@ -323,7 +324,7 @@ def UpdateDeviceLabels(
     )
 
     return (
-        UpdateDeviceLabelsResponse(**body)
+        attach_rate_limit(UpdateDeviceLabelsResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateDeviceLabelsResponse.model_construct()
     )

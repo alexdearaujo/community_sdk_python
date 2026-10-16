@@ -87,3 +87,105 @@ def test_generate_writes_wrapper_and_mounts_it_in_client_mixin(
     )
     assert "DeviceServiceWrapper" in mixin_content
     assert "self.device = DeviceServiceWrapper(self._transport)" in mixin_content
+
+
+# --- end to end, against a sandbox copy of the committed tree -----------------
+
+import ast  # noqa: E402
+import subprocess  # noqa: E402
+import sys  # noqa: E402
+
+# generate_sdk.py imports `generation` script-style, so scripts/ must be on sys.path.
+_SCRIPTS_DIR = Path(__file__).resolve().parents[2] / "scripts"
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
+
+from generate_sdk import _inject_generated_headers  # noqa: E402  # type: ignore[import-not-found]
+
+REAL_GEN = Path(__file__).resolve().parents[2] / "src" / "kentik_api" / "gen"
+
+
+def _post_process_like_generate_sdk(sandbox) -> None:
+    """The same ruff pass and header injection generate_modular_sdk() applies."""
+    for cmd in (
+        ["ruff", "check", "--select", "F,I", "--fix", str(sandbox.gen)],
+        ["ruff", "format", "--quiet", str(sandbox.gen)],
+    ):
+        result = subprocess.run(
+            [sys.executable, "-m", *cmd],
+            cwd=sandbox.root,
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+    _inject_generated_headers(sandbox.gen)
+
+
+@pytest.mark.parametrize("service", ["device", "alerting"])
+def test_regenerated_wrapper_matches_the_committed_one_byte_for_byte(sandbox, service):
+    sandbox.wrapper_file(service).unlink()
+
+    wrapper_generation.generate()
+    _post_process_like_generate_sdk(sandbox)
+
+    committed = (REAL_GEN / service / "services" / f"{service}.py").read_text()
+    assert sandbox.wrapper_file(service).read_text() == committed
+
+
+def test_service_without_rest_paths_gets_no_wrapper(sandbox):
+    wrapper_generation.generate()
+
+    assert not sandbox.wrapper_file("core").exists()
+
+
+def test_mixin_mounts_exactly_the_services_that_have_a_wrapper(sandbox):
+    wrapper_generation.generate()
+
+    mixin = (sandbox.package / "client_mixin.py").read_text()
+    ast.parse(mixin)
+    assert "self.device = DeviceServiceWrapper(self._transport)" in mixin
+    assert "self.alerting = AlertingServiceWrapper(self._transport)" in mixin
+    assert (
+        "from kentik_api.gen.device.services.device import DeviceServiceWrapper"
+        in mixin
+    )
+    assert "core" not in {
+        line.split("self.")[1].split(" ")[0]
+        for line in mixin.splitlines()
+        if "= " in line and "self." in line
+    }
+
+
+def test_wrapper_for_a_service_without_proto_stubs_is_rest_only(sandbox):
+    import shutil
+
+    shutil.rmtree(sandbox.gen / "device" / "pb")
+    sandbox.wrapper_file("device").unlink()
+
+    wrapper_generation.generate()
+
+    wrapper = sandbox.wrapper_file("device").read_text()
+    ast.parse(wrapper)
+    assert "call_grpc" not in wrapper
+    assert "gRPC translation for" in wrapper
+    assert "RestDeviceModule1.ListDevices(" in wrapper
+
+
+def test_discover_grpc_stubs_maps_methods_to_request_and_response_types():
+    stubs, methods = wrapper_generation._discover_grpc_stubs(
+        REAL_GEN / "device", "device"
+    )
+
+    assert any(stub_class == "DeviceServiceStub" for _, _, stub_class, _ in stubs)
+    assert methods["ListDevices"][1:] == ("ListDevicesRequest", "ListDevicesResponse")
+
+
+def test_discover_grpc_stubs_without_pb_dir_is_empty(tmp_path):
+    assert wrapper_generation._discover_grpc_stubs(tmp_path, "x") == ([], {})
+
+
+def test_discover_grpc_stubs_skips_unparseable_files(tmp_path):
+    (tmp_path / "pb").mkdir()
+    (tmp_path / "pb" / "broken_pb2_grpc.py").write_text("def (:\n")
+
+    assert wrapper_generation._discover_grpc_stubs(tmp_path, "x") == ([], {})

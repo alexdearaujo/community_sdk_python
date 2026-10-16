@@ -180,4 +180,4 @@ def test_operation_is_frozen(tmp_path: Path) -> None:
 
     op = parse_generated_rest_module(f)[0]
     with pytest.raises((AttributeError, TypeError)):
-        op.name = "changed"  # type: ignore[misc]
+        op.name = "changed"  # ty: ignore[invalid-assignment]

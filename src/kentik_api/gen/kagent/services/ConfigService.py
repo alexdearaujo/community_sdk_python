@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -93,7 +94,7 @@ def CreateConfig(
     )
 
     return (
-        CreateConfigResponse(**body)
+        attach_rate_limit(CreateConfigResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateConfigResponse.model_construct()
     )
@@ -118,7 +119,7 @@ def GetConfig(
     )
 
     return (
-        GetConfigResponse(**body)
+        attach_rate_limit(GetConfigResponse(**body), rate_limit_of(body))
         if body is not None
         else GetConfigResponse.model_construct()
     )
@@ -143,7 +144,7 @@ def DeleteConfig(
     )
 
     return (
-        DeleteConfigResponse(**body)
+        attach_rate_limit(DeleteConfigResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteConfigResponse.model_construct()
     )
@@ -172,7 +173,7 @@ def UpdateConfig(
     )
 
     return (
-        UpdateConfigResponse(**body)
+        attach_rate_limit(UpdateConfigResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateConfigResponse.model_construct()
     )

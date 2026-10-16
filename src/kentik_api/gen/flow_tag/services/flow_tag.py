@@ -3,7 +3,9 @@ from typing import List, Optional, Union, cast
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.flow_tag.services.FlowTagService as RestFlowTagModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.flow_tag import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -34,6 +36,7 @@ class FlowTagServiceWrapper:
     def search_flow_tag(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         searchlimit: Optional[int] = None,
         searchoffset: Optional[int] = None,
         searchlookupFields: Optional[List[str]] = None,
@@ -41,7 +44,7 @@ class FlowTagServiceWrapper:
         searchfieldLimit: Optional[int] = None,
     ) -> rest_models.SearchFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -60,14 +63,19 @@ class FlowTagServiceWrapper:
                 self._grpc_pb2_1.SearchFlowTagRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.SearchFlowTag, _req)
-            return rest_models.SearchFlowTagResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.SearchFlowTag, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.SearchFlowTagResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestFlowTagModule1.SearchFlowTag(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 searchlimit=searchlimit,
                 searchoffset=searchoffset,
                 searchlookupFields=searchlookupFields,
@@ -80,10 +88,13 @@ class FlowTagServiceWrapper:
             )
 
     def create_flow_tag(
-        self, *, data: rest_models.CreateFlowTagRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateFlowTagRequest,
     ) -> rest_models.CreateFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -92,23 +103,31 @@ class FlowTagServiceWrapper:
                 self._grpc_pb2_1.CreateFlowTagRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateFlowTag, _req)
-            return rest_models.CreateFlowTagResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateFlowTag, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.CreateFlowTagResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestFlowTagModule1.CreateFlowTag(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_flow_tag(self, *, flowTagid: str) -> rest_models.GetFlowTagResponse:
+    def get_flow_tag(
+        self, *, api_config_override: Optional[APIConfig] = None, flowTagid: str
+    ) -> rest_models.GetFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -117,14 +136,20 @@ class FlowTagServiceWrapper:
                 self._grpc_pb2_1.GetFlowTagRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetFlowTag, _req)
-            return rest_models.GetFlowTagResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetFlowTag, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetFlowTagResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestFlowTagModule1.GetFlowTag(
-                api_config_override=rest_transport.api_config, flowTagid=flowTagid
+                api_config_override=api_config_override or rest_transport.api_config,
+                flowTagid=flowTagid,
             )
         else:
             raise TypeError(
@@ -132,10 +157,14 @@ class FlowTagServiceWrapper:
             )
 
     def update_flow_tag(
-        self, *, flowTagid: str, data: rest_models.FlowTagServiceUpdateFlowTagBody
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        flowTagid: str,
+        data: rest_models.FlowTagServiceUpdateFlowTagBody,
     ) -> rest_models.UpdateFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -148,14 +177,19 @@ class FlowTagServiceWrapper:
                 self._grpc_pb2_1.UpdateFlowTagRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateFlowTag, _req)
-            return rest_models.UpdateFlowTagResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateFlowTag, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.UpdateFlowTagResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestFlowTagModule1.UpdateFlowTag(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 flowTagid=flowTagid,
                 data=data,
             )
@@ -164,9 +198,11 @@ class FlowTagServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_flow_tag(self, *, flowTagid: str) -> rest_models.DeleteFlowTagResponse:
+    def delete_flow_tag(
+        self, *, api_config_override: Optional[APIConfig] = None, flowTagid: str
+    ) -> rest_models.DeleteFlowTagResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for flow_tag service"
                 )
@@ -175,14 +211,20 @@ class FlowTagServiceWrapper:
                 self._grpc_pb2_1.DeleteFlowTagRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.DeleteFlowTag, _req)
-            return rest_models.DeleteFlowTagResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteFlowTag, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.DeleteFlowTagResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestFlowTagModule1.DeleteFlowTag(
-                api_config_override=rest_transport.api_config, flowTagid=flowTagid
+                api_config_override=api_config_override or rest_transport.api_config,
+                flowTagid=flowTagid,
             )
         else:
             raise TypeError(

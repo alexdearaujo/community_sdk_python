@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -44,7 +45,7 @@ def ListServiceNowConfigs(
     )
 
     return (
-        ListServiceNowConfigsResponse(**body)
+        attach_rate_limit(ListServiceNowConfigsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListServiceNowConfigsResponse.model_construct()
     )
@@ -70,7 +71,7 @@ def CreateServiceNowConfig(
     )
 
     return (
-        CreateServiceNowConfigResponse(**body)
+        attach_rate_limit(CreateServiceNowConfigResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateServiceNowConfigResponse.model_construct()
     )
@@ -95,7 +96,7 @@ def GetServiceNowConfig(
     )
 
     return (
-        GetServiceNowConfigResponse(**body)
+        attach_rate_limit(GetServiceNowConfigResponse(**body), rate_limit_of(body))
         if body is not None
         else GetServiceNowConfigResponse.model_construct()
     )
@@ -125,7 +126,7 @@ def UpdateServiceNowConfig(
     )
 
     return (
-        UpdateServiceNowConfigResponse(**body)
+        attach_rate_limit(UpdateServiceNowConfigResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateServiceNowConfigResponse.model_construct()
     )
@@ -150,7 +151,7 @@ def DeleteServiceNowConfig(
     )
 
     return (
-        DeleteServiceNowConfigResponse(**body)
+        attach_rate_limit(DeleteServiceNowConfigResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteServiceNowConfigResponse.model_construct()
     )

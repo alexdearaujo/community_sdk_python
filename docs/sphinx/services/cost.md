@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202308ListCostProvidersResponse (JSON)
         W-->>C: v202308ListCostProvidersResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202308ListCostProvidersResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202308ListCostProvidersResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -113,9 +114,11 @@ sequenceDiagram
     alt success
         API-->>W: v202308ListCostProviderSummariesResponse (JSON)
         W-->>C: v202308ListCostProviderSummariesResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -135,10 +138,9 @@ sequenceDiagram
         API-->>B: v202308ListCostProviderSummariesResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202308ListCostProviderSummariesResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -186,9 +188,11 @@ sequenceDiagram
     alt success
         API-->>W: v202308GetCostProviderSummaryResponse (JSON)
         W-->>C: v202308GetCostProviderSummaryResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -208,10 +212,9 @@ sequenceDiagram
         API-->>B: v202308GetCostProviderSummaryResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202308GetCostProviderSummaryResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

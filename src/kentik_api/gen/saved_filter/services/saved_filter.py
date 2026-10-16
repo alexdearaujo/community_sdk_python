@@ -1,9 +1,11 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.saved_filter.services.SavedFilterService as RestSavedFilterModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.saved_filter import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -32,10 +34,13 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1 = None
 
     def create_saved_filter(
-        self, *, data: rest_models.SavedFilter
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.SavedFilter,
     ) -> rest_models.CreateSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -44,23 +49,33 @@ class SavedFilterServiceWrapper:
                 self._grpc_pb2_1.CreateSavedFilterRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateSavedFilter, _req)
-            return rest_models.CreateSavedFilterResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateSavedFilter,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.CreateSavedFilterResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSavedFilterModule1.CreateSavedFilter(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_saved_filter(self, *, id: str) -> rest_models.GetSavedFilterResponse:
+    def get_saved_filter(
+        self, *, api_config_override: Optional[APIConfig] = None, id: str
+    ) -> rest_models.GetSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -69,14 +84,20 @@ class SavedFilterServiceWrapper:
                 self._grpc_pb2_1.GetSavedFilterRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetSavedFilter, _req)
-            return rest_models.GetSavedFilterResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetSavedFilter, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetSavedFilterResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSavedFilterModule1.GetSavedFilter(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
             )
         else:
             raise TypeError(
@@ -84,10 +105,14 @@ class SavedFilterServiceWrapper:
             )
 
     def update_saved_filter(
-        self, *, id: str, data: rest_models.SavedFilter
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        id: str,
+        data: rest_models.SavedFilter,
     ) -> rest_models.UpdateSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -98,23 +123,34 @@ class SavedFilterServiceWrapper:
                 self._grpc_pb2_1.UpdateSavedFilterRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateSavedFilter, _req)
-            return rest_models.UpdateSavedFilterResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateSavedFilter,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.UpdateSavedFilterResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSavedFilterModule1.UpdateSavedFilter(
-                api_config_override=rest_transport.api_config, id=id, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_saved_filter(self, *, id: str) -> rest_models.DeleteSavedFilterResponse:
+    def delete_saved_filter(
+        self, *, api_config_override: Optional[APIConfig] = None, id: str
+    ) -> rest_models.DeleteSavedFilterResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
@@ -123,14 +159,22 @@ class SavedFilterServiceWrapper:
                 self._grpc_pb2_1.DeleteSavedFilterRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.DeleteSavedFilter, _req)
-            return rest_models.DeleteSavedFilterResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteSavedFilter,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.DeleteSavedFilterResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSavedFilterModule1.DeleteSavedFilter(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
             )
         else:
             raise TypeError(
@@ -138,22 +182,27 @@ class SavedFilterServiceWrapper:
             )
 
     def list_saved_filters(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSavedFiltersResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
             _req = self._grpc_pb2_1.ListSavedFiltersRequest()
-            _resp = call_grpc(self._grpc_stub_1.ListSavedFilters, _req)
-            return rest_models.ListSavedFiltersResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListSavedFilters, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListSavedFiltersResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSavedFilterModule1.ListSavedFilters(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(
@@ -161,22 +210,29 @@ class SavedFilterServiceWrapper:
             )
 
     def list_saved_filters_all(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSavedFiltersAllResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for saved_filter service"
                 )
             _req = self._grpc_pb2_1.ListSavedFiltersAllRequest()
-            _resp = call_grpc(self._grpc_stub_1.ListSavedFiltersAll, _req)
-            return rest_models.ListSavedFiltersAllResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListSavedFiltersAll,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.ListSavedFiltersAllResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestSavedFilterModule1.ListSavedFiltersAll(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(

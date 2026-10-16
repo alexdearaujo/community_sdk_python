@@ -1,7 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Runtime architecture docs (inline Mermaid), the gen/ root README, and per-service READMEs.
 
-Also updates <!-- kentik-gen:MARKER --> blocks in docs/guides/ files so every
+Also updates <!-- kentik-gen:MARKER --> blocks in docs/sphinx/guides/ files so every
 reference to generated service names, method names, and class names stays
 current without manual edits.
 """
@@ -18,7 +18,7 @@ from ._shared import (
     parse_wrapper_methods,
 )
 
-_GUIDES_DIR = PROJECT_ROOT / "docs" / "guides"
+_GUIDES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "guides"
 
 # Top-level README for src/kentik_api/gen/. This lives inside the fully-wiped
 # gen/ tree, so it is generated here rather than hand-written: `make clean`
@@ -178,6 +178,7 @@ _GROUP_CONFIG: dict[str, str] = {
     "API Config": "foundation",
     "REST Runtime": "foundation",
     "gRPC Runtime": "foundation",
+    "Rate Limit": "foundation",
     "Error Types": "foundation",
     "Transport Base": "transport",
     "REST Transport": "transport",
@@ -209,6 +210,8 @@ def _module_group(module_name: str, source_file: Path | None = None) -> str | No
         return "REST Runtime"
     if module_name.startswith("kentik_api.core.grpc_runtime"):
         return "gRPC Runtime"
+    if module_name.startswith("kentik_api.core.rate_limit"):
+        return "Rate Limit"
     if module_name.startswith("kentik_api.errors"):
         return "Error Types"
     if module_name.startswith("kentik_api.transports.base"):
@@ -535,7 +538,7 @@ def _replace_marker(text: str, marker: str, new_content: str) -> str:
 
 
 def _update_guide_snippets() -> None:
-    """Injects current generated operation names and counts into docs/guides/ marker blocks."""
+    """Injects current generated operation names and counts into docs/sphinx/guides/ marker blocks."""
     if not SDK_OUTPUT_DIR.exists():
         return
 
@@ -661,10 +664,14 @@ sequenceDiagram
         API-->>RJ: JSON response
         RJ-->>W: parsed dict
         W-->>C: {primary["response_class"]} (Pydantic)
-    else HTTP error
+    else 401
         API-->>RJ: error JSON
-        RJ-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+        RJ-->>C: raise AuthenticationError
+    else other error status
+        API-->>RJ: error JSON
+        RJ-->>C: raise the operation's HTTPException subclass
+    else no response (unreachable or timed out)
+        RJ-->>C: raise TransportError
     end
 ```
 """,
@@ -684,18 +691,16 @@ sequenceDiagram
     C->>W: {primary["method"]}()
     W->>W: build {request_proto} proto<br/>(ParseDict for operations with a body)
     W->>CG: stub method + proto request
-    CG->>S: {stub_method} (gRPC/TLS)
+    CG->>S: {stub_method} (gRPC/TLS, deadline set by the channel)
     S->>API: serialized proto request
     alt success
         API-->>S: serialized proto response
         S-->>CG: {primary["response_class"]} proto
         CG-->>W: proto response
         W-->>C: {primary["response_class"]} (Pydantic)<br/>via MessageToDict + model_validate
-    else gRPC error (status code)
-        API-->>S: gRPC status + details
+    else gRPC error, deadline, or unreachable
         S-->>CG: raise RpcError
-        CG-->>W: map_grpc_error() -> AuthenticationError<br/>or HTTPException
-        W-->>C: raise
+        CG-->>C: map_grpc_error(): AuthenticationError,<br/>HTTPException, or TransportError
     end
 ```
 """,

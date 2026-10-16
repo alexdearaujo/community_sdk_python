@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import GetAuditEventError, ListAuditEventsError
@@ -46,7 +47,7 @@ def ListAuditEvents(
     )
 
     return (
-        ListAuditEventsResponse(**body)
+        attach_rate_limit(ListAuditEventsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListAuditEventsResponse.model_construct()
     )
@@ -74,7 +75,7 @@ def GetAuditEvent(
     )
 
     return (
-        GetAuditEventResponse(**body)
+        attach_rate_limit(GetAuditEventResponse(**body), rate_limit_of(body))
         if body is not None
         else GetAuditEventResponse.model_construct()
     )
@@ -99,7 +100,7 @@ def GetAuditEvent_2(
     )
 
     return (
-        GetAuditEventResponse(**body)
+        attach_rate_limit(GetAuditEventResponse(**body), rate_limit_of(body))
         if body is not None
         else GetAuditEventResponse.model_construct()
     )

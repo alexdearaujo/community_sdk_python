@@ -24,6 +24,8 @@ from typing import Any, Optional, Union, get_args, get_origin
 
 from pydantic import BaseModel
 
+from kentik_api.core.api_config import APIConfig
+
 from scripts.generation._shared import iter_service_dirs, service_to_pascal_case
 
 
@@ -191,6 +193,15 @@ def _sample_value_for_type(annotation: Any, name: str, seen: frozenset) -> Any:
 
     if origin is dict:
         return {}
+
+    if annotation is APIConfig:
+        # A per-call override replaces the client's config, so a usable sample
+        # needs its own credentials; `verify` stays at its safe default.
+        return APIConfig(
+            base_path="https://api.example.com",
+            auth_email="override@example.com",
+            auth_token="override-token",
+        )
 
     if isinstance(annotation, type) and issubclass(annotation, BaseModel):
         return sample_model_instance(annotation, seen)

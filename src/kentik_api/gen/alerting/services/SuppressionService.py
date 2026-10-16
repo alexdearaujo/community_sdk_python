@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import CreateError, DeleteError, GetError, ListError, ReplaceError
@@ -218,7 +219,7 @@ def Create(
     )
 
     return (
-        SuppressionServiceCreateResponse(**body)
+        attach_rate_limit(SuppressionServiceCreateResponse(**body), rate_limit_of(body))
         if body is not None
         else SuppressionServiceCreateResponse.model_construct()
     )
@@ -246,7 +247,7 @@ def List(
     )
 
     return (
-        SuppressionServiceListResponse(**body)
+        attach_rate_limit(SuppressionServiceListResponse(**body), rate_limit_of(body))
         if body is not None
         else SuppressionServiceListResponse.model_construct()
     )
@@ -271,7 +272,7 @@ def Get(
     )
 
     return (
-        SuppressionServiceGetResponse(**body)
+        attach_rate_limit(SuppressionServiceGetResponse(**body), rate_limit_of(body))
         if body is not None
         else SuppressionServiceGetResponse.model_construct()
     )
@@ -296,7 +297,7 @@ def Delete(
     )
 
     return (
-        SuppressionServiceDeleteResponse(**body)
+        attach_rate_limit(SuppressionServiceDeleteResponse(**body), rate_limit_of(body))
         if body is not None
         else SuppressionServiceDeleteResponse.model_construct()
     )
@@ -325,7 +326,9 @@ def Replace(
     )
 
     return (
-        SuppressionServiceReplaceResponse(**body)
+        attach_rate_limit(
+            SuppressionServiceReplaceResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else SuppressionServiceReplaceResponse.model_construct()
     )

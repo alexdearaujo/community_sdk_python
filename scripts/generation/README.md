@@ -14,7 +14,7 @@ package owns one concern of SDK generation.
 | [`error_package.py`](error_package.py) | Error class generation and error dispatch | `generate_service_error_package()`, `inject_service_error_handling()` |
 | [`fixup.py`](fixup.py) | Generated-code post-processing: import patching, model init rebuild, file cleanup | `fix_generated_service()` |
 | [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation | `generate()` |
-| [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams, service READMEs, and generated-example snippets injected into `docs/guides/*.md` | `generate()` |
+| [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams, service READMEs, and generated-example snippets injected into `docs/sphinx/guides/*.md` | `generate()` |
 | [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation | `EndpointDocsCollector` |
 | [`api_surface.py`](api_surface.py) | Records the public API surface to `api_surface.json`, and diffs two recordings into release notes | `generate()`, `capture()`, `diff()`, `render_markdown()` |
 | [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `INTERNAL_GEN_DIRS`, `iter_service_dirs()`, `discover_service_model_classes()`, `service_to_pascal_case()`, `RestOperation`, `parse_generated_rest_module()`, `WrapperMethod`, `parse_wrapper_methods()` |

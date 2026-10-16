@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -56,7 +57,7 @@ def ListCustomDimensions(
     )
 
     return (
-        ListCustomDimensionsResponse(**body)
+        attach_rate_limit(ListCustomDimensionsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListCustomDimensionsResponse.model_construct()
     )
@@ -81,7 +82,7 @@ def GetCustomDimensionInfo(
     )
 
     return (
-        GetCustomDimensionInfoResponse(**body)
+        attach_rate_limit(GetCustomDimensionInfoResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCustomDimensionInfoResponse.model_construct()
     )
@@ -110,7 +111,7 @@ def UpdateCustomDimension(
     )
 
     return (
-        UpdateCustomDimensionResponse(**body)
+        attach_rate_limit(UpdateCustomDimensionResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateCustomDimensionResponse.model_construct()
     )
@@ -135,7 +136,7 @@ def DeleteCustomDimension(
     )
 
     return (
-        DeleteCustomDimensionResponse(**body)
+        attach_rate_limit(DeleteCustomDimensionResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteCustomDimensionResponse.model_construct()
     )
@@ -164,7 +165,7 @@ def CreatePopulator(
     )
 
     return (
-        CreatePopulatorResponse(**body)
+        attach_rate_limit(CreatePopulatorResponse(**body), rate_limit_of(body))
         if body is not None
         else CreatePopulatorResponse.model_construct()
     )
@@ -193,7 +194,7 @@ def GetPopulator(
     )
 
     return (
-        GetPopulatorResponse(**body)
+        attach_rate_limit(GetPopulatorResponse(**body), rate_limit_of(body))
         if body is not None
         else GetPopulatorResponse.model_construct()
     )
@@ -223,7 +224,7 @@ def UpdatePopulator(
     )
 
     return (
-        UpdatePopulatorResponse(**body)
+        attach_rate_limit(UpdatePopulatorResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdatePopulatorResponse.model_construct()
     )
@@ -251,7 +252,7 @@ def DeletePopulator(
     )
 
     return (
-        DeletePopulatorResponse(**body)
+        attach_rate_limit(DeletePopulatorResponse(**body), rate_limit_of(body))
         if body is not None
         else DeletePopulatorResponse.model_construct()
     )
@@ -282,7 +283,7 @@ def GetPopulatorField(
     )
 
     return (
-        GetPopulatorFieldResponse(**body)
+        attach_rate_limit(GetPopulatorFieldResponse(**body), rate_limit_of(body))
         if body is not None
         else GetPopulatorFieldResponse.model_construct()
     )
@@ -308,7 +309,7 @@ def CreateCustomDimension(
     )
 
     return (
-        CreateCustomDimensionResponse(**body)
+        attach_rate_limit(CreateCustomDimensionResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateCustomDimensionResponse.model_construct()
     )

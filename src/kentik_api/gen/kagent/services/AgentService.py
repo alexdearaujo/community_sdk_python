@@ -4,6 +4,7 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -105,7 +106,7 @@ def ListAgents(
     )
 
     return (
-        ListAgentsResponse(**body)
+        attach_rate_limit(ListAgentsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListAgentsResponse.model_construct()
     )
@@ -131,7 +132,7 @@ def CreateAgent(
     )
 
     return (
-        CreateAgentResponse(**body)
+        attach_rate_limit(CreateAgentResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateAgentResponse.model_construct()
     )
@@ -156,7 +157,7 @@ def Authorize(
     )
 
     return (
-        AuthorizeResponse(**body)
+        attach_rate_limit(AuthorizeResponse(**body), rate_limit_of(body))
         if body is not None
         else AuthorizeResponse.model_construct()
     )
@@ -184,7 +185,7 @@ def GenerateInstallCommands(
     )
 
     return (
-        GenerateInstallCommandsResponse(**body)
+        attach_rate_limit(GenerateInstallCommandsResponse(**body), rate_limit_of(body))
         if body is not None
         else GenerateInstallCommandsResponse.model_construct()
     )
@@ -212,7 +213,7 @@ def GetAgent(
     )
 
     return (
-        GetAgentResponse(**body)
+        attach_rate_limit(GetAgentResponse(**body), rate_limit_of(body))
         if body is not None
         else GetAgentResponse.model_construct()
     )
@@ -240,7 +241,7 @@ def DeleteAgent(
     )
 
     return (
-        DeleteAgentResponse(**body)
+        attach_rate_limit(DeleteAgentResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteAgentResponse.model_construct()
     )
@@ -270,7 +271,7 @@ def UpdateAgent(
     )
 
     return (
-        UpdateAgentResponse(**body)
+        attach_rate_limit(UpdateAgentResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateAgentResponse.model_construct()
     )

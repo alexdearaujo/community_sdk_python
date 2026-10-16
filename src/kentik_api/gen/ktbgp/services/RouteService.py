@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -82,7 +83,7 @@ def RouteService_Announce(
     )
 
     return (
-        RouteServiceAnnounceResponse(**body)
+        attach_rate_limit(RouteServiceAnnounceResponse(**body), rate_limit_of(body))
         if body is not None
         else RouteServiceAnnounceResponse.model_construct()
     )
@@ -108,7 +109,7 @@ def RouteService_List(
     )
 
     return (
-        RouteServiceListResponse(**body)
+        attach_rate_limit(RouteServiceListResponse(**body), rate_limit_of(body))
         if body is not None
         else RouteServiceListResponse.model_construct()
     )
@@ -136,7 +137,7 @@ def RouteService_Withdraw(
     )
 
     return (
-        RouteServiceWithdrawResponse(**body)
+        attach_rate_limit(RouteServiceWithdrawResponse(**body), rate_limit_of(body))
         if body is not None
         else RouteServiceWithdrawResponse.model_construct()
     )

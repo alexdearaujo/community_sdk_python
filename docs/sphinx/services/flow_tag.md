@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202404alpha1SearchFlowTagResponse (JSON)
         W-->>C: v202404alpha1SearchFlowTagResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202404alpha1SearchFlowTagResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202404alpha1SearchFlowTagResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -123,9 +124,11 @@ sequenceDiagram
     alt success
         API-->>W: v202404alpha1CreateFlowTagResponse (JSON)
         W-->>C: v202404alpha1CreateFlowTagResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -145,10 +148,9 @@ sequenceDiagram
         API-->>B: v202404alpha1CreateFlowTagResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202404alpha1CreateFlowTagResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -198,9 +200,11 @@ sequenceDiagram
     alt success
         API-->>W: v202404alpha1GetFlowTagResponse (JSON)
         W-->>C: v202404alpha1GetFlowTagResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -220,10 +224,9 @@ sequenceDiagram
         API-->>B: v202404alpha1GetFlowTagResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202404alpha1GetFlowTagResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -273,9 +276,11 @@ sequenceDiagram
     alt success
         API-->>W: v202404alpha1UpdateFlowTagResponse (JSON)
         W-->>C: v202404alpha1UpdateFlowTagResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -295,10 +300,9 @@ sequenceDiagram
         API-->>B: v202404alpha1UpdateFlowTagResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202404alpha1UpdateFlowTagResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -350,9 +354,11 @@ sequenceDiagram
     alt success
         API-->>W: v202404alpha1DeleteFlowTagResponse (JSON)
         W-->>C: v202404alpha1DeleteFlowTagResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -372,10 +378,9 @@ sequenceDiagram
         API-->>B: v202404alpha1DeleteFlowTagResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202404alpha1DeleteFlowTagResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

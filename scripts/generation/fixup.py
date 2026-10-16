@@ -94,7 +94,6 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         _fix_import_aliases,
         _fix_pydantic_construct,
         _fix_path_parameters,
-        _fix_auth_header,
         _inject_data_body,
         _fix_typing_wildcard,
         _fix_list_collision,
@@ -170,15 +169,6 @@ def _fix_path_parameters(content: str) -> str:
         lambda m: re.sub(
             r"\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\}", r"{\1\2}", m.group(0)
         ),
-        content,
-    )
-
-
-def _fix_auth_header(content: str) -> str:
-    """Replaces Bearer token auth with Kentik's email/token header scheme."""
-    return re.sub(
-        r'["\']Authorization["\']:\s*f["\']Bearer\s*\{[^}]+\}["\'],?',
-        r'"X-CH-Auth-Email": api_config.auth_email,\n        "X-CH-Auth-API-Token": api_config.auth_token,',
         content,
     )
 

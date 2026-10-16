@@ -4,6 +4,7 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -105,7 +106,7 @@ def CapabilityReleaseService_GetCapabilityRelease(
     )
 
     return (
-        GetCapabilityReleaseResponse(**body)
+        attach_rate_limit(GetCapabilityReleaseResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCapabilityReleaseResponse.model_construct()
     )
@@ -144,7 +145,9 @@ def CapabilityReleaseService_GetCapabilityLatestReleases(
     )
 
     return (
-        GetCapabilityLatestReleasesResponse(**body)
+        attach_rate_limit(
+            GetCapabilityLatestReleasesResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else GetCapabilityLatestReleasesResponse.model_construct()
     )
@@ -171,7 +174,9 @@ def CapabilityReleaseService_GetCapabilitySupportedDistros(
     )
 
     return (
-        GetCapabilitySupportedDistrosResponse(**body)
+        attach_rate_limit(
+            GetCapabilitySupportedDistrosResponse(**body), rate_limit_of(body)
+        )
         if body is not None
         else GetCapabilitySupportedDistrosResponse.model_construct()
     )

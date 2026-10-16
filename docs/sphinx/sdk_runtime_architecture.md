@@ -41,12 +41,16 @@ flowchart TB
         Auth_Credentials["Auth Credentials"]
         Error_Types["Error Types"]
         REST_Runtime["REST Runtime"]
+        Rate_Limit["Rate Limit"]
         gRPC_Runtime["gRPC Runtime"]
     end
 
     API_Config --> Error_Types
+    API_Config --> Rate_Limit
+    Client_API --> API_Config
     Client_API --> Auth_Credentials
     Client_API --> Client_Mixin
+    Client_API --> Error_Types
     Client_API --> REST_Transport
     Client_API --> gRPC_Transport
     Client_Mixin -->|"x35"| Generated_Service_Wrappers
@@ -56,17 +60,27 @@ flowchart TB
     Generated_REST_Services -->|"x51"| Generated_Error_Classes
     Generated_REST_Services -->|"x51"| Generated_Models
     Generated_REST_Services -->|"x51"| REST_Runtime
+    Generated_REST_Services -->|"x51"| Rate_Limit
+    Generated_Service_Wrappers -->|"x35"| API_Config
     Generated_Service_Wrappers -->|"x51"| Generated_REST_Services
     Generated_Service_Wrappers -->|"x35"| REST_Transport
+    Generated_Service_Wrappers -->|"x35"| Rate_Limit
     Generated_Service_Wrappers -->|"x35"| gRPC_Runtime
     Generated_Service_Wrappers -->|"x35"| gRPC_Transport
     REST_Runtime --> API_Config
+    REST_Runtime --> Auth_Credentials
     REST_Runtime --> Error_Types
+    REST_Runtime --> Rate_Limit
     REST_Transport --> API_Config
     REST_Transport --> Auth_Credentials
+    REST_Transport --> Rate_Limit
     REST_Transport --> Transport_Base
+    gRPC_Runtime --> API_Config
     gRPC_Runtime --> Error_Types
+    gRPC_Runtime --> Rate_Limit
+    gRPC_Transport --> API_Config
     gRPC_Transport --> Auth_Credentials
+    gRPC_Transport --> Rate_Limit
     gRPC_Transport --> Transport_Base
 ```
 

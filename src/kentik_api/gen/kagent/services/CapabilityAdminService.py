@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -93,7 +94,7 @@ def CapabilityAdminService_ListCapabilities(
     )
 
     return (
-        ListCapabilitiesResponse(**body)
+        attach_rate_limit(ListCapabilitiesResponse(**body), rate_limit_of(body))
         if body is not None
         else ListCapabilitiesResponse.model_construct()
     )
@@ -119,7 +120,7 @@ def CapabilityAdminService_CreateCapability(
     )
 
     return (
-        CreateCapabilityResponse(**body)
+        attach_rate_limit(CreateCapabilityResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateCapabilityResponse.model_construct()
     )
@@ -144,7 +145,7 @@ def CapabilityAdminService_GetCapability(
     )
 
     return (
-        GetCapabilityResponse(**body)
+        attach_rate_limit(GetCapabilityResponse(**body), rate_limit_of(body))
         if body is not None
         else GetCapabilityResponse.model_construct()
     )
@@ -169,7 +170,7 @@ def CapabilityAdminService_DeleteCapability(
     )
 
     return (
-        DeleteCapabilityResponse(**body)
+        attach_rate_limit(DeleteCapabilityResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteCapabilityResponse.model_construct()
     )
@@ -198,7 +199,7 @@ def CapabilityAdminService_UpdateCapability(
     )
 
     return (
-        UpdateCapabilityResponse(**body)
+        attach_rate_limit(UpdateCapabilityResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateCapabilityResponse.model_construct()
     )

@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -112,7 +113,7 @@ def GetResultsForTests(
     )
 
     return (
-        GetResultsForTestsResponse(**body)
+        attach_rate_limit(GetResultsForTestsResponse(**body), rate_limit_of(body))
         if body is not None
         else GetResultsForTestsResponse.model_construct()
     )
@@ -140,7 +141,7 @@ def GetResultsForTestsCsv(
     )
 
     return (
-        GetResultsForTestsCsvResponse(**body)
+        attach_rate_limit(GetResultsForTestsCsvResponse(**body), rate_limit_of(body))
         if body is not None
         else GetResultsForTestsCsvResponse.model_construct()
     )
@@ -166,7 +167,7 @@ def GetTraceForTest(
     )
 
     return (
-        GetTraceForTestResponse(**body)
+        attach_rate_limit(GetTraceForTestResponse(**body), rate_limit_of(body))
         if body is not None
         else GetTraceForTestResponse.model_construct()
     )

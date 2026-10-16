@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import CreateChatSessionError, GetChatSessionError, UpdateChatSessionError
@@ -40,7 +41,7 @@ def CreateChatSession(
     )
 
     return (
-        CreateChatSessionResponse(**body)
+        attach_rate_limit(CreateChatSessionResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateChatSessionResponse.model_construct()
     )
@@ -66,7 +67,7 @@ def UpdateChatSession(
     )
 
     return (
-        UpdateChatSessionResponse(**body)
+        attach_rate_limit(UpdateChatSessionResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateChatSessionResponse.model_construct()
     )
@@ -91,7 +92,7 @@ def GetChatSession(
     )
 
     return (
-        GetChatSessionResponse(**body)
+        attach_rate_limit(GetChatSessionResponse(**body), rate_limit_of(body))
         if body is not None
         else GetChatSessionResponse.model_construct()
     )

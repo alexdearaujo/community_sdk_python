@@ -4,9 +4,10 @@
 
 Hand-written. Not touched by [`make generate`](../../../Makefile).
 
-`KentikCredentials` is the one place that turns a Kentik email and API
-token into the two transport-specific auth shapes the SDK needs: REST
-headers and a gRPC auth plugin.
+This module is the one definition of Kentik's auth scheme: the
+`X-CH-Auth-Email` and `X-CH-Auth-API-Token` keys. REST sends them as
+headers and gRPC as call metadata (lowercased, as gRPC requires). Nothing
+else in the SDK spells those names.
 
 ## `KentikCredentials`
 
@@ -16,10 +17,10 @@ from kentik_api.auth.credentials import KentikCredentials
 creds = KentikCredentials(email="you@example.com", api_token="...")
 ```
 
-| Method | Returns | Used by |
+| Name | Returns | Used by |
 | --- | --- | --- |
-| `get_rest_headers()` | A `dict` with `X-CH-Auth-Email`, `X-CH-Auth-API-Token`, and `Content-Type`. | Not currently called anywhere in the SDK — [`RestTransport`](../transports/rest_client.py) reads `.email`/`.api_token` off `KentikCredentials` directly, and [`request_json()`](../core/rest_runtime.py) rebuilds the header dict inline. |
-| `get_grpc_plugin()` | A `grpc.AuthMetadataPlugin` that injects the same two headers as gRPC call metadata. | [`GrpcTransport`](../transports/grpc_client.py) |
+| `auth_headers(email, api_token)` | A `dict` with `X-CH-Auth-Email` and `X-CH-Auth-API-Token`. | [`request_json()`](../core/rest_runtime.py), on every REST call |
+| `KentikCredentials.get_grpc_plugin()` | A `grpc.AuthMetadataPlugin` that sends the same two keys, lowercased, as call metadata. | [`GrpcTransport`](../transports/grpc_client.py) |
 
 ## Shape
 
@@ -29,6 +30,7 @@ One credential pair becomes the two transport-specific auth shapes:
 flowchart LR
     In["email + api_token"] --> KC[KentikCredentials]
     KC -->|.email / .api_token| RT[RestTransport]
+    RT -->|APIConfig| RJ["request_json() via auth_headers()"]
     KC -->|get_grpc_plugin| P["grpc.AuthMetadataPlugin"]
     P --> GT[GrpcTransport]
 
@@ -36,9 +38,10 @@ flowchart LR
 
 ## Where credentials actually get read
 
-`KentikCredentials` only holds and formats values passed to it. Loading
-`KENTIK_EMAIL` / `KENTIK_API_TOKEN` from a project-root `.env` file
-happens in [`KentikAPI`](../client.py), the SDK's public entrypoint, not
-here. See "Auth/config" in the repository root
-[CLAUDE.md](../../../CLAUDE.md) for the full precedence rules (explicit
-constructor args win over `.env`).
+`KentikCredentials` only holds and formats values passed to it.
+[`KentikAPI`](../client.py), the SDK's public entrypoint, resolves them:
+explicit constructor arguments first, then the `KENTIK_EMAIL` /
+`KENTIK_API_TOKEN` environment variables, then the `env_file` argument
+(`.env` by default, `None` to skip). The file is read into memory, never
+into `os.environ`. See
+[Authentication](../../../docs/sphinx/authentication.md) for the full rules.

@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202501alpha1CreateSavedFilterResponse (JSON)
         W-->>C: v202501alpha1CreateSavedFilterResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202501alpha1CreateSavedFilterResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202501alpha1CreateSavedFilterResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -121,9 +122,11 @@ sequenceDiagram
     alt success
         API-->>W: v202501alpha1GetSavedFilterResponse (JSON)
         W-->>C: v202501alpha1GetSavedFilterResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -143,10 +146,9 @@ sequenceDiagram
         API-->>B: v202501alpha1GetSavedFilterResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202501alpha1GetSavedFilterResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -196,9 +198,11 @@ sequenceDiagram
     alt success
         API-->>W: v202501alpha1UpdateSavedFilterResponse (JSON)
         W-->>C: v202501alpha1UpdateSavedFilterResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -218,10 +222,9 @@ sequenceDiagram
         API-->>B: v202501alpha1UpdateSavedFilterResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202501alpha1UpdateSavedFilterResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -273,9 +276,11 @@ sequenceDiagram
     alt success
         API-->>W: v202501alpha1DeleteSavedFilterResponse (JSON)
         W-->>C: v202501alpha1DeleteSavedFilterResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -295,10 +300,9 @@ sequenceDiagram
         API-->>B: v202501alpha1DeleteSavedFilterResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202501alpha1DeleteSavedFilterResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -348,9 +352,11 @@ sequenceDiagram
     alt success
         API-->>W: v202501alpha1ListSavedFiltersResponse (JSON)
         W-->>C: v202501alpha1ListSavedFiltersResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -370,10 +376,9 @@ sequenceDiagram
         API-->>B: v202501alpha1ListSavedFiltersResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202501alpha1ListSavedFiltersResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -415,9 +420,11 @@ sequenceDiagram
     alt success
         API-->>W: v202501alpha1ListSavedFiltersAllResponse (JSON)
         W-->>C: v202501alpha1ListSavedFiltersAllResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -437,10 +444,9 @@ sequenceDiagram
         API-->>B: v202501alpha1ListSavedFiltersAllResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202501alpha1ListSavedFiltersAllResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

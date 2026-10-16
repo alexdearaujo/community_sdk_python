@@ -18,6 +18,7 @@ classDiagram
         +str method
         +str path
         +dict details
+        +str grpc_status_code
     }
     class GeneratedOperationError {
         <<generated>>
@@ -37,10 +38,14 @@ service generates under `gen/<service>/error/`.
 | Class | Raised when |
 | --- | --- |
 | `KentikError` | Base class for every SDK-specific error. Catch this to handle any SDK failure. |
-| `ConfigurationError` | Reserved for an invalid `APIConfig` value; defined for callers to catch, but not currently raised anywhere in the SDK. |
-| `AuthenticationError` | gRPC only: `map_grpc_error()` raises this for a gRPC `UNAUTHENTICATED` status. A REST 401 raises a generated `HTTPException` subclass instead (see below), not `AuthenticationError`. |
-| `TransportError` | The transport layer fails before a response arrives (raised by [`request_json()`](../core/rest_runtime.py) on an `httpx.RequestError`, or by `call_grpc()` on a non-`RpcError` exception). |
-| `HTTPException` | An HTTP response doesn't match the operation's expected status. Carries `status_code`, `message`, `method`, `path`, and a `details` dict (parsed from the response body when possible). |
+| `ConfigurationError` | `KentikAPI(...)` or `APIConfig(...)` gets missing credentials, an unknown region or protocol, or a non-positive timeout. |
+| `AuthenticationError` | Credentials are rejected on either transport: [`request_json()`](../core/rest_runtime.py) raises it for a REST 401, ahead of the generated error class, and `map_grpc_error()` for a gRPC `UNAUTHENTICATED` status. |
+| `TransportError` | No response arrived: `request_json()` on an `httpx.RequestError`, or `map_grpc_error()` for `CANCELLED`, `DEADLINE_EXCEEDED`, `UNAVAILABLE`, or an unrecognized code. |
+| `HTTPException` | The API responded with a fault. Carries `status_code`, `message`, `method`, `path`, a `details` dict (parsed from the response body when possible), and on gRPC the verbatim `grpc_status_code`. |
+
+Every class inherits a `rate_limit` attribute from `KentikError`. The shared
+runtimes set it to the quota the API reported on the failing call, or leave it
+`None` when no response arrived.
 
 ## Generated per-operation error classes
 

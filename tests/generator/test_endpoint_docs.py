@@ -243,3 +243,263 @@ def test_extract_propagates_failure_instead_of_swallowing_it(tmp_path: Path):
 
     with pytest.raises(Exception):
         collector.extract("broken_service", unparseable)
+
+
+# --- end to end, against a sandbox copy of the committed tree -----------------
+
+import json  # noqa: E402
+
+
+_REPO = Path(__file__).resolve().parents[2]
+_COMMITTED_PAGES = _REPO / "docs" / "sphinx" / "services"
+
+_DEFAULT_ERROR = {
+    "description": "An unexpected error response.",
+    "content": {
+        "application/json": {"schema": {"$ref": "#/components/schemas/rpcStatus"}}
+    },
+}
+
+
+def _ok(schema: str) -> dict:
+    return {
+        "description": "A successful response.",
+        "content": {
+            "application/json": {"schema": {"$ref": f"#/components/schemas/{schema}"}}
+        },
+    }
+
+
+# Three device operations rebuilt from what the committed page shows of the real
+# schema, so the rendered sections can be compared with it exactly.
+_DEVICE_SWAGGER = {
+    "openapi": "3.0.1",
+    "tags": [{"name": "DeviceService"}],
+    "paths": {
+        "/device/v202504beta2/device": {
+            "get": {
+                "operationId": "ListDevices",
+                "summary": "List all devices.",
+                "description": "Returns list of configured devices. Use the 'view' parameter to control response detail: FULL (default), BASIC (id, name, status), or ID_ONLY (id only). See [About Devices](https://kb.kentik.com/v4/Cb01.htm).",
+                "parameters": [
+                    {
+                        "name": "query.noCustomColumns",
+                        "in": "query",
+                        "schema": {"type": "boolean"},
+                    },
+                    {"name": "view", "in": "query", "schema": {"type": "string"}},
+                ],
+                "responses": {
+                    "200": _ok("v202504beta2ListDevicesResponse"),
+                    "default": _DEFAULT_ERROR,
+                },
+            },
+            "post": {
+                "operationId": "CreateDevice",
+                "summary": "Configure a new device.",
+                "description": "Create configuration for a new device. Returns the newly created configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).",
+                "requestBody": {
+                    "required": True,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/v202504beta2CreateDeviceRequest"
+                            }
+                        }
+                    },
+                },
+                "responses": {
+                    "200": _ok("v202504beta2CreateDeviceResponse"),
+                    "default": _DEFAULT_ERROR,
+                },
+            },
+        },
+        "/device/v202504beta2/device/{device.id}": {
+            "get": {
+                "operationId": "GetDevice",
+                "summary": "Retrieve configuration of a device.",
+                "description": "Returns configuration of a device specified by ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).",
+                "parameters": [
+                    {
+                        "name": "device.id",
+                        "in": "path",
+                        "required": True,
+                        "schema": {"type": "string"},
+                    },
+                    {
+                        "name": "query.noCustomColumns",
+                        "in": "query",
+                        "schema": {"type": "boolean"},
+                    },
+                ],
+                "responses": {
+                    "200": _ok("v202504beta2GetDeviceResponse"),
+                    "default": _DEFAULT_ERROR,
+                },
+            }
+        },
+    },
+}
+
+
+def _alerting_swagger(path: str, tag: str) -> dict:
+    return {
+        "openapi": "3.0.1",
+        "tags": [{"name": tag}],
+        "paths": {
+            path: {
+                "post": {
+                    "operationId": "List",
+                    "summary": f"{tag} list.",
+                    "responses": {
+                        "200": _ok("SomeResponse"),
+                        "default": _DEFAULT_ERROR,
+                    },
+                }
+            }
+        },
+    }
+
+
+def _write(tmp_path: Path, name: str, swagger: dict) -> Path:
+    path = tmp_path / "swagger" / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(swagger))
+    return path
+
+
+def _section(page: str, heading: str) -> str:
+    """One endpoint section, at whatever level it renders.
+
+    Single-tag services use `###` and `---` separators; multi-tag services nest
+    endpoints under a tag heading at `####` with no separator. So a section ends
+    at a separator or at the next heading of the same or higher level.
+    """
+    lines = page.splitlines(keepends=True)
+    start = next(
+        i for i, line in enumerate(lines) if line.lstrip("#") == heading.lstrip("#")
+    )
+    level = len(lines[start]) - len(lines[start].lstrip("#"))
+    end = len(lines)
+    in_fence = False
+    for i in range(start + 1, len(lines)):
+        if lines[i].startswith("```"):
+            in_fence = not in_fence
+        if in_fence:
+            continue  # a `#` comment in an example is not a heading
+        hashes = len(lines[i]) - len(lines[i].lstrip("#"))
+        if lines[i] == "---\n" or 0 < hashes <= level:
+            end = i
+            break
+    return "".join(lines[start:end]).rstrip("\n")
+
+
+def _without_provenance(page: str) -> str:
+    # The header names the writer relative to PROJECT_ROOT, which the sandbox moves.
+    return page.split("\n", 1)[1]
+
+
+def _model_directives(page: str) -> set[str]:
+    return {line for line in page.splitlines() if line.startswith(".. auto")}
+
+
+@pytest.fixture
+def rendered(sandbox, tmp_path) -> Path:
+    collector = EndpointDocsCollector()
+    collector.extract("device", _write(tmp_path, "device.json", _DEVICE_SWAGGER))
+    # Two files reusing the operationId `List`, as alerting's real schema does.
+    collector.extract(
+        "alerting",
+        _write(
+            tmp_path,
+            "ack.json",
+            _alerting_swagger("/v202505/alerts/ack/auto/list", "AlertAutoAckService"),
+        ),
+    )
+    collector.extract(
+        "alerting",
+        _write(
+            tmp_path,
+            "alerts.json",
+            _alerting_swagger("/v202505/alerts", "AlertService"),
+        ),
+    )
+    # A swagger file with no operations contributes no section at all.
+    collector.extract(
+        "alerting", _write(tmp_path, "empty.json", {"openapi": "3.0.1", "paths": {}})
+    )
+    stale = sandbox.docs / "services" / "retired_service.md"
+    stale.parent.mkdir(parents=True, exist_ok=True)
+    stale.write_text("left over from a service that no longer exists")
+
+    collector.render()
+    return sandbox.docs / "services"
+
+
+@pytest.mark.parametrize(
+    "heading",
+    [
+        "### `GET` `/device/v202504beta2/device`\n",
+        "### `POST` `/device/v202504beta2/device`\n",
+        "### `GET` `/device/v202504beta2/device/{device.id}`\n",
+    ],
+)
+def test_endpoint_sections_match_the_committed_page_exactly(rendered, heading):
+    produced = (rendered / "device.md").read_text()
+    committed = (_COMMITTED_PAGES / "device.md").read_text()
+
+    assert _section(produced, heading) == _section(committed, heading)
+
+
+def test_every_model_gets_the_same_directive_as_the_committed_page(rendered):
+    # The relationship diagram in this section depends on which operations the
+    # swagger declares, so compare the per-model directives, which do not.
+    produced = (rendered / "device.md").read_text()
+    committed = (_COMMITTED_PAGES / "device.md").read_text()
+
+    assert _model_directives(produced) == _model_directives(committed)
+
+
+def test_enum_models_use_autoclass_and_pydantic_models_use_autopydantic(rendered):
+    page = (rendered / "device.md").read_text()
+
+    assert ".. autoclass:: kentik_api.gen.device.models.DeviceView" in page
+    assert (
+        ".. autopydantic_model:: kentik_api.gen.device.models.CreateDeviceRequest"
+        in page
+    )
+
+
+def test_service_without_endpoints_matches_the_committed_page(rendered):
+    produced = (rendered / "core.md").read_text()
+
+    assert _without_provenance(produced) == _without_provenance(
+        (_COMMITTED_PAGES / "core.md").read_text()
+    )
+
+
+def test_reused_operation_ids_resolve_to_the_right_wrapper_method(rendered):
+    page = (rendered / "alerting.md").read_text()
+
+    ack = _section(page, "### `POST` `/v202505/alerts/ack/auto/list`\n")
+    alerts = _section(page, "### `POST` `/v202505/alerts`\n")
+    assert "client.alerting.list(" in ack
+    assert "client.alerting.alert_list(" in alerts
+    assert "alert_list" not in ack
+
+
+def test_render_removes_pages_for_services_that_no_longer_exist(rendered):
+    assert not (rendered / "retired_service.md").exists()
+    assert {p.stem for p in rendered.glob("*.md")} >= {
+        "device",
+        "alerting",
+        "core",
+        "index",
+    }
+
+
+def test_services_index_lists_every_sandbox_service(rendered):
+    index = (rendered / "index.md").read_text()
+
+    for service in ("alerting", "core", "device"):
+        assert f"\n{service}\n" in index

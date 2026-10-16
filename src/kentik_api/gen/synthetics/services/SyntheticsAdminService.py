@@ -4,6 +4,7 @@
 from typing import Any, Dict, List, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -125,7 +126,7 @@ def ListAgentAlerts(
     )
 
     return (
-        ListAgentAlertsResponse(**body)
+        attach_rate_limit(ListAgentAlertsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListAgentAlertsResponse.model_construct()
     )
@@ -151,7 +152,7 @@ def CreateAgentAlert(
     )
 
     return (
-        CreateAgentAlertResponse(**body)
+        attach_rate_limit(CreateAgentAlertResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateAgentAlertResponse.model_construct()
     )
@@ -176,7 +177,7 @@ def GetAgentAlert(
     )
 
     return (
-        GetAgentAlertResponse(**body)
+        attach_rate_limit(GetAgentAlertResponse(**body), rate_limit_of(body))
         if body is not None
         else GetAgentAlertResponse.model_construct()
     )
@@ -205,7 +206,7 @@ def UpdateAgentAlert(
     )
 
     return (
-        UpdateAgentAlertResponse(**body)
+        attach_rate_limit(UpdateAgentAlertResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateAgentAlertResponse.model_construct()
     )
@@ -230,7 +231,7 @@ def DeleteAgentAlert(
     )
 
     return (
-        DeleteAgentAlertResponse(**body)
+        attach_rate_limit(DeleteAgentAlertResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteAgentAlertResponse.model_construct()
     )
@@ -253,7 +254,7 @@ def ListAgents(api_config_override: Optional[APIConfig] = None) -> ListAgentsRes
     )
 
     return (
-        ListAgentsResponse(**body)
+        attach_rate_limit(ListAgentsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListAgentsResponse.model_construct()
     )
@@ -278,7 +279,7 @@ def GetAgent(
     )
 
     return (
-        GetAgentResponse(**body)
+        attach_rate_limit(GetAgentResponse(**body), rate_limit_of(body))
         if body is not None
         else GetAgentResponse.model_construct()
     )
@@ -307,7 +308,7 @@ def UpdateAgent(
     )
 
     return (
-        UpdateAgentResponse(**body)
+        attach_rate_limit(UpdateAgentResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateAgentResponse.model_construct()
     )
@@ -332,7 +333,7 @@ def DeleteAgent(
     )
 
     return (
-        DeleteAgentResponse(**body)
+        attach_rate_limit(DeleteAgentResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteAgentResponse.model_construct()
     )
@@ -355,7 +356,7 @@ def ListTests(api_config_override: Optional[APIConfig] = None) -> ListTestsRespo
     )
 
     return (
-        ListTestsResponse(**body)
+        attach_rate_limit(ListTestsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListTestsResponse.model_construct()
     )
@@ -381,7 +382,7 @@ def CreateTest(
     )
 
     return (
-        CreateTestResponse(**body)
+        attach_rate_limit(CreateTestResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateTestResponse.model_construct()
     )
@@ -406,7 +407,7 @@ def GetTest(
     )
 
     return (
-        GetTestResponse(**body)
+        attach_rate_limit(GetTestResponse(**body), rate_limit_of(body))
         if body is not None
         else GetTestResponse.model_construct()
     )
@@ -435,7 +436,7 @@ def UpdateTest(
     )
 
     return (
-        UpdateTestResponse(**body)
+        attach_rate_limit(UpdateTestResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateTestResponse.model_construct()
     )
@@ -460,7 +461,7 @@ def DeleteTest(
     )
 
     return (
-        DeleteTestResponse(**body)
+        attach_rate_limit(DeleteTestResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteTestResponse.model_construct()
     )
@@ -489,7 +490,7 @@ def SetTestStatus(
     )
 
     return (
-        SetTestStatusResponse(**body)
+        attach_rate_limit(SetTestStatusResponse(**body), rate_limit_of(body))
         if body is not None
         else SetTestStatusResponse.model_construct()
     )

@@ -1,21 +1,35 @@
 <!--
 Sync Impact Report
-Version change: 1.2.0 → 1.2.1
-Rationale: Resolved the "Known drift" TODO the v1.1.0/v1.2.0 text had left
-under "Architecture & Generation Pipeline": verified current code and
-rewrote the gRPC bullet with the actual, fully-implemented behavior (two
-distinct NotImplementedError cases — missing proto companions vs. no
-matching gRPC method name — not one), replacing the stale "intentionally a
-stub" claim this constitution had flagged for correction. CLAUDE.md and
-src/kentik_api/gen/README.md's generator template
-(scripts/generation/docs_rendering.py) corrected in lockstep, plus a new
-tests/e2e/test_endpoints_e2e_grpc.py (`make test-e2e-grpc`) added as the
-gRPC transport's end-to-end coverage layer.
-Modified principles: none (Architecture & Generation Pipeline bullet
-reworded for accuracy, not the dual-protocol requirement itself)
-Added sections: none (existing bullet reworded, not replaced)
+Version change: 1.2.1 → 1.3.0
+Rationale: Principle IV assumed every declared response status would be
+observed through a generated per-operation error class, because that was
+the only dispatch path when the principle was written. Feature 003
+(specs/003-harden-runtime-and-ci/) establishes that some statuses are
+better handled in the shared runtime before per-operation dispatch: a 401
+must raise AuthenticationError on both transports, and routing that in
+`request_json()` keeps all 35 generated error packages byte-identical
+(Principle II). Under the previous wording, a suite updated to assert the
+new runtime behavior could be read as violating Principle IV, and the
+tempting "fix" would be to narrow the suite instead. Principle IV is
+therefore expanded to state that coverage means asserting the SDK's actual
+observable behavior for every declared status, whichever layer produces
+it, and to add an explicit anti-narrowing rule. No principle is removed or
+redefined, so this is MINOR rather than MAJOR.
+Modified principles: IV (materially expanded, not redefined)
+Added sections: none
 Removed sections: n/a
+Also in this revision: replaced four em dashes with ordinary punctuation, to
+match the repository's writing-style rule. Wording only, no meaning changed;
+folded into this MINOR bump rather than issued as a separate PATCH because
+1.3.0 is not yet committed.
 Deferred TODOs: none
+Prior report (1.2.0 → 1.2.1, retained for history): resolved the "Known
+drift" TODO under "Architecture & Generation Pipeline" by rewriting the
+gRPC bullet with the actual, fully-implemented behavior (two distinct
+NotImplementedError cases, not one), replacing the stale "intentionally a
+stub" claim. CLAUDE.md and src/kentik_api/gen/README.md's generator
+template corrected in lockstep, plus a new
+tests/e2e/test_endpoints_e2e_grpc.py (`make test-e2e-grpc`).
 -->
 
 # Kentik Community Python SDK Constitution
@@ -66,6 +80,23 @@ every time the schema grows or `gen/` is regenerated, not a one-time task.
 Incomplete endpoint or option coverage is a bug in the test suite or the
 generator, not an acceptable gap.
 
+Coverage of a status code means asserting the **SDK's actual observable
+behavior** for that status, not asserting that a particular layer produced it.
+A status MAY be handled in the shared runtime before per-operation dispatch,
+in which case the generated per-operation error class never sees it and the
+suite MUST assert the runtime's behavior instead. Handling a cross-cutting
+status once in the runtime is the Principle II answer and MUST NOT be read as
+a coverage gap. What is forbidden is the status going unasserted.
+
+A suite MUST NOT be narrowed, skipped, parameterized away, or made
+status-agnostic in order to make a change pass. When a runtime change shifts
+the expected behavior for many endpoints at once, the suite is updated to the
+new expectation for **every** affected endpoint. Whoever makes such a change
+MUST demonstrate the suite still detects regressions, by reverting the change
+and confirming the suite fails, and MUST record that result in the pull
+request. A suite that stays green with the change reverted has been narrowed
+and does not satisfy this principle.
+
 ### V. End-to-End Tests Are Opt-In and Safe-by-Default
 
 `tests/e2e/` runs against the real Kentik API and MUST NOT run as part of
@@ -109,11 +140,11 @@ tracked and reduced over time, not silently ignored.
   raises `NotImplementedError` for `GrpcTransport` either when that
   service's proto companions failed to import (`gen/pb_companions/`) at
   wrapper `__init__` time, or when the generator found no gRPC method
-  matching that REST operation's name. Neither case is a bug by itself —
+  matching that REST operation's name. Neither case is a bug by itself.
   `tests/e2e/test_endpoints_e2e_grpc.py` (`make test-e2e-grpc`) treats
   `NotImplementedError` as an expected, passing outcome for exactly this
   reason. (This bullet previously flagged a drift against CLAUDE.md's
-  stale "intentionally a stub" claim; resolved 2026-08-26 — both now
+  stale "intentionally a stub" claim; resolved 2026-08-26, and both now
   agree.)
 - Two files look hand-written but are fully regenerated every run and MUST
   NOT be hand-edited: `src/kentik_api/client_mixin.py` and
@@ -145,7 +176,7 @@ tracked and reduced over time, not silently ignored.
   (specs/001-validate-schema-checkout/). This catches a corrupted or
   truncated schema *file*. It does NOT catch a whole service *directory*
   silently missing from the schema tree (a discovery-time gap, not a
-  content one) — for that, still verify the local `../api-schema-public/`
+  content one). For that, still verify the local `../api-schema-public/`
   checkout is clean (`git -C ../api-schema-public status`) before trusting
   `make generate local`, or regenerate from a clean canonical clone with
   `make generate` (no `local`) instead.
@@ -155,8 +186,8 @@ tracked and reduced over time, not silently ignored.
 This constitution governs planning, analysis, and review for all Spec Kit
 workflows in this repository; it takes precedence over ad hoc practice when
 the two conflict. `CLAUDE.md` (and its `AGENTS.md` symlink) remains the
-detailed, day-to-day reference this constitution distills principles from —
-if the two visibly diverge on a factual claim about the architecture, treat
+detailed, day-to-day reference this constitution distills principles from.
+If the two visibly diverge on a factual claim about the architecture, treat
 that as a documentation-drift bug to fix, not a reason to silently pick one
 (see the gRPC example above).
 
@@ -169,4 +200,4 @@ and `/speckit-analyze` MUST treat this constitution as authoritative context;
 complexity or deviation from it MUST be justified explicitly in the relevant
 plan, not silently introduced.
 
-**Version**: 1.2.1 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-08-26
+**Version**: 1.3.0 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-09-21

@@ -79,6 +79,16 @@ def get_schema_root(repo_source: str):
             tmp_path = Path(tmp)
             print(f"Cloning schema repository from {repo_source}...")
             run_cmd(["git", "clone", "--depth", "1", repo_source, str(tmp_path)])
+            # Logged so a CI determinism failure can be traced to the schema
+            # commit it generated from, separating upstream drift from a
+            # generator regression.
+            commit = subprocess.run(
+                ["git", "-C", str(tmp_path), "rev-parse", "HEAD"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            print(f"Schema commit: {commit}")
             yield tmp_path
     else:
         local_path = Path(repo_source.replace("file://", "")).resolve()
@@ -152,9 +162,7 @@ def _relink_pb2_dependency_imports(output_dir: Path) -> int:
                     )
             return match.group(0)
 
-        for pb_file in sorted(
-            [*pb_dir.glob("*_pb2.py"), *pb_dir.glob("*.pyi")]
-        ):
+        for pb_file in sorted([*pb_dir.glob("*_pb2.py"), *pb_dir.glob("*.pyi")]):
             content = pb_file.read_text(encoding="utf-8")
             patched = pattern.sub(_replace, content)
             if patched != content:

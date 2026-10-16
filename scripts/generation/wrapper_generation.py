@@ -147,6 +147,8 @@ def _generate_service_wrappers():
         wrapper_code = [
             "from typing import Union, cast",
             f"from kentik_api.gen.{service} import models as rest_models",
+            "from kentik_api.core.api_config import APIConfig",
+            "from kentik_api.core.rate_limit import attach_rate_limit",
             "from kentik_api.transports.grpc_client import GrpcTransport",
             "from kentik_api.transports.rest_client import RestTransport",
             "",
@@ -255,8 +257,9 @@ def _generate_service_wrappers():
                 emitted_method_names.add(func_name_snake)
                 emitted_method_names.add(unique_method_name)
 
-                # Build the wrapper signature: all params except api_config_override,
-                # preserving * keyword-only separator, with model types qualified.
+                # Build the wrapper signature: the REST params (their own
+                # api_config_override is re-added below as keyword-only, so it
+                # sits with the other options), with model types qualified.
                 def _qualify_annotation(annotation: str) -> str:
                     return re.sub(
                         r"\bTypingList\b",
@@ -281,7 +284,13 @@ def _generate_service_wrappers():
                         op.kwonly_start :
                     ]
                 ]
-                sig_args = ", ".join(pos_parts + (["*"] + kw_parts if kw_parts else []))
+                # A per-call override replaces the client's config for this call
+                # only (FR-018 to FR-021); omitted, the client's config is used.
+                kw_parts = [
+                    "api_config_override: Optional[APIConfig] = None",
+                    *kw_parts,
+                ]
+                sig_args = ", ".join(pos_parts + ["*"] + kw_parts)
 
                 for typing_symbol in (
                     "Any",
@@ -313,6 +322,10 @@ def _generate_service_wrappers():
                 call_args = [
                     f"{arg}={arg}" for arg in arg_names if arg != "api_config_override"
                 ]
+                grpc_call = (
+                    f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{{idx}}.{func_name_pascal}, _req, "
+                    "api_config=api_config_override)"
+                )
 
                 call_args_str = ", ".join(call_args)
                 if call_args_str:
@@ -326,12 +339,12 @@ def _generate_service_wrappers():
                     if arg_name not in ("api_config_override", "data")
                 ]
                 if func_name_pascal in grpc_method_map:
-                    stub_idx, req_class, resp_class = grpc_method_map[func_name_pascal]
+                    stub_idx, req_class, _ = grpc_method_map[func_name_pascal]
                     is_none_return = return_type.strip() == "None"
                     # Guard: if proto deps weren't available at init, fall back.
                     stub_guard = [
                         "        if isinstance(self._transport, GrpcTransport):",
-                        f"            if self._grpc_stub_{stub_idx} is None:",
+                        f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
                         f'                raise NotImplementedError("gRPC proto dependencies not installed for {service} service")',
                     ]
                     if "data" in arg_names and non_data_args:
@@ -342,14 +355,14 @@ def _generate_service_wrappers():
                             f"            _req_dict = {body_expr}",
                             f"            _req_dict.update({{k: v for k, v in {{{other_dict}}}.items() if v is not None}})",
                             f"            _req = ParseDict(_req_dict, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
-                            f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
+                            grpc_call.format(idx=stub_idx),
                         ]
                     elif "data" in arg_names:
                         # Body param only
                         grpc_lines = [
                             *stub_guard,
                             f"            _req = ParseDict({body_expr}, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
-                            f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
+                            grpc_call.format(idx=stub_idx),
                         ]
                     elif non_data_args:
                         # Query/path params only
@@ -357,14 +370,14 @@ def _generate_service_wrappers():
                         grpc_lines = [
                             *stub_guard,
                             f"            _req = ParseDict({{k: v for k, v in {{{kwarg_dict}}}.items() if v is not None}}, self._grpc_pb2_{stub_idx}.{req_class}(), ignore_unknown_fields=True)",
-                            f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
+                            grpc_call.format(idx=stub_idx),
                         ]
                     else:
                         # No params
                         grpc_lines = [
                             *stub_guard,
                             f"            _req = self._grpc_pb2_{stub_idx}.{req_class}()",
-                            f"            _resp = call_grpc(self._grpc_stub_{stub_idx}.{func_name_pascal}, _req)",
+                            grpc_call.format(idx=stub_idx),
                         ]
                     if is_none_return:
                         grpc_lines.append("            return None")
@@ -374,7 +387,7 @@ def _generate_service_wrappers():
                         # false), which then fails model_validate() against a Pydantic
                         # model where the schema marks that field required.
                         grpc_lines.append(
-                            f"            return {return_type}.model_validate(MessageToDict(_resp, always_print_fields_with_no_presence=True))"
+                            f"            return attach_rate_limit({return_type}.model_validate(MessageToDict(_resp, always_print_fields_with_no_presence=True)), _rate_limit)"
                         )
                 else:
                     grpc_lines = [
@@ -389,7 +402,7 @@ def _generate_service_wrappers():
                         "        elif isinstance(self._transport, RestTransport):",
                         "            rest_transport = cast(RestTransport, self._transport)",
                         f"            return {module_alias}.{func_name_pascal}(",
-                        f"                api_config_override=rest_transport.api_config{call_args_str}",
+                        f"                api_config_override=api_config_override or rest_transport.api_config{call_args_str}",
                         "            )",
                         "        else:",
                         '            raise TypeError(f"Unsupported transport type: {self._transport.__class__.__name__}")',

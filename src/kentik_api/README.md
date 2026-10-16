@@ -27,7 +27,7 @@ error.
 
 ```mermaid
 flowchart LR
-    A["KentikAPI()"] --> B["KentikAPI.__init__<br/>load .env credentials"]
+    A["KentikAPI()"] --> B["KentikAPI.__init__<br/>resolve credentials<br/>(args, env vars, .env)"]
     A --> C["transports/<br/>pick REST or gRPC transport"]
     A --> D["client_mixin.py<br/>mount service wrappers"]
     D --> E["gen/{service}<br/>ServiceWrapper, e.g. client.device"]
@@ -52,7 +52,7 @@ service wrapper implements its own HTTP, auth, or error-parsing logic.
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
+client = KentikAPI(protocol="rest")  # KENTIK_EMAIL/KENTIK_API_TOKEN from the environment or .env
 devices = client.device.list_devices()
 ```
 

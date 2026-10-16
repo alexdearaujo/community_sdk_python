@@ -29,6 +29,8 @@ class Suppression(_message.Message):
         "end_time_at",
         "created_at",
         "modified_at",
+        "display_name",
+        "severities",
     )
     ID_FIELD_NUMBER: _ClassVar[int]
     USER_ID_FIELD_NUMBER: _ClassVar[int]
@@ -40,6 +42,8 @@ class Suppression(_message.Message):
     END_TIME_AT_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     MODIFIED_AT_FIELD_NUMBER: _ClassVar[int]
+    DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
+    SEVERITIES_FIELD_NUMBER: _ClassVar[int]
     id: str
     user_id: str
     source: _common_pb2.Source
@@ -50,6 +54,8 @@ class Suppression(_message.Message):
     end_time_at: _timestamp_pb2.Timestamp
     created_at: _timestamp_pb2.Timestamp
     modified_at: _timestamp_pb2.Timestamp
+    display_name: str
+    severities: _containers.RepeatedScalarFieldContainer[_types_pb2.Severity]
     def __init__(
         self,
         id: _Optional[str] = ...,
@@ -70,6 +76,8 @@ class Suppression(_message.Message):
         modified_at: _Optional[
             _Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]
         ] = ...,
+        display_name: _Optional[str] = ...,
+        severities: _Optional[_Iterable[_Union[_types_pb2.Severity, str]]] = ...,
     ) -> None: ...
 
 class SuppressionServiceCreateRequest(_message.Message):

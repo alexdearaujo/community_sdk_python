@@ -18,12 +18,14 @@ source_suffix = [".rst", ".md"]
 root_doc = "index"
 
 # Exclude GitHub-browsable README files (not Sphinx pages) and build artifacts.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**/README.md"]
+# "**/README.md" does not match a README at the source root, so list it too.
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "README.md", "**/README.md"]
 
-# Suppress cross-reference warnings for links to files outside the Sphinx source
-# tree. Those links are valid for GitHub markdown browsing; they are intentionally
-# not Sphinx cross-references.
-suppress_warnings = ["myst.xref_missing", "toc.not_included"]
+# Deliberately empty. Broken links surface as myst.xref_missing and orphaned
+# pages as toc.not_included, so suppressing either would let `-W` pass on the
+# exact defects it exists to catch. Link to files outside this tree by GitHub
+# URL instead.
+suppress_warnings: list[str] = []
 
 extensions = [
     "myst_parser",

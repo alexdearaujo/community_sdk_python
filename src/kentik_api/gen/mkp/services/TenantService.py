@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -76,7 +77,7 @@ def TenantList(api_config_override: Optional[APIConfig] = None) -> ListTenantRes
     )
 
     return (
-        ListTenantResponse(**body)
+        attach_rate_limit(ListTenantResponse(**body), rate_limit_of(body))
         if body is not None
         else ListTenantResponse.model_construct()
     )
@@ -102,7 +103,7 @@ def TenantCreate(
     )
 
     return (
-        CreateTenantResponse(**body)
+        attach_rate_limit(CreateTenantResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateTenantResponse.model_construct()
     )
@@ -127,7 +128,7 @@ def TenantGet(
     )
 
     return (
-        GetTenantResponse(**body)
+        attach_rate_limit(GetTenantResponse(**body), rate_limit_of(body))
         if body is not None
         else GetTenantResponse.model_construct()
     )
@@ -156,7 +157,7 @@ def TenantUpdate(
     )
 
     return (
-        UpdateTenantResponse(**body)
+        attach_rate_limit(UpdateTenantResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateTenantResponse.model_construct()
     )
@@ -181,7 +182,7 @@ def TenantDelete(
     )
 
     return (
-        DeleteTenantResponse(**body)
+        attach_rate_limit(DeleteTenantResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteTenantResponse.model_construct()
     )

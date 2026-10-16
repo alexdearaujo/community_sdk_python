@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -42,7 +43,7 @@ def ListLabels(api_config_override: Optional[APIConfig] = None) -> ListLabelsRes
     )
 
     return (
-        ListLabelsResponse(**body)
+        attach_rate_limit(ListLabelsResponse(**body), rate_limit_of(body))
         if body is not None
         else ListLabelsResponse.model_construct()
     )
@@ -68,7 +69,7 @@ def CreateLabel(
     )
 
     return (
-        CreateLabelResponse(**body)
+        attach_rate_limit(CreateLabelResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateLabelResponse.model_construct()
     )
@@ -97,7 +98,7 @@ def UpdateLabel(
     )
 
     return (
-        UpdateLabelResponse(**body)
+        attach_rate_limit(UpdateLabelResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateLabelResponse.model_construct()
     )
@@ -122,7 +123,7 @@ def DeleteLabel(
     )
 
     return (
-        DeleteLabelResponse(**body)
+        attach_rate_limit(DeleteLabelResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteLabelResponse.model_construct()
     )

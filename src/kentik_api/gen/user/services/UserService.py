@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -51,7 +52,7 @@ def ListUsers(api_config_override: Optional[APIConfig] = None) -> ListUsersRespo
     )
 
     return (
-        ListUsersResponse(**body)
+        attach_rate_limit(ListUsersResponse(**body), rate_limit_of(body))
         if body is not None
         else ListUsersResponse.model_construct()
     )
@@ -77,7 +78,7 @@ def CreateUser(
     )
 
     return (
-        CreateUserResponse(**body)
+        attach_rate_limit(CreateUserResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateUserResponse.model_construct()
     )
@@ -102,7 +103,7 @@ def GetUser(
     )
 
     return (
-        GetUserResponse(**body)
+        attach_rate_limit(GetUserResponse(**body), rate_limit_of(body))
         if body is not None
         else GetUserResponse.model_construct()
     )
@@ -131,7 +132,7 @@ def UpdateUser(
     )
 
     return (
-        UpdateUserResponse(**body)
+        attach_rate_limit(UpdateUserResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateUserResponse.model_construct()
     )
@@ -156,7 +157,7 @@ def DeleteUser(
     )
 
     return (
-        DeleteUserResponse(**body)
+        attach_rate_limit(DeleteUserResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteUserResponse.model_construct()
     )
@@ -181,7 +182,7 @@ def ResetActiveSessions(
     )
 
     return (
-        ResetActiveSessionsResponse(**body)
+        attach_rate_limit(ResetActiveSessionsResponse(**body), rate_limit_of(body))
         if body is not None
         else ResetActiveSessionsResponse.model_construct()
     )
@@ -206,7 +207,7 @@ def ResetApiToken(
     )
 
     return (
-        ResetApiTokenResponse(**body)
+        attach_rate_limit(ResetApiTokenResponse(**body), rate_limit_of(body))
         if body is not None
         else ResetApiTokenResponse.model_construct()
     )

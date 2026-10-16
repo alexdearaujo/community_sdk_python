@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -92,7 +93,7 @@ def ListAgentCapabilities(
     )
 
     return (
-        ListAgentCapabilitiesResponse(**body)
+        attach_rate_limit(ListAgentCapabilitiesResponse(**body), rate_limit_of(body))
         if body is not None
         else ListAgentCapabilitiesResponse.model_construct()
     )
@@ -120,7 +121,7 @@ def GetAgentCapability(
     )
 
     return (
-        GetAgentCapabilityResponse(**body)
+        attach_rate_limit(GetAgentCapabilityResponse(**body), rate_limit_of(body))
         if body is not None
         else GetAgentCapabilityResponse.model_construct()
     )
@@ -148,7 +149,7 @@ def DeleteAgentCapability(
     )
 
     return (
-        DeleteAgentCapabilityResponse(**body)
+        attach_rate_limit(DeleteAgentCapabilityResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteAgentCapabilityResponse.model_construct()
     )
@@ -179,7 +180,7 @@ def UpsertAgentCapability(
     )
 
     return (
-        UpsertAgentCapabilityResponse(**body)
+        attach_rate_limit(UpsertAgentCapabilityResponse(**body), rate_limit_of(body))
         if body is not None
         else UpsertAgentCapabilityResponse.model_construct()
     )

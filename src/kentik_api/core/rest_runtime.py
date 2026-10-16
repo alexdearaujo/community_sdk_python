@@ -5,8 +5,16 @@ import json
 from typing import Any, Dict, Optional
 
 import httpx
+from kentik_api.auth.credentials import auth_headers
 from kentik_api.core.api_config import APIConfig
-from kentik_api.errors import HTTPException, TransportError
+from kentik_api.core.rate_limit import RateLimit, attach_rate_limit
+from kentik_api.errors import (
+    AuthenticationError,
+    ConfigurationError,
+    HTTPException,
+    KentikError,
+    TransportError,
+)
 
 
 def request_json(
@@ -23,12 +31,20 @@ def request_json(
 ) -> Any:
     """Shared REST request execution for generated service methods."""
     api_config = api_config_override if api_config_override else APIConfig()
+    # An override replaces the client's config wholesale, credentials included,
+    # so one that omits them must fail here rather than send an unauthenticated
+    # request (or, before this check, crash inside httpx on a None header).
+    if not api_config.auth_email or not api_config.auth_token:
+        raise ConfigurationError(
+            f"{operation_name}: the APIConfig for this call has no credentials. An "
+            "api_config_override replaces the client's config entirely; build it "
+            "with client.api_config.with_timeout(...) or pass auth_email and auth_token."
+        )
 
     headers: Dict[str, Any] = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "X-CH-Auth-Email": api_config.auth_email,
-        "X-CH-Auth-API-Token": api_config.auth_token,
+        **auth_headers(api_config.auth_email, api_config.auth_token),
     }
     if header_params:
         headers.update(
@@ -44,23 +60,56 @@ def request_json(
     }
 
     try:
-        with httpx.Client(
-            base_url=api_config.base_path,
-            verify=api_config.verify,
-            timeout=httpx.Timeout(60.0),
-        ) as client:
-            response = client.request(
-                method.lower(),
-                httpx.URL(path),
-                headers=headers,
-                params=clean_query_params,
-                json=json_body,
-            )
+        response = api_config.client.request(
+            method.lower(),
+            httpx.URL(path),
+            headers=headers,
+            params=clean_query_params,
+            json=json_body,
+            # Per request, so a with_timeout() copy sharing this client applies its own.
+            timeout=api_config.rest_timeout,
+        )
     except httpx.RequestError as exc:
         raise TransportError(
             f"{operation_name} transport failed: {exc}",
         ) from exc
 
+    rate_limit = RateLimit.from_headers(response.headers)
+    if rate_limit is not None:
+        api_config.rate_limits[path] = rate_limit
+
+    try:
+        body = _handle_response(
+            response,
+            method=method,
+            path=path,
+            expected_status=expected_status,
+            operation_name=operation_name,
+            error_cls=error_cls,
+        )
+    except KentikError as exc:
+        exc.rate_limit = rate_limit
+        raise
+    # A plain dict cannot hold an attribute; a subclass can, and the generated
+    # function hands the quota on to the model it builds from this body.
+    if isinstance(body, dict):
+        body = attach_rate_limit(_ResponseBody(body), rate_limit)
+    return body
+
+
+class _ResponseBody(dict):
+    """A parsed JSON object that can also carry the call's quota."""
+
+
+def _handle_response(
+    response: httpx.Response,
+    *,
+    method: str,
+    path: str,
+    expected_status: int,
+    operation_name: str,
+    error_cls: type[HTTPException],
+) -> Any:
     def _raise_http_error(message: str, *, details: dict[str, Any]) -> None:
         error_factory = getattr(error_cls, "from_response", None)
         if callable(error_factory):
@@ -110,6 +159,11 @@ def request_json(
                 details["details"] = payload.get("details")
         elif payload is not None:
             details["response_json"] = payload
+
+        # Handled here, ahead of the generated error_cls, so REST raises the
+        # same type gRPC does for UNAUTHENTICATED without regenerating errors.
+        if response.status_code == 401:
+            raise AuthenticationError(message)
 
         _raise_http_error(message, details=details)
 

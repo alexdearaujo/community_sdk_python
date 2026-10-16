@@ -1,9 +1,11 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.cloud_export.services.CloudExportAdminService as RestCloudExportModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.cloud_export import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -32,22 +34,27 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1 = None
 
     def list_cloud_exports(
-        self,
+        self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCloudExportsResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
             _req = self._grpc_pb2_1.ListCloudExportsRequest()
-            _resp = call_grpc(self._grpc_stub_1.ListCloudExports, _req)
-            return rest_models.ListCloudExportsResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListCloudExports, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.ListCloudExportsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCloudExportModule1.ListCloudExports(
-                api_config_override=rest_transport.api_config
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(
@@ -55,10 +62,13 @@ class CloudExportServiceWrapper:
             )
 
     def create_cloud_export(
-        self, *, data: rest_models.CreateCloudExportRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateCloudExportRequest,
     ) -> rest_models.CreateCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
@@ -67,23 +77,33 @@ class CloudExportServiceWrapper:
                 self._grpc_pb2_1.CreateCloudExportRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateCloudExport, _req)
-            return rest_models.CreateCloudExportResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateCloudExport,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.CreateCloudExportResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCloudExportModule1.CreateCloudExport(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_cloud_export(self, *, exportid: str) -> rest_models.GetCloudExportResponse:
+    def get_cloud_export(
+        self, *, api_config_override: Optional[APIConfig] = None, exportid: str
+    ) -> rest_models.GetCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
@@ -92,14 +112,20 @@ class CloudExportServiceWrapper:
                 self._grpc_pb2_1.GetCloudExportRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetCloudExport, _req)
-            return rest_models.GetCloudExportResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetCloudExport, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetCloudExportResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCloudExportModule1.GetCloudExport(
-                api_config_override=rest_transport.api_config, exportid=exportid
+                api_config_override=api_config_override or rest_transport.api_config,
+                exportid=exportid,
             )
         else:
             raise TypeError(
@@ -109,11 +135,12 @@ class CloudExportServiceWrapper:
     def update_cloud_export(
         self,
         *,
+        api_config_override: Optional[APIConfig] = None,
         exportid: str,
         data: rest_models.CloudExportAdminServiceUpdateCloudExportBody,
     ) -> rest_models.UpdateCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
@@ -126,14 +153,21 @@ class CloudExportServiceWrapper:
                 self._grpc_pb2_1.UpdateCloudExportRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateCloudExport, _req)
-            return rest_models.UpdateCloudExportResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateCloudExport,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.UpdateCloudExportResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCloudExportModule1.UpdateCloudExport(
-                api_config_override=rest_transport.api_config,
+                api_config_override=api_config_override or rest_transport.api_config,
                 exportid=exportid,
                 data=data,
             )
@@ -143,10 +177,10 @@ class CloudExportServiceWrapper:
             )
 
     def delete_cloud_export(
-        self, *, exportid: str
+        self, *, api_config_override: Optional[APIConfig] = None, exportid: str
     ) -> rest_models.DeleteCloudExportResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for cloud_export service"
                 )
@@ -155,14 +189,22 @@ class CloudExportServiceWrapper:
                 self._grpc_pb2_1.DeleteCloudExportRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.DeleteCloudExport, _req)
-            return rest_models.DeleteCloudExportResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteCloudExport,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.DeleteCloudExportResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestCloudExportModule1.DeleteCloudExport(
-                api_config_override=rest_transport.api_config, exportid=exportid
+                api_config_override=api_config_override or rest_transport.api_config,
+                exportid=exportid,
             )
         else:
             raise TypeError(

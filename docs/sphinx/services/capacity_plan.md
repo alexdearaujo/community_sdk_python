@@ -46,9 +46,11 @@ sequenceDiagram
     alt success
         API-->>W: v202212ListCapacityPlansResponse (JSON)
         W-->>C: v202212ListCapacityPlansResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -68,10 +70,9 @@ sequenceDiagram
         API-->>B: v202212ListCapacityPlansResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202212ListCapacityPlansResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -113,9 +114,11 @@ sequenceDiagram
     alt success
         API-->>W: v202212ListCapacitySummariesResponse (JSON)
         W-->>C: v202212ListCapacitySummariesResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -135,10 +138,9 @@ sequenceDiagram
         API-->>B: v202212ListCapacitySummariesResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202212ListCapacitySummariesResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -180,9 +182,11 @@ sequenceDiagram
     alt success
         API-->>W: v202212GetCapacityPlanResponse (JSON)
         W-->>C: v202212GetCapacityPlanResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -202,10 +206,9 @@ sequenceDiagram
         API-->>B: v202212GetCapacityPlanResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202212GetCapacityPlanResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 
@@ -255,9 +258,11 @@ sequenceDiagram
     alt success
         API-->>W: v202212GetCapacitySummaryResponse (JSON)
         W-->>C: v202212GetCapacitySummaryResponse
-    else error
+    else error status
         API-->>W: error body
-        W-->>C: raise HTTPException
+        W-->>C: raise AuthenticationError (401) or HTTPException
+    else no response
+        W-->>C: raise TransportError
     end
 ```
 
@@ -277,10 +282,9 @@ sequenceDiagram
         API-->>B: v202212GetCapacitySummaryResponse proto
         B-->>W: MessageToDict(response)
         W-->>C: v202212GetCapacitySummaryResponse
-    else gRPC error
-        API-->>B: gRPC status + details
-        B-->>W: raise HTTPException
-        W-->>C: raise HTTPException
+    else gRPC error, deadline, or unreachable
+        B-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
 

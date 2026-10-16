@@ -50,7 +50,7 @@ repo.
 - `docs/sphinx/services/<service>.md` — one reference page per
   service, written by `endpoint_docs.EndpointDocsCollector.render()`
 - the `<!-- kentik-gen:... -->` marker blocks inside
-  `docs/guides/{quickstart,rest,grpc,generation}.md` and
+  `docs/sphinx/guides/{quickstart,rest,grpc,generation}.md` and
   `docs/sphinx/README.md` — rewritten by
   `docs_rendering._update_guide_snippets()`. The surrounding prose in
   those files is hand-written; only the marker blocks are generated.
@@ -75,7 +75,10 @@ time ("gRPC proto dependencies not installed for `<service>`
 service"), or no matching gRPC method name was found for that REST
 operation ("gRPC translation for `<Operation>` is not yet
 implemented"). Both REST and gRPC return identical Pydantic models
-for every operation gRPC covers.
+for every operation gRPC covers, and raise the same exception type
+for the same failure. Every gRPC call carries a deadline:
+`GrpcTransport`'s channel interceptor applies `APIConfig.grpc_deadline`
+unless the call passes its own, so generated call sites never need one.
 
 ### The generator's phase modules
 
@@ -98,8 +101,8 @@ subpackage of independently testable phase modules (see
   Single public entrypoint: `fix_generated_service(service_dir)`.
   Internally: rebuilds `models/__init__.py` from a full directory
   scan, replaces wildcard exports with explicit named imports, and
-  applies all file-level content patches (import aliases, auth
-  headers, path parameter sanitization, docstring normalization,
+  applies all file-level content patches (import aliases, path
+  parameter sanitization, docstring normalization,
   duplicate function renaming, and error-handling injection).
 - `wrapper_generation.py` — generates service wrappers and the
   client mixin, collapsed into a single `generate()` entrypoint
@@ -147,7 +150,7 @@ script's own direct-execution import path.
 
 The **shared REST runtime** is the single most significant piece of
 hand-written engineering in this repo. It routes every generated
-endpoint, across all ~39 services, through one connection path
+endpoint, across all 35 mounted services, through one connection path
 instead of generating or hand-writing bespoke per-endpoint HTTP
 code. This is not just a convention. It's structural. The source
 code confirms it directly:
@@ -156,24 +159,39 @@ code confirms it directly:
   *only* function that ever calls `httpx` for REST traffic. Every
   generated operation in every service calls this same function. It
   centralizes:
-  - Kentik's auth header scheme (`X-CH-Auth-Email` /
-    `X-CH-Auth-API-Token`)
+  - Kentik's auth headers (`X-CH-Auth-Email` /
+    `X-CH-Auth-API-Token`), built by `auth_headers()` in
+    `src/kentik_api/auth/credentials.py`, the scheme's one definition,
+    which the gRPC auth plugin also derives from
+  - the credentials check, before anything is sent
   - query-param cleaning
-  - the request itself
+  - the request itself, over the one `httpx.Client` its `APIConfig`
+    owns (one pooled connection per client, timeout passed per request)
   - transport-failure wrapping (`TransportError`)
+  - quota capture into `RateLimit`, on the result and on every error
+  - a 401 raised as `AuthenticationError`, ahead of the generated
+    error class, so generated error packages never see one
   - status-code checking
   - JSON error-body parsing
   - dispatch into per-operation error classes via
     `error_cls.from_response`
 - `src/kentik_api/core/grpc_runtime.py` — `call_grpc()` is the gRPC
   analogue of `request_json()`. It routes every generated gRPC wrapper
-  call through one place. `map_grpc_error()` is extracted as a pure
-  function (no I/O, no side effects) that maps a `grpc.RpcError` status
-  code to `AuthenticationError` or `HTTPException`. Testable without a
-  gRPC channel.
+  call through one place, applies a per-call deadline override, and
+  returns `(response, rate_limit)`. `map_grpc_error()` is extracted as
+  a pure function (no I/O, no side effects) that classifies every
+  non-OK `grpc.RpcError` status as `AuthenticationError`,
+  `HTTPException`, or `TransportError`. Testable without a gRPC
+  channel.
 - `src/kentik_api/core/api_config.py` — `APIConfig` is the one
-  shared config object (base URL, auth email/token, TLS verify) used
-  in every call.
+  shared config object (base URL, auth email/token, TLS verify,
+  timeouts, the shared HTTP client, per-endpoint quota) used in every
+  call. A wrapper's `api_config_override` **replaces** it for one call,
+  never merges with it, so an override that changes the host cannot
+  inherit credentials. `with_timeout()` is the only derivation helper,
+  and it can change timeouts only. Changing the host, credentials, or
+  `verify` takes an explicit `APIConfig(...)`, which keeps any
+  credential redirect visible at its call site.
 - `src/kentik_api/errors/__init__.py` — one shared exception
   hierarchy (`KentikError` → `ConfigurationError`,
   `AuthenticationError`, `TransportError`, `HTTPException`) that
@@ -329,6 +347,11 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
 - `make generate LOCAL_REPO=/path/to/api-schema-public` —
   regenerate from an arbitrary local schema path
 - `make docs` — build Sphinx docs (`docs/sphinx` → `docs/build/html`)
+- `make impact-report` (`SINCE=<ref>`, `CHECKS=0`): run by hand after a
+  regeneration. `scripts/impact_report.py` writes the facts of what changed
+  (schema commit, files by kind, surface delta, floors, checks) to
+  `reports/regeneration-impact-<date>.html`. It never overwrites an earlier
+  report, and it leaves the Findings section to a person.
 - `make test` / `make tests` — full pytest run (mocked layers only —
   never wires in `tests/e2e/`)
 - `make test-generated` / `make test-runtime` / `make test-smoke` /
@@ -450,10 +473,14 @@ task.
 
 ## Auth/config
 
-The SDK loads credentials from a project-root `.env` file
-(`KENTIK_EMAIL`, `KENTIK_API_TOKEN`) via `find_dotenv` and
-`load_dotenv`. Explicit constructor args to `KentikAPI(...)` override
-env values. Never read or print `.env` contents — it holds real
+`KentikAPI` resolves credentials in this order: explicit
+`email`/`api_token` args, then the `KENTIK_EMAIL`/`KENTIK_API_TOKEN`
+environment variables, then the `env_file` arg (`.env` by default,
+searched upward from the cwd; `None` disables it). The file is read
+with `dotenv_values` into a dict, and only when a value is still
+missing. Never switch this back to `load_dotenv`: writing the file
+into `os.environ` leaks secrets into every subprocess, which breaks
+callers that keep credentials encrypted (sops, age). Never read or print `.env` contents — it holds real
 credentials.
 
 ## Constraints

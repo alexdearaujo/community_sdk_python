@@ -1,9 +1,11 @@
-from typing import Union, cast
+from typing import Optional, Union, cast
 
 from google.protobuf.json_format import MessageToDict, ParseDict
 
 import kentik_api.gen.ai_advisor.services.AiAdvisorDataService as RestAiAdvisorModule1
+from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
+from kentik_api.core.rate_limit import attach_rate_limit
 from kentik_api.gen.ai_advisor import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -32,10 +34,13 @@ class AiAdvisorServiceWrapper:
                 self._grpc_stub_1 = None
 
     def create_chat_session(
-        self, *, data: rest_models.CreateChatSessionRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateChatSessionRequest,
     ) -> rest_models.CreateChatSessionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for ai_advisor service"
                 )
@@ -44,14 +49,22 @@ class AiAdvisorServiceWrapper:
                 self._grpc_pb2_1.CreateChatSessionRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.CreateChatSession, _req)
-            return rest_models.CreateChatSessionResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateChatSession,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.CreateChatSessionResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAiAdvisorModule1.CreateChatSession(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
@@ -59,10 +72,13 @@ class AiAdvisorServiceWrapper:
             )
 
     def update_chat_session(
-        self, *, data: rest_models.UpdateChatSessionRequest
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.UpdateChatSessionRequest,
     ) -> rest_models.UpdateChatSessionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for ai_advisor service"
                 )
@@ -71,23 +87,33 @@ class AiAdvisorServiceWrapper:
                 self._grpc_pb2_1.UpdateChatSessionRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.UpdateChatSession, _req)
-            return rest_models.UpdateChatSessionResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateChatSession,
+                _req,
+                api_config=api_config_override,
+            )
+            return attach_rate_limit(
+                rest_models.UpdateChatSessionResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAiAdvisorModule1.UpdateChatSession(
-                api_config_override=rest_transport.api_config, data=data
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
             )
         else:
             raise TypeError(
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_chat_session(self, *, id: str) -> rest_models.GetChatSessionResponse:
+    def get_chat_session(
+        self, *, api_config_override: Optional[APIConfig] = None, id: str
+    ) -> rest_models.GetChatSessionResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_stub_1 is None:
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for ai_advisor service"
                 )
@@ -96,14 +122,20 @@ class AiAdvisorServiceWrapper:
                 self._grpc_pb2_1.GetChatSessionRequest(),
                 ignore_unknown_fields=True,
             )
-            _resp = call_grpc(self._grpc_stub_1.GetChatSession, _req)
-            return rest_models.GetChatSessionResponse.model_validate(
-                MessageToDict(_resp, always_print_fields_with_no_presence=True)
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetChatSession, _req, api_config=api_config_override
+            )
+            return attach_rate_limit(
+                rest_models.GetChatSessionResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
             return RestAiAdvisorModule1.GetChatSession(
-                api_config_override=rest_transport.api_config, id=id
+                api_config_override=api_config_override or rest_transport.api_config,
+                id=id,
             )
         else:
             raise TypeError(

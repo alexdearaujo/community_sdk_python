@@ -25,6 +25,8 @@
     "dist/**",
     "docs/sphinx/services/**",
     ".github/skills/**",
-    ".specify/templates/**"
+    ".claude/skills/speckit-*/**",
+    ".specify/templates/**",
+    ".specify/extensions/**"
   ]
 }

@@ -4,6 +4,7 @@
 from typing import Any, Dict, Optional
 
 from kentik_api.core.api_config import APIConfig
+from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of
 from kentik_api.core.rest_runtime import request_json
 
 from ..error import (
@@ -77,7 +78,7 @@ def TenantUserList(
     )
 
     return (
-        ListTenantUserResponse(**body)
+        attach_rate_limit(ListTenantUserResponse(**body), rate_limit_of(body))
         if body is not None
         else ListTenantUserResponse.model_construct()
     )
@@ -106,7 +107,7 @@ def TenantUserCreate(
     )
 
     return (
-        CreateTenantUserResponse(**body)
+        attach_rate_limit(CreateTenantUserResponse(**body), rate_limit_of(body))
         if body is not None
         else CreateTenantUserResponse.model_construct()
     )
@@ -136,7 +137,7 @@ def TenantUserUpdate(
     )
 
     return (
-        UpdateTenantUserResponse(**body)
+        attach_rate_limit(UpdateTenantUserResponse(**body), rate_limit_of(body))
         if body is not None
         else UpdateTenantUserResponse.model_construct()
     )
@@ -161,7 +162,7 @@ def TenantUserDelete(
     )
 
     return (
-        DeleteTenantUserResponse(**body)
+        attach_rate_limit(DeleteTenantUserResponse(**body), rate_limit_of(body))
         if body is not None
         else DeleteTenantUserResponse.model_construct()
     )
