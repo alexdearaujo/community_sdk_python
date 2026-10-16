@@ -37,5 +37,5 @@
   description, the generator changes, and the model layout to planning.
 - FR-006 to FR-008 restate constitution Principles I and II for the new
   services, because a hand-written V5 client would break them.
-- The service names (`query_v5`, `batch_v5`) are an assumption, not a
-  decision. Planning confirms them before `public_names.json` freezes them.
+- The service name is `v5` (clarified 2026-10-16). Planning sets the method
+  names before `public_names.json` freezes them.

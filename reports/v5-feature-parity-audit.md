@@ -16,11 +16,11 @@ Status values:
 
 | Rank | Loss | Why it matters | Can the SDK restore it? |
 | --- | --- | --- | --- |
-| 1 | Query API (`query.sql`, `query.data`, `query.chart`, `query.url`) and the `analytics` package | It was the only way to pull flow and traffic data into scripts and pandas | Not from the V6 schema, which has no query service. Ask Kentik whether `/api/v5/query/*` still answers |
-| 2 | Batch API for flow tags and populators | Bulk sync from a CMDB or IPAM becomes many single calls, which is slower and uses more quota | No. The V6 schema has no batch endpoint for them |
+| 1 | Query API (`query.sql`, `query.data`, `query.chart`, `query.url`) and the `analytics` package | It was the only way to pull flow and traffic data into scripts and pandas | Not from the V6 schema, which has no query service. `topXdata` and `url` still answer (see "Live check"). `sql` is retired |
+| 2 | Batch API for flow tags and populators | Bulk sync from a CMDB or IPAM becomes many single calls, which is slower and uses more quota | Not from the V6 schema. The V5 batch status endpoint still answers |
 | 3 | Automatic retry on 429, 502, 503, and 504 | Batch scripts recovered from rate limits without code. Now they fail | Yes, but retrying a write is unsafe. A caller-side retry on 429 is the safer design |
 | 4 | Tolerance of unknown enum values (V5 ADR 0003) | A new enum value from the API now fails the whole call with a 502 until the SDK is regenerated | Yes, in the model template |
-| 5 | Alert list and alert history semantics | Every alert-polling integration needs a rewrite. History parity is not verified | Partly. `alerting.alert_list` covers some of it |
+| 5 | Alert list and alert history semantics | Every alert-polling integration needs a rewrite | Yes. `alerting.alert_list` with `states` and `startedAt` returns cleared alerts (verified live) |
 | 6 | Credential profiles and `KTAPI_*` variables | Existing environments and `~/.kentik/<profile>` files stop working | Yes, with a small helper |
 | 7 | `DeviceCache` | Scripts that map device or interface names to objects or speeds must build their own lookup | Yes, with a small helper over `device` and `interface` |
 | 8 | User-Agent header and debug logging | Kentik loses SDK usage data, and users lose request traces | Yes, a few lines in the runtime |
@@ -70,8 +70,47 @@ What can be restored:
   `eval()` on text from the YAML file, which allows code injection.
 
 The [rate limiting guide](../docs/sphinx/guides/rate_limiting.md) still quotes
-a separate Query API limit from the Kentik Knowledge Base. Confirm with Kentik
-whether the V5 query endpoints still answer before you drop analytics for good.
+a separate Query API limit from the Kentik Knowledge Base.
+
+## Live check of the V5 API (2026-10-16)
+
+[`v5_live_probe.py`](v5_live_probe.py) sent read-only calls to
+`https://api.kentik.com` with the project credentials. It prints status codes,
+response shapes, and quota headers only. The
+[Admin APIs](https://kb.kentik.com/docs/admin-apis) and
+[Query API](https://kb.kentik.com/docs/query-api) pages of the Kentik
+Knowledge Base mark V5 as deprecated, but list these endpoints.
+
+| V5 endpoint | Result | V6 equivalent |
+| --- | --- | --- |
+| `GET /users`, `/devices`, `/deviceLabels`, `/plans`, `/sites`, `/tags`, `/customdimensions`, `/saved-filters/custom` | 200 | Yes: `user`, `device`, `label`, `plan`, `site`, `flow_tag`, `custom_dimension`, `saved_filter` |
+| `GET /customApplications` | 404 | Yes: `custom_application` |
+| `GET /mykentik/tenants` | 404 | Yes: `mkp` |
+| `GET /alerts-active/alarms`, `/alerts-active/alerts-history` | 200 | Yes: `alerting.alert_list`. A live call with `states=[ALERT_STATE_CLEAR]` and a 30-day `startedAt` returned 138 cleared alerts |
+| `POST /alerts/manual-mitigate` | Not called (writes) | Yes: `alerting.mitigations_create` |
+| `POST /query/topXdata` and `/api/next/v5/query/topXdata` | 200, with `results[].bucket` and `results[].data` rows | None |
+| `POST /query/url` | 200, a JSON string with a portal link | None |
+| `POST /query/topXchart` | No response in 180 s, for SVG and PNG. A manual retest with the Knowledge Base example body also timed out, while `topXdata` answered the same body in 1.4 s | None |
+| `POST /query/sql` | 403 `Access Denied`. The Knowledge Base says Kentik retired it on 2025-05-01 | None |
+| `GET /batch/<guid>/status` | 404 `Could not find this batch` for an unknown ID, so the endpoint answers | None |
+| `POST /batch/tags`, `/batch/customdimensions/<name>/populators` | Not called (writes) | None. V6 `device` has bulk calls, but only for devices |
+
+Other findings:
+
+- V5 sends no `X-RateLimit-*` headers. V6 sends `x-ratelimit-limit`,
+  `x-ratelimit-remaining`, and `x-ratelimit-reset`. So the SDK cannot report
+  quota for a V5 call.
+- A query needs `device_name` even when `all_selected` is true. Without it, the
+  API returns 400 `The device_name is required`.
+- V5 uses its own hosts: `https://api.kentik.com/api/v5` (US) and
+  `https://api.kentik.eu/api/v5` (EU). V6 REST uses `grpc.api.kentik.com`.
+- A V6 `alert_list` call with `states=[ALERT_STATE_ACTIVE]` and a `startedAt`
+  range returned 400 `backend request error`. Investigate before you document
+  active-alert polling with a time filter.
+
+Result: only the query (`topXdata`, `url`, and maybe `topXchart`) and batch
+endpoints have no V6 equivalent. Every other V5 endpoint has one, so the SDK
+maps those in the migration guide instead of adding them again.
 
 ## API resources
 
@@ -97,7 +136,7 @@ hand-written classes became generated Pydantic models.
 | `my_kentik_portal.get_all`, `get`, `create_tenant_user`, `delete_tenant_user` | `mkp.tenant_list`, `tenant_get`, `tenant_user_create`, `tenant_user_delete` | Kept. V6 adds tenant and package management |
 | `alerting.create_manual_mitigation` | `alerting.mitigations_create` | Kept, with a new model that uses platform and method IDs |
 | `alerting.get_active_alerts` | `alerting.alert_list` | Partial. Filters move into a request body with different semantics |
-| `alerting.get_alerts_history` | `alerting.alert_list` with state and time filters | Partial. Parity not verified |
+| `alerting.get_alerts_history` | `alerting.alert_list` with `states` and `startedAt` filters | Kept. Verified live on 2026-10-16 |
 | `batch.batch_operation_on_flow_tags`, `batch_operation_on_populators`, `get_status` | None | Missing. Not in the V6 schema |
 | `query.sql`, `query.data`, `query.chart`, `query.url` | None | Missing. Not in the V6 schema |
 | `synthetics` agents, tests, results, traces | `synthetics.*` (v202309) | Kept. `private_only` filtering moves to the caller |
@@ -177,8 +216,10 @@ resources, on REST and gRPC.
 
 ## Recommended follow-up
 
-1. Ask Kentik whether the V5 query and batch endpoints still answer, and
-   whether a V6 query service is planned. This decides the fate of analytics.
+1. Done: Kentik confirmed that the V5 query and batch endpoints still answer
+   and that a V6 query service is planned. The live check above confirms it,
+   except for `query/sql` (retired) and `query/topXchart` (no response).
+   Feature 005 (`specs/005-v5-query-batch/`) covers the rest.
 2. Accept unknown enum values in response models, as V5 did, so that a new
    value from the API does not fail calls.
 3. Add a User-Agent header and debug logging to `request_json()` and
