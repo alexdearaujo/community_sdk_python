@@ -25,6 +25,15 @@ def _resolve_credentials(
     api_token: str | None,
     env_file: str | os.PathLike[str] | None,
 ) -> tuple[str, str]:
+    # An explicit empty value is a caller bug; falling back would send the
+    # environment's or the file's identity instead of failing.
+    for name, value in (("email", email), ("api_token", api_token)):
+        if value is not None and not value.strip():
+            raise ConfigurationError(
+                f"{name} is empty. Pass a value, or omit it to read "
+                "credentials from the environment."
+            )
+
     # The file is read into a dict, never into os.environ: callers that keep
     # secrets out of the environment (so subprocesses cannot inherit them)
     # stay that way, and the file is not opened when nothing is missing.

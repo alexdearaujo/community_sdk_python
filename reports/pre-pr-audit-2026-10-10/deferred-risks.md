@@ -39,26 +39,26 @@ This ledger records findings that are intentionally deferred.
 | L11 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | L12 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | L13 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R2 | runtime | JSON null and list shapes need generated-code changes. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R4 | runtime | Quota keys need a method and path-template scheme. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R5 | runtime | Total-deadline timeout needs a transport design. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R6 | runtime | Fork safety needs client pool lifecycle work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R7 | runtime | Empty-string credentials need a resolution-order decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R9 | runtime | Mutability rules for config objects need a design decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R10 | runtime | Needs one live call to settle. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R11 | runtime | Free-form bodies need schema-aware gRPC encoding. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R12 | runtime | The missing update_mask argument needs generator work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R13 | runtime | No consumer needs the error details today. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R14 | runtime | Wrapper generation hides the import cause. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R15 | runtime | Model output step must relax REQUIRED on message fields. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| R16 | runtime | Generator does not hoist inline objects. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R2 | runtime | JSON null and list shapes need generated-code changes. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R4 | runtime | Quota keys need a method and path-template scheme. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R5 | runtime | Total-deadline timeout needs a transport design. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R6 | runtime | Fork safety needs client pool lifecycle work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R7 | runtime | Empty-string credentials need a resolution-order decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R9 | runtime | Mutability rules for config objects need a design decision. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R10 | runtime | Needs one live call to settle. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R11 | runtime | Free-form bodies need schema-aware gRPC encoding. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R12 | runtime | The missing update_mask argument needs generator work. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R13 | runtime | No consumer needs the error details today. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R14 | runtime | Wrapper generation hides the import cause. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R15 | runtime | Model output step must relax REQUIRED on message fields. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| R16 | runtime | Generator does not hoist inline objects. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T1 | test gap | Swagger-derived response fixtures are a large test-harness change. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T2 | test gap | In-process grpc.server success-path test. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T3 | test gap | Needs gRPC routes recorded in api_surface.json. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T4 | test gap | Needs the real request builder run on populated bodies. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| K1 | release or docs | dist/ is local build output; the owner deletes it. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| K1 | release or docs | dist/ is local build output; the owner deletes it. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K2 | release or docs | Trusted publishing needs PyPI-side setup. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K8 | release or docs | Needs a clean-venv wheel job in CI. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -102,3 +102,75 @@ This ledger records findings that are intentionally deferred.
   operations have a gRPC translation. `mitigation_lost.py` now checks the
   renamed stub modules.
 - 2026-10-13: 47 entries remain open, none of them blockers.
+- R15 is resolved (2026-10-13). The generator drops message-typed fields from
+  `required` in every model a response can reach. Models used only in
+  requests keep them. Nine fields became `Optional`, and a policy without a
+  `baseline` now parses. 46 entries remain open.
+- K1 is resolved (2026-10-13). The owner approved deleting `dist/`. It held a
+  local `uv build` from 2026-08-18 with a fixed version 2.0.0, the MIT
+  license and fork URLs. 45 entries remain open.
+- R2 is resolved (2026-10-13) in the shared runtime, with no generated-code
+  change. A non-JSON or JSON `null` success body raises `HTTPException` 502,
+  as a wrong-shape body already did (a JSON list no longer gave `TypeError`).
+  44 entries remain open.
+- R12 is resolved (2026-10-13). A bad gRPC argument already raised
+  `ConfigurationError`. For the missing `update_mask`, no argument is needed:
+  grpc-gateway derives the mask from the PATCH body on REST, and
+  `build_grpc_request` now does the same on gRPC. Only `UpdateCapability`
+  qualifies today. `UpdateConfig` sends its `mask` in a `*` body. 43 entries
+  remain open.
+- R11 is resolved (2026-10-13). `build_grpc_request` parses the body
+  strictly, so an unknown key or enum name raises `ConfigurationError` before
+  the send. The proto descriptor is the schema, so no extra encoding is
+  needed. A recursive check found all 235 typed request model and message
+  pairs match, so only untyped `Dict` bodies (R16) can now fail. 42 entries
+  remain open.
+- R16 is resolved (2026-10-13). Earlier fixes had already typed 20 of the 24
+  bodies. The generator now hoists the last 4 inline bodies into
+  `<Service><Method>Body` schemas, so no `Dict[str, Any]` body remains. Typed
+  bodies are serialized with `exclude_unset=True` on both transports: REST
+  sent `null` for every unset field, which would clear fields on a PATCH. 41
+  entries remain open.
+- R5 is resolved (2026-10-13). A numeric `timeout` or `rest_timeout` is now a
+  total deadline. The REST transport checks it when the headers arrive and on
+  every body chunk, so a trickling server is cut off at most one read after
+  the deadline. One gap remains: headers that trickle in are bounded per read
+  only. An `httpx.Timeout` keeps httpx's per-phase meaning by design. 40
+  entries remain open.
+- R7 is resolved (2026-10-13). Decision: an explicit `email` or `api_token`
+  argument that is empty or only whitespace raises `ConfigurationError` and
+  never falls back. An empty environment variable still counts as unset, as
+  shells commonly use it that way. 39 entries remain open.
+- R6 is resolved (2026-10-13). `APIConfig.client` records the process ID. In
+  a forked child it drops the inherited client without closing it (closing
+  would send a TLS close_notify on the parent's connection), replaces the
+  lock, and opens a new client. gRPC fork handling stays with gRPC
+  (`GRPC_ENABLE_FORK_SUPPORT`). 38 entries remain open.
+- R4 is resolved (2026-10-13). Generated REST calls pass the schema path to
+  `request_json(path_template=...)`, and the quota key is
+  `"<METHOD> <path template>"`, so the map holds one entry per endpoint. The
+  guide reads the public `client.api_config.rate_limits`. 37 entries remain
+  open.
+- R9 is resolved (2026-10-13). Decision: settings are read-only after
+  construction. `APIConfig` refuses assignment to its eight settings, and
+  `KentikCredentials` exposes `email` and `api_token` as properties.
+  `rate_limits` stays a shared, mutable map. The gRPC override check no longer
+  compares fields, since a `with_timeout()` copy cannot change them. 36
+  entries remain open.
+- R10 is resolved (2026-10-13) without the live call. `request_json` encodes
+  the query itself and writes a space as `%20`, which both Envoy and
+  grpc-gateway decode as a space, so the answer to "does the server decode
+  `+`?" no longer matters. httpx still renders the values (`True` as `true`).
+  35 entries remain open.
+- R13 is resolved (2026-10-13). `map_grpc_error` decodes
+  `grpc-status-details-bin` into `details["rpc_status"]` (proto JSON, with an
+  `@type`-only entry for a detail type with no descriptor). The generated REST
+  error classes now store the body itself there, instead of a model dump that
+  lost every detail field, so both transports match. `rate_limit_of_rpc` falls
+  back to trailing metadata for trailers-only responses. 34 entries remain
+  open.
+- R14 is resolved (2026-10-13). Each generated wrapper keeps the exception
+  its proto import raised, and the guard on each gRPC method raises
+  `NotImplementedError` naming it, chained with `from`. The import still
+  degrades instead of failing the client, so REST keeps working. 33 entries
+  remain open.

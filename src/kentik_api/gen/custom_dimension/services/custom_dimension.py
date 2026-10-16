@@ -29,9 +29,10 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.CustomDimensionServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def list_custom_dimensions(
         self, *, api_config_override: Optional[APIConfig] = None
@@ -39,8 +40,8 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.ListCustomDimensionsRequest, None, {}
             )
@@ -72,8 +73,8 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetCustomDimensionInfoRequest,
                 None,
@@ -112,11 +113,11 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateCustomDimensionRequest,
-                {"dimension": data.model_dump(by_alias=True, exclude_none=True)},
+                {"dimension": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
@@ -149,8 +150,8 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteCustomDimensionRequest,
                 None,
@@ -189,11 +190,11 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreatePopulatorRequest,
-                {"populator": data.model_dump(by_alias=True, exclude_none=True)},
+                {"populator": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"custom_dimension_id": customDimensionId},
             )
             _resp, _rate_limit = call_grpc(
@@ -231,8 +232,8 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetPopulatorRequest,
                 None,
@@ -278,11 +279,11 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdatePopulatorRequest,
-                {"populator": data.model_dump(by_alias=True, exclude_none=True)},
+                {"populator": data.model_dump(by_alias=True, exclude_unset=True)},
                 {"custom_dimension_id": customDimensionId, "populator_id": populatorId},
             )
             _resp, _rate_limit = call_grpc(
@@ -320,8 +321,8 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeletePopulatorRequest,
                 None,
@@ -364,8 +365,8 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetPopulatorFieldRequest,
                 None,
@@ -413,11 +414,11 @@ class CustomDimensionServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for custom_dimension service"
-                )
+                    f"gRPC proto modules for custom_dimension service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateCustomDimensionRequest,
-                {"dimension": data.model_dump(by_alias=True, exclude_none=True)},
+                {"dimension": data.model_dump(by_alias=True, exclude_unset=True)},
                 {},
             )
             _resp, _rate_limit = call_grpc(

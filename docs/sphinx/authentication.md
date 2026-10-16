@@ -41,6 +41,11 @@ The client reads the file only when a value is still missing after steps 1
 and 2. It reads the file into memory and never writes its contents into
 `os.environ`, so subprocesses that your program starts do not inherit them.
 
+An argument that is empty or only whitespace raises `ConfigurationError`. The
+client does not fall back to another source, because that would send another
+identity's credentials. Omit the argument, or pass `None`, to use the other
+sources.
+
 | `env_file` | Result |
 | --- | --- |
 | `".env"` (default) | Search for `.env` from the working directory upward. |

@@ -60,6 +60,7 @@ def ListMonitors(
     body = request_json(
         method="get",
         path="/bgp_monitoring/v202210/monitors",
+        path_template="/bgp_monitoring/v202210/monitors",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -87,9 +88,10 @@ def CreateMonitor(
     body = request_json(
         method="post",
         path="/bgp_monitoring/v202210/monitors",
+        path_template="/bgp_monitoring/v202210/monitors",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateMonitor",
@@ -115,6 +117,7 @@ def GetMonitor(
     body = request_json(
         method="get",
         path=f"/bgp_monitoring/v202210/monitors/{path_segment(id)}",
+        path_template="/bgp_monitoring/v202210/monitors/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -145,9 +148,10 @@ def UpdateMonitor(
     body = request_json(
         method="put",
         path=f"/bgp_monitoring/v202210/monitors/{path_segment(id)}",
+        path_template="/bgp_monitoring/v202210/monitors/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateMonitor",
@@ -173,6 +177,7 @@ def DeleteMonitor(
     body = request_json(
         method="delete",
         path=f"/bgp_monitoring/v202210/monitors/{path_segment(id)}",
+        path_template="/bgp_monitoring/v202210/monitors/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -203,9 +208,10 @@ def SetMonitorStatus(
     body = request_json(
         method="put",
         path=f"/bgp_monitoring/v202210/monitors/{path_segment(id)}/status",
+        path_template="/bgp_monitoring/v202210/monitors/{id}/status",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="SetMonitorStatus",

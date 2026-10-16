@@ -29,10 +29,12 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _qualify_colliding_imports,
     _rewrite_grpc_imports,
     clean_schema_names,
+    hoist_inline_request_bodies,
     inline_request_body_refs,
     oneof_members_by_definition,
     patched_swagger,
     relax_oneof_required,
+    relax_response_message_required,
 )
 from google.protobuf import descriptor_pb2  # noqa: E402
 
@@ -398,6 +400,56 @@ def test_inline_request_body_refs_does_not_mutate_input():
     assert "$ref" in post["requestBody"]
 
 
+def _inline_body_schema() -> dict:
+    return {
+        "paths": {
+            "/capabilities/{capability.name}": {
+                "patch": {
+                    "operationId": "CapabilityAdminService_UpdateCapability",
+                    "tags": ["CapabilityAdminService"],
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "capability",
+                                    "properties": {"displayName": {"type": "string"}},
+                                    "required": ["capability"],
+                                }
+                            }
+                        }
+                    },
+                }
+            }
+        },
+        "components": {"schemas": {}},
+    }
+
+
+def test_inline_request_body_is_hoisted_to_a_named_schema():
+    # R16: an inline object body became Dict[str, Any] in the generated wrapper.
+    schema = hoist_inline_request_bodies(_inline_body_schema())
+
+    name = "CapabilityAdminServiceUpdateCapabilityBody"
+    media = schema["paths"]["/capabilities/{capability.name}"]["patch"]["requestBody"]
+    assert media["content"]["application/json"]["schema"] == {
+        "$ref": f"#/components/schemas/{name}"
+    }
+    # `capability` wraps the body on the wire and is not one of its properties.
+    assert schema["components"]["schemas"][name] == {
+        "type": "object",
+        "properties": {"displayName": {"type": "string"}},
+    }
+
+
+def test_hoisting_refuses_to_overwrite_an_existing_schema():
+    schema = _inline_body_schema()
+    schema["components"]["schemas"]["CapabilityAdminServiceUpdateCapabilityBody"] = {}
+
+    with pytest.raises(ValueError, match="exists"):
+        hoist_inline_request_bodies(schema)
+
+
 def test_patched_swagger_does_not_modify_original(tmp_path: Path):
     schema = {
         "paths": {},
@@ -477,6 +529,89 @@ def test_relax_oneof_required_does_not_mutate_input():
     result = relax_oneof_required(schema, {"v1Thing": {"a"}})
     assert result["definitions"]["v1Thing"]["required"] == ["b"]
     assert schema["definitions"]["v1Thing"]["required"] == ["a", "b"]
+
+
+# ---------------------------------------------------------------------------
+# Response models: proto REQUIRED binds requests only, and an unset message
+# field is absent from a response, so FlowPolicySettings.baseline failed (R15).
+# ---------------------------------------------------------------------------
+
+
+def _policy_schema() -> dict:
+    ref = "#/components/schemas/"
+    return {
+        "paths": {
+            "/policies/{id}": {
+                "get": {
+                    "responses": {
+                        "200": {
+                            "content": {
+                                "application/json": {
+                                    "schema": {"$ref": f"{ref}GetPolicyResponse"}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/policies": {
+                "post": {
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {"$ref": f"{ref}CreatePolicyRequest"}
+                            }
+                        }
+                    },
+                    "responses": {},
+                }
+            },
+        },
+        "components": {
+            "schemas": {
+                "GetPolicyResponse": {
+                    "properties": {"policy": {"$ref": f"{ref}Settings"}},
+                    "required": ["policy"],
+                },
+                "Settings": {
+                    "properties": {
+                        "baseline": {"$ref": f"{ref}Baseline"},
+                        "mode": {"$ref": f"{ref}Mode"},
+                        "name": {"type": "string"},
+                        "rules": {"type": "array", "items": {"$ref": f"{ref}Baseline"}},
+                    },
+                    "required": ["baseline", "mode", "name", "rules"],
+                },
+                "Baseline": {"properties": {"x": {"type": "string"}}},
+                "Mode": {"type": "string", "enum": ["A", "B"]},
+                "CreatePolicyRequest": {
+                    "properties": {"settings": {"$ref": f"{ref}Baseline"}},
+                    "required": ["settings"],
+                },
+            }
+        },
+    }
+
+
+def test_response_models_drop_message_fields_from_required():
+    schemas = relax_response_message_required(_policy_schema())["components"]["schemas"]
+    assert "required" not in schemas["GetPolicyResponse"]
+    # Enums, scalars and repeated fields always reach the response, so they stay.
+    assert schemas["Settings"]["required"] == ["mode", "name", "rules"]
+
+
+def test_request_only_models_keep_required_message_fields():
+    original = _policy_schema()
+    # A requestBodies entry's `required` is a bool, not a field list.
+    original["components"]["requestBodies"] = {"Body": {"required": True}}
+    schemas = relax_response_message_required(original)["components"]["schemas"]
+    assert schemas["CreatePolicyRequest"]["required"] == ["settings"]
+    assert original["components"]["schemas"]["Settings"]["required"] == [
+        "baseline",
+        "mode",
+        "name",
+        "rules",
+    ]
 
 
 # ---------------------------------------------------------------------------

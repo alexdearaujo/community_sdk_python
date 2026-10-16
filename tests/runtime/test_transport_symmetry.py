@@ -108,6 +108,54 @@ def test_api_fault_reaches_the_same_except_branch_on_both_transports(
     assert rest_exc.value.status_code == grpc_exc.value.status_code == 404
 
 
+def test_rpc_status_details_are_the_same_on_both_transports(monkeypatch, rpc_error):
+    from google.protobuf.json_format import ParseDict
+    from google.rpc import status_pb2
+
+    from kentik_api.gen.device.error import ListDevicesError
+
+    status = {
+        "code": 3,
+        "message": "bad",
+        "details": [
+            {
+                "@type": "type.googleapis.com/google.rpc.BadRequest",
+                "fieldViolations": [{"field": "limit", "description": "too big"}],
+            }
+        ],
+    }
+    fault = httpx.Response(400, json=status, request=_REQUEST)
+    monkeypatch.setattr(httpx.Client, "request", lambda self, *a, **k: fault)
+    error = rpc_error(grpc.StatusCode.INVALID_ARGUMENT, "bad")
+    error.trailing_metadata = lambda: [
+        (
+            "grpc-status-details-bin",
+            ParseDict(status, status_pb2.Status()).SerializeToString(),
+        )
+    ]
+
+    with pytest.raises(HTTPException) as rest_exc:
+        request_json(
+            "GET",
+            "/device/v202504beta2/device",
+            api_config_override=APIConfig(
+                base_path="https://api.example.com",
+                auth_email="dev@example.com",
+                auth_token="t",
+            ),
+            error_cls=ListDevicesError,
+        )
+
+    def _stub(_request):
+        raise error
+
+    with pytest.raises(HTTPException) as grpc_exc:
+        call_grpc(_stub, object(), error_cls=ListDevicesError)
+
+    assert rest_exc.value.details["rpc_status"] == status
+    assert grpc_exc.value.details["rpc_status"] == status
+
+
 def test_a_non_region_value_is_a_configuration_error():
     from kentik_api import KentikAPI
     from kentik_api.errors import ConfigurationError

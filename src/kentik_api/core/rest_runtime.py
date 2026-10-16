@@ -2,15 +2,16 @@
 from __future__ import annotations
 
 import json
+import time
 from enum import Enum
 from typing import Any, Dict, Optional, TypeVar
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 
 import httpx
 from pydantic import BaseModel, ValidationError
 
 from kentik_api.auth.credentials import auth_headers
-from kentik_api.core.api_config import APIConfig
+from kentik_api.core.api_config import DEADLINE_EXTENSION, APIConfig
 from kentik_api.core.rate_limit import RateLimit, attach_rate_limit, rate_limit_of
 from kentik_api.errors import (
     AuthenticationError,
@@ -79,6 +80,19 @@ def _payload_preview(payload: Any, *, max_chars: int = 200) -> str:
     return f"{rendered[:max_chars]}..."
 
 
+def _unusable_body(
+    operation_name: str, method: str, path: str, problem: str, preview: str
+) -> HTTPException:
+    """A success status whose body the SDK cannot use: the 502 a gateway would give."""
+    return HTTPException(
+        status_code=502,
+        message=f"{operation_name} returned {problem}",
+        method=method.upper(),
+        path=path,
+        details={"response_preview": preview},
+    )
+
+
 def parse_response_model(
     model_cls: type[_MODEL_T],
     body: Any,
@@ -88,7 +102,8 @@ def parse_response_model(
     path: str,
 ) -> _MODEL_T:
     if body is None:
-        return model_cls.model_construct()
+        # proto JSON encodes an empty message as {}, never null.
+        raise _unusable_body(operation_name, method, path, "a null body", "null")
 
     try:
         parsed = model_cls.model_validate(body)
@@ -120,7 +135,7 @@ def parse_response_model_list(
     path: str,
 ) -> list[_MODEL_T]:
     if body is None:
-        return []
+        raise _unusable_body(operation_name, method, path, "a null body", "null")
 
     if not isinstance(body, list):
         raise HTTPException(
@@ -175,6 +190,7 @@ def request_json(
     method: str,
     path: str,
     *,
+    path_template: Optional[str] = None,
     api_config_override: Optional[APIConfig] = None,
     query_params: Optional[Dict[str, Any]] = None,
     json_body: Any = None,
@@ -183,7 +199,11 @@ def request_json(
     operation_name: str = "request",
     error_cls: type[HTTPException] = HTTPException,
 ) -> Any:
-    """Shared REST request execution for generated service methods."""
+    """Shared REST request execution for generated service methods.
+
+    `path_template` is the schema path, such as `/device/v1/device/{device.id}`.
+    It keys the quota, so one endpoint keeps one entry whatever IDs it is called with.
+    """
     api_config = api_config_override if api_config_override else APIConfig()
     # An override replaces the client's config wholesale, credentials included,
     # so one that omits them must fail here rather than send an unauthenticated
@@ -221,16 +241,25 @@ def request_json(
         for (key, value) in (query_params or {}).items()
         if value is not None
     }
+    # httpx writes a space as "+", which Envoy's transcoder does not decode by
+    # default; "%20" means a space to every server. httpx still renders the values.
+    query = urlencode(
+        httpx.QueryParams(clean_query_params).multi_items(), quote_via=quote
+    )
+
+    extensions = {}
+    if api_config.rest_deadline is not None:
+        extensions[DEADLINE_EXTENSION] = time.monotonic() + api_config.rest_deadline
 
     try:
         response = api_config.client.request(
             method.lower(),
-            httpx.URL(path),
+            httpx.URL(path, query=query.encode()) if query else httpx.URL(path),
             headers=headers,
-            params=clean_query_params,
             json=json_body,
             # Per request, so a with_timeout() copy sharing this client applies its own.
             timeout=api_config.rest_timeout,
+            extensions=extensions,
         )
     except httpx.RequestError as exc:
         raise TransportError(
@@ -239,7 +268,7 @@ def request_json(
 
     rate_limit = RateLimit.from_headers(response.headers)
     if rate_limit is not None:
-        api_config.rate_limits[path] = rate_limit
+        api_config.rate_limits[f"{method.upper()} {path_template or path}"] = rate_limit
 
     try:
         body = _handle_response(
@@ -339,15 +368,11 @@ def _handle_response(
     except ValueError:
         preview = response.text[:200].replace("\n", " ")
         content_type = response.headers.get("content-type", "unknown")
-        _raise_http_error(
-            (
-                f"{operation_name} returned non-JSON response "
-                f"(content-type={content_type}, preview={preview!r})"
-            ),
-            details={
-                "method": method.upper(),
-                "path": path,
-                "content_type": content_type,
-                "preview": preview,
-            },
-        )
+        # Not error_cls: its message blames the status code, which was a success.
+        raise _unusable_body(
+            operation_name,
+            method,
+            path,
+            f"a non-JSON body (content-type={content_type})",
+            preview,
+        ) from None

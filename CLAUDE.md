@@ -81,8 +81,8 @@ query argument that resolves to no field fails generation or raises
 `ParseError`, never drops silently. A wrapper method raises
 `NotImplementedError` for `GrpcTransport` in exactly two cases: the
 service's proto companions failed to import at wrapper `__init__`
-time ("gRPC proto dependencies not installed for `<service>`
-service"), or no RPC shares that REST operation's HTTP rule
+time ("gRPC proto modules for `<service>` service failed to import:
+`<cause>`", chained from the import error), or no RPC shares that REST operation's HTTP rule
 ("gRPC translation for `<Operation>` is not yet
 implemented"). Both REST and gRPC return identical Pydantic models
 for every operation gRPC covers, and raise the same exception type
@@ -500,7 +500,8 @@ task.
 environment variables, then the `env_file` arg (`.env` by default,
 searched upward from the cwd; `None` disables it). The file is read
 with `dotenv_values` into a dict, and only when a value is still
-missing. Never switch this back to `load_dotenv`: writing the file
+missing. An explicit argument that is empty or only whitespace raises
+`ConfigurationError` instead of falling back. Never switch this back to `load_dotenv`: writing the file
 into `os.environ` leaks secrets into every subprocess, which breaks
 callers that keep credentials encrypted (sops, age). Never read or print `.env` contents — it holds real
 credentials.

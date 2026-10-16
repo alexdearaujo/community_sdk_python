@@ -29,9 +29,10 @@ class UserServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.UserServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def list_users(
         self, *, api_config_override: Optional[APIConfig] = None
@@ -39,8 +40,8 @@ class UserServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for user service"
-                )
+                    f"gRPC proto modules for user service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.ListUsersRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListUsers,
@@ -73,11 +74,11 @@ class UserServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for user service"
-                )
+                    f"gRPC proto modules for user service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateUserRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -109,8 +110,8 @@ class UserServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for user service"
-                )
+                    f"gRPC proto modules for user service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.GetUserRequest, None, {"id": id})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetUser,
@@ -145,11 +146,11 @@ class UserServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for user service"
-                )
+                    f"gRPC proto modules for user service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateUserRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"user.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -182,8 +183,8 @@ class UserServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for user service"
-                )
+                    f"gRPC proto modules for user service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteUserRequest, None, {"id": id}
             )
@@ -216,8 +217,8 @@ class UserServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for user service"
-                )
+                    f"gRPC proto modules for user service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.ResetActiveSessionsRequest, None, {"id": id}
             )
@@ -250,8 +251,8 @@ class UserServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for user service"
-                )
+                    f"gRPC proto modules for user service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.ResetApiTokenRequest, None, {"id": id}
             )

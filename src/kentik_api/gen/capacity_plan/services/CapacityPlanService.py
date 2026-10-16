@@ -47,6 +47,7 @@ def ListCapacityPlans(
     body = request_json(
         method="get",
         path="/capacity_plan/v202212/capacity_plan",
+        path_template="/capacity_plan/v202212/capacity_plan",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -74,6 +75,7 @@ def ListCapacitySummaries(
     body = request_json(
         method="get",
         path="/capacity_plan/v202212/capacity_plan/summary",
+        path_template="/capacity_plan/v202212/capacity_plan/summary",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -101,6 +103,7 @@ def GetCapacityPlan(
     body = request_json(
         method="get",
         path=f"/capacity_plan/v202212/capacity_plan/{path_segment(id)}",
+        path_template="/capacity_plan/v202212/capacity_plan/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -128,6 +131,7 @@ def GetCapacitySummary(
     body = request_json(
         method="get",
         path=f"/capacity_plan/v202212/capacity_plan/{path_segment(id)}/summary",
+        path_template="/capacity_plan/v202212/capacity_plan/{id}/summary",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

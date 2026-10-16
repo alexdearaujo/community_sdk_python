@@ -1,7 +1,7 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `make generate`. Do not edit by hand.
 
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -20,4 +20,4 @@ class EventPolicySettings(BaseModel):
 
     dimensions: List[str] = Field(validation_alias="dimensions")
 
-    filters: PolicyFilters = Field(validation_alias="filters")
+    filters: Optional[PolicyFilters] = Field(validation_alias="filters", default=None)

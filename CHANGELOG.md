@@ -98,7 +98,9 @@ by a number. The Service word stays when it is the object of the call
   applies.
 - **Quota reporting.** `kentik_api.rate_limit_of(result)` returns the quota
   that the call reported. Every SDK exception has a `rate_limit` attribute.
-  `client._transport.rate_limits` holds the latest quota for each endpoint.
+  `client.api_config.rate_limits` holds the latest quota for each endpoint,
+  keyed by HTTP method and path template on REST (for example
+  `GET /device/v202504beta2/device/{device.id}`) and by gRPC method on gRPC.
   See [the rate limiting guide](docs/sphinx/guides/rate_limiting.md).
 - **`HTTPException.grpc_status_code`** holds the gRPC status name verbatim.
 - **Connection reuse.** A `KentikAPI` client uses one HTTP connection for all
@@ -114,6 +116,46 @@ by a number. The Service word stays when it is the object of the call
 
 ### Fixed
 
+- **A failed gRPC proto import names its cause.** When a service's proto
+  modules failed to import, every gRPC call raised "gRPC proto dependencies
+  not installed", even for a descriptor-pool conflict, which needs a different
+  fix. The `NotImplementedError` now reads "gRPC proto modules for `<service>`
+  service failed to import: `<cause>`" and is chained from the import error.
+- **gRPC errors keep the server's error details.** gRPC dropped the
+  `google.rpc.Status` that the server sends in a trailer, so a `BadRequest`
+  did not say which field it rejected. It is now decoded into
+  `exc.details["rpc_status"]`. On REST, `exc.details["rpc_status"]` kept only
+  each detail's `@type`, and renamed it `type`. It now holds the full JSON
+  body. Both transports give the same dict.
+- **gRPC errors report quota from a trailers-only response.** An error with no
+  body sends every header as trailing metadata, and the SDK read quota only
+  from initial metadata, so a `429` on gRPC could carry no `rate_limit`. Both
+  are now read.
+- **A space in a REST query value goes out as `%20`.** httpx wrote it as `+`,
+  which Envoy's gRPC transcoder does not decode by default, so a value such as
+  a journeys `prompt` could reach the service with plus signs. `%20` means a
+  space to every server.
+- **`APIConfig` and `KentikCredentials` settings are read-only.** The SDK reads
+  each setting at a different time: `verify` and `base_path` when the REST
+  connection opens, the credentials when the gRPC channel opens, a timeout on
+  every call. So a change after construction reached some calls, or none. Each
+  assignment now raises `AttributeError`. Use `with_timeout()` for timeouts, or
+  build a new `KentikAPI` for anything else.
+- **A forked process opens its own REST connection.** After `os.fork()`, for
+  example in a multiprocessing worker, the child reused the parent's pooled
+  connection, so both processes wrote to one socket. The child now opens a new
+  connection on its first REST call. gRPC channels follow gRPC's own fork rules.
+- **An empty credential argument raises an error.** `KentikAPI(email="")`
+  took the email from the environment or `.env` instead, so a caller whose
+  secret lookup returned nothing silently ran as another identity. An `email`
+  or `api_token` argument that is empty or only whitespace now raises
+  `ConfigurationError`. Omit the argument to read it from the environment.
+- **A REST timeout bounds the whole call.** httpx restarts its read timeout on
+  every chunk, so a server that kept sending a few bytes held a call with
+  `timeout=1.0` open for 11 seconds. A numeric `timeout` or `rest_timeout` is
+  now a total deadline: the call raises `TransportError` once the deadline
+  passes, at most one read later. A `rest_timeout` given as an `httpx.Timeout`
+  keeps httpx's per-phase meaning and sets no total deadline.
 - **`Alert.acknowledgement` is the acknowledgement object again.** The
   generator stripped a version prefix, and the enum `v202505AlertAcknowledgement`
   overwrote the object `AlertAcknowledgement`. Any alert with an acknowledgement
@@ -128,6 +170,49 @@ by a number. The Service word stays when it is the object of the call
   `ExternalContext.jiraCloud` are now `Optional`, so alerts with an external
   context parse, and `set_external_context` accepts one context.
   `Nlri.prefix` (`bgp_monitoring`) is now `Optional[str]`.
+- **Request bodies send only the fields you set.** REST sent `null` for every
+  optional field left unset. On a PATCH, grpc-gateway builds the update mask
+  from the body keys, so those nulls cleared the fields. Both transports now
+  send exactly the fields set on the model. To clear a field, set it to `None`
+  explicitly.
+- **Four untyped request bodies are now models.** Their `data` parameter took
+  `Dict[str, Any]`, because the schema declares their bodies inline. `data`
+  now takes a typed model:
+  - `kagent` `upsert_agent_capability`: `AgentCapabilityServiceUpsertAgentCapabilityBody`
+  - `kagent` `update_agent`: `AgentServiceUpdateAgentBody`
+  - `kagent` `capability_admin_service__update_capability`:
+    `CapabilityAdminServiceUpdateCapabilityBody`
+  - `rbux` `update_scope`: `ScopeServiceUpdateScopeBody`
+- **A misspelled key or enum value in a gRPC body raises an error.** gRPC
+  dropped a body key or enum name the proto does not declare. On a
+  full-replace update this blanked the field the caller meant to set, and on a
+  PATCH it left the update mask empty, so every field was replaced. gRPC now
+  raises `ConfigurationError` that names the bad key before it sends anything.
+  Typed request models are not affected: every field they declare exists in
+  the proto. Code that passes extra keys in a `Dict[str, Any]` body must remove
+  them.
+- **A gRPC PATCH updates only the fields you send.** For a PATCH whose body is
+  one field, grpc-gateway builds the request's `update_mask` from the keys in
+  the REST body. The gRPC call sent an empty mask instead, which updates every
+  field and can clear the ones you left out. gRPC now builds the same mask.
+  This applies to `client.kagent.capability_admin_service__update_capability`.
+- **A success status with an unusable body raises a 502.** A REST success
+  whose body is not JSON raised the operation's error class with the message
+  "failed with status code: 200". A JSON `null` body returned an empty model
+  that nothing validated. Both now raise `HTTPException` with status 502 and
+  a message that names the problem, as a body of the wrong shape already did.
+- **Responses parse when the server leaves a message field unset.** A proto
+  `REQUIRED` field binds the request, not the response, and an unset message
+  field is absent from a response. So a policy without a baseline failed
+  validation. In models that a response can reach, message fields are now
+  `Optional`. Models used only in requests keep them required. Code that reads
+  these fields must handle `None`: `FlowPolicySettings.baseline`,
+  `FlowPolicySettings.dataset`, `FlowPolicySettings.evaluation`,
+  `FlowPolicySettingsDatasetConfig.sources`,
+  `FlowPolicySettingsDatasetConfig.filters`,
+  `FlowPolicyLevelSettings.activation`, `EventPolicySettings.filters`,
+  `EventPolicyLevelSettings.filters` (`alerting`), and
+  `GetSecretResponse.secret` (`vault`).
 - **A gRPC response over 4 MiB no longer reads as a quota error.** The channel
   now allows 40 MiB, and `KentikAPI(grpc_options=[...])` changes it. A response
   over the limit raises `TransportError`, not `HTTPException` with status 429.

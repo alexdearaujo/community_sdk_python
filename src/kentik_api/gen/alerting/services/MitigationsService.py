@@ -247,6 +247,7 @@ def List(
     body = request_json(
         method="get",
         path="/v202505/mitigations",
+        path_template="/v202505/mitigations",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -276,9 +277,10 @@ def Create(
     body = request_json(
         method="post",
         path="/v202505/mitigations",
+        path_template="/v202505/mitigations",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="Create",
@@ -304,6 +306,7 @@ def AvailableActions(
     body = request_json(
         method="get",
         path="/v202505/mitigations/actions",
+        path_template="/v202505/mitigations/actions",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -331,6 +334,7 @@ def Get(
     body = request_json(
         method="get",
         path=f"/v202505/mitigations/{path_segment(action)}",
+        path_template="/v202505/mitigations/{action}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -361,9 +365,10 @@ def Act(
     body = request_json(
         method="post",
         path=f"/v202505/mitigations/{path_segment(action)}",
+        path_template="/v202505/mitigations/{action}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="Act",
@@ -389,6 +394,7 @@ def AvailableActionsForMitigation(
     body = request_json(
         method="get",
         path=f"/v202505/mitigations/{path_segment(id)}/actions",
+        path_template="/v202505/mitigations/{id}/actions",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

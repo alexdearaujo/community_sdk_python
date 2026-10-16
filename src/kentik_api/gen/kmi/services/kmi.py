@@ -29,9 +29,10 @@ class KmiServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.KmiServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def get_global_insights(
         self,
@@ -47,8 +48,8 @@ class KmiServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kmi service"
-                )
+                    f"gRPC proto modules for kmi service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetGlobalInsightsRequest,
                 None,
@@ -104,8 +105,8 @@ class KmiServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kmi service"
-                )
+                    f"gRPC proto modules for kmi service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetASNInsightsRequest,
                 None,
@@ -160,11 +161,11 @@ class KmiServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kmi service"
-                )
+                    f"gRPC proto modules for kmi service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetASNDetailsRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"market_id": marketId, "asn": asn, "type": type},
             )
             _resp, _rate_limit = call_grpc(
@@ -205,11 +206,11 @@ class KmiServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kmi service"
-                )
+                    f"gRPC proto modules for kmi service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetRankingsRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"market_id": marketId, "rank_type": rankType, "ip": ip},
             )
             _resp, _rate_limit = call_grpc(
@@ -244,8 +245,8 @@ class KmiServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for kmi service"
-                )
+                    f"gRPC proto modules for kmi service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.ListMarketsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListMarkets,

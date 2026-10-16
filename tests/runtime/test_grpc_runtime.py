@@ -50,6 +50,56 @@ def test_unauthenticated_raises_auth_error(rpc_error):
     assert "bad token" in str(result)
 
 
+def test_google_rpc_status_details_reach_the_error(rpc_error):
+    # REST returns these details in the JSON error body; gRPC sends them in a trailer.
+    from google.protobuf.any_pb2 import Any as AnyMessage
+    from google.rpc import error_details_pb2, status_pb2
+
+    violation = error_details_pb2.BadRequest(
+        field_violations=[{"field": "device.name", "description": "required"}]
+    )
+    known, unknown = AnyMessage(), AnyMessage(type_url="type.googleapis.com/x.Y")
+    known.Pack(violation)
+    status = status_pb2.Status(code=3, message="bad", details=[known, unknown])
+    error = rpc_error(grpc.StatusCode.INVALID_ARGUMENT, "bad")
+    error.trailing_metadata = lambda: [
+        ("grpc-status-details-bin", status.SerializeToString())
+    ]
+
+    result = map_grpc_error(error)
+
+    assert isinstance(result, HTTPException)
+    assert result.details["rpc_status"] == {
+        "code": 3,
+        "message": "bad",
+        "details": [
+            {
+                "@type": "type.googleapis.com/google.rpc.BadRequest",
+                "fieldViolations": [
+                    {"field": "device.name", "description": "required"}
+                ],
+            },
+            {"@type": "type.googleapis.com/x.Y"},
+        ],
+    }
+    assert result.details["rpc_status_code"] == 3
+
+
+@pytest.mark.parametrize(
+    "trailers",
+    [None, [], [("grpc-status-details-bin", b"\xff\xff")]],
+    ids=["none", "empty", "corrupt"],
+)
+def test_missing_or_corrupt_status_details_leave_details_empty(rpc_error, trailers):
+    error = rpc_error(grpc.StatusCode.INVALID_ARGUMENT, "bad")
+    error.trailing_metadata = lambda: trailers
+
+    result = map_grpc_error(error)
+
+    assert isinstance(result, HTTPException)
+    assert result.details == {}
+
+
 @pytest.mark.parametrize(
     ("code", "http_status"), HTTP_MAPPED.items(), ids=lambda v: str(v)
 )
@@ -218,6 +268,73 @@ def test_build_grpc_request_rejects_a_field_the_request_does_not_declare(device_
         build_grpc_request(device_pb2.GetDeviceRequest, None, {"deviceid": "42"})
 
 
+@pytest.mark.parametrize(
+    ("body", "bad"),
+    [
+        ({"capability": {"dispalyName": "Edge"}}, "dispalyName"),
+        ({"capability": {"name": "snmp", "nmae": "x"}}, "nmae"),
+    ],
+)
+def test_build_grpc_request_rejects_an_unknown_body_key(capability_pb2, body, bad):
+    # R11: a dropped key left the update mask empty, so the PATCH would replace
+    # every field of the capability instead of failing.
+    with pytest.raises(ConfigurationError, match=bad):
+        build_grpc_request(
+            capability_pb2.UpdateCapabilityRequest,
+            body,
+            {"capability.name": "snmp"},
+            update_mask_from="capability",
+        )
+
+
+def test_build_grpc_request_rejects_an_unknown_enum_name(device_pb2):
+    with pytest.raises(ConfigurationError, match="DEVICE_VIEW_FUL"):
+        build_grpc_request(
+            device_pb2.ListDevicesRequest, {"view": "DEVICE_VIEW_FUL"}, {}
+        )
+
+
+@pytest.fixture
+def capability_pb2():
+    import kentik_api.gen.pb_companions  # noqa: F401  -- registers proto dependencies
+    from kentik_api.gen.kagent.pb import capability_pb2
+
+    return capability_pb2
+
+
+def test_patch_derives_update_mask_from_the_sent_keys(capability_pb2):
+    # R12: grpc-gateway fills the mask from the REST body; an empty mask on gRPC
+    # would replace every field of the capability, not just the ones sent.
+    request = build_grpc_request(
+        capability_pb2.UpdateCapabilityRequest,
+        {"capability": {"displayName": "Edge", "description": ""}},
+        {"capability.name": "snmp"},
+        update_mask_from="capability",
+    )
+
+    assert list(request.update_mask.paths) == ["display_name", "description"]
+    assert request.capability.name == "snmp"
+
+
+def test_update_mask_paths_recurse_into_nested_messages(device_pb2):
+    from kentik_api.core.grpc_runtime import _mask_paths
+
+    device = device_pb2.UpdateDeviceRequest().device
+    sent = {"deviceName": "edge-1", "deviceSnmpV3Conf": {"username": "u"}}
+
+    assert _mask_paths(device, sent) == ["device_name", "device_snmp_v3_conf.username"]
+
+
+def test_no_update_mask_without_update_mask_from(capability_pb2):
+    request = build_grpc_request(
+        capability_pb2.UpdateCapabilityRequest,
+        {"capability": {"displayName": "Edge"}},
+        {"capability.name": "snmp"},
+    )
+
+    assert not request.update_mask.paths
+
+
 def test_call_grpc_rejects_direct_per_call_config_override_for_grpc():
     called = False
 
@@ -264,19 +381,13 @@ def test_call_grpc_allows_with_timeout_override_for_deadline_only():
     assert seen_timeout == 7.5
 
 
-def test_call_grpc_rejects_tampered_with_timeout_override():
-    class _Stub:
-        _method = "/svc.Service/Op"
+def test_a_timeout_override_cannot_be_tampered_with():
+    override = APIConfig(auth_email="dev@example.com", auth_token="token").with_timeout(
+        grpc_deadline=7.5
+    )
 
-        def __call__(self, _request, **_kwargs):
-            return b"ok"
-
-    base = APIConfig(auth_email="dev@example.com", auth_token="token")
-    override = base.with_timeout(grpc_deadline=7.5)
-    override.base_path = "https://127.0.0.1:1"
-
-    with pytest.raises(ConfigurationError, match="only change timeouts"):
-        call_grpc(_Stub(), object(), api_config=override)
+    with pytest.raises(AttributeError, match="read-only"):
+        override.base_path = "https://127.0.0.1:1"
 
 
 def test_call_grpc_raises_the_operation_error_class_like_rest(rpc_error):

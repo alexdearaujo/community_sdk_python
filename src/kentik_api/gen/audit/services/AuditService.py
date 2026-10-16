@@ -41,6 +41,7 @@ def ListAuditEvents(
     body = request_json(
         method="get",
         path="/audit/v202601/events",
+        path_template="/audit/v202601/events",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -71,6 +72,7 @@ def GetAuditEvent(
     body = request_json(
         method="get",
         path=f"/audit/v202601/events/{path_segment(id)}",
+        path_template="/audit/v202601/events/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -98,6 +100,7 @@ def GetAuditEvent_2(
     body = request_json(
         method="get",
         path=f"/audit/v202601/events/{path_segment(id)}/{path_segment(ctime)}",
+        path_template="/audit/v202601/events/{id}/{ctime}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

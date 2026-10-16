@@ -14,9 +14,9 @@ from scripts.generation.fixup import (
     _dedupe_top_level_function_names,
     _fix_import_aliases,
     _fix_list_collision,
+    _fix_model_field_names,
     _fix_path_parameters,
     _fix_pydantic_construct,
-    _fix_model_field_names,
     _fix_typing_wildcard,
     _fix_wildcard_exports,
     _inject_data_body,
@@ -374,4 +374,4 @@ def test_inject_data_body_adds_json_body_param():
             )
         """)
     result = _inject_data_body(content)
-    assert "json_body=data.model_dump(by_alias=True)" in result
+    assert "json_body=data.model_dump(by_alias=True, exclude_unset=True)" in result

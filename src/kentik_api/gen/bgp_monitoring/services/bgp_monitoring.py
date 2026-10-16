@@ -30,9 +30,10 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.BgpMonitoringAdminServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.bgp_monitoring.pb.bgp_monitoring_pb2 as _pb2_2_mod
@@ -42,9 +43,10 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_stub_2 = _pb2_grpc_2_mod.BgpMonitoringDataServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_2 = None
                 self._grpc_stub_2 = None
+                self._grpc_import_error_2 = exc
 
     def list_monitors(
         self, *, api_config_override: Optional[APIConfig] = None
@@ -52,8 +54,8 @@ class BgpMonitoringServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for bgp_monitoring service"
-                )
+                    f"gRPC proto modules for bgp_monitoring service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.ListMonitorsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListMonitors,
@@ -86,11 +88,11 @@ class BgpMonitoringServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for bgp_monitoring service"
-                )
+                    f"gRPC proto modules for bgp_monitoring service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateMonitorRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -122,8 +124,8 @@ class BgpMonitoringServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for bgp_monitoring service"
-                )
+                    f"gRPC proto modules for bgp_monitoring service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetMonitorRequest, None, {"id": id}
             )
@@ -160,11 +162,11 @@ class BgpMonitoringServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for bgp_monitoring service"
-                )
+                    f"gRPC proto modules for bgp_monitoring service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateMonitorRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"monitor.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -197,8 +199,8 @@ class BgpMonitoringServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for bgp_monitoring service"
-                )
+                    f"gRPC proto modules for bgp_monitoring service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteMonitorRequest, None, {"id": id}
             )
@@ -235,11 +237,11 @@ class BgpMonitoringServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for bgp_monitoring service"
-                )
+                    f"gRPC proto modules for bgp_monitoring service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.SetMonitorStatusRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -275,11 +277,11 @@ class BgpMonitoringServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for bgp_monitoring service"
-                )
+                    f"gRPC proto modules for bgp_monitoring service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.GetMetricsForTargetRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -314,11 +316,11 @@ class BgpMonitoringServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for bgp_monitoring service"
-                )
+                    f"gRPC proto modules for bgp_monitoring service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.GetRoutesForTargetRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(

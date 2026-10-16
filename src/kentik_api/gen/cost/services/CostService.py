@@ -37,6 +37,7 @@ def ListCostProviders(
     body = request_json(
         method="get",
         path="/cost/v202308/cost/providers",
+        path_template="/cost/v202308/cost/providers",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -64,6 +65,7 @@ def ListCostProviderSummaries(
     body = request_json(
         method="get",
         path="/cost/v202308/cost/summary",
+        path_template="/cost/v202308/cost/summary",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -94,6 +96,7 @@ def GetCostProviderSummary(
     body = request_json(
         method="get",
         path=f"/cost/v202308/cost/summary/{path_segment(id)}",
+        path_template="/cost/v202308/cost/summary/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

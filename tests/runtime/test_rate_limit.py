@@ -126,8 +126,30 @@ def test_rest_success_records_quota_per_path(monkeypatch):
         "/b",
     )
 
-    assert config.rate_limits["/a"].remaining == 59
-    assert config.rate_limits["/b"].remaining == 12
+    assert config.rate_limits["GET /a"].remaining == 59
+    assert config.rate_limits["GET /b"].remaining == 12
+
+
+def test_rest_quota_has_one_key_per_endpoint_not_per_id(monkeypatch):
+    config = _rest_config()
+    monkeypatch.setattr(
+        httpx.Client,
+        "request",
+        lambda self, *a, **k: httpx.Response(200, json={}, headers=MEASURED),
+    )
+
+    for method, device_id in (("GET", "1"), ("GET", "2"), ("DELETE", "1")):
+        request_json(
+            method,
+            f"/device/v1/device/{device_id}",
+            path_template="/device/v1/device/{device.id}",
+            api_config_override=config,
+        )
+
+    assert set(config.rate_limits) == {
+        "GET /device/v1/device/{device.id}",
+        "DELETE /device/v1/device/{device.id}",
+    }
 
 
 @pytest.mark.parametrize(
@@ -190,6 +212,19 @@ def test_grpc_error_carries_quota_from_initial_metadata(rpc_error):
         call_grpc(_stub, object())
 
     rate_limit = exc_info.value.rate_limit
+    assert rate_limit is not None
+    assert rate_limit.remaining == 0
+
+
+def test_grpc_error_reads_quota_from_trailers_only_responses(rpc_error):
+    # A gRPC error with no body is "Trailers-Only": every header arrives as
+    # trailing metadata, and the initial metadata is empty.
+    error = rpc_error(grpc.StatusCode.RESOURCE_EXHAUSTED, "slow down")
+    error.initial_metadata = lambda: ()
+    error.trailing_metadata = lambda: [("x-ratelimit-remaining", "0")]
+
+    rate_limit = rate_limit_of_rpc(error)
+
     assert rate_limit is not None
     assert rate_limit.remaining == 0
 

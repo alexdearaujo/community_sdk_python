@@ -130,6 +130,19 @@ def test_environment_beats_env_file_and_args_beat_both(no_env_credentials, monke
         assert _credentials(client) == ("env@example.com", "arg-token")
 
 
+@pytest.mark.parametrize("field", ["email", "api_token"])
+@pytest.mark.parametrize("value", ["", "  "])
+def test_an_explicit_empty_credential_is_refused(no_env_credentials, field, value):
+    # Falling back would send another identity's credentials, e.g. from .env.
+    (no_env_credentials / ".env").write_text(
+        "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN=file-token\n"
+    )
+    args = {"email": "arg@example.com", "api_token": "arg-token", field: value}
+
+    with pytest.raises(ConfigurationError, match=field):
+        KentikAPI(**args)
+
+
 def test_client_mounts_selected_services():
     client = KentikAPI(
         email="dev@example.com",

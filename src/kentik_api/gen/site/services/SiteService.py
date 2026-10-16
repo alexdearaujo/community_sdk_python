@@ -60,6 +60,7 @@ def ListSiteMarkets(
     body = request_json(
         method="get",
         path="/site/v202509/site_markets",
+        path_template="/site/v202509/site_markets",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -87,9 +88,10 @@ def CreateSiteMarket(
     body = request_json(
         method="post",
         path="/site/v202509/site_markets",
+        path_template="/site/v202509/site_markets",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateSiteMarket",
@@ -115,6 +117,7 @@ def GetSiteMarket(
     body = request_json(
         method="get",
         path=f"/site/v202509/site_markets/{path_segment(id)}",
+        path_template="/site/v202509/site_markets/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -145,9 +148,10 @@ def UpdateSiteMarket(
     body = request_json(
         method="put",
         path=f"/site/v202509/site_markets/{path_segment(id)}",
+        path_template="/site/v202509/site_markets/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateSiteMarket",
@@ -173,6 +177,7 @@ def DeleteSiteMarket(
     body = request_json(
         method="delete",
         path=f"/site/v202509/site_markets/{path_segment(id)}",
+        path_template="/site/v202509/site_markets/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -198,6 +203,7 @@ def ListSites(api_config_override: Optional[APIConfig] = None) -> ListSitesRespo
     body = request_json(
         method="get",
         path="/site/v202509/sites",
+        path_template="/site/v202509/sites",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -225,9 +231,10 @@ def CreateSite(
     body = request_json(
         method="post",
         path="/site/v202509/sites",
+        path_template="/site/v202509/sites",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateSite",
@@ -253,6 +260,7 @@ def GetSite(
     body = request_json(
         method="get",
         path=f"/site/v202509/sites/{path_segment(id)}",
+        path_template="/site/v202509/sites/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -283,9 +291,10 @@ def UpdateSite(
     body = request_json(
         method="put",
         path=f"/site/v202509/sites/{path_segment(id)}",
+        path_template="/site/v202509/sites/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateSite",
@@ -311,6 +320,7 @@ def DeleteSite(
     body = request_json(
         method="delete",
         path=f"/site/v202509/sites/{path_segment(id)}",
+        path_template="/site/v202509/sites/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

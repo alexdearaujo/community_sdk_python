@@ -51,6 +51,7 @@ def ListCustomDimensions(
     body = request_json(
         method="get",
         path="/custom_dimensions/v202411alpha1",
+        path_template="/custom_dimensions/v202411alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -78,6 +79,7 @@ def GetCustomDimensionInfo(
     body = request_json(
         method="get",
         path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}",
+        path_template="/custom_dimensions/v202411alpha1/{customDimensionId}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -108,9 +110,10 @@ def UpdateCustomDimension(
     body = request_json(
         method="put",
         path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}",
+        path_template="/custom_dimensions/v202411alpha1/{customDimensionId}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateCustomDimension",
@@ -136,6 +139,7 @@ def DeleteCustomDimension(
     body = request_json(
         method="delete",
         path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}",
+        path_template="/custom_dimensions/v202411alpha1/{customDimensionId}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -166,9 +170,10 @@ def CreatePopulator(
     body = request_json(
         method="post",
         path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator",
+        path_template="/custom_dimensions/v202411alpha1/{customDimensionId}/populator",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreatePopulator",
@@ -198,6 +203,7 @@ def GetPopulator(
     body = request_json(
         method="get",
         path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator/{path_segment(populatorId)}",
+        path_template="/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -229,9 +235,10 @@ def UpdatePopulator(
     body = request_json(
         method="put",
         path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator/{path_segment(populatorId)}",
+        path_template="/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdatePopulator",
@@ -260,6 +267,7 @@ def DeletePopulator(
     body = request_json(
         method="delete",
         path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator/{path_segment(populatorId)}",
+        path_template="/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -293,6 +301,7 @@ def GetPopulatorField(
     body = request_json(
         method="get",
         path=f"/custom_dimensions/v202411alpha1/{path_segment(customDimensionId)}/populator/{path_segment(populatorId)}/field/{path_segment(fieldName)}",
+        path_template="/custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -320,9 +329,10 @@ def CreateCustomDimension(
     body = request_json(
         method="post",
         path="/v1/customdimension",
+        path_template="/v1/customdimension",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateCustomDimension",

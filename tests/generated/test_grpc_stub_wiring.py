@@ -17,6 +17,7 @@ from __future__ import annotations
 import ast
 import importlib
 import re
+import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -101,6 +102,19 @@ def test_mounted_wrapper_proto_module_imports_cleanly(service: str, wrapper_clas
     importlib.import_module("kentik_api.gen.pb_companions")
     for module in modules:
         importlib.import_module(module)
+
+
+def test_a_failed_proto_import_names_its_cause(monkeypatch):
+    # A descriptor-pool conflict and a missing module need different fixes, so
+    # the call must say which one happened.
+    monkeypatch.setitem(sys.modules, "kentik_api.gen.device.pb.device_pb2", None)
+    wrapper = _build("device", "DeviceServiceWrapper")
+
+    with pytest.raises(NotImplementedError, match="failed to import") as exc_info:
+        wrapper.list_devices()
+
+    assert isinstance(exc_info.value.__cause__, ImportError)
+    assert "device_pb2" in str(exc_info.value)
 
 
 def test_every_service_with_a_wrapper_is_checked_here():

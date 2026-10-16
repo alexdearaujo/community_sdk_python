@@ -1,9 +1,11 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 import ipaddress
 import math
+import os
 import threading
+import time
 import urllib.request
-from typing import Optional
+from typing import Optional, cast
 
 import httpx
 
@@ -15,6 +17,53 @@ __all__ = ["APIConfig", "HTTPException"]
 # Retries only a failed connection attempt, which never reached the server, so
 # no request can be replayed (FR-032). A response of any status is never retried.
 _CONNECT_RETRIES = 2
+
+# A request extension holding the call's time.monotonic() deadline.
+DEADLINE_EXTENSION = "kentik_deadline"
+
+
+class _DeadlineStream(httpx.SyncByteStream):
+    def __init__(
+        self, stream: httpx.SyncByteStream, deadline: float, request: httpx.Request
+    ):
+        self._stream = stream
+        self._deadline = deadline
+        self._request = request
+
+    def __iter__(self):
+        for chunk in self._stream:
+            _check_deadline(self._deadline, self._request)
+            yield chunk
+
+    def close(self) -> None:
+        self._stream.close()
+
+
+def _check_deadline(deadline: float, request: httpx.Request) -> None:
+    if time.monotonic() > deadline:
+        raise httpx.ReadTimeout("the call's total deadline passed", request=request)
+
+
+class _DeadlineTransport(httpx.HTTPTransport):
+    """Holds a call to its total deadline while the response arrives.
+
+    httpx's read timeout restarts on every chunk, so a server that keeps
+    trickling bytes would otherwise hold the call open indefinitely.
+    """
+
+    def handle_request(self, request: httpx.Request) -> httpx.Response:
+        response = super().handle_request(request)
+        deadline = request.extensions.get(DEADLINE_EXTENSION)
+        if deadline is None:
+            return response
+        try:
+            _check_deadline(deadline, request)
+        except httpx.ReadTimeout:
+            response.close()
+            raise
+        stream = cast(httpx.SyncByteStream, response.stream)
+        response.stream = _DeadlineStream(stream, deadline, request)
+        return response
 
 
 def _environment_proxies() -> dict[str, str | None]:
@@ -51,14 +100,42 @@ def _require_positive(field: str, value: float) -> None:
         )
 
 
+# Read at different times (client creation, each call, gRPC channel setup), so a
+# later change would apply to some calls and not others.
+_READ_ONLY = frozenset(
+    {
+        "base_path",
+        "auth_email",
+        "auth_token",
+        "verify",
+        "timeout",
+        "rest_timeout",
+        "rest_deadline",
+        "grpc_deadline",
+    }
+)
+
+
 class APIConfig:
     """Centralized API Configuration for all generated REST services.
 
     `timeout` is the one shared default. `rest_timeout` and `grpc_deadline`
-    derive from it when omitted, so the two transports cannot drift apart,
-    but stay separate because httpx bounds four phases independently while
-    gRPC has a single end-to-end deadline.
+    derive from it when omitted, so the two transports cannot drift apart.
+
+    A number bounds the whole call on either transport. A `rest_timeout`
+    given as an `httpx.Timeout` keeps httpx's meaning instead: it bounds
+    each phase, and each read, separately, with no total deadline.
+
+    The settings are read-only. Use with_timeout(), or build a new APIConfig.
     """
+
+    def __setattr__(self, name: str, value: object) -> None:
+        if name in _READ_ONLY and name in self.__dict__:
+            raise AttributeError(
+                f"APIConfig.{name} is read-only. Use with_timeout(), or build "
+                "a new APIConfig or KentikAPI."
+            )
+        super().__setattr__(name, value)
 
     def __init__(
         self,
@@ -80,6 +157,9 @@ class APIConfig:
 
         if rest_timeout is None:
             rest_timeout = timeout
+        self.rest_deadline: float | None = (
+            None if isinstance(rest_timeout, httpx.Timeout) else rest_timeout
+        )
         if not isinstance(rest_timeout, httpx.Timeout):
             rest_timeout = httpx.Timeout(rest_timeout)
         for phase in ("connect", "read", "write", "pool"):
@@ -104,6 +184,7 @@ class APIConfig:
         self._client: httpx.Client | None = None
         self._closed = False
         self._client_lock = threading.Lock()
+        self._pid = os.getpid()
         # Set on a with_timeout() copy, which borrows its origin's connection.
         self._shares_client_of: APIConfig | None = None
 
@@ -130,7 +211,8 @@ class APIConfig:
             )
         if timeout is None:
             timeout = self.timeout
-            rest_timeout = self.rest_timeout if rest_timeout is None else rest_timeout
+            if rest_timeout is None:
+                rest_timeout = self.rest_deadline or self.rest_timeout
             grpc_deadline = (
                 self.grpc_deadline if grpc_deadline is None else grpc_deadline
             )
@@ -156,6 +238,13 @@ class APIConfig:
         """
         if self._shares_client_of is not None:
             return self._shares_client_of.client
+        if self._pid != os.getpid():
+            # A forked child must not write to the parent's sockets, and may have
+            # inherited the lock held. The old client is dropped, not closed:
+            # closing it would send a TLS close_notify on the parent's connection.
+            self._pid = os.getpid()
+            self._client_lock = threading.Lock()
+            self._client = None
         with self._client_lock:
             if self._closed:
                 raise ConfigurationError(
@@ -172,7 +261,7 @@ class APIConfig:
             return self._client
 
     def _transport(self, proxy: str | None = None) -> httpx.HTTPTransport:
-        return httpx.HTTPTransport(
+        return _DeadlineTransport(
             verify=self.verify, retries=_CONNECT_RETRIES, proxy=proxy
         )
 

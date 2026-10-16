@@ -71,6 +71,7 @@ def TenantList(api_config_override: Optional[APIConfig] = None) -> ListTenantRes
     body = request_json(
         method="get",
         path="/mkp/v202407/tenants",
+        path_template="/mkp/v202407/tenants",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -98,9 +99,10 @@ def TenantCreate(
     body = request_json(
         method="post",
         path="/mkp/v202407/tenants",
+        path_template="/mkp/v202407/tenants",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="TenantCreate",
@@ -126,6 +128,7 @@ def TenantGet(
     body = request_json(
         method="get",
         path=f"/mkp/v202407/tenants/{path_segment(id)}",
+        path_template="/mkp/v202407/tenants/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -156,9 +159,10 @@ def TenantUpdate(
     body = request_json(
         method="put",
         path=f"/mkp/v202407/tenants/{path_segment(id)}",
+        path_template="/mkp/v202407/tenants/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="TenantUpdate",
@@ -184,6 +188,7 @@ def TenantDelete(
     body = request_json(
         method="delete",
         path=f"/mkp/v202407/tenants/{path_segment(id)}",
+        path_template="/mkp/v202407/tenants/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

@@ -1538,8 +1538,8 @@
         },
         "EventPolicyLevelSettings": {
           "filters": {
-            "type": "PolicyDimensionFilters",
-            "required": true
+            "type": "Optional[PolicyDimensionFilters]",
+            "required": false
           }
         },
         "EventPolicySettings": {
@@ -1552,8 +1552,8 @@
             "required": true
           },
           "filters": {
-            "type": "PolicyFilters",
-            "required": true
+            "type": "Optional[PolicyFilters]",
+            "required": false
           }
         },
         "ExternalContext": {
@@ -1680,8 +1680,8 @@
             "required": true
           },
           "activation": {
-            "type": "FlowPolicyLevelSettingsActivationSettings",
-            "required": true
+            "type": "Optional[FlowPolicyLevelSettingsActivationSettings]",
+            "required": false
           },
           "mitigationAssociations": {
             "type": "List[FlowPolicyLevelSettingsMitigationAssociation]",
@@ -1740,16 +1740,16 @@
         },
         "FlowPolicySettings": {
           "dataset": {
-            "type": "FlowPolicySettingsDatasetConfig",
-            "required": true
+            "type": "Optional[FlowPolicySettingsDatasetConfig]",
+            "required": false
           },
           "evaluation": {
-            "type": "FlowPolicySettingsEvaluationConfig",
-            "required": true
+            "type": "Optional[FlowPolicySettingsEvaluationConfig]",
+            "required": false
           },
           "baseline": {
-            "type": "FlowPolicySettingsBaselineConfig",
-            "required": true
+            "type": "Optional[FlowPolicySettingsBaselineConfig]",
+            "required": false
           }
         },
         "FlowPolicySettingsBaselineConfig": {
@@ -1788,12 +1788,12 @@
         },
         "FlowPolicySettingsDatasetConfig": {
           "sources": {
-            "type": "PolicyDataSources",
-            "required": true
+            "type": "Optional[PolicyDataSources]",
+            "required": false
           },
           "filters": {
-            "type": "PolicyFilters",
-            "required": true
+            "type": "Optional[PolicyFilters]",
+            "required": false
           },
           "dimensions": {
             "type": "List[str]",
@@ -9382,7 +9382,7 @@
             "api_config_override": "Optional[APIConfig]",
             "agentId": "str",
             "capabilityname": "str",
-            "data": "Dict[str, Any]",
+            "data": "AgentCapabilityServiceUpsertAgentCapabilityBody",
             "mask": "Optional[str]"
           },
           "returns": "UpsertAgentCapabilityResponse"
@@ -9398,7 +9398,7 @@
           "params": {
             "api_config_override": "Optional[APIConfig]",
             "agentid": "str",
-            "data": "Dict[str, Any]",
+            "data": "AgentServiceUpdateAgentBody",
             "mask": "Optional[str]"
           },
           "returns": "UpdateAgentResponse"
@@ -9414,7 +9414,7 @@
           "params": {
             "api_config_override": "Optional[APIConfig]",
             "capabilityname": "str",
-            "data": "Dict[str, Any]"
+            "data": "CapabilityAdminServiceUpdateCapabilityBody"
           },
           "returns": "UpdateCapabilityResponse"
         },
@@ -9530,10 +9530,13 @@
       "models": [
         "Agent",
         "AgentCapability",
+        "AgentCapabilityServiceUpsertAgentCapabilityBody",
         "AgentRegistration",
+        "AgentServiceUpdateAgentBody",
         "AuthorizeResponse",
         "BootstrapInfo",
         "Capability",
+        "CapabilityAdminServiceUpdateCapabilityBody",
         "CapabilityDistro",
         "CapabilityRelease",
         "CapabilitySupportedDistro",
@@ -9651,6 +9654,36 @@
             "required": false
           }
         },
+        "AgentCapabilityServiceUpsertAgentCapabilityBody": {
+          "bundleId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "enabled": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "version": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "channel": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "configId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "groupId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "groupIndex": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
         "AgentRegistration": {
           "publicKey": {
             "type": "Optional[str]",
@@ -9674,6 +9707,32 @@
           },
           "clusterId": {
             "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "AgentServiceUpdateAgentBody": {
+          "running": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "clusterId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "publicKey": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "provisioningToken": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "config": {
+            "type": "Optional[kagentv202401AgentConfig]",
+            "required": false
+          },
+          "install": {
+            "type": "Optional[InstallConfig]",
             "required": false
           }
         },
@@ -9702,6 +9761,24 @@
             "type": "Optional[str]",
             "required": false
           },
+          "displayName": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "seedBundleId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "seedConfig": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "CapabilityAdminServiceUpdateCapabilityBody": {
           "displayName": {
             "type": "Optional[str]",
             "required": false
@@ -13385,7 +13462,7 @@
           "params": {
             "api_config_override": "Optional[APIConfig]",
             "id": "str",
-            "data": "Dict[str, Any]"
+            "data": "ScopeServiceUpdateScopeBody"
           },
           "returns": "UpdateScopeResponse"
         }
@@ -13399,6 +13476,7 @@
         "Scope",
         "ScopeConfig",
         "ScopeDimensions",
+        "ScopeServiceUpdateScopeBody",
         "UpdateScopeResponse",
         "protobufAny",
         "rpcStatus",
@@ -13490,6 +13568,32 @@
           },
           "assetTags": {
             "type": "Optional[List[Optional[AssetTagSelector]]]",
+            "required": false
+          }
+        },
+        "ScopeServiceUpdateScopeBody": {
+          "name": {
+            "type": "str",
+            "required": true
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "scope": {
+            "type": "ScopeConfig",
+            "required": true
+          },
+          "createdBy": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "createdDate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "updatedDate": {
+            "type": "Optional[str]",
             "required": false
           }
         },
@@ -16368,8 +16472,8 @@
       "fields": {
         "GetSecretResponse": {
           "secret": {
-            "type": "Secret",
-            "required": true
+            "type": "Optional[Secret]",
+            "required": false
           }
         },
         "ListSecretResponse": {

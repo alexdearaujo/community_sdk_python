@@ -22,10 +22,13 @@ from ..error import (
 from ..models import (  # noqa: F401
     Agent,
     AgentCapability,
+    AgentCapabilityServiceUpsertAgentCapabilityBody,
     AgentRegistration,
+    AgentServiceUpdateAgentBody,
     AuthorizeResponse,
     BootstrapInfo,
     Capability,
+    CapabilityAdminServiceUpdateCapabilityBody,
     CapabilityDistro,
     CapabilityRelease,
     CapabilitySupportedDistro,
@@ -100,6 +103,7 @@ def ListAgents(
     body = request_json(
         method="get",
         path="/kagent/v202401/agents",
+        path_template="/kagent/v202401/agents",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -127,9 +131,10 @@ def CreateAgent(
     body = request_json(
         method="post",
         path="/kagent/v202401/agents",
+        path_template="/kagent/v202401/agents",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateAgent",
@@ -155,6 +160,7 @@ def Authorize(
     body = request_json(
         method="put",
         path=f"/kagent/v202401/agents/authorize/{path_segment(installId)}",
+        path_template="/kagent/v202401/agents/authorize/{installId}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -184,9 +190,10 @@ def GenerateInstallCommands(
     body = request_json(
         method="post",
         path="/kagent/v202401/agents/install-commands",
+        path_template="/kagent/v202401/agents/install-commands",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="GenerateInstallCommands",
@@ -215,6 +222,7 @@ def GetAgent(
     body = request_json(
         method="get",
         path=f"/kagent/v202401/agents/{path_segment(agentid)}",
+        path_template="/kagent/v202401/agents/{agent.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -245,6 +253,7 @@ def DeleteAgent(
     body = request_json(
         method="delete",
         path=f"/kagent/v202401/agents/{path_segment(agentid)}",
+        path_template="/kagent/v202401/agents/{agent.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -266,7 +275,7 @@ def UpdateAgent(
     api_config_override: Optional[APIConfig] = None,
     *,
     agentid: str,
-    data: Dict[str, Any],
+    data: AgentServiceUpdateAgentBody,
     mask: Optional[str] = None,
 ) -> UpdateAgentResponse:
     query_params: Dict[str, Any] = {"mask": mask}
@@ -276,9 +285,10 @@ def UpdateAgent(
     body = request_json(
         method="patch",
         path=f"/kagent/v202401/agents/{path_segment(agentid)}",
+        path_template="/kagent/v202401/agents/{agent.id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data,
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateAgent",

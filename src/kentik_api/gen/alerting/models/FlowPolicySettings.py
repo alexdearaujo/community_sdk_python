@@ -1,6 +1,8 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `make generate`. Do not edit by hand.
 
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 from .FlowPolicySettingsBaselineConfig import FlowPolicySettingsBaselineConfig
@@ -15,10 +17,14 @@ class FlowPolicySettings(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    dataset: FlowPolicySettingsDatasetConfig = Field(validation_alias="dataset")
-
-    evaluation: FlowPolicySettingsEvaluationConfig = Field(
-        validation_alias="evaluation"
+    dataset: Optional[FlowPolicySettingsDatasetConfig] = Field(
+        validation_alias="dataset", default=None
     )
 
-    baseline: FlowPolicySettingsBaselineConfig = Field(validation_alias="baseline")
+    evaluation: Optional[FlowPolicySettingsEvaluationConfig] = Field(
+        validation_alias="evaluation", default=None
+    )
+
+    baseline: Optional[FlowPolicySettingsBaselineConfig] = Field(
+        validation_alias="baseline", default=None
+    )

@@ -29,9 +29,10 @@ class AiAdvisorServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.AiAdvisorDataServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def create_chat_session(
         self,
@@ -42,11 +43,11 @@ class AiAdvisorServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for ai_advisor service"
-                )
+                    f"gRPC proto modules for ai_advisor service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateChatSessionRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -81,11 +82,11 @@ class AiAdvisorServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for ai_advisor service"
-                )
+                    f"gRPC proto modules for ai_advisor service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateChatSessionRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -117,8 +118,8 @@ class AiAdvisorServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for ai_advisor service"
-                )
+                    f"gRPC proto modules for ai_advisor service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetChatSessionRequest, None, {"id": id}
             )

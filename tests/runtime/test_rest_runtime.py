@@ -57,11 +57,32 @@ def test_request_json_success_builds_headers_and_filters_query(
 
     assert result == {"ok": True}
     assert captured["method"] == "post"
-    assert captured["url"] == "/v1/test"
+    assert captured["url"] == "/v1/test?keep=1"
     assert captured["headers"]["X-CH-Auth-Email"] == "dev@example.com"
     assert captured["headers"]["X-CH-Auth-API-Token"] == "token"
-    assert captured["params"] == {"keep": 1}
+    assert captured["params"] is None
     assert captured["json"] == {"hello": "world"}
+
+
+def test_query_values_encode_a_space_as_percent_20(monkeypatch: pytest.MonkeyPatch):
+    # Envoy's transcoder does not decode "+" by default, so it would reach the
+    # gRPC service as a literal plus sign.
+    sent = []
+    monkeypatch.setattr(
+        httpx.Client,
+        "request",
+        lambda self, method, url, **_: sent.append(str(url))
+        or httpx.Response(200, json={}),
+    )
+
+    request_json(
+        "GET",
+        "/v1/test",
+        api_config_override=_config(),
+        query_params={"prompt": "a b+c", "flag": True, "ids": [1, 2]},
+    )
+
+    assert sent == ["/v1/test?prompt=a%20b%2Bc&flag=true&ids=1&ids=2"]
 
 
 def test_request_json_returns_none_for_204(monkeypatch: pytest.MonkeyPatch):
@@ -304,3 +325,40 @@ def test_http_exception_survives_pickling():
     )
     assert restored.details == {"k": 1}
     assert str(restored) == str(original)
+
+
+@pytest.mark.parametrize(
+    ("response", "problem"),
+    [
+        (
+            httpx.Response(200, text="<html/>", headers={"content-type": "text/html"}),
+            "a non-JSON body (content-type=text/html)",
+        ),
+        (
+            httpx.Response(
+                200, content=b"null", headers={"content-type": "application/json"}
+            ),
+            "a null body",
+        ),
+        (httpx.Response(200, json=[{"site": {}}]), "data that does not match"),
+    ],
+)
+def test_a_success_status_with_an_unusable_body_raises_502(
+    monkeypatch: pytest.MonkeyPatch, response: httpx.Response, problem: str
+):
+    # R2: a non-JSON 200 blamed "status code: 200", and a null body returned an
+    # empty model that nothing validated.
+    from kentik_api import KentikAPI
+
+    monkeypatch.setattr(httpx.Client, "request", lambda self, *a, **k: response)
+    client = KentikAPI(email="dev@example.com", api_token="token", env_file=None)
+    try:
+        with pytest.raises(HTTPException) as exc:
+            client.site.get_site(id="1")
+    finally:
+        client.close()
+
+    assert type(exc.value) is HTTPException
+    assert exc.value.status_code == 502
+    assert f"GetSite returned {problem}" in str(exc.value)
+    assert "status code" not in str(exc.value)

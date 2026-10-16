@@ -49,9 +49,10 @@ def GetMetricsForTarget(
     body = request_json(
         method="post",
         path="/bgp_monitoring/v202210/metrics",
+        path_template="/bgp_monitoring/v202210/metrics",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="GetMetricsForTarget",
@@ -77,9 +78,10 @@ def GetRoutesForTarget(
     body = request_json(
         method="post",
         path="/bgp_monitoring/v202210/routes",
+        path_template="/bgp_monitoring/v202210/routes",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="GetRoutesForTarget",

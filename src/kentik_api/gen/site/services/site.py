@@ -29,9 +29,10 @@ class SiteServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.SiteServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
 
     def list_markets(
         self, *, api_config_override: Optional[APIConfig] = None
@@ -39,8 +40,8 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.ListSiteMarketsRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListSiteMarkets,
@@ -73,11 +74,11 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateSiteMarketRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -109,8 +110,8 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetSiteMarketRequest, None, {"id": id}
             )
@@ -147,11 +148,11 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateSiteMarketRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"site_market.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -184,8 +185,8 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteSiteMarketRequest, None, {"id": id}
             )
@@ -218,8 +219,8 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.ListSitesRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListSites,
@@ -252,11 +253,11 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreateSiteRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -288,8 +289,8 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.GetSiteRequest, None, {"id": id})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetSite,
@@ -324,11 +325,11 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdateSiteRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"site.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -361,8 +362,8 @@ class SiteServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for site service"
-                )
+                    f"gRPC proto modules for site service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeleteSiteRequest, None, {"id": id}
             )

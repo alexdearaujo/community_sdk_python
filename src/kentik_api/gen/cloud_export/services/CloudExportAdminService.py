@@ -50,6 +50,7 @@ def ListCloudExports(
     body = request_json(
         method="get",
         path="/cloud_export/v202506/exports",
+        path_template="/cloud_export/v202506/exports",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -77,9 +78,10 @@ def CreateCloudExport(
     body = request_json(
         method="post",
         path="/cloud_export/v202506/exports",
+        path_template="/cloud_export/v202506/exports",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateCloudExport",
@@ -105,6 +107,7 @@ def GetCloudExport(
     body = request_json(
         method="get",
         path=f"/cloud_export/v202506/exports/{path_segment(exportid)}",
+        path_template="/cloud_export/v202506/exports/{export.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -135,9 +138,10 @@ def UpdateCloudExport(
     body = request_json(
         method="put",
         path=f"/cloud_export/v202506/exports/{path_segment(exportid)}",
+        path_template="/cloud_export/v202506/exports/{export.id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateCloudExport",
@@ -163,6 +167,7 @@ def DeleteCloudExport(
     body = request_json(
         method="delete",
         path=f"/cloud_export/v202506/exports/{path_segment(exportid)}",
+        path_template="/cloud_export/v202506/exports/{export.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

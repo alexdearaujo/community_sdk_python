@@ -19,10 +19,13 @@ from ..error import (
 from ..models import (  # noqa: F401
     Agent,
     AgentCapability,
+    AgentCapabilityServiceUpsertAgentCapabilityBody,
     AgentRegistration,
+    AgentServiceUpdateAgentBody,
     AuthorizeResponse,
     BootstrapInfo,
     Capability,
+    CapabilityAdminServiceUpdateCapabilityBody,
     CapabilityDistro,
     CapabilityRelease,
     CapabilitySupportedDistro,
@@ -87,9 +90,10 @@ def CreateConfig(
     body = request_json(
         method="post",
         path="/kagent/v202401/config",
+        path_template="/kagent/v202401/config",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateConfig",
@@ -115,6 +119,7 @@ def GetConfig(
     body = request_json(
         method="get",
         path=f"/kagent/v202401/config/{path_segment(configname)}",
+        path_template="/kagent/v202401/config/{config.name}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -142,6 +147,7 @@ def DeleteConfig(
     body = request_json(
         method="delete",
         path=f"/kagent/v202401/config/{path_segment(configname)}",
+        path_template="/kagent/v202401/config/{config.name}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -172,9 +178,10 @@ def UpdateConfig(
     body = request_json(
         method="patch",
         path=f"/kagent/v202401/config/{path_segment(configname)}",
+        path_template="/kagent/v202401/config/{config.name}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateConfig",

@@ -29,6 +29,7 @@ def NetworkClassGet(
     body = request_json(
         method="get",
         path="/network_class/v202109alpha1/network_class",
+        path_template="/network_class/v202109alpha1/network_class",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -56,9 +57,10 @@ def NetworkClassUpdate(
     body = request_json(
         method="post",
         path="/network_class/v202109alpha1/network_class",
+        path_template="/network_class/v202109alpha1/network_class",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="NetworkClassUpdate",

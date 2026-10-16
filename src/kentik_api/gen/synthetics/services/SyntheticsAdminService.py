@@ -120,6 +120,7 @@ def ListAgentAlerts(
     body = request_json(
         method="get",
         path="/synthetics/v202309/agentAlerts",
+        path_template="/synthetics/v202309/agentAlerts",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -147,9 +148,10 @@ def CreateAgentAlert(
     body = request_json(
         method="post",
         path="/synthetics/v202309/agentAlerts",
+        path_template="/synthetics/v202309/agentAlerts",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateAgentAlert",
@@ -175,6 +177,7 @@ def GetAgentAlert(
     body = request_json(
         method="get",
         path=f"/synthetics/v202309/agentAlerts/{path_segment(id)}",
+        path_template="/synthetics/v202309/agentAlerts/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -205,9 +208,10 @@ def UpdateAgentAlert(
     body = request_json(
         method="put",
         path=f"/synthetics/v202309/agentAlerts/{path_segment(id)}",
+        path_template="/synthetics/v202309/agentAlerts/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateAgentAlert",
@@ -233,6 +237,7 @@ def DeleteAgentAlert(
     body = request_json(
         method="delete",
         path=f"/synthetics/v202309/agentAlerts/{path_segment(id)}",
+        path_template="/synthetics/v202309/agentAlerts/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -258,6 +263,7 @@ def ListAgents(api_config_override: Optional[APIConfig] = None) -> ListAgentsRes
     body = request_json(
         method="get",
         path="/synthetics/v202309/agents",
+        path_template="/synthetics/v202309/agents",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -285,6 +291,7 @@ def GetAgent(
     body = request_json(
         method="get",
         path=f"/synthetics/v202309/agents/{path_segment(agentid)}",
+        path_template="/synthetics/v202309/agents/{agent.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -315,9 +322,10 @@ def UpdateAgent(
     body = request_json(
         method="put",
         path=f"/synthetics/v202309/agents/{path_segment(agentid)}",
+        path_template="/synthetics/v202309/agents/{agent.id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateAgent",
@@ -343,6 +351,7 @@ def DeleteAgent(
     body = request_json(
         method="delete",
         path=f"/synthetics/v202309/agents/{path_segment(agentid)}",
+        path_template="/synthetics/v202309/agents/{agent.id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -368,6 +377,7 @@ def ListTests(api_config_override: Optional[APIConfig] = None) -> ListTestsRespo
     body = request_json(
         method="get",
         path="/synthetics/v202309/tests",
+        path_template="/synthetics/v202309/tests",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -395,9 +405,10 @@ def CreateTest(
     body = request_json(
         method="post",
         path="/synthetics/v202309/tests",
+        path_template="/synthetics/v202309/tests",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateTest",
@@ -423,6 +434,7 @@ def GetTest(
     body = request_json(
         method="get",
         path=f"/synthetics/v202309/tests/{path_segment(id)}",
+        path_template="/synthetics/v202309/tests/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -453,9 +465,10 @@ def UpdateTest(
     body = request_json(
         method="put",
         path=f"/synthetics/v202309/tests/{path_segment(id)}",
+        path_template="/synthetics/v202309/tests/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateTest",
@@ -481,6 +494,7 @@ def DeleteTest(
     body = request_json(
         method="delete",
         path=f"/synthetics/v202309/tests/{path_segment(id)}",
+        path_template="/synthetics/v202309/tests/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -511,9 +525,10 @@ def SetTestStatus(
     body = request_json(
         method="put",
         path=f"/synthetics/v202309/tests/{path_segment(id)}/status",
+        path_template="/synthetics/v202309/tests/{id}/status",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="SetTestStatus",

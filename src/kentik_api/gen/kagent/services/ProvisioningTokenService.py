@@ -20,10 +20,13 @@ from ..error import (
 from ..models import (  # noqa: F401
     Agent,
     AgentCapability,
+    AgentCapabilityServiceUpsertAgentCapabilityBody,
     AgentRegistration,
+    AgentServiceUpdateAgentBody,
     AuthorizeResponse,
     BootstrapInfo,
     Capability,
+    CapabilityAdminServiceUpdateCapabilityBody,
     CapabilityDistro,
     CapabilityRelease,
     CapabilitySupportedDistro,
@@ -88,6 +91,7 @@ def ListProvisioningTokens(
     body = request_json(
         method="get",
         path="/kagent/v202401/provisioning-tokens",
+        path_template="/kagent/v202401/provisioning-tokens",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -115,9 +119,10 @@ def CreateProvisioningToken(
     body = request_json(
         method="post",
         path="/kagent/v202401/provisioning-tokens",
+        path_template="/kagent/v202401/provisioning-tokens",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="CreateProvisioningToken",
@@ -143,6 +148,7 @@ def GetProvisioningToken(
     body = request_json(
         method="get",
         path=f"/kagent/v202401/provisioning-tokens/{path_segment(token)}",
+        path_template="/kagent/v202401/provisioning-tokens/{token}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -170,6 +176,7 @@ def ListAgentsByProvisioningToken(
     body = request_json(
         method="get",
         path=f"/kagent/v202401/provisioning-tokens/{path_segment(token)}/agents",
+        path_template="/kagent/v202401/provisioning-tokens/{token}/agents",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -200,9 +207,10 @@ def RevokeProvisioningToken(
     body = request_json(
         method="post",
         path=f"/kagent/v202401/provisioning-tokens/{path_segment(token)}/revoke",
+        path_template="/kagent/v202401/provisioning-tokens/{token}/revoke",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="RevokeProvisioningToken",

@@ -5,10 +5,14 @@ Every generated gRPC wrapper method routes through call_grpc so error
 handling, status-code mapping, and transport failures stay in one place.
 """
 
-from typing import Any
+from collections.abc import Iterable
+from typing import Any, cast
 
 import grpc
-from google.protobuf.json_format import ParseDict, ParseError
+from google.protobuf.json_format import MessageToDict, ParseDict, ParseError
+from google.protobuf.message import DecodeError
+from google.rpc import error_details_pb2 as _error_details_pb2  # noqa: F401  registers the standard detail types
+from google.rpc import status_pb2
 
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
@@ -47,6 +51,31 @@ _NO_RESPONSE_CODES: frozenset[grpc.StatusCode] = frozenset(
     }
 )
 
+_STATUS_DETAILS_KEY = "grpc-status-details-bin"
+
+
+def _rpc_status(exc: grpc.RpcError) -> dict[str, Any] | None:
+    """The google.rpc.Status a server sent, in the JSON form REST's error body has."""
+    try:
+        trailers = cast(
+            Iterable[tuple[str, Any]],
+            exc.trailing_metadata() or (),  # ty: ignore[unresolved-attribute]
+        )
+        raw = next((v for k, v in trailers if k == _STATUS_DETAILS_KEY), None)
+        if not isinstance(raw, bytes):
+            return None
+        status = status_pb2.Status.FromString(raw)
+    except (AttributeError, DecodeError, TypeError, ValueError):
+        return None
+    details = []
+    for detail in status.details:
+        try:
+            details.append(MessageToDict(detail))
+        except (KeyError, TypeError):
+            # A detail type this process has no descriptor for.
+            details.append({"@type": detail.type_url})
+    return {"code": status.code, "message": status.message, "details": details}
+
 
 def map_grpc_error(
     exc: grpc.RpcError,
@@ -80,27 +109,61 @@ def map_grpc_error(
         return TransportError(
             f"{method} {path} failed with unrecognized gRPC status {code_name}: {details}"
         )
+    status = _rpc_status(exc)
     return HTTPException(
         status_code=http_status,
         message=details,
         method=method,
         path=path,
+        details=None
+        if status is None
+        else {"rpc_status": status, "rpc_status_code": status["code"]},
         grpc_status_code=code_name,
     )
 
 
+def _mask_paths(message: Any, sent: dict[str, Any], prefix: str = "") -> list[str]:
+    """The field paths a JSON body sets, as grpc-gateway's FieldMaskFromRequestBody."""
+    fields = message.DESCRIPTOR.fields_by_name
+    by_json = {field.json_name: field for field in fields.values()}
+    paths: list[str] = []
+    for key, value in sent.items():
+        field = by_json.get(key) or fields.get(key)
+        if field is None:
+            continue
+        path = f"{prefix}{field.name}"
+        nested = field.message_type
+        if (
+            isinstance(value, dict)
+            and value
+            and nested is not None
+            and not nested.GetOptions().map_entry
+            and not nested.full_name.startswith("google.protobuf.")
+        ):
+            paths += _mask_paths(getattr(message, field.name), value, f"{path}.")
+        else:
+            paths.append(path)
+    return paths
+
+
 def build_grpc_request(
-    message_cls, body: dict[str, Any] | None, fields: dict[str, Any]
+    message_cls,
+    body: dict[str, Any] | None,
+    fields: dict[str, Any],
+    update_mask_from: str | None = None,
 ) -> Any:
     """Builds a request message the way grpc-gateway transcodes the REST call.
 
     `body` is the REST request body, already nested under the field the RPC's
     HTTP rule names. `fields` maps each path and query parameter's dotted field
-    path (for example "device.id") to its value; None means unset. The body
-    tolerates unknown keys as before, but a field path must resolve: an
-    argument that matches no field would otherwise be dropped from the call.
+    path (for example "device.id") to its value; None means unset. Both must
+    resolve: an unknown body key or enum name would otherwise be dropped, and a
+    full-replace update would then blank the field it was meant to set.
+
+    `update_mask_from` names the body field of a PATCH whose request has an
+    `update_mask`. grpc-gateway fills an unset mask from the keys sent there,
+    and an empty mask on gRPC would replace every field instead.
     """
-    request = ParseDict(body or {}, message_cls(), ignore_unknown_fields=True)
     nested: dict[str, Any] = {}
     for field_path, value in fields.items():
         if value is None:
@@ -110,13 +173,21 @@ def build_grpc_request(
         for parent in parents:
             node = node.setdefault(parent, {})
         node[leaf] = value
-    # ParseDict merges into `request`, so path fields land inside the body.
     try:
-        return ParseDict(nested, request)
+        request = ParseDict(body or {}, message_cls())
+        # ParseDict merges into `request`, so path fields land inside the body.
+        request = ParseDict(nested, request)
     except ParseError as exc:
         raise ConfigurationError(
             f"Invalid argument for {message_cls.DESCRIPTOR.name}: {exc}"
         ) from exc
+    if update_mask_from:
+        sent = (body or {}).get(update_mask_from)
+        if isinstance(sent, dict) and not request.update_mask.paths:
+            request.update_mask.paths.extend(
+                _mask_paths(getattr(request, update_mask_from), sent)
+            )
+    return request
 
 
 def _method_label(stub_method) -> str:
@@ -133,23 +204,12 @@ def _method_label(stub_method) -> str:
 
 def _validate_grpc_override(api_config: APIConfig) -> None:
     # gRPC auth metadata and target are bound to the channel at transport setup.
-    # A direct APIConfig(...) passed per call cannot change them safely.
-    source = getattr(api_config, "_shares_client_of", None)
-    if source is None:
+    # A direct APIConfig(...) passed per call cannot change them safely; a
+    # with_timeout() copy cannot change them at all.
+    if getattr(api_config, "_shares_client_of", None) is None:
         raise ConfigurationError(
             "gRPC api_config_override must come from client.api_config.with_timeout(...). "
             "Per-call credential, host, or verify overrides are not supported on gRPC."
-        )
-
-    if (
-        api_config.base_path != source.base_path
-        or api_config.auth_email != source.auth_email
-        or api_config.auth_token != source.auth_token
-        or api_config.verify != source.verify
-    ):
-        raise ConfigurationError(
-            "gRPC api_config_override can only change timeouts. "
-            "Credential, host, and verify changes require a new KentikAPI client."
         )
 
 
@@ -194,7 +254,9 @@ def call_grpc(
     if api_config is not None:
         _validate_grpc_override(api_config)
 
-    kwargs = {} if api_config is None else {"timeout": api_config.grpc_deadline}
+    kwargs: dict[str, Any] = (
+        {} if api_config is None else {"timeout": api_config.grpc_deadline}
+    )
     try:
         # with_call exposes the call's initial metadata, where the quota is.
         if isinstance(stub_method, grpc.UnaryUnaryMultiCallable):

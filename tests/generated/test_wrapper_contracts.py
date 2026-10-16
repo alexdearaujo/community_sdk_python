@@ -187,9 +187,9 @@ def test_wrapper_raises_for_grpc_unimplemented(
     except NotImplementedError as exc:
         # Two different conditions raise this. "not yet implemented" means the
         # generator found no gRPC method for this operation, which is fine.
-        # "proto dependencies not installed" means __init__ swallowed an
-        # ImportError or TypeError and the service has no gRPC at all.
-        assert "proto dependencies not installed" not in str(exc), (
+        # "failed to import" means __init__ swallowed an ImportError or
+        # TypeError and the service has no gRPC at all.
+        assert "failed to import" not in str(exc), (
             f"{case.wrapper_class}.{case.method_name} reported gRPC as unavailable "
             f"because its stub is None, not because the operation lacks a gRPC "
             f"translation. See tests/generated/test_grpc_stub_wiring.py for the "

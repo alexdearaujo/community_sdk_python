@@ -36,6 +36,7 @@ def GetDictionary(
     body = request_json(
         method="get",
         path="/dictionary/v20260604alpha1",
+        path_template="/dictionary/v20260604alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,

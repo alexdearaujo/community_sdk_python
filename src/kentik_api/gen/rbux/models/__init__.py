@@ -11,6 +11,9 @@ from .rpcStatus import rpcStatus as rpcStatus
 from .Scope import Scope as Scope
 from .ScopeConfig import ScopeConfig as ScopeConfig
 from .ScopeDimensions import ScopeDimensions as ScopeDimensions
+from .ScopeServiceUpdateScopeBody import (
+    ScopeServiceUpdateScopeBody as ScopeServiceUpdateScopeBody,
+)
 from .UpdateScopeResponse import UpdateScopeResponse as UpdateScopeResponse
 from .v202501alpha1FilterField import (
     v202501alpha1FilterField as v202501alpha1FilterField,

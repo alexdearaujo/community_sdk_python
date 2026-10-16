@@ -31,9 +31,10 @@ class MkpServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.PackageServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.mkp.pb.mkp_pb2 as _pb2_2_mod
@@ -43,9 +44,10 @@ class MkpServiceWrapper:
                 self._grpc_stub_2 = _pb2_grpc_2_mod.TenantServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_2 = None
                 self._grpc_stub_2 = None
+                self._grpc_import_error_2 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.mkp.pb.mkp_pb2 as _pb2_3_mod
@@ -55,9 +57,10 @@ class MkpServiceWrapper:
                 self._grpc_stub_3 = _pb2_grpc_3_mod.TenantUserServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_3 = None
                 self._grpc_stub_3 = None
+                self._grpc_import_error_3 = exc
 
     def package_list(
         self, *, api_config_override: Optional[APIConfig] = None
@@ -65,8 +68,8 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(self._grpc_pb2_1.ListPackageRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.ListPackage,
@@ -99,11 +102,11 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.CreatePackageRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -135,8 +138,8 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.GetPackageRequest, None, {"id": id}
             )
@@ -173,11 +176,11 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.UpdatePackageRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"package.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -210,8 +213,8 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.DeletePackageRequest, None, {"id": id}
             )
@@ -244,8 +247,8 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(self._grpc_pb2_2.ListTenantRequest, None, {})
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_2.ListTenant,
@@ -278,11 +281,11 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.CreateTenantRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -314,8 +317,8 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.GetTenantRequest, None, {"id": id}
             )
@@ -352,11 +355,11 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.UpdateTenantRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"tenant.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -389,8 +392,8 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.DeleteTenantRequest, None, {"id": id}
             )
@@ -423,8 +426,8 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.ListTenantUserRequest, None, {"tenant_id": tenantId}
             )
@@ -461,11 +464,11 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.CreateTenantUserRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"user.tenant_id": tenantId},
             )
             _resp, _rate_limit = call_grpc(
@@ -503,11 +506,11 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.UpdateTenantUserRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"user.tenant_id": tenantId, "user.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -541,8 +544,8 @@ class MkpServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for mkp service"
-                )
+                    f"gRPC proto modules for mkp service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.DeleteTenantUserRequest,
                 None,

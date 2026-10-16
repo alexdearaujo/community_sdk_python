@@ -211,9 +211,10 @@ def List(
     body = request_json(
         method="post",
         path="/v202505/policies/list",
+        path_template="/v202505/policies/list",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="List",
@@ -239,6 +240,7 @@ def Get(
     body = request_json(
         method="get",
         path=f"/v202505/policies/{path_segment(policyType)}/{path_segment(id)}",
+        path_template="/v202505/policies/{policyType}/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -270,9 +272,10 @@ def Disable(
     body = request_json(
         method="post",
         path=f"/v202505/policies/{path_segment(policyType)}/{path_segment(id)}/disable",
+        path_template="/v202505/policies/{policyType}/{id}/disable",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="Disable",
@@ -302,9 +305,10 @@ def Enable(
     body = request_json(
         method="post",
         path=f"/v202505/policies/{path_segment(policyType)}/{path_segment(id)}/enable",
+        path_template="/v202505/policies/{policyType}/{id}/enable",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True),
+        json_body=data.model_dump(by_alias=True, exclude_unset=True),
         header_params=header_params,
         expected_status=200,
         operation_name="Enable",

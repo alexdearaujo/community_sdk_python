@@ -139,7 +139,7 @@ cases. The two have different causes and different fixes:
 | Message | Cause | What to do |
 | --- | --- | --- |
 | `gRPC translation for <Operation> is not yet implemented.` | No RPC declares the operation's HTTP rule. No operation in the current schema is in this state. | Call it through a `protocol="rest"` client. |
-| `gRPC proto dependencies not installed for <service> service` | The service's compiled proto modules failed to import when the client started. | Repair the installation. Every other method of that service raises the same error. |
+| `gRPC proto modules for <service> service failed to import: <cause>` | The service's compiled proto modules failed to import when the client started. The cause names the import error, or a descriptor-pool conflict. | Repair the installation. Every other method of that service raises the same error. |
 
 The first case is fixed and predictable: a schema change adds or removes it,
 not the run. The second case depends on the environment.

@@ -27,6 +27,7 @@
     ".github/skills/**",
     ".claude/skills/speckit-*/**",
     ".specify/templates/**",
-    ".specify/extensions/**"
+    ".specify/extensions/**",
+    "reports/**"
   ]
 }

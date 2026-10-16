@@ -215,6 +215,37 @@ def test_proxy_routing_uses_no_private_httpx_import():
     assert "httpx._" not in inspect.getsource(api_config)
 
 
+@pytest.mark.parametrize(
+    "field",
+    [
+        "base_path",
+        "auth_email",
+        "auth_token",
+        "verify",
+        "timeout",
+        "rest_timeout",
+        "rest_deadline",
+        "grpc_deadline",
+    ],
+)
+def test_settings_are_read_only(field):
+    # Each is read at a different time, so a change would reach only some calls.
+    config = APIConfig(**_BASE)
+
+    with pytest.raises(AttributeError, match="read-only"):
+        setattr(config, field, getattr(config, field))
+
+
+def test_credentials_are_read_only():
+    from kentik_api.auth.credentials import KentikCredentials
+
+    credentials = KentikCredentials("dev@example.com", "token")
+
+    for field in ("email", "api_token"):
+        with pytest.raises(AttributeError):
+            setattr(credentials, field, "other")
+
+
 def test_environment_proxies_follow_the_proxy_variables(monkeypatch):
     from kentik_api.core.api_config import _environment_proxies
 

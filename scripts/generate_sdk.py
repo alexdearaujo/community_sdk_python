@@ -265,6 +265,45 @@ def clean_schema_names(schema: dict, version: str) -> dict:
     return schema
 
 
+def hoist_inline_request_bodies(schema: dict) -> dict:
+    """Returns a copy of schema with inline object request bodies moved to components.
+
+    protoc-gen-openapiv2 inlines a one-field body whose message is partly set by
+    the path, and the model generator types an inline object as Dict[str, Any].
+    Its `required` can also name the wrapping field, which is not a property.
+    """
+    import copy
+
+    schema = copy.deepcopy(schema)
+    schemas = schema.get("components", {}).get("schemas")
+    if schemas is None:
+        return schema
+    for path_item in schema.get("paths", {}).values():
+        for op in path_item.values():
+            if not isinstance(op, dict):
+                continue
+            media = op.get("requestBody", {}).get("content", {}).get("application/json")
+            body = (media or {}).get("schema")
+            if not isinstance(body, dict) or "properties" not in body:
+                continue
+            # protoc-gen-openapiv2's own name for such a body: <Service><Method>Body.
+            method = op["operationId"].rsplit("_", 1)[-1]
+            name = f"{op['tags'][0]}{method}Body"
+            if name in schemas:
+                raise ValueError(
+                    f"Cannot hoist the {method} request body: {name} exists"
+                )
+            required = [f for f in body.get("required", []) if f in body["properties"]]
+            body.pop("title", None)
+            if required:
+                body["required"] = required
+            else:
+                body.pop("required", None)
+            schemas[name] = body
+            media["schema"] = {"$ref": f"#/components/schemas/{name}"}
+    return schema
+
+
 def inline_request_body_refs(schema: dict) -> dict:
     """Returns a copy of schema with requestBody $refs inlined from components/requestBodies.
 
@@ -342,6 +381,69 @@ def relax_oneof_required(schema: dict, oneof_members: dict[str, set[str]]) -> di
     return schema
 
 
+def relax_response_message_required(schema: dict) -> dict:
+    """Returns a copy of schema where response models never require a message field.
+
+    Proto REQUIRED binds the request, not the response (AIP-203), and an unset
+    message field is absent from the response on both transports. Models only
+    requests reach keep `required`, so a missing field still fails before a send.
+    """
+    import copy
+
+    schema = copy.deepcopy(schema)
+    definitions = {
+        name: definition
+        for section in _definition_sections(schema)
+        for name, definition in section.items()
+        if isinstance(definition, dict)
+    }
+
+    def refs(node: object) -> list[str]:
+        if isinstance(node, dict):
+            ref = node.get("$ref")
+            found = [ref.rsplit("/", 1)[-1]] if isinstance(ref, str) else []
+            return found + [r for value in node.values() for r in refs(value)]
+        if isinstance(node, list):
+            return [r for item in node for r in refs(item)]
+        return []
+
+    def is_message(name: str) -> bool:
+        return "properties" in definitions.get(name, {})
+
+    reachable: set[str] = set()
+    pending = [
+        name
+        for path_item in schema.get("paths", {}).values()
+        for op in path_item.values()
+        if isinstance(op, dict)
+        for name in refs(op.get("responses", {}))
+    ]
+    while pending:
+        name = pending.pop()
+        if name in reachable or name not in definitions:
+            continue
+        reachable.add(name)
+        pending.extend(refs(definitions[name]))
+
+    for name in reachable:
+        definition = definitions[name]
+        properties = definition.get("properties", {})
+        required = definition.get("required")
+        if not isinstance(required, list) or not required:
+            continue
+        kept = [
+            field
+            for field in required
+            if not any(is_message(r) for r in refs(properties.get(field, {})))
+            or properties.get(field, {}).get("type") == "array"
+        ]
+        if kept:
+            definition["required"] = kept
+        else:
+            del definition["required"]
+    return schema
+
+
 def _definition_sections(schema: dict) -> list[dict]:
     sections: list[dict] = []
     if "definitions" in schema:
@@ -368,8 +470,10 @@ def patched_swagger(
     schema = json.loads(swagger_path.read_text(encoding="utf-8"))
     # Before clean_schema_names: oneof_members is keyed by the prefixed names.
     schema = relax_oneof_required(schema, oneof_members or {})
+    schema = relax_response_message_required(schema)
     schema = clean_schema_names(schema, version)
     schema = inline_request_body_refs(schema)
+    schema = hoist_inline_request_bodies(schema)
     with NamedTemporaryFile(
         mode="w",
         suffix=".json",

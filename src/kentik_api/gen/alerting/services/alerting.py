@@ -36,9 +36,10 @@ class AlertingServiceWrapper:
                 self._grpc_stub_1 = _pb2_grpc_1_mod.AlertServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
+                self._grpc_import_error_1 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.auto_ack_pb2 as _pb2_2_mod
@@ -48,9 +49,10 @@ class AlertingServiceWrapper:
                 self._grpc_stub_2 = _pb2_grpc_2_mod.AlertAutoAckServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_2 = None
                 self._grpc_stub_2 = None
+                self._grpc_import_error_2 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.mitigation_method_pb2 as _pb2_3_mod
@@ -60,9 +62,10 @@ class AlertingServiceWrapper:
                 self._grpc_stub_3 = _pb2_grpc_3_mod.MitigationMethodsServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_3 = None
                 self._grpc_stub_3 = None
+                self._grpc_import_error_3 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.mitigation_platform_pb2 as _pb2_4_mod
@@ -72,9 +75,10 @@ class AlertingServiceWrapper:
                 self._grpc_stub_4 = _pb2_grpc_4_mod.MitigationPlatformsServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_4 = None
                 self._grpc_stub_4 = None
+                self._grpc_import_error_4 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.mitigation_public_v202505_pb2 as _pb2_5_mod
@@ -84,9 +88,10 @@ class AlertingServiceWrapper:
                 self._grpc_stub_5 = _pb2_grpc_5_mod.MitigationsServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_5 = None
                 self._grpc_stub_5 = None
+                self._grpc_import_error_5 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.policy_pb2 as _pb2_6_mod
@@ -96,9 +101,10 @@ class AlertingServiceWrapper:
                 self._grpc_stub_6 = _pb2_grpc_6_mod.PolicyServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_6 = None
                 self._grpc_stub_6 = None
+                self._grpc_import_error_6 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.silencing_pb2 as _pb2_7_mod
@@ -110,9 +116,10 @@ class AlertingServiceWrapper:
                         self._transport.channel
                     )
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_7 = None
                 self._grpc_stub_7 = None
+                self._grpc_import_error_7 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
                 import kentik_api.gen.alerting.pb.suppressions_pb2 as _pb2_8_mod
@@ -122,9 +129,10 @@ class AlertingServiceWrapper:
                 self._grpc_stub_8 = _pb2_grpc_8_mod.SuppressionServiceStub(
                     self._transport.channel
                 )
-            except (ImportError, TypeError):
+            except (ImportError, TypeError) as exc:
                 self._grpc_pb2_8 = None
                 self._grpc_stub_8 = None
+                self._grpc_import_error_8 = exc
 
     def auto_ack_create(
         self,
@@ -135,11 +143,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.AlertAutoAckServiceCreateRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -174,11 +182,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.AlertAutoAckServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -210,8 +218,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.AlertAutoAckServiceGetRequest, None, {"id": autoAckid}
             )
@@ -244,8 +252,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.AlertAutoAckServiceDeleteRequest,
                 None,
@@ -284,11 +292,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_2!r}"
+                ) from self._grpc_import_error_2
             _req = build_grpc_request(
                 self._grpc_pb2_2.AlertAutoAckServiceReplaceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"auto_ack.id": autoAckid},
             )
             _resp, _rate_limit = call_grpc(
@@ -324,11 +332,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -363,11 +371,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceClearRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -399,8 +407,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceListCommentsRequest,
                 None,
@@ -439,11 +447,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceAddCommentRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"alert_id": alertId},
             )
             _resp, _rate_limit = call_grpc(
@@ -480,11 +488,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceSetExternalContextRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"alert_id": alertId},
             )
             _resp, _rate_limit = call_grpc(
@@ -517,8 +525,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceGetRequest, None, {"id": id}
             )
@@ -555,11 +563,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceAckRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -596,11 +604,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
             _req = build_grpc_request(
                 self._grpc_pb2_1.AlertServiceUnAckRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -636,11 +644,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_7!r}"
+                ) from self._grpc_import_error_7
             _req = build_grpc_request(
                 self._grpc_pb2_7.AlertSilenceNotificationsServiceCreateRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -675,11 +683,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_7!r}"
+                ) from self._grpc_import_error_7
             _req = build_grpc_request(
                 self._grpc_pb2_7.AlertSilenceNotificationsServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -711,8 +719,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_7!r}"
+                ) from self._grpc_import_error_7
             _req = build_grpc_request(
                 self._grpc_pb2_7.AlertSilenceNotificationsServiceGetRequest,
                 None,
@@ -747,8 +755,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_7!r}"
+                ) from self._grpc_import_error_7
             _req = build_grpc_request(
                 self._grpc_pb2_7.AlertSilenceNotificationsServiceDeleteRequest,
                 None,
@@ -787,11 +795,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_7!r}"
+                ) from self._grpc_import_error_7
             _req = build_grpc_request(
                 self._grpc_pb2_7.AlertSilenceNotificationsServiceReplaceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"silence.id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -835,8 +843,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.MitigationMethodsServiceListRequest,
                 None,
@@ -889,8 +897,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_3!r}"
+                ) from self._grpc_import_error_3
             _req = build_grpc_request(
                 self._grpc_pb2_3.MitigationMethodsServiceGetRequest, None, {"id": id}
             )
@@ -934,8 +942,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_4!r}"
+                ) from self._grpc_import_error_4
             _req = build_grpc_request(
                 self._grpc_pb2_4.MitigationPlatformsServiceListRequest,
                 None,
@@ -988,8 +996,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_4 is None or self._grpc_stub_4 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_4!r}"
+                ) from self._grpc_import_error_4
             _req = build_grpc_request(
                 self._grpc_pb2_4.MitigationPlatformsServiceGetRequest, None, {"id": id}
             )
@@ -1037,8 +1045,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.MitigationsServiceListRequest,
                 None,
@@ -1102,11 +1110,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.MitigationsServiceCreateRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1138,8 +1146,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.MitigationsServiceAvailableActionsRequest, None, {}
             )
@@ -1171,8 +1179,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.MitigationsServiceGetRequest, None, {"id": action}
             )
@@ -1209,11 +1217,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.MitigationsServiceActRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"action": action},
             )
             _resp, _rate_limit = call_grpc(
@@ -1246,8 +1254,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_5!r}"
+                ) from self._grpc_import_error_5
             _req = build_grpc_request(
                 self._grpc_pb2_5.MitigationsServiceAvailableActionsForMitigationRequest,
                 None,
@@ -1285,11 +1293,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.PolicyServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1325,8 +1333,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.PolicyServiceGetRequest,
                 None,
@@ -1367,11 +1375,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.PolicyServiceDisableRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -1410,11 +1418,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_6!r}"
+                ) from self._grpc_import_error_6
             _req = build_grpc_request(
                 self._grpc_pb2_6.PolicyServiceEnableRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
@@ -1451,11 +1459,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
+                ) from self._grpc_import_error_8
             _req = build_grpc_request(
                 self._grpc_pb2_8.SuppressionServiceCreateRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1490,11 +1498,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
+                ) from self._grpc_import_error_8
             _req = build_grpc_request(
                 self._grpc_pb2_8.SuppressionServiceListRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
@@ -1526,8 +1534,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
+                ) from self._grpc_import_error_8
             _req = build_grpc_request(
                 self._grpc_pb2_8.SuppressionServiceGetRequest, None, {"id": id}
             )
@@ -1560,8 +1568,8 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
+                ) from self._grpc_import_error_8
             _req = build_grpc_request(
                 self._grpc_pb2_8.SuppressionServiceDeleteRequest, None, {"id": id}
             )
@@ -1598,11 +1606,11 @@ class AlertingServiceWrapper:
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
-                    "gRPC proto dependencies not installed for alerting service"
-                )
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
+                ) from self._grpc_import_error_8
             _req = build_grpc_request(
                 self._grpc_pb2_8.SuppressionServiceReplaceRequest,
-                data.model_dump(by_alias=True, exclude_none=True),
+                data.model_dump(by_alias=True, exclude_unset=True),
                 {"suppression.id": id},
             )
             _resp, _rate_limit = call_grpc(

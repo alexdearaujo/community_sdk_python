@@ -25,6 +25,7 @@ def ListPlans(api_config_override: Optional[APIConfig] = None) -> ListPlansRespo
     body = request_json(
         method="get",
         path="/plans/v202501alpha1",
+        path_template="/plans/v202501alpha1",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
