@@ -11,9 +11,11 @@ folder: [`request_json()`](rest_runtime.py) for REST, and
 ## `APIConfig`
 
 `APIConfig` (in [`api_config.py`](api_config.py)) is the shared config object passed to
-every generated call: base URL, auth email, auth token, and TLS
-`verify`. [`RestTransport`](../transports/rest_client.py) builds one
-from [`KentikCredentials`](../auth/credentials.py) once, in `__init__`.
+every generated call: base URL, auth email, auth token, TLS `verify`,
+`timeout`, `rest_timeout`, `grpc_deadline`, the per-endpoint quota, and the
+shared HTTP client. [`KentikAPI`](../client.py) builds one and gives it to the
+transport. The settings are read-only. `with_timeout()` gives a copy with
+different timeouts.
 Generated wrapper methods read `api_config` off the transport and
 forward it as `api_config_override`.
 
@@ -21,7 +23,7 @@ forward it as `api_config_override`.
 
 `request_json()` (in [`rest_runtime.py`](rest_runtime.py)) is the **only** function that
 calls `httpx` for REST traffic in this SDK. Every generated operation,
-in every one of the 35 services mounted on the client, under
+in every one of the 36 services mounted on the client, under
 [`src/kentik_api/gen/`](../gen/README.md), calls this same function through the
 `httpx.jinja2` template. See
 [`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
@@ -71,15 +73,16 @@ sequenceDiagram
     CG->>S: invoke
     alt success
         S-->>CG: proto response
-        CG-->>W: proto response
+        CG-->>W: proto response and quota
     else grpc.RpcError
         S-->>CG: RpcError
         CG->>MG: exc, method, path
-        MG-->>CG: AuthenticationError (UNAUTHENTICATED)<br/>or HTTPException
+        MG-->>CG: AuthenticationError, TransportError,<br/>or HTTPException
+        CG->>CG: re-type HTTPException as the operation's error class
         CG-->>W: raise
     else other exception
         S-->>CG: Exception
-        CG-->>W: raise TransportError
+        CG-->>W: raise the same exception, unchanged
     end
 ```
 
@@ -88,16 +91,20 @@ sequenceDiagram
 - Kentik's auth headers, built by `auth_headers()` in
   [`auth/credentials.py`](../auth/credentials.py), the scheme's single
   definition
-- Query-param cleaning (drops `None` values)
+- Query-param cleaning: drops `None` values, sends enum values, and encodes a
+  space as `%20`
+- A check that the call's `APIConfig` has credentials
 - The request itself, via the one `httpx.Client` its `APIConfig` owns, so
   every call through a `KentikAPI` reuses a pooled connection instead of
   opening a new TLS session each time. `KentikAPI.close()` releases it, and
   a call after that raises `ConfigurationError`.
 - Transport-failure wrapping into `TransportError`
+- Quota capture into `RateLimit`, keyed by HTTP method and path template
 - Status-code checking against each operation's `expected_status`
 - JSON error-body parsing (`code`, `message`, `details`)
 - Dispatch into the operation's generated error class via
   `error_cls.from_response`
+- A 502 `HTTPException` for a success status with a body that is not JSON
 
 ## Concurrency
 
@@ -108,10 +115,13 @@ if it arrives before the previous one is answered. No response header reports
 this limit. Throughput is capped by the API, not by this client, so calling
 from several threads mostly queues requests on the server.
 
+After `os.fork()`, the child opens its own connection on first use. It does
+not use the connection of the parent.
+
 A caller that invokes a generated REST function directly with no
-`api_config_override` gets a fresh `APIConfig`, and therefore a fresh client,
-for that one call; `request_json()` closes it afterwards. The mounted
-`KentikAPI` wrappers always pass their shared config.
+`api_config_override` gets `ConfigurationError`, because a default
+`APIConfig` has no credentials. The mounted `KentikAPI` wrappers always pass
+their shared config.
 
 ## Extending this layer
 

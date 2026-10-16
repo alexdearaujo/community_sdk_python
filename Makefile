@@ -28,10 +28,10 @@ all: services tests ## Generate services and run tests (docs is opt-in: run `mak
 install: ## Install dependencies and sync environment
 	uv sync
 
-generate: ## Generate the SDK and Architecture Diagrams
+generate: ## Generate the SDK, its docs pages, and the API records
 	$(PYTHON) scripts/generate_sdk.py $(GENERATE_ARGS)
 
-services: generate ## Generate SDK services/models and architecture diagrams
+services: generate ## Alias for generate
 
 sync-schema: ## Regenerate from upstream schema HEAD and move the pin in schema.lock
 	$(PYTHON) scripts/generate_sdk.py --schema-ref HEAD

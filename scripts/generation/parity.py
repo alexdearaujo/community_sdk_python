@@ -1,5 +1,6 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
-"""Swagger file selection and generated/schema service-directory parity validation."""
+"""Swagger file selection, superseded-file dropping, schema file validation, and
+generated/schema service-directory parity validation."""
 
 import json
 import re

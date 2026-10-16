@@ -82,11 +82,11 @@ sequenceDiagram
     alt success
         API-->>S: serialized proto response
         S-->>CG: ListASGroupsResponse proto
-        CG-->>W: proto response
+        CG-->>W: proto response and quota
         W-->>C: ListASGroupsResponse (Pydantic)<br/>via parse_grpc_response(), the same check as REST
     else gRPC error, deadline, or unreachable
         S-->>CG: raise RpcError
-        CG-->>C: map_grpc_error(): AuthenticationError,<br/>HTTPException, or TransportError
+        CG-->>C: map_grpc_error(): AuthenticationError,<br/>the operation's HTTPException subclass, or TransportError
     end
 ```
 <!-- /kentik-gen:grpc-callflow-diagram -->
@@ -100,11 +100,15 @@ The gRPC path uses:
    and query argument sets the field that its HTTP rule placeholder or wire
    name gives: `get_device(deviceid=...)` sets `id`. It uses
    [`ParseDict`](https://googleapis.dev/python/protobuf/latest/) from
-   `google.protobuf.json_format`.
+   `google.protobuf.json_format`. An unknown body key or enum name raises
+   `ConfigurationError`. On a PATCH call, the SDK fills an empty
+   `update_mask` from the body fields you set, as grpc-gateway does.
 2. A compiled gRPC stub (in `gen/<service>/pb/`) to make the call.
 3. [`MessageToDict`](https://googleapis.dev/python/protobuf/latest/) to convert
    the proto response back to a dict.
-4. `model_validate` to build the Pydantic response model.
+4. `parse_grpc_response()` to build the Pydantic response model. It runs the
+   same check as REST. A response that the model rejects raises
+   `HTTPException` with status 502.
 5. [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) in
    [`core/grpc_runtime.py`](../../../src/kentik_api/core/grpc_runtime.py) to
    normalize gRPC errors to the SDK exception hierarchy.
@@ -129,6 +133,10 @@ invokes the stub and delegates the classification to it. See
 Every call has a deadline: 60 seconds unless `KentikAPI` gets `timeout` or
 `grpc_deadline`. `GrpcTransport` applies it with a channel interceptor, so an
 unresponsive server raises `TransportError` instead of blocking forever.
+
+The SDK accepts gRPC responses up to 40 MiB. A larger response raises
+`TransportError`, not a 429. To raise the limit, pass
+`grpc_options=[("grpc.max_receive_message_length", N)]` to `KentikAPI`.
 
 ## Runnable gRPC examples
 

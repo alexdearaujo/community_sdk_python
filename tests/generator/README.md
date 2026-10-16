@@ -21,6 +21,11 @@ four.
 | `test_endpoint_docs.py` | `parse_wrapper_methods()`/wrapper-signature parsing in [`scripts/generation/endpoint_docs.py`](../../scripts/generation/endpoint_docs.py) and [`_shared.py`](../../scripts/generation/_shared.py), the derived `AUTO-GENERATED` provenance header, and that a failed extraction propagates rather than being swallowed. |
 | `test_docs_rendering.py` | [`scripts/generation/docs_rendering.py`](../../scripts/generation/docs_rendering.py)'s `_GROUP_CONFIG`/`_module_group`/`_LAYER_NAMES` consistency (architecture-diagram module grouping). |
 | `test_generate_sdk.py` | [`scripts/generate_sdk.py`](../../scripts/generate_sdk.py)'s top-level helpers: schema-name cleanup, request-body `$ref` inlining through `patched_swagger` (the path a real run uses), generated gRPC import rewriting, and the validate-before-clean ordering guard. |
+| `test_api_surface.py` | [`scripts/generation/api_surface.py`](../../scripts/generation/api_surface.py). Builds surface dicts directly instead of generating an SDK. `capture()` runs against a minimal fixture tree. |
+| `test_release_notes.py` | The `CHANGELOG.md` check in [`scripts/release_notes.py`](../../scripts/release_notes.py). |
+| `test_impact_report.py` | The impact report's classification, which decides what a reviewer looks at first. |
+| `test_openapi_templates.py` | The custom OpenAPI templates, rendered with the generator's own Jinja settings. |
+| `test_toolchain_versions.py` | The declared runtime floors in `pyproject.toml` against the versions protoc stamps into the generated stubs. |
 
 ## Run
 
@@ -35,9 +40,9 @@ uv run pytest tests/generator/
 Add a test when logic in `scripts/generation/*.py` changes. Most
 tests build their own minimal swagger fragment or fake generated-file
 fixture with `tmp_path` and need no schema checkout. One exception:
-`test_schema_request_body_coverage` in `test_generate_sdk.py`
-cross-checks generated code against the real local `../api-schema-public`
-checkout and is skipped automatically when that checkout is absent.
+`test_the_real_alert_schema_keeps_acknowledgement_an_object` in
+`test_generate_sdk.py` reads the real local `../api-schema-public`
+checkout. It skips when that checkout is absent.
 
 To run a whole phase end to end, use the `sandbox` fixture in
 [`conftest.py`](conftest.py). It copies the hand-written runtime and three

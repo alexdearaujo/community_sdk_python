@@ -282,8 +282,9 @@ def call_grpc(
     misreported as a network failure.
 
     `api_config` is a per-call override: its grpc_deadline bounds this call,
-    ahead of the channel's default. Channel credentials cannot change per call,
-    so the override's credentials do not apply on gRPC.
+    ahead of the channel's default. An override that with_timeout() did not
+    build raises ConfigurationError, because the channel binds its credentials
+    and host once.
     """
     path = _method_label(stub_method)
     if api_config is not None:

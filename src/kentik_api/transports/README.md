@@ -10,8 +10,8 @@ and credential-wiring code, not per-endpoint logic.
 | Class | File | Role |
 | --- | --- | --- |
 | `BaseTransport` | [`base.py`](base.py) | Abstract base. Declares `close()`. |
-| `RestTransport` | [`rest_client.py`](rest_client.py) | Builds an [`APIConfig`](../core/api_config.py) from [`KentikCredentials`](../auth/credentials.py). Generated wrappers read `api_config` off this object. |
-| `GrpcTransport` | [`grpc_client.py`](grpc_client.py) | Opens a `grpc.secure_channel` using the credentials' gRPC auth plugin. |
+| `RestTransport` | [`rest_client.py`](rest_client.py) | Holds the [`APIConfig`](../core/api_config.py) that [`KentikAPI`](../client.py) builds. It builds one from [`KentikCredentials`](../auth/credentials.py) only when none is given. Generated wrappers read `api_config` off this object. |
+| `GrpcTransport` | [`grpc_client.py`](grpc_client.py) | Opens a `grpc.secure_channel` with the credentials' gRPC auth plugin. Every call gets the `grpc_deadline` default, and the receive limit is 40 MiB. It records quota per gRPC method in `api_config.rate_limits`. |
 
 ```mermaid
 classDiagram
@@ -24,6 +24,7 @@ classDiagram
     }
     class GrpcTransport {
         +channel: grpc.Channel
+        +APIConfig api_config
     }
     BaseTransport <|-- RestTransport
     BaseTransport <|-- GrpcTransport

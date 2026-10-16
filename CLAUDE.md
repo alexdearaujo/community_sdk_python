@@ -34,7 +34,8 @@ repo.
 - `scripts/generation/` — the generator's phase modules
   (`parity.py`, `error_package.py`, `fixup.py`,
   `wrapper_generation.py`, `docs_rendering.py`, `endpoint_docs.py`,
-  `public_names.py`, `_shared.py`), orchestrated by `scripts/generate_sdk.py`
+  `api_surface.py`, `public_names.py`, `_shared.py`), orchestrated by
+  `scripts/generate_sdk.py`
 - `public_names.json` — the public name of every Service, client
   method, and model. Edited by hand; a run only adds entries (see
   "Public names" below)
@@ -50,11 +51,14 @@ repo.
 - `src/kentik_api/gen/README.md` — the `gen/` root README
 - `docs/sphinx/sdk_runtime_architecture.md` — the runtime
   architecture page, with an inline Mermaid dependency graph
-- `docs/sphinx/services/<service>.md` — one reference page per
-  service, written by `endpoint_docs.EndpointDocsCollector.render()`
+- `docs/sphinx/services/<service>.md`, `index.md`, and `README.md`:
+  one reference page per service and the two index pages, written by
+  `endpoint_docs.EndpointDocsCollector.render()`
 - `schema_operations.json` — each service's operations as the patched
   swagger declares them, written by
   `EndpointDocsCollector.write_record()`
+- `api_surface.json`: the public API surface, written by
+  `api_surface.generate()` at the end of each run
 - the `<!-- kentik-gen:... -->` marker blocks inside
   `docs/sphinx/guides/{quickstart,rest,grpc,generation}.md` and
   `docs/sphinx/README.md` — rewritten by
@@ -100,7 +104,7 @@ unless the call passes its own, so generated call sites never need one.
 ### The generator's phase modules
 
 `scripts/generate_sdk.py` is the entrypoint: CLI parsing
-(`--local-repo`) and the top-level orchestration loop in
+(`--local-repo`, `--schema-ref`) and the top-level orchestration loop in
 `generate_modular_sdk()`. It calls out to `scripts/generation/`, a
 subpackage of independently testable phase modules (see
 `tests/generator/`):
@@ -139,9 +143,10 @@ subpackage of independently testable phase modules (see
   `collector.render()` must run afterward, and only after
   `wrapper_generation.generate()` runs. `render()` builds Sphinx
   MyST stubs whose example snippets statically read the real
-  generated wrapper method signatures off disk. The two-method
-  interface makes this ordering constraint visible instead of
-  relying on caller discipline.
+  generated wrapper method signatures off disk.
+  `collector.write_record()` writes `schema_operations.json` after
+  `render()`. The collector does not enforce this order.
+  `generate_modular_sdk()` calls the methods in the correct order.
 - `api_surface.py` — records the public API surface into
   `api_surface.json` on every run, and diffs two recordings. `make
   release-notes`, `make check-changelog`, and the end-of-run
@@ -400,7 +405,7 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   would silently pick whichever wrapper method was parsed last,
   producing a real-looking but wrong example (wrong method, wrong
   request model). Method and path together are unique per operation
-  within a merged service. `_parse_wrapper_method_signatures()` (in
+  within a merged service. `parse_wrapper_method_signatures()` (in
   `scripts/generation/endpoint_docs.py`) resolves this by statically
   reading the wrapper's import aliases. The generator itself never
   imports or executes generated code — that stays test-only by
@@ -468,8 +473,9 @@ Mocked/offline layers (no network, safe to run anywhere, part of
   `error/__init__.py::response_error_map`. Shared discovery and
   sample-building helpers live in `tests/_discovery.py` (at the
   tests root, not inside one layer, since `tests/e2e/` imports it
-  too). Every generated and e2e test file imports these helpers, so
-  they can't drift apart.
+  too). The wrapper contract, schema coverage, path encoding, gRPC
+  request mapping, retry eligibility, and auto-discovered e2e suites
+  import these helpers. This keeps their discovery identical.
 - `tests/generated/test_schema_operations.py` — holds the generated
   REST modules to `schema_operations.json`: the same operations, a
   `data` argument wherever the swagger has a body, an argument for
@@ -480,8 +486,10 @@ Mocked/offline layers (no network, safe to run anywhere, part of
 - `tests/smoke/test_client_mounts_and_calls.py` — lightweight
   client-wiring checks; keep this suite small and fast.
 - `tests/generator/` — unit tests for `scripts/generation/*.py`
-  (see "The generator's phase modules" above): `test_parity.py`,
-  `test_error_package.py`, `test_wrapper_generation.py`. These test
+  (see "The generator's phase modules" above), for example
+  `test_parity.py`, `test_error_package.py`,
+  `test_wrapper_generation.py`, and `test_public_names.py`.
+  `tests/generator/README.md` lists every file. These test
   the generator itself, not the SDK it produces. They build minimal
   swagger or fixture data with `tmp_path`, instead of needing a real
   or local schema checkout.
@@ -503,10 +511,16 @@ Mocked/offline layers (no network, safe to run anywhere, part of
   CI also runs these gates on every pull request. Run them locally
   first:
 
+  - the full mocked test suite on Python 3.12, 3.13, and 3.14 (the
+    `test` job)
   - `make typecheck`
   - `uv run ruff check .` and `uv run ruff format --check .`
   - `make check-specs`
+  - `make check-changelog` against the merge base (the `changelog`
+    job)
   - the Sphinx build with `-W` (see `make docs` above)
+  - the built wheel, installed into a clean virtual environment
+    outside the checkout (`build.yml`)
   - generated-output drift: CI runs `make generate` at the commit in
     `schema.lock` and fails if the tree differs from what is
     committed. Commit `schema.lock` with every regeneration, or this
@@ -520,8 +534,10 @@ Live layer (real network, opt-in only, **not** part of `make test`):
 - `tests/e2e/test_endpoints_e2e_grpc.py` (`make test-e2e-grpc`, `-m
   e2e_grpc`) — the gRPC-transport variant of the same read-only
   coverage. A `NotImplementedError` counts as a passing outcome here
-  (see "gRPC transport is fully implemented" above): it means this
-  particular operation has no gRPC translation yet, not a bug.
+  (see "gRPC transport is fully implemented" above). Today every
+  operation has a gRPC translation, so it means the service's proto
+  companions failed to import. A future operation also raises it when
+  no RPC shares its HTTP rule.
 
 ### Test coverage requirement
 

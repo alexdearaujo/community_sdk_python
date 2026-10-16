@@ -43,5 +43,7 @@ flowchart LR
 explicit constructor arguments first, then the `KENTIK_EMAIL` /
 `KENTIK_API_TOKEN` environment variables, then the `env_file` argument
 (`.env` by default, `None` to skip). The file is read into memory, never
-into `os.environ`. See
+into `os.environ`. An explicit argument that is empty or only whitespace
+raises `ConfigurationError`. The SDK does not fall back to the environment for
+it. `KentikCredentials` is read-only. See
 [Authentication](../../../docs/sphinx/authentication.md) for the full rules.

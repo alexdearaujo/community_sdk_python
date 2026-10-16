@@ -14,7 +14,7 @@ hand-written-vs-generated architecture.
 | [`client.py`](client.py) | Hand-written. `KentikAPI`, the SDK's entrypoint: loads credentials, picks a transport, mounts every generated service. |
 | [`client_mixin.py`](client_mixin.py) | Generated. Mounts every service wrapper onto `KentikAPI` as a typed attribute (`client.device`, `client.user`, and so on). |
 | [`auth/`](auth/README.md) | Hand-written. See [auth/README.md](auth/README.md). |
-| [`core/`](core/README.md) | Hand-written. The shared REST runtime every generated call routes through. See [core/README.md](core/README.md). |
+| [`core/`](core/README.md) | Hand-written. The shared REST and gRPC runtimes every generated call routes through. See [core/README.md](core/README.md). |
 | [`errors/`](errors/README.md) | Hand-written. The base exception hierarchy every generated error class builds on. See [errors/README.md](errors/README.md). |
 | [`transports/`](transports/README.md) | Hand-written. REST/gRPC transport selection. See [transports/README.md](transports/README.md). |
 | [`gen/`](gen/README.md) | Fully generated, one directory per Kentik API service. See [gen/README.md](gen/README.md). |

@@ -17,11 +17,12 @@ four mocked ones.
 | --- | --- |
 | `conftest.py` | The `real_client` (REST) and `grpc_real_client` (gRPC) fixtures. Both delegate all credential loading to `KentikAPI()` (a project-root `.env` file, or `KENTIK_EMAIL`/`KENTIK_API_TOKEN`). Either fixture skips the whole suite when no credentials are configured. |
 | `test_endpoints_e2e.py` | The end-to-end operation tests, REST transport. |
-| `test_endpoints_e2e_grpc.py` | The same coverage over the gRPC transport. Additionally treats `NotImplementedError` as a passing outcome, since gRPC translation is only implemented for a subset of operations (see CLAUDE.md's "gRPC transport is fully implemented" section). |
+| `test_endpoints_e2e_grpc.py` | The same coverage over the gRPC transport. Additionally treats `NotImplementedError` as a passing outcome (see CLAUDE.md's "gRPC transport is fully implemented" section). A wrapper raises `NotImplementedError` when the service's proto companions fail to import, or when no RPC shares the operation's HTTP rule. Today every operation has a gRPC translation. |
+| `test_alert_list_e2e.py` | A live check of `alert_list`, a read-only POST that the auto-discovered suite skips. |
 
 Endpoint discovery comes from
 [`tests/_discovery.py`](../_discovery.py) (`discover_endpoint_cases()`), which builds on
-the same `discover_cases()`/`WrapperCase` discovery [`tests/generated/`](../generated/README.md) uses, not a hand-written list. Both files above
+the same `discover_cases()`/`WrapperCase` discovery [`tests/generated/`](../generated/README.md) uses, not a hand-written list. The two endpoint suites above
 share the identical discovered cases and GET-vs-mutating split.
 
 ## How read and mutating operations differ

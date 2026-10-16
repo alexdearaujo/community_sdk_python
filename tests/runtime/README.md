@@ -19,6 +19,19 @@ headers, params, and body.
 pure function that maps `grpc.RpcError` status codes to SDK exceptions.
 It uses a minimal `FakeRpcError` stub and requires no live gRPC channel.
 
+The other files in this layer:
+
+| File | Covers |
+| --- | --- |
+| `test_api_config.py` | `APIConfig` timeout derivation and validation. |
+| `test_connection_reuse.py` | One HTTP client per `KentikAPI`, released by `close()`. |
+| `test_credentials.py` | The exact auth wire format for both transports. |
+| `test_grpc_end_to_end.py` | A generated wrapper call over a real gRPC channel to an in-process server (T2). |
+| `test_grpc_transport.py` | The gRPC transport bounds every call with a deadline. |
+| `test_rate_limit.py` | Quota parsing and capture on both transports. |
+| `test_rest_deadline.py` | A numeric REST timeout bounds the whole call, not each read. |
+| `test_transport_symmetry.py` | The same failure raises the same SDK exception on both transports. |
+
 ## Run
 
 ```bash
