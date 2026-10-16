@@ -17,7 +17,7 @@ package owns one concern of SDK generation.
 | [`public_names.py`](public_names.py) | The public name of every Service, client method, and model, read from and added to `public_names.json`. Fails when an entry no longer matches the schema | `PublicNames`, `operation_key()`, `model_key()`, `NameDriftError` |
 | [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams, service READMEs, and generated-example snippets injected into `docs/sphinx/guides/*.md` | `generate()` |
 | [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation, and `schema_operations.json`, the swagger-derived operation record | `EndpointDocsCollector` |
-| [`api_surface.py`](api_surface.py) | Records the public API surface (operations with their gRPC routes, model fields, enum values) to `api_surface.json`, and diffs two recordings into release notes | `generate()`, `capture()`, `diff()`, `breaking_changes()`, `render_markdown()` |
+| [`api_surface.py`](api_surface.py) | Records the public API surface (operations with their client methods, gRPC routes, and error classes, model fields, enum values) to `api_surface.json`, and diffs two recordings into release notes | `generate()`, `capture()`, `diff()`, `breaking_changes()`, `render_markdown()` |
 | [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `INTERNAL_GEN_DIRS`, `iter_service_dirs()`, `discover_service_model_classes()`, `service_to_pascal_case()`, `normalize_symbol()`, `RestOperation`, `parse_generated_rest_module()`, `WrapperMethod`, `parse_wrapper_methods()`, `GrpcCall`, `grpc_call()`, `grpc_stub_services()` |
 
 Keep a helper in `_shared.py` only when two or more phase modules call

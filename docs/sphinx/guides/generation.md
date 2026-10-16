@@ -219,10 +219,15 @@ The alert lists a change as breaking when it can stop existing caller code
 from working:
 
 - A service, operation, model, field, or enum value is removed.
+- A service is no longer mounted on the client.
+- A client method is renamed, or an operation no longer routes to gRPC.
+- An operation raises a different error class, or loses the error class for
+  a status code.
+- An operation requires a new parameter, drops a parameter, or changes a
+  parameter or return type.
 - A field changes its type.
 - A field becomes required, or a new field is required.
-- An operation requires a new parameter.
-- A dependency floor goes up, or a new dependency is required.
+- A dependency requirement narrows, or a new dependency is required.
 
 A renamed field shows as one removed field and one added field. The removed
 name is the breaking change.

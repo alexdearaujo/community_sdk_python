@@ -294,6 +294,72 @@ def test_a_record_without_grpc_routes_compares_as_unchanged():
     assert api_surface.is_empty(api_surface.diff(before, _routed("DemoService/Get")))
 
 
+def test_capture_records_each_operation_error_class(tmp_path: Path):
+    service = tmp_path / "demo"
+    (service / "services").mkdir(parents=True)
+    (service / "error").mkdir()
+    (service / "services" / "DemoService.py").write_text(
+        "def ListThings() -> None:\n"
+        '    return request_json(method="get", path="/things", expected_status=200,\n'
+        "        error_cls=ListThingsError)\n"
+    )
+    (service / "error" / "__init__.py").write_text(
+        "class ListThingsError(DemoError): ...\n"
+        "class ListThingsNotFoundError(ListThingsError): ...\n"
+        'ListThingsError.response_error_map = {"404": ListThingsNotFoundError}\n'
+    )
+
+    operation = api_surface.capture(tmp_path)["services"]["demo"]["operations"][
+        "GET /things"
+    ]
+
+    assert operation["error"] == "ListThingsError"
+    assert operation["error_responses"] == {"404": "ListThingsNotFoundError"}
+
+
+def _raising(error: str, **responses: str) -> dict:
+    surface = _surface({"demo": _service(["GET /thing"])})
+    operation = surface["services"]["demo"]["operations"]["GET /thing"]
+    operation.update(error=error, error_responses=responses)
+    return surface
+
+
+def test_a_renamed_error_class_is_breaking():
+    before = _raising("GetThingError", **{"404": "GetThingNotFoundError"})
+    after = _raising("ThingGetError", **{"404": "ThingGetNotFoundError"})
+
+    assert api_surface.breaking_changes(api_surface.diff(before, after)) == [
+        (
+            "- `demo`: `GET /thing` raises `ThingGetError`, not `GetThingError`",
+            "GetThingError",
+        )
+    ]
+
+
+def test_a_removed_status_class_is_breaking_and_a_new_one_is_not():
+    with_404 = _raising("GetThingError", **{"404": "GetThingNotFoundError"})
+    without = _raising("GetThingError")
+
+    removed = api_surface.breaking_changes(api_surface.diff(with_404, without))
+    added = api_surface.breaking_changes(api_surface.diff(without, with_404))
+
+    assert removed == [
+        (
+            "- `demo`: error class removed, `GetThingNotFoundError`",
+            "GetThingNotFoundError",
+        )
+    ]
+    assert added == []
+    assert "error class added, `GetThingNotFoundError`" in _render(without, with_404)
+
+
+def test_a_record_without_error_classes_compares_as_unchanged():
+    """Records written before schema_version 7 carry no error classes."""
+    before = _surface({"demo": _service(["GET /thing"])})
+
+    assert api_surface.is_empty(api_surface.diff(before, _raising("GetThingError")))
+
+
 def test_write_then_read_round_trips(tmp_path: Path):
     surface = _surface({"device": _service(["GET /device"])})
     path = tmp_path / "api_surface.json"
