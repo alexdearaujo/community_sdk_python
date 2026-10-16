@@ -700,31 +700,30 @@ This audit pushed nothing. Do these steps yourself.
    rm -rf dist/
    ```
 
-9. Push to the Jira branch on `origin`. The local branch tracks `fork`, so
-   name `origin` in the command. The push is a fast-forward: 170 commits
-   ahead and 0 behind.
+9. Push `feat/v6-sdk` to `fork`. Your account cannot push to `origin`, so
+   the pull request comes from the fork.
 
    ```bash
-   git push origin FA-2-Update-the-python-SDK-from-V5-to-V6
+   git push fork feat/v6-sdk
    ```
 
 10. Write the PR description in a file outside the repo, for example
-    `~/fa-2-pr.md`. Name each deferred blocker in it.
+    `~/v6-sdk-pr.md`. Name each deferred blocker in it.
 11. Open the PR as a draft, so that CI runs before review. Five CI jobs never
     ran on GitHub: lint, changelog, determinism, docs, and spec references.
 
     ```bash
     gh pr create --repo kentik/community_sdk_python --base main \
-      --head FA-2-Update-the-python-SDK-from-V5-to-V6 --draft \
+      --head alexdearaujo:feat/v6-sdk --draft \
       --title "FA-2: Update the Python SDK from V5 to V6" \
-      --body-file ~/fa-2-pr.md
+      --body-file ~/v6-sdk-pr.md
     ```
 
-12. When CI passes, mark the PR ready for review.
+12. When CI passes, mark the PR ready for review. Use the PR number that
+    step 11 printed.
 
     ```bash
-    gh pr ready FA-2-Update-the-python-SDK-from-V5-to-V6 \
-      --repo kentik/community_sdk_python
+    gh pr ready <number> --repo kentik/community_sdk_python
     ```
 
 Know these facts before the merge:
@@ -737,8 +736,6 @@ Know these facts before the merge:
   keeps them.
 - After the merge, `pip install kentik-api` still installs 1.0.7 until you
   publish 2.0.0.
-- The fork branch is 74 commits behind. To keep it current, push the same
-  branch to `fork`.
 
 Do these steps after the merge (ledger entry P3a):
 
