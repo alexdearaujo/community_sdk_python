@@ -188,6 +188,7 @@ _GROUP_CONFIG: dict[str, str] = {
     "Generated REST Services": "generated",
     "Generated Models": "generated",
     "Generated Error Classes": "generated",
+    "Generated Proto Stubs": "generated",
 }
 
 _LAYER_NAMES: dict[str, str] = {
@@ -223,6 +224,8 @@ def _module_group(module_name: str, source_file: Path | None = None) -> str | No
         return "gRPC Transport"
 
     if module_name.startswith("kentik_api.gen."):
+        if ".pb." in module_name:
+            return "Generated Proto Stubs"
         if ".error" in module_name:
             return "Generated Error Classes"
         if ".services." in module_name:
@@ -283,14 +286,17 @@ def _generate_runtime_architecture_docs() -> None:
             if isinstance(node, ast.Import):
                 target_modules.extend(alias.name for alias in node.names)
             elif isinstance(node, ast.ImportFrom):
-                target_modules.append(
-                    _resolve_import_from(current_module, node.level, node.module)
-                )
+                base = _resolve_import_from(current_module, node.level, node.module)
+                target_modules.append(base)
+                # `from kentik_api.gen.label import models` imports a module by name.
+                target_modules.extend(f"{base}.{alias.name}" for alias in node.names)
 
-            for target_module in target_modules:
-                if not target_module.startswith("kentik_api"):
-                    continue
-                dst_group = _module_group(target_module)
+            dst_groups = {
+                _module_group(target_module)
+                for target_module in target_modules
+                if target_module.startswith("kentik_api")
+            }
+            for dst_group in dst_groups:
                 if dst_group is None or dst_group == src_group:
                     continue
                 nodes.add(dst_group)
@@ -365,6 +371,7 @@ def _generate_runtime_architecture_docs() -> None:
         "- `Client API` and `Client Mixin` are the orchestration entrypoints.",
         "- `Generated Service Wrappers` are transport-aware facades exposed as `client.<service>`.",
         "- `Generated REST Services` host operation functions generated from OpenAPI schemas.",
+        "- `Generated Proto Stubs` are the protoc-compiled modules that wrappers call on a gRPC transport.",
         "- `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.",
         "",
         *_services_without_wrappers_section(),
