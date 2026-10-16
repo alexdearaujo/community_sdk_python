@@ -90,5 +90,4 @@ In `my_script.py`, pass that path as `KentikAPI(env_file=args.env_file)`.
 - `KENTIK_EMAIL`
 - `KENTIK_API_TOKEN`
 
-If neither explicit credentials nor environment values are available,
-client initialization raises an error.
+If no source supplies both values, `KentikAPI` raises `ConfigurationError`.

@@ -12,8 +12,15 @@ four.
 | --- | --- |
 | `test_wrapper_contracts.py` | Contract tests for every generated snake_case service wrapper: argument forwarding, transport branching, and discovery rules. |
 | `test_endpoint_schema_coverage.py` | Every discovered operation, run against every response status code the OpenAPI schema declares for it. |
+| `test_schema_operations.py` | The generated REST modules match the operations in `schema_operations.json`. Needs no schema checkout. |
+| `test_grpc_request_mapping.py` | Each gRPC wrapper call reaches the right RPC with every argument set. |
+| `test_grpc_stub_wiring.py` | Every mounted wrapper builds a live gRPC stub. |
+| `test_model_wire_names.py` | Every model field sends the name it was read under. |
+| `test_path_encoding.py` | Every REST path parameter is encoded into its own segment. |
+| `test_retry_eligibility.py` | Which operations a future retry policy can replay, derived from each operation's HTTP verb. |
+| `test_alert_acknowledgement.py` | An alert that carries an acknowledgement parses (audit finding B2). |
 
-Both files import shared discovery and sample-building helpers from
+The contract, coverage, path encoding, gRPC request mapping, and retry eligibility files import shared discovery and sample-building helpers from
 [`tests/_discovery.py`](../_discovery.py), so they stay in sync with
 the e2e suite automatically.
 

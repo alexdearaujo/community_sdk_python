@@ -79,6 +79,8 @@ Every [`make generate`](../../../Makefile) run wipes and rebuilds:
 - [`src/kentik_api/client_mixin.py`](../../../src/kentik_api/client_mixin.py)
 - [`docs/sphinx/sdk_runtime_architecture.md`](../sdk_runtime_architecture.md)
 - [`docs/sphinx/services/*.md`](../services/index.md) — all <!-- kentik-gen:service-count -->42<!-- /kentik-gen:service-count --> service pages
+- `schema_operations.json`, `api_surface.json`, and `schema.lock`
+- the `kentik-gen` marker blocks in the guides and in `docs/sphinx/README.md`
 
 These files are **never hand-edited**.
 
@@ -168,8 +170,9 @@ schema or with the schema from GitHub.
 
 `make generate` records the public API surface in
 [`api_surface.json`](../../../api_surface.json). The record holds every
-service, operation, model field, and enum value, and the gRPC method each
-operation calls. At the end of the run, the
+service, operation, model field, and enum value. It also holds the gRPC
+method that each operation calls and the error classes that each operation
+raises. At the end of the run, the
 generator compares the new record with the record committed at `HEAD`. It
 then prints one of three messages:
 

@@ -23,7 +23,7 @@ class RestTransport(BaseTransport):
 
     @property
     def rate_limits(self) -> dict[str, RateLimit]:
-        """Quota per REST path, as of the last call to each."""
+        """Quota per REST method and path template, as of the last call to each."""
         return self.api_config.rate_limits
 
     def close(self):

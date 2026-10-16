@@ -26,8 +26,8 @@ Python and marks it `safe`.
 
 Without a custom template, `openapi-python-generator` emits a direct
 `httpx` call per operation. That duplicates auth headers, error
-handling, and status checks across every one of the ~39 generated
-services. `httpx.jinja2` instead calls
+handling, and status checks across every generated
+service. `httpx.jinja2` instead calls
 [`request_json()`](../../src/kentik_api/core/rest_runtime.py), the
 single shared function that owns all of that. See the "shared
 connection handler" section of the repository root
@@ -57,7 +57,7 @@ flowchart LR
 > `from kentik_api.core.rest_runtime import request_json` import line and
 > the `# __ERROR_IMPORTS_PLACEHOLDER__` sentinel right after it.
 > `error_package.inject_service_error_handling()` replaces that sentinel to
-> wire in per-service error classes, falling back to string-matching the
-> `request_json` import line only for legacy files generated before the
-> sentinel existed. Renaming or relocating either anchor silently breaks
-> that injection for every service.
+> wire in per-service error classes. When the sentinel is missing, it falls
+> back to the `request_json` import line. `fixup._fix_path_parameters()` also
+> matches that line. When the anchor is missing, generation fails with
+> `ValueError`. Rename either anchor only together with both functions.

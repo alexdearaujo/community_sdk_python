@@ -117,7 +117,7 @@ _READ_ONLY = frozenset(
 
 
 class APIConfig:
-    """Centralized API Configuration for all generated REST services.
+    """Shared configuration for every generated call, on REST and gRPC.
 
     `timeout` is the one shared default. `rest_timeout` and `grpc_deadline`
     derive from it when omitted, so the two transports cannot drift apart.
@@ -177,8 +177,9 @@ class APIConfig:
         _require_positive("grpc_deadline", grpc_deadline)
         self.grpc_deadline: float = grpc_deadline
 
-        # Keyed by endpoint (REST path or gRPC method), the granularity Kentik
-        # enforces quota at; one client-wide value would mix budgets.
+        # Keyed by endpoint: the REST method and path template, or the gRPC
+        # method. Kentik enforces quota per endpoint, so one client-wide value
+        # would mix budgets.
         self.rate_limits: dict[str, RateLimit] = {}
 
         self._client: httpx.Client | None = None

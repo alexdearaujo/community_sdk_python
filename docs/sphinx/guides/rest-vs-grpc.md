@@ -16,7 +16,7 @@ in most ways that matter, and REST covers every operation.
 | One-off script | REST | Every operation works. |
 | CI or automation job | REST | A new operation in the job never raises `NotImplementedError`. |
 | Sustained polling | Either | The per-endpoint quota is the limit, and both transports share it. |
-| Long-running service | Either | Check first that gRPC covers every operation the service calls. |
+| Long-running service | Either | Both transports cover every operation. Pick by the other rows in this guide. |
 | Debugging an API problem | REST | You can read the body and reproduce the call with curl. |
 
 This guide does not cover payload size, general speed, or behavior behind a

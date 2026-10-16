@@ -18,7 +18,10 @@ class ConfigurationError(KentikError):
 
 
 class AuthenticationError(KentikError):
-    """Raised for authentication/authorization failures."""
+    """Raised when the API rejects the credentials.
+
+    That is a REST 401 or a gRPC UNAUTHENTICATED status.
+    """
 
 
 class TransportError(KentikError):

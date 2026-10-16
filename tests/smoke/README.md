@@ -10,10 +10,18 @@ four.
 
 `test_client_mounts_and_calls.py` holds lightweight checks for
 overall wiring: multi-region endpoint configuration
-(`_REGION_ENDPOINTS` for `us`/`eu`, and the `ValueError` raised for an
+(`_REGION_ENDPOINTS` for `us`/`eu`, and the `ConfigurationError` raised for an
 unrecognized region), that `KentikAPI` mounts the expected service
 attributes, and that a call through one mounted wrapper reaches the
 generated REST module.
+
+The other files in this layer:
+
+| File | Covers |
+| --- | --- |
+| `test_docs_contract.py` | Documentation and tooling facts the audit found wrong (findings D7 to D10). |
+| `test_examples_import.py` | Each example imports, and its `client.<service>.<method>(...)` calls resolve against a real client. Nothing is sent. |
+| `test_packaging_contract.py` | Packaging metadata the published artifacts depend on (audit findings K4 to K9, K11). |
 
 ## Run
 

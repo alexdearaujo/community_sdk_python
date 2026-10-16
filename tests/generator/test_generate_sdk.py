@@ -2,8 +2,9 @@
 """Tests for scripts/generate_sdk.py top-level helpers.
 
 All tests use tmp_path so no schema download or full generation run is needed
-for the unit tests. The integration test (test_schema_request_body_coverage)
-also skips gracefully when the local schema repo is absent.
+for the unit tests. The integration test
+(test_the_real_alert_schema_keeps_acknowledgement_an_object) also skips
+gracefully when the local schema repo is absent.
 """
 
 from __future__ import annotations

@@ -1,8 +1,9 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Demonstrate SDK error handling, which works identically for REST and gRPC.
 
-Each `except` branch below is exercised on both transports by
-`tests/runtime/test_transport_symmetry.py`.
+`tests/runtime/test_transport_symmetry.py` checks that each failure raises the
+same exception type on REST and gRPC, so each `except` branch below catches the
+same failures on both transports.
 """
 
 from kentik_api.client import KentikAPI

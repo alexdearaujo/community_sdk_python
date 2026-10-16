@@ -46,7 +46,7 @@ Each change below can stop an existing `except` clause or call from working.
 | `KentikAPI(...)` loaded every key of the nearest `.env` into `os.environ`, even when you passed credentials | It reads only `KENTIK_EMAIL` and `KENTIK_API_TOKEN`, into memory, and only when an argument or environment variable is missing | Load other `.env` keys yourself, for example with `dotenv.load_dotenv()` |
 | `kmeta` `ServiceNowConfig.credentialVaultId` held a credential vault entry ID | Upstream renamed it `credentialVaultName`; it holds the entry's name and always resolves to the entry's latest version | Read and send `credentialVaultName` |
 | Client method names depended on module and route order, and many repeated the Service name (`client.audit.get_audit_event`) | Names no longer depend on order and drop the Service word when two or more words remain. See [Renamed client methods](#renamed-client-methods) | Use the new names in the table below |
-| 50 model names held a schema version (`labelv202210Label`), so a version bump renamed them | The version and its package prefix are gone (`Label`). See [Renamed models](#renamed-models) | Use the new names in the table below |
+| 55 model names held a schema version (`labelv202210Label`), so a version bump renamed them | The version and its package prefix are gone (`Label`). See [Renamed models](#renamed-models) | Use the new names in the table below |
 | Error classes were named after the upstream operationId, and operations that share one (`alerting` has eight `List` operations) shared one class | Each operation has its own class, named after its client method: `client.label.list_labels` raises `ListLabelsError`. See [Renamed error classes](#renamed-error-classes) | Catch the new names in the table below |
 | Each error package exported `ERROR_BY_OPERATION`, keyed by operationId | It exports `ERROR_BY_METHOD`, keyed by client method name | Look up `ERROR_BY_METHOD["list_labels"]` |
 
@@ -166,9 +166,9 @@ These fields keep their names, but their type is now the renamed model:
 
 An error class is now named after its client method, so it keeps its name
 when upstream changes the operationId. Each response class follows its
-operation class: `ListLabelsNotFoundError` extends `ListLabelsError`. A name
-that would match a Python builtin exception gets the Service name in front.
-Acronyms are no longer all capitals, because method names are lowercase
+operation class: `ListLabelsUnexpectedError` extends `ListLabelsError`. A
+name that would match a Python builtin exception gets the Service name in
+front. Acronyms are no longer all capitals, because method names are lowercase
 (`ListASGroupsError` is now `ListAsGroupsError`).
 
 In `alerting`, `CreateError`, `DeleteError`, `GetError`, `ListError`, and
@@ -240,6 +240,9 @@ method name in PascalCase with `Error` added: `alert_list` raises
 - **Proxies.** REST calls honor `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, and
   `NO_PROXY` (either case). gRPC already honored the lowercase `https_proxy` and
   `no_proxy`. There is no `proxy=` argument.
+- **Schema text in docstrings.** Each client method has the operation summary
+  and description from the schema as its docstring. Each model field has the
+  schema description. `help()`, editors, and the Sphinx pages show this text.
 
 ### Fixed
 
@@ -349,7 +352,7 @@ method name in PascalCase with `Error` added: `alert_list` raises
   now allows 40 MiB, and `KentikAPI(grpc_options=[...])` changes it. A response
   over the limit raises `TransportError`, not `HTTPException` with status 429.
 - **`except <Operation>Error` now catches what the operation raises.** Each
-  response error class, such as `ListDevicesNotFoundError`, now extends its
+  response error class, such as `ListDevicesUnexpectedError`, now extends its
   operation class, `ListDevicesError`, as well as the service class. gRPC now
   raises the same class as REST, with `grpc_status_code` set, where it raised
   the plain `HTTPException` before.

@@ -54,6 +54,15 @@ Pass `region` to target a non-default Kentik region:
 client = KentikAPI(protocol="rest", region="eu")
 ```
 
+## Timeouts and proxies
+
+A numeric `timeout` or `rest_timeout` is a total deadline for the whole call.
+An `httpx.Timeout` bounds each phase and each read separately. The REST
+transport honors `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and `NO_PROXY`.
+
+A success status with a body that is not JSON, or that does not match the
+model, raises `HTTPException` with status 502.
+
 ## Request flow
 
 ```mermaid

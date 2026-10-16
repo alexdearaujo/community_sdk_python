@@ -56,11 +56,14 @@ flowchart TB
 ## Staying current with the Kentik API
 
 Kentik evolves its API continuously. Because this SDK is generated
-rather than hand-written, adopting a schema change is one command:
+rather than hand-written, one command adopts a new schema:
 
 ```bash
-make generate   # regenerate from the latest published schema
+make sync-schema   # regenerate from the newest schema and move the pin in schema.lock
 ```
+
+If upstream renames a public name, the run stops with `NameDriftError`.
+You then update `public_names.json` and run the command again.
 
 One run propagates a change through every layer at once: models, REST
 functions, per-operation error classes, gRPC stubs, the typed client
@@ -179,7 +182,8 @@ make install
 
 ```bash
 make generate local   # from local ../api-schema-public/ checkout
-make generate         # fetch latest schema from GitHub
+make generate         # fetch the schema at the commit in schema.lock
+make sync-schema      # fetch the newest schema and update schema.lock
 make                  # generate + test (default)
 ```
 

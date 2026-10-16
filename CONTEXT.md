@@ -32,12 +32,13 @@ _Avoid_: endpoint, function, method
 The `(service, namespace, filename)` grouping key that the generator
 uses to pick the latest schema version, when multiple versioned
 swagger files exist. The generator generates only the newest version
-in each family and skips older versions.
+in each family and skips older versions. It also skips a file when
+newer files in its service write all of that file's REST modules.
 
 **Phase module**:
 One of the independently testable units in [`scripts/generation/`](scripts/generation/README.md)
 (`parity`, `error_package`, `fixup`, `wrapper_generation`,
-`docs_rendering`, `endpoint_docs`). Each phase module owns one concern of SDK
+`docs_rendering`, `endpoint_docs`, `api_surface`, `public_names`). Each phase module owns one concern of SDK
 generation; [`scripts/generate_sdk.py`](scripts/generate_sdk.py)'s orchestration calls them in
 sequence.
 _Avoid_: generator step, stage
@@ -51,13 +52,15 @@ The runtime dispatches errors through `error_cls.from_response`.
 
 **Parity validation**:
 The check that compares the set of generated service directories
-against the set of top-level schema service directories. If any
+against the public names that `public_names.json` gives the top-level
+schema service directories. If any
 directory doesn't match, the check fails the whole generation run.
 
 **EndpointDocsCollector**:
-The two-method object (`extract()`, `render()`) that accumulates
+The object with three methods (`extract()`, `render()`, `write_record()`) that accumulates
 per-endpoint documentation. `extract()` runs while swagger files are
 available; `render()` builds Sphinx stubs from that documentation
 afterward. `render()` must run after wrapper generation, because its
 examples read real method signatures that wrapper generation writes.
+`write_record()` writes `schema_operations.json`.
 _Avoid_: doc builder, doc generator

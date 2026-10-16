@@ -121,6 +121,13 @@ Add logic here only when the status or error coverage strategy
 itself changes. A new service, operation, or status code needs no
 manual update: the next [`make generate`](../Makefile) picks it up automatically.
 
+### 1c) Schema operation record
+
+Primary file: [`tests/generated/test_schema_operations.py`](generated/test_schema_operations.py)
+
+This suite holds the generated REST modules to `schema_operations.json`.
+It needs no schema checkout.
+
 ### 2) Runtime tests
 
 Primary files:
@@ -154,15 +161,21 @@ small and fast.
 | [`tests/generator/test_endpoint_docs.py`](generator/test_endpoint_docs.py) | `parse_wrapper_methods()`/wrapper-signature parsing in [`scripts/generation/endpoint_docs.py`](../scripts/generation/endpoint_docs.py) and [`_shared.py`](../scripts/generation/_shared.py) |
 | [`tests/generator/test_docs_rendering.py`](generator/test_docs_rendering.py) | [`scripts/generation/docs_rendering.py`](../scripts/generation/docs_rendering.py)'s `_GROUP_CONFIG`/`_module_group`/`_LAYER_NAMES` consistency (architecture-diagram module grouping) |
 | [`tests/generator/test_generate_sdk.py`](generator/test_generate_sdk.py) | [`scripts/generate_sdk.py`](../scripts/generate_sdk.py)'s top-level helpers: schema-name cleanup, request-body `$ref` inlining, generated gRPC import rewriting, and the validate-before-clean ordering guard |
+| [`tests/generator/test_public_names.py`](generator/test_public_names.py) | `public_names.json`: version-free keys, default names, and the failure when an entry no longer matches the schema |
+| [`tests/generator/test_api_surface.py`](generator/test_api_surface.py) | [`scripts/generation/api_surface.py`](../scripts/generation/api_surface.py), with surface dicts built directly instead of a generated SDK |
+| [`tests/generator/test_release_notes.py`](generator/test_release_notes.py) | The `CHANGELOG.md` check in [`scripts/release_notes.py`](../scripts/release_notes.py) |
+| [`tests/generator/test_impact_report.py`](generator/test_impact_report.py) | The impact report's classification of what changed |
+| [`tests/generator/test_openapi_templates.py`](generator/test_openapi_templates.py) | The custom OpenAPI templates, rendered with the generator's own Jinja settings |
+| [`tests/generator/test_toolchain_versions.py`](generator/test_toolchain_versions.py) | The declared runtime floors against the versions protoc stamps into the generated stubs |
 
 Add tests here when `scripts/generation/*.py` logic changes. These
 are unit tests against the generator itself, not the SDK it
 produces. Most need no real or local schema checkout — build minimal
 swagger fragments or fake generated-file fixtures with `tmp_path`
-instead. One exception: `test_schema_request_body_coverage` in
-`test_generate_sdk.py` cross-checks generated code against the real
-local `../api-schema-public` checkout and is skipped automatically
-when that checkout is absent.
+instead. One exception:
+`test_the_real_alert_schema_keeps_acknowledgement_an_object` in
+`test_generate_sdk.py` reads the real local `../api-schema-public`
+checkout. It skips when that checkout is absent.
 
 ### 5) End-to-end tests (real API, opt-in)
 
@@ -190,9 +203,11 @@ from the mocked ones:
   counts as a failure, since the test cannot control what data
   exists in the real account.
 - The gRPC variant additionally treats `NotImplementedError` as a
-  passing outcome: gRPC coverage is per-operation (see CLAUDE.md's
-  "gRPC transport is fully implemented" section), so an operation
-  with no gRPC translation yet is expected to raise it, not a bug.
+  passing outcome (see CLAUDE.md's "gRPC transport is fully
+  implemented" section). A wrapper raises `NotImplementedError` when
+  the service's proto companions fail to import, or when no RPC
+  shares the operation's HTTP rule. Today every operation has a gRPC
+  translation.
 - Create, Update, and Delete operations are deliberately not
   auto-called, in either transport. `test_mutating_endpoint_excluded_from_e2e`
   and `test_mutating_endpoint_excluded_from_e2e_grpc` carry a

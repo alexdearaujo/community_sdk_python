@@ -38,14 +38,17 @@ classDiagram
 
 | Exception | When raised |
 | --- | --- |
-| `ConfigurationError` | `KentikAPI(...)` gets missing credentials, an unknown region or protocol, or a non-positive timeout |
+| `ConfigurationError` | `KentikAPI(...)` gets missing or empty credentials, an unknown region or protocol, or a timeout that is not a positive number. A gRPC call gets an unknown body key or enum name, or an `api_config_override` that `with_timeout()` did not build. A call runs after `close()`. |
 | `AuthenticationError` | Credentials are rejected: a REST 401 or a gRPC `UNAUTHENTICATED` status |
-| `TransportError` | No response arrived: connection failure, timeout, or a gRPC `CANCELLED`, `DEADLINE_EXCEEDED`, or `UNAVAILABLE` status |
-| `HTTPException` | The API responded with a fault. Both transports raise the operation's generated subclass, such as `ListDevicesNotFoundError`. gRPC sets `grpc_status_code` as well. A success status whose body the SDK cannot use (not JSON, JSON `null`, or the wrong shape) raises a plain `HTTPException` with status 502 |
+| `TransportError` | No response arrived: connection failure, timeout, or a gRPC `CANCELLED`, `DEADLINE_EXCEEDED`, or `UNAVAILABLE` status. A gRPC response larger than the receive limit also raises `TransportError`. |
+| `HTTPException` | The API responded with a fault. Both transports raise the operation's generated class, such as `ListDevicesError`. A subclass exists for each status that the schema declares, such as `ListDevicesUnexpectedError` for the `default` response. gRPC sets `grpc_status_code` as well. A success status whose body the SDK cannot use (not JSON, JSON `null`, or the wrong shape) raises a plain `HTTPException` with status 502 |
 
 Every exception carries a `rate_limit` attribute with the quota the API
 reported on the failing call, or `None` when no response arrived. See the
-[rate limiting guide](rate_limiting.md). `except KentikError:` catches everything the SDK raises.
+[rate limiting guide](rate_limiting.md). `except KentikError:` catches every API,
+authentication, configuration, and transport failure. Two errors are outside
+it. A REST path argument of `""`, `"."` or `".."` raises `ValueError`. A gRPC
+client whose proto modules fail to import raises `NotImplementedError`.
 
 All classes are in [`src/kentik_api/errors/__init__.py`](../../../src/kentik_api/errors/__init__.py).
 
@@ -95,6 +98,7 @@ Where no response arrived, no HTTP status is invented.
 | `NOT_FOUND` | `HTTPException` | 404 |
 | `ALREADY_EXISTS`, `ABORTED` | `HTTPException` | 409 |
 | `RESOURCE_EXHAUSTED` | `HTTPException` | 429 |
+| `RESOURCE_EXHAUSTED` from a response over the receive limit (40 MiB) | `TransportError` | none |
 | `UNKNOWN`, `INTERNAL`, `DATA_LOSS` | `HTTPException` | 500 |
 | `UNIMPLEMENTED` | `HTTPException` | 501 |
 | `CANCELLED`, `DEADLINE_EXCEEDED`, `UNAVAILABLE` | `TransportError` | none |

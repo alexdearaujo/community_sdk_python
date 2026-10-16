@@ -1,5 +1,16 @@
 <!--
 Sync Impact Report
+Version change: 1.4.0 → 1.4.1
+Rationale: factual drift fixes. No principle changed, so this is PATCH.
+`make generate` fetches the schema at the commit in `schema.lock`, not at
+HEAD. `make sync-schema` fetches HEAD and moves that pin. `public_names`
+joins the phase modules. `make typecheck` checks the SDK (generated code
+included), scripts, and tests, not only hand-written code.
+Modified principles: none (III wording only)
+Added sections: none
+Removed sections: n/a
+Deferred TODOs: none
+Prior report (1.3.0 → 1.4.0, retained for history):
 Version change: 1.3.0 → 1.4.0
 Rationale: Principle VI prescribed `load_dotenv`, which writes `.env` into
 os.environ, so every subprocess inherits the secrets. A Spec Kit run that
@@ -56,7 +67,7 @@ request logic into individual service wrappers. Extend `request_json`,
 
 `scripts/generation/` is split into single-concern phase modules (`parity`,
 `error_package`, `fixup`, `wrapper_generation`, `docs_rendering`,
-`endpoint_docs`, `api_surface`), each independently unit-tested under `tests/generator/`.
+`endpoint_docs`, `api_surface`, `public_names`), each independently unit-tested under `tests/generator/`.
 Intra-subpackage imports MUST stay relative (`from ._shared import ...`); MUST
 NOT switch to absolute `scripts.generation.*` imports, since
 `generate_sdk.py`'s own direct-execution import path depends on the relative
@@ -122,7 +133,8 @@ tracked and reduced over time, not silently ignored.
 ## Architecture & Generation Pipeline
 
 - The SDK is generated end-to-end from Kentik's public OpenAPI v3 schema
-  (`kentik/api-schema-public`). `make generate` clones it at HEAD;
+  (`kentik/api-schema-public`). `make generate` fetches it at the commit in
+  `schema.lock`. `make sync-schema` fetches HEAD and moves that pin.
   `make generate local` reads the sibling checkout `../api-schema-public/`
   and fails if it is absent. Neither falls back to the other.
 - When multiple versioned swagger files exist for the same `(service,
@@ -166,7 +178,8 @@ tracked and reduced over time, not silently ignored.
   run the relevant focused test layer, then run the full `make test` before
   opening a PR.
 - `make lint` (`ruff check --fix` + `ruff format`) and `make typecheck` (`ty
-  check` on hand-written code) MUST stay clean.
+  check` on the SDK, generated code included, and on scripts and tests) MUST
+  stay clean.
 - `make test` MUST stay mocked-only and fast enough to run anywhere; `make
   test-e2e` MUST stay a separate, explicit, opt-in target (see Principle V).
 - `make generate local` and `make generate` both call
@@ -201,4 +214,4 @@ and `/speckit-analyze` MUST treat this constitution as authoritative context;
 complexity or deviation from it MUST be justified explicitly in the relevant
 plan, not silently introduced.
 
-**Version**: 1.4.0 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-13
+**Version**: 1.4.1 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-16
