@@ -684,7 +684,7 @@ This audit pushed nothing. Do these steps yourself.
    uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html
    ```
 
-5. If the regeneration changed files, commit them.
+5. If the regeneration changed files, commit them with `schema.lock`.
 6. Make sure that `git status --porcelain` prints nothing.
 7. After the B13 fixes, run the live suites. They issue only read calls, but
    they use the account in `.env`.
@@ -731,14 +731,25 @@ Know these facts before the merge:
 
 - The CI `changelog` job tests nothing on this PR, because `main` has no
   `api_surface.json`. Review the CHANGELOG by hand.
-- If upstream moves before the merge, the determinism job fails. Regenerate
-  and push again.
+- The determinism job regenerates at the commit in `schema.lock`, so an
+  upstream schema change before the merge does not fail it.
 - A squash merge replaces the 170 branch commits with one. A merge commit
   keeps them.
 - After the merge, `pip install kentik-api` still installs 1.0.7 until you
   publish 2.0.0.
 - The fork branch is 74 commits behind. To keep it current, push the same
   branch to `fork`.
+
+Do these steps after the merge (ledger entry P3a):
+
+1. Turn on **Settings > Actions > General > Allow GitHub Actions to create
+   and approve pull requests**. The weekly `schema-sync` job fails without it.
+2. Run `schema-sync` once by hand from the Actions tab. Confirm that it ends
+   with "already matches schema HEAD" or opens a pull request.
+3. Expect Dependabot pull requests for the action SHA pins and `uv.lock`.
+4. Close and reopen each `schema-sync` pull request to start its CI. The
+   steps are in "Automated update pull requests" in
+   [the generation guide](../../docs/sphinx/guides/generation.md).
 
 ## Deferred risks for the PR description
 

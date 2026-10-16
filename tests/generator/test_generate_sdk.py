@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import ast
 import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -30,13 +32,18 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     _rewrite_grpc_imports,
     _silence_grpc_experimental,
     clean_schema_names,
+    fetch_schema,
+    get_schema_root,
     hoist_inline_request_bodies,
     inline_request_body_refs,
+    local_schema_commit,
     oneof_members_by_definition,
     openapi_generator_cmd,
     patched_swagger,
+    read_schema_pin,
     relax_oneof_required,
     relax_response_message_required,
+    restored_on_failure,
 )
 from google.protobuf import descriptor_pb2  # noqa: E402
 
@@ -601,8 +608,11 @@ def _function_by_name(source: str, name: str) -> ast.FunctionDef | None:
     )
 
 
-def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir():
-    """The corrupted-checkout gate must run before SDK_OUTPUT_DIR is touched.
+@pytest.mark.parametrize(
+    "check", ["validate_schema_files_or_raise", "validate_selected_services_or_raise"]
+)
+def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir(check):
+    """The corrupted-checkout gates must run before SDK_OUTPUT_DIR is touched.
 
     Regression test: an earlier version of this gate ran *after* the
     "Cleaning old modules" step, so a validation failure still left
@@ -622,15 +632,15 @@ def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir():
         if not isinstance(node, ast.Call):
             continue
         call_repr = ast.unparse(node.func)
-        if call_repr.endswith("validate_schema_files_or_raise"):
+        if call_repr.endswith(check):
             validate_lines.append(node.lineno)
         elif call_repr.endswith("rmtree"):
             rmtree_lines.append(node.lineno)
 
-    assert validate_lines, "validate_schema_files_or_raise(...) call not found"
+    assert validate_lines, f"{check}(...) call not found"
     assert rmtree_lines, "shutil.rmtree(...) call not found"
     assert max(validate_lines) < min(rmtree_lines), (
-        "validate_schema_files_or_raise() must run before shutil.rmtree() "
+        f"{check}() must run before shutil.rmtree() "
         "cleans SDK_OUTPUT_DIR, so a validation failure never leaves "
         "generated output partially wiped"
     )
@@ -688,3 +698,137 @@ def test_the_real_alert_schema_keeps_acknowledgement_an_object():
 
     assert definitions["AlertAcknowledgement"].get("type") == "object"
     assert "v202505AlertAcknowledgement" in definitions
+
+
+# ---------------------------------------------------------------------------
+# Schema pin: schema.lock names the commit the committed tree came from
+# ---------------------------------------------------------------------------
+
+
+def _git(repo: Path, *args: str) -> str:
+    return subprocess.run(
+        ["git", "-C", str(repo), *args], capture_output=True, text=True, check=True
+    ).stdout.strip()
+
+
+def _schema_repo(path: Path, commits: int = 1) -> list[str]:
+    """A git repo with `commits` commits, oldest first."""
+    path.mkdir()
+    _git(path, "init", "-q")
+    _git(path, "config", "user.email", "t@example.invalid")
+    _git(path, "config", "user.name", "t")
+    shas = []
+    for n in range(commits):
+        (path / "schema.json").write_text(str(n), encoding="utf-8")
+        _git(path, "add", "schema.json")
+        _git(path, "commit", "-q", "-m", str(n))
+        shas.append(_git(path, "rev-parse", "HEAD"))
+    return shas
+
+
+def test_the_committed_pin_is_one_commit_sha():
+    assert len(read_schema_pin()) == 40
+
+
+@pytest.mark.parametrize("content", ["", "HEAD", "9de9a68", "x" * 40])
+def test_a_malformed_pin_is_rejected(tmp_path, content):
+    pin = tmp_path / "schema.lock"
+    pin.write_text(content, encoding="utf-8")
+
+    with pytest.raises(ValueError, match="40-character commit SHA"):
+        read_schema_pin(pin)
+
+
+def test_a_missing_pin_names_the_command_that_writes_it(tmp_path):
+    with pytest.raises(ValueError, match="make sync-schema"):
+        read_schema_pin(tmp_path / "schema.lock")
+
+
+def test_fetch_checks_out_the_pinned_commit_not_the_tip(tmp_path):
+    upstream = tmp_path / "upstream"
+    first, _ = _schema_repo(upstream, commits=2)
+    # GitHub serves any reachable commit; a local repo needs this to match it.
+    _git(upstream, "config", "uploadpack.allowAnySHA1InWant", "true")
+
+    commit = fetch_schema(str(upstream), first, tmp_path / "checkout")
+
+    assert commit == first
+    assert (tmp_path / "checkout" / "schema.json").read_text() == "0"
+
+
+def test_fetch_rejects_a_ref_git_would_read_as_an_option(tmp_path):
+    with pytest.raises(ValueError, match="must not start with"):
+        fetch_schema("https://example.invalid/r.git", "--upload-pack=x", tmp_path)
+
+
+def test_a_clean_local_checkout_reports_its_commit(tmp_path):
+    repo = tmp_path / "schema"
+    (sha,) = _schema_repo(repo)
+    (repo / "uv.lock").write_text("untracked", encoding="utf-8")
+
+    assert local_schema_commit(repo) == sha
+
+
+def test_a_modified_local_checkout_reports_no_commit(tmp_path):
+    repo = tmp_path / "schema"
+    _schema_repo(repo)
+    (repo / "schema.json").write_text("edited", encoding="utf-8")
+
+    assert local_schema_commit(repo) is None
+
+
+def test_a_local_folder_outside_git_reports_no_commit(tmp_path):
+    assert local_schema_commit(tmp_path) is None
+
+
+def test_a_ref_with_a_local_schema_is_rejected(tmp_path):
+    with pytest.raises(ValueError, match="remote repository only"):
+        with get_schema_root(str(tmp_path), "HEAD"):
+            pass
+
+
+# ---------------------------------------------------------------------------
+# restored_on_failure: a failed run leaves the previous output in place
+# ---------------------------------------------------------------------------
+
+
+def _outputs(tmp_path: Path) -> tuple[Path, Path, Path]:
+    gen = tmp_path / "gen"
+    (gen / "device").mkdir(parents=True)
+    (gen / "device" / "wrapper.py").write_text("old", encoding="utf-8")
+    mixin = tmp_path / "client_mixin.py"
+    mixin.write_text("old", encoding="utf-8")
+    return gen, mixin, tmp_path / "schema.lock"
+
+
+def _half_build(gen: Path, mixin: Path, pin: Path) -> None:
+    shutil.rmtree(gen)
+    (gen / "user").mkdir(parents=True)
+    mixin.write_text("new", encoding="utf-8")
+    pin.write_text("new", encoding="utf-8")
+
+
+@pytest.mark.parametrize("error", [RuntimeError, KeyboardInterrupt])
+def test_a_failed_run_restores_every_output(tmp_path, error):
+    gen, mixin, pin = _outputs(tmp_path)
+
+    with pytest.raises(error):
+        with restored_on_failure((gen, mixin, pin)):
+            _half_build(gen, mixin, pin)
+            raise error
+
+    assert sorted(p.name for p in gen.iterdir()) == ["device"]
+    assert (gen / "device" / "wrapper.py").read_text() == "old"
+    assert mixin.read_text() == "old"
+    assert not pin.exists()
+
+
+def test_a_completed_run_keeps_the_new_output(tmp_path):
+    gen, mixin, pin = _outputs(tmp_path)
+
+    with restored_on_failure((gen, mixin, pin)):
+        _half_build(gen, mixin, pin)
+
+    assert sorted(p.name for p in gen.iterdir()) == ["user"]
+    assert mixin.read_text() == "new"
+    assert pin.read_text() == "new"

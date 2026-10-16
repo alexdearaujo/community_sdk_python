@@ -120,7 +120,50 @@ def test_new_required_dependency_is_flagged_breaking():
     )
 
     assert "New required dependency, `protobuf>=7.35.1,<8`" in markdown
-    assert "Dependency floor raised, `grpcio>=1.78.0` to `grpcio>=1.84.0`" in markdown
+    assert (
+        "Dependency requirement narrowed, `grpcio>=1.78.0` to `grpcio>=1.84.0`"
+        in markdown
+    )
+
+
+def _requirement_breaks(before: str, after: str) -> bool:
+    current = {"schema_version": api_surface.SCHEMA_VERSION}
+    delta = api_surface.diff(
+        {**_surface({}, requirements={"pkg": before}), **current},
+        {**_surface({}, requirements={"pkg": after}), **current},
+    )
+    return bool(api_surface.breaking_changes(delta))
+
+
+def test_loosened_requirement_is_not_breaking():
+    assert not _requirement_breaks("httpx>=0.28.1,<1", "httpx>=0.27,<2")
+    assert not _requirement_breaks("httpx<1,>=0.28.1", "httpx>=0.28.1")
+
+
+def test_narrowed_requirement_is_breaking():
+    assert _requirement_breaks("httpx>=0.28.1", "httpx>=0.28.1,<1")
+    assert _requirement_breaks("httpx>=0.28.1,<2", "httpx>=0.28.1,<1")
+    assert _requirement_breaks("httpx>=0.28.1", "httpx>=0.28.1,!=0.29.0")
+    assert _requirement_breaks("httpx>=0.28.1", "httpx[http2]>=0.28.1")
+
+
+def test_record_tracks_every_dependency_and_python_floor():
+    requirements = api_surface._declared_requirements()
+
+    assert {"python-dotenv", "googleapis-common-protos", "python"} <= set(requirements)
+    assert requirements["python"].startswith("python>=")
+
+
+def test_older_record_does_not_report_untracked_dependencies_as_new():
+    before = _surface({}, requirements={"httpx": "httpx>=0.28.1"})
+    after = {
+        **_surface(
+            {}, requirements={"httpx": "httpx>=0.28.1", "python": "python>=3.12"}
+        ),
+        "schema_version": api_surface.SCHEMA_VERSION,
+    }
+
+    assert api_surface.diff(before, after)["requirements"] == {}
 
 
 def test_gencode_bump_is_reported_but_not_breaking():

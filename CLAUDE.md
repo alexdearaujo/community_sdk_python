@@ -299,11 +299,25 @@ so no generator can currently act on it.
 
 ## Generation pipeline
 
-- `make generate` clones
-  `https://github.com/kentik/api-schema-public.git` (schema HEAD).
+- `make generate` fetches
+  `https://github.com/kentik/api-schema-public.git` at the commit
+  pinned in `schema.lock`. `make sync-schema` fetches schema HEAD
+  instead. `make generate SCHEMA_REF=<ref>` fetches any other ref.
   `make generate local` reads the sibling checkout
   `../api-schema-public/` instead, and fails if it is absent. There
   is no automatic fallback between the two.
+- Every completed run writes the schema commit it used to
+  `schema.lock`, so commit that file with the regenerated tree. A
+  local checkout with uncommitted changes to tracked files leaves the
+  pin unchanged. The scheduled `schema-sync` workflow runs
+  `make sync-schema` weekly and opens a pull request when the output
+  changes. It needs the repository setting that allows GitHub Actions to
+  create pull requests, and each of its pull requests needs a close and
+  reopen to start CI (see "Automated update pull requests" in
+  `docs/sphinx/guides/generation.md`).
+- A run that fails or is interrupted puts every generated output back
+  as it was (`restored_on_failure()` around `generate_modular_sdk()`).
+  Only a hard kill can leave a half-built tree; `git checkout` fixes it.
 - The generator uses only the newest version per swagger family (see
   CONTEXT.md) when multiple versioned swagger files exist.
 - See `docs/sphinx/local_generation_workflow.md` for full details,
@@ -360,7 +374,9 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
 
 - `make` / `make all` — `services tests`. Docs are opt-in.
 - `make services` (alias for `make generate`) — regenerate SDK from
-  schema HEAD on GitHub
+  the pinned schema commit on GitHub
+- `make sync-schema` — regenerate from schema HEAD on GitHub and
+  move the pin in `schema.lock`
 - `make generate local` — regenerate from the local
   `../api-schema-public/` checkout
 - `make generate LOCAL_REPO=/path/to/api-schema-public` —
@@ -370,8 +386,9 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   warnings as errors. To build from the committed tree only, run
   `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`.
 - `make release-notes` (`SINCE=<ref>`): lists the API surface changes since
-  a ref (default: the newest tag with a surface record), field and enum level
-  included. `make check-changelog` fails when a breaking change in that list
+  a ref (default: the highest-versioned earlier release tag reachable from
+  HEAD that has a surface record), field and enum level
+  included. An unknown `SINCE` ref fails. `make check-changelog` fails when a breaking change in that list
   has no mention in `CHANGELOG.md`'s Unreleased section; CI runs it on every
   pull request against the merge base.
 - `make impact-report` (`SINCE=<ref>`, `CHECKS=0`): run by hand after a
@@ -454,9 +471,10 @@ Mocked/offline layers (no network, safe to run anywhere, part of
   - `uv run ruff check .` and `uv run ruff format --check .`
   - `make check-specs`
   - the Sphinx build with `-W` (see `make docs` above)
-  - generated-output drift: CI runs `make generate` from schema HEAD
-    and fails if the tree differs from what is committed. Output
-    generated with `local` from a stale checkout fails this gate.
+  - generated-output drift: CI runs `make generate` at the commit in
+    `schema.lock` and fails if the tree differs from what is
+    committed. Commit `schema.lock` with every regeneration, or this
+    gate regenerates from the wrong commit.
 
 Live layer (real network, opt-in only, **not** part of `make test`):
 

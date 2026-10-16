@@ -20,9 +20,45 @@ make generate local
 # Override the schema path
 make generate LOCAL_REPO=/path/to/api-schema-public
 
-# Fetch the latest schema from GitHub (slower, no local checkout needed)
+# Fetch the pinned schema commit from GitHub (no local checkout needed)
 make generate
+
+# Fetch schema HEAD from GitHub and move the pin
+make sync-schema
 ```
+
+`schema.lock` holds the schema commit that the committed tree was
+generated from. Every completed run writes the commit it used to that
+file, so commit it with the regenerated output. CI regenerates at that
+commit, so a schema change upstream cannot fail a pull request. The
+scheduled `schema-sync` workflow runs `make sync-schema` every week and
+opens a pull request when the output changes.
+
+### Automated update pull requests
+
+Two bots open pull requests against the default branch:
+
+| Bot | Schedule | What it changes |
+| --- | --- | --- |
+| [`schema-sync.yml`](../../../.github/workflows/schema-sync.yml) | Mondays, or by hand from the Actions tab | `schema.lock` and the regenerated tree |
+| [Dependabot](../../../.github/dependabot.yml) | Weekly | Action SHA pins in `.github/workflows/`, and `uv.lock` |
+
+Before `schema-sync` can open a pull request, a repository admin must
+turn on **Settings > Actions > General > Allow GitHub Actions to create
+and approve pull requests**. Without it, the job fails at the
+`gh pr create` step.
+
+When a `schema-sync` pull request opens, do these steps:
+
+1. Close the pull request and reopen it. A pull request that the
+   workflow token opens starts no CI, and the reopen starts it.
+2. Read the API surface changes in the pull request description.
+3. For each breaking change, add a `CHANGELOG.md` entry to the branch.
+   The `changelog` job fails until each one is named.
+4. Merge when CI passes.
+
+If the workflow run fails, the new schema breaks generation. Reproduce
+the failure with `make sync-schema`, and fix the generator.
 
 > [!WARNING]
 > `make generate` does not write release notes. When a run changes the API
