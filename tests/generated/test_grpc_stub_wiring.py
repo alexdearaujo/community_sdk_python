@@ -1,0 +1,95 @@
+# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+"""Verifies every mounted wrapper builds a live gRPC stub.
+
+Generated wrapper `__init__` catches `(ImportError, TypeError)` around its proto
+imports and sets the stub to None. That is correct for an environment without the
+proto dependencies, but it also swallows a descriptor-pool failure caused by the
+generator itself, and every later call then raises NotImplementedError as if the
+operation simply had no gRPC translation yet.
+
+That is exactly what happened: protoc's dependency imports look unused, `ruff
+--select F --fix` deleted them, and 10 of 28 services lost gRPC entirely while the
+suite stayed green. These tests make that failure mode loud.
+"""
+
+from __future__ import annotations
+
+import importlib
+import re
+from pathlib import Path
+from unittest.mock import MagicMock
+
+import pytest
+
+from kentik_api.transports.grpc_client import GrpcTransport
+
+_MIXIN = Path(__file__).resolve().parents[2] / "src" / "kentik_api" / "client_mixin.py"
+_MOUNTED_RE = re.compile(r"from kentik_api\.gen\.(\w+)\.services\.\w+ import (\w+)")
+
+
+def _mounted_wrappers() -> list[tuple[str, str]]:
+    if not _MIXIN.exists():
+        return []
+    return sorted(set(_MOUNTED_RE.findall(_MIXIN.read_text(encoding="utf-8"))))
+
+
+MOUNTED = _mounted_wrappers()
+
+if not MOUNTED:
+    pytest.skip("client_mixin.py not generated yet", allow_module_level=True)
+
+
+def _build(service: str, wrapper_class: str):
+    module = importlib.import_module(f"kentik_api.gen.{service}.services.{service}")
+    transport = MagicMock(spec=GrpcTransport)
+    transport.channel = MagicMock()
+    return getattr(module, wrapper_class)(transport)
+
+
+@pytest.mark.parametrize(
+    ("service", "wrapper_class"), MOUNTED, ids=[svc for svc, _ in MOUNTED]
+)
+def test_mounted_wrapper_builds_live_grpc_stubs(service: str, wrapper_class: str):
+    wrapper = _build(service, wrapper_class)
+    stubs = {
+        name: value
+        for name, value in vars(wrapper).items()
+        if name.startswith("_grpc_stub")
+    }
+
+    assert stubs, (
+        f"`{wrapper_class}` declared no gRPC stub attribute at all. Either the "
+        "generator found no proto for this service, or wrapper generation changed "
+        "shape and this guard needs updating."
+    )
+    dead = sorted(name for name, value in stubs.items() if value is None)
+    assert not dead, (
+        f"`client.{service}` built {dead} as None, so every gRPC call on it raises "
+        "NotImplementedError. The wrapper swallowed an ImportError or TypeError "
+        f"while importing kentik_api.gen.{service}.pb. Import that module directly "
+        "to see the real error; a descriptor-pool TypeError means a dependency "
+        "import was dropped from a generated _pb2 module."
+    )
+
+
+@pytest.mark.parametrize(
+    ("service", "wrapper_class"), MOUNTED, ids=[svc for svc, _ in MOUNTED]
+)
+def test_mounted_wrapper_proto_module_imports_cleanly(service: str, wrapper_class: str):
+    """Surfaces the underlying error the wrapper's except clause would hide."""
+    wrapper_src = (
+        Path(__file__).resolve().parents[2]
+        / "src"
+        / "kentik_api"
+        / "gen"
+        / service
+        / "services"
+        / f"{service}.py"
+    ).read_text(encoding="utf-8")
+    modules = re.findall(r"import (kentik_api\.gen\.\w+\.pb\.\w+_pb2) as", wrapper_src)
+    if not modules:
+        pytest.skip(f"{service} wrapper imports no proto module")
+
+    importlib.import_module("kentik_api.gen.pb_companions")
+    for module in modules:
+        importlib.import_module(module)

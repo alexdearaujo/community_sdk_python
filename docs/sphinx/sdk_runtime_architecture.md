@@ -49,17 +49,17 @@ flowchart TB
     Client_API --> Client_Mixin
     Client_API --> REST_Transport
     Client_API --> gRPC_Transport
-    Client_Mixin -->|"x34"| Generated_Service_Wrappers
+    Client_Mixin -->|"x35"| Generated_Service_Wrappers
     Client_Mixin --> REST_Transport
     Client_Mixin --> gRPC_Transport
-    Generated_REST_Services -->|"x50"| API_Config
-    Generated_REST_Services -->|"x50"| Generated_Error_Classes
-    Generated_REST_Services -->|"x50"| Generated_Models
-    Generated_REST_Services -->|"x50"| REST_Runtime
-    Generated_Service_Wrappers -->|"x50"| Generated_REST_Services
-    Generated_Service_Wrappers -->|"x34"| REST_Transport
-    Generated_Service_Wrappers -->|"x34"| gRPC_Runtime
-    Generated_Service_Wrappers -->|"x34"| gRPC_Transport
+    Generated_REST_Services -->|"x51"| API_Config
+    Generated_REST_Services -->|"x51"| Generated_Error_Classes
+    Generated_REST_Services -->|"x51"| Generated_Models
+    Generated_REST_Services -->|"x51"| REST_Runtime
+    Generated_Service_Wrappers -->|"x51"| Generated_REST_Services
+    Generated_Service_Wrappers -->|"x35"| REST_Transport
+    Generated_Service_Wrappers -->|"x35"| gRPC_Runtime
+    Generated_Service_Wrappers -->|"x35"| gRPC_Transport
     REST_Runtime --> API_Config
     REST_Runtime --> Error_Types
     REST_Transport --> API_Config
@@ -76,3 +76,18 @@ flowchart TB
 - `Generated Service Wrappers` are transport-aware facades exposed as `client.<service>`.
 - `Generated REST Services` host operation functions generated from OpenAPI schemas.
 - `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.
+
+## Services Without A Wrapper
+
+Wrapper generation is driven by REST paths in the OpenAPI schema. A Service
+whose schema declares no paths produces models and proto stubs but no
+wrapper, so it is not mounted on the client. That is intentional: REST
+operations are this SDK's contract, and proto-driven wrapper generation is
+deliberately out of scope.
+
+6 Services are in that state today: `core`, `deviceconf`, `diagnostic`, `kptr`, `monitoring`, `net`.
+
+Some of these declare gRPC RPCs upstream but carry no `google.api.http`
+annotation, which is why no path reaches the schema. Those cases are an
+upstream schema gap, not an SDK limitation, and they resolve here
+automatically once the annotation is added.

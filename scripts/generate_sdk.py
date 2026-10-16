@@ -12,7 +12,14 @@ import subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from generation import docs_rendering, error_package, fixup, parity, wrapper_generation
+from generation import (
+    api_surface,
+    docs_rendering,
+    error_package,
+    fixup,
+    parity,
+    wrapper_generation,
+)
 from generation._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
@@ -105,6 +112,56 @@ def _rewrite_grpc_imports(content: str) -> str:
         flags=re.MULTILINE,
     )
     return content
+
+
+def _relink_pb2_dependency_imports(output_dir: Path) -> int:
+    """Repoints protoc's dependency imports at the flattened gen/<service>/pb/ layout.
+
+    protoc writes these against the original proto package tree (`from
+    kentik.core.v202303 import annotations_pb2`), which does not exist here. In a
+    _pb2 module they look unused, but importing them is what registers each
+    dependency in the descriptor pool, so an unresolved one makes
+    AddSerializedFile raise TypeError at import and silently disables the whole
+    service's gRPC transport. In a .pyi stub the same imports carry the types.
+    """
+    pattern = re.compile(
+        r"^from ([\w\.]+) import (\w+_pb2) as ([\w_]+)$", flags=re.MULTILINE
+    )
+    rewritten = 0
+
+    for pb_dir in sorted(output_dir.glob("*/pb")):
+        siblings = {path.stem for path in pb_dir.glob("*_pb2.py")}
+
+        def _replace(match: re.Match, siblings=siblings) -> str:
+            package, module, alias = match.groups()
+            if package.startswith("google."):
+                return match.group(0)  # resolved by googleapis-common-protos
+            if package.split(".")[0] == "protoc_gen_openapiv2":
+                return (
+                    f"from kentik_api.gen.pb_companions.{package} "
+                    f"import {module} as {alias}"
+                )
+            if module in siblings:
+                return f"from . import {module} as {alias}"
+            parts = package.split(".")
+            if parts[0] == "kentik" and len(parts) > 1:
+                target = output_dir / parts[1] / "pb" / f"{module}.py"
+                if target.exists():
+                    return (
+                        f"from kentik_api.gen.{parts[1]}.pb import {module} as {alias}"
+                    )
+            return match.group(0)
+
+        for pb_file in sorted(
+            [*pb_dir.glob("*_pb2.py"), *pb_dir.glob("*.pyi")]
+        ):
+            content = pb_file.read_text(encoding="utf-8")
+            patched = pattern.sub(_replace, content)
+            if patched != content:
+                pb_file.write_text(patched, encoding="utf-8")
+                rewritten += 1
+
+    return rewritten
 
 
 def clean_schema_names(schema: dict, version: str) -> dict:
@@ -410,6 +467,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                 f"-I{grpc_gateway_path}",
                                 f"--python_out={tmp_pb_path}",
                                 f"--grpc_python_out={tmp_pb_path}",
+                                f"--pyi_out={tmp_pb_path}",
                             ]
                             cmd.extend(rel_proto_files)
 
@@ -418,7 +476,11 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                     cmd, check=True, capture_output=True, text=True
                                 )
 
-                                generated_files = list(tmp_pb_path.rglob("*.py"))
+                                generated_files = [
+                                    path
+                                    for suffix in ("*.py", "*.pyi")
+                                    for path in tmp_pb_path.rglob(suffix)
+                                ]
                                 print(
                                     f"    ✅ Protoc successfully generated {len(generated_files)} files."
                                 )
@@ -467,6 +529,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
         if service_dir.is_dir() and service_dir.name != "__pycache__":
             fixup.fix_generated_service(service_dir)
 
+    # Runs once every pb/ directory exists, so cross-service targets resolve.
+    relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR)
+    print(f"    ✅ Relinked descriptor dependency imports in {relinked} pb2 modules.")
+
     print("\nFormatting...")
     run_cmd(
         ["uv", "run", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)]
@@ -496,6 +562,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
 
     # Run after ruff so it cannot reorder the header comments.
     _inject_generated_headers(SDK_OUTPUT_DIR)
+
+    # Last: the surface record must reflect the final formatted output.
+    surface_path = api_surface.generate()
+    print(f"\nRecorded API surface in {surface_path.name}")
 
     print("\n✅ SDK and Documentation Generation Complete!")
 

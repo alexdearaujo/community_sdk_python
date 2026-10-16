@@ -114,7 +114,7 @@ class RbuxServiceWrapper:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for rbux service"
                 )
-            _req_dict = data.model_dump(by_alias=True, exclude_none=True)
+            _req_dict = dict(data)
             _req_dict.update({k: v for k, v in {"id": id}.items() if v is not None})
             _req = ParseDict(
                 _req_dict,

@@ -1,0 +1,2746 @@
+{
+  "schema_version": 1,
+  "requirements": {
+    "grpcio": "grpcio>=1.84.0",
+    "httpx": "httpx>=0.28.1",
+    "protobuf": "protobuf>=7.35.1,<8",
+    "pydantic": "pydantic>=2.12.5"
+  },
+  "gencode": {
+    "protobuf": "7.35.1",
+    "grpcio": "1.84.0"
+  },
+  "services": {
+    "ai_advisor": {
+      "mounted": true,
+      "operations": {
+        "GET /ai_advisor/v202511/chat/{id}": {
+          "operation": "GetChatSession",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "POST /ai_advisor/v202511/chat": {
+          "operation": "CreateChatSession",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /ai_advisor/v202511/chat": {
+          "operation": "UpdateChatSession",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "ChatMessage",
+        "CreateChatSessionRequest",
+        "CreateChatSessionResponse",
+        "GetChatSessionResponse",
+        "SessionStatus",
+        "UpdateChatSessionRequest",
+        "UpdateChatSessionResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "alerting": {
+      "mounted": true,
+      "operations": {
+        "DELETE /v202505/alerts/ack/auto/{autoAckid}": {
+          "operation": "Delete",
+          "status": 200,
+          "required_params": [
+            "autoAckid"
+          ]
+        },
+        "DELETE /v202505/alerts/silence/{id}": {
+          "operation": "Delete",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "DELETE /v202505/suppressions/{id}": {
+          "operation": "Delete",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /v202505/alerts/ack/auto/{autoAckid}": {
+          "operation": "Get",
+          "status": 200,
+          "required_params": [
+            "autoAckid"
+          ]
+        },
+        "GET /v202505/alerts/silence/{id}": {
+          "operation": "Get",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /v202505/alerts/{alertId}/comments": {
+          "operation": "ListComments",
+          "status": 200,
+          "required_params": [
+            "alertId"
+          ]
+        },
+        "GET /v202505/alerts/{id}": {
+          "operation": "Get",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /v202505/mitigations": {
+          "operation": "List",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /v202505/mitigations/actions": {
+          "operation": "AvailableActions",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /v202505/mitigations/methods": {
+          "operation": "List",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /v202505/mitigations/methods/{id}": {
+          "operation": "Get",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /v202505/mitigations/platforms": {
+          "operation": "List",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /v202505/mitigations/platforms/{id}": {
+          "operation": "Get",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /v202505/mitigations/{action}": {
+          "operation": "Get",
+          "status": 200,
+          "required_params": [
+            "action"
+          ]
+        },
+        "GET /v202505/mitigations/{id}/actions": {
+          "operation": "AvailableActionsForMitigation",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /v202505/policies/{policyType}/{id}": {
+          "operation": "Get",
+          "status": 200,
+          "required_params": [
+            "id",
+            "policyType"
+          ]
+        },
+        "GET /v202505/suppressions/{id}": {
+          "operation": "Get",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "PATCH /v202505/alerts/ack/auto/{autoAckid}": {
+          "operation": "Replace",
+          "status": 200,
+          "required_params": [
+            "autoAckid",
+            "data"
+          ]
+        },
+        "PATCH /v202505/alerts/silence/{id}": {
+          "operation": "Replace",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PATCH /v202505/suppressions/{id}": {
+          "operation": "Replace",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "POST /v202505/alerts": {
+          "operation": "List",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/alerts/ack/auto": {
+          "operation": "Create",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/alerts/ack/auto/list": {
+          "operation": "List",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/alerts/clear": {
+          "operation": "Clear",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/alerts/silence": {
+          "operation": "Create",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/alerts/silence/list": {
+          "operation": "List",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/alerts/{alertId}/comments": {
+          "operation": "AddComment",
+          "status": 200,
+          "required_params": [
+            "alertId",
+            "data"
+          ]
+        },
+        "POST /v202505/alerts/{id}/ack": {
+          "operation": "Ack",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "POST /v202505/alerts/{id}/unack": {
+          "operation": "UnAck",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "POST /v202505/mitigations": {
+          "operation": "Create",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/mitigations/{action}": {
+          "operation": "Act",
+          "status": 200,
+          "required_params": [
+            "action",
+            "data"
+          ]
+        },
+        "POST /v202505/policies/list": {
+          "operation": "List",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/policies/{policyType}/{id}/disable": {
+          "operation": "Disable",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id",
+            "policyType"
+          ]
+        },
+        "POST /v202505/policies/{policyType}/{id}/enable": {
+          "operation": "Enable",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id",
+            "policyType"
+          ]
+        },
+        "POST /v202505/suppressions": {
+          "operation": "Create",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /v202505/suppressions/list": {
+          "operation": "List",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /v202505/alerts/{alertId}/external-context": {
+          "operation": "SetExternalContext",
+          "status": 200,
+          "required_params": [
+            "alertId",
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "AggregationType",
+        "Alert",
+        "AlertAcknowledgement",
+        "AlertAutoAck",
+        "AlertAutoAckFilters",
+        "AlertAutoAckServiceCreateRequest",
+        "AlertAutoAckServiceCreateResponse",
+        "AlertAutoAckServiceDeleteResponse",
+        "AlertAutoAckServiceGetResponse",
+        "AlertAutoAckServiceListRequest",
+        "AlertAutoAckServiceListResponse",
+        "AlertAutoAckServiceReplaceBody",
+        "AlertAutoAckServiceReplaceResponse",
+        "AlertFilters",
+        "AlertPhase",
+        "AlertServiceAckBody",
+        "AlertServiceAckResponse",
+        "AlertServiceAddCommentBody",
+        "AlertServiceAddCommentResponse",
+        "AlertServiceClearRequest",
+        "AlertServiceClearResponse",
+        "AlertServiceGetResponse",
+        "AlertServiceListCommentsResponse",
+        "AlertServiceListRequest",
+        "AlertServiceListResponse",
+        "AlertServiceSetExternalContextBody",
+        "AlertServiceSetExternalContextResponse",
+        "AlertServiceUnAckBody",
+        "AlertServiceUnAckResponse",
+        "AlertSilenceNotificationFilters",
+        "AlertSilenceNotificationsDefinition",
+        "AlertSilenceNotificationsServiceCreateRequest",
+        "AlertSilenceNotificationsServiceCreateResponse",
+        "AlertSilenceNotificationsServiceDeleteResponse",
+        "AlertSilenceNotificationsServiceGetResponse",
+        "AlertSilenceNotificationsServiceListRequest",
+        "AlertSilenceNotificationsServiceListResponse",
+        "AlertSilenceNotificationsServiceReplaceBody",
+        "AlertSilenceNotificationsServiceReplaceResponse",
+        "AlertState",
+        "BaselineConditionDeltaType",
+        "BaselineConfigCompareMode",
+        "Comment",
+        "ConditionsBaselineCondition",
+        "ConditionsForecastCondition",
+        "ConditionsInterfaceCapacityCondition",
+        "ConditionsRatioCondition",
+        "ConditionsStaticCondition",
+        "ConditionsTopKeysCondition",
+        "EventPolicyLevelSettings",
+        "EventPolicySettings",
+        "EventPolicySettingsEventType",
+        "ExternalContext",
+        "FieldBy",
+        "FlowContext",
+        "FlowContextActivationStatus",
+        "FlowContextAlertKeyDetails",
+        "FlowContextDeviceDetails",
+        "FlowContextInterfaceDetails",
+        "FlowContextMetricValue",
+        "FlowContextSiteDetails",
+        "FlowPolicyLevelSettings",
+        "FlowPolicyLevelSettingsActivationSettings",
+        "FlowPolicyLevelSettingsConditions",
+        "FlowPolicyLevelSettingsConditionsOperator",
+        "FlowPolicyLevelSettingsMitigationAssociation",
+        "FlowPolicySettings",
+        "FlowPolicySettingsBaselineConfig",
+        "FlowPolicySettingsDatasetConfig",
+        "FlowPolicySettingsEvaluationConfig",
+        "JiraCloudContext",
+        "Mitigation",
+        "MitigationActionDetail",
+        "MitigationEvent",
+        "MitigationFilters",
+        "MitigationMethod",
+        "MitigationMethodsFilters",
+        "MitigationMethodsServiceGetResponse",
+        "MitigationMethodsServiceListResponse",
+        "MitigationPlatform",
+        "MitigationPlatformType",
+        "MitigationPlatformsFilters",
+        "MitigationPlatformsServiceGetResponse",
+        "MitigationPlatformsServiceListResponse",
+        "MitigationState",
+        "MitigationStateEntry",
+        "MitigationType",
+        "MitigationUserAction",
+        "MitigationsActResult",
+        "MitigationsServiceActBody",
+        "MitigationsServiceActResponse",
+        "MitigationsServiceAvailableActionsForMitigationResponse",
+        "MitigationsServiceAvailableActionsResponse",
+        "MitigationsServiceAvailableActionsResponseMitigationAvailableTransitions",
+        "MitigationsServiceCreateRequest",
+        "MitigationsServiceCreateResponse",
+        "MitigationsServiceGetResponse",
+        "MitigationsServiceListResponse",
+        "NmsActivateOrClearConditions",
+        "NmsCondition",
+        "NmsConditionConnector",
+        "NmsConditionGroup",
+        "NmsConditionOperator",
+        "NmsContext",
+        "NmsContextActivationInfo",
+        "NmsContextAlarmMetricMap",
+        "NmsContextAlarmTarget",
+        "NmsContextDatasetInfo",
+        "NmsPolicyLevelSettings",
+        "NmsPolicyLevelSettingsClearType",
+        "NmsPolicySettings",
+        "NmsPolicySettingsDatasetConfig",
+        "NmsPolicySettingsEvaluationConfig",
+        "NmsStateChangeCondition",
+        "NmsStateSet",
+        "NmsThresholdCondition",
+        "NotificationChannelAssociation",
+        "Policy",
+        "PolicyDataSources",
+        "PolicyDataSourcesDeviceTag",
+        "PolicyDimensionFilters",
+        "PolicyDimensionFiltersConjunction",
+        "PolicyDimensionFiltersEntry",
+        "PolicyDimensionFiltersEntryStringArray",
+        "PolicyFilters",
+        "PolicyFiltersFieldFilter",
+        "PolicyFiltersFilterConnector",
+        "PolicyFiltersOperator",
+        "PolicyFiltersSavedFilter",
+        "PolicyListFilters",
+        "PolicyPolicyErrorInfo",
+        "PolicyPolicyLevel",
+        "PolicyServiceDisableBody",
+        "PolicyServiceDisableResponse",
+        "PolicyServiceEnableBody",
+        "PolicyServiceEnableResponse",
+        "PolicyServiceGetResponse",
+        "PolicyServiceListRequest",
+        "PolicyServiceListResponse",
+        "PolicyType",
+        "RatioConditionDirection",
+        "ServiceNowContext",
+        "SortingConfigField",
+        "SortingConfigOrder",
+        "Source",
+        "Suppression",
+        "SuppressionFilters",
+        "SuppressionServiceCreateRequest",
+        "SuppressionServiceCreateResponse",
+        "SuppressionServiceDeleteResponse",
+        "SuppressionServiceGetResponse",
+        "SuppressionServiceListRequest",
+        "SuppressionServiceListResponse",
+        "SuppressionServiceReplaceBody",
+        "SuppressionServiceReplaceResponse",
+        "TopKeysConditionTopKeysEvent",
+        "protobufAny",
+        "rpcStatus",
+        "typesv202506PaginationConfig",
+        "typesv202506PaginationInfo",
+        "typesv202506SortingConfig",
+        "v202303AttributeFilter",
+        "v202303AttributeFilterStringArray",
+        "v202303KeyValue",
+        "v202303KeyValueFilter",
+        "v202303MultiAttributeFilter",
+        "v202303Severity",
+        "v202303SimpleAttributeFilter",
+        "v202303SimpleAttributeFilterStringArray",
+        "v202303TimeRange",
+        "v202501BitwiseOp",
+        "v202501FlowspecMatch",
+        "v202501Fragment",
+        "v202501FragmentFormula",
+        "v202501FragmentPredicate",
+        "v202501FragmentPredicateGroup",
+        "v202501NumericFormula",
+        "v202501NumericOp",
+        "v202501NumericPredicate",
+        "v202501NumericPredicateGroup",
+        "v202501TCPFlag",
+        "v202501TCPFlagsFormula",
+        "v202501TCPFlagsPredicate",
+        "v202501TCPFlagsPredicateGroup",
+        "v202506MitigationTarget"
+      ]
+    },
+    "as_group": {
+      "mounted": true,
+      "operations": {
+        "DELETE /as_group/v202212/as_group/{asGroupid}": {
+          "operation": "DeleteASGroup",
+          "status": 200,
+          "required_params": [
+            "asGroupid"
+          ]
+        },
+        "GET /as_group/v202212/as_group": {
+          "operation": "ListASGroups",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /as_group/v202212/as_group/{asGroupid}": {
+          "operation": "GetASGroup",
+          "status": 200,
+          "required_params": [
+            "asGroupid"
+          ]
+        },
+        "POST /as_group/v202212/as_group": {
+          "operation": "CreateASGroup",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /as_group/v202212/as_group/{asGroupid}": {
+          "operation": "UpdateASGroup",
+          "status": 200,
+          "required_params": [
+            "asGroupid",
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "ASGroupConcise",
+        "ASGroupDetailed",
+        "ASGroupServiceUpdateASGroupBody",
+        "AutonomousSystem",
+        "CreateASGroupRequest",
+        "CreateASGroupResponse",
+        "DeleteASGroupResponse",
+        "GetASGroupResponse",
+        "ListASGroupsResponse",
+        "UpdateASGroupResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "asset_tags": {
+      "mounted": true,
+      "operations": {
+        "DELETE /asset_tags/v20260515beta1/keys/{id}": {
+          "operation": "DeleteTagKey",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values": {
+          "operation": "GetTagValues",
+          "status": 200,
+          "required_params": [
+            "assetId",
+            "assetType"
+          ]
+        },
+        "GET /asset_tags/v20260515beta1/keys": {
+          "operation": "ListTagKeys",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /asset_tags/v20260515beta1/keys/{id}": {
+          "operation": "GetTagKey",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values": {
+          "operation": "ListTagValues",
+          "status": 200,
+          "required_params": [
+            "assetType",
+            "tagId"
+          ]
+        },
+        "POST /asset_tags/v20260515beta1/keys": {
+          "operation": "CreateTagKey",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /asset_tags/v20260515beta1/values/delete": {
+          "operation": "DeleteTagValues",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /asset_tags/v20260515beta1/keys/{id}": {
+          "operation": "UpdateTagKey",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PUT /asset_tags/v20260515beta1/values": {
+          "operation": "SetTagValues",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "AssetTagsServiceUpdateTagKeyBody",
+        "AssetType",
+        "CreateTagKeyRequest",
+        "CreateTagKeyResponse",
+        "DeleteTagKeyResponse",
+        "DeleteTagValuesRequest",
+        "DeleteTagValuesResponse",
+        "GetTagKeyResponse",
+        "GetTagValuesResponse",
+        "ListTagKeysResponse",
+        "ListTagValuesResponse",
+        "SetTagValuesRequest",
+        "SetTagValuesResponse",
+        "TagKey",
+        "TagValue",
+        "UpdateTagKeyResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "audit": {
+      "mounted": true,
+      "operations": {
+        "GET /audit/v202601/events": {
+          "operation": "ListAuditEvents",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /audit/v202601/events/{id}": {
+          "operation": "GetAuditEvent",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /audit/v202601/events/{id}/{ctime}": {
+          "operation": "GetAuditEvent",
+          "status": 200,
+          "required_params": [
+            "ctime",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "AuditEvent",
+        "GenericEvent",
+        "GetAuditEventResponse",
+        "ListAuditEventsResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "bgp_monitoring": {
+      "mounted": true,
+      "operations": {
+        "DELETE /bgp_monitoring/v202210/monitors/{id}": {
+          "operation": "DeleteMonitor",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /bgp_monitoring/v202210/monitors": {
+          "operation": "ListMonitors",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /bgp_monitoring/v202210/monitors/{id}": {
+          "operation": "GetMonitor",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "POST /bgp_monitoring/v202210/metrics": {
+          "operation": "GetMetricsForTarget",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /bgp_monitoring/v202210/monitors": {
+          "operation": "CreateMonitor",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /bgp_monitoring/v202210/routes": {
+          "operation": "GetRoutesForTarget",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /bgp_monitoring/v202210/monitors/{id}": {
+          "operation": "UpdateMonitor",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PUT /bgp_monitoring/v202210/monitors/{id}/status": {
+          "operation": "SetMonitorStatus",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "BgpHealthSettings",
+        "BgpMetric",
+        "BgpMetricType",
+        "BgpMonitor",
+        "BgpMonitorSettings",
+        "BgpMonitorStatus",
+        "BgpMonitoringAdminServiceSetMonitorStatusBody",
+        "BgpMonitoringAdminServiceUpdateMonitorBody",
+        "CreateMonitorRequest",
+        "CreateMonitorResponse",
+        "DeleteMonitorResponse",
+        "GetMetricsForTargetRequest",
+        "GetMetricsForTargetResponse",
+        "GetMonitorResponse",
+        "GetRoutesForTargetRequest",
+        "GetRoutesForTargetResponse",
+        "ListMonitorsResponse",
+        "Nlri",
+        "RouteInfo",
+        "SetMonitorStatusResponse",
+        "UpdateMonitorResponse",
+        "protobufAny",
+        "rpcStatus",
+        "v202303Afi",
+        "v202303RpkiStatus",
+        "v202303Safi",
+        "v202303UserInfo",
+        "v202303VantagePoint"
+      ]
+    },
+    "capacity_plan": {
+      "mounted": true,
+      "operations": {
+        "GET /capacity_plan/v202212/capacity_plan": {
+          "operation": "ListCapacityPlans",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /capacity_plan/v202212/capacity_plan/summary": {
+          "operation": "ListCapacitySummaries",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /capacity_plan/v202212/capacity_plan/{id}": {
+          "operation": "GetCapacityPlan",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /capacity_plan/v202212/capacity_plan/{id}/summary": {
+          "operation": "GetCapacitySummary",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CapacityPlan",
+        "CapacityPlanInterfaceDetail",
+        "CapacitySummary",
+        "CapacitySummaryInterfacesDetail",
+        "Config",
+        "ConfigRunoutConfig",
+        "ConfigUtilConfig",
+        "GetCapacityPlanResponse",
+        "GetCapacitySummaryResponse",
+        "InterfacesDetailStatusDetail",
+        "ListCapacityPlansResponse",
+        "ListCapacitySummariesResponse",
+        "SummaryStatus",
+        "SummaryStatusRunoutStatus",
+        "SummaryStatusUtilStatus",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "cloud_export": {
+      "mounted": true,
+      "operations": {
+        "DELETE /cloud_export/v202506/exports/{exportid}": {
+          "operation": "DeleteCloudExport",
+          "status": 200,
+          "required_params": [
+            "exportid"
+          ]
+        },
+        "GET /cloud_export/v202506/exports": {
+          "operation": "ListCloudExports",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /cloud_export/v202506/exports/{exportid}": {
+          "operation": "GetCloudExport",
+          "status": 200,
+          "required_params": [
+            "exportid"
+          ]
+        },
+        "POST /cloud_export/v202506/exports": {
+          "operation": "CreateCloudExport",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /cloud_export/v202506/exports/{exportid}": {
+          "operation": "UpdateCloudExport",
+          "status": 200,
+          "required_params": [
+            "data",
+            "exportid"
+          ]
+        }
+      },
+      "models": [
+        "AwsProperties",
+        "AzureProperties",
+        "CloudExport",
+        "CloudExportAdminServiceUpdateCloudExportBody",
+        "CloudExportSamplingProperties",
+        "CloudExportSamplingType",
+        "CloudExportStatus",
+        "CloudExportType",
+        "CloudProvider",
+        "CreateCloudExportRequest",
+        "CreateCloudExportResponse",
+        "DeleteCloudExportResponse",
+        "GceProperties",
+        "GetCloudExportResponse",
+        "ListCloudExportsResponse",
+        "OciProperties",
+        "UpdateCloudExportResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "connectivity_checker": {
+      "mounted": true,
+      "operations": {
+        "POST /connectivity_checker/v202410beta1/create": {
+          "operation": "CreateConnectivityReport",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "CloudProvider",
+        "CreateConnectivityReportRequest",
+        "CreateConnectivityReportResponse",
+        "EntityType",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "core": {
+      "mounted": false,
+      "operations": {},
+      "models": [
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "cost": {
+      "mounted": true,
+      "operations": {
+        "GET /cost/v202308/cost/providers": {
+          "operation": "ListCostProviders",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /cost/v202308/cost/summary": {
+          "operation": "ListCostProviderSummaries",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /cost/v202308/cost/summary/{id}": {
+          "operation": "GetCostProviderSummary",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CostProviderConcise",
+        "CostProviderSummary",
+        "GetCostProviderSummaryResponse",
+        "ListCostProviderSummariesResponse",
+        "ListCostProvidersResponse",
+        "costv202308Status",
+        "googlerpcStatus",
+        "protobufAny"
+      ]
+    },
+    "credential": {
+      "mounted": true,
+      "operations": {
+        "GET /credential/v202407alpha1/group": {
+          "operation": "ListCredentialGroup",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /credential/v202407alpha1/group/{id}": {
+          "operation": "GetCredentialGroup",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CredentialGroup",
+        "GetCredentialGroupResponse",
+        "ListCredentialGroupResponse",
+        "protobufAny",
+        "rpcStatus",
+        "v202211LandingType",
+        "v202211PermissionEntry",
+        "v202211Role",
+        "v202211User",
+        "v202312alpha1Secret",
+        "v202312alpha1SecretType"
+      ]
+    },
+    "custom_application": {
+      "mounted": true,
+      "operations": {
+        "DELETE /custom_application/v202501alpha1/{customApplicationId}": {
+          "operation": "DeleteCustomApplication",
+          "status": 200,
+          "required_params": [
+            "customApplicationId"
+          ]
+        },
+        "GET /custom_application/v202501alpha1": {
+          "operation": "ListCustomApplications",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /custom_application/v202501alpha1/{customApplicationId}": {
+          "operation": "GetCustomApplication",
+          "status": 200,
+          "required_params": [
+            "customApplicationId"
+          ]
+        },
+        "POST /custom_application/v202501alpha1": {
+          "operation": "CreateCustomApplication",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /custom_application/v202501alpha1/{customApplicationId}": {
+          "operation": "UpdateCustomApplication",
+          "status": 200,
+          "required_params": [
+            "customApplicationId",
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "CreateCustomApplicationResponse",
+        "CustomApplication",
+        "DeleteCustomApplicationResponse",
+        "GetCustomApplicationResponse",
+        "ListCustomApplicationsResponse",
+        "UpdateCustomApplicationResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "custom_dimension": {
+      "mounted": true,
+      "operations": {
+        "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}": {
+          "operation": "DeleteCustomDimension",
+          "status": 200,
+          "required_params": [
+            "customDimensionId"
+          ]
+        },
+        "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
+          "operation": "DeletePopulator",
+          "status": 200,
+          "required_params": [
+            "customDimensionId",
+            "populatorId"
+          ]
+        },
+        "GET /custom_dimensions/v202411alpha1": {
+          "operation": "ListCustomDimensions",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /custom_dimensions/v202411alpha1/{customDimensionId}": {
+          "operation": "GetCustomDimensionInfo",
+          "status": 200,
+          "required_params": [
+            "customDimensionId"
+          ]
+        },
+        "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
+          "operation": "GetPopulator",
+          "status": 200,
+          "required_params": [
+            "customDimensionId",
+            "populatorId"
+          ]
+        },
+        "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}": {
+          "operation": "GetPopulatorField",
+          "status": 200,
+          "required_params": [
+            "customDimensionId",
+            "fieldName",
+            "populatorId"
+          ]
+        },
+        "POST /custom_dimensions/v202411alpha1/{customDimensionId}/populator": {
+          "operation": "CreatePopulator",
+          "status": 200,
+          "required_params": [
+            "customDimensionId",
+            "data"
+          ]
+        },
+        "POST /v1/customdimension": {
+          "operation": "CreateCustomDimension",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /custom_dimensions/v202411alpha1/{customDimensionId}": {
+          "operation": "UpdateCustomDimension",
+          "status": 200,
+          "required_params": [
+            "customDimensionId",
+            "data"
+          ]
+        },
+        "PUT /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
+          "operation": "UpdatePopulator",
+          "status": 200,
+          "required_params": [
+            "customDimensionId",
+            "data",
+            "populatorId"
+          ]
+        }
+      },
+      "models": [
+        "CreateCustomDimensionResponse",
+        "CreatePopulatorResponse",
+        "CustomDimension",
+        "DeleteCustomDimensionResponse",
+        "DeletePopulatorResponse",
+        "ExtendedField",
+        "GetCustomDimensionInfoResponse",
+        "GetPopulatorFieldResponse",
+        "GetPopulatorResponse",
+        "ListCustomDimensionsResponse",
+        "Populator",
+        "UpdateCustomDimensionResponse",
+        "UpdatePopulatorResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "device": {
+      "mounted": true,
+      "operations": {
+        "DELETE /device/v202504beta2/device/{deviceid}": {
+          "operation": "DeleteDevice",
+          "status": 200,
+          "required_params": [
+            "deviceid"
+          ]
+        },
+        "GET /device/v202504beta2/device": {
+          "operation": "ListDevices",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /device/v202504beta2/device/name/{deviceName}": {
+          "operation": "GetDeviceByName",
+          "status": 200,
+          "required_params": [
+            "deviceName"
+          ]
+        },
+        "GET /device/v202504beta2/device/{deviceid}": {
+          "operation": "GetDevice",
+          "status": 200,
+          "required_params": [
+            "deviceid"
+          ]
+        },
+        "POST /device/v202504beta2/device": {
+          "operation": "CreateDevice",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /device/v202504beta2/device/batch_create": {
+          "operation": "CreateDevices",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /device/v202504beta2/device/batch_delete": {
+          "operation": "DeleteDevices",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /device/v202504beta2/device/batch_update": {
+          "operation": "UpdateDevices",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /device/v202504beta2/device/{deviceid}": {
+          "operation": "UpdateDevice",
+          "status": 200,
+          "required_params": [
+            "data",
+            "deviceid"
+          ]
+        },
+        "PUT /device/v202504beta2/device/{id}/labels": {
+          "operation": "UpdateDeviceLabels",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CreateDeviceRequest",
+        "CreateDeviceResponse",
+        "CreateDevicesRequest",
+        "CreateDevicesResponse",
+        "CustomColumnData",
+        "DeleteDeviceResponse",
+        "DeleteDevicesRequest",
+        "DeleteDevicesResponse",
+        "DeviceConcise",
+        "DeviceDetailed",
+        "DeviceNmsConfig",
+        "DeviceNmsSnmpConfig",
+        "DeviceNmsStConfig",
+        "DeviceQuery",
+        "DeviceServiceUpdateDeviceBody",
+        "DeviceServiceUpdateDeviceLabelsBody",
+        "DeviceSnmpV3Conf",
+        "DeviceView",
+        "GetDeviceByNameResponse",
+        "GetDeviceResponse",
+        "GnmiV1Conf",
+        "Interface",
+        "LabelConcise",
+        "ListDevicesResponse",
+        "Plan",
+        "Site",
+        "UpdateDeviceLabelsResponse",
+        "UpdateDeviceResponse",
+        "UpdateDevicesRequest",
+        "UpdateDevicesResponse",
+        "devicev202504beta2Label",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "deviceconf": {
+      "mounted": false,
+      "operations": {},
+      "models": [
+        "AclAction",
+        "AclMode",
+        "CommandAcl",
+        "CommandResult",
+        "CommitDetails",
+        "ConfigEncoding",
+        "DeleteDeviceConfigurationResponse",
+        "Device",
+        "DeviceCommand",
+        "DevicePlatform",
+        "DeviceSSHCreds",
+        "ExecuteCommandResponse",
+        "FetchParameters",
+        "GetCommandAclsResponse",
+        "GetDeviceAssignmentsResponse",
+        "GetDeviceConfigurationResponse",
+        "GetLatestDeviceConfigurationsResponse",
+        "ListDeviceConfigurationRevisionsResponse",
+        "MessageSignature",
+        "RequestDeviceConfigurationFetchResponse",
+        "Revision",
+        "SignatureAlgorithm",
+        "Snapshot",
+        "UpdateCommandAclsResponse",
+        "UpdateDeviceConfigurationResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "diagnostic": {
+      "mounted": false,
+      "operations": {},
+      "models": [
+        "ChatResponse",
+        "EchoRequest",
+        "EchoResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "dictionary": {
+      "mounted": true,
+      "operations": {
+        "GET /dictionary/v20260604alpha1": {
+          "operation": "GetDictionary",
+          "status": 200,
+          "required_params": []
+        }
+      },
+      "models": [
+        "BaseUnit",
+        "DimensionField",
+        "FieldDataType",
+        "FieldDirection",
+        "GetDictionaryResponse",
+        "MeasurementDetail",
+        "MeasurementFamily",
+        "MetricFamilyDef",
+        "MetricField",
+        "MetricQuantity",
+        "Operator",
+        "OperatorSet",
+        "OperatorSetKey",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "enrichments": {
+      "mounted": true,
+      "operations": {
+        "POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids": {
+          "operation": "FetchValuesByIds",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "FetchValuesByIdsRequest",
+        "FetchValuesByIdsResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "flow_tag": {
+      "mounted": true,
+      "operations": {
+        "DELETE /flow_tag/v202404alpha1/tag/{flowTagid}": {
+          "operation": "DeleteFlowTag",
+          "status": 200,
+          "required_params": [
+            "flowTagid"
+          ]
+        },
+        "GET /flow_tag/v202404alpha1/tag": {
+          "operation": "SearchFlowTag",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /flow_tag/v202404alpha1/tag/{flowTagid}": {
+          "operation": "GetFlowTag",
+          "status": 200,
+          "required_params": [
+            "flowTagid"
+          ]
+        },
+        "POST /flow_tag/v202404alpha1/tag": {
+          "operation": "CreateFlowTag",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /flow_tag/v202404alpha1/tag/{flowTagid}": {
+          "operation": "UpdateFlowTag",
+          "status": 200,
+          "required_params": [
+            "data",
+            "flowTagid"
+          ]
+        }
+      },
+      "models": [
+        "AddressInfo",
+        "CreateFlowTagRequest",
+        "CreateFlowTagResponse",
+        "DeleteFlowTagResponse",
+        "FlowTag",
+        "FlowTagSearch",
+        "FlowTagServiceUpdateFlowTagBody",
+        "GetFlowTagResponse",
+        "LookupField",
+        "OrderDirection",
+        "OrderField",
+        "SearchFlowTagResponse",
+        "UpdateFlowTagResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "interface": {
+      "mounted": true,
+      "operations": {
+        "DELETE /interface/v202108alpha1/interfaces/{id}": {
+          "operation": "InterfaceDelete",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /interface/v202108alpha1/interfaces": {
+          "operation": "ListInterface",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /interface/v202108alpha1/interfaces/{id}": {
+          "operation": "InterfaceGet",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "POST /interface/v202108alpha1/interfaces": {
+          "operation": "InterfaceCreate",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /interface/v202108alpha1/manual_classify": {
+          "operation": "ManualClassify",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /interface/v202108alpha1/interfaces/{id}": {
+          "operation": "InterfaceUpdate",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "ConnectivityType",
+        "CreateInterfaceRequest",
+        "CreateInterfaceResponse",
+        "DeleteInterfaceResponse",
+        "GetInterfaceResponse",
+        "Interface",
+        "InterfaceFilter",
+        "InterfaceServiceUpdateInterfaceBody",
+        "InterfaceVrf",
+        "IpFilter",
+        "ListInterfaceResponse",
+        "ManualClassifyRequest",
+        "ManualClassifyResponse",
+        "NetworkBoundary",
+        "UpdateInterfaceResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "journeys": {
+      "mounted": true,
+      "operations": {
+        "GET /journeys/v202406/GetJourneysNlq": {
+          "operation": "GetJourneysNlq",
+          "status": 200,
+          "required_params": [
+            "prompt"
+          ]
+        }
+      },
+      "models": [
+        "GetJourneysNlqResponse",
+        "ResultFormat",
+        "ResultType",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "kagent": {
+      "mounted": true,
+      "operations": {
+        "DELETE /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
+          "operation": "DeleteAgentCapability",
+          "status": 200,
+          "required_params": [
+            "agentId",
+            "capabilityname"
+          ]
+        },
+        "DELETE /kagent/v202401/agents/{agentid}": {
+          "operation": "DeleteAgent",
+          "status": 200,
+          "required_params": [
+            "agentid"
+          ]
+        },
+        "DELETE /kagent/v202401/capabilities/{capabilityname}": {
+          "operation": "CapabilityAdminService_DeleteCapability",
+          "status": 200,
+          "required_params": [
+            "capabilityname"
+          ]
+        },
+        "DELETE /kagent/v202401/config/{configname}": {
+          "operation": "DeleteConfig",
+          "status": 200,
+          "required_params": [
+            "configname"
+          ]
+        },
+        "GET /kagent/v202401/agents": {
+          "operation": "ListAgents",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /kagent/v202401/agents/{agentId}/capabilities": {
+          "operation": "ListAgentCapabilities",
+          "status": 200,
+          "required_params": [
+            "agentId"
+          ]
+        },
+        "GET /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
+          "operation": "GetAgentCapability",
+          "status": 200,
+          "required_params": [
+            "agentId",
+            "capabilityname"
+          ]
+        },
+        "GET /kagent/v202401/agents/{agentid}": {
+          "operation": "GetAgent",
+          "status": 200,
+          "required_params": [
+            "agentid"
+          ]
+        },
+        "GET /kagent/v202401/capabilities": {
+          "operation": "CapabilityAdminService_ListCapabilities",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /kagent/v202401/capabilities/{capabilityname}": {
+          "operation": "CapabilityAdminService_GetCapability",
+          "status": 200,
+          "required_params": [
+            "capabilityname"
+          ]
+        },
+        "GET /kagent/v202401/config/{configname}": {
+          "operation": "GetConfig",
+          "status": 200,
+          "required_params": [
+            "configname"
+          ]
+        },
+        "GET /kagent/v202401/provisioning-tokens": {
+          "operation": "ListProvisioningTokens",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /kagent/v202401/provisioning-tokens/{token}": {
+          "operation": "GetProvisioningToken",
+          "status": 200,
+          "required_params": [
+            "token"
+          ]
+        },
+        "GET /kagent/v202401/provisioning-tokens/{token}/agents": {
+          "operation": "ListAgentsByProvisioningToken",
+          "status": 200,
+          "required_params": [
+            "token"
+          ]
+        },
+        "GET /kagent/v202401/releases": {
+          "operation": "CapabilityReleaseService_GetCapabilityRelease",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /kagent/v202401/releases/latest": {
+          "operation": "CapabilityReleaseService_GetCapabilityLatestReleases",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /kagent/v202401/releases/supported_distros": {
+          "operation": "CapabilityReleaseService_GetCapabilitySupportedDistros",
+          "status": 200,
+          "required_params": []
+        },
+        "PATCH /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
+          "operation": "UpsertAgentCapability",
+          "status": 200,
+          "required_params": [
+            "agentId",
+            "capabilityname",
+            "data"
+          ]
+        },
+        "PATCH /kagent/v202401/agents/{agentid}": {
+          "operation": "UpdateAgent",
+          "status": 200,
+          "required_params": [
+            "agentid",
+            "data"
+          ]
+        },
+        "PATCH /kagent/v202401/capabilities/{capabilityname}": {
+          "operation": "CapabilityAdminService_UpdateCapability",
+          "status": 200,
+          "required_params": [
+            "capabilityname",
+            "data"
+          ]
+        },
+        "PATCH /kagent/v202401/config/{configname}": {
+          "operation": "UpdateConfig",
+          "status": 200,
+          "required_params": [
+            "configname",
+            "data"
+          ]
+        },
+        "POST /kagent/v202401/agents": {
+          "operation": "CreateAgent",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /kagent/v202401/agents/install-commands": {
+          "operation": "GenerateInstallCommands",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /kagent/v202401/capabilities": {
+          "operation": "CapabilityAdminService_CreateCapability",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /kagent/v202401/config": {
+          "operation": "CreateConfig",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /kagent/v202401/provisioning-tokens": {
+          "operation": "CreateProvisioningToken",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /kagent/v202401/provisioning-tokens/{token}/revoke": {
+          "operation": "RevokeProvisioningToken",
+          "status": 200,
+          "required_params": [
+            "data",
+            "token"
+          ]
+        },
+        "PUT /kagent/v202401/agents/authorize/{installId}": {
+          "operation": "Authorize",
+          "status": 200,
+          "required_params": [
+            "installId"
+          ]
+        }
+      },
+      "models": [
+        "Agent",
+        "AgentCapability",
+        "AgentRegistration",
+        "AuthorizeResponse",
+        "BootstrapInfo",
+        "Capability",
+        "CapabilityDistro",
+        "CapabilityRelease",
+        "CapabilitySupportedDistro",
+        "CompatibilityInfo",
+        "Config",
+        "ConfigLayer",
+        "ConfigLayerLayerType",
+        "ConfigServiceUpdateConfigBody",
+        "CreateAgentRequest",
+        "CreateAgentResponse",
+        "CreateCapabilityResponse",
+        "CreateConfigResponse",
+        "CreateProvisioningTokenResponse",
+        "DeleteAgentCapabilityResponse",
+        "DeleteAgentResponse",
+        "DeleteCapabilityResponse",
+        "DeleteConfigResponse",
+        "GenerateInstallCommandsRequest",
+        "GenerateInstallCommandsResponse",
+        "GetAgentCapabilityResponse",
+        "GetAgentResponse",
+        "GetCapabilityLatestReleasesResponse",
+        "GetCapabilityReleaseResponse",
+        "GetCapabilityResponse",
+        "GetCapabilitySupportedDistrosResponse",
+        "GetConfigResponse",
+        "GetProvisioningTokenResponse",
+        "HostMetadata",
+        "InstallConfig",
+        "InstallerType",
+        "ListAgentCapabilitiesResponse",
+        "ListAgentsByProvisioningTokenResponse",
+        "ListAgentsResponse",
+        "ListCapabilitiesResponse",
+        "ListProvisioningTokensResponse",
+        "ProvisioningToken",
+        "ProvisioningTokenAgentConfig",
+        "ProvisioningTokenServiceRevokeProvisioningTokenBody",
+        "RegistrationConfig",
+        "RevokeProvisioningTokenResponse",
+        "RuntimeConfig",
+        "RuntimeConfigEnvVar",
+        "TelemetryConfig",
+        "TokenRevoked",
+        "UpdateAgentResponse",
+        "UpdateCapabilityResponse",
+        "UpdateConfigResponse",
+        "UpsertAgentCapabilityResponse",
+        "kagentv202401AgentConfig",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "kmeta": {
+      "mounted": true,
+      "operations": {
+        "DELETE /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
+          "operation": "DeleteServiceNowConfig",
+          "status": 200,
+          "required_params": [
+            "cid",
+            "id"
+          ]
+        },
+        "GET /kmeta/v202607alpha1/{cid}/servicenow/config": {
+          "operation": "ListServiceNowConfigs",
+          "status": 200,
+          "required_params": [
+            "cid"
+          ]
+        },
+        "GET /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
+          "operation": "GetServiceNowConfig",
+          "status": 200,
+          "required_params": [
+            "cid",
+            "id"
+          ]
+        },
+        "POST /kmeta/v202607alpha1/{cid}/servicenow/config": {
+          "operation": "CreateServiceNowConfig",
+          "status": 200,
+          "required_params": [
+            "cid",
+            "data"
+          ]
+        },
+        "PUT /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
+          "operation": "UpdateServiceNowConfig",
+          "status": 200,
+          "required_params": [
+            "cid",
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CreateServiceNowConfigResponse",
+        "DeleteServiceNowConfigResponse",
+        "GetServiceNowConfigResponse",
+        "ListServiceNowConfigsResponse",
+        "ServiceNowConfig",
+        "UpdateServiceNowConfigResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "kmi": {
+      "mounted": true,
+      "operations": {
+        "GET /kmi/v202212/insights": {
+          "operation": "GetGlobalInsights",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /kmi/v202212/insights/{asn}": {
+          "operation": "GetASNInsights",
+          "status": 200,
+          "required_params": [
+            "asn"
+          ]
+        },
+        "GET /kmi/v202212/markets": {
+          "operation": "ListMarkets",
+          "status": 200,
+          "required_params": []
+        },
+        "POST /kmi/v202212/market/{marketId}/network/{asn}/{type}": {
+          "operation": "GetASNDetails",
+          "status": 200,
+          "required_params": [
+            "asn",
+            "data",
+            "marketId",
+            "type"
+          ]
+        },
+        "POST /kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}": {
+          "operation": "GetRankings",
+          "status": 200,
+          "required_params": [
+            "data",
+            "ip",
+            "marketId",
+            "rankType"
+          ]
+        }
+      },
+      "models": [
+        "ASNDetails",
+        "CustomerProvider",
+        "GetASNDetailsResponse",
+        "GetASNInsightsResponse",
+        "GetGlobalInsightsResponse",
+        "GetRankingsResponse",
+        "Insight",
+        "KmiServiceGetASNDetailsBody",
+        "KmiServiceGetRankingsBody",
+        "ListMarketsResponse",
+        "Market",
+        "Peer",
+        "Ranking",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "kptr": {
+      "mounted": false,
+      "operations": {},
+      "models": [
+        "GetNetworkRangeAssignmentsResponse",
+        "ListResolvedAddressesResponse",
+        "PtrResult",
+        "ResolveAddressesResponse",
+        "UpdateAddressNamesResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "ktbgp": {
+      "mounted": true,
+      "operations": {
+        "POST /routes/announce": {
+          "operation": "RouteService_Announce",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /routes/list": {
+          "operation": "RouteService_List",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /routes/withdraw": {
+          "operation": "RouteService_Withdraw",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "AdvertStatus",
+        "BitwiseOp",
+        "DeviceAdverts",
+        "ExtendedCommunityRouteType",
+        "FlowspecAction",
+        "FlowspecActionAccept",
+        "FlowspecActionDiscard",
+        "FlowspecActionExtendedCommunity",
+        "FlowspecActionIPNextHopCopy",
+        "FlowspecActionIPNextHopRedirect",
+        "FlowspecActionLargeCommunity",
+        "FlowspecActionMarkDSCP",
+        "FlowspecActionRegularCommunity",
+        "FlowspecActionRouteTargetRedirect",
+        "FlowspecActionTerminalSample",
+        "FlowspecActionTrafficRateBytes",
+        "FlowspecMatch",
+        "FlowspecUpdate",
+        "Fragment",
+        "FragmentFormula",
+        "FragmentPredicate",
+        "FragmentPredicateGroup",
+        "InetType",
+        "NumericFormula",
+        "NumericOp",
+        "NumericPredicate",
+        "NumericPredicateGroup",
+        "RTBHAction",
+        "RTBHMatch",
+        "RTBHUpdate",
+        "RouteServiceAnnounceRequest",
+        "RouteServiceAnnounceResponse",
+        "RouteServiceListRequest",
+        "RouteServiceListResponse",
+        "RouteServiceWithdrawRequest",
+        "RouteServiceWithdrawResponse",
+        "RoutesFilter",
+        "TCPFlag",
+        "TCPFlagsFormula",
+        "TCPFlagsPredicate",
+        "TCPFlagsPredicateGroup",
+        "UpdateResult",
+        "ktbgpv202501Withdraw",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "label": {
+      "mounted": true,
+      "operations": {
+        "DELETE /label/v202210/labels/{id}": {
+          "operation": "DeleteLabel",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /label/v202210/labels": {
+          "operation": "ListLabels",
+          "status": 200,
+          "required_params": []
+        },
+        "POST /label/v202210/labels": {
+          "operation": "CreateLabel",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /label/v202210/labels/{id}": {
+          "operation": "UpdateLabel",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CreateLabelRequest",
+        "CreateLabelResponse",
+        "DeleteLabelResponse",
+        "LabelServiceUpdateLabelBody",
+        "ListLabelsResponse",
+        "UpdateLabelResponse",
+        "labelv202210Label",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "mkp": {
+      "mounted": true,
+      "operations": {
+        "DELETE /mkp/v202407/packages/{id}": {
+          "operation": "PackageDelete",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "DELETE /mkp/v202407/tenants/{id}": {
+          "operation": "TenantDelete",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "DELETE /mkp/v202407/tenants/{tenantId}/users/{id}": {
+          "operation": "TenantUserDelete",
+          "status": 200,
+          "required_params": [
+            "id",
+            "tenantId"
+          ]
+        },
+        "GET /mkp/v202407/packages": {
+          "operation": "PackageList",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /mkp/v202407/packages/{id}": {
+          "operation": "PackageGet",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /mkp/v202407/tenants": {
+          "operation": "TenantList",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /mkp/v202407/tenants/{id}": {
+          "operation": "TenantGet",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /mkp/v202407/tenants/{tenantId}/users": {
+          "operation": "TenantUserList",
+          "status": 200,
+          "required_params": [
+            "tenantId"
+          ]
+        },
+        "POST /mkp/v202407/packages": {
+          "operation": "PackageCreate",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /mkp/v202407/tenants": {
+          "operation": "TenantCreate",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /mkp/v202407/tenants/{tenantId}/users": {
+          "operation": "TenantUserCreate",
+          "status": 200,
+          "required_params": [
+            "data",
+            "tenantId"
+          ]
+        },
+        "PUT /mkp/v202407/packages/{id}": {
+          "operation": "PackageUpdate",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PUT /mkp/v202407/tenants/{id}": {
+          "operation": "TenantUpdate",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PUT /mkp/v202407/tenants/{tenantId}/users/{id}": {
+          "operation": "TenantUserUpdate",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id",
+            "tenantId"
+          ]
+        }
+      },
+      "models": [
+        "Activate",
+        "Alert",
+        "Asset",
+        "AssetReport",
+        "Condition",
+        "CreatePackageRequest",
+        "CreatePackageResponse",
+        "CreateTenantRequest",
+        "CreateTenantResponse",
+        "CreateTenantUserResponse",
+        "CustomDimension",
+        "DeletePackageResponse",
+        "DeleteTenantResponse",
+        "DeleteTenantUserResponse",
+        "Devices",
+        "Filter",
+        "FilterField",
+        "GetPackageResponse",
+        "GetTenantResponse",
+        "ListPackageResponse",
+        "ListTenantResponse",
+        "ListTenantUserResponse",
+        "Mitigation",
+        "NotificationChannel",
+        "Package",
+        "PackageServiceUpdatePackageBody",
+        "Tenant",
+        "TenantLink",
+        "TenantServiceUpdateTenantBody",
+        "TenantUser",
+        "TenantUserServiceCreateTenantUserBody",
+        "TenantUserServiceUpdateTenantUserBody",
+        "Threshold",
+        "UpdatePackageResponse",
+        "UpdateTenantResponse",
+        "UpdateTenantUserResponse",
+        "protobufAny",
+        "rpcStatus",
+        "v202211LandingType",
+        "v202211PermissionEntry",
+        "v202211Role",
+        "v202211User"
+      ]
+    },
+    "monitoring": {
+      "mounted": false,
+      "operations": {},
+      "models": [
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "net": {
+      "mounted": false,
+      "operations": {},
+      "models": [
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "network_class": {
+      "mounted": true,
+      "operations": {
+        "GET /network_class/v202109alpha1/network_class": {
+          "operation": "NetworkClassGet",
+          "status": 200,
+          "required_params": []
+        },
+        "POST /network_class/v202109alpha1/network_class": {
+          "operation": "NetworkClassUpdate",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "CloudSubnet",
+        "CloudType",
+        "GetNetworkClassResponse",
+        "NetworkClass",
+        "UpdateNetworkClassRequest",
+        "UpdateNetworkClassResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "notification_channel": {
+      "mounted": true,
+      "operations": {
+        "GET /notification_channel/v202210/notification_channels": {
+          "operation": "ListNotificationChannels",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /notification_channel/v202210/notification_channels/{id}": {
+          "operation": "GetNotificationChannel",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "POST /notification_channel/v202210/notification_channels/search": {
+          "operation": "SearchNotificationChannels",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "ChannelType",
+        "GetNotificationChannelResponse",
+        "ListNotificationChannelsResponse",
+        "NotificationChannel",
+        "SearchNotificationChannelsRequest",
+        "SearchNotificationChannelsResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "pathfinder": {
+      "mounted": true,
+      "operations": {
+        "POST /pathfinder/v202505beta1/create": {
+          "operation": "CreatePathfinderReport",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        }
+      },
+      "models": [
+        "CloudProvider",
+        "CreatePathfinderReportRequest",
+        "CreatePathfinderReportResponse",
+        "EntityType",
+        "PathElement",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "plan": {
+      "mounted": true,
+      "operations": {
+        "GET /plans/v202501alpha1": {
+          "operation": "ListPlans",
+          "status": 200,
+          "required_params": []
+        }
+      },
+      "models": [
+        "DeviceSubtype",
+        "ListPlansResponse",
+        "Plan",
+        "PlanDevice",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "rbux": {
+      "mounted": true,
+      "operations": {
+        "DELETE /rbux/v202607alpha1/scopes/{id}": {
+          "operation": "DeleteScope",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /rbux/v202607alpha1/scopes": {
+          "operation": "ListScopes",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /rbux/v202607alpha1/scopes/{id}": {
+          "operation": "GetScope",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "POST /rbux/v202607alpha1/scopes": {
+          "operation": "CreateScope",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /rbux/v202607alpha1/scopes/{id}": {
+          "operation": "UpdateScope",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "AssetTagSelector",
+        "CreateScopeResponse",
+        "DeleteScopeResponse",
+        "GetScopeResponse",
+        "ListScopesResponse",
+        "Scope",
+        "ScopeConfig",
+        "ScopeDimensions",
+        "UpdateScopeResponse",
+        "protobufAny",
+        "rpcStatus",
+        "v202501alpha1FilterField",
+        "v202501alpha1FilterOperator",
+        "v202501alpha1SavedFilterFilter",
+        "v202501alpha1SavedFilterFilterGroup",
+        "v202501alpha1SavedFilterFilterId",
+        "v202501alpha1SavedFilterFilters"
+      ]
+    },
+    "saved_filter": {
+      "mounted": true,
+      "operations": {
+        "DELETE /saved-filter/v202501alpha1/{id}": {
+          "operation": "DeleteSavedFilter",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /saved-filter/v202501alpha1/{id}": {
+          "operation": "GetSavedFilter",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /saved-filters/v202501alpha1": {
+          "operation": "ListSavedFilters",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /saved-filters/v202501alpha1/all": {
+          "operation": "ListSavedFiltersAll",
+          "status": 200,
+          "required_params": []
+        },
+        "POST /saved-filter/v202501alpha1": {
+          "operation": "CreateSavedFilter",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /saved-filter/v202501alpha1/{id}": {
+          "operation": "UpdateSavedFilter",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CreateSavedFilterResponse",
+        "DeleteSavedFilterResponse",
+        "FilterField",
+        "FilterLevel",
+        "FilterOperator",
+        "GetSavedFilterResponse",
+        "ListSavedFiltersAllResponse",
+        "ListSavedFiltersResponse",
+        "SavedFilter",
+        "SavedFilterFilter",
+        "SavedFilterFilterGroup",
+        "SavedFilterFilterId",
+        "SavedFilterFilters",
+        "UpdateSavedFilterResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "site": {
+      "mounted": true,
+      "operations": {
+        "DELETE /site/v202509/site_markets/{id}": {
+          "operation": "DeleteSiteMarket",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "DELETE /site/v202509/sites/{id}": {
+          "operation": "DeleteSite",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /site/v202509/site_markets": {
+          "operation": "ListSiteMarkets",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /site/v202509/site_markets/{id}": {
+          "operation": "GetSiteMarket",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /site/v202509/sites": {
+          "operation": "ListSites",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /site/v202509/sites/{id}": {
+          "operation": "GetSite",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "POST /site/v202509/site_markets": {
+          "operation": "CreateSiteMarket",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /site/v202509/sites": {
+          "operation": "CreateSite",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /site/v202509/site_markets/{id}": {
+          "operation": "UpdateSiteMarket",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PUT /site/v202509/sites/{id}": {
+          "operation": "UpdateSite",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CreateSiteMarketRequest",
+        "CreateSiteMarketResponse",
+        "CreateSiteRequest",
+        "CreateSiteResponse",
+        "DeleteSiteMarketResponse",
+        "DeleteSiteResponse",
+        "GetSiteMarketResponse",
+        "GetSiteResponse",
+        "Layer",
+        "LayerSet",
+        "ListSiteMarketsResponse",
+        "ListSitesResponse",
+        "PeeringDBSiteMapping",
+        "PostalAddress",
+        "Site",
+        "SiteIpAddressClassification",
+        "SiteMarket",
+        "SiteServiceUpdateSiteBody",
+        "SiteServiceUpdateSiteMarketBody",
+        "SiteType",
+        "UpdateSiteMarketResponse",
+        "UpdateSiteResponse",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "synthetics": {
+      "mounted": true,
+      "operations": {
+        "DELETE /synthetics/v202309/agentAlerts/{id}": {
+          "operation": "DeleteAgentAlert",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "DELETE /synthetics/v202309/agents/{agentid}": {
+          "operation": "DeleteAgent",
+          "status": 200,
+          "required_params": [
+            "agentid"
+          ]
+        },
+        "DELETE /synthetics/v202309/tests/{id}": {
+          "operation": "DeleteTest",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /synthetics/v202309/agentAlerts": {
+          "operation": "ListAgentAlerts",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /synthetics/v202309/agentAlerts/{id}": {
+          "operation": "GetAgentAlert",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /synthetics/v202309/agents": {
+          "operation": "ListAgents",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /synthetics/v202309/agents/{agentid}": {
+          "operation": "GetAgent",
+          "status": 200,
+          "required_params": [
+            "agentid"
+          ]
+        },
+        "GET /synthetics/v202309/tests": {
+          "operation": "ListTests",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /synthetics/v202309/tests/{id}": {
+          "operation": "GetTest",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "POST /synthetics/v202309/agentAlerts": {
+          "operation": "CreateAgentAlert",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /synthetics/v202309/results": {
+          "operation": "GetResultsForTests",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /synthetics/v202309/results/csv": {
+          "operation": "GetResultsForTestsCsv",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /synthetics/v202309/tests": {
+          "operation": "CreateTest",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "POST /synthetics/v202309/trace": {
+          "operation": "GetTraceForTest",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /synthetics/v202309/agentAlerts/{id}": {
+          "operation": "UpdateAgentAlert",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PUT /synthetics/v202309/agents/{agentid}": {
+          "operation": "UpdateAgent",
+          "status": 200,
+          "required_params": [
+            "agentid",
+            "data"
+          ]
+        },
+        "PUT /synthetics/v202309/tests/{id}": {
+          "operation": "UpdateTest",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PUT /synthetics/v202309/tests/{id}/status": {
+          "operation": "SetTestStatus",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "ActivationSettings",
+        "Agent",
+        "AgentAlert",
+        "AgentMetadata",
+        "AgentMetadataIpValue",
+        "AgentResults",
+        "AgentStatus",
+        "AgentTest",
+        "AlertingSettings",
+        "AlertingType",
+        "CreateAgentAlertRequest",
+        "CreateAgentAlertResponse",
+        "CreateTestRequest",
+        "CreateTestResponse",
+        "DNSRecord",
+        "DNSResponseData",
+        "DNSResults",
+        "DeleteAgentAlertResponse",
+        "DeleteAgentResponse",
+        "DeleteTestResponse",
+        "DisabledMetrics",
+        "DnsTest",
+        "FlowTest",
+        "GetAgentAlertResponse",
+        "GetAgentResponse",
+        "GetResultsForTestsCsvRequest",
+        "GetResultsForTestsCsvResponse",
+        "GetResultsForTestsRequest",
+        "GetResultsForTestsResponse",
+        "GetTestResponse",
+        "GetTraceForTestRequest",
+        "GetTraceForTestResponse",
+        "GroupedAlertSetting",
+        "GroupedAlertSettings",
+        "HTTPResponseData",
+        "HTTPResults",
+        "HealthSettings",
+        "HostnameTest",
+        "IPFamily",
+        "ImplementType",
+        "IpTest",
+        "ListAgentAlertsResponse",
+        "ListAgentsResponse",
+        "ListTestsResponse",
+        "MetricData",
+        "NetNode",
+        "NetworkMeshTest",
+        "PacketLossData",
+        "PageLoadTest",
+        "Path",
+        "PathTrace",
+        "PingResults",
+        "ScheduleSettings",
+        "SetTestStatusResponse",
+        "SrcGroupBy",
+        "Stats",
+        "SyntheticsAdminServiceSetTestStatusBody",
+        "SyntheticsAdminServiceUpdateAgentAlertBody",
+        "SyntheticsAdminServiceUpdateAgentBody",
+        "SyntheticsAdminServiceUpdateTestBody",
+        "TaskResults",
+        "Test",
+        "TestPingSettings",
+        "TestResults",
+        "TestSettings",
+        "TestStatus",
+        "TestThroughputSettings",
+        "TestTraceSettings",
+        "TraceHop",
+        "UpdateAgentAlertResponse",
+        "UpdateAgentResponse",
+        "UpdateTestResponse",
+        "UrlTest",
+        "protobufAny",
+        "rpcStatus",
+        "syntheticsv202309Location",
+        "v202303UserInfo"
+      ]
+    },
+    "user": {
+      "mounted": true,
+      "operations": {
+        "DELETE /user/v202211/users/{id}": {
+          "operation": "DeleteUser",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "GET /user/v202211/users": {
+          "operation": "ListUsers",
+          "status": 200,
+          "required_params": []
+        },
+        "GET /user/v202211/users/{id}": {
+          "operation": "GetUser",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "POST /user/v202211/users": {
+          "operation": "CreateUser",
+          "status": 200,
+          "required_params": [
+            "data"
+          ]
+        },
+        "PUT /user/v202211/users/{id}": {
+          "operation": "UpdateUser",
+          "status": 200,
+          "required_params": [
+            "data",
+            "id"
+          ]
+        },
+        "PUT /user/v202211/users/{id}/reset_active_sessions": {
+          "operation": "ResetActiveSessions",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        },
+        "PUT /user/v202211/users/{id}/reset_api_token": {
+          "operation": "ResetApiToken",
+          "status": 200,
+          "required_params": [
+            "id"
+          ]
+        }
+      },
+      "models": [
+        "CreateUserRequest",
+        "CreateUserResponse",
+        "DeleteUserResponse",
+        "GetUserResponse",
+        "LandingType",
+        "ListUsersResponse",
+        "PermissionEntry",
+        "ResetActiveSessionsResponse",
+        "ResetApiTokenResponse",
+        "Role",
+        "UpdateUserResponse",
+        "User",
+        "UserServiceUpdateUserBody",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    },
+    "vault": {
+      "mounted": true,
+      "operations": {
+        "GET /vault/v202312alpha1/secrets": {
+          "operation": "ListSecret",
+          "status": 200,
+          "required_params": [
+            "names"
+          ]
+        },
+        "GET /vault/v202312alpha1/secrets/{name}": {
+          "operation": "GetSecret",
+          "status": 200,
+          "required_params": [
+            "name"
+          ]
+        }
+      },
+      "models": [
+        "GetSecretResponse",
+        "ListSecretResponse",
+        "Secret",
+        "SecretType",
+        "protobufAny",
+        "rpcStatus"
+      ]
+    }
+  }
+}

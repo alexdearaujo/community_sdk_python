@@ -175,7 +175,17 @@ def test_wrapper_raises_for_grpc_unimplemented(
         # No exception: call_grpc was invoked and the mocked response parsed OK.
         assert _grpc_was_called, "Expected gRPC call to route through call_grpc"
         print_case_result(case, mode="grpc-not-implemented", result="PASS")
-    except NotImplementedError:
+    except NotImplementedError as exc:
+        # Two different conditions raise this. "not yet implemented" means the
+        # generator found no gRPC method for this operation, which is fine.
+        # "proto dependencies not installed" means __init__ swallowed an
+        # ImportError or TypeError and the service has no gRPC at all.
+        assert "proto dependencies not installed" not in str(exc), (
+            f"{case.wrapper_class}.{case.method_name} reported gRPC as unavailable "
+            f"because its stub is None, not because the operation lacks a gRPC "
+            f"translation. See tests/generated/test_grpc_stub_wiring.py for the "
+            f"underlying import error. Original message: {exc}"
+        )
         # Acceptable: this operation has no gRPC stub yet.
         assert not _grpc_was_called
         print_case_result(case, mode="grpc-not-implemented", result="PASS")

@@ -51,6 +51,7 @@ flowchart LR
 | Interface | [interface.md](interface.md) | Fetch Search Interfaces |
 | Journeys | [journeys.md](journeys.md) | Journeys AI NLQ Service |
 | Kagent | [kagent.md](kagent.md) | List agents. |
+| Kmeta | [kmeta.md](kmeta.md) | List ServiceNow Configs |
 | Kmi | [kmi.md](kmi.md) | List global KMI insights. |
 | Kptr | [kptr.md](kptr.md) | |
 | Ktbgp | [ktbgp.md](ktbgp.md) | Announce a BGP route to a specified set of devices |

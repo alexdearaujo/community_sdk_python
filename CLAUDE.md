@@ -235,6 +235,32 @@ line's text changes, the function now raises `ValueError` immediately
 injection. Update `scripts/generation/error_package.py` in lockstep
 with any such rename.
 
+### Services without a wrapper: out of scope, on purpose
+
+Wrapper generation is driven by REST paths in the OpenAPI schema. A
+Service whose schema declares no paths gets models and proto stubs but
+no wrapper, so it is not mounted on the client. Six Services are in
+that state, and the split matters:
+
+- `core`, `monitoring`, `net` genuinely declare no RPCs. Shared types
+  only. Correct as is.
+- `deviceconf` (10 RPCs), `kptr` (4), and `diagnostic` (2) declare real
+  gRPC RPCs upstream, but none carry a `google.api.http` annotation, so
+  `protoc-gen-openapiv2` emits no paths for them.
+
+**REST paths are this SDK's contract.** Proto-driven wrapper generation
+is deliberately out of scope: it would mean a second generation path
+alongside the swagger one, including proto-derived request and response
+models, for 16 RPCs. The gap is an upstream schema gap, and it closes
+here automatically if those annotations are added. Do not "fix" it by
+hand-editing `client_mixin.py`, which is fully overwritten on every run.
+
+Note this is not the same question as service visibility. `kptr` is
+annotated `SERVICE_VISIBILITY_PUBLIC` upstream, while `ktbgp` and
+`vault`, which the SDK does mount, are annotated
+`SERVICE_VISIBILITY_PRIVATE`. That annotation never reaches the swagger,
+so no generator can currently act on it.
+
 ## Generation pipeline
 
 - Schema source defaults to the local sibling repo
