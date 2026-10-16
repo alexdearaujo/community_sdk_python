@@ -53,20 +53,20 @@ flowchart TB
     Client_API --> Error_Types
     Client_API --> REST_Transport
     Client_API --> gRPC_Transport
-    Client_Mixin -->|"x35"| Generated_Service_Wrappers
+    Client_Mixin -->|"x36"| Generated_Service_Wrappers
     Client_Mixin --> REST_Transport
     Client_Mixin --> gRPC_Transport
-    Generated_REST_Services -->|"x51"| API_Config
-    Generated_REST_Services -->|"x51"| Generated_Error_Classes
-    Generated_REST_Services -->|"x51"| Generated_Models
-    Generated_REST_Services -->|"x51"| REST_Runtime
-    Generated_REST_Services -->|"x51"| Rate_Limit
-    Generated_Service_Wrappers -->|"x35"| API_Config
-    Generated_Service_Wrappers -->|"x51"| Generated_REST_Services
-    Generated_Service_Wrappers -->|"x35"| REST_Transport
-    Generated_Service_Wrappers -->|"x35"| Rate_Limit
-    Generated_Service_Wrappers -->|"x35"| gRPC_Runtime
-    Generated_Service_Wrappers -->|"x35"| gRPC_Transport
+    Generated_REST_Services -->|"x52"| API_Config
+    Generated_REST_Services -->|"x52"| Generated_Error_Classes
+    Generated_REST_Services -->|"x52"| Generated_Models
+    Generated_REST_Services -->|"x52"| REST_Runtime
+    Generated_REST_Services -->|"x52"| Rate_Limit
+    Generated_Service_Wrappers -->|"x36"| API_Config
+    Generated_Service_Wrappers -->|"x52"| Generated_REST_Services
+    Generated_Service_Wrappers -->|"x36"| REST_Transport
+    Generated_Service_Wrappers -->|"x36"| Rate_Limit
+    Generated_Service_Wrappers -->|"x36"| gRPC_Runtime
+    Generated_Service_Wrappers -->|"x36"| gRPC_Transport
     REST_Runtime --> API_Config
     REST_Runtime --> Auth_Credentials
     REST_Runtime --> Error_Types

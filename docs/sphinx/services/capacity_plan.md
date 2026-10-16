@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.capacity_plan
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_capacity_plans()
-    W->>B: ParseDict(params, ListCapacityPlansRequest)
-    B->>API: list_capacity_plans (gRPC/TLS)
+    W->>R: build_grpc_request(ListCapacityPlansRequest, arguments)
+    R->>API: CapacityPlanService/ListCapacityPlans (gRPC/TLS)
     alt success
-        API-->>B: v202212ListCapacityPlansResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212ListCapacityPlansResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.capacity_plan
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_capacity_summaries()
-    W->>B: ParseDict(params, ListCapacitySummariesRequest)
-    B->>API: list_capacity_summaries (gRPC/TLS)
+    W->>R: build_grpc_request(ListCapacitySummariesRequest, arguments)
+    R->>API: CapacityPlanService/ListCapacitySummaries (gRPC/TLS)
     alt success
-        API-->>B: v202212ListCapacitySummariesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212ListCapacitySummariesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -196,18 +196,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.capacity_plan
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_capacity_plan(id="id-example")
-    W->>B: ParseDict(params, GetCapacityPlanRequest)
-    B->>API: get_capacity_plan (gRPC/TLS)
+    W->>R: build_grpc_request(GetCapacityPlanRequest, arguments)
+    R->>API: CapacityPlanService/GetCapacityPlan (gRPC/TLS)
     alt success
-        API-->>B: v202212GetCapacityPlanResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212GetCapacityPlanResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -272,18 +272,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.capacity_plan
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_capacity_summary(id="id-example")
-    W->>B: ParseDict(params, GetCapacitySummaryRequest)
-    B->>API: get_capacity_summary (gRPC/TLS)
+    W->>R: build_grpc_request(GetCapacitySummaryRequest, arguments)
+    R->>API: CapacityPlanService/GetCapacitySummary (gRPC/TLS)
     alt success
-        API-->>B: v202212GetCapacitySummaryResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202212GetCapacitySummaryResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

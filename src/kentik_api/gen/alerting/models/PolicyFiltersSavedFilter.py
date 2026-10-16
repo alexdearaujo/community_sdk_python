@@ -15,4 +15,6 @@ class PolicyFiltersSavedFilter(BaseModel):
 
     id: Optional[str] = Field(validation_alias="id", default=None)
 
-    not_: Optional[bool] = Field(validation_alias="not", default=None)
+    not_: Optional[bool] = Field(
+        validation_alias="not", serialization_alias="not", default=None
+    )

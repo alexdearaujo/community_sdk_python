@@ -62,18 +62,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: alert_list(data=AlertServiceListRequest(...))
-    W->>B: ParseDict(params, ListRequest)
-    B->>API: alert_list (gRPC/TLS)
+    W->>R: build_grpc_request(AlertServiceListRequest, arguments)
+    R->>API: AlertService/List (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertServiceListResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertServiceListResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -138,18 +138,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: clear(data=AlertServiceClearRequest(...))
-    W->>B: ParseDict(params, ClearRequest)
-    B->>API: clear (gRPC/TLS)
+    W->>R: build_grpc_request(AlertServiceClearRequest, arguments)
+    R->>API: AlertService/Clear (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertServiceClearResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertServiceClearResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -214,18 +214,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_comments(alertId="alertId-example")
-    W->>B: ParseDict(params, ListCommentsRequest)
-    B->>API: list_comments (gRPC/TLS)
+    W->>R: build_grpc_request(AlertServiceListCommentsRequest, arguments)
+    R->>API: AlertService/ListComments (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertServiceListCommentsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertServiceListCommentsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -290,18 +290,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: add_comment(alertId="alertId-example", data=AlertServiceAddCommentBody(...))
-    W->>B: ParseDict(params, AddCommentRequest)
-    B->>API: add_comment (gRPC/TLS)
+    W->>R: build_grpc_request(AlertServiceAddCommentRequest, arguments)
+    R->>API: AlertService/AddComment (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertServiceAddCommentResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertServiceAddCommentResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -368,18 +368,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: set_external_context(alertId="alertId-example", data=AlertServiceSetExternalContextBody(...))
-    W->>B: ParseDict(params, SetExternalContextRequest)
-    B->>API: set_external_context (gRPC/TLS)
+    W->>R: build_grpc_request(AlertServiceSetExternalContextRequest, arguments)
+    R->>API: AlertService/SetExternalContext (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertServiceSetExternalContextResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertServiceSetExternalContextResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -446,18 +446,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: alert_get(id="id-example")
-    W->>B: ParseDict(params, GetRequest)
-    B->>API: alert_get (gRPC/TLS)
+    W->>R: build_grpc_request(AlertServiceGetRequest, arguments)
+    R->>API: AlertService/Get (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertServiceGetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertServiceGetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -522,18 +522,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: ack(id="id-example", data=AlertServiceAckBody(...))
-    W->>B: ParseDict(params, AckRequest)
-    B->>API: ack (gRPC/TLS)
+    W->>R: build_grpc_request(AlertServiceAckRequest, arguments)
+    R->>API: AlertService/Ack (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertServiceAckResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertServiceAckResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -600,18 +600,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: un_ack(id="id-example", data=AlertServiceUnAckBody(...))
-    W->>B: ParseDict(params, UnAckRequest)
-    B->>API: un_ack (gRPC/TLS)
+    W->>R: build_grpc_request(AlertServiceUnAckRequest, arguments)
+    R->>API: AlertService/UnAck (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertServiceUnAckResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertServiceUnAckResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -678,18 +678,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create(data=AlertAutoAckServiceCreateRequest(...))
-    W->>B: ParseDict(params, CreateRequest)
-    B->>API: create (gRPC/TLS)
+    W->>R: build_grpc_request(AlertAutoAckServiceCreateRequest, arguments)
+    R->>API: AlertAutoAckService/Create (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertAutoAckServiceCreateResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertAutoAckServiceCreateResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -754,18 +754,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list(data=AlertAutoAckServiceListRequest(...))
-    W->>B: ParseDict(params, ListRequest)
-    B->>API: list (gRPC/TLS)
+    W->>R: build_grpc_request(AlertAutoAckServiceListRequest, arguments)
+    R->>API: AlertAutoAckService/List (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertAutoAckServiceListResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertAutoAckServiceListResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -830,18 +830,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get(autoAckid="autoAckid-example")
-    W->>B: ParseDict(params, GetRequest)
-    B->>API: get (gRPC/TLS)
+    W->>R: build_grpc_request(AlertAutoAckServiceGetRequest, arguments)
+    R->>API: AlertAutoAckService/Get (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertAutoAckServiceGetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertAutoAckServiceGetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -906,18 +906,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
-    W->>B: ParseDict(params, ReplaceRequest)
-    B->>API: replace (gRPC/TLS)
+    W->>R: build_grpc_request(AlertAutoAckServiceReplaceRequest, arguments)
+    R->>API: AlertAutoAckService/Replace (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertAutoAckServiceReplaceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertAutoAckServiceReplaceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -984,18 +984,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete(autoAckid="autoAckid-example")
-    W->>B: ParseDict(params, DeleteRequest)
-    B->>API: delete (gRPC/TLS)
+    W->>R: build_grpc_request(AlertAutoAckServiceDeleteRequest, arguments)
+    R->>API: AlertAutoAckService/Delete (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertAutoAckServiceDeleteResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertAutoAckServiceDeleteResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1056,25 +1056,7 @@ sequenceDiagram
 
 **gRPC transport**
 
-```mermaid
-sequenceDiagram
-    participant C as Caller
-    participant W as client.alerting
-    participant B as proto bridge
-    participant API as Kentik gRPC API
-
-    C->>W: mitigations_list()
-    W->>B: ParseDict(params, ListRequest)
-    B->>API: mitigations_list (gRPC/TLS)
-    alt success
-        API-->>B: v202505MitigationsServiceListResponse proto
-        B-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceListResponse
-    else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
-        W-->>C: raise AuthenticationError, HTTPException, or TransportError
-    end
-```
+Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
 
 ##### Parameters
 
@@ -1142,25 +1124,7 @@ sequenceDiagram
 
 **gRPC transport**
 
-```mermaid
-sequenceDiagram
-    participant C as Caller
-    participant W as client.alerting
-    participant B as proto bridge
-    participant API as Kentik gRPC API
-
-    C->>W: mitigations_create(data=MitigationsServiceCreateRequest(...))
-    W->>B: ParseDict(params, CreateRequest)
-    B->>API: mitigations_create (gRPC/TLS)
-    alt success
-        API-->>B: v202505MitigationsServiceCreateResponse proto
-        B-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceCreateResponse
-    else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
-        W-->>C: raise AuthenticationError, HTTPException, or TransportError
-    end
-```
+Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
 
 ##### Parameters
 
@@ -1218,25 +1182,7 @@ sequenceDiagram
 
 **gRPC transport**
 
-```mermaid
-sequenceDiagram
-    participant C as Caller
-    participant W as client.alerting
-    participant B as proto bridge
-    participant API as Kentik gRPC API
-
-    C->>W: available_actions()
-    W->>B: ParseDict(params, AvailableActionsRequest)
-    B->>API: available_actions (gRPC/TLS)
-    alt success
-        API-->>B: v202505MitigationsServiceAvailableActionsResponse proto
-        B-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceAvailableActionsResponse
-    else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
-        W-->>C: raise AuthenticationError, HTTPException, or TransportError
-    end
-```
+Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
 
 ##### Responses
 
@@ -1286,25 +1232,7 @@ sequenceDiagram
 
 **gRPC transport**
 
-```mermaid
-sequenceDiagram
-    participant C as Caller
-    participant W as client.alerting
-    participant B as proto bridge
-    participant API as Kentik gRPC API
-
-    C->>W: mitigations_get(action="action-example")
-    W->>B: ParseDict(params, GetRequest)
-    B->>API: mitigations_get (gRPC/TLS)
-    alt success
-        API-->>B: v202505MitigationsServiceGetResponse proto
-        B-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceGetResponse
-    else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
-        W-->>C: raise AuthenticationError, HTTPException, or TransportError
-    end
-```
+Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
 
 ##### Parameters
 
@@ -1362,25 +1290,7 @@ sequenceDiagram
 
 **gRPC transport**
 
-```mermaid
-sequenceDiagram
-    participant C as Caller
-    participant W as client.alerting
-    participant B as proto bridge
-    participant API as Kentik gRPC API
-
-    C->>W: act(action="action-example", data=MitigationsServiceActBody(...))
-    W->>B: ParseDict(params, ActRequest)
-    B->>API: act (gRPC/TLS)
-    alt success
-        API-->>B: v202505MitigationsServiceActResponse proto
-        B-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceActResponse
-    else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
-        W-->>C: raise AuthenticationError, HTTPException, or TransportError
-    end
-```
+Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
 
 ##### Parameters
 
@@ -1440,25 +1350,7 @@ sequenceDiagram
 
 **gRPC transport**
 
-```mermaid
-sequenceDiagram
-    participant C as Caller
-    participant W as client.alerting
-    participant B as proto bridge
-    participant API as Kentik gRPC API
-
-    C->>W: available_actions_for_mitigation(id="id-example")
-    W->>B: ParseDict(params, AvailableActionsForMitigationRequest)
-    B->>API: available_actions_for_mitigation (gRPC/TLS)
-    alt success
-        API-->>B: v202505MitigationsServiceAvailableActionsForMitigationResponse proto
-        B-->>W: MessageToDict(response)
-        W-->>C: v202505MitigationsServiceAvailableActionsForMitigationResponse
-    else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
-        W-->>C: raise AuthenticationError, HTTPException, or TransportError
-    end
-```
+Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
 
 ##### Parameters
 
@@ -1520,18 +1412,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: mitigation_methods_list()
-    W->>B: ParseDict(params, ListRequest)
-    B->>API: mitigation_methods_list (gRPC/TLS)
+    W->>R: build_grpc_request(MitigationMethodsServiceListRequest, arguments)
+    R->>API: MitigationMethodsService/List (gRPC/TLS)
     alt success
-        API-->>B: v202505MitigationMethodsServiceListResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505MitigationMethodsServiceListResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1602,18 +1494,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: mitigation_methods_get(id="id-example")
-    W->>B: ParseDict(params, GetRequest)
-    B->>API: mitigation_methods_get (gRPC/TLS)
+    W->>R: build_grpc_request(MitigationMethodsServiceGetRequest, arguments)
+    R->>API: MitigationMethodsService/Get (gRPC/TLS)
     alt success
-        API-->>B: v202505MitigationMethodsServiceGetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505MitigationMethodsServiceGetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1678,18 +1570,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: mitigation_platforms_list()
-    W->>B: ParseDict(params, ListRequest)
-    B->>API: mitigation_platforms_list (gRPC/TLS)
+    W->>R: build_grpc_request(MitigationPlatformsServiceListRequest, arguments)
+    R->>API: MitigationPlatformsService/List (gRPC/TLS)
     alt success
-        API-->>B: v202505MitigationPlatformsServiceListResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505MitigationPlatformsServiceListResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1760,18 +1652,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: mitigation_platforms_get(id="id-example")
-    W->>B: ParseDict(params, GetRequest)
-    B->>API: mitigation_platforms_get (gRPC/TLS)
+    W->>R: build_grpc_request(MitigationPlatformsServiceGetRequest, arguments)
+    R->>API: MitigationPlatformsService/Get (gRPC/TLS)
     alt success
-        API-->>B: v202505MitigationPlatformsServiceGetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505MitigationPlatformsServiceGetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1836,18 +1728,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: policy_list(data=PolicyServiceListRequest(...))
-    W->>B: ParseDict(params, ListRequest)
-    B->>API: policy_list (gRPC/TLS)
+    W->>R: build_grpc_request(PolicyServiceListRequest, arguments)
+    R->>API: PolicyService/List (gRPC/TLS)
     alt success
-        API-->>B: v202505PolicyServiceListResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505PolicyServiceListResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1912,18 +1804,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: policy_get(policyType="policyType-example", id="id-example")
-    W->>B: ParseDict(params, GetRequest)
-    B->>API: policy_get (gRPC/TLS)
+    W->>R: build_grpc_request(PolicyServiceGetRequest, arguments)
+    R->>API: PolicyService/Get (gRPC/TLS)
     alt success
-        API-->>B: v202505PolicyServiceGetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505PolicyServiceGetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1990,18 +1882,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: disable(policyType="policyType-example", id="id-example", data=PolicyServiceDisableBody(...))
-    W->>B: ParseDict(params, DisableRequest)
-    B->>API: disable (gRPC/TLS)
+    W->>R: build_grpc_request(PolicyServiceDisableRequest, arguments)
+    R->>API: PolicyService/Disable (gRPC/TLS)
     alt success
-        API-->>B: v202505PolicyServiceDisableResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505PolicyServiceDisableResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2070,18 +1962,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: enable(policyType="policyType-example", id="id-example", data=PolicyServiceEnableBody(...))
-    W->>B: ParseDict(params, EnableRequest)
-    B->>API: enable (gRPC/TLS)
+    W->>R: build_grpc_request(PolicyServiceEnableRequest, arguments)
+    R->>API: PolicyService/Enable (gRPC/TLS)
     alt success
-        API-->>B: v202505PolicyServiceEnableResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505PolicyServiceEnableResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2150,18 +2042,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: alert_silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
-    W->>B: ParseDict(params, CreateRequest)
-    B->>API: alert_silence_notifications_create (gRPC/TLS)
+    W->>R: build_grpc_request(AlertSilenceNotificationsServiceCreateRequest, arguments)
+    R->>API: AlertSilenceNotificationsService/Create (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertSilenceNotificationsServiceCreateResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertSilenceNotificationsServiceCreateResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2226,18 +2118,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: alert_silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
-    W->>B: ParseDict(params, ListRequest)
-    B->>API: alert_silence_notifications_list (gRPC/TLS)
+    W->>R: build_grpc_request(AlertSilenceNotificationsServiceListRequest, arguments)
+    R->>API: AlertSilenceNotificationsService/List (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertSilenceNotificationsServiceListResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertSilenceNotificationsServiceListResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2302,18 +2194,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: alert_silence_notifications_get(id="id-example")
-    W->>B: ParseDict(params, GetRequest)
-    B->>API: alert_silence_notifications_get (gRPC/TLS)
+    W->>R: build_grpc_request(AlertSilenceNotificationsServiceGetRequest, arguments)
+    R->>API: AlertSilenceNotificationsService/Get (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertSilenceNotificationsServiceGetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertSilenceNotificationsServiceGetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2378,18 +2270,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: alert_silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
-    W->>B: ParseDict(params, ReplaceRequest)
-    B->>API: alert_silence_notifications_replace (gRPC/TLS)
+    W->>R: build_grpc_request(AlertSilenceNotificationsServiceReplaceRequest, arguments)
+    R->>API: AlertSilenceNotificationsService/Replace (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertSilenceNotificationsServiceReplaceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertSilenceNotificationsServiceReplaceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2456,18 +2348,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: alert_silence_notifications_delete(id="id-example")
-    W->>B: ParseDict(params, DeleteRequest)
-    B->>API: alert_silence_notifications_delete (gRPC/TLS)
+    W->>R: build_grpc_request(AlertSilenceNotificationsServiceDeleteRequest, arguments)
+    R->>API: AlertSilenceNotificationsService/Delete (gRPC/TLS)
     alt success
-        API-->>B: v202505AlertSilenceNotificationsServiceDeleteResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505AlertSilenceNotificationsServiceDeleteResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2532,18 +2424,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: suppression_create(data=SuppressionServiceCreateRequest(...))
-    W->>B: ParseDict(params, CreateRequest)
-    B->>API: suppression_create (gRPC/TLS)
+    W->>R: build_grpc_request(SuppressionServiceCreateRequest, arguments)
+    R->>API: SuppressionService/Create (gRPC/TLS)
     alt success
-        API-->>B: v202505SuppressionServiceCreateResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505SuppressionServiceCreateResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2608,18 +2500,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: suppression_list(data=SuppressionServiceListRequest(...))
-    W->>B: ParseDict(params, ListRequest)
-    B->>API: suppression_list (gRPC/TLS)
+    W->>R: build_grpc_request(SuppressionServiceListRequest, arguments)
+    R->>API: SuppressionService/List (gRPC/TLS)
     alt success
-        API-->>B: v202505SuppressionServiceListResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505SuppressionServiceListResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2684,18 +2576,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: suppression_get(id="id-example")
-    W->>B: ParseDict(params, GetRequest)
-    B->>API: suppression_get (gRPC/TLS)
+    W->>R: build_grpc_request(SuppressionServiceGetRequest, arguments)
+    R->>API: SuppressionService/Get (gRPC/TLS)
     alt success
-        API-->>B: v202505SuppressionServiceGetResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505SuppressionServiceGetResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2760,18 +2652,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: suppression_replace(id="id-example", data=SuppressionServiceReplaceBody(...))
-    W->>B: ParseDict(params, ReplaceRequest)
-    B->>API: suppression_replace (gRPC/TLS)
+    W->>R: build_grpc_request(SuppressionServiceReplaceRequest, arguments)
+    R->>API: SuppressionService/Replace (gRPC/TLS)
     alt success
-        API-->>B: v202505SuppressionServiceReplaceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505SuppressionServiceReplaceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2838,18 +2730,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.alerting
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: suppression_delete(id="id-example")
-    W->>B: ParseDict(params, DeleteRequest)
-    B->>API: suppression_delete (gRPC/TLS)
+    W->>R: build_grpc_request(SuppressionServiceDeleteRequest, arguments)
+    R->>API: SuppressionService/Delete (gRPC/TLS)
     alt success
-        API-->>B: v202505SuppressionServiceDeleteResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505SuppressionServiceDeleteResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

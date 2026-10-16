@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_devices()
-    W->>B: ParseDict(params, ListDevicesRequest)
-    B->>API: list_devices (gRPC/TLS)
+    W->>R: build_grpc_request(ListDevicesRequest, arguments)
+    R->>API: DeviceService/ListDevices (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2ListDevicesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2ListDevicesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -135,18 +135,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_device(data=CreateDeviceRequest(...))
-    W->>B: ParseDict(params, CreateDeviceRequest)
-    B->>API: create_device (gRPC/TLS)
+    W->>R: build_grpc_request(CreateDeviceRequest, arguments)
+    R->>API: DeviceService/CreateDevice (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2CreateDeviceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2CreateDeviceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -211,18 +211,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_devices(data=CreateDevicesRequest(...))
-    W->>B: ParseDict(params, CreateDevicesRequest)
-    B->>API: create_devices (gRPC/TLS)
+    W->>R: build_grpc_request(CreateDevicesRequest, arguments)
+    R->>API: DeviceService/CreateDevices (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2CreateDevicesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2CreateDevicesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -287,18 +287,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_devices(data=DeleteDevicesRequest(...))
-    W->>B: ParseDict(params, DeleteDevicesRequest)
-    B->>API: delete_devices (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteDevicesRequest, arguments)
+    R->>API: DeviceService/DeleteDevices (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2DeleteDevicesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2DeleteDevicesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -363,18 +363,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_devices(data=UpdateDevicesRequest(...))
-    W->>B: ParseDict(params, UpdateDevicesRequest)
-    B->>API: update_devices (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateDevicesRequest, arguments)
+    R->>API: DeviceService/UpdateDevices (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2UpdateDevicesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2UpdateDevicesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -439,18 +439,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_device_by_name(deviceName="deviceName-example")
-    W->>B: ParseDict(params, GetDeviceByNameRequest)
-    B->>API: get_device_by_name (gRPC/TLS)
+    W->>R: build_grpc_request(GetDeviceByNameRequest, arguments)
+    R->>API: DeviceService/GetDeviceByName (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2GetDeviceByNameResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2GetDeviceByNameResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -516,18 +516,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_device(deviceid="deviceid-example")
-    W->>B: ParseDict(params, GetDeviceRequest)
-    B->>API: get_device (gRPC/TLS)
+    W->>R: build_grpc_request(GetDeviceRequest, arguments)
+    R->>API: DeviceService/GetDevice (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2GetDeviceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2GetDeviceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -593,18 +593,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_device(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
-    W->>B: ParseDict(params, UpdateDeviceRequest)
-    B->>API: update_device (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateDeviceRequest, arguments)
+    R->>API: DeviceService/UpdateDevice (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2UpdateDeviceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2UpdateDeviceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -671,18 +671,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_device(deviceid="deviceid-example")
-    W->>B: ParseDict(params, DeleteDeviceRequest)
-    B->>API: delete_device (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteDeviceRequest, arguments)
+    R->>API: DeviceService/DeleteDevice (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2DeleteDeviceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2DeleteDeviceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -747,18 +747,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.device
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_device_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
-    W->>B: ParseDict(params, UpdateDeviceLabelsRequest)
-    B->>API: update_device_labels (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateDeviceLabelsRequest, arguments)
+    R->>API: DeviceService/UpdateDeviceLabels (gRPC/TLS)
     alt success
-        API-->>B: v202504beta2UpdateDeviceLabelsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202504beta2UpdateDeviceLabelsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

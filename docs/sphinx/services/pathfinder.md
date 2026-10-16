@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.pathfinder
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_pathfinder_report(data=CreatePathfinderReportRequest(...))
-    W->>B: ParseDict(params, CreatePathfinderReportRequest)
-    B->>API: create_pathfinder_report (gRPC/TLS)
+    W->>R: build_grpc_request(CreatePathfinderReportRequest, arguments)
+    R->>API: PathfinderAdminService/CreatePathfinderReport (gRPC/TLS)
     alt success
-        API-->>B: v202505beta1CreatePathfinderReportResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202505beta1CreatePathfinderReportResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

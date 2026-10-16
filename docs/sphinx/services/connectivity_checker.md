@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.connectivity_checker
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_connectivity_report(data=CreateConnectivityReportRequest(...))
-    W->>B: ParseDict(params, CreateConnectivityReportRequest)
-    B->>API: create_connectivity_report (gRPC/TLS)
+    W->>R: build_grpc_request(CreateConnectivityReportRequest, arguments)
+    R->>API: ConnectivityCheckerAdminService/CreateConnectivityReport (gRPC/TLS)
     alt success
-        API-->>B: v202410beta1CreateConnectivityReportResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202410beta1CreateConnectivityReportResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

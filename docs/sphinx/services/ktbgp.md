@@ -58,18 +58,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.ktbgp
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: route_service__announce(data=RouteServiceAnnounceRequest(...))
-    W->>B: ParseDict(params, RouteService_AnnounceRequest)
-    B->>API: route_service__announce (gRPC/TLS)
+    W->>R: build_grpc_request(RouteServiceAnnounceRequest, arguments)
+    R->>API: RouteService/Announce (gRPC/TLS)
     alt success
-        API-->>B: v202501RouteServiceAnnounceResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501RouteServiceAnnounceResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -132,18 +132,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.ktbgp
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: route_service__list(data=RouteServiceListRequest(...))
-    W->>B: ParseDict(params, RouteService_ListRequest)
-    B->>API: route_service__list (gRPC/TLS)
+    W->>R: build_grpc_request(RouteServiceListRequest, arguments)
+    R->>API: RouteService/List (gRPC/TLS)
     alt success
-        API-->>B: v202501RouteServiceListResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501RouteServiceListResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -206,18 +206,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.ktbgp
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: route_service__withdraw(data=RouteServiceWithdrawRequest(...))
-    W->>B: ParseDict(params, RouteService_WithdrawRequest)
-    B->>API: route_service__withdraw (gRPC/TLS)
+    W->>R: build_grpc_request(RouteServiceWithdrawRequest, arguments)
+    R->>API: RouteService/Withdraw (gRPC/TLS)
     alt success
-        API-->>B: v202501RouteServiceWithdrawResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202501RouteServiceWithdrawResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

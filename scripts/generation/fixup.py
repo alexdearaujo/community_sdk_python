@@ -10,6 +10,8 @@ import textwrap
 from pathlib import Path
 from typing import Callable
 
+from pydantic import BaseModel
+
 from ._shared import discover_service_model_classes
 from .error_package import inject_service_error_handling
 
@@ -96,6 +98,7 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         _fix_path_parameters,
         _inject_data_body,
         _fix_typing_wildcard,
+        _fix_model_field_names,
         _fix_list_collision,
         _make_models_import_transform(model_classes),
         _dedupe_top_level_function_names,
@@ -197,7 +200,7 @@ def _fix_path_parameters(content: str) -> str:
 
 
 def _inject_data_body(content: str) -> str:
-    """Injects json_body=data.model_dump() into request_json() calls that have a data param."""
+    """Injects json_body=data.model_dump(by_alias=True) into request_json() calls that have a data param."""
     functions = re.split(r"^(?=async def |def )", content, flags=re.MULTILINE)
     fixed_funcs = []
     for func in functions:
@@ -213,25 +216,56 @@ def _inject_data_body(content: str) -> str:
             if "request_json(" in func:
                 func = re.sub(
                     r"(query_params=query_params)(,?)(\s*)",
-                    r"\1,\n                json_body=data.model_dump()\3",
+                    r"\1,\n                json_body=data.model_dump(by_alias=True)\3",
                     func,
                     count=1,
                 )
             else:
                 func = re.sub(
                     r"(params=query_params)(,?)(\s*\))",
-                    r"\1, json=data.model_dump()\3",
+                    r"\1, json=data.model_dump(by_alias=True)\3",
                     func,
                 )
-        func = re.sub(r"\bdata\.dict\(\)", "data.model_dump()", func)
+        func = re.sub(r"\bdata\.dict\(\)", "data.model_dump(by_alias=True)", func)
         if not has_data_param and has_json_kwarg:
-            func = re.sub(r",\s*json=data\.model_dump\(\)", "", func)
-            func = re.sub(r"json=data\.model_dump\(\)", "", func)
+            func = re.sub(r",\s*json=data\.model_dump\([^)]*\)", "", func)
+            func = re.sub(r"json=data\.model_dump\([^)]*\)", "", func)
         if not has_data_param and has_json_body_kwarg:
-            func = re.sub(r",\s*json_body\s*=\s*data\.model_dump\(\)", "", func)
-            func = re.sub(r"json_body\s*=\s*data\.model_dump\(\)\s*,?", "", func)
+            func = re.sub(r",\s*json_body\s*=\s*data\.model_dump\([^)]*\)", "", func)
+            func = re.sub(r"json_body\s*=\s*data\.model_dump\([^)]*\)\s*,?", "", func)
         fixed_funcs.append(func)
     return "".join(fixed_funcs)
+
+
+_BASEMODEL_ATTRS = frozenset(
+    name for name in dir(BaseModel) if not name.startswith("_")
+)
+# Raw generator output, before ruff, may space the colon: "schema : Optional[...]".
+_MODEL_FIELD = re.compile(
+    r'^( +)(\w+)( *:[^\n=]+= *Field\(validation_alias="([^"]*)")', re.MULTILINE
+)
+
+
+def _fix_model_field_names(content: str) -> str:
+    """Keeps each model field's wire name on the way out as well as in.
+
+    The generator escapes a keyword field (`not` -> `not_`), and a field that
+    shadows a BaseModel attribute is escaped here (`schema` -> `schema_`, or
+    Pydantic warns on every `import kentik_api`). validation_alias alone
+    reads the wire name but dumps the Python one, so a request sent
+    `{"not_": true}` and the API ignored the negation. serialization_alias
+    makes `model_dump(by_alias=True)` send `not` again.
+    """
+
+    def fix(m: re.Match[str]) -> str:
+        indent, name, rest, wire = m[1], m[2], m[3], m[4]
+        if name in _BASEMODEL_ATTRS:
+            name += "_"
+        if name != wire:
+            rest += f', serialization_alias="{wire}"'
+        return f"{indent}{name}{rest}"
+
+    return _MODEL_FIELD.sub(fix, content)
 
 
 def _fix_typing_wildcard(content: str) -> str:

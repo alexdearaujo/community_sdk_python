@@ -15,7 +15,9 @@ class v202303AttributeFilter(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    not_: Optional[bool] = Field(validation_alias="not", default=None)
+    not_: Optional[bool] = Field(
+        validation_alias="not", serialization_alias="not", default=None
+    )
 
     empty: Optional[bool] = Field(validation_alias="empty", default=None)
 
@@ -28,7 +30,7 @@ class v202303AttributeFilter(BaseModel):
     contains: Optional[str] = Field(validation_alias="contains", default=None)
 
     in_: Optional[v202303AttributeFilterStringArray] = Field(
-        validation_alias="in", default=None
+        validation_alias="in", serialization_alias="in", default=None
     )
 
     matchesRegex: Optional[str] = Field(validation_alias="matchesRegex", default=None)

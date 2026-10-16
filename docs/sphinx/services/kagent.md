@@ -62,18 +62,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_agents()
-    W->>B: ParseDict(params, ListAgentsRequest)
-    B->>API: list_agents (gRPC/TLS)
+    W->>R: build_grpc_request(ListAgentsRequest, arguments)
+    R->>API: AgentService/ListAgents (gRPC/TLS)
     alt success
-        API-->>B: v202401ListAgentsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401ListAgentsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -139,18 +139,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_agent(data=CreateAgentRequest(...))
-    W->>B: ParseDict(params, CreateAgentRequest)
-    B->>API: create_agent (gRPC/TLS)
+    W->>R: build_grpc_request(CreateAgentRequest, arguments)
+    R->>API: AgentService/CreateAgent (gRPC/TLS)
     alt success
-        API-->>B: v202401CreateAgentResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401CreateAgentResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -215,18 +215,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: authorize(installId="installId-example")
-    W->>B: ParseDict(params, AuthorizeRequest)
-    B->>API: authorize (gRPC/TLS)
+    W->>R: build_grpc_request(AuthorizeRequest, arguments)
+    R->>API: AgentService/Authorize (gRPC/TLS)
     alt success
-        API-->>B: v202401AuthorizeResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401AuthorizeResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -291,18 +291,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: generate_install_commands(data=GenerateInstallCommandsRequest(...))
-    W->>B: ParseDict(params, GenerateInstallCommandsRequest)
-    B->>API: generate_install_commands (gRPC/TLS)
+    W->>R: build_grpc_request(GenerateInstallCommandsRequest, arguments)
+    R->>API: AgentService/GenerateInstallCommands (gRPC/TLS)
     alt success
-        API-->>B: v202401GenerateInstallCommandsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GenerateInstallCommandsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -367,18 +367,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_agent(agentid="agentid-example")
-    W->>B: ParseDict(params, GetAgentRequest)
-    B->>API: get_agent (gRPC/TLS)
+    W->>R: build_grpc_request(GetAgentRequest, arguments)
+    R->>API: AgentService/GetAgent (gRPC/TLS)
     alt success
-        API-->>B: v202401GetAgentResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GetAgentResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -444,18 +444,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_agent(agentid="agentid-example", data=Dict[str, Any](...))
-    W->>B: ParseDict(params, UpdateAgentRequest)
-    B->>API: update_agent (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateAgentRequest, arguments)
+    R->>API: AgentService/UpdateAgent (gRPC/TLS)
     alt success
-        API-->>B: v202401UpdateAgentResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401UpdateAgentResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -523,18 +523,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_agent(agentid="agentid-example")
-    W->>B: ParseDict(params, DeleteAgentRequest)
-    B->>API: delete_agent (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteAgentRequest, arguments)
+    R->>API: AgentService/DeleteAgent (gRPC/TLS)
     alt success
-        API-->>B: v202401DeleteAgentResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401DeleteAgentResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -600,18 +600,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_agent_capabilities(agentId="agentId-example")
-    W->>B: ParseDict(params, ListAgentCapabilitiesRequest)
-    B->>API: list_agent_capabilities (gRPC/TLS)
+    W->>R: build_grpc_request(ListAgentCapabilitiesRequest, arguments)
+    R->>API: AgentCapabilityService/ListAgentCapabilities (gRPC/TLS)
     alt success
-        API-->>B: v202401ListAgentCapabilitiesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401ListAgentCapabilitiesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -676,18 +676,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example")
-    W->>B: ParseDict(params, GetAgentCapabilityRequest)
-    B->>API: get_agent_capability (gRPC/TLS)
+    W->>R: build_grpc_request(GetAgentCapabilityRequest, arguments)
+    R->>API: AgentCapabilityService/GetAgentCapability (gRPC/TLS)
     alt success
-        API-->>B: v202401GetAgentCapabilityResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GetAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -754,18 +754,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: upsert_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example", data=Dict[str, Any](...))
-    W->>B: ParseDict(params, UpsertAgentCapabilityRequest)
-    B->>API: upsert_agent_capability (gRPC/TLS)
+    W->>R: build_grpc_request(UpsertAgentCapabilityRequest, arguments)
+    R->>API: AgentCapabilityService/UpsertAgentCapability (gRPC/TLS)
     alt success
-        API-->>B: v202401UpsertAgentCapabilityResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401UpsertAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -835,18 +835,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example")
-    W->>B: ParseDict(params, DeleteAgentCapabilityRequest)
-    B->>API: delete_agent_capability (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteAgentCapabilityRequest, arguments)
+    R->>API: AgentCapabilityService/DeleteAgentCapability (gRPC/TLS)
     alt success
-        API-->>B: v202401DeleteAgentCapabilityResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401DeleteAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -911,18 +911,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: capability_admin_service__list_capabilities()
-    W->>B: ParseDict(params, CapabilityAdminService_ListCapabilitiesRequest)
-    B->>API: capability_admin_service__list_capabilities (gRPC/TLS)
+    W->>R: build_grpc_request(ListCapabilitiesRequest, arguments)
+    R->>API: CapabilityAdminService/ListCapabilities (gRPC/TLS)
     alt success
-        API-->>B: v202401ListCapabilitiesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401ListCapabilitiesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -977,18 +977,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: capability_admin_service__create_capability(data=Capability(...))
-    W->>B: ParseDict(params, CapabilityAdminService_CreateCapabilityRequest)
-    B->>API: capability_admin_service__create_capability (gRPC/TLS)
+    W->>R: build_grpc_request(CreateCapabilityRequest, arguments)
+    R->>API: CapabilityAdminService/CreateCapability (gRPC/TLS)
     alt success
-        API-->>B: v202401CreateCapabilityResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401CreateCapabilityResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1051,18 +1051,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: capability_admin_service__get_capability(capabilityname="capabilityname-example")
-    W->>B: ParseDict(params, CapabilityAdminService_GetCapabilityRequest)
-    B->>API: capability_admin_service__get_capability (gRPC/TLS)
+    W->>R: build_grpc_request(GetCapabilityRequest, arguments)
+    R->>API: CapabilityAdminService/GetCapability (gRPC/TLS)
     alt success
-        API-->>B: v202401GetCapabilityResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GetCapabilityResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1125,18 +1125,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: capability_admin_service__update_capability(capabilityname="capabilityname-example", data=Dict[str, Any](...))
-    W->>B: ParseDict(params, CapabilityAdminService_UpdateCapabilityRequest)
-    B->>API: capability_admin_service__update_capability (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateCapabilityRequest, arguments)
+    R->>API: CapabilityAdminService/UpdateCapability (gRPC/TLS)
     alt success
-        API-->>B: v202401UpdateCapabilityResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401UpdateCapabilityResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1201,18 +1201,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: capability_admin_service__delete_capability(capabilityname="capabilityname-example")
-    W->>B: ParseDict(params, CapabilityAdminService_DeleteCapabilityRequest)
-    B->>API: capability_admin_service__delete_capability (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteCapabilityRequest, arguments)
+    R->>API: CapabilityAdminService/DeleteCapability (gRPC/TLS)
     alt success
-        API-->>B: v202401DeleteCapabilityResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401DeleteCapabilityResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1275,18 +1275,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: capability_release_service__get_capability_release()
-    W->>B: ParseDict(params, CapabilityReleaseService_GetCapabilityReleaseRequest)
-    B->>API: capability_release_service__get_capability_release (gRPC/TLS)
+    W->>R: build_grpc_request(GetCapabilityReleaseRequest, arguments)
+    R->>API: CapabilityReleaseService/GetCapabilityRelease (gRPC/TLS)
     alt success
-        API-->>B: v202401GetCapabilityReleaseResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GetCapabilityReleaseResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1352,18 +1352,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: capability_release_service__get_capability_latest_releases()
-    W->>B: ParseDict(params, CapabilityReleaseService_GetCapabilityLatestReleasesRequest)
-    B->>API: capability_release_service__get_capability_latest_releases (gRPC/TLS)
+    W->>R: build_grpc_request(GetCapabilityLatestReleasesRequest, arguments)
+    R->>API: CapabilityReleaseService/GetCapabilityLatestReleases (gRPC/TLS)
     alt success
-        API-->>B: v202401GetCapabilityLatestReleasesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GetCapabilityLatestReleasesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1427,18 +1427,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: capability_release_service__get_capability_supported_distros()
-    W->>B: ParseDict(params, CapabilityReleaseService_GetCapabilitySupportedDistrosRequest)
-    B->>API: capability_release_service__get_capability_supported_distros (gRPC/TLS)
+    W->>R: build_grpc_request(GetCapabilitySupportedDistrosRequest, arguments)
+    R->>API: CapabilityReleaseService/GetCapabilitySupportedDistros (gRPC/TLS)
     alt success
-        API-->>B: v202401GetCapabilitySupportedDistrosResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GetCapabilitySupportedDistrosResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1501,18 +1501,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_config(data=Config(...))
-    W->>B: ParseDict(params, CreateConfigRequest)
-    B->>API: create_config (gRPC/TLS)
+    W->>R: build_grpc_request(CreateConfigRequest, arguments)
+    R->>API: ConfigService/CreateConfig (gRPC/TLS)
     alt success
-        API-->>B: v202401CreateConfigResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401CreateConfigResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1577,18 +1577,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_config(configname="configname-example")
-    W->>B: ParseDict(params, GetConfigRequest)
-    B->>API: get_config (gRPC/TLS)
+    W->>R: build_grpc_request(GetConfigRequest, arguments)
+    R->>API: ConfigService/GetConfig (gRPC/TLS)
     alt success
-        API-->>B: v202401GetConfigResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GetConfigResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1653,18 +1653,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_config(configname="configname-example", data=ConfigServiceUpdateConfigBody(...))
-    W->>B: ParseDict(params, UpdateConfigRequest)
-    B->>API: update_config (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateConfigRequest, arguments)
+    R->>API: ConfigService/UpdateConfig (gRPC/TLS)
     alt success
-        API-->>B: v202401UpdateConfigResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401UpdateConfigResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1731,18 +1731,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_config(configname="configname-example")
-    W->>B: ParseDict(params, DeleteConfigRequest)
-    B->>API: delete_config (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteConfigRequest, arguments)
+    R->>API: ConfigService/DeleteConfig (gRPC/TLS)
     alt success
-        API-->>B: v202401DeleteConfigResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401DeleteConfigResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1807,18 +1807,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_provisioning_tokens()
-    W->>B: ParseDict(params, ListProvisioningTokensRequest)
-    B->>API: list_provisioning_tokens (gRPC/TLS)
+    W->>R: build_grpc_request(ListProvisioningTokensRequest, arguments)
+    R->>API: ProvisioningTokenService/ListProvisioningTokens (gRPC/TLS)
     alt success
-        API-->>B: v202401ListProvisioningTokensResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401ListProvisioningTokensResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1875,18 +1875,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_provisioning_token(data=ProvisioningToken(...))
-    W->>B: ParseDict(params, CreateProvisioningTokenRequest)
-    B->>API: create_provisioning_token (gRPC/TLS)
+    W->>R: build_grpc_request(CreateProvisioningTokenRequest, arguments)
+    R->>API: ProvisioningTokenService/CreateProvisioningToken (gRPC/TLS)
     alt success
-        API-->>B: v202401CreateProvisioningTokenResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401CreateProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -1951,18 +1951,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_provisioning_token(token="token-example")
-    W->>B: ParseDict(params, GetProvisioningTokenRequest)
-    B->>API: get_provisioning_token (gRPC/TLS)
+    W->>R: build_grpc_request(GetProvisioningTokenRequest, arguments)
+    R->>API: ProvisioningTokenService/GetProvisioningToken (gRPC/TLS)
     alt success
-        API-->>B: v202401GetProvisioningTokenResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401GetProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2027,18 +2027,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_agents_by_provisioning_token(token="token-example")
-    W->>B: ParseDict(params, ListAgentsByProvisioningTokenRequest)
-    B->>API: list_agents_by_provisioning_token (gRPC/TLS)
+    W->>R: build_grpc_request(ListAgentsByProvisioningTokenRequest, arguments)
+    R->>API: ProvisioningTokenService/ListAgentsByProvisioningToken (gRPC/TLS)
     alt success
-        API-->>B: v202401ListAgentsByProvisioningTokenResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401ListAgentsByProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -2103,18 +2103,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.kagent
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: revoke_provisioning_token(token="token-example", data=ProvisioningTokenServiceRevokeProvisioningTokenBody(...))
-    W->>B: ParseDict(params, RevokeProvisioningTokenRequest)
-    B->>API: revoke_provisioning_token (gRPC/TLS)
+    W->>R: build_grpc_request(RevokeProvisioningTokenRequest, arguments)
+    R->>API: ProvisioningTokenService/RevokeProvisioningToken (gRPC/TLS)
     alt success
-        API-->>B: v202401RevokeProvisioningTokenResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202401RevokeProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

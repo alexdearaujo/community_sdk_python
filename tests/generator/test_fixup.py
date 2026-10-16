@@ -16,6 +16,7 @@ from scripts.generation.fixup import (
     _fix_list_collision,
     _fix_path_parameters,
     _fix_pydantic_construct,
+    _fix_model_field_names,
     _fix_typing_wildcard,
     _fix_wildcard_exports,
     _inject_data_body,
@@ -270,6 +271,30 @@ def test_fix_path_parameters_requires_the_request_json_import():
         _fix_path_parameters("path=f'/v1/device/{id}'")
 
 
+def test_fix_model_field_names_escapes_basemodel_attributes():
+    content = (
+        '    schema : Optional[MetricsSchema] = Field(validation_alias="schema" , default = None )\n'
+        '    name : str = Field(validation_alias="name" )\n'
+    )
+
+    assert _fix_model_field_names(content) == (
+        '    schema_ : Optional[MetricsSchema] = Field(validation_alias="schema", '
+        'serialization_alias="schema" , default = None )\n'
+        '    name : str = Field(validation_alias="name" )\n'
+    )
+
+
+def test_fix_model_field_names_dumps_an_escaped_keyword_under_its_wire_name():
+    content = (
+        '    not_ : Optional[bool] = Field(validation_alias="not" , default = None )\n'
+    )
+
+    assert _fix_model_field_names(content) == (
+        '    not_ : Optional[bool] = Field(validation_alias="not", '
+        'serialization_alias="not" , default = None )\n'
+    )
+
+
 def test_fix_typing_wildcard_replaces_star():
     result = _fix_typing_wildcard("from typing import *\nx = 1\n")
     assert "from typing import *" not in result
@@ -349,4 +374,4 @@ def test_inject_data_body_adds_json_body_param():
             )
         """)
     result = _inject_data_body(content)
-    assert "json_body=data.model_dump()" in result
+    assert "json_body=data.model_dump(by_alias=True)" in result

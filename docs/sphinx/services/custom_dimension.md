@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_custom_dimensions()
-    W->>B: ParseDict(params, ListCustomDimensionsRequest)
-    B->>API: list_custom_dimensions (gRPC/TLS)
+    W->>R: build_grpc_request(ListCustomDimensionsRequest, arguments)
+    R->>API: CustomDimensionService/ListCustomDimensions (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1ListCustomDimensionsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1ListCustomDimensionsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_custom_dimension_info(customDimensionId="customDimensionId-example")
-    W->>B: ParseDict(params, GetCustomDimensionInfoRequest)
-    B->>API: get_custom_dimension_info (gRPC/TLS)
+    W->>R: build_grpc_request(GetCustomDimensionInfoRequest, arguments)
+    R->>API: CustomDimensionService/GetCustomDimensionInfo (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1GetCustomDimensionInfoResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1GetCustomDimensionInfoResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_custom_dimension(customDimensionId="customDimensionId-example", data=CustomDimension(...))
-    W->>B: ParseDict(params, UpdateCustomDimensionRequest)
-    B->>API: update_custom_dimension (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateCustomDimensionRequest, arguments)
+    R->>API: CustomDimensionService/UpdateCustomDimension (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1UpdateCustomDimensionResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1UpdateCustomDimensionResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -282,18 +282,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_custom_dimension(customDimensionId="customDimensionId-example")
-    W->>B: ParseDict(params, DeleteCustomDimensionRequest)
-    B->>API: delete_custom_dimension (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteCustomDimensionRequest, arguments)
+    R->>API: CustomDimensionService/DeleteCustomDimension (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1DeleteCustomDimensionResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1DeleteCustomDimensionResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_populator(customDimensionId="customDimensionId-example", data=Populator(...))
-    W->>B: ParseDict(params, CreatePopulatorRequest)
-    B->>API: create_populator (gRPC/TLS)
+    W->>R: build_grpc_request(CreatePopulatorRequest, arguments)
+    R->>API: CustomDimensionService/CreatePopulator (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1CreatePopulatorResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1CreatePopulatorResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -436,18 +436,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example")
-    W->>B: ParseDict(params, GetPopulatorRequest)
-    B->>API: get_populator (gRPC/TLS)
+    W->>R: build_grpc_request(GetPopulatorRequest, arguments)
+    R->>API: CustomDimensionService/GetPopulator (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1GetPopulatorResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1GetPopulatorResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -515,18 +515,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example", data=Populator(...))
-    W->>B: ParseDict(params, UpdatePopulatorRequest)
-    B->>API: update_populator (gRPC/TLS)
+    W->>R: build_grpc_request(UpdatePopulatorRequest, arguments)
+    R->>API: CustomDimensionService/UpdatePopulator (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1UpdatePopulatorResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1UpdatePopulatorResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -595,18 +595,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_populator(customDimensionId="customDimensionId-example", populatorId="populatorId-example")
-    W->>B: ParseDict(params, DeletePopulatorRequest)
-    B->>API: delete_populator (gRPC/TLS)
+    W->>R: build_grpc_request(DeletePopulatorRequest, arguments)
+    R->>API: CustomDimensionService/DeletePopulator (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1DeletePopulatorResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1DeletePopulatorResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -673,18 +673,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_populator_field(customDimensionId="customDimensionId-example", populatorId="populatorId-example", fieldName="fieldName-example")
-    W->>B: ParseDict(params, GetPopulatorFieldRequest)
-    B->>API: get_populator_field (gRPC/TLS)
+    W->>R: build_grpc_request(GetPopulatorFieldRequest, arguments)
+    R->>API: CustomDimensionService/GetPopulatorField (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1GetPopulatorFieldResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1GetPopulatorFieldResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -755,18 +755,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.custom_dimension
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_custom_dimension(data=CustomDimension(...))
-    W->>B: ParseDict(params, CreateCustomDimensionRequest)
-    B->>API: create_custom_dimension (gRPC/TLS)
+    W->>R: build_grpc_request(CreateCustomDimensionRequest, arguments)
+    R->>API: CustomDimensionService/CreateCustomDimension (gRPC/TLS)
     alt success
-        API-->>B: v202411alpha1CreateCustomDimensionResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202411alpha1CreateCustomDimensionResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

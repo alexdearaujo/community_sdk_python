@@ -16,5 +16,5 @@ class FragmentPredicateGroup(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     and_: Optional[List[Optional[FragmentPredicate]]] = Field(
-        validation_alias="and", default=None
+        validation_alias="and", serialization_alias="and", default=None
     )

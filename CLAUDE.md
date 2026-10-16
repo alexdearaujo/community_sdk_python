@@ -160,7 +160,7 @@ script's own direct-execution import path.
 
 The **shared REST runtime** is the single most significant piece of
 hand-written engineering in this repo. It routes every generated
-endpoint, across all 35 mounted services, through one connection path
+endpoint, across all 36 mounted services, through one connection path
 instead of generating or hand-writing bespoke per-endpoint HTTP
 code. This is not just a convention. It's structural. The source
 code confirms it directly:
@@ -357,6 +357,11 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
 - `make generate LOCAL_REPO=/path/to/api-schema-public` —
   regenerate from an arbitrary local schema path
 - `make docs` — build Sphinx docs (`docs/sphinx` → `docs/build/html`)
+- `make release-notes` (`SINCE=<ref>`): lists the API surface changes since
+  a ref (default: the newest tag with a surface record), field and enum level
+  included. `make check-changelog` fails when a breaking change in that list
+  has no mention in `CHANGELOG.md`'s Unreleased section; CI runs it on every
+  pull request against the merge base.
 - `make impact-report` (`SINCE=<ref>`, `CHECKS=0`): run by hand after a
   regeneration. `scripts/impact_report.py` writes the facts of what changed
   (schema commit, files by kind, surface delta, floors, checks) to
@@ -415,8 +420,15 @@ Mocked/offline layers (no network, safe to run anywhere, part of
 - If generation output changed, follow these steps before opening a
   PR:
   1. Regenerate: `make generate local`.
-  2. Run the relevant focused suite.
-  3. Run `make test`.
+  2. Read the message at the end of the run. If it says `⚠️ API SURFACE
+     CHANGED`, write a `CHANGELOG.md` Unreleased entry for each listed
+     change, naming each breaking change exactly as the alert does. Then
+     run `make check-changelog SINCE=HEAD`. `make generate` never writes
+     release notes or `CHANGELOG.md` itself; skipping this step fails the
+     `changelog` CI job. See "Update the release notes after every
+     regeneration" in `docs/sphinx/guides/generation.md`.
+  3. Run the relevant focused suite.
+  4. Run `make test`.
 
 Live layer (real network, opt-in only, **not** part of `make test`):
 

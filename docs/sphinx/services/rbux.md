@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.rbux
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_scopes()
-    W->>B: ParseDict(params, ListScopesRequest)
-    B->>API: list_scopes (gRPC/TLS)
+    W->>R: build_grpc_request(ListScopesRequest, arguments)
+    R->>API: ScopeService/ListScopes (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1ListScopesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1ListScopesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.rbux
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_scope(data=Scope(...))
-    W->>B: ParseDict(params, CreateScopeRequest)
-    B->>API: create_scope (gRPC/TLS)
+    W->>R: build_grpc_request(CreateScopeRequest, arguments)
+    R->>API: ScopeService/CreateScope (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1CreateScopeResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1CreateScopeResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.rbux
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_scope(id="id-example")
-    W->>B: ParseDict(params, GetScopeRequest)
-    B->>API: get_scope (gRPC/TLS)
+    W->>R: build_grpc_request(GetScopeRequest, arguments)
+    R->>API: ScopeService/GetScope (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1GetScopeResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1GetScopeResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -280,18 +280,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.rbux
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_scope(id="id-example", data=Dict[str, Any](...))
-    W->>B: ParseDict(params, UpdateScopeRequest)
-    B->>API: update_scope (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateScopeRequest, arguments)
+    R->>API: ScopeService/UpdateScope (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1UpdateScopeResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1UpdateScopeResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.rbux
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_scope(id="id-example")
-    W->>B: ParseDict(params, DeleteScopeRequest)
-    B->>API: delete_scope (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteScopeRequest, arguments)
+    R->>API: ScopeService/DeleteScope (gRPC/TLS)
     alt success
-        API-->>B: v202607alpha1DeleteScopeResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202607alpha1DeleteScopeResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

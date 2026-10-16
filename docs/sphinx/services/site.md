@@ -60,18 +60,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_site_markets()
-    W->>B: ParseDict(params, ListSiteMarketsRequest)
-    B->>API: list_site_markets (gRPC/TLS)
+    W->>R: build_grpc_request(ListSiteMarketsRequest, arguments)
+    R->>API: SiteService/ListSiteMarkets (gRPC/TLS)
     alt success
-        API-->>B: v202509ListSiteMarketsResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509ListSiteMarketsResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -128,18 +128,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_site_market(data=CreateSiteMarketRequest(...))
-    W->>B: ParseDict(params, CreateSiteMarketRequest)
-    B->>API: create_site_market (gRPC/TLS)
+    W->>R: build_grpc_request(CreateSiteMarketRequest, arguments)
+    R->>API: SiteService/CreateSiteMarket (gRPC/TLS)
     alt success
-        API-->>B: v202509CreateSiteMarketResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509CreateSiteMarketResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -204,18 +204,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_site_market(id="id-example")
-    W->>B: ParseDict(params, GetSiteMarketRequest)
-    B->>API: get_site_market (gRPC/TLS)
+    W->>R: build_grpc_request(GetSiteMarketRequest, arguments)
+    R->>API: SiteService/GetSiteMarket (gRPC/TLS)
     alt success
-        API-->>B: v202509GetSiteMarketResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509GetSiteMarketResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -280,18 +280,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_site_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
-    W->>B: ParseDict(params, UpdateSiteMarketRequest)
-    B->>API: update_site_market (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateSiteMarketRequest, arguments)
+    R->>API: SiteService/UpdateSiteMarket (gRPC/TLS)
     alt success
-        API-->>B: v202509UpdateSiteMarketResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509UpdateSiteMarketResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -358,18 +358,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_site_market(id="id-example")
-    W->>B: ParseDict(params, DeleteSiteMarketRequest)
-    B->>API: delete_site_market (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteSiteMarketRequest, arguments)
+    R->>API: SiteService/DeleteSiteMarket (gRPC/TLS)
     alt success
-        API-->>B: v202509DeleteSiteMarketResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509DeleteSiteMarketResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -434,18 +434,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: list_sites()
-    W->>B: ParseDict(params, ListSitesRequest)
-    B->>API: list_sites (gRPC/TLS)
+    W->>R: build_grpc_request(ListSitesRequest, arguments)
+    R->>API: SiteService/ListSites (gRPC/TLS)
     alt success
-        API-->>B: v202509ListSitesResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509ListSitesResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -502,18 +502,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: create_site(data=CreateSiteRequest(...))
-    W->>B: ParseDict(params, CreateSiteRequest)
-    B->>API: create_site (gRPC/TLS)
+    W->>R: build_grpc_request(CreateSiteRequest, arguments)
+    R->>API: SiteService/CreateSite (gRPC/TLS)
     alt success
-        API-->>B: v202509CreateSiteResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509CreateSiteResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -578,18 +578,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: get_site(id="id-example")
-    W->>B: ParseDict(params, GetSiteRequest)
-    B->>API: get_site (gRPC/TLS)
+    W->>R: build_grpc_request(GetSiteRequest, arguments)
+    R->>API: SiteService/GetSite (gRPC/TLS)
     alt success
-        API-->>B: v202509GetSiteResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509GetSiteResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -654,18 +654,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: update_site(id="id-example", data=SiteServiceUpdateSiteBody(...))
-    W->>B: ParseDict(params, UpdateSiteRequest)
-    B->>API: update_site (gRPC/TLS)
+    W->>R: build_grpc_request(UpdateSiteRequest, arguments)
+    R->>API: SiteService/UpdateSite (gRPC/TLS)
     alt success
-        API-->>B: v202509UpdateSiteResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509UpdateSiteResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```
@@ -732,18 +732,18 @@ sequenceDiagram
 sequenceDiagram
     participant C as Caller
     participant W as client.site
-    participant B as proto bridge
+    participant R as grpc_runtime
     participant API as Kentik gRPC API
 
     C->>W: delete_site(id="id-example")
-    W->>B: ParseDict(params, DeleteSiteRequest)
-    B->>API: delete_site (gRPC/TLS)
+    W->>R: build_grpc_request(DeleteSiteRequest, arguments)
+    R->>API: SiteService/DeleteSite (gRPC/TLS)
     alt success
-        API-->>B: v202509DeleteSiteResponse proto
-        B-->>W: MessageToDict(response)
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
         W-->>C: v202509DeleteSiteResponse
     else gRPC error, deadline, or unreachable
-        B-->>W: map_grpc_error()
+        R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
 ```

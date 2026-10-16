@@ -3,14 +3,23 @@
 # Changelog
 
 This file lists the changes a caller of the SDK can see. The generated API
-surface (services, operations, and models) has its own record in
-[`api_surface.json`](api_surface.json). To list surface changes between two
-releases, run
+surface (services, operations, model fields, and enum values) has its own
+record in [`api_surface.json`](api_surface.json). To list surface changes
+between two releases, run
 [`scripts/release_notes.py`](scripts/release_notes.py):
 
 ```bash
 make release-notes SINCE=v1.0.7
 ```
+
+Each release appends that list to its GitHub release notes. A pull request
+whose surface change can break a caller (a removed or retyped field, for
+example) fails `make check-changelog` until this file names the change.
+
+`make generate` does not edit this file. When a regeneration ends with
+`⚠️ API SURFACE CHANGED`, add an entry here for each listed change before you
+commit. See "Update the release notes after every regeneration" in
+[the generation guide](docs/sphinx/guides/generation.md).
 
 ## Unreleased
 
@@ -42,6 +51,10 @@ Each change below can stop an existing `except` clause or call from working.
 - **`kmeta` service.** `client.kmeta` manages ServiceNow configurations: list,
   get, create, update, and delete. It predates `api_surface.json`, so
   `make release-notes` does not list it.
+- **`nms` service.** `client.nms.metrics_schema_service__get_metrics_schema()`
+  returns the NMS metrics schema: each measurement and its fields, on REST
+  and gRPC. The response's `schema` field is `schema_` in Python, because
+  `schema` is a `BaseModel` attribute.
 - **Static agent addresses.** `synthetics` `AgentMetadata` has read-only
   `staticIpv4` and `staticIpv6`, true when the agent's public address does not
   change.
@@ -90,6 +103,12 @@ Each change below can stop an existing `except` clause or call from working.
 - **More operations work on gRPC.** 32 operations that raised
   `NotImplementedError` on gRPC now make the call, because their REST name
   differed from their RPC name.
+- **Renamed fields keep their wire name in requests.** A field whose
+  Python name differs from its JSON name went out under the Python name.
+  For example, a saved filter group's `not_` was sent as `"not_"`, so the
+  API ignored the negation, and `protobufAny.type` lost its `@type` key.
+  Request bodies now use the JSON names (`not`, `and`, `or`, `in`,
+  `from`, `@type`) on REST and gRPC.
 - **REST path arguments are encoded.** A path argument went into the URL
   as is, so `client.device.delete_device(deviceid="../../user/7")` sent the
   DELETE to another resource, and a `?` or `#` cut the path short. Each path

@@ -20,7 +20,9 @@ class NmsConditionGroup(BaseModel):
         validation_alias="connector", default=None
     )
 
-    not_: Optional[bool] = Field(validation_alias="not", default=None)
+    not_: Optional[bool] = Field(
+        validation_alias="not", serialization_alias="not", default=None
+    )
 
     conditions: Optional[List[Optional[NmsCondition]]] = Field(
         validation_alias="conditions", default=None

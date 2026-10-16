@@ -21,7 +21,9 @@ class Filter(BaseModel):
 
     connector: Optional[str] = Field(validation_alias="connector", default=None)
 
-    not_: Optional[bool] = Field(validation_alias="not", default=None)
+    not_: Optional[bool] = Field(
+        validation_alias="not", serialization_alias="not", default=None
+    )
 
     autoAdded: Optional[str] = Field(validation_alias="autoAdded", default=None)
 

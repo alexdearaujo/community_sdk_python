@@ -13,6 +13,8 @@ class NmsStateSet(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    not_: Optional[bool] = Field(validation_alias="not", default=None)
+    not_: Optional[bool] = Field(
+        validation_alias="not", serialization_alias="not", default=None
+    )
 
     states: Optional[List[str]] = Field(validation_alias="states", default=None)
