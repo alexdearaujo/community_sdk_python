@@ -612,14 +612,13 @@ credentials.
 - Known generator warnings are non-blocking. Track and reduce them
   over time — don't ignore them silently.
 
-## Branch naming (exception to the shared rule below)
+## Branch naming and Jira
 
-Jira creates every branch in this repo automatically from its
-ticket, using the ticket key and title as-is (for example
-`FA-2-Update-the-python-SDK-from-V5-to-V6`). This repo does not use
-the `<category>/<short-kebab-description>` convention from the
-shared agent rules below. Use the Jira-generated branch name as-is,
-even though it does not match that pattern.
+This repo follows the `<category>/<short-kebab-description>` rule in
+the shared agent rules below. Do not use the branch name that Jira
+generates. To link work to its Jira ticket, put the ticket key (for
+example `FA-2`) at the start of the pull request title. Jira also
+links a commit that names the key.
 
 <!-- shared-rules:start -->
 <!-- Synced from ~/.claude/CLAUDE.md; regenerate by re-running the
