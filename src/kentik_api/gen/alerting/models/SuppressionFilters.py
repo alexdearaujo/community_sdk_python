@@ -6,7 +6,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from .Source import Source
-from .v202303TimeRange import v202303TimeRange
+from .TimeRange import TimeRange
 
 
 class SuppressionFilters(BaseModel):
@@ -34,18 +34,12 @@ class SuppressionFilters(BaseModel):
         description="The IDs of the users who created the suppression configurations.",
     )
 
-    createdAt: Optional[v202303TimeRange] = Field(
-        validation_alias="createdAt", default=None
-    )
+    createdAt: Optional[TimeRange] = Field(validation_alias="createdAt", default=None)
 
-    modifiedAt: Optional[v202303TimeRange] = Field(
-        validation_alias="modifiedAt", default=None
-    )
+    modifiedAt: Optional[TimeRange] = Field(validation_alias="modifiedAt", default=None)
 
-    startTimeAt: Optional[v202303TimeRange] = Field(
+    startTimeAt: Optional[TimeRange] = Field(
         validation_alias="startTimeAt", default=None
     )
 
-    endTimeAt: Optional[v202303TimeRange] = Field(
-        validation_alias="endTimeAt", default=None
-    )
+    endTimeAt: Optional[TimeRange] = Field(validation_alias="endTimeAt", default=None)

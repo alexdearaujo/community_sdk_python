@@ -800,8 +800,11 @@
         "AlertSilenceNotificationsServiceReplaceBody",
         "AlertSilenceNotificationsServiceReplaceResponse",
         "AlertState",
+        "AttributeFilter",
+        "AttributeFilterStringArray",
         "BaselineConditionDeltaType",
         "BaselineConfigCompareMode",
+        "BitwiseOp",
         "Comment",
         "ConditionsBaselineCondition",
         "ConditionsForecastCondition",
@@ -830,7 +833,14 @@
         "FlowPolicySettingsBaselineConfig",
         "FlowPolicySettingsDatasetConfig",
         "FlowPolicySettingsEvaluationConfig",
+        "FlowspecMatch",
+        "Fragment",
+        "FragmentFormula",
+        "FragmentPredicate",
+        "FragmentPredicateGroup",
         "JiraCloudContext",
+        "KeyValue",
+        "KeyValueFilter",
         "Mitigation",
         "MitigationActionDetail",
         "MitigationEvent",
@@ -846,6 +856,7 @@
         "MitigationPlatformsServiceListResponse",
         "MitigationState",
         "MitigationStateEntry",
+        "MitigationTarget",
         "MitigationType",
         "MitigationUserAction",
         "MitigationsActResult",
@@ -858,6 +869,7 @@
         "MitigationsServiceCreateResponse",
         "MitigationsServiceGetResponse",
         "MitigationsServiceListResponse",
+        "MultiAttributeFilter",
         "NmsActivateOrClearConditions",
         "NmsCondition",
         "NmsConditionConnector",
@@ -877,6 +889,12 @@
         "NmsStateSet",
         "NmsThresholdCondition",
         "NotificationChannelAssociation",
+        "NumericFormula",
+        "NumericOp",
+        "NumericPredicate",
+        "NumericPredicateGroup",
+        "PaginationConfig",
+        "PaginationInfo",
         "Policy",
         "PolicyDataSources",
         "PolicyDataSourcesDeviceTag",
@@ -902,6 +920,10 @@
         "PolicyType",
         "RatioConditionDirection",
         "ServiceNowContext",
+        "Severity",
+        "SimpleAttributeFilter",
+        "SimpleAttributeFilterStringArray",
+        "SortingConfig",
         "SortingConfigField",
         "SortingConfigOrder",
         "Source",
@@ -915,37 +937,15 @@
         "SuppressionServiceListResponse",
         "SuppressionServiceReplaceBody",
         "SuppressionServiceReplaceResponse",
+        "TCPFlag",
+        "TCPFlagsFormula",
+        "TCPFlagsPredicate",
+        "TCPFlagsPredicateGroup",
+        "TimeRange",
         "TopKeysConditionTopKeysEvent",
         "protobufAny",
         "rpcStatus",
-        "typesv202506PaginationConfig",
-        "typesv202506PaginationInfo",
-        "typesv202506SortingConfig",
-        "v202303AttributeFilter",
-        "v202303AttributeFilterStringArray",
-        "v202303KeyValue",
-        "v202303KeyValueFilter",
-        "v202303MultiAttributeFilter",
-        "v202303Severity",
-        "v202303SimpleAttributeFilter",
-        "v202303SimpleAttributeFilterStringArray",
-        "v202303TimeRange",
-        "v202501BitwiseOp",
-        "v202501FlowspecMatch",
-        "v202501Fragment",
-        "v202501FragmentFormula",
-        "v202501FragmentPredicate",
-        "v202501FragmentPredicateGroup",
-        "v202501NumericFormula",
-        "v202501NumericOp",
-        "v202501NumericPredicate",
-        "v202501NumericPredicateGroup",
-        "v202501TCPFlag",
-        "v202501TCPFlagsFormula",
-        "v202501TCPFlagsPredicate",
-        "v202501TCPFlagsPredicateGroup",
-        "v202505AlertAcknowledgement",
-        "v202506MitigationTarget"
+        "v202505AlertAcknowledgement"
       ],
       "fields": {
         "Alert": {
@@ -970,11 +970,11 @@
             "required": false
           },
           "severity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "highestSeverity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "acknowledgement": {
@@ -1034,7 +1034,7 @@
             "required": false
           },
           "key": {
-            "type": "Optional[v202303KeyValue]",
+            "type": "Optional[KeyValue]",
             "required": false
           },
           "startTimeAt": {
@@ -1064,7 +1064,7 @@
             "required": false
           },
           "keys": {
-            "type": "Optional[List[Optional[v202303KeyValue]]]",
+            "type": "Optional[List[Optional[KeyValue]]]",
             "required": false
           },
           "userIds": {
@@ -1072,19 +1072,19 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "startTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "endTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -1109,11 +1109,11 @@
         },
         "AlertAutoAckServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -1123,7 +1123,7 @@
         },
         "AlertAutoAckServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "autoAcks": {
@@ -1145,7 +1145,7 @@
         },
         "AlertFilters": {
           "severities": {
-            "type": "Optional[List[Optional[v202303Severity]]]",
+            "type": "Optional[List[Optional[Severity]]]",
             "required": false
           },
           "alertIds": {
@@ -1157,7 +1157,7 @@
             "required": false
           },
           "keys": {
-            "type": "Optional[v202303MultiAttributeFilter]",
+            "type": "Optional[MultiAttributeFilter]",
             "required": false
           },
           "states": {
@@ -1165,19 +1165,19 @@
             "required": false
           },
           "startedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "endedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "highestSeverities": {
-            "type": "Optional[List[Optional[v202303Severity]]]",
+            "type": "Optional[List[Optional[Severity]]]",
             "required": false
           },
           "recentSeverities": {
-            "type": "Optional[List[Optional[v202303Severity]]]",
+            "type": "Optional[List[Optional[Severity]]]",
             "required": false
           },
           "ackStates": {
@@ -1185,7 +1185,7 @@
             "required": false
           },
           "activeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "ackedByUserIds": {
@@ -1203,7 +1203,7 @@
         },
         "AlertPhase": {
           "severity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "startTimeAt": {
@@ -1281,11 +1281,11 @@
         },
         "AlertServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -1295,7 +1295,7 @@
         },
         "AlertServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "alerts": {
@@ -1336,23 +1336,23 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "startTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "endTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "keys": {
-            "type": "Optional[List[Optional[v202303KeyValue]]]",
+            "type": "Optional[List[Optional[KeyValue]]]",
             "required": false
           }
         },
@@ -1370,7 +1370,7 @@
             "required": false
           },
           "key": {
-            "type": "Optional[v202303KeyValue]",
+            "type": "Optional[KeyValue]",
             "required": false
           },
           "startTimeAt": {
@@ -1411,11 +1411,11 @@
         },
         "AlertSilenceNotificationsServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -1425,7 +1425,7 @@
         },
         "AlertSilenceNotificationsServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "silences": {
@@ -1442,6 +1442,50 @@
         "AlertSilenceNotificationsServiceReplaceResponse": {
           "silence": {
             "type": "Optional[AlertSilenceNotificationsDefinition]",
+            "required": false
+          }
+        },
+        "AttributeFilter": {
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "empty": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "equals": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "startsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "endsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "contains": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "in_": {
+            "type": "Optional[AttributeFilterStringArray]",
+            "required": false
+          },
+          "matchesRegex": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "any": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "AttributeFilterStringArray": {
+          "values": {
+            "type": "Optional[List[str]]",
             "required": false
           }
         },
@@ -1857,6 +1901,74 @@
             "required": true
           }
         },
+        "FlowspecMatch": {
+          "dstPrefix": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "srcPrefix": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "ipProtocol": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "dstPort": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "srcPort": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "icmpType": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "icmpCode": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "tcpFlags": {
+            "type": "Optional[TCPFlagsFormula]",
+            "required": false
+          },
+          "packetLength": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "dscp": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "fragments": {
+            "type": "Optional[FragmentFormula]",
+            "required": false
+          }
+        },
+        "FragmentFormula": {
+          "or_": {
+            "type": "Optional[List[Optional[FragmentPredicateGroup]]]",
+            "required": false
+          }
+        },
+        "FragmentPredicate": {
+          "operator": {
+            "type": "Optional[BitwiseOp]",
+            "required": false
+          },
+          "values": {
+            "type": "Optional[List[Optional[Fragment]]]",
+            "required": false
+          }
+        },
+        "FragmentPredicateGroup": {
+          "and_": {
+            "type": "Optional[List[Optional[FragmentPredicate]]]",
+            "required": false
+          }
+        },
         "JiraCloudContext": {
           "issueKey": {
             "type": "str",
@@ -1865,6 +1977,22 @@
           "issueUrl": {
             "type": "str",
             "required": true
+          }
+        },
+        "KeyValue": {
+          "value": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          }
+        },
+        "KeyValueFilter": {
+          "key": {
+            "type": "Optional[SimpleAttributeFilter]",
+            "required": false
+          },
+          "value": {
+            "type": "Optional[AttributeFilter]",
+            "required": false
           }
         },
         "Mitigation": {
@@ -1881,7 +2009,7 @@
             "required": false
           },
           "target": {
-            "type": "Optional[v202506MitigationTarget]",
+            "type": "Optional[MitigationTarget]",
             "required": false
           },
           "currentState": {
@@ -1949,7 +2077,7 @@
         },
         "MitigationFilters": {
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "mitigationIds": {
@@ -2041,11 +2169,11 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -2057,7 +2185,7 @@
         },
         "MitigationMethodsServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "methods": {
@@ -2105,11 +2233,11 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -2121,7 +2249,7 @@
         },
         "MitigationPlatformsServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "platforms": {
@@ -2140,6 +2268,20 @@
           },
           "event": {
             "type": "Optional[MitigationEvent]",
+            "required": false
+          }
+        },
+        "MitigationTarget": {
+          "ipCidr": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "flowspec": {
+            "type": "Optional[FlowspecMatch]",
+            "required": false
+          },
+          "adaptiveFlowspec": {
+            "type": "Optional[KeyValue]",
             "required": false
           }
         },
@@ -2235,11 +2377,25 @@
         },
         "MitigationsServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "mitigations": {
             "type": "Optional[List[Optional[Mitigation]]]",
+            "required": false
+          }
+        },
+        "MultiAttributeFilter": {
+          "filter": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          },
+          "filters": {
+            "type": "Optional[List[Optional[KeyValueFilter]]]",
+            "required": false
+          },
+          "strict": {
+            "type": "Optional[bool]",
             "required": false
           }
         },
@@ -2329,7 +2485,7 @@
             "required": false
           },
           "severity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "clearManual": {
@@ -2461,6 +2617,52 @@
           "channelId": {
             "type": "str",
             "required": true
+          }
+        },
+        "NumericFormula": {
+          "or_": {
+            "type": "Optional[List[Optional[NumericPredicateGroup]]]",
+            "required": false
+          }
+        },
+        "NumericPredicate": {
+          "operator": {
+            "type": "Optional[NumericOp]",
+            "required": false
+          },
+          "value": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "NumericPredicateGroup": {
+          "and_": {
+            "type": "Optional[List[Optional[NumericPredicate]]]",
+            "required": false
+          }
+        },
+        "PaginationConfig": {
+          "limit": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "offset": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "includeTotalCount": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "PaginationInfo": {
+          "totalCount": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "hasMoreResults": {
+            "type": "Optional[bool]",
+            "required": false
           }
         },
         "Policy": {
@@ -2653,11 +2855,11 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -2673,7 +2875,7 @@
         },
         "PolicyPolicyLevel": {
           "severity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "description": {
@@ -2723,11 +2925,11 @@
         },
         "PolicyServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -2737,7 +2939,7 @@
         },
         "PolicyServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "policies": {
@@ -2753,6 +2955,48 @@
           "incidentUrl": {
             "type": "str",
             "required": true
+          }
+        },
+        "SimpleAttributeFilter": {
+          "equals": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "startsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "endsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "contains": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "in_": {
+            "type": "Optional[SimpleAttributeFilterStringArray]",
+            "required": false
+          },
+          "matchesRegex": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "any": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "SimpleAttributeFilterStringArray": {
+          "values": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "SortingConfig": {
+          "fields": {
+            "type": "Optional[List[Optional[SortingConfigField]]]",
+            "required": false
           }
         },
         "SortingConfigField": {
@@ -2789,7 +3033,7 @@
             "required": false
           },
           "keyFilter": {
-            "type": "Optional[v202303MultiAttributeFilter]",
+            "type": "Optional[MultiAttributeFilter]",
             "required": false
           },
           "strict": {
@@ -2821,7 +3065,7 @@
             "required": false
           },
           "severities": {
-            "type": "Optional[List[Optional[v202303Severity]]]",
+            "type": "Optional[List[Optional[Severity]]]",
             "required": false
           }
         },
@@ -2839,19 +3083,19 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "startTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "endTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -2876,11 +3120,11 @@
         },
         "SuppressionServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -2890,7 +3134,7 @@
         },
         "SuppressionServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "suppressions": {
@@ -2907,6 +3151,38 @@
         "SuppressionServiceReplaceResponse": {
           "suppression": {
             "type": "Optional[Suppression]",
+            "required": false
+          }
+        },
+        "TCPFlagsFormula": {
+          "or_": {
+            "type": "Optional[List[Optional[TCPFlagsPredicateGroup]]]",
+            "required": false
+          }
+        },
+        "TCPFlagsPredicate": {
+          "operator": {
+            "type": "Optional[BitwiseOp]",
+            "required": false
+          },
+          "values": {
+            "type": "Optional[List[Optional[TCPFlag]]]",
+            "required": false
+          }
+        },
+        "TCPFlagsPredicateGroup": {
+          "and_": {
+            "type": "Optional[List[Optional[TCPFlagsPredicate]]]",
+            "required": false
+          }
+        },
+        "TimeRange": {
+          "start": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "end": {
+            "type": "Optional[str]",
             "required": false
           }
         },
@@ -2927,282 +3203,6 @@
           },
           "details": {
             "type": "Optional[List[Optional[protobufAny]]]",
-            "required": false
-          }
-        },
-        "typesv202506PaginationConfig": {
-          "limit": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "offset": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "includeTotalCount": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "typesv202506PaginationInfo": {
-          "totalCount": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "hasMoreResults": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "typesv202506SortingConfig": {
-          "fields": {
-            "type": "Optional[List[Optional[SortingConfigField]]]",
-            "required": false
-          }
-        },
-        "v202303AttributeFilter": {
-          "not_": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "empty": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "equals": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "startsWith": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "endsWith": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "contains": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "in_": {
-            "type": "Optional[v202303AttributeFilterStringArray]",
-            "required": false
-          },
-          "matchesRegex": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "any": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "v202303AttributeFilterStringArray": {
-          "values": {
-            "type": "Optional[List[str]]",
-            "required": false
-          }
-        },
-        "v202303KeyValue": {
-          "value": {
-            "type": "Optional[Dict[str, Any]]",
-            "required": false
-          }
-        },
-        "v202303KeyValueFilter": {
-          "key": {
-            "type": "Optional[v202303SimpleAttributeFilter]",
-            "required": false
-          },
-          "value": {
-            "type": "Optional[v202303AttributeFilter]",
-            "required": false
-          }
-        },
-        "v202303MultiAttributeFilter": {
-          "filter": {
-            "type": "Optional[Dict[str, Any]]",
-            "required": false
-          },
-          "filters": {
-            "type": "Optional[List[Optional[v202303KeyValueFilter]]]",
-            "required": false
-          },
-          "strict": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "v202303SimpleAttributeFilter": {
-          "equals": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "startsWith": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "endsWith": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "contains": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "in_": {
-            "type": "Optional[v202303SimpleAttributeFilterStringArray]",
-            "required": false
-          },
-          "matchesRegex": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "any": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "v202303SimpleAttributeFilterStringArray": {
-          "values": {
-            "type": "Optional[List[str]]",
-            "required": false
-          }
-        },
-        "v202303TimeRange": {
-          "start": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "end": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202501FlowspecMatch": {
-          "dstPrefix": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "srcPrefix": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "ipProtocol": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "dstPort": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "srcPort": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "icmpType": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "icmpCode": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "tcpFlags": {
-            "type": "Optional[v202501TCPFlagsFormula]",
-            "required": false
-          },
-          "packetLength": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "dscp": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "fragments": {
-            "type": "Optional[v202501FragmentFormula]",
-            "required": false
-          }
-        },
-        "v202501FragmentFormula": {
-          "or_": {
-            "type": "Optional[List[Optional[v202501FragmentPredicateGroup]]]",
-            "required": false
-          }
-        },
-        "v202501FragmentPredicate": {
-          "operator": {
-            "type": "Optional[v202501BitwiseOp]",
-            "required": false
-          },
-          "values": {
-            "type": "Optional[List[Optional[v202501Fragment]]]",
-            "required": false
-          }
-        },
-        "v202501FragmentPredicateGroup": {
-          "and_": {
-            "type": "Optional[List[Optional[v202501FragmentPredicate]]]",
-            "required": false
-          }
-        },
-        "v202501NumericFormula": {
-          "or_": {
-            "type": "Optional[List[Optional[v202501NumericPredicateGroup]]]",
-            "required": false
-          }
-        },
-        "v202501NumericPredicate": {
-          "operator": {
-            "type": "Optional[v202501NumericOp]",
-            "required": false
-          },
-          "value": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202501NumericPredicateGroup": {
-          "and_": {
-            "type": "Optional[List[Optional[v202501NumericPredicate]]]",
-            "required": false
-          }
-        },
-        "v202501TCPFlagsFormula": {
-          "or_": {
-            "type": "Optional[List[Optional[v202501TCPFlagsPredicateGroup]]]",
-            "required": false
-          }
-        },
-        "v202501TCPFlagsPredicate": {
-          "operator": {
-            "type": "Optional[v202501BitwiseOp]",
-            "required": false
-          },
-          "values": {
-            "type": "Optional[List[Optional[v202501TCPFlag]]]",
-            "required": false
-          }
-        },
-        "v202501TCPFlagsPredicateGroup": {
-          "and_": {
-            "type": "Optional[List[Optional[v202501TCPFlagsPredicate]]]",
-            "required": false
-          }
-        },
-        "v202506MitigationTarget": {
-          "ipCidr": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "flowspec": {
-            "type": "Optional[v202501FlowspecMatch]",
-            "required": false
-          },
-          "adaptiveFlowspec": {
-            "type": "Optional[v202303KeyValue]",
             "required": false
           }
         }
@@ -3239,6 +3239,13 @@
           "COMPARE_MODE_PREVIOUS_DAYS",
           "COMPARE_MODE_PREVIOUS_DAYS_DISTINGUISH_WEEKENDS",
           "COMPARE_MODE_PREVIOUS_WEEKS"
+        ],
+        "BitwiseOp": [
+          "BITWISE_OP_UNSPECIFIED",
+          "BITWISE_OP_ANY",
+          "BITWISE_OP_NONE",
+          "BITWISE_OP_ALL",
+          "BITWISE_OP_NOT_ALL"
         ],
         "EventPolicySettingsEventType": [
           "EVENT_TYPE_UNSPECIFIED",
@@ -3292,6 +3299,13 @@
           "OPERATOR_LESS_THAN_OR_EQUALS",
           "OPERATOR_IN_SET",
           "OPERATOR_NOT_IN_SET"
+        ],
+        "Fragment": [
+          "FRAGMENT_UNSPECIFIED",
+          "FRAGMENT_DF",
+          "FRAGMENT_ISF",
+          "FRAGMENT_FF",
+          "FRAGMENT_LF"
         ],
         "MitigationEvent": [
           "MITIGATION_EVENT_UNSPECIFIED",
@@ -3375,6 +3389,15 @@
           "CLEAR_TYPE_CLEAR_MANUAL",
           "CLEAR_TYPE_CLEAR_UNLESS_ACTIVATED"
         ],
+        "NumericOp": [
+          "NUMERIC_OP_UNSPECIFIED",
+          "NUMERIC_OP_EQUALS",
+          "NUMERIC_OP_NOT_EQUALS",
+          "NUMERIC_OP_LESS_THAN",
+          "NUMERIC_OP_GREATER_THAN",
+          "NUMERIC_OP_LESS_THAN_OR_EQUALS",
+          "NUMERIC_OP_GREATER_THAN_OR_EQUALS"
+        ],
         "PolicyFiltersFilterConnector": [
           "FILTER_CONNECTOR_UNSPECIFIED",
           "FILTER_CONNECTOR_AND",
@@ -3422,17 +3445,7 @@
           "DIRECTION_RIGHT",
           "DIRECTION_LEFT"
         ],
-        "SortingConfigOrder": [
-          "ORDER_UNSPECIFIED",
-          "ORDER_ASCENDING",
-          "ORDER_DESCENDING"
-        ],
-        "TopKeysConditionTopKeysEvent": [
-          "TOP_KEYS_EVENT_UNSPECIFIED",
-          "TOP_KEYS_EVENT_JOINS",
-          "TOP_KEYS_EVENT_LEAVES"
-        ],
-        "v202303Severity": [
+        "Severity": [
           "SEVERITY_UNSPECIFIED",
           "SEVERITY_CLEAR",
           "SEVERITY_MINOR",
@@ -3441,30 +3454,12 @@
           "SEVERITY_SEVERE",
           "SEVERITY_CRITICAL"
         ],
-        "v202501BitwiseOp": [
-          "BITWISE_OP_UNSPECIFIED",
-          "BITWISE_OP_ANY",
-          "BITWISE_OP_NONE",
-          "BITWISE_OP_ALL",
-          "BITWISE_OP_NOT_ALL"
+        "SortingConfigOrder": [
+          "ORDER_UNSPECIFIED",
+          "ORDER_ASCENDING",
+          "ORDER_DESCENDING"
         ],
-        "v202501Fragment": [
-          "FRAGMENT_UNSPECIFIED",
-          "FRAGMENT_DF",
-          "FRAGMENT_ISF",
-          "FRAGMENT_FF",
-          "FRAGMENT_LF"
-        ],
-        "v202501NumericOp": [
-          "NUMERIC_OP_UNSPECIFIED",
-          "NUMERIC_OP_EQUALS",
-          "NUMERIC_OP_NOT_EQUALS",
-          "NUMERIC_OP_LESS_THAN",
-          "NUMERIC_OP_GREATER_THAN",
-          "NUMERIC_OP_LESS_THAN_OR_EQUALS",
-          "NUMERIC_OP_GREATER_THAN_OR_EQUALS"
-        ],
-        "v202501TCPFlag": [
+        "TCPFlag": [
           "TCP_FLAG_UNSPECIFIED",
           "TCP_FLAG_FIN",
           "TCP_FLAG_SYN",
@@ -3474,6 +3469,11 @@
           "TCP_FLAG_URG",
           "TCP_FLAG_ECE",
           "TCP_FLAG_CWR"
+        ],
+        "TopKeysConditionTopKeysEvent": [
+          "TOP_KEYS_EVENT_UNSPECIFIED",
+          "TOP_KEYS_EVENT_JOINS",
+          "TOP_KEYS_EVENT_LEAVES"
         ],
         "v202505AlertAcknowledgement": [
           "ALERT_ACKNOWLEDGEMENT_UNSPECIFIED",
@@ -4335,6 +4335,7 @@
         }
       },
       "models": [
+        "Afi",
         "BgpHealthSettings",
         "BgpMetric",
         "BgpMetricType",
@@ -4354,15 +4355,14 @@
         "ListMonitorsResponse",
         "Nlri",
         "RouteInfo",
+        "RpkiStatus",
+        "Safi",
         "SetMonitorStatusResponse",
         "UpdateMonitorResponse",
+        "UserInfo",
+        "VantagePoint",
         "protobufAny",
-        "rpcStatus",
-        "v202303Afi",
-        "v202303RpkiStatus",
-        "v202303Safi",
-        "v202303UserInfo",
-        "v202303VantagePoint"
+        "rpcStatus"
       ],
       "fields": {
         "BgpHealthSettings": {
@@ -4419,11 +4419,11 @@
             "required": false
           },
           "createdBy": {
-            "type": "Optional[v202303UserInfo]",
+            "type": "Optional[UserInfo]",
             "required": false
           },
           "lastUpdatedBy": {
-            "type": "Optional[v202303UserInfo]",
+            "type": "Optional[UserInfo]",
             "required": false
           },
           "labels": {
@@ -4564,11 +4564,11 @@
         },
         "Nlri": {
           "afi": {
-            "type": "v202303Afi",
+            "type": "Afi",
             "required": true
           },
           "safi": {
-            "type": "v202303Safi",
+            "type": "Safi",
             "required": true
           },
           "prefix": {
@@ -4590,11 +4590,11 @@
             "required": false
           },
           "vantagePoint": {
-            "type": "Optional[v202303VantagePoint]",
+            "type": "Optional[VantagePoint]",
             "required": false
           },
           "rpkiStatus": {
-            "type": "Optional[v202303RpkiStatus]",
+            "type": "Optional[RpkiStatus]",
             "required": false
           },
           "nexthop": {
@@ -4606,6 +4606,38 @@
         "UpdateMonitorResponse": {
           "monitor": {
             "type": "Optional[BgpMonitor]",
+            "required": false
+          }
+        },
+        "UserInfo": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "email": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fullName": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "VantagePoint": {
+          "dataset": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "collector": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "peerAsn": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "peerIp": {
+            "type": "Optional[str]",
             "required": false
           }
         },
@@ -4628,41 +4660,14 @@
             "type": "Optional[List[Optional[protobufAny]]]",
             "required": false
           }
-        },
-        "v202303UserInfo": {
-          "id": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "email": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "fullName": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202303VantagePoint": {
-          "dataset": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "collector": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "peerAsn": {
-            "type": "Optional[int]",
-            "required": false
-          },
-          "peerIp": {
-            "type": "Optional[str]",
-            "required": false
-          }
         }
       },
       "enums": {
+        "Afi": [
+          "AFI_UNSPECIFIED",
+          "AFI_IP4",
+          "AFI_IP6"
+        ],
         "BgpMetricType": [
           "BGP_METRIC_TYPE_UNSPECIFIED",
           "BGP_METRIC_TYPE_REACHABILITY",
@@ -4674,12 +4679,7 @@
           "BGP_MONITOR_STATUS_PAUSED",
           "BGP_MONITOR_STATUS_DELETED"
         ],
-        "v202303Afi": [
-          "AFI_UNSPECIFIED",
-          "AFI_IP4",
-          "AFI_IP6"
-        ],
-        "v202303RpkiStatus": [
+        "RpkiStatus": [
           "RPKI_STATUS_UNSPECIFIED",
           "RPKI_STATUS_NOT_FOUND",
           "RPKI_STATUS_EXPLICIT_INVALID",
@@ -4688,7 +4688,7 @@
           "RPKI_STATUS_VALID",
           "RPKI_STATUS_ERROR"
         ],
-        "v202303Safi": [
+        "Safi": [
           "SAFI_UNSPECIFIED",
           "SAFI_UNICAST",
           "SAFI_MPLS",
@@ -5687,7 +5687,7 @@
         "GetCostProviderSummaryResponse",
         "ListCostProviderSummariesResponse",
         "ListCostProvidersResponse",
-        "costv202308Status",
+        "Status",
         "googlerpcStatus",
         "protobufAny"
       ],
@@ -5708,7 +5708,7 @@
             "required": false
           },
           "status": {
-            "type": "Optional[costv202308Status]",
+            "type": "Optional[Status]",
             "required": false
           },
           "totalCost": {
@@ -5828,7 +5828,7 @@
         }
       },
       "enums": {
-        "costv202308Status": [
+        "Status": [
           "STATUS_UNSPECIFIED",
           "STATUS_INCOMPLETE",
           "STATUS_COMPLETE"
@@ -5867,15 +5867,15 @@
       "models": [
         "CredentialGroup",
         "GetCredentialGroupResponse",
+        "LandingType",
         "ListCredentialGroupResponse",
+        "PermissionEntry",
+        "Role",
+        "Secret",
+        "SecretType",
+        "User",
         "protobufAny",
-        "rpcStatus",
-        "v202211LandingType",
-        "v202211PermissionEntry",
-        "v202211Role",
-        "v202211User",
-        "v202312alpha1Secret",
-        "v202312alpha1SecretType"
+        "rpcStatus"
       ],
       "fields": {
         "CredentialGroup": {
@@ -5896,7 +5896,7 @@
             "required": false
           },
           "type": {
-            "type": "Optional[v202312alpha1SecretType]",
+            "type": "Optional[SecretType]",
             "required": false
           },
           "cdate": {
@@ -5908,11 +5908,11 @@
             "required": false
           },
           "createdBy": {
-            "type": "Optional[v202211User]",
+            "type": "Optional[User]",
             "required": false
           },
           "credentials": {
-            "type": "Optional[List[Optional[v202312alpha1Secret]]]",
+            "type": "Optional[List[Optional[Secret]]]",
             "required": false
           },
           "labels": {
@@ -5936,27 +5936,7 @@
             "required": false
           }
         },
-        "protobufAny": {
-          "type": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "rpcStatus": {
-          "code": {
-            "type": "Optional[int]",
-            "required": false
-          },
-          "message": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "details": {
-            "type": "Optional[List[Optional[protobufAny]]]",
-            "required": false
-          }
-        },
-        "v202211PermissionEntry": {
+        "PermissionEntry": {
           "capability": {
             "type": "str",
             "required": true
@@ -5966,7 +5946,33 @@
             "required": true
           }
         },
-        "v202211User": {
+        "Secret": {
+          "name": {
+            "type": "str",
+            "required": true
+          },
+          "value": {
+            "type": "str",
+            "required": true
+          },
+          "version": {
+            "type": "int",
+            "required": true
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "type": {
+            "type": "Optional[SecretType]",
+            "required": false
+          },
+          "id": {
+            "type": "str",
+            "required": true
+          }
+        },
+        "User": {
           "id": {
             "type": "Optional[str]",
             "required": false
@@ -5980,11 +5986,11 @@
             "required": true
           },
           "role": {
-            "type": "v202211Role",
+            "type": "Role",
             "required": true
           },
           "permissions": {
-            "type": "Optional[List[Optional[v202211PermissionEntry]]]",
+            "type": "Optional[List[Optional[PermissionEntry]]]",
             "required": false
           },
           "filter": {
@@ -6004,7 +6010,7 @@
             "required": false
           },
           "defaultLandingPageType": {
-            "type": "Optional[v202211LandingType]",
+            "type": "Optional[LandingType]",
             "required": false
           },
           "defaultLandingPageValue": {
@@ -6020,35 +6026,29 @@
             "required": false
           }
         },
-        "v202312alpha1Secret": {
-          "name": {
-            "type": "str",
-            "required": true
+        "protobufAny": {
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "rpcStatus": {
+          "code": {
+            "type": "Optional[int]",
+            "required": false
           },
-          "value": {
-            "type": "str",
-            "required": true
-          },
-          "version": {
-            "type": "int",
-            "required": true
-          },
-          "description": {
+          "message": {
             "type": "Optional[str]",
             "required": false
           },
-          "type": {
-            "type": "Optional[v202312alpha1SecretType]",
+          "details": {
+            "type": "Optional[List[Optional[protobufAny]]]",
             "required": false
-          },
-          "id": {
-            "type": "str",
-            "required": true
           }
         }
       },
       "enums": {
-        "v202211LandingType": [
+        "LandingType": [
           "LANDING_TYPE_UNSPECIFIED",
           "LANDING_TYPE_LOCAL",
           "LANDING_TYPE_OBSERVATION_DECK",
@@ -6065,13 +6065,13 @@
           "LANDING_TYPE_MARKET_INTELLIGENCE",
           "LANDING_TYPE_AI_ADVISOR"
         ],
-        "v202211Role": [
+        "Role": [
           "ROLE_UNSPECIFIED",
           "ROLE_MEMBER",
           "ROLE_ADMINISTRATOR",
           "ROLE_SUPER_ADMINISTRATOR"
         ],
-        "v202312alpha1SecretType": [
+        "SecretType": [
           "SECRET_TYPE_UNSPECIFIED",
           "SECRET_TYPE_BASIC_AUTH",
           "SECRET_TYPE_SNMP_V1",
@@ -6843,6 +6843,7 @@
         "GetDeviceResponse",
         "GnmiV1Conf",
         "Interface",
+        "Label",
         "LabelConcise",
         "ListDevicesResponse",
         "Plan",
@@ -6851,7 +6852,6 @@
         "UpdateDeviceResponse",
         "UpdateDevicesRequest",
         "UpdateDevicesResponse",
-        "devicev202504beta2Label",
         "protobufAny",
         "rpcStatus"
       ],
@@ -7059,7 +7059,7 @@
             "required": false
           },
           "labels": {
-            "type": "Optional[List[Optional[devicev202504beta2Label]]]",
+            "type": "Optional[List[Optional[Label]]]",
             "required": false
           },
           "allInterfaces": {
@@ -7441,6 +7441,52 @@
             "required": false
           }
         },
+        "Label": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "edate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "cdate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "userId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "companyId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "color": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "order": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "pivotDeviceId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "pivotLabelId": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "LabelConcise": {
           "id": {
             "type": "Optional[int]",
@@ -7570,52 +7616,6 @@
           },
           "failedDevices": {
             "type": "Optional[List[str]]",
-            "required": false
-          }
-        },
-        "devicev202504beta2Label": {
-          "id": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "name": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "description": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "edate": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "cdate": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "userId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "companyId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "color": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "order": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "pivotDeviceId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "pivotLabelId": {
-            "type": "Optional[str]",
             "required": false
           }
         },
@@ -9681,6 +9681,7 @@
         "Agent",
         "AgentCapability",
         "AgentCapabilityServiceUpsertAgentCapabilityBody",
+        "AgentConfig",
         "AgentRegistration",
         "AgentServiceUpdateAgentBody",
         "AuthorizeResponse",
@@ -9735,7 +9736,6 @@
         "UpdateCapabilityResponse",
         "UpdateConfigResponse",
         "UpsertAgentCapabilityResponse",
-        "kagentv202401AgentConfig",
         "protobufAny",
         "rpcStatus"
       ],
@@ -9762,7 +9762,7 @@
             "required": false
           },
           "config": {
-            "type": "Optional[kagentv202401AgentConfig]",
+            "type": "Optional[AgentConfig]",
             "required": false
           },
           "install": {
@@ -9834,6 +9834,36 @@
             "required": false
           }
         },
+        "AgentConfig": {
+          "created": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "edited": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "siteId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "releaseChannel": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "osDistribution": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "AgentRegistration": {
           "publicKey": {
             "type": "Optional[str]",
@@ -9878,7 +9908,7 @@
             "required": false
           },
           "config": {
-            "type": "Optional[kagentv202401AgentConfig]",
+            "type": "Optional[AgentConfig]",
             "required": false
           },
           "install": {
@@ -10410,36 +10440,6 @@
         "UpsertAgentCapabilityResponse": {
           "capability": {
             "type": "Optional[AgentCapability]",
-            "required": false
-          }
-        },
-        "kagentv202401AgentConfig": {
-          "created": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "edited": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "siteId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "name": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "description": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "releaseChannel": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "osDistribution": {
-            "type": "Optional[str]",
             "required": false
           }
         },
@@ -11144,7 +11144,7 @@
         "TCPFlagsPredicate",
         "TCPFlagsPredicateGroup",
         "UpdateResult",
-        "ktbgpv202501Withdraw",
+        "Withdraw",
         "protobufAny",
         "rpcStatus"
       ],
@@ -11545,7 +11545,7 @@
             "required": false
           },
           "withdraw": {
-            "type": "Optional[ktbgpv202501Withdraw]",
+            "type": "Optional[Withdraw]",
             "required": false
           }
         },
@@ -11597,7 +11597,7 @@
             "required": false
           }
         },
-        "ktbgpv202501Withdraw": {
+        "Withdraw": {
           "flowspec": {
             "type": "Optional[FlowspecMatch]",
             "required": false
@@ -11745,50 +11745,28 @@
         "CreateLabelRequest",
         "CreateLabelResponse",
         "DeleteLabelResponse",
+        "Label",
         "LabelServiceUpdateLabelBody",
         "ListLabelsResponse",
         "UpdateLabelResponse",
-        "labelv202210Label",
         "protobufAny",
         "rpcStatus"
       ],
       "fields": {
         "CreateLabelRequest": {
           "label": {
-            "type": "labelv202210Label",
+            "type": "Label",
             "required": true
           }
         },
         "CreateLabelResponse": {
           "label": {
-            "type": "Optional[labelv202210Label]",
+            "type": "Optional[Label]",
             "required": false
           }
         },
         "DeleteLabelResponse": {},
-        "LabelServiceUpdateLabelBody": {
-          "label": {
-            "type": "Dict[str, Any]",
-            "required": true
-          }
-        },
-        "ListLabelsResponse": {
-          "labels": {
-            "type": "Optional[List[Optional[labelv202210Label]]]",
-            "required": false
-          },
-          "invalidCount": {
-            "type": "Optional[int]",
-            "required": false
-          }
-        },
-        "UpdateLabelResponse": {
-          "label": {
-            "type": "Optional[labelv202210Label]",
-            "required": false
-          }
-        },
-        "labelv202210Label": {
+        "Label": {
           "id": {
             "type": "Optional[str]",
             "required": false
@@ -11811,6 +11789,28 @@
           },
           "edate": {
             "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "LabelServiceUpdateLabelBody": {
+          "label": {
+            "type": "Dict[str, Any]",
+            "required": true
+          }
+        },
+        "ListLabelsResponse": {
+          "labels": {
+            "type": "Optional[List[Optional[Label]]]",
+            "required": false
+          },
+          "invalidCount": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "UpdateLabelResponse": {
+          "label": {
+            "type": "Optional[Label]",
             "required": false
           }
         },
@@ -12063,6 +12063,7 @@
         "FilterField",
         "GetPackageResponse",
         "GetTenantResponse",
+        "LandingType",
         "ListPackageResponse",
         "ListTenantResponse",
         "ListTenantUserResponse",
@@ -12070,6 +12071,8 @@
         "NotificationChannel",
         "Package",
         "PackageServiceUpdatePackageBody",
+        "PermissionEntry",
+        "Role",
         "Tenant",
         "TenantLink",
         "TenantServiceUpdateTenantBody",
@@ -12080,12 +12083,9 @@
         "UpdatePackageResponse",
         "UpdateTenantResponse",
         "UpdateTenantUserResponse",
+        "User",
         "protobufAny",
-        "rpcStatus",
-        "v202211LandingType",
-        "v202211PermissionEntry",
-        "v202211Role",
-        "v202211User"
+        "rpcStatus"
       ],
       "fields": {
         "Activate": {
@@ -12441,6 +12441,16 @@
             "required": false
           }
         },
+        "PermissionEntry": {
+          "capability": {
+            "type": "str",
+            "required": true
+          },
+          "allowed": {
+            "type": "bool",
+            "required": true
+          }
+        },
         "Tenant": {
           "id": {
             "type": "Optional[str]",
@@ -12507,7 +12517,7 @@
             "required": false
           },
           "users": {
-            "type": "Optional[List[Optional[v202211User]]]",
+            "type": "Optional[List[Optional[User]]]",
             "required": false
           },
           "templateId": {
@@ -12621,37 +12631,7 @@
             "required": false
           }
         },
-        "protobufAny": {
-          "type": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "rpcStatus": {
-          "code": {
-            "type": "Optional[int]",
-            "required": false
-          },
-          "message": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "details": {
-            "type": "Optional[List[Optional[protobufAny]]]",
-            "required": false
-          }
-        },
-        "v202211PermissionEntry": {
-          "capability": {
-            "type": "str",
-            "required": true
-          },
-          "allowed": {
-            "type": "bool",
-            "required": true
-          }
-        },
-        "v202211User": {
+        "User": {
           "id": {
             "type": "Optional[str]",
             "required": false
@@ -12665,11 +12645,11 @@
             "required": true
           },
           "role": {
-            "type": "v202211Role",
+            "type": "Role",
             "required": true
           },
           "permissions": {
-            "type": "Optional[List[Optional[v202211PermissionEntry]]]",
+            "type": "Optional[List[Optional[PermissionEntry]]]",
             "required": false
           },
           "filter": {
@@ -12689,7 +12669,7 @@
             "required": false
           },
           "defaultLandingPageType": {
-            "type": "Optional[v202211LandingType]",
+            "type": "Optional[LandingType]",
             "required": false
           },
           "defaultLandingPageValue": {
@@ -12704,10 +12684,30 @@
             "type": "Optional[List[str]]",
             "required": false
           }
+        },
+        "protobufAny": {
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "rpcStatus": {
+          "code": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "message": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "details": {
+            "type": "Optional[List[Optional[protobufAny]]]",
+            "required": false
+          }
         }
       },
       "enums": {
-        "v202211LandingType": [
+        "LandingType": [
           "LANDING_TYPE_UNSPECIFIED",
           "LANDING_TYPE_LOCAL",
           "LANDING_TYPE_OBSERVATION_DECK",
@@ -12724,7 +12724,7 @@
           "LANDING_TYPE_MARKET_INTELLIGENCE",
           "LANDING_TYPE_AI_ADVISOR"
         ],
-        "v202211Role": [
+        "Role": [
           "ROLE_UNSPECIFIED",
           "ROLE_MEMBER",
           "ROLE_ADMINISTRATOR",
@@ -13665,21 +13665,21 @@
         "AssetTagSelector",
         "CreateScopeResponse",
         "DeleteScopeResponse",
+        "FilterField",
+        "FilterOperator",
         "GetScopeResponse",
         "ListScopesResponse",
+        "SavedFilterFilter",
+        "SavedFilterFilterGroup",
+        "SavedFilterFilterId",
+        "SavedFilterFilters",
         "Scope",
         "ScopeConfig",
         "ScopeDimensions",
         "ScopeServiceUpdateScopeBody",
         "UpdateScopeResponse",
         "protobufAny",
-        "rpcStatus",
-        "v202501alpha1FilterField",
-        "v202501alpha1FilterOperator",
-        "v202501alpha1SavedFilterFilter",
-        "v202501alpha1SavedFilterFilterGroup",
-        "v202501alpha1SavedFilterFilterId",
-        "v202501alpha1SavedFilterFilters"
+        "rpcStatus"
       ],
       "fields": {
         "AssetTagSelector": {
@@ -13709,6 +13709,78 @@
           "scopes": {
             "type": "Optional[List[Optional[Scope]]]",
             "required": false
+          }
+        },
+        "SavedFilterFilter": {
+          "filterField": {
+            "type": "Optional[FilterField]",
+            "required": false
+          },
+          "operator": {
+            "type": "Optional[FilterOperator]",
+            "required": false
+          },
+          "filterValue": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "filterFieldString": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "metric": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "aggregate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "rightFilterField": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "SavedFilterFilterGroup": {
+          "any": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "filters": {
+            "type": "Optional[List[Optional[SavedFilterFilter]]]",
+            "required": false
+          },
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "savedFilterIds": {
+            "type": "Optional[List[Optional[SavedFilterFilterId]]]",
+            "required": false
+          },
+          "nestedFilterGroups": {
+            "type": "Optional[List[Optional['SavedFilterFilterGroup']]]",
+            "required": false
+          }
+        },
+        "SavedFilterFilterId": {
+          "filterId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "isNot": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "SavedFilterFilters": {
+          "any": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "filterGroups": {
+            "type": "List[SavedFilterFilterGroup]",
+            "required": true
           }
         },
         "Scope": {
@@ -13747,7 +13819,7 @@
             "required": false
           },
           "filters": {
-            "type": "Optional[v202501alpha1SavedFilterFilters]",
+            "type": "Optional[SavedFilterFilters]",
             "required": false
           }
         },
@@ -13816,82 +13888,10 @@
             "type": "Optional[List[Optional[protobufAny]]]",
             "required": false
           }
-        },
-        "v202501alpha1SavedFilterFilter": {
-          "filterField": {
-            "type": "Optional[v202501alpha1FilterField]",
-            "required": false
-          },
-          "operator": {
-            "type": "Optional[v202501alpha1FilterOperator]",
-            "required": false
-          },
-          "filterValue": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "filterFieldString": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "metric": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "aggregate": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "rightFilterField": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202501alpha1SavedFilterFilterGroup": {
-          "any": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "filters": {
-            "type": "Optional[List[Optional[v202501alpha1SavedFilterFilter]]]",
-            "required": false
-          },
-          "not_": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "savedFilterIds": {
-            "type": "Optional[List[Optional[v202501alpha1SavedFilterFilterId]]]",
-            "required": false
-          },
-          "nestedFilterGroups": {
-            "type": "Optional[List[Optional['v202501alpha1SavedFilterFilterGroup']]]",
-            "required": false
-          }
-        },
-        "v202501alpha1SavedFilterFilterId": {
-          "filterId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "isNot": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "v202501alpha1SavedFilterFilters": {
-          "any": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "filterGroups": {
-            "type": "List[v202501alpha1SavedFilterFilterGroup]",
-            "required": true
-          }
         }
       },
       "enums": {
-        "v202501alpha1FilterField": [
+        "FilterField": [
           "FILTER_FIELD_UNSPECIFIED",
           "FILTER_FIELD_DST_AS",
           "FILTER_FIELD_DST_NEXTHOP_AS",
@@ -13941,7 +13941,7 @@
           "FILTER_FIELD_VLAN_IN",
           "FILTER_FIELD_VLAN_OUT"
         ],
-        "v202501alpha1FilterOperator": [
+        "FilterOperator": [
           "FILTER_OPERATOR_UNSPECIFIED",
           "FILTER_OPERATOR_EQUAL",
           "FILTER_OPERATOR_NOT_EQUAL",
@@ -15014,6 +15014,7 @@
         "ListAgentAlertsResponse",
         "ListAgentsResponse",
         "ListTestsResponse",
+        "Location",
         "MetricData",
         "NetNode",
         "NetworkMeshTest",
@@ -15043,10 +15044,9 @@
         "UpdateAgentResponse",
         "UpdateTestResponse",
         "UrlTest",
+        "UserInfo",
         "protobufAny",
-        "rpcStatus",
-        "syntheticsv202309Location",
-        "v202303UserInfo"
+        "rpcStatus"
       ],
       "fields": {
         "ActivationSettings": {
@@ -15776,6 +15776,28 @@
             "required": false
           }
         },
+        "Location": {
+          "latitude": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "longitude": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "country": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "region": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "city": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "MetricData": {
           "current": {
             "type": "Optional[int]",
@@ -15808,7 +15830,7 @@
             "required": false
           },
           "location": {
-            "type": "Optional[syntheticsv202309Location]",
+            "type": "Optional[Location]",
             "required": false
           },
           "dnsName": {
@@ -16029,11 +16051,11 @@
             "required": false
           },
           "createdBy": {
-            "type": "Optional[v202303UserInfo]",
+            "type": "Optional[UserInfo]",
             "required": false
           },
           "lastUpdatedBy": {
-            "type": "Optional[v202303UserInfo]",
+            "type": "Optional[UserInfo]",
             "required": false
           },
           "labels": {
@@ -16285,6 +16307,20 @@
             "required": false
           }
         },
+        "UserInfo": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "email": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fullName": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "protobufAny": {
           "type": {
             "type": "Optional[str]",
@@ -16302,42 +16338,6 @@
           },
           "details": {
             "type": "Optional[List[Optional[protobufAny]]]",
-            "required": false
-          }
-        },
-        "syntheticsv202309Location": {
-          "latitude": {
-            "type": "Optional[float]",
-            "required": false
-          },
-          "longitude": {
-            "type": "Optional[float]",
-            "required": false
-          },
-          "country": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "region": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "city": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202303UserInfo": {
-          "id": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "email": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "fullName": {
-            "type": "Optional[str]",
             "required": false
           }
         }

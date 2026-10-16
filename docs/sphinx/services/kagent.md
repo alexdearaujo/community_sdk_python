@@ -2166,6 +2166,7 @@ classDiagram
     class Agent
     class AgentCapability
     class AgentCapabilityServiceUpsertAgentCapabilityBody
+    class AgentConfig
     class AgentRegistration
     class AgentServiceUpdateAgentBody
     class AuthorizeResponse
@@ -2192,7 +2193,8 @@ classDiagram
     class GetAgentResponse
     class GetCapabilityLatestReleasesResponse
     class GetCapabilityReleaseResponse
-    class GetCapabilityResponse
+    Agent --> AgentConfig
+    AgentServiceUpdateAgentBody --> AgentConfig
     Config --> ConfigLayer
     CreateAgentRequest --> AgentRegistration
     CreateAgentResponse --> Agent
@@ -2204,7 +2206,6 @@ classDiagram
     GetAgentResponse --> Agent
     GetCapabilityLatestReleasesResponse --> CapabilityRelease
     GetCapabilityReleaseResponse --> CapabilityRelease
-    GetCapabilityResponse --> Capability
 ```
 
 </details>
@@ -2219,6 +2220,10 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.kagent.models.AgentCapabilityServiceUpsertAgentCapabilityBody
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.kagent.models.AgentConfig
 ```
 
 ```{eval-rst}
@@ -2437,10 +2442,6 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.kagent.models.UpsertAgentCapabilityResponse
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.kagent.models.kagentv202401AgentConfig
 ```
 
 ```{eval-rst}

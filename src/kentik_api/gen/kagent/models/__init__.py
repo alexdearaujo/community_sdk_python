@@ -6,6 +6,7 @@ from .AgentCapability import AgentCapability as AgentCapability
 from .AgentCapabilityServiceUpsertAgentCapabilityBody import (
     AgentCapabilityServiceUpsertAgentCapabilityBody as AgentCapabilityServiceUpsertAgentCapabilityBody,
 )
+from .AgentConfig import AgentConfig as AgentConfig
 from .AgentRegistration import AgentRegistration as AgentRegistration
 from .AgentServiceUpdateAgentBody import (
     AgentServiceUpdateAgentBody as AgentServiceUpdateAgentBody,
@@ -72,9 +73,6 @@ from .GetProvisioningTokenResponse import (
 from .HostMetadata import HostMetadata as HostMetadata
 from .InstallConfig import InstallConfig as InstallConfig
 from .InstallerType import InstallerType as InstallerType
-from .kagentv202401AgentConfig import (
-    kagentv202401AgentConfig as kagentv202401AgentConfig,
-)
 from .ListAgentCapabilitiesResponse import (
     ListAgentCapabilitiesResponse as ListAgentCapabilitiesResponse,
 )

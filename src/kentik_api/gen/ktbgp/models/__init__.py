@@ -42,7 +42,6 @@ from .FragmentFormula import FragmentFormula as FragmentFormula
 from .FragmentPredicate import FragmentPredicate as FragmentPredicate
 from .FragmentPredicateGroup import FragmentPredicateGroup as FragmentPredicateGroup
 from .InetType import InetType as InetType
-from .ktbgpv202501Withdraw import ktbgpv202501Withdraw as ktbgpv202501Withdraw
 from .NumericFormula import NumericFormula as NumericFormula
 from .NumericOp import NumericOp as NumericOp
 from .NumericPredicate import NumericPredicate as NumericPredicate
@@ -74,3 +73,4 @@ from .TCPFlagsFormula import TCPFlagsFormula as TCPFlagsFormula
 from .TCPFlagsPredicate import TCPFlagsPredicate as TCPFlagsPredicate
 from .TCPFlagsPredicateGroup import TCPFlagsPredicateGroup as TCPFlagsPredicateGroup
 from .UpdateResult import UpdateResult as UpdateResult
+from .Withdraw import Withdraw as Withdraw

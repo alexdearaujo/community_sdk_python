@@ -5,9 +5,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
+from .MultiAttributeFilter import MultiAttributeFilter
+from .Severity import Severity
 from .Source import Source
-from .v202303MultiAttributeFilter import v202303MultiAttributeFilter
-from .v202303Severity import v202303Severity
 
 
 class Suppression(BaseModel):
@@ -31,7 +31,7 @@ class Suppression(BaseModel):
 
     source: Optional[Source] = Field(validation_alias="source", default=None)
 
-    keyFilter: Optional[v202303MultiAttributeFilter] = Field(
+    keyFilter: Optional[MultiAttributeFilter] = Field(
         validation_alias="keyFilter", default=None
     )
 
@@ -76,7 +76,7 @@ class Suppression(BaseModel):
         description="The name of the suppression configuration.",
     )
 
-    severities: Optional[List[Optional[v202303Severity]]] = Field(
+    severities: Optional[List[Optional[Severity]]] = Field(
         validation_alias="severities",
         default=None,
         description="The alarm severities the suppression applies to.",

@@ -57,6 +57,7 @@ from .IpTest import IpTest as IpTest
 from .ListAgentAlertsResponse import ListAgentAlertsResponse as ListAgentAlertsResponse
 from .ListAgentsResponse import ListAgentsResponse as ListAgentsResponse
 from .ListTestsResponse import ListTestsResponse as ListTestsResponse
+from .Location import Location as Location
 from .MetricData import MetricData as MetricData
 from .NetNode import NetNode as NetNode
 from .NetworkMeshTest import NetworkMeshTest as NetworkMeshTest
@@ -83,9 +84,6 @@ from .SyntheticsAdminServiceUpdateAgentBody import (
 from .SyntheticsAdminServiceUpdateTestBody import (
     SyntheticsAdminServiceUpdateTestBody as SyntheticsAdminServiceUpdateTestBody,
 )
-from .syntheticsv202309Location import (
-    syntheticsv202309Location as syntheticsv202309Location,
-)
 from .TaskResults import TaskResults as TaskResults
 from .Test import Test as Test
 from .TestPingSettings import TestPingSettings as TestPingSettings
@@ -101,4 +99,4 @@ from .UpdateAgentAlertResponse import (
 from .UpdateAgentResponse import UpdateAgentResponse as UpdateAgentResponse
 from .UpdateTestResponse import UpdateTestResponse as UpdateTestResponse
 from .UrlTest import UrlTest as UrlTest
-from .v202303UserInfo import v202303UserInfo as v202303UserInfo
+from .UserInfo import UserInfo as UserInfo

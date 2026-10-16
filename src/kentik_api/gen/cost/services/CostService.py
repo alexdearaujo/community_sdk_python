@@ -21,7 +21,7 @@ from ..models import (  # noqa: F401
     GetCostProviderSummaryResponse,
     ListCostProvidersResponse,
     ListCostProviderSummariesResponse,
-    costv202308Status,
+    Status,
     googlerpcStatus,
     protobufAny,
 )

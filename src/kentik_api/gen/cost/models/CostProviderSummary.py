@@ -5,7 +5,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .costv202308Status import costv202308Status
+from .Status import Status
 
 
 class CostProviderSummary(BaseModel):
@@ -21,7 +21,7 @@ class CostProviderSummary(BaseModel):
         description="Date of the cost provider summary (YYYY-MM)",
     )
 
-    status: Optional[costv202308Status] = Field(validation_alias="status", default=None)
+    status: Optional[Status] = Field(validation_alias="status", default=None)
 
     totalCost: Optional[float] = Field(
         validation_alias="totalCost",

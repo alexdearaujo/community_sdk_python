@@ -335,16 +335,16 @@ classDiagram
     class CreateLabelRequest
     class CreateLabelResponse
     class DeleteLabelResponse
+    class Label
     class LabelServiceUpdateLabelBody
     class ListLabelsResponse
     class UpdateLabelResponse
-    class labelv202210Label
     class protobufAny
     class rpcStatus
-    CreateLabelRequest --> labelv202210Label
-    CreateLabelResponse --> labelv202210Label
-    ListLabelsResponse --> labelv202210Label
-    UpdateLabelResponse --> labelv202210Label
+    CreateLabelRequest --> Label
+    CreateLabelResponse --> Label
+    ListLabelsResponse --> Label
+    UpdateLabelResponse --> Label
     rpcStatus --> protobufAny
 ```
 
@@ -363,6 +363,10 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.label.models.Label
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.label.models.LabelServiceUpdateLabelBody
 ```
 
@@ -372,10 +376,6 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.label.models.UpdateLabelResponse
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.label.models.labelv202210Label
 ```
 
 ```{eval-rst}

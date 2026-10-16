@@ -1,6 +1,7 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `make generate`. Do not edit by hand.
 
+from .Afi import Afi as Afi
 from .BgpHealthSettings import BgpHealthSettings as BgpHealthSettings
 from .BgpMetric import BgpMetric as BgpMetric
 from .BgpMetricType import BgpMetricType as BgpMetricType
@@ -34,12 +35,11 @@ from .Nlri import Nlri as Nlri
 from .protobufAny import protobufAny as protobufAny
 from .RouteInfo import RouteInfo as RouteInfo
 from .rpcStatus import rpcStatus as rpcStatus
+from .RpkiStatus import RpkiStatus as RpkiStatus
+from .Safi import Safi as Safi
 from .SetMonitorStatusResponse import (
     SetMonitorStatusResponse as SetMonitorStatusResponse,
 )
 from .UpdateMonitorResponse import UpdateMonitorResponse as UpdateMonitorResponse
-from .v202303Afi import v202303Afi as v202303Afi
-from .v202303RpkiStatus import v202303RpkiStatus as v202303RpkiStatus
-from .v202303Safi import v202303Safi as v202303Safi
-from .v202303UserInfo import v202303UserInfo as v202303UserInfo
-from .v202303VantagePoint import v202303VantagePoint as v202303VantagePoint
+from .UserInfo import UserInfo as UserInfo
+from .VantagePoint import VantagePoint as VantagePoint

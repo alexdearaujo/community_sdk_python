@@ -5,7 +5,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .labelv202210Label import labelv202210Label
+from .Label import Label
 
 
 class UpdateLabelResponse(BaseModel):
@@ -15,4 +15,4 @@ class UpdateLabelResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    label: Optional[labelv202210Label] = Field(validation_alias="label", default=None)
+    label: Optional[Label] = Field(validation_alias="label", default=None)

@@ -8,6 +8,7 @@ import pytest
 from scripts.generation import wrapper_generation
 from scripts.generation._shared import RestOperation
 from scripts.generation.parity import select_latest_swagger_files_by_service
+from scripts.generation.public_names import PublicNames
 from scripts.generation.wrapper_generation import (
     _drop_service_word,
     _to_snake_case,
@@ -187,7 +188,7 @@ def test_generate_writes_wrapper_and_mounts_it_in_client_mixin(
     )
     (project_root / "src" / "kentik_api").mkdir(parents=True)
 
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     wrapper_content = (services_dir / "device.py").read_text(encoding="utf-8")
     assert "class DeviceServiceWrapper:" in wrapper_content
@@ -220,7 +221,7 @@ def test_wrapper_method_keeps_the_rest_function_docstring_exactly(
         encoding="utf-8",
     )
 
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     tree = ast.parse((services_dir / "device.py").read_text(encoding="utf-8"))
     method = next(
@@ -271,7 +272,7 @@ def test_rpc_taking_and_returning_empty_gets_a_working_grpc_branch(
     )
     (pb_dir / "ping_pb2_grpc.py").write_text("")
 
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     source = (services_dir / "ping.py").read_text(encoding="utf-8")
     tree = ast.parse(source)
@@ -352,7 +353,7 @@ def _post_process_like_generate_sdk(sandbox) -> None:
 def test_regenerated_wrapper_matches_the_committed_one_byte_for_byte(sandbox, service):
     sandbox.wrapper_file(service).unlink()
 
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
     _post_process_like_generate_sdk(sandbox)
 
     committed = (REAL_GEN / service / "services" / f"{service}.py").read_text()
@@ -360,7 +361,7 @@ def test_regenerated_wrapper_matches_the_committed_one_byte_for_byte(sandbox, se
 
 
 def test_wrapper_generation_is_deterministic_across_repeated_runs(sandbox):
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     first = {
         "device": sandbox.wrapper_file("device").read_text(),
@@ -368,7 +369,7 @@ def test_wrapper_generation_is_deterministic_across_repeated_runs(sandbox):
         "mixin": (sandbox.package / "client_mixin.py").read_text(),
     }
 
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     assert sandbox.wrapper_file("device").read_text() == first["device"]
     assert sandbox.wrapper_file("alerting").read_text() == first["alerting"]
@@ -376,13 +377,13 @@ def test_wrapper_generation_is_deterministic_across_repeated_runs(sandbox):
 
 
 def test_service_without_rest_paths_gets_no_wrapper(sandbox):
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     assert not sandbox.wrapper_file("core").exists()
 
 
 def test_mixin_mounts_exactly_the_services_that_have_a_wrapper(sandbox):
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     mixin = (sandbox.package / "client_mixin.py").read_text()
     ast.parse(mixin)
@@ -405,7 +406,7 @@ def test_wrapper_for_a_service_without_proto_stubs_is_rest_only(sandbox):
     shutil.rmtree(sandbox.gen / "device" / "pb")
     sandbox.wrapper_file("device").unlink()
 
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     wrapper = sandbox.wrapper_file("device").read_text()
     ast.parse(wrapper)
@@ -524,7 +525,7 @@ def test_each_grpc_call_uses_the_stub_of_its_own_rest_service(sandbox):
     # name alone, every Delete went to whichever stub was discovered last.
     sandbox.wrapper_file("alerting").unlink()
 
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     calls = _grpc_calls_by_rest_module(sandbox.wrapper_file("alerting"))
     assert len(calls) > 2
@@ -535,7 +536,7 @@ def test_each_grpc_call_uses_the_stub_of_its_own_rest_service(sandbox):
 def test_grpc_request_maps_arguments_to_the_rpc_request_fields(sandbox):
     sandbox.wrapper_file("device").unlink()
 
-    wrapper_generation.generate()
+    wrapper_generation.generate(PublicNames())
 
     wrapper = sandbox.wrapper_file("device").read_text()
     # The REST path says {device.id}, but GetDeviceRequest's field is `id`.

@@ -6,8 +6,8 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from .AlertFilters import AlertFilters
-from .typesv202506PaginationConfig import typesv202506PaginationConfig
-from .typesv202506SortingConfig import typesv202506SortingConfig
+from .PaginationConfig import PaginationConfig
+from .SortingConfig import SortingConfig
 
 
 class AlertServiceListRequest(BaseModel):
@@ -17,12 +17,10 @@ class AlertServiceListRequest(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    pagination: Optional[typesv202506PaginationConfig] = Field(
+    pagination: Optional[PaginationConfig] = Field(
         validation_alias="pagination", default=None
     )
 
-    sorting: Optional[typesv202506SortingConfig] = Field(
-        validation_alias="sorting", default=None
-    )
+    sorting: Optional[SortingConfig] = Field(validation_alias="sorting", default=None)
 
     filters: Optional[AlertFilters] = Field(validation_alias="filters", default=None)

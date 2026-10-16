@@ -314,3 +314,11 @@ This ledger records findings that are intentionally deferred.
   Renamed: 8 in kagent, 3 in ktbgp, 1 in nms. Every other name is already
   snake_case. B11's third rule (version strings in 50 model class names) is
   still open.
+- 2026-10-15: B11 is fully resolved. `public_names.json` now holds the public
+  name of every Service, client method, and model, keyed by version-free
+  upstream values. A run only adds entries, and fails with `NameDriftError`
+  when an entry no longer matches the schema. 50 versioned model names lost
+  their version (`labelv202210Label` to `Label`). A simulated upstream change
+  (label version bump, operationId rename, moved DELETE path) failed once,
+  naming only `delete_label`; after a one-line fix every label name was
+  unchanged. Error class names still follow the operationId.

@@ -46,6 +46,7 @@ Each change below can stop an existing `except` clause or call from working.
 | `KentikAPI(...)` loaded every key of the nearest `.env` into `os.environ`, even when you passed credentials | It reads only `KENTIK_EMAIL` and `KENTIK_API_TOKEN`, into memory, and only when an argument or environment variable is missing | Load other `.env` keys yourself, for example with `dotenv.load_dotenv()` |
 | `kmeta` `ServiceNowConfig.credentialVaultId` held a credential vault entry ID | Upstream renamed it `credentialVaultName`; it holds the entry's name and always resolves to the entry's latest version | Read and send `credentialVaultName` |
 | Client method names depended on module and route order, and many repeated the Service name (`client.audit.get_audit_event`) | Names no longer depend on order and drop the Service word when two or more words remain. See [Renamed client methods](#renamed-client-methods) | Use the new names in the table below |
+| 50 model names held a schema version (`labelv202210Label`), so a version bump renamed them | The version and its package prefix are gone (`Label`). See [Renamed models](#renamed-models) | Use the new names in the table below |
 
 #### Renamed client methods
 
@@ -81,8 +82,91 @@ underscore; if one word is left, the module noun stays
 records the gRPC method each operation calls, so an operation that stops
 working over gRPC is a breaking change too.
 
+#### Renamed models
+
+Each model module is renamed too: import from
+`kentik_api.gen.<service>.models`, for example
+`from kentik_api.gen.label.models import Label`.
+`v202505AlertAcknowledgement` in `alerting` keeps its name, because
+`AlertAcknowledgement` is a different model.
+
+| Service | Before | After |
+| --- | --- | --- |
+| `alerting` | `typesv202506PaginationConfig`, `typesv202506PaginationInfo`, `typesv202506SortingConfig` | `PaginationConfig`, `PaginationInfo`, `SortingConfig` |
+| `alerting` | `v202303AttributeFilter`, `v202303AttributeFilterStringArray`, `v202303KeyValue`, `v202303KeyValueFilter`, `v202303MultiAttributeFilter`, `v202303Severity`, `v202303SimpleAttributeFilter`, `v202303SimpleAttributeFilterStringArray`, `v202303TimeRange` | `AttributeFilter`, `AttributeFilterStringArray`, `KeyValue`, `KeyValueFilter`, `MultiAttributeFilter`, `Severity`, `SimpleAttributeFilter`, `SimpleAttributeFilterStringArray`, `TimeRange` |
+| `alerting` | `v202501BitwiseOp`, `v202501FlowspecMatch`, `v202501Fragment`, `v202501FragmentFormula`, `v202501FragmentPredicate`, `v202501FragmentPredicateGroup`, `v202501NumericFormula`, `v202501NumericOp`, `v202501NumericPredicate`, `v202501NumericPredicateGroup`, `v202501TCPFlag`, `v202501TCPFlagsFormula`, `v202501TCPFlagsPredicate`, `v202501TCPFlagsPredicateGroup` | `BitwiseOp`, `FlowspecMatch`, `Fragment`, `FragmentFormula`, `FragmentPredicate`, `FragmentPredicateGroup`, `NumericFormula`, `NumericOp`, `NumericPredicate`, `NumericPredicateGroup`, `TCPFlag`, `TCPFlagsFormula`, `TCPFlagsPredicate`, `TCPFlagsPredicateGroup` |
+| `alerting` | `v202506MitigationTarget` | `MitigationTarget` |
+| `bgp_monitoring` | `v202303Afi`, `v202303RpkiStatus`, `v202303Safi`, `v202303UserInfo`, `v202303VantagePoint` | `Afi`, `RpkiStatus`, `Safi`, `UserInfo`, `VantagePoint` |
+| `cost` | `costv202308Status` | `Status` |
+| `credential` | `v202211LandingType`, `v202211PermissionEntry`, `v202211Role`, `v202211User`, `v202312alpha1Secret`, `v202312alpha1SecretType` | `LandingType`, `PermissionEntry`, `Role`, `User`, `Secret`, `SecretType` |
+| `device` | `devicev202504beta2Label` | `Label` |
+| `kagent` | `kagentv202401AgentConfig` | `AgentConfig` |
+| `ktbgp` | `ktbgpv202501Withdraw` | `Withdraw` |
+| `label` | `labelv202210Label` | `Label` |
+| `mkp` | `v202211LandingType`, `v202211PermissionEntry`, `v202211Role`, `v202211User` | `LandingType`, `PermissionEntry`, `Role`, `User` |
+| `rbux` | `v202501alpha1FilterField`, `v202501alpha1FilterOperator`, `v202501alpha1SavedFilterFilter`, `v202501alpha1SavedFilterFilterGroup`, `v202501alpha1SavedFilterFilterId`, `v202501alpha1SavedFilterFilters` | `FilterField`, `FilterOperator`, `SavedFilterFilter`, `SavedFilterFilterGroup`, `SavedFilterFilterId`, `SavedFilterFilters` |
+| `synthetics` | `syntheticsv202309Location`, `v202303UserInfo` | `Location`, `UserInfo` |
+
+These fields keep their names, but their type is now the renamed model:
+
+- `alerting`: `Alert.highestSeverity`, `Alert.severity`, `AlertAutoAck.key`,
+  `AlertAutoAckFilters.createdAt`, `AlertAutoAckFilters.endTimeAt`,
+  `AlertAutoAckFilters.keys`, `AlertAutoAckFilters.modifiedAt`,
+  `AlertAutoAckFilters.startTimeAt`,
+  `AlertAutoAckServiceListRequest.pagination`,
+  `AlertAutoAckServiceListRequest.sorting`,
+  `AlertAutoAckServiceListResponse.pagination`, `AlertFilters.activeAt`,
+  `AlertFilters.endedAt`, `AlertFilters.highestSeverities`,
+  `AlertFilters.keys`, `AlertFilters.recentSeverities`,
+  `AlertFilters.severities`, `AlertFilters.startedAt`, `AlertPhase.severity`,
+  `AlertServiceListRequest.pagination`, `AlertServiceListRequest.sorting`,
+  `AlertServiceListResponse.pagination`,
+  `AlertSilenceNotificationFilters.createdAt`,
+  `AlertSilenceNotificationFilters.endTimeAt`,
+  `AlertSilenceNotificationFilters.keys`,
+  `AlertSilenceNotificationFilters.modifiedAt`,
+  `AlertSilenceNotificationFilters.startTimeAt`,
+  `AlertSilenceNotificationsDefinition.key`,
+  `AlertSilenceNotificationsServiceListRequest.pagination`,
+  `AlertSilenceNotificationsServiceListRequest.sorting`,
+  `AlertSilenceNotificationsServiceListResponse.pagination`,
+  `Mitigation.target`, `MitigationFilters.createdAt`,
+  `MitigationMethodsFilters.createdAt`, `MitigationMethodsFilters.modifiedAt`,
+  `MitigationMethodsServiceListResponse.pagination`,
+  `MitigationPlatformsFilters.createdAt`,
+  `MitigationPlatformsFilters.modifiedAt`,
+  `MitigationPlatformsServiceListResponse.pagination`,
+  `MitigationsServiceListResponse.pagination`,
+  `NmsContextActivationInfo.severity`, `PolicyListFilters.createdAt`,
+  `PolicyListFilters.modifiedAt`, `PolicyPolicyLevel.severity`,
+  `PolicyServiceListRequest.pagination`, `PolicyServiceListRequest.sorting`,
+  `PolicyServiceListResponse.pagination`, `Suppression.keyFilter`,
+  `Suppression.severities`, `SuppressionFilters.createdAt`,
+  `SuppressionFilters.endTimeAt`, `SuppressionFilters.modifiedAt`,
+  `SuppressionFilters.startTimeAt`, `SuppressionServiceListRequest.pagination`,
+  `SuppressionServiceListRequest.sorting`,
+  `SuppressionServiceListResponse.pagination`
+- `bgp_monitoring`: `BgpMonitor.createdBy`, `BgpMonitor.lastUpdatedBy`,
+  `Nlri.afi`, `Nlri.safi`, `RouteInfo.rpkiStatus`, `RouteInfo.vantagePoint`
+- `cost`: `CostProviderSummary.status`
+- `credential`: `CredentialGroup.createdBy`, `CredentialGroup.credentials`,
+  `CredentialGroup.type`
+- `device`: `DeviceDetailed.labels`
+- `kagent`: `Agent.config`, `AgentServiceUpdateAgentBody.config`
+- `ktbgp`: `RouteServiceWithdrawRequest.withdraw`
+- `label`: `CreateLabelRequest.label`, `CreateLabelResponse.label`,
+  `ListLabelsResponse.labels`, `UpdateLabelResponse.label`
+- `mkp`: `Tenant.users`
+- `rbux`: `ScopeConfig.filters`
+- `synthetics`: `NetNode.location`, `Test.createdBy`, `Test.lastUpdatedBy`
+
 ### Added
 
+- **Stable public names.** `public_names.json` sets the name of every Service,
+  client method, and model. A version bump or a new operationId upstream no
+  longer renames anything. When upstream moves or renames something,
+  generation fails and names the entry to update. See "Keep public names
+  stable" in [the generation guide](docs/sphinx/guides/generation.md).
 - **`kmeta` service.** `client.kmeta` manages ServiceNow configurations: list,
   get, create, update, and delete. It predates `api_surface.json`, so
   `make release-notes` does not list it.

@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 from .BgpMonitorSettings import BgpMonitorSettings
 from .BgpMonitorStatus import BgpMonitorStatus
-from .v202303UserInfo import v202303UserInfo
+from .UserInfo import UserInfo
 
 
 class BgpMonitor(BaseModel):
@@ -43,11 +43,9 @@ class BgpMonitor(BaseModel):
         description="Last modification timestamp (UTC)",
     )
 
-    createdBy: Optional[v202303UserInfo] = Field(
-        validation_alias="createdBy", default=None
-    )
+    createdBy: Optional[UserInfo] = Field(validation_alias="createdBy", default=None)
 
-    lastUpdatedBy: Optional[v202303UserInfo] = Field(
+    lastUpdatedBy: Optional[UserInfo] = Field(
         validation_alias="lastUpdatedBy", default=None
     )
 

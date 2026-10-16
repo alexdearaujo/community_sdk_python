@@ -268,7 +268,7 @@ classDiagram
     class RouteServiceWithdrawResponse
     class RoutesFilter
     class UpdateResult
-    class ktbgpv202501Withdraw
+    class Withdraw
     class protobufAny
     class rpcStatus
     DeviceAdverts --> FlowspecUpdate
@@ -278,7 +278,7 @@ classDiagram
     RouteServiceAnnounceResponse --> UpdateResult
     RouteServiceListRequest --> RoutesFilter
     RouteServiceListResponse --> DeviceAdverts
-    RouteServiceWithdrawRequest --> ktbgpv202501Withdraw
+    RouteServiceWithdrawRequest --> Withdraw
     RouteServiceWithdrawResponse --> UpdateResult
     rpcStatus --> protobufAny
 ```
@@ -461,7 +461,7 @@ classDiagram
 ```
 
 ```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.ktbgp.models.ktbgpv202501Withdraw
+.. autopydantic_model:: kentik_api.gen.ktbgp.models.Withdraw
 ```
 
 ```{eval-rst}

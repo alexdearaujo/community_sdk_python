@@ -5,8 +5,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from .SavedFilterFilters import SavedFilterFilters
 from .ScopeDimensions import ScopeDimensions
-from .v202501alpha1SavedFilterFilters import v202501alpha1SavedFilterFilters
 
 
 class ScopeConfig(BaseModel):
@@ -20,6 +20,6 @@ class ScopeConfig(BaseModel):
         validation_alias="dimensions", default=None
     )
 
-    filters: Optional[v202501alpha1SavedFilterFilters] = Field(
+    filters: Optional[SavedFilterFilters] = Field(
         validation_alias="filters", default=None
     )

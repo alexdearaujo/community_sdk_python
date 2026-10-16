@@ -8,6 +8,7 @@ from .models import (  # noqa: F401
     Agent,
     AgentCapability,
     AgentCapabilityServiceUpsertAgentCapabilityBody,
+    AgentConfig,
     AgentRegistration,
     AgentServiceUpdateAgentBody,
     AuthorizeResponse,
@@ -62,7 +63,6 @@ from .models import (  # noqa: F401
     UpdateCapabilityResponse,
     UpdateConfigResponse,
     UpsertAgentCapabilityResponse,
-    kagentv202401AgentConfig,
     protobufAny,
     rpcStatus,
 )

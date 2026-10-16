@@ -6,8 +6,8 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from .Nlri import Nlri
-from .v202303RpkiStatus import v202303RpkiStatus
-from .v202303VantagePoint import v202303VantagePoint
+from .RpkiStatus import RpkiStatus
+from .VantagePoint import VantagePoint
 
 
 class RouteInfo(BaseModel):
@@ -31,11 +31,11 @@ class RouteInfo(BaseModel):
         description="AS path observed at the vantage point for the NLRI",
     )
 
-    vantagePoint: Optional[v202303VantagePoint] = Field(
+    vantagePoint: Optional[VantagePoint] = Field(
         validation_alias="vantagePoint", default=None
     )
 
-    rpkiStatus: Optional[v202303RpkiStatus] = Field(
+    rpkiStatus: Optional[RpkiStatus] = Field(
         validation_alias="rpkiStatus", default=None
     )
 

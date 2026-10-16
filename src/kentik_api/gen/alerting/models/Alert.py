@@ -10,8 +10,8 @@ from .AlertState import AlertState
 from .ExternalContext import ExternalContext
 from .FlowContext import FlowContext
 from .NmsContext import NmsContext
+from .Severity import Severity
 from .Source import Source
-from .v202303Severity import v202303Severity
 
 
 class Alert(BaseModel):
@@ -43,11 +43,9 @@ class Alert(BaseModel):
 
     state: Optional[AlertState] = Field(validation_alias="state", default=None)
 
-    severity: Optional[v202303Severity] = Field(
-        validation_alias="severity", default=None
-    )
+    severity: Optional[Severity] = Field(validation_alias="severity", default=None)
 
-    highestSeverity: Optional[v202303Severity] = Field(
+    highestSeverity: Optional[Severity] = Field(
         validation_alias="highestSeverity", default=None
     )
 

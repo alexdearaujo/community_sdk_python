@@ -5,8 +5,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from .AgentConfig import AgentConfig
 from .InstallConfig import InstallConfig
-from .kagentv202401AgentConfig import kagentv202401AgentConfig
 
 
 class AgentServiceUpdateAgentBody(BaseModel):
@@ -40,8 +40,6 @@ class AgentServiceUpdateAgentBody(BaseModel):
         description="Provisioning token the agent registered with.",
     )
 
-    config: Optional[kagentv202401AgentConfig] = Field(
-        validation_alias="config", default=None
-    )
+    config: Optional[AgentConfig] = Field(validation_alias="config", default=None)
 
     install: Optional[InstallConfig] = Field(validation_alias="install", default=None)

@@ -45,6 +45,7 @@ from ..models import (  # noqa: F401
     GetDeviceResponse,
     GnmiV1Conf,
     Interface,
+    Label,
     LabelConcise,
     ListDevicesResponse,
     Plan,
@@ -53,7 +54,6 @@ from ..models import (  # noqa: F401
     UpdateDeviceResponse,
     UpdateDevicesRequest,
     UpdateDevicesResponse,
-    devicev202504beta2Label,
     protobufAny,
     rpcStatus,
 )

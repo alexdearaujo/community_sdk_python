@@ -19,6 +19,7 @@ from ..error import (
     UpdateMonitorError,
 )
 from ..models import (  # noqa: F401
+    Afi,
     BgpHealthSettings,
     BgpMetric,
     BgpMetricType,
@@ -38,15 +39,14 @@ from ..models import (  # noqa: F401
     ListMonitorsResponse,
     Nlri,
     RouteInfo,
+    RpkiStatus,
+    Safi,
     SetMonitorStatusResponse,
     UpdateMonitorResponse,
+    UserInfo,
+    VantagePoint,
     protobufAny,
     rpcStatus,
-    v202303Afi,
-    v202303RpkiStatus,
-    v202303Safi,
-    v202303UserInfo,
-    v202303VantagePoint,
 )
 
 

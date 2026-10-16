@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 from .FlowContext import FlowContext
 from .NmsContext import NmsContext
-from .v202303Severity import v202303Severity
+from .Severity import Severity
 
 
 class AlertPhase(BaseModel):
@@ -17,9 +17,7 @@ class AlertPhase(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    severity: Optional[v202303Severity] = Field(
-        validation_alias="severity", default=None
-    )
+    severity: Optional[Severity] = Field(validation_alias="severity", default=None)
 
     startTimeAt: Optional[str] = Field(
         validation_alias="startTimeAt",

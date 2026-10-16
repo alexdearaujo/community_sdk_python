@@ -7,9 +7,9 @@ from pydantic import BaseModel, Field
 
 from .MitigationState import MitigationState
 from .MitigationStateEntry import MitigationStateEntry
+from .MitigationTarget import MitigationTarget
 from .MitigationType import MitigationType
 from .Source import Source
-from .v202506MitigationTarget import v202506MitigationTarget
 
 
 class Mitigation(BaseModel):
@@ -31,9 +31,7 @@ class Mitigation(BaseModel):
         description="The alarm IDs associated with this mitigation.",
     )
 
-    target: Optional[v202506MitigationTarget] = Field(
-        validation_alias="target", default=None
-    )
+    target: Optional[MitigationTarget] = Field(validation_alias="target", default=None)
 
     currentState: Optional[MitigationState] = Field(
         validation_alias="currentState", default=None

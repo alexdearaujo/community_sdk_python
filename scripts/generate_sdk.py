@@ -27,6 +27,7 @@ from generation._shared import (
     normalize_symbol,
 )
 from generation.endpoint_docs import SCHEMA_RECORD_FILE, EndpointDocsCollector
+from generation.public_names import NAMES_FILE, PublicNames
 from google.protobuf import descriptor_pb2
 
 # Configuration
@@ -535,6 +536,50 @@ def relax_response_message_required(schema: dict) -> dict:
     return schema
 
 
+def _named_schema(schema: dict, version: str) -> dict:
+    """The schema transforms that decide which models a swagger file defines."""
+    schema = clean_schema_names(schema, version)
+    schema = inline_request_body_refs(schema)
+    return hoist_inline_request_bodies(schema)
+
+
+def schema_model_names(swagger_path: Path, version: str) -> list[str]:
+    """The model names a swagger file defines before public names apply."""
+    schema = _named_schema(
+        json.loads(swagger_path.read_text(encoding="utf-8")), version
+    )
+    return list(schema.get("components", {}).get("schemas", {}))
+
+
+def rename_models(schema: dict, renames: dict[str, str]) -> dict:
+    """Returns a copy of schema with each model, and every $ref to it, renamed."""
+    import copy
+
+    schema = copy.deepcopy(schema)
+    prefix = "#/components/schemas/"
+
+    def _rename_refs(node: object) -> None:
+        if isinstance(node, dict):
+            ref = node.get("$ref")
+            if isinstance(ref, str) and ref.startswith(prefix):
+                name = ref[len(prefix) :]
+                node["$ref"] = prefix + renames.get(name, name)
+            for child in node.values():
+                _rename_refs(child)
+        elif isinstance(node, list):
+            for item in node:
+                _rename_refs(item)
+
+    _rename_refs(schema)
+    components = schema.get("components", {})
+    if "schemas" in components:
+        components["schemas"] = {
+            renames.get(name, name): definition
+            for name, definition in components["schemas"].items()
+        }
+    return schema
+
+
 def _definition_sections(schema: dict) -> list[dict]:
     sections: list[dict] = []
     if "definitions" in schema:
@@ -579,8 +624,9 @@ def patched_swagger(
     version: str,
     oneof_members: dict[str, set[str]] | None = None,
     model_names: dict[str, tuple[str, str, str]] | None = None,
+    model_renames: dict[str, str] | None = None,
 ):
-    """Yields a temp-file path containing the schema with clean names and inlined request bodies.
+    """Yields a temp-file path containing the schema with public model names and inlined request bodies.
 
     The original swagger_path is never modified, so local schema checkouts stay clean.
     """
@@ -590,9 +636,7 @@ def patched_swagger(
     # Before clean_schema_names: oneof_members is keyed by the prefixed names.
     schema = relax_oneof_required(schema, oneof_members or {})
     schema = relax_response_message_required(schema)
-    schema = clean_schema_names(schema, version)
-    schema = inline_request_body_refs(schema)
-    schema = hoist_inline_request_bodies(schema)
+    schema = rename_models(_named_schema(schema, version), model_renames or {})
     if model_names is not None:
         check_model_names(schema, model_names, swagger_path.name)
     with NamedTemporaryFile(
@@ -701,6 +745,7 @@ GENERATED_PATHS = (
     api_surface.SURFACE_FILE,
     SCHEMA_RECORD_FILE,
     SCHEMA_PIN,
+    NAMES_FILE,
 )
 
 
@@ -775,6 +820,23 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                 "newer files in its service write all of its REST modules."
             )
 
+        # Fails before the wipe below when a public name no longer matches.
+        names = PublicNames.load()
+        public_service = names.services(source_services)
+        model_renames = {
+            public_service[service]: names.models(
+                public_service[service],
+                [
+                    name
+                    for metadata in files
+                    for name in schema_model_names(
+                        Path(metadata["path"]), str(metadata["version"])
+                    )
+                ],
+            )
+            for service, files in selected_swagger_files.items()
+        }
+
         # Setup directories (only now, once the schema checkout is known-good)
         SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         (SDK_OUTPUT_DIR / "__init__.py").touch(exist_ok=True)
@@ -796,7 +858,8 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         pb_owners: dict[tuple[str, str], str] = {}
         endpoint_docs_collector = EndpointDocsCollector()
 
-        for service in sorted(selected_swagger_files):
+        for upstream_service in sorted(selected_swagger_files):
+            service = public_service[upstream_service]
             out_dir = SDK_OUTPUT_DIR / service
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / "__init__.py").touch(exist_ok=True)
@@ -809,7 +872,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             service_swagger_paths[service] = []
             model_names: dict[str, tuple[str, str, str]] = {}
 
-            for metadata in selected_swagger_files[service]:
+            for metadata in selected_swagger_files[upstream_service]:
                 swagger_path = Path(metadata["path"])
                 version = str(metadata["version"])
                 namespace = "/".join(metadata["namespace"])
@@ -942,7 +1005,11 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                 # 2. GENERATE OPENAPI (REST)
                 # -----------------------------------------------------------------
                 with patched_swagger(
-                    swagger_path, version, oneof_members, model_names
+                    swagger_path,
+                    version,
+                    oneof_members,
+                    model_names,
+                    model_renames[service],
                 ) as tmp_swagger:
                     run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
                     # The patched swagger, so pages name the models the SDK defines.
@@ -951,9 +1018,15 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         for service, swagger_paths in service_swagger_paths.items():
             service_dir = SDK_OUTPUT_DIR / service
             if service_dir.exists():
-                error_package.generate_service_error_package(service_dir, swagger_paths)
+                error_package.generate_service_error_package(
+                    service_dir,
+                    swagger_paths,
+                    status_model=model_renames[service].get("rpcStatus"),
+                )
 
-    parity.validate_generated_service_parity(source_services, SDK_OUTPUT_DIR)
+    parity.validate_generated_service_parity(
+        {public_service[s] for s in source_services}, SDK_OUTPUT_DIR
+    )
 
     # -----------------------------------------------------------------
     # 3. POST-PROCESSING (Rest & Models Cleanup)
@@ -976,7 +1049,8 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
     run_cmd(["uv", "run", "ruff", "format", str(SDK_OUTPUT_DIR)])
 
     print("\nGenerating Wrappers & Documentation...")
-    wrapper_generation.generate()
+    wrapper_generation.generate(names)
+    names.save()
     docs_rendering.generate()
     endpoint_docs_collector.render()
     endpoint_docs_collector.write_record()

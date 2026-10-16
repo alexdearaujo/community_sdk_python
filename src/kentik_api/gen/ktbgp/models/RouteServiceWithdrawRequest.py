@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from .ktbgpv202501Withdraw import ktbgpv202501Withdraw
+from .Withdraw import Withdraw
 
 
 class RouteServiceWithdrawRequest(BaseModel):
@@ -17,6 +17,4 @@ class RouteServiceWithdrawRequest(BaseModel):
 
     deviceIds: Optional[List[str]] = Field(validation_alias="deviceIds", default=None)
 
-    withdraw: Optional[ktbgpv202501Withdraw] = Field(
-        validation_alias="withdraw", default=None
-    )
+    withdraw: Optional[Withdraw] = Field(validation_alias="withdraw", default=None)

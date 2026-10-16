@@ -5,8 +5,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .v202303Afi import v202303Afi
-from .v202303Safi import v202303Safi
+from .Afi import Afi
+from .Safi import Safi
 
 
 class Nlri(BaseModel):
@@ -16,9 +16,9 @@ class Nlri(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    afi: v202303Afi = Field(validation_alias="afi")
+    afi: Afi = Field(validation_alias="afi")
 
-    safi: v202303Safi = Field(validation_alias="safi")
+    safi: Safi = Field(validation_alias="safi")
 
     prefix: Optional[str] = Field(
         validation_alias="prefix",

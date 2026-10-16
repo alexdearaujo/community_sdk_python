@@ -47,7 +47,7 @@ from .models import (  # noqa: F401
     TCPFlagsPredicate,
     TCPFlagsPredicateGroup,
     UpdateResult,
-    ktbgpv202501Withdraw,
+    Withdraw,
     protobufAny,
     rpcStatus,
 )

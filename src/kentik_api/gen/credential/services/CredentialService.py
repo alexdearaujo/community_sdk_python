@@ -14,15 +14,15 @@ from ..error import GetCredentialGroupError, ListCredentialGroupError
 from ..models import (  # noqa: F401
     CredentialGroup,
     GetCredentialGroupResponse,
+    LandingType,
     ListCredentialGroupResponse,
+    PermissionEntry,
+    Role,
+    Secret,
+    SecretType,
+    User,
     protobufAny,
     rpcStatus,
-    v202211LandingType,
-    v202211PermissionEntry,
-    v202211Role,
-    v202211User,
-    v202312alpha1Secret,
-    v202312alpha1SecretType,
 )
 
 

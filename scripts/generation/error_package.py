@@ -141,9 +141,12 @@ def merge_operation_error_responses(
 
 
 def generate_service_error_package(
-    service_dir: Path, swagger_paths: list[Path]
+    service_dir: Path, swagger_paths: list[Path], status_model: str | None = "rpcStatus"
 ) -> None:
-    """Generates a service-local error package from one or more swagger files."""
+    """Generates a service-local error package from one or more swagger files.
+
+    status_model is the public name of the schema's `rpcStatus` model.
+    """
     service = service_dir.name
     title = service_to_pascal_case(service)
     model_classes = discover_service_model_classes(service_dir)
@@ -166,8 +169,8 @@ def generate_service_error_package(
     ]
 
     model_import_line = None
-    if "rpcStatus" in model_classes:
-        model_import_line = "from ..models import rpcStatus"
+    if status_model in model_classes:
+        model_import_line = f"from ..models import {status_model}"
         base_imports.extend(["", model_import_line])
 
     lines = [
@@ -194,11 +197,11 @@ def generate_service_error_package(
         '            details["response_json"] = payload',
     ]
 
-    if "rpcStatus" in model_classes:
+    if status_model in model_classes:
         lines.extend(
             [
                 "            try:",
-                "                status = rpcStatus.model_validate(payload)",
+                f"                status = {status_model}.model_validate(payload)",
                 "            except Exception:",
                 "                status = None",
                 "            if status is not None:",
