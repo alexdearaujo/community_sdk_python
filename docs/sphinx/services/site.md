@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: list_site_markets()
+    C->>W: list_markets()
     W->>API: GET /site/v202509/site_markets
     alt success
         API-->>W: v202509ListSiteMarketsResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_site_markets()
+    C->>W: list_markets()
     W->>R: build_grpc_request(ListSiteMarketsRequest, arguments)
     R->>API: SiteService/ListSiteMarkets (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.list_site_markets()
+response = client.site.list_markets()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: create_site_market(data=CreateSiteMarketRequest(...))
+    C->>W: create_market(data=CreateSiteMarketRequest(...))
     W->>API: POST /site/v202509/site_markets
     alt success
         API-->>W: v202509CreateSiteMarketResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_site_market(data=CreateSiteMarketRequest(...))
+    C->>W: create_market(data=CreateSiteMarketRequest(...))
     W->>R: build_grpc_request(CreateSiteMarketRequest, arguments)
     R->>API: SiteService/CreateSiteMarket (gRPC/TLS)
     alt success
@@ -164,7 +164,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.create_site_market(
+response = client.site.create_market(
     data=CreateSiteMarketRequest(...),
 )
 ```
@@ -185,7 +185,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: get_site_market(id="id-example")
+    C->>W: get_market(id="id-example")
     W->>API: GET /site/v202509/site_markets/{id}
     alt success
         API-->>W: v202509GetSiteMarketResponse (JSON)
@@ -207,7 +207,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_site_market(id="id-example")
+    C->>W: get_market(id="id-example")
     W->>R: build_grpc_request(GetSiteMarketRequest, arguments)
     R->>API: SiteService/GetSiteMarket (gRPC/TLS)
     alt success
@@ -240,7 +240,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.get_site_market(
+response = client.site.get_market(
     id="id-example",
 )
 ```
@@ -261,7 +261,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: update_site_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
+    C->>W: update_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
     W->>API: PUT /site/v202509/site_markets/{id}
     alt success
         API-->>W: v202509UpdateSiteMarketResponse (JSON)
@@ -283,7 +283,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_site_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
+    C->>W: update_market(id="id-example", data=SiteServiceUpdateSiteMarketBody(...))
     W->>R: build_grpc_request(UpdateSiteMarketRequest, arguments)
     R->>API: SiteService/UpdateSiteMarket (gRPC/TLS)
     alt success
@@ -317,7 +317,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.update_site_market(
+response = client.site.update_market(
     id="id-example",
     data=SiteServiceUpdateSiteMarketBody(...),
 )
@@ -339,7 +339,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: delete_site_market(id="id-example")
+    C->>W: delete_market(id="id-example")
     W->>API: DELETE /site/v202509/site_markets/{id}
     alt success
         API-->>W: v202509DeleteSiteMarketResponse (JSON)
@@ -361,7 +361,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_site_market(id="id-example")
+    C->>W: delete_market(id="id-example")
     W->>R: build_grpc_request(DeleteSiteMarketRequest, arguments)
     R->>API: SiteService/DeleteSiteMarket (gRPC/TLS)
     alt success
@@ -394,7 +394,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.delete_site_market(
+response = client.site.delete_market(
     id="id-example",
 )
 ```

@@ -63,47 +63,55 @@ class CostError(HTTPException):
         )
 
 
-class GetCostProviderSummaryUnexpectedError(CostError):
+class GetCostProviderSummaryError(CostError):
+    """Operation-local error for GetCostProviderSummary."""
+
+    response_error_map: dict[str, type[CostError]] = {}
+
+
+class GetCostProviderSummaryUnexpectedError(GetCostProviderSummaryError):
     """Operation-local response error for GetCostProviderSummary (default: An unexpected error response. #/components/schemas/googlerpcStatus)."""
 
     pass
 
 
-class GetCostProviderSummaryError(CostError):
-    """Operation-local error for GetCostProviderSummary."""
-
-    response_error_map = {
-        "default": GetCostProviderSummaryUnexpectedError,
-    }
-
-
-class ListCostProviderSummariesUnexpectedError(CostError):
-    """Operation-local response error for ListCostProviderSummaries (default: An unexpected error response. #/components/schemas/googlerpcStatus)."""
-
-    pass
+GetCostProviderSummaryError.response_error_map = {
+    "default": GetCostProviderSummaryUnexpectedError,
+}
 
 
 class ListCostProviderSummariesError(CostError):
     """Operation-local error for ListCostProviderSummaries."""
 
-    response_error_map = {
-        "default": ListCostProviderSummariesUnexpectedError,
-    }
+    response_error_map: dict[str, type[CostError]] = {}
 
 
-class ListCostProvidersUnexpectedError(CostError):
-    """Operation-local response error for ListCostProviders (default: An unexpected error response. #/components/schemas/googlerpcStatus)."""
+class ListCostProviderSummariesUnexpectedError(ListCostProviderSummariesError):
+    """Operation-local response error for ListCostProviderSummaries (default: An unexpected error response. #/components/schemas/googlerpcStatus)."""
 
     pass
+
+
+ListCostProviderSummariesError.response_error_map = {
+    "default": ListCostProviderSummariesUnexpectedError,
+}
 
 
 class ListCostProvidersError(CostError):
     """Operation-local error for ListCostProviders."""
 
-    response_error_map = {
-        "default": ListCostProvidersUnexpectedError,
-    }
+    response_error_map: dict[str, type[CostError]] = {}
 
+
+class ListCostProvidersUnexpectedError(ListCostProvidersError):
+    """Operation-local response error for ListCostProviders (default: An unexpected error response. #/components/schemas/googlerpcStatus)."""
+
+    pass
+
+
+ListCostProvidersError.response_error_map = {
+    "default": ListCostProvidersUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[CostError]] = {
     "GetCostProviderSummary": GetCostProviderSummaryError,

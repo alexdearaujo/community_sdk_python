@@ -33,7 +33,7 @@ class SiteServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def list_site_markets(
+    def list_markets(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSiteMarketsResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -43,7 +43,10 @@ class SiteServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListSiteMarketsRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListSiteMarkets, _req, api_config=api_config_override
+                self._grpc_stub_1.ListSiteMarkets,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.ListSiteMarketsError,
             )
             return attach_rate_limit(
                 rest_models.ListSiteMarketsResponse.model_validate(
@@ -61,7 +64,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_site_market(
+    def create_market(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -78,7 +81,10 @@ class SiteServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateSiteMarket, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateSiteMarket,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.CreateSiteMarketError,
             )
             return attach_rate_limit(
                 rest_models.CreateSiteMarketResponse.model_validate(
@@ -97,7 +103,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_site_market(
+    def get_market(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -109,7 +115,10 @@ class SiteServiceWrapper:
                 self._grpc_pb2_1.GetSiteMarketRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetSiteMarket, _req, api_config=api_config_override
+                self._grpc_stub_1.GetSiteMarket,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.GetSiteMarketError,
             )
             return attach_rate_limit(
                 rest_models.GetSiteMarketResponse.model_validate(
@@ -128,7 +137,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_site_market(
+    def update_market(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -146,7 +155,10 @@ class SiteServiceWrapper:
                 {"site_market.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateSiteMarket, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateSiteMarket,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.UpdateSiteMarketError,
             )
             return attach_rate_limit(
                 rest_models.UpdateSiteMarketResponse.model_validate(
@@ -166,7 +178,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_site_market(
+    def delete_market(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteSiteMarketResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -178,7 +190,10 @@ class SiteServiceWrapper:
                 self._grpc_pb2_1.DeleteSiteMarketRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteSiteMarket, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteSiteMarket,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.DeleteSiteMarketError,
             )
             return attach_rate_limit(
                 rest_models.DeleteSiteMarketResponse.model_validate(
@@ -207,7 +222,10 @@ class SiteServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListSitesRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListSites, _req, api_config=api_config_override
+                self._grpc_stub_1.ListSites,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.ListSitesError,
             )
             return attach_rate_limit(
                 rest_models.ListSitesResponse.model_validate(
@@ -242,7 +260,10 @@ class SiteServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateSite, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateSite,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.CreateSiteError,
             )
             return attach_rate_limit(
                 rest_models.CreateSiteResponse.model_validate(
@@ -271,7 +292,10 @@ class SiteServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.GetSiteRequest, None, {"id": id})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetSite, _req, api_config=api_config_override
+                self._grpc_stub_1.GetSite,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.GetSiteError,
             )
             return attach_rate_limit(
                 rest_models.GetSiteResponse.model_validate(
@@ -308,7 +332,10 @@ class SiteServiceWrapper:
                 {"site.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateSite, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateSite,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.UpdateSiteError,
             )
             return attach_rate_limit(
                 rest_models.UpdateSiteResponse.model_validate(
@@ -340,7 +367,10 @@ class SiteServiceWrapper:
                 self._grpc_pb2_1.DeleteSiteRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteSite, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteSite,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSiteModule1.DeleteSiteError,
             )
             return attach_rate_limit(
                 rest_models.DeleteSiteResponse.model_validate(

@@ -33,7 +33,7 @@ class JourneysServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def get_journeys_nlq(
+    def get_nlq(
         self, *, api_config_override: Optional[APIConfig] = None, prompt: str
     ) -> rest_models.GetJourneysNlqResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -45,7 +45,10 @@ class JourneysServiceWrapper:
                 self._grpc_pb2_1.GetJourneysNlqRequest, None, {"prompt": prompt}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetJourneysNlq, _req, api_config=api_config_override
+                self._grpc_stub_1.GetJourneysNlq,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestJourneysModule1.GetJourneysNlqError,
             )
             return attach_rate_limit(
                 rest_models.GetJourneysNlqResponse.model_validate(

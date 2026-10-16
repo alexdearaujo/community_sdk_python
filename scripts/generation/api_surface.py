@@ -29,7 +29,7 @@ from ._shared import (
 )
 
 SURFACE_FILE = PROJECT_ROOT / "api_surface.json"
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 _TRACKED_REQUIREMENTS = ("grpcio", "protobuf", "httpx", "pydantic")
 _PROTOBUF_GENCODE_RE = re.compile(
@@ -124,6 +124,35 @@ def _model_shapes(service_dir: Path) -> tuple[dict[str, Any], dict[str, list[str
     return dict(sorted(fields.items())), dict(sorted(enums.items()))
 
 
+def _wrapper_method_by_rest_call(service_dir: Path) -> dict[tuple[str, str], str]:
+    """Maps (REST module, REST function) to the client method that calls it."""
+    wrapper = service_dir / "services" / f"{service_dir.name}.py"
+    if not wrapper.exists():
+        return {}
+    tree = ast.parse(wrapper.read_text(encoding="utf-8"))
+    modules = {
+        alias.asname: alias.name.rsplit(".", 1)[-1]
+        for node in tree.body
+        if isinstance(node, ast.Import)
+        for alias in node.names
+        if alias.asname
+    }
+    methods: dict[tuple[str, str], str] = {}
+    for cls in (node for node in tree.body if isinstance(node, ast.ClassDef)):
+        for fn in cls.body:
+            if not isinstance(fn, ast.FunctionDef) or fn.name.startswith("_"):
+                continue
+            for call in ast.walk(fn):
+                if (
+                    isinstance(call, ast.Call)
+                    and isinstance(call.func, ast.Attribute)
+                    and isinstance(call.func.value, ast.Name)
+                    and call.func.value.id in modules
+                ):
+                    methods[(modules[call.func.value.id], call.func.attr)] = fn.name
+    return methods
+
+
 def capture(output_dir: Path | None = None) -> dict[str, Any]:
     """Builds a snapshot of the generated SDK's public surface."""
     root = SDK_OUTPUT_DIR if output_dir is None else output_dir
@@ -131,11 +160,13 @@ def capture(output_dir: Path | None = None) -> dict[str, Any]:
     services: dict[str, Any] = {}
 
     for service_dir in iter_service_dirs(root):
+        wrapper_methods = _wrapper_method_by_rest_call(service_dir)
         operations: dict[str, Any] = {}
         for module in sorted((service_dir / "services").glob("*.py")):
             for op in parse_generated_rest_module(module):
                 operations[_operation_key(op.http_method, op.path)] = {
                     "operation": op.operation_name,
+                    "method": wrapper_methods.get((module.stem, op.name)),
                     "status": op.expected_status,
                     "required_params": sorted(
                         name for name, _, required in op.params if required
@@ -251,12 +282,21 @@ def _changed_operations(
             ]
             if old.get("returns") != new.get("returns"):
                 return_change = [old.get("returns"), new.get("returns")]
+        # Before schema_version 4 a record has no method; a service with no
+        # wrapper has None. Neither is a rename.
+        old_method, new_method = old.get("method"), new.get("method")
+        method_change = (
+            [old_method, new_method]
+            if old_method and new_method and old_method != new_method
+            else None
+        )
         if (
             old.get("status") == new.get("status")
             and old_required == new_required
             and not removed_params
             and not retyped_params
             and return_change is None
+            and method_change is None
         ):
             continue
         changes.append(
@@ -268,6 +308,7 @@ def _changed_operations(
                 "removed_params": removed_params,
                 "retyped_params": retyped_params,
                 "return_change": return_change,
+                "method_change": method_change,
             }
         )
     return changes
@@ -334,6 +375,15 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
         for model in entry["removed_models"]:
             breaking.append((f"- `{name}`: model removed, `{model}`", model))
         for change in entry.get("changed_operations", []):
+            if change.get("method_change"):
+                before, after = change["method_change"]
+                breaking.append(
+                    (
+                        f"- `{name}`: `{change['operation']}` is now "
+                        f"`client.{name}.{after}`, not `{before}`",
+                        before,
+                    )
+                )
             for param in change["newly_required"]:
                 breaking.append(
                     (
@@ -430,6 +480,11 @@ def _service_bullets(entry: dict[str, Any]) -> list[str]:
             + (" ..." if count > 5 else "")
         )
     for change in entry.get("changed_operations", []):
+        if change.get("method_change"):
+            before, after = change["method_change"]
+            bullets.append(
+                f"  - **`{change['operation']}` renamed**: `{before}` to `{after}`"
+            )
         old_status, new_status = change["status"]
         if old_status != new_status:
             bullets.append(

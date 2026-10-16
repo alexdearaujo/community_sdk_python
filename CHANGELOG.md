@@ -45,6 +45,32 @@ Each change below can stop an existing `except` clause or call from working.
 | An `APIConfig` with no credentials failed inside httpx with `TypeError` | It raises `ConfigurationError` before the SDK sends a request | Give the config `auth_email` and `auth_token` |
 | `KentikAPI(...)` loaded every key of the nearest `.env` into `os.environ`, even when you passed credentials | It reads only `KENTIK_EMAIL` and `KENTIK_API_TOKEN`, into memory, and only when an argument or environment variable is missing | Load other `.env` keys yourself, for example with `dotenv.load_dotenv()` |
 | `kmeta` `ServiceNowConfig.credentialVaultId` held a credential vault entry ID | Upstream renamed it `credentialVaultName`; it holds the entry's name and always resolves to the entry's latest version | Read and send `credentialVaultName` |
+| Client method names depended on module and route order, and many repeated the Service name (`client.audit.get_audit_event`) | Names no longer depend on order and drop the Service word when two or more words remain. See [Renamed client methods](#renamed-client-methods) | Use the new names in the table below |
+
+#### Renamed client methods
+
+A name that several modules of one Service declare carries the module prefix
+in every module, so a client method name never moves to another operation. A
+second HTTP route of one operation is named by its extra path parameters, not
+by a number. The Service word stays when it is the object of the call
+(`client.device.get_device`) or when removing it would leave one word
+(`client.alerting.alert_list`).
+
+| Service | Before | After |
+| --- | --- | --- |
+| `alerting` | `list`, `get`, `create`, `delete`, `replace` (AlertAutoAckService) | `auto_ack_list`, `auto_ack_get`, `auto_ack_create`, `auto_ack_delete`, `auto_ack_replace` |
+| `alerting` | `alert_silence_notifications_list`, `alert_silence_notifications_get`, `alert_silence_notifications_create`, `alert_silence_notifications_delete`, `alert_silence_notifications_replace` | `silence_notifications_list`, `silence_notifications_get`, `silence_notifications_create`, `silence_notifications_delete`, `silence_notifications_replace` |
+| `audit` | `list_audit_events`, `get_audit_event`, `get_audit_event_2` | `list_events`, `get_event`, `get_event_by_ctime` |
+| `cost` | `list_cost_providers`, `list_cost_provider_summaries`, `get_cost_provider_summary` | `list_providers`, `list_provider_summaries`, `get_provider_summary` |
+| `credential` | `list_credential_group`, `get_credential_group` | `list_group`, `get_group` |
+| `custom_dimension` | `get_custom_dimension_info` | `get_info` |
+| `device` | `update_device_labels` | `update_labels` |
+| `journeys` | `get_journeys_nlq` | `get_nlq` |
+| `pathfinder` | `create_pathfinder_report` | `create_report` |
+| `site` | `list_site_markets`, `get_site_market`, `create_site_market`, `update_site_market`, `delete_site_market` | `list_markets`, `get_market`, `create_market`, `update_market`, `delete_market` |
+
+`api_surface.json` now records the client method for each operation, so
+`make check-changelog` flags a renamed method as a breaking change.
 
 ### Added
 
@@ -88,13 +114,41 @@ Each change below can stop an existing `except` clause or call from working.
 
 ### Fixed
 
+- **`Alert.acknowledgement` is the acknowledgement object again.** The
+  generator stripped a version prefix, and the enum `v202505AlertAcknowledgement`
+  overwrote the object `AlertAcknowledgement`. Any alert with an acknowledgement
+  then failed validation. The enum now keeps its prefixed name, and
+  `AlertFilters.ackStates` uses `v202505AlertAcknowledgement`. Code that
+  imported the enum as `AlertAcknowledgement` must import
+  `v202505AlertAcknowledgement`.
+- **`oneof` members are optional.** The OpenAPI schema drops the proto `oneof`
+  grouping and marks every member as required, so no valid message could pass
+  validation. The generator now reads the `oneof` groups from the proto and
+  makes their members optional. `ExternalContext.servicenow` and
+  `ExternalContext.jiraCloud` are now `Optional`, so alerts with an external
+  context parse, and `set_external_context` accepts one context.
+  `Nlri.prefix` (`bgp_monitoring`) is now `Optional[str]`.
+- **A gRPC response over 4 MiB no longer reads as a quota error.** The channel
+  now allows 40 MiB, and `KentikAPI(grpc_options=[...])` changes it. A response
+  over the limit raises `TransportError`, not `HTTPException` with status 429.
+- **`except <Operation>Error` now catches what the operation raises.** Each
+  response error class, such as `ListDevicesNotFoundError`, now extends its
+  operation class, `ListDevicesError`, as well as the service class. gRPC now
+  raises the same class as REST, with `grpc_status_code` set, where it raised
+  the plain `HTTPException` before.
 - **gRPC calls reach the right RPC.** In a Service with more than one proto
   service, such as `alerting`, a gRPC call went to whichever service declared
   an RPC of the same name last. For example, deleting an AlertAutoAck called
   `SuppressionService.Delete`. Each call now goes to the RPC that shares its
-  REST operation's HTTP rule. No proto declares `MitigationsService`, so on
-  gRPC its `list`, `create`, and `get` now raise `NotImplementedError`, as its
-  other operations already did, instead of calling SuppressionService.
+  REST operation's HTTP rule.
+- **`alerting` mitigation operations work on gRPC.** `alerting` has two
+  protos named `mitigation.proto`, and the second overwrote the first in
+  `pb/`, which lost `MitigationsService`. Its six operations raised
+  `NotImplementedError` on gRPC. Proto modules whose names collide inside a
+  Service now carry their folder in the name, for example
+  `pb/mitigation_public_v202505_pb2.py` and `pb/mitigation_types_v202506_pb2.py`.
+  Code that imported `kentik_api.gen.alerting.pb.mitigation_pb2` directly must
+  import one of these.
 - **gRPC calls send every argument.** Path and query arguments were sent
   under their Python names, which match no proto field, and were dropped.
   For example, `client.device.get_device(deviceid="42")` sent an empty `id`,
@@ -125,6 +179,9 @@ the declared floors match them:
 | --- | --- | --- |
 | `grpcio` | `>=1.78.0` | `>=1.84.0` |
 | `protobuf` | not declared | `>=7.35.1,<8` |
+| `httpx` | `>=0.28.1` | `>=0.28.1,<1` |
+| `python-dotenv` | `>=1.1.1` | `>=1.2.1` |
+| `googleapis-common-protos` | `>=1.63.0` | `>=1.73.1` |
 
 ### Documentation
 

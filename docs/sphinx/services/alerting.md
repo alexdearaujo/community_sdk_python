@@ -659,7 +659,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: create(data=AlertAutoAckServiceCreateRequest(...))
+    C->>W: auto_ack_create(data=AlertAutoAckServiceCreateRequest(...))
     W->>API: POST /v202505/alerts/ack/auto
     alt success
         API-->>W: v202505AlertAutoAckServiceCreateResponse (JSON)
@@ -681,7 +681,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create(data=AlertAutoAckServiceCreateRequest(...))
+    C->>W: auto_ack_create(data=AlertAutoAckServiceCreateRequest(...))
     W->>R: build_grpc_request(AlertAutoAckServiceCreateRequest, arguments)
     R->>API: AlertAutoAckService/Create (gRPC/TLS)
     alt success
@@ -714,7 +714,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.create(
+response = client.alerting.auto_ack_create(
     data=AlertAutoAckServiceCreateRequest(...),
 )
 ```
@@ -735,7 +735,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: list(data=AlertAutoAckServiceListRequest(...))
+    C->>W: auto_ack_list(data=AlertAutoAckServiceListRequest(...))
     W->>API: POST /v202505/alerts/ack/auto/list
     alt success
         API-->>W: v202505AlertAutoAckServiceListResponse (JSON)
@@ -757,7 +757,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list(data=AlertAutoAckServiceListRequest(...))
+    C->>W: auto_ack_list(data=AlertAutoAckServiceListRequest(...))
     W->>R: build_grpc_request(AlertAutoAckServiceListRequest, arguments)
     R->>API: AlertAutoAckService/List (gRPC/TLS)
     alt success
@@ -790,7 +790,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.list(
+response = client.alerting.auto_ack_list(
     data=AlertAutoAckServiceListRequest(...),
 )
 ```
@@ -811,7 +811,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: get(autoAckid="autoAckid-example")
+    C->>W: auto_ack_get(autoAckid="autoAckid-example")
     W->>API: GET /v202505/alerts/ack/auto/{autoAck.id}
     alt success
         API-->>W: v202505AlertAutoAckServiceGetResponse (JSON)
@@ -833,7 +833,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get(autoAckid="autoAckid-example")
+    C->>W: auto_ack_get(autoAckid="autoAckid-example")
     W->>R: build_grpc_request(AlertAutoAckServiceGetRequest, arguments)
     R->>API: AlertAutoAckService/Get (gRPC/TLS)
     alt success
@@ -866,7 +866,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.get(
+response = client.alerting.auto_ack_get(
     autoAckid="autoAckid-example",
 )
 ```
@@ -887,7 +887,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
+    C->>W: auto_ack_replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
     W->>API: PATCH /v202505/alerts/ack/auto/{autoAck.id}
     alt success
         API-->>W: v202505AlertAutoAckServiceReplaceResponse (JSON)
@@ -909,7 +909,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
+    C->>W: auto_ack_replace(autoAckid="autoAckid-example", data=AlertAutoAckServiceReplaceBody(...))
     W->>R: build_grpc_request(AlertAutoAckServiceReplaceRequest, arguments)
     R->>API: AlertAutoAckService/Replace (gRPC/TLS)
     alt success
@@ -943,7 +943,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.replace(
+response = client.alerting.auto_ack_replace(
     autoAckid="autoAckid-example",
     data=AlertAutoAckServiceReplaceBody(...),
 )
@@ -965,7 +965,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: delete(autoAckid="autoAckid-example")
+    C->>W: auto_ack_delete(autoAckid="autoAckid-example")
     W->>API: DELETE /v202505/alerts/ack/auto/{autoAck.id}
     alt success
         API-->>W: v202505AlertAutoAckServiceDeleteResponse (JSON)
@@ -987,7 +987,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete(autoAckid="autoAckid-example")
+    C->>W: auto_ack_delete(autoAckid="autoAckid-example")
     W->>R: build_grpc_request(AlertAutoAckServiceDeleteRequest, arguments)
     R->>API: AlertAutoAckService/Delete (gRPC/TLS)
     alt success
@@ -1020,7 +1020,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.delete(
+response = client.alerting.auto_ack_delete(
     autoAckid="autoAckid-example",
 )
 ```
@@ -1056,7 +1056,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_list()
+    W->>R: build_grpc_request(MitigationsServiceListRequest, arguments)
+    R->>API: MitigationsService/List (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceListResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -1124,7 +1142,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_create(data=MitigationsServiceCreateRequest(...))
+    W->>R: build_grpc_request(MitigationsServiceCreateRequest, arguments)
+    R->>API: MitigationsService/Create (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceCreateResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -1182,7 +1218,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: available_actions()
+    W->>R: build_grpc_request(MitigationsServiceAvailableActionsRequest, arguments)
+    R->>API: MitigationsService/AvailableActions (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceAvailableActionsResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Responses
 
@@ -1232,7 +1286,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: mitigations_get(action="action-example")
+    W->>R: build_grpc_request(MitigationsServiceGetRequest, arguments)
+    R->>API: MitigationsService/Get (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceGetResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -1290,7 +1362,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: act(action="action-example", data=MitigationsServiceActBody(...))
+    W->>R: build_grpc_request(MitigationsServiceActRequest, arguments)
+    R->>API: MitigationsService/Act (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceActResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -1350,7 +1440,25 @@ sequenceDiagram
 
 **gRPC transport**
 
-Not available: no RPC declares this operation's HTTP rule, so on `protocol="grpc"` this method raises `NotImplementedError`. Call it through a `protocol="rest"` client.
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant W as client.alerting
+    participant R as grpc_runtime
+    participant API as Kentik gRPC API
+
+    C->>W: available_actions_for_mitigation(id="id-example")
+    W->>R: build_grpc_request(MitigationsServiceAvailableActionsForMitigationRequest, arguments)
+    R->>API: MitigationsService/AvailableActionsForMitigation (gRPC/TLS)
+    alt success
+        API-->>R: response message
+        R-->>W: MessageToDict(response)
+        W-->>C: v202505MitigationsServiceAvailableActionsForMitigationResponse
+    else gRPC error, deadline, or unreachable
+        R-->>W: map_grpc_error()
+        W-->>C: raise AuthenticationError, HTTPException, or TransportError
+    end
+```
 
 ##### Parameters
 
@@ -2023,7 +2131,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: alert_silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
+    C->>W: silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
     W->>API: POST /v202505/alerts/silence
     alt success
         API-->>W: v202505AlertSilenceNotificationsServiceCreateResponse (JSON)
@@ -2045,7 +2153,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: alert_silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
+    C->>W: silence_notifications_create(data=AlertSilenceNotificationsServiceCreateRequest(...))
     W->>R: build_grpc_request(AlertSilenceNotificationsServiceCreateRequest, arguments)
     R->>API: AlertSilenceNotificationsService/Create (gRPC/TLS)
     alt success
@@ -2078,7 +2186,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.alert_silence_notifications_create(
+response = client.alerting.silence_notifications_create(
     data=AlertSilenceNotificationsServiceCreateRequest(...),
 )
 ```
@@ -2099,7 +2207,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: alert_silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
+    C->>W: silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
     W->>API: POST /v202505/alerts/silence/list
     alt success
         API-->>W: v202505AlertSilenceNotificationsServiceListResponse (JSON)
@@ -2121,7 +2229,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: alert_silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
+    C->>W: silence_notifications_list(data=AlertSilenceNotificationsServiceListRequest(...))
     W->>R: build_grpc_request(AlertSilenceNotificationsServiceListRequest, arguments)
     R->>API: AlertSilenceNotificationsService/List (gRPC/TLS)
     alt success
@@ -2154,7 +2262,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.alert_silence_notifications_list(
+response = client.alerting.silence_notifications_list(
     data=AlertSilenceNotificationsServiceListRequest(...),
 )
 ```
@@ -2175,7 +2283,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: alert_silence_notifications_get(id="id-example")
+    C->>W: silence_notifications_get(id="id-example")
     W->>API: GET /v202505/alerts/silence/{id}
     alt success
         API-->>W: v202505AlertSilenceNotificationsServiceGetResponse (JSON)
@@ -2197,7 +2305,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: alert_silence_notifications_get(id="id-example")
+    C->>W: silence_notifications_get(id="id-example")
     W->>R: build_grpc_request(AlertSilenceNotificationsServiceGetRequest, arguments)
     R->>API: AlertSilenceNotificationsService/Get (gRPC/TLS)
     alt success
@@ -2230,7 +2338,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.alert_silence_notifications_get(
+response = client.alerting.silence_notifications_get(
     id="id-example",
 )
 ```
@@ -2251,7 +2359,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: alert_silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
+    C->>W: silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
     W->>API: PATCH /v202505/alerts/silence/{id}
     alt success
         API-->>W: v202505AlertSilenceNotificationsServiceReplaceResponse (JSON)
@@ -2273,7 +2381,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: alert_silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
+    C->>W: silence_notifications_replace(id="id-example", data=AlertSilenceNotificationsServiceReplaceBody(...))
     W->>R: build_grpc_request(AlertSilenceNotificationsServiceReplaceRequest, arguments)
     R->>API: AlertSilenceNotificationsService/Replace (gRPC/TLS)
     alt success
@@ -2307,7 +2415,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.alert_silence_notifications_replace(
+response = client.alerting.silence_notifications_replace(
     id="id-example",
     data=AlertSilenceNotificationsServiceReplaceBody(...),
 )
@@ -2329,7 +2437,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: alert_silence_notifications_delete(id="id-example")
+    C->>W: silence_notifications_delete(id="id-example")
     W->>API: DELETE /v202505/alerts/silence/{id}
     alt success
         API-->>W: v202505AlertSilenceNotificationsServiceDeleteResponse (JSON)
@@ -2351,7 +2459,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: alert_silence_notifications_delete(id="id-example")
+    C->>W: silence_notifications_delete(id="id-example")
     W->>R: build_grpc_request(AlertSilenceNotificationsServiceDeleteRequest, arguments)
     R->>API: AlertSilenceNotificationsService/Delete (gRPC/TLS)
     alt success
@@ -2384,7 +2492,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.alert_silence_notifications_delete(
+response = client.alerting.silence_notifications_delete(
     id="id-example",
 )
 ```
@@ -2774,7 +2882,7 @@ response = client.alerting.suppression_delete(
 ## Data Models
 
 <details>
-<summary>Model relationships (10 of 185 models)</summary>
+<summary>Model relationships (10 of 186 models)</summary>
 
 ```mermaid
 classDiagram
@@ -2804,8 +2912,7 @@ classDiagram
 ```
 
 ```{eval-rst}
-.. autoclass:: kentik_api.gen.alerting.models.AlertAcknowledgement
-   :members:
+.. autopydantic_model:: kentik_api.gen.alerting.models.AlertAcknowledgement
 ```
 
 ```{eval-rst}
@@ -3556,6 +3663,11 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.alerting.models.v202501TCPFlagsPredicateGroup
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.alerting.models.v202505AlertAcknowledgement
+   :members:
 ```
 
 ```{eval-rst}

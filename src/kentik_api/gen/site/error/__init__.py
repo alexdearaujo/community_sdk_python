@@ -78,145 +78,174 @@ class SiteError(HTTPException):
         )
 
 
-class CreateSiteUnexpectedError(SiteError):
+class CreateSiteError(SiteError):
+    """Operation-local error for CreateSite."""
+
+    response_error_map: dict[str, type[SiteError]] = {}
+
+
+class CreateSiteUnexpectedError(CreateSiteError):
     """Operation-local response error for CreateSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateSiteError(SiteError):
-    """Operation-local error for CreateSite."""
-
-    response_error_map = {
-        "default": CreateSiteUnexpectedError,
-    }
-
-
-class CreateSiteMarketUnexpectedError(SiteError):
-    """Operation-local response error for CreateSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateSiteError.response_error_map = {
+    "default": CreateSiteUnexpectedError,
+}
 
 
 class CreateSiteMarketError(SiteError):
     """Operation-local error for CreateSiteMarket."""
 
-    response_error_map = {
-        "default": CreateSiteMarketUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
 
-class DeleteSiteUnexpectedError(SiteError):
-    """Operation-local response error for DeleteSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateSiteMarketUnexpectedError(CreateSiteMarketError):
+    """Operation-local response error for CreateSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CreateSiteMarketError.response_error_map = {
+    "default": CreateSiteMarketUnexpectedError,
+}
 
 
 class DeleteSiteError(SiteError):
     """Operation-local error for DeleteSite."""
 
-    response_error_map = {
-        "default": DeleteSiteUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
 
-class DeleteSiteMarketUnexpectedError(SiteError):
-    """Operation-local response error for DeleteSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteSiteUnexpectedError(DeleteSiteError):
+    """Operation-local response error for DeleteSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteSiteError.response_error_map = {
+    "default": DeleteSiteUnexpectedError,
+}
 
 
 class DeleteSiteMarketError(SiteError):
     """Operation-local error for DeleteSiteMarket."""
 
-    response_error_map = {
-        "default": DeleteSiteMarketUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
 
-class GetSiteUnexpectedError(SiteError):
-    """Operation-local response error for GetSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteSiteMarketUnexpectedError(DeleteSiteMarketError):
+    """Operation-local response error for DeleteSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteSiteMarketError.response_error_map = {
+    "default": DeleteSiteMarketUnexpectedError,
+}
 
 
 class GetSiteError(SiteError):
     """Operation-local error for GetSite."""
 
-    response_error_map = {
-        "default": GetSiteUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
 
-class GetSiteMarketUnexpectedError(SiteError):
-    """Operation-local response error for GetSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetSiteUnexpectedError(GetSiteError):
+    """Operation-local response error for GetSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetSiteError.response_error_map = {
+    "default": GetSiteUnexpectedError,
+}
 
 
 class GetSiteMarketError(SiteError):
     """Operation-local error for GetSiteMarket."""
 
-    response_error_map = {
-        "default": GetSiteMarketUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
 
-class ListSiteMarketsUnexpectedError(SiteError):
-    """Operation-local response error for ListSiteMarkets (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetSiteMarketUnexpectedError(GetSiteMarketError):
+    """Operation-local response error for GetSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetSiteMarketError.response_error_map = {
+    "default": GetSiteMarketUnexpectedError,
+}
 
 
 class ListSiteMarketsError(SiteError):
     """Operation-local error for ListSiteMarkets."""
 
-    response_error_map = {
-        "default": ListSiteMarketsUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
 
-class ListSitesUnexpectedError(SiteError):
-    """Operation-local response error for ListSites (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListSiteMarketsUnexpectedError(ListSiteMarketsError):
+    """Operation-local response error for ListSiteMarkets (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListSiteMarketsError.response_error_map = {
+    "default": ListSiteMarketsUnexpectedError,
+}
 
 
 class ListSitesError(SiteError):
     """Operation-local error for ListSites."""
 
-    response_error_map = {
-        "default": ListSitesUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
 
-class UpdateSiteUnexpectedError(SiteError):
-    """Operation-local response error for UpdateSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListSitesUnexpectedError(ListSitesError):
+    """Operation-local response error for ListSites (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListSitesError.response_error_map = {
+    "default": ListSitesUnexpectedError,
+}
 
 
 class UpdateSiteError(SiteError):
     """Operation-local error for UpdateSite."""
 
-    response_error_map = {
-        "default": UpdateSiteUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
 
-class UpdateSiteMarketUnexpectedError(SiteError):
-    """Operation-local response error for UpdateSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateSiteUnexpectedError(UpdateSiteError):
+    """Operation-local response error for UpdateSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+UpdateSiteError.response_error_map = {
+    "default": UpdateSiteUnexpectedError,
+}
 
 
 class UpdateSiteMarketError(SiteError):
     """Operation-local error for UpdateSiteMarket."""
 
-    response_error_map = {
-        "default": UpdateSiteMarketUnexpectedError,
-    }
+    response_error_map: dict[str, type[SiteError]] = {}
 
+
+class UpdateSiteMarketUnexpectedError(UpdateSiteMarketError):
+    """Operation-local response error for UpdateSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateSiteMarketError.response_error_map = {
+    "default": UpdateSiteMarketUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[SiteError]] = {
     "CreateSite": CreateSiteError,

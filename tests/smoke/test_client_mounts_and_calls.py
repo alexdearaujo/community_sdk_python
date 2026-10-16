@@ -268,7 +268,7 @@ def test_region_selects_the_rest_and_grpc_hosts(
     monkeypatch.setattr(
         grpc,
         "secure_channel",
-        lambda target, creds: targets.append(target) or MagicMock(),
+        lambda target, creds, **kw: targets.append(target) or MagicMock(),
     )
     monkeypatch.setattr(grpc, "intercept_channel", lambda channel, _: channel)
     grpc_target, rest_url = _REGION_ENDPOINTS[region]

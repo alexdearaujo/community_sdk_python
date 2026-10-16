@@ -78,229 +78,276 @@ class AlertingError(HTTPException):
         )
 
 
-class AckUnexpectedError(AlertingError):
+class AckError(AlertingError):
+    """Operation-local error for Ack."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class AckUnexpectedError(AckError):
     """Operation-local response error for Ack (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class AckError(AlertingError):
-    """Operation-local error for Ack."""
-
-    response_error_map = {
-        "default": AckUnexpectedError,
-    }
-
-
-class ActUnexpectedError(AlertingError):
-    """Operation-local response error for Act (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+AckError.response_error_map = {
+    "default": AckUnexpectedError,
+}
 
 
 class ActError(AlertingError):
     """Operation-local error for Act."""
 
-    response_error_map = {
-        "default": ActUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class AddCommentUnexpectedError(AlertingError):
-    """Operation-local response error for AddComment (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ActUnexpectedError(ActError):
+    """Operation-local response error for Act (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ActError.response_error_map = {
+    "default": ActUnexpectedError,
+}
 
 
 class AddCommentError(AlertingError):
     """Operation-local error for AddComment."""
 
-    response_error_map = {
-        "default": AddCommentUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class AvailableActionsUnexpectedError(AlertingError):
-    """Operation-local response error for AvailableActions (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class AddCommentUnexpectedError(AddCommentError):
+    """Operation-local response error for AddComment (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+AddCommentError.response_error_map = {
+    "default": AddCommentUnexpectedError,
+}
 
 
 class AvailableActionsError(AlertingError):
     """Operation-local error for AvailableActions."""
 
-    response_error_map = {
-        "default": AvailableActionsUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class AvailableActionsForMitigationUnexpectedError(AlertingError):
-    """Operation-local response error for AvailableActionsForMitigation (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class AvailableActionsUnexpectedError(AvailableActionsError):
+    """Operation-local response error for AvailableActions (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+AvailableActionsError.response_error_map = {
+    "default": AvailableActionsUnexpectedError,
+}
 
 
 class AvailableActionsForMitigationError(AlertingError):
     """Operation-local error for AvailableActionsForMitigation."""
 
-    response_error_map = {
-        "default": AvailableActionsForMitigationUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class ClearUnexpectedError(AlertingError):
-    """Operation-local response error for Clear (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class AvailableActionsForMitigationUnexpectedError(AvailableActionsForMitigationError):
+    """Operation-local response error for AvailableActionsForMitigation (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+AvailableActionsForMitigationError.response_error_map = {
+    "default": AvailableActionsForMitigationUnexpectedError,
+}
 
 
 class ClearError(AlertingError):
     """Operation-local error for Clear."""
 
-    response_error_map = {
-        "default": ClearUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class CreateUnexpectedError(AlertingError):
-    """Operation-local response error for Create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ClearUnexpectedError(ClearError):
+    """Operation-local response error for Clear (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ClearError.response_error_map = {
+    "default": ClearUnexpectedError,
+}
 
 
 class CreateError(AlertingError):
     """Operation-local error for Create."""
 
-    response_error_map = {
-        "default": CreateUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class DeleteUnexpectedError(AlertingError):
-    """Operation-local response error for Delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateUnexpectedError(CreateError):
+    """Operation-local response error for Create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+CreateError.response_error_map = {
+    "default": CreateUnexpectedError,
+}
 
 
 class DeleteError(AlertingError):
     """Operation-local error for Delete."""
 
-    response_error_map = {
-        "default": DeleteUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class DisableUnexpectedError(AlertingError):
-    """Operation-local response error for Disable (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteUnexpectedError(DeleteError):
+    """Operation-local response error for Delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteError.response_error_map = {
+    "default": DeleteUnexpectedError,
+}
 
 
 class DisableError(AlertingError):
     """Operation-local error for Disable."""
 
-    response_error_map = {
-        "default": DisableUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class EnableUnexpectedError(AlertingError):
-    """Operation-local response error for Enable (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DisableUnexpectedError(DisableError):
+    """Operation-local response error for Disable (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DisableError.response_error_map = {
+    "default": DisableUnexpectedError,
+}
 
 
 class EnableError(AlertingError):
     """Operation-local error for Enable."""
 
-    response_error_map = {
-        "default": EnableUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class GetUnexpectedError(AlertingError):
-    """Operation-local response error for Get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class EnableUnexpectedError(EnableError):
+    """Operation-local response error for Enable (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+EnableError.response_error_map = {
+    "default": EnableUnexpectedError,
+}
 
 
 class GetError(AlertingError):
     """Operation-local error for Get."""
 
-    response_error_map = {
-        "default": GetUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class ListUnexpectedError(AlertingError):
-    """Operation-local response error for List (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetUnexpectedError(GetError):
+    """Operation-local response error for Get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetError.response_error_map = {
+    "default": GetUnexpectedError,
+}
 
 
 class ListError(AlertingError):
     """Operation-local error for List."""
 
-    response_error_map = {
-        "default": ListUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class ListCommentsUnexpectedError(AlertingError):
-    """Operation-local response error for ListComments (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListUnexpectedError(ListError):
+    """Operation-local response error for List (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListError.response_error_map = {
+    "default": ListUnexpectedError,
+}
 
 
 class ListCommentsError(AlertingError):
     """Operation-local error for ListComments."""
 
-    response_error_map = {
-        "default": ListCommentsUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class ReplaceUnexpectedError(AlertingError):
-    """Operation-local response error for Replace (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListCommentsUnexpectedError(ListCommentsError):
+    """Operation-local response error for ListComments (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListCommentsError.response_error_map = {
+    "default": ListCommentsUnexpectedError,
+}
 
 
 class ReplaceError(AlertingError):
     """Operation-local error for Replace."""
 
-    response_error_map = {
-        "default": ReplaceUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class SetExternalContextUnexpectedError(AlertingError):
-    """Operation-local response error for SetExternalContext (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ReplaceUnexpectedError(ReplaceError):
+    """Operation-local response error for Replace (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ReplaceError.response_error_map = {
+    "default": ReplaceUnexpectedError,
+}
 
 
 class SetExternalContextError(AlertingError):
     """Operation-local error for SetExternalContext."""
 
-    response_error_map = {
-        "default": SetExternalContextUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class UnAckUnexpectedError(AlertingError):
-    """Operation-local response error for UnAck (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class SetExternalContextUnexpectedError(SetExternalContextError):
+    """Operation-local response error for SetExternalContext (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+SetExternalContextError.response_error_map = {
+    "default": SetExternalContextUnexpectedError,
+}
 
 
 class UnAckError(AlertingError):
     """Operation-local error for UnAck."""
 
-    response_error_map = {
-        "default": UnAckUnexpectedError,
-    }
+    response_error_map: dict[str, type[AlertingError]] = {}
 
+
+class UnAckUnexpectedError(UnAckError):
+    """Operation-local response error for UnAck (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UnAckError.response_error_map = {
+    "default": UnAckUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[AlertingError]] = {
     "Ack": AckError,

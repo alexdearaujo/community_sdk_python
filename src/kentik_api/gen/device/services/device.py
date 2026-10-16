@@ -51,7 +51,10 @@ class DeviceServiceWrapper:
                 {"query.noCustomColumns": querynoCustomColumns, "view": view},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListDevices, _req, api_config=api_config_override
+                self._grpc_stub_1.ListDevices,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.ListDevicesError,
             )
             return attach_rate_limit(
                 rest_models.ListDevicesResponse.model_validate(
@@ -88,7 +91,10 @@ class DeviceServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateDevice, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateDevice,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.CreateDeviceError,
             )
             return attach_rate_limit(
                 rest_models.CreateDeviceResponse.model_validate(
@@ -124,7 +130,10 @@ class DeviceServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateDevices, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateDevices,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.CreateDevicesError,
             )
             return attach_rate_limit(
                 rest_models.CreateDevicesResponse.model_validate(
@@ -160,7 +169,10 @@ class DeviceServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteDevices, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteDevices,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.DeleteDevicesError,
             )
             return attach_rate_limit(
                 rest_models.DeleteDevicesResponse.model_validate(
@@ -196,7 +208,10 @@ class DeviceServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateDevices, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateDevices,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.UpdateDevicesError,
             )
             return attach_rate_limit(
                 rest_models.UpdateDevicesResponse.model_validate(
@@ -236,7 +251,10 @@ class DeviceServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetDeviceByName, _req, api_config=api_config_override
+                self._grpc_stub_1.GetDeviceByName,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.GetDeviceByNameError,
             )
             return attach_rate_limit(
                 rest_models.GetDeviceByNameResponse.model_validate(
@@ -274,7 +292,10 @@ class DeviceServiceWrapper:
                 {"id": deviceid, "query.noCustomColumns": querynoCustomColumns},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetDevice, _req, api_config=api_config_override
+                self._grpc_stub_1.GetDevice,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.GetDeviceError,
             )
             return attach_rate_limit(
                 rest_models.GetDeviceResponse.model_validate(
@@ -312,7 +333,10 @@ class DeviceServiceWrapper:
                 {"device.id": deviceid},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateDevice, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateDevice,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.UpdateDeviceError,
             )
             return attach_rate_limit(
                 rest_models.UpdateDeviceResponse.model_validate(
@@ -344,7 +368,10 @@ class DeviceServiceWrapper:
                 self._grpc_pb2_1.DeleteDeviceRequest, None, {"id": deviceid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteDevice, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteDevice,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDeviceModule1.DeleteDeviceError,
             )
             return attach_rate_limit(
                 rest_models.DeleteDeviceResponse.model_validate(
@@ -363,7 +390,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_device_labels(
+    def update_labels(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -384,6 +411,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.UpdateDeviceLabels,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestDeviceModule1.UpdateDeviceLabelsError,
             )
             return attach_rate_limit(
                 rest_models.UpdateDeviceLabelsResponse.model_validate(

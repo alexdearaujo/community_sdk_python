@@ -53,6 +53,7 @@ class AiAdvisorServiceWrapper:
                 self._grpc_stub_1.CreateChatSession,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestAiAdvisorModule1.CreateChatSessionError,
             )
             return attach_rate_limit(
                 rest_models.CreateChatSessionResponse.model_validate(
@@ -91,6 +92,7 @@ class AiAdvisorServiceWrapper:
                 self._grpc_stub_1.UpdateChatSession,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestAiAdvisorModule1.UpdateChatSessionError,
             )
             return attach_rate_limit(
                 rest_models.UpdateChatSessionResponse.model_validate(
@@ -121,7 +123,10 @@ class AiAdvisorServiceWrapper:
                 self._grpc_pb2_1.GetChatSessionRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetChatSession, _req, api_config=api_config_override
+                self._grpc_stub_1.GetChatSession,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAiAdvisorModule1.GetChatSessionError,
             )
             return attach_rate_limit(
                 rest_models.GetChatSessionResponse.model_validate(

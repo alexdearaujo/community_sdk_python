@@ -393,4 +393,7 @@ from .v202501TCPFlagsPredicate import (
 from .v202501TCPFlagsPredicateGroup import (
     v202501TCPFlagsPredicateGroup as v202501TCPFlagsPredicateGroup,
 )
+from .v202505AlertAcknowledgement import (
+    v202505AlertAcknowledgement as v202505AlertAcknowledgement,
+)
 from .v202506MitigationTarget import v202506MitigationTarget as v202506MitigationTarget

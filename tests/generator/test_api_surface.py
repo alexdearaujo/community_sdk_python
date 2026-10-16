@@ -171,6 +171,12 @@ def test_capture_reads_a_generated_tree(tmp_path: Path):
         '        operation_name="ListThings",\n'
         "    )\n"
     )
+    (service / "services" / "demo.py").write_text(
+        "import kentik_api.gen.demo.services.DemoService as RestDemoModule1\n"
+        "class DemoServiceWrapper:\n"
+        "    def list_things(self, *, cid):\n"
+        "        return RestDemoModule1.ListThings(cid=cid)\n"
+    )
 
     surface = api_surface.capture(tmp_path)
 
@@ -187,6 +193,7 @@ def test_capture_reads_a_generated_tree(tmp_path: Path):
     assert "GET /demo/v1/{cid}/things" in operations
     assert operations["GET /demo/v1/{cid}/things"]["operation"] == "ListThings"
     assert operations["GET /demo/v1/{cid}/things"]["required_params"] == ["cid"]
+    assert operations["GET /demo/v1/{cid}/things"]["method"] == "list_things"
 
 
 def test_write_then_read_round_trips(tmp_path: Path):
@@ -299,6 +306,35 @@ def test_a_record_without_fields_compares_as_unchanged():
     after = _surface(
         {"demo": _service(models=["Thing"], fields={"Thing": {"note": _field()}})}
     )
+
+    assert api_surface.is_empty(api_surface.diff(before, after))
+
+
+def test_renamed_client_method_is_flagged_breaking():
+    before = _surface({"alerting": _service(["GET /auto-acks"])})
+    after = _surface({"alerting": _service(["GET /auto-acks"])})
+    before["services"]["alerting"]["operations"]["GET /auto-acks"]["method"] = "list"
+    after["services"]["alerting"]["operations"]["GET /auto-acks"]["method"] = (
+        "alert_auto_ack_list"
+    )
+
+    delta = api_surface.diff(before, after)
+
+    assert api_surface.breaking_changes(delta) == [
+        (
+            "- `alerting`: `GET /auto-acks` is now "
+            "`client.alerting.alert_auto_ack_list`, not `list`",
+            "list",
+        )
+    ]
+    assert "`list` to `alert_auto_ack_list`" in _render(before, after)
+
+
+def test_a_record_without_method_names_compares_as_unchanged():
+    """Records written before schema_version 4 carry no client method names."""
+    before = _surface({"demo": _service(["GET /thing"])})
+    after = _surface({"demo": _service(["GET /thing"])})
+    after["services"]["demo"]["operations"]["GET /thing"]["method"] = "get_thing"
 
     assert api_surface.is_empty(api_surface.diff(before, after))
 

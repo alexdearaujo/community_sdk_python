@@ -43,7 +43,10 @@ class AsGroupServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListASGroupsRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListASGroups, _req, api_config=api_config_override
+                self._grpc_stub_1.ListASGroups,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAsGroupModule1.ListASGroupsError,
             )
             return attach_rate_limit(
                 rest_models.ListASGroupsResponse.model_validate(
@@ -78,7 +81,10 @@ class AsGroupServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateASGroup, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateASGroup,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAsGroupModule1.CreateASGroupError,
             )
             return attach_rate_limit(
                 rest_models.CreateASGroupResponse.model_validate(
@@ -109,7 +115,10 @@ class AsGroupServiceWrapper:
                 self._grpc_pb2_1.GetASGroupRequest, None, {"id": asGroupid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetASGroup, _req, api_config=api_config_override
+                self._grpc_stub_1.GetASGroup,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAsGroupModule1.GetASGroupError,
             )
             return attach_rate_limit(
                 rest_models.GetASGroupResponse.model_validate(
@@ -146,7 +155,10 @@ class AsGroupServiceWrapper:
                 {"as_group.id": asGroupid},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateASGroup, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateASGroup,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAsGroupModule1.UpdateASGroupError,
             )
             return attach_rate_limit(
                 rest_models.UpdateASGroupResponse.model_validate(
@@ -178,7 +190,10 @@ class AsGroupServiceWrapper:
                 self._grpc_pb2_1.DeleteASGroupRequest, None, {"id": asGroupid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteASGroup, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteASGroup,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAsGroupModule1.DeleteASGroupError,
             )
             return attach_rate_limit(
                 rest_models.DeleteASGroupResponse.model_validate(

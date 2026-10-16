@@ -1,14 +1,26 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `make generate`. Do not edit by hand.
 
-from enum import Enum
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from .v202505AlertAcknowledgement import v202505AlertAcknowledgement
 
 
-class AlertAcknowledgement(str, Enum):
-    ALERT_ACKNOWLEDGEMENT_UNSPECIFIED = "ALERT_ACKNOWLEDGEMENT_UNSPECIFIED"
+class AlertAcknowledgement(BaseModel):
+    """
+    AlertAcknowledgement model
+    """
 
-    ALERT_ACKNOWLEDGEMENT_REQUIRED = "ALERT_ACKNOWLEDGEMENT_REQUIRED"
+    model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    ALERT_ACKNOWLEDGEMENT_DONE = "ALERT_ACKNOWLEDGEMENT_DONE"
+    state: Optional[v202505AlertAcknowledgement] = Field(
+        validation_alias="state", default=None
+    )
 
-    ALERT_ACKNOWLEDGEMENT_NOT_ACKED = "ALERT_ACKNOWLEDGEMENT_NOT_ACKED"
+    ackedByUser: Optional[str] = Field(validation_alias="ackedByUser", default=None)
+
+    autoAckId: Optional[str] = Field(validation_alias="autoAckId", default=None)
+
+    ackedAt: Optional[str] = Field(validation_alias="ackedAt", default=None)

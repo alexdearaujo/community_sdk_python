@@ -77,11 +77,11 @@ class AlertingServiceWrapper:
                 self._grpc_stub_4 = None
             try:
                 __import__("kentik_api.gen.pb_companions")
-                import kentik_api.gen.alerting.pb.policy_pb2 as _pb2_5_mod
-                import kentik_api.gen.alerting.pb.policy_pb2_grpc as _pb2_grpc_5_mod
+                import kentik_api.gen.alerting.pb.mitigation_public_v202505_pb2 as _pb2_5_mod
+                import kentik_api.gen.alerting.pb.mitigation_public_v202505_pb2_grpc as _pb2_grpc_5_mod
 
                 self._grpc_pb2_5 = _pb2_5_mod
-                self._grpc_stub_5 = _pb2_grpc_5_mod.PolicyServiceStub(
+                self._grpc_stub_5 = _pb2_grpc_5_mod.MitigationsServiceStub(
                     self._transport.channel
                 )
             except (ImportError, TypeError):
@@ -89,32 +89,44 @@ class AlertingServiceWrapper:
                 self._grpc_stub_5 = None
             try:
                 __import__("kentik_api.gen.pb_companions")
-                import kentik_api.gen.alerting.pb.silencing_pb2 as _pb2_6_mod
-                import kentik_api.gen.alerting.pb.silencing_pb2_grpc as _pb2_grpc_6_mod
+                import kentik_api.gen.alerting.pb.policy_pb2 as _pb2_6_mod
+                import kentik_api.gen.alerting.pb.policy_pb2_grpc as _pb2_grpc_6_mod
 
                 self._grpc_pb2_6 = _pb2_6_mod
-                self._grpc_stub_6 = (
-                    _pb2_grpc_6_mod.AlertSilenceNotificationsServiceStub(
-                        self._transport.channel
-                    )
+                self._grpc_stub_6 = _pb2_grpc_6_mod.PolicyServiceStub(
+                    self._transport.channel
                 )
             except (ImportError, TypeError):
                 self._grpc_pb2_6 = None
                 self._grpc_stub_6 = None
             try:
                 __import__("kentik_api.gen.pb_companions")
-                import kentik_api.gen.alerting.pb.suppressions_pb2 as _pb2_7_mod
-                import kentik_api.gen.alerting.pb.suppressions_pb2_grpc as _pb2_grpc_7_mod
+                import kentik_api.gen.alerting.pb.silencing_pb2 as _pb2_7_mod
+                import kentik_api.gen.alerting.pb.silencing_pb2_grpc as _pb2_grpc_7_mod
 
                 self._grpc_pb2_7 = _pb2_7_mod
-                self._grpc_stub_7 = _pb2_grpc_7_mod.SuppressionServiceStub(
-                    self._transport.channel
+                self._grpc_stub_7 = (
+                    _pb2_grpc_7_mod.AlertSilenceNotificationsServiceStub(
+                        self._transport.channel
+                    )
                 )
             except (ImportError, TypeError):
                 self._grpc_pb2_7 = None
                 self._grpc_stub_7 = None
+            try:
+                __import__("kentik_api.gen.pb_companions")
+                import kentik_api.gen.alerting.pb.suppressions_pb2 as _pb2_8_mod
+                import kentik_api.gen.alerting.pb.suppressions_pb2_grpc as _pb2_grpc_8_mod
 
-    def create(
+                self._grpc_pb2_8 = _pb2_8_mod
+                self._grpc_stub_8 = _pb2_grpc_8_mod.SuppressionServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError):
+                self._grpc_pb2_8 = None
+                self._grpc_stub_8 = None
+
+    def auto_ack_create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -131,7 +143,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Create, _req, api_config=api_config_override
+                self._grpc_stub_2.Create,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.CreateError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceCreateResponse.model_validate(
@@ -150,7 +165,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def list(
+    def auto_ack_list(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -167,7 +182,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.List, _req, api_config=api_config_override
+                self._grpc_stub_2.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.ListError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceListResponse.model_validate(
@@ -186,7 +204,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get(
+    def auto_ack_get(
         self, *, api_config_override: Optional[APIConfig] = None, autoAckid: str
     ) -> rest_models.AlertAutoAckServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -198,7 +216,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_2.AlertAutoAckServiceGetRequest, None, {"id": autoAckid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Get, _req, api_config=api_config_override
+                self._grpc_stub_2.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.GetError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceGetResponse.model_validate(
@@ -217,7 +238,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete(
+    def auto_ack_delete(
         self, *, api_config_override: Optional[APIConfig] = None, autoAckid: str
     ) -> rest_models.AlertAutoAckServiceDeleteResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -231,7 +252,10 @@ class AlertingServiceWrapper:
                 {"id": autoAckid},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Delete, _req, api_config=api_config_override
+                self._grpc_stub_2.Delete,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.DeleteError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceDeleteResponse.model_validate(
@@ -250,7 +274,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def replace(
+    def auto_ack_replace(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -268,7 +292,10 @@ class AlertingServiceWrapper:
                 {"auto_ack.id": autoAckid},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Replace, _req, api_config=api_config_override
+                self._grpc_stub_2.Replace,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule1.ReplaceError,
             )
             return attach_rate_limit(
                 rest_models.AlertAutoAckServiceReplaceResponse.model_validate(
@@ -305,7 +332,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.List, _req, api_config=api_config_override
+                self._grpc_stub_1.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.ListError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceListResponse.model_validate(
@@ -341,7 +371,10 @@ class AlertingServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.Clear, _req, api_config=api_config_override
+                self._grpc_stub_1.Clear,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.ClearError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceClearResponse.model_validate(
@@ -374,7 +407,10 @@ class AlertingServiceWrapper:
                 {"alert_id": alertId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListComments, _req, api_config=api_config_override
+                self._grpc_stub_1.ListComments,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.ListCommentsError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceListCommentsResponse.model_validate(
@@ -411,7 +447,10 @@ class AlertingServiceWrapper:
                 {"alert_id": alertId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.AddComment, _req, api_config=api_config_override
+                self._grpc_stub_1.AddComment,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.AddCommentError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceAddCommentResponse.model_validate(
@@ -452,6 +491,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_1.SetExternalContext,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestAlertingModule2.SetExternalContextError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceSetExternalContextResponse.model_validate(
@@ -483,7 +523,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_1.AlertServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.Get, _req, api_config=api_config_override
+                self._grpc_stub_1.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.GetError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceGetResponse.model_validate(
@@ -520,7 +563,10 @@ class AlertingServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.Ack, _req, api_config=api_config_override
+                self._grpc_stub_1.Ack,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.AckError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceAckResponse.model_validate(
@@ -558,7 +604,10 @@ class AlertingServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UnAck, _req, api_config=api_config_override
+                self._grpc_stub_1.UnAck,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule2.UnAckError,
             )
             return attach_rate_limit(
                 rest_models.AlertServiceUnAckResponse.model_validate(
@@ -578,24 +627,27 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_create(
+    def silence_notifications_create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.AlertSilenceNotificationsServiceCreateRequest,
     ) -> rest_models.AlertSilenceNotificationsServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_6.AlertSilenceNotificationsServiceCreateRequest,
+                self._grpc_pb2_7.AlertSilenceNotificationsServiceCreateRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.Create, _req, api_config=api_config_override
+                self._grpc_stub_7.Create,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.CreateError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceCreateResponse.model_validate(
@@ -614,24 +666,27 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_list(
+    def silence_notifications_list(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.AlertSilenceNotificationsServiceListRequest,
     ) -> rest_models.AlertSilenceNotificationsServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_6.AlertSilenceNotificationsServiceListRequest,
+                self._grpc_pb2_7.AlertSilenceNotificationsServiceListRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.List, _req, api_config=api_config_override
+                self._grpc_stub_7.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.ListError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceListResponse.model_validate(
@@ -650,21 +705,24 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_get(
+    def silence_notifications_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertSilenceNotificationsServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_6.AlertSilenceNotificationsServiceGetRequest,
+                self._grpc_pb2_7.AlertSilenceNotificationsServiceGetRequest,
                 None,
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.Get, _req, api_config=api_config_override
+                self._grpc_stub_7.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.GetError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceGetResponse.model_validate(
@@ -683,21 +741,24 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_delete(
+    def silence_notifications_delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertSilenceNotificationsServiceDeleteResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_6.AlertSilenceNotificationsServiceDeleteRequest,
+                self._grpc_pb2_7.AlertSilenceNotificationsServiceDeleteRequest,
                 None,
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.Delete, _req, api_config=api_config_override
+                self._grpc_stub_7.Delete,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.DeleteError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceDeleteResponse.model_validate(
@@ -716,7 +777,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_silence_notifications_replace(
+    def silence_notifications_replace(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -724,17 +785,20 @@ class AlertingServiceWrapper:
         data: rest_models.AlertSilenceNotificationsServiceReplaceBody,
     ) -> rest_models.AlertSilenceNotificationsServiceReplaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
+            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_6.AlertSilenceNotificationsServiceReplaceRequest,
+                self._grpc_pb2_7.AlertSilenceNotificationsServiceReplaceRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {"silence.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_6.Replace, _req, api_config=api_config_override
+                self._grpc_stub_7.Replace,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule3.ReplaceError,
             )
             return attach_rate_limit(
                 rest_models.AlertSilenceNotificationsServiceReplaceResponse.model_validate(
@@ -789,7 +853,10 @@ class AlertingServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_3.List, _req, api_config=api_config_override
+                self._grpc_stub_3.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule4.ListError,
             )
             return attach_rate_limit(
                 rest_models.MitigationMethodsServiceListResponse.model_validate(
@@ -828,7 +895,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_3.MitigationMethodsServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_3.Get, _req, api_config=api_config_override
+                self._grpc_stub_3.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule4.GetError,
             )
             return attach_rate_limit(
                 rest_models.MitigationMethodsServiceGetResponse.model_validate(
@@ -882,7 +952,10 @@ class AlertingServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.List, _req, api_config=api_config_override
+                self._grpc_stub_4.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule5.ListError,
             )
             return attach_rate_limit(
                 rest_models.MitigationPlatformsServiceListResponse.model_validate(
@@ -921,7 +994,10 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_4.MitigationPlatformsServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.Get, _req, api_config=api_config_override
+                self._grpc_stub_4.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule5.GetError,
             )
             return attach_rate_limit(
                 rest_models.MitigationPlatformsServiceGetResponse.model_validate(
@@ -959,8 +1035,40 @@ class AlertingServiceWrapper:
         filterstypes: Optional[List[str]] = None,
     ) -> rest_models.MitigationsServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for List is not yet implemented."
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for alerting service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_5.MitigationsServiceListRequest,
+                None,
+                {
+                    "pagination.limit": paginationlimit,
+                    "pagination.offset": paginationoffset,
+                    "pagination.includeTotalCount": paginationincludeTotalCount,
+                    "filters.createdAt.start": filterscreatedAtstart,
+                    "filters.createdAt.end": filterscreatedAtend,
+                    "filters.mitigationIds": filtersmitigationIds,
+                    "filters.alarmIds": filtersalarmIds,
+                    "filters.states": filtersstates,
+                    "filters.platformIds": filtersplatformIds,
+                    "filters.methodIds": filtersmethodIds,
+                    "filters.ipCidrs": filtersipCidrs,
+                    "filters.ipCidrPattern": filtersipCidrPattern,
+                    "filters.types": filterstypes,
+                },
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_5.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule6.ListError,
+            )
+            return attach_rate_limit(
+                rest_models.MitigationsServiceListResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -992,8 +1100,26 @@ class AlertingServiceWrapper:
         data: rest_models.MitigationsServiceCreateRequest,
     ) -> rest_models.MitigationsServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for Create is not yet implemented."
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for alerting service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_5.MitigationsServiceCreateRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_5.Create,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule6.CreateError,
+            )
+            return attach_rate_limit(
+                rest_models.MitigationsServiceCreateResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1010,8 +1136,24 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.MitigationsServiceAvailableActionsResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for AvailableActions is not yet implemented."
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for alerting service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_5.MitigationsServiceAvailableActionsRequest, None, {}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_5.AvailableActions,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule6.AvailableActionsError,
+            )
+            return attach_rate_limit(
+                rest_models.MitigationsServiceAvailableActionsResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1027,8 +1169,24 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, action: str
     ) -> rest_models.MitigationsServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for Get is not yet implemented."
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for alerting service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_5.MitigationsServiceGetRequest, None, {"id": action}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_5.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule6.GetError,
+            )
+            return attach_rate_limit(
+                rest_models.MitigationsServiceGetResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1049,8 +1207,26 @@ class AlertingServiceWrapper:
         data: rest_models.MitigationsServiceActBody,
     ) -> rest_models.MitigationsServiceActResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for Act is not yet implemented."
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for alerting service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_5.MitigationsServiceActRequest,
+                data.model_dump(by_alias=True, exclude_none=True),
+                {"action": action},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_5.Act,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule6.ActError,
+            )
+            return attach_rate_limit(
+                rest_models.MitigationsServiceActResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1068,8 +1244,26 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.MitigationsServiceAvailableActionsForMitigationResponse:
         if isinstance(self._transport, GrpcTransport):
-            raise NotImplementedError(
-                "gRPC translation for AvailableActionsForMitigation is not yet implemented."
+            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+                raise NotImplementedError(
+                    "gRPC proto dependencies not installed for alerting service"
+                )
+            _req = build_grpc_request(
+                self._grpc_pb2_5.MitigationsServiceAvailableActionsForMitigationRequest,
+                None,
+                {"id": id},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_5.AvailableActionsForMitigation,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule6.AvailableActionsForMitigationError,
+            )
+            return attach_rate_limit(
+                rest_models.MitigationsServiceAvailableActionsForMitigationResponse.model_validate(
+                    MessageToDict(_resp, always_print_fields_with_no_presence=True)
+                ),
+                _rate_limit,
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
@@ -1089,17 +1283,20 @@ class AlertingServiceWrapper:
         data: rest_models.PolicyServiceListRequest,
     ) -> rest_models.PolicyServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_5.PolicyServiceListRequest,
+                self._grpc_pb2_6.PolicyServiceListRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.List, _req, api_config=api_config_override
+                self._grpc_stub_6.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule7.ListError,
             )
             return attach_rate_limit(
                 rest_models.PolicyServiceListResponse.model_validate(
@@ -1126,17 +1323,20 @@ class AlertingServiceWrapper:
         id: str,
     ) -> rest_models.PolicyServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_5.PolicyServiceGetRequest,
+                self._grpc_pb2_6.PolicyServiceGetRequest,
                 None,
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.Get, _req, api_config=api_config_override
+                self._grpc_stub_6.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule7.GetError,
             )
             return attach_rate_limit(
                 rest_models.PolicyServiceGetResponse.model_validate(
@@ -1165,17 +1365,20 @@ class AlertingServiceWrapper:
         data: rest_models.PolicyServiceDisableBody,
     ) -> rest_models.PolicyServiceDisableResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_5.PolicyServiceDisableRequest,
+                self._grpc_pb2_6.PolicyServiceDisableRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.Disable, _req, api_config=api_config_override
+                self._grpc_stub_6.Disable,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule7.DisableError,
             )
             return attach_rate_limit(
                 rest_models.PolicyServiceDisableResponse.model_validate(
@@ -1205,17 +1408,20 @@ class AlertingServiceWrapper:
         data: rest_models.PolicyServiceEnableBody,
     ) -> rest_models.PolicyServiceEnableResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_5 is None or self._grpc_stub_5 is None:
+            if self._grpc_pb2_6 is None or self._grpc_stub_6 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_5.PolicyServiceEnableRequest,
+                self._grpc_pb2_6.PolicyServiceEnableRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {"policy_type": policyType, "id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.Enable, _req, api_config=api_config_override
+                self._grpc_stub_6.Enable,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule7.EnableError,
             )
             return attach_rate_limit(
                 rest_models.PolicyServiceEnableResponse.model_validate(
@@ -1243,17 +1449,20 @@ class AlertingServiceWrapper:
         data: rest_models.SuppressionServiceCreateRequest,
     ) -> rest_models.SuppressionServiceCreateResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
+            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_7.SuppressionServiceCreateRequest,
+                self._grpc_pb2_8.SuppressionServiceCreateRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.Create, _req, api_config=api_config_override
+                self._grpc_stub_8.Create,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.CreateError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceCreateResponse.model_validate(
@@ -1279,17 +1488,20 @@ class AlertingServiceWrapper:
         data: rest_models.SuppressionServiceListRequest,
     ) -> rest_models.SuppressionServiceListResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
+            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_7.SuppressionServiceListRequest,
+                self._grpc_pb2_8.SuppressionServiceListRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.List, _req, api_config=api_config_override
+                self._grpc_stub_8.List,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.ListError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceListResponse.model_validate(
@@ -1312,15 +1524,18 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.SuppressionServiceGetResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
+            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_7.SuppressionServiceGetRequest, None, {"id": id}
+                self._grpc_pb2_8.SuppressionServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.Get, _req, api_config=api_config_override
+                self._grpc_stub_8.Get,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.GetError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceGetResponse.model_validate(
@@ -1343,15 +1558,18 @@ class AlertingServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.SuppressionServiceDeleteResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
+            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_7.SuppressionServiceDeleteRequest, None, {"id": id}
+                self._grpc_pb2_8.SuppressionServiceDeleteRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.Delete, _req, api_config=api_config_override
+                self._grpc_stub_8.Delete,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.DeleteError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceDeleteResponse.model_validate(
@@ -1378,17 +1596,20 @@ class AlertingServiceWrapper:
         data: rest_models.SuppressionServiceReplaceBody,
     ) -> rest_models.SuppressionServiceReplaceResponse:
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_7 is None or self._grpc_stub_7 is None:
+            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
                 raise NotImplementedError(
                     "gRPC proto dependencies not installed for alerting service"
                 )
             _req = build_grpc_request(
-                self._grpc_pb2_7.SuppressionServiceReplaceRequest,
+                self._grpc_pb2_8.SuppressionServiceReplaceRequest,
                 data.model_dump(by_alias=True, exclude_none=True),
                 {"suppression.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_7.Replace, _req, api_config=api_config_override
+                self._grpc_stub_8.Replace,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestAlertingModule8.ReplaceError,
             )
             return attach_rate_limit(
                 rest_models.SuppressionServiceReplaceResponse.model_validate(

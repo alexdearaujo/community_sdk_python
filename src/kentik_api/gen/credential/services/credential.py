@@ -33,7 +33,7 @@ class CredentialServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def list_credential_group(
+    def list_group(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCredentialGroupResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -48,6 +48,7 @@ class CredentialServiceWrapper:
                 self._grpc_stub_1.ListCredentialGroup,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCredentialModule1.ListCredentialGroupError,
             )
             return attach_rate_limit(
                 rest_models.ListCredentialGroupResponse.model_validate(
@@ -65,7 +66,7 @@ class CredentialServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_credential_group(
+    def get_group(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetCredentialGroupResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -80,6 +81,7 @@ class CredentialServiceWrapper:
                 self._grpc_stub_1.GetCredentialGroup,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCredentialModule1.GetCredentialGroupError,
             )
             return attach_rate_limit(
                 rest_models.GetCredentialGroupResponse.model_validate(

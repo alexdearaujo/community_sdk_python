@@ -78,89 +78,106 @@ class SavedFilterError(HTTPException):
         )
 
 
-class CreateSavedFilterUnexpectedError(SavedFilterError):
+class CreateSavedFilterError(SavedFilterError):
+    """Operation-local error for CreateSavedFilter."""
+
+    response_error_map: dict[str, type[SavedFilterError]] = {}
+
+
+class CreateSavedFilterUnexpectedError(CreateSavedFilterError):
     """Operation-local response error for CreateSavedFilter (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateSavedFilterError(SavedFilterError):
-    """Operation-local error for CreateSavedFilter."""
-
-    response_error_map = {
-        "default": CreateSavedFilterUnexpectedError,
-    }
-
-
-class DeleteSavedFilterUnexpectedError(SavedFilterError):
-    """Operation-local response error for DeleteSavedFilter (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateSavedFilterError.response_error_map = {
+    "default": CreateSavedFilterUnexpectedError,
+}
 
 
 class DeleteSavedFilterError(SavedFilterError):
     """Operation-local error for DeleteSavedFilter."""
 
-    response_error_map = {
-        "default": DeleteSavedFilterUnexpectedError,
-    }
+    response_error_map: dict[str, type[SavedFilterError]] = {}
 
 
-class GetSavedFilterUnexpectedError(SavedFilterError):
-    """Operation-local response error for GetSavedFilter (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteSavedFilterUnexpectedError(DeleteSavedFilterError):
+    """Operation-local response error for DeleteSavedFilter (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteSavedFilterError.response_error_map = {
+    "default": DeleteSavedFilterUnexpectedError,
+}
 
 
 class GetSavedFilterError(SavedFilterError):
     """Operation-local error for GetSavedFilter."""
 
-    response_error_map = {
-        "default": GetSavedFilterUnexpectedError,
-    }
+    response_error_map: dict[str, type[SavedFilterError]] = {}
 
 
-class ListSavedFiltersUnexpectedError(SavedFilterError):
-    """Operation-local response error for ListSavedFilters (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetSavedFilterUnexpectedError(GetSavedFilterError):
+    """Operation-local response error for GetSavedFilter (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetSavedFilterError.response_error_map = {
+    "default": GetSavedFilterUnexpectedError,
+}
 
 
 class ListSavedFiltersError(SavedFilterError):
     """Operation-local error for ListSavedFilters."""
 
-    response_error_map = {
-        "default": ListSavedFiltersUnexpectedError,
-    }
+    response_error_map: dict[str, type[SavedFilterError]] = {}
 
 
-class ListSavedFiltersAllUnexpectedError(SavedFilterError):
-    """Operation-local response error for ListSavedFiltersAll (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListSavedFiltersUnexpectedError(ListSavedFiltersError):
+    """Operation-local response error for ListSavedFilters (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListSavedFiltersError.response_error_map = {
+    "default": ListSavedFiltersUnexpectedError,
+}
 
 
 class ListSavedFiltersAllError(SavedFilterError):
     """Operation-local error for ListSavedFiltersAll."""
 
-    response_error_map = {
-        "default": ListSavedFiltersAllUnexpectedError,
-    }
+    response_error_map: dict[str, type[SavedFilterError]] = {}
 
 
-class UpdateSavedFilterUnexpectedError(SavedFilterError):
-    """Operation-local response error for UpdateSavedFilter (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListSavedFiltersAllUnexpectedError(ListSavedFiltersAllError):
+    """Operation-local response error for ListSavedFiltersAll (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListSavedFiltersAllError.response_error_map = {
+    "default": ListSavedFiltersAllUnexpectedError,
+}
 
 
 class UpdateSavedFilterError(SavedFilterError):
     """Operation-local error for UpdateSavedFilter."""
 
-    response_error_map = {
-        "default": UpdateSavedFilterUnexpectedError,
-    }
+    response_error_map: dict[str, type[SavedFilterError]] = {}
 
+
+class UpdateSavedFilterUnexpectedError(UpdateSavedFilterError):
+    """Operation-local response error for UpdateSavedFilter (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateSavedFilterError.response_error_map = {
+    "default": UpdateSavedFilterUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[SavedFilterError]] = {
     "CreateSavedFilter": CreateSavedFilterError,

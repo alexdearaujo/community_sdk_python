@@ -728,7 +728,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: update_device_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
+    C->>W: update_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
     W->>API: PUT /device/v202504beta2/device/{id}/labels
     alt success
         API-->>W: v202504beta2UpdateDeviceLabelsResponse (JSON)
@@ -750,7 +750,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_device_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
+    C->>W: update_labels(id="id-example", data=DeviceServiceUpdateDeviceLabelsBody(...))
     W->>R: build_grpc_request(UpdateDeviceLabelsRequest, arguments)
     R->>API: DeviceService/UpdateDeviceLabels (gRPC/TLS)
     alt success
@@ -784,7 +784,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.update_device_labels(
+response = client.device.update_labels(
     id="id-example",
     data=DeviceServiceUpdateDeviceLabelsBody(...),
 )

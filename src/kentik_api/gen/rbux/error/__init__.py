@@ -78,75 +78,89 @@ class RbuxError(HTTPException):
         )
 
 
-class CreateScopeUnexpectedError(RbuxError):
+class CreateScopeError(RbuxError):
+    """Operation-local error for CreateScope."""
+
+    response_error_map: dict[str, type[RbuxError]] = {}
+
+
+class CreateScopeUnexpectedError(CreateScopeError):
     """Operation-local response error for CreateScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateScopeError(RbuxError):
-    """Operation-local error for CreateScope."""
-
-    response_error_map = {
-        "default": CreateScopeUnexpectedError,
-    }
-
-
-class DeleteScopeUnexpectedError(RbuxError):
-    """Operation-local response error for DeleteScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateScopeError.response_error_map = {
+    "default": CreateScopeUnexpectedError,
+}
 
 
 class DeleteScopeError(RbuxError):
     """Operation-local error for DeleteScope."""
 
-    response_error_map = {
-        "default": DeleteScopeUnexpectedError,
-    }
+    response_error_map: dict[str, type[RbuxError]] = {}
 
 
-class GetScopeUnexpectedError(RbuxError):
-    """Operation-local response error for GetScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteScopeUnexpectedError(DeleteScopeError):
+    """Operation-local response error for DeleteScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteScopeError.response_error_map = {
+    "default": DeleteScopeUnexpectedError,
+}
 
 
 class GetScopeError(RbuxError):
     """Operation-local error for GetScope."""
 
-    response_error_map = {
-        "default": GetScopeUnexpectedError,
-    }
+    response_error_map: dict[str, type[RbuxError]] = {}
 
 
-class ListScopesUnexpectedError(RbuxError):
-    """Operation-local response error for ListScopes (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetScopeUnexpectedError(GetScopeError):
+    """Operation-local response error for GetScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetScopeError.response_error_map = {
+    "default": GetScopeUnexpectedError,
+}
 
 
 class ListScopesError(RbuxError):
     """Operation-local error for ListScopes."""
 
-    response_error_map = {
-        "default": ListScopesUnexpectedError,
-    }
+    response_error_map: dict[str, type[RbuxError]] = {}
 
 
-class UpdateScopeUnexpectedError(RbuxError):
-    """Operation-local response error for UpdateScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListScopesUnexpectedError(ListScopesError):
+    """Operation-local response error for ListScopes (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListScopesError.response_error_map = {
+    "default": ListScopesUnexpectedError,
+}
 
 
 class UpdateScopeError(RbuxError):
     """Operation-local error for UpdateScope."""
 
-    response_error_map = {
-        "default": UpdateScopeUnexpectedError,
-    }
+    response_error_map: dict[str, type[RbuxError]] = {}
 
+
+class UpdateScopeUnexpectedError(UpdateScopeError):
+    """Operation-local response error for UpdateScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateScopeError.response_error_map = {
+    "default": UpdateScopeUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[RbuxError]] = {
     "CreateScope": CreateScopeError,

@@ -115,6 +115,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_1.ListAgentCapabilities,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule1.ListAgentCapabilitiesError,
             )
             return attach_rate_limit(
                 rest_models.ListAgentCapabilitiesResponse.model_validate(
@@ -154,6 +155,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_1.GetAgentCapability,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule1.GetAgentCapabilityError,
             )
             return attach_rate_limit(
                 rest_models.GetAgentCapabilityResponse.model_validate(
@@ -194,6 +196,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_1.DeleteAgentCapability,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule1.DeleteAgentCapabilityError,
             )
             return attach_rate_limit(
                 rest_models.DeleteAgentCapabilityResponse.model_validate(
@@ -236,6 +239,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_1.UpsertAgentCapability,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule1.UpsertAgentCapabilityError,
             )
             return attach_rate_limit(
                 rest_models.UpsertAgentCapabilityResponse.model_validate(
@@ -282,7 +286,10 @@ class KagentServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.ListAgents, _req, api_config=api_config_override
+                self._grpc_stub_2.ListAgents,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule2.ListAgentsError,
             )
             return attach_rate_limit(
                 rest_models.ListAgentsResponse.model_validate(
@@ -321,7 +328,10 @@ class KagentServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.CreateAgent, _req, api_config=api_config_override
+                self._grpc_stub_2.CreateAgent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule2.CreateAgentError,
             )
             return attach_rate_limit(
                 rest_models.CreateAgentResponse.model_validate(
@@ -352,7 +362,10 @@ class KagentServiceWrapper:
                 self._grpc_pb2_2.AuthorizeRequest, None, {"install_id": installId}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.Authorize, _req, api_config=api_config_override
+                self._grpc_stub_2.Authorize,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule2.AuthorizeError,
             )
             return attach_rate_limit(
                 rest_models.AuthorizeResponse.model_validate(
@@ -391,6 +404,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_2.GenerateInstallCommands,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule2.GenerateInstallCommandsError,
             )
             return attach_rate_limit(
                 rest_models.GenerateInstallCommandsResponse.model_validate(
@@ -427,7 +441,10 @@ class KagentServiceWrapper:
                 {"id": agentid, "unregistered": unregistered},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.GetAgent, _req, api_config=api_config_override
+                self._grpc_stub_2.GetAgent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule2.GetAgentError,
             )
             return attach_rate_limit(
                 rest_models.GetAgentResponse.model_validate(
@@ -465,7 +482,10 @@ class KagentServiceWrapper:
                 {"id": agentid, "unregistered": unregistered},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.DeleteAgent, _req, api_config=api_config_override
+                self._grpc_stub_2.DeleteAgent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule2.DeleteAgentError,
             )
             return attach_rate_limit(
                 rest_models.DeleteAgentResponse.model_validate(
@@ -504,7 +524,10 @@ class KagentServiceWrapper:
                 {"agent.id": agentid, "mask": mask},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.UpdateAgent, _req, api_config=api_config_override
+                self._grpc_stub_2.UpdateAgent,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule2.UpdateAgentError,
             )
             return attach_rate_limit(
                 rest_models.UpdateAgentResponse.model_validate(
@@ -537,7 +560,10 @@ class KagentServiceWrapper:
                 self._grpc_pb2_4.ListCapabilitiesRequest, None, {}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.ListCapabilities, _req, api_config=api_config_override
+                self._grpc_stub_4.ListCapabilities,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule3.CapabilityAdminService_ListCapabilitiesError,
             )
             return attach_rate_limit(
                 rest_models.ListCapabilitiesResponse.model_validate(
@@ -572,7 +598,10 @@ class KagentServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.CreateCapability, _req, api_config=api_config_override
+                self._grpc_stub_4.CreateCapability,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule3.CapabilityAdminService_CreateCapabilityError,
             )
             return attach_rate_limit(
                 rest_models.CreateCapabilityResponse.model_validate(
@@ -603,7 +632,10 @@ class KagentServiceWrapper:
                 self._grpc_pb2_4.GetCapabilityRequest, None, {"name": capabilityname}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.GetCapability, _req, api_config=api_config_override
+                self._grpc_stub_4.GetCapability,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule3.CapabilityAdminService_GetCapabilityError,
             )
             return attach_rate_limit(
                 rest_models.GetCapabilityResponse.model_validate(
@@ -634,7 +666,10 @@ class KagentServiceWrapper:
                 self._grpc_pb2_4.DeleteCapabilityRequest, None, {"name": capabilityname}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.DeleteCapability, _req, api_config=api_config_override
+                self._grpc_stub_4.DeleteCapability,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule3.CapabilityAdminService_DeleteCapabilityError,
             )
             return attach_rate_limit(
                 rest_models.DeleteCapabilityResponse.model_validate(
@@ -671,7 +706,10 @@ class KagentServiceWrapper:
                 {"capability.name": capabilityname},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_4.UpdateCapability, _req, api_config=api_config_override
+                self._grpc_stub_4.UpdateCapability,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule3.CapabilityAdminService_UpdateCapabilityError,
             )
             return attach_rate_limit(
                 rest_models.UpdateCapabilityResponse.model_validate(
@@ -723,6 +761,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_3.GetCapabilityRelease,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilityReleaseError,
             )
             return attach_rate_limit(
                 rest_models.GetCapabilityReleaseResponse.model_validate(
@@ -778,6 +817,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_3.GetCapabilityLatestReleases,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilityLatestReleasesError,
             )
             return attach_rate_limit(
                 rest_models.GetCapabilityLatestReleasesResponse.model_validate(
@@ -824,6 +864,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_3.GetCapabilitySupportedDistros,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilitySupportedDistrosError,
             )
             return attach_rate_limit(
                 rest_models.GetCapabilitySupportedDistrosResponse.model_validate(
@@ -859,7 +900,10 @@ class KagentServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.CreateConfig, _req, api_config=api_config_override
+                self._grpc_stub_5.CreateConfig,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule5.CreateConfigError,
             )
             return attach_rate_limit(
                 rest_models.CreateConfigResponse.model_validate(
@@ -890,7 +934,10 @@ class KagentServiceWrapper:
                 self._grpc_pb2_5.GetConfigRequest, None, {"name": configname}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.GetConfig, _req, api_config=api_config_override
+                self._grpc_stub_5.GetConfig,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule5.GetConfigError,
             )
             return attach_rate_limit(
                 rest_models.GetConfigResponse.model_validate(
@@ -921,7 +968,10 @@ class KagentServiceWrapper:
                 self._grpc_pb2_5.DeleteConfigRequest, None, {"name": configname}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.DeleteConfig, _req, api_config=api_config_override
+                self._grpc_stub_5.DeleteConfig,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule5.DeleteConfigError,
             )
             return attach_rate_limit(
                 rest_models.DeleteConfigResponse.model_validate(
@@ -958,7 +1008,10 @@ class KagentServiceWrapper:
                 {"config.name": configname},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_5.UpdateConfig, _req, api_config=api_config_override
+                self._grpc_stub_5.UpdateConfig,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestKagentModule5.UpdateConfigError,
             )
             return attach_rate_limit(
                 rest_models.UpdateConfigResponse.model_validate(
@@ -993,6 +1046,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_6.ListProvisioningTokens,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule6.ListProvisioningTokensError,
             )
             return attach_rate_limit(
                 rest_models.ListProvisioningTokensResponse.model_validate(
@@ -1030,6 +1084,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_6.CreateProvisioningToken,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule6.CreateProvisioningTokenError,
             )
             return attach_rate_limit(
                 rest_models.CreateProvisioningTokenResponse.model_validate(
@@ -1063,6 +1118,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_6.GetProvisioningToken,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule6.GetProvisioningTokenError,
             )
             return attach_rate_limit(
                 rest_models.GetProvisioningTokenResponse.model_validate(
@@ -1098,6 +1154,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_6.ListAgentsByProvisioningToken,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule6.ListAgentsByProvisioningTokenError,
             )
             return attach_rate_limit(
                 rest_models.ListAgentsByProvisioningTokenResponse.model_validate(
@@ -1137,6 +1194,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_6.RevokeProvisioningToken,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKagentModule6.RevokeProvisioningTokenError,
             )
             return attach_rate_limit(
                 rest_models.RevokeProvisioningTokenResponse.model_validate(

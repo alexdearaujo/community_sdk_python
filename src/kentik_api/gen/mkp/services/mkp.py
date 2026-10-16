@@ -69,7 +69,10 @@ class MkpServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListPackageRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListPackage, _req, api_config=api_config_override
+                self._grpc_stub_1.ListPackage,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule1.PackageListError,
             )
             return attach_rate_limit(
                 rest_models.ListPackageResponse.model_validate(
@@ -104,7 +107,10 @@ class MkpServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreatePackage, _req, api_config=api_config_override
+                self._grpc_stub_1.CreatePackage,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule1.PackageCreateError,
             )
             return attach_rate_limit(
                 rest_models.CreatePackageResponse.model_validate(
@@ -135,7 +141,10 @@ class MkpServiceWrapper:
                 self._grpc_pb2_1.GetPackageRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetPackage, _req, api_config=api_config_override
+                self._grpc_stub_1.GetPackage,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule1.PackageGetError,
             )
             return attach_rate_limit(
                 rest_models.GetPackageResponse.model_validate(
@@ -172,7 +181,10 @@ class MkpServiceWrapper:
                 {"package.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdatePackage, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdatePackage,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule1.PackageUpdateError,
             )
             return attach_rate_limit(
                 rest_models.UpdatePackageResponse.model_validate(
@@ -204,7 +216,10 @@ class MkpServiceWrapper:
                 self._grpc_pb2_1.DeletePackageRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeletePackage, _req, api_config=api_config_override
+                self._grpc_stub_1.DeletePackage,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule1.PackageDeleteError,
             )
             return attach_rate_limit(
                 rest_models.DeletePackageResponse.model_validate(
@@ -233,7 +248,10 @@ class MkpServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_2.ListTenantRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.ListTenant, _req, api_config=api_config_override
+                self._grpc_stub_2.ListTenant,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule2.TenantListError,
             )
             return attach_rate_limit(
                 rest_models.ListTenantResponse.model_validate(
@@ -268,7 +286,10 @@ class MkpServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.CreateTenant, _req, api_config=api_config_override
+                self._grpc_stub_2.CreateTenant,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule2.TenantCreateError,
             )
             return attach_rate_limit(
                 rest_models.CreateTenantResponse.model_validate(
@@ -299,7 +320,10 @@ class MkpServiceWrapper:
                 self._grpc_pb2_2.GetTenantRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.GetTenant, _req, api_config=api_config_override
+                self._grpc_stub_2.GetTenant,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule2.TenantGetError,
             )
             return attach_rate_limit(
                 rest_models.GetTenantResponse.model_validate(
@@ -336,7 +360,10 @@ class MkpServiceWrapper:
                 {"tenant.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.UpdateTenant, _req, api_config=api_config_override
+                self._grpc_stub_2.UpdateTenant,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule2.TenantUpdateError,
             )
             return attach_rate_limit(
                 rest_models.UpdateTenantResponse.model_validate(
@@ -368,7 +395,10 @@ class MkpServiceWrapper:
                 self._grpc_pb2_2.DeleteTenantRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_2.DeleteTenant, _req, api_config=api_config_override
+                self._grpc_stub_2.DeleteTenant,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule2.TenantDeleteError,
             )
             return attach_rate_limit(
                 rest_models.DeleteTenantResponse.model_validate(
@@ -399,7 +429,10 @@ class MkpServiceWrapper:
                 self._grpc_pb2_3.ListTenantUserRequest, None, {"tenant_id": tenantId}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_3.ListTenantUser, _req, api_config=api_config_override
+                self._grpc_stub_3.ListTenantUser,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule3.TenantUserListError,
             )
             return attach_rate_limit(
                 rest_models.ListTenantUserResponse.model_validate(
@@ -436,7 +469,10 @@ class MkpServiceWrapper:
                 {"user.tenant_id": tenantId},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_3.CreateTenantUser, _req, api_config=api_config_override
+                self._grpc_stub_3.CreateTenantUser,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule3.TenantUserCreateError,
             )
             return attach_rate_limit(
                 rest_models.CreateTenantUserResponse.model_validate(
@@ -475,7 +511,10 @@ class MkpServiceWrapper:
                 {"user.tenant_id": tenantId, "user.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_3.UpdateTenantUser, _req, api_config=api_config_override
+                self._grpc_stub_3.UpdateTenantUser,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule3.TenantUserUpdateError,
             )
             return attach_rate_limit(
                 rest_models.UpdateTenantUserResponse.model_validate(
@@ -510,7 +549,10 @@ class MkpServiceWrapper:
                 {"tenant_id": tenantId, "id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_3.DeleteTenantUser, _req, api_config=api_config_override
+                self._grpc_stub_3.DeleteTenantUser,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestMkpModule3.TenantUserDeleteError,
             )
             return attach_rate_limit(
                 rest_models.DeleteTenantUserResponse.model_validate(

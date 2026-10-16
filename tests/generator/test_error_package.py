@@ -123,8 +123,43 @@ def test_generate_service_error_package_writes_operation_and_leaf_classes(
     content = (service_dir / "error" / "__init__.py").read_text(encoding="utf-8")
     assert "class DeviceError(HTTPException):" in content
     assert "class ListDevicesError(DeviceError):" in content
-    assert "class ListDevicesNotFoundError(DeviceError):" in content
+    assert "class ListDevicesNotFoundError(ListDevicesError):" in content
     assert '"ListDevices": ListDevicesError,' in content
+
+
+def test_a_raised_response_error_is_caught_by_its_operation_class(tmp_path: Path):
+    swagger_path = _write_swagger(
+        tmp_path,
+        "device.swagger.json",
+        {
+            "/devices": {
+                "get": {
+                    "operationId": "ListDevices",
+                    "responses": {"404": {"description": "not found"}},
+                }
+            }
+        },
+    )
+    service_dir = tmp_path / "device"
+    service_dir.mkdir()
+    generate_service_error_package(service_dir, [swagger_path])
+
+    namespace: dict = {"__name__": "generated_error"}
+    source = (service_dir / "error" / "__init__.py").read_text(encoding="utf-8")
+    exec(compile(source, "generated_error", "exec"), namespace)
+
+    response = type(
+        "Response",
+        (),
+        {"status_code": 404, "text": "", "headers": {}, "json": lambda self: {}},
+    )()
+    error = namespace["ListDevicesError"].from_response(
+        response, operation_name="ListDevices", method="GET", path="/devices"
+    )
+
+    assert type(error) is namespace["ListDevicesNotFoundError"]
+    assert isinstance(error, namespace["ListDevicesError"])
+    assert isinstance(error, namespace["DeviceError"])
 
 
 def test_inject_service_error_handling_adds_import_via_sentinel():

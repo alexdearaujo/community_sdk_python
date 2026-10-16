@@ -78,131 +78,157 @@ class AssetTagsError(HTTPException):
         )
 
 
-class CreateTagKeyUnexpectedError(AssetTagsError):
+class CreateTagKeyError(AssetTagsError):
+    """Operation-local error for CreateTagKey."""
+
+    response_error_map: dict[str, type[AssetTagsError]] = {}
+
+
+class CreateTagKeyUnexpectedError(CreateTagKeyError):
     """Operation-local response error for CreateTagKey (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateTagKeyError(AssetTagsError):
-    """Operation-local error for CreateTagKey."""
-
-    response_error_map = {
-        "default": CreateTagKeyUnexpectedError,
-    }
-
-
-class DeleteTagKeyUnexpectedError(AssetTagsError):
-    """Operation-local response error for DeleteTagKey (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateTagKeyError.response_error_map = {
+    "default": CreateTagKeyUnexpectedError,
+}
 
 
 class DeleteTagKeyError(AssetTagsError):
     """Operation-local error for DeleteTagKey."""
 
-    response_error_map = {
-        "default": DeleteTagKeyUnexpectedError,
-    }
+    response_error_map: dict[str, type[AssetTagsError]] = {}
 
 
-class DeleteTagValuesUnexpectedError(AssetTagsError):
-    """Operation-local response error for DeleteTagValues (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteTagKeyUnexpectedError(DeleteTagKeyError):
+    """Operation-local response error for DeleteTagKey (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteTagKeyError.response_error_map = {
+    "default": DeleteTagKeyUnexpectedError,
+}
 
 
 class DeleteTagValuesError(AssetTagsError):
     """Operation-local error for DeleteTagValues."""
 
-    response_error_map = {
-        "default": DeleteTagValuesUnexpectedError,
-    }
+    response_error_map: dict[str, type[AssetTagsError]] = {}
 
 
-class GetTagKeyUnexpectedError(AssetTagsError):
-    """Operation-local response error for GetTagKey (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteTagValuesUnexpectedError(DeleteTagValuesError):
+    """Operation-local response error for DeleteTagValues (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteTagValuesError.response_error_map = {
+    "default": DeleteTagValuesUnexpectedError,
+}
 
 
 class GetTagKeyError(AssetTagsError):
     """Operation-local error for GetTagKey."""
 
-    response_error_map = {
-        "default": GetTagKeyUnexpectedError,
-    }
+    response_error_map: dict[str, type[AssetTagsError]] = {}
 
 
-class GetTagValuesUnexpectedError(AssetTagsError):
-    """Operation-local response error for GetTagValues (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetTagKeyUnexpectedError(GetTagKeyError):
+    """Operation-local response error for GetTagKey (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetTagKeyError.response_error_map = {
+    "default": GetTagKeyUnexpectedError,
+}
 
 
 class GetTagValuesError(AssetTagsError):
     """Operation-local error for GetTagValues."""
 
-    response_error_map = {
-        "default": GetTagValuesUnexpectedError,
-    }
+    response_error_map: dict[str, type[AssetTagsError]] = {}
 
 
-class ListTagKeysUnexpectedError(AssetTagsError):
-    """Operation-local response error for ListTagKeys (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetTagValuesUnexpectedError(GetTagValuesError):
+    """Operation-local response error for GetTagValues (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetTagValuesError.response_error_map = {
+    "default": GetTagValuesUnexpectedError,
+}
 
 
 class ListTagKeysError(AssetTagsError):
     """Operation-local error for ListTagKeys."""
 
-    response_error_map = {
-        "default": ListTagKeysUnexpectedError,
-    }
+    response_error_map: dict[str, type[AssetTagsError]] = {}
 
 
-class ListTagValuesUnexpectedError(AssetTagsError):
-    """Operation-local response error for ListTagValues (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListTagKeysUnexpectedError(ListTagKeysError):
+    """Operation-local response error for ListTagKeys (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListTagKeysError.response_error_map = {
+    "default": ListTagKeysUnexpectedError,
+}
 
 
 class ListTagValuesError(AssetTagsError):
     """Operation-local error for ListTagValues."""
 
-    response_error_map = {
-        "default": ListTagValuesUnexpectedError,
-    }
+    response_error_map: dict[str, type[AssetTagsError]] = {}
 
 
-class SetTagValuesUnexpectedError(AssetTagsError):
-    """Operation-local response error for SetTagValues (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListTagValuesUnexpectedError(ListTagValuesError):
+    """Operation-local response error for ListTagValues (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListTagValuesError.response_error_map = {
+    "default": ListTagValuesUnexpectedError,
+}
 
 
 class SetTagValuesError(AssetTagsError):
     """Operation-local error for SetTagValues."""
 
-    response_error_map = {
-        "default": SetTagValuesUnexpectedError,
-    }
+    response_error_map: dict[str, type[AssetTagsError]] = {}
 
 
-class UpdateTagKeyUnexpectedError(AssetTagsError):
-    """Operation-local response error for UpdateTagKey (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class SetTagValuesUnexpectedError(SetTagValuesError):
+    """Operation-local response error for SetTagValues (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+SetTagValuesError.response_error_map = {
+    "default": SetTagValuesUnexpectedError,
+}
 
 
 class UpdateTagKeyError(AssetTagsError):
     """Operation-local error for UpdateTagKey."""
 
-    response_error_map = {
-        "default": UpdateTagKeyUnexpectedError,
-    }
+    response_error_map: dict[str, type[AssetTagsError]] = {}
 
+
+class UpdateTagKeyUnexpectedError(UpdateTagKeyError):
+    """Operation-local response error for UpdateTagKey (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateTagKeyError.response_error_map = {
+    "default": UpdateTagKeyUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[AssetTagsError]] = {
     "CreateTagKey": CreateTagKeyError,

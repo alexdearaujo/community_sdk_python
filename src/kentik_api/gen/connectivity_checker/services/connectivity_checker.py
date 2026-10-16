@@ -53,6 +53,7 @@ class ConnectivityCheckerServiceWrapper:
                 self._grpc_stub_1.CreateConnectivityReport,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestConnectivityCheckerModule1.CreateConnectivityReportError,
             )
             return attach_rate_limit(
                 rest_models.CreateConnectivityReportResponse.model_validate(

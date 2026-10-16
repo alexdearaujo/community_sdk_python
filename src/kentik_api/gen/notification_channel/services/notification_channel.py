@@ -48,6 +48,7 @@ class NotificationChannelServiceWrapper:
                 self._grpc_stub_1.ListNotificationChannels,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestNotificationChannelModule1.ListNotificationChannelsError,
             )
             return attach_rate_limit(
                 rest_models.ListNotificationChannelsResponse.model_validate(
@@ -85,6 +86,7 @@ class NotificationChannelServiceWrapper:
                 self._grpc_stub_1.SearchNotificationChannels,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestNotificationChannelModule1.SearchNotificationChannelsError,
             )
             return attach_rate_limit(
                 rest_models.SearchNotificationChannelsResponse.model_validate(
@@ -118,6 +120,7 @@ class NotificationChannelServiceWrapper:
                 self._grpc_stub_1.GetNotificationChannel,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestNotificationChannelModule1.GetNotificationChannelError,
             )
             return attach_rate_limit(
                 rest_models.GetNotificationChannelResponse.model_validate(

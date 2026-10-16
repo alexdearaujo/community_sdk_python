@@ -48,6 +48,7 @@ class KmetaServiceWrapper:
                 self._grpc_stub_1.ListServiceNowConfigs,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKmetaModule1.ListServiceNowConfigsError,
             )
             return attach_rate_limit(
                 rest_models.ListServiceNowConfigsResponse.model_validate(
@@ -87,6 +88,7 @@ class KmetaServiceWrapper:
                 self._grpc_stub_1.CreateServiceNowConfig,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKmetaModule1.CreateServiceNowConfigError,
             )
             return attach_rate_limit(
                 rest_models.CreateServiceNowConfigResponse.model_validate(
@@ -123,6 +125,7 @@ class KmetaServiceWrapper:
                 self._grpc_stub_1.GetServiceNowConfig,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKmetaModule1.GetServiceNowConfigError,
             )
             return attach_rate_limit(
                 rest_models.GetServiceNowConfigResponse.model_validate(
@@ -164,6 +167,7 @@ class KmetaServiceWrapper:
                 self._grpc_stub_1.UpdateServiceNowConfig,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKmetaModule1.UpdateServiceNowConfigError,
             )
             return attach_rate_limit(
                 rest_models.UpdateServiceNowConfigResponse.model_validate(
@@ -201,6 +205,7 @@ class KmetaServiceWrapper:
                 self._grpc_stub_1.DeleteServiceNowConfig,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestKmetaModule1.DeleteServiceNowConfigError,
             )
             return attach_rate_limit(
                 rest_models.DeleteServiceNowConfigResponse.model_validate(

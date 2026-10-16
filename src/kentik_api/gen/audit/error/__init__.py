@@ -78,33 +78,38 @@ class AuditError(HTTPException):
         )
 
 
-class GetAuditEventUnexpectedError(AuditError):
+class GetAuditEventError(AuditError):
+    """Operation-local error for GetAuditEvent."""
+
+    response_error_map: dict[str, type[AuditError]] = {}
+
+
+class GetAuditEventUnexpectedError(GetAuditEventError):
     """Operation-local response error for GetAuditEvent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class GetAuditEventError(AuditError):
-    """Operation-local error for GetAuditEvent."""
-
-    response_error_map = {
-        "default": GetAuditEventUnexpectedError,
-    }
-
-
-class ListAuditEventsUnexpectedError(AuditError):
-    """Operation-local response error for ListAuditEvents (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+GetAuditEventError.response_error_map = {
+    "default": GetAuditEventUnexpectedError,
+}
 
 
 class ListAuditEventsError(AuditError):
     """Operation-local error for ListAuditEvents."""
 
-    response_error_map = {
-        "default": ListAuditEventsUnexpectedError,
-    }
+    response_error_map: dict[str, type[AuditError]] = {}
 
+
+class ListAuditEventsUnexpectedError(ListAuditEventsError):
+    """Operation-local response error for ListAuditEvents (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+ListAuditEventsError.response_error_map = {
+    "default": ListAuditEventsUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[AuditError]] = {
     "GetAuditEvent": GetAuditEventError,

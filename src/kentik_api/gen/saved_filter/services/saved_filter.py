@@ -53,6 +53,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.CreateSavedFilter,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestSavedFilterModule1.CreateSavedFilterError,
             )
             return attach_rate_limit(
                 rest_models.CreateSavedFilterResponse.model_validate(
@@ -83,7 +84,10 @@ class SavedFilterServiceWrapper:
                 self._grpc_pb2_1.GetSavedFilterRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetSavedFilter, _req, api_config=api_config_override
+                self._grpc_stub_1.GetSavedFilter,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSavedFilterModule1.GetSavedFilterError,
             )
             return attach_rate_limit(
                 rest_models.GetSavedFilterResponse.model_validate(
@@ -123,6 +127,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.UpdateSavedFilter,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestSavedFilterModule1.UpdateSavedFilterError,
             )
             return attach_rate_limit(
                 rest_models.UpdateSavedFilterResponse.model_validate(
@@ -157,6 +162,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.DeleteSavedFilter,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestSavedFilterModule1.DeleteSavedFilterError,
             )
             return attach_rate_limit(
                 rest_models.DeleteSavedFilterResponse.model_validate(
@@ -187,7 +193,10 @@ class SavedFilterServiceWrapper:
                 self._grpc_pb2_1.ListSavedFiltersRequest, None, {}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListSavedFilters, _req, api_config=api_config_override
+                self._grpc_stub_1.ListSavedFilters,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestSavedFilterModule1.ListSavedFiltersError,
             )
             return attach_rate_limit(
                 rest_models.ListSavedFiltersResponse.model_validate(
@@ -220,6 +229,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.ListSavedFiltersAll,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestSavedFilterModule1.ListSavedFiltersAllError,
             )
             return attach_rate_limit(
                 rest_models.ListSavedFiltersAllResponse.model_validate(

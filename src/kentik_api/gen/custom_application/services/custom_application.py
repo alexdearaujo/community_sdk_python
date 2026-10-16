@@ -48,6 +48,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.ListCustomApplications,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomApplicationModule1.ListCustomApplicationsError,
             )
             return attach_rate_limit(
                 rest_models.ListCustomApplicationsResponse.model_validate(
@@ -85,6 +86,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.CreateCustomApplication,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomApplicationModule1.CreateCustomApplicationError,
             )
             return attach_rate_limit(
                 rest_models.CreateCustomApplicationResponse.model_validate(
@@ -123,6 +125,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.GetCustomApplication,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomApplicationModule1.GetCustomApplicationError,
             )
             return attach_rate_limit(
                 rest_models.GetCustomApplicationResponse.model_validate(
@@ -162,6 +165,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.UpdateCustomApplication,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomApplicationModule1.UpdateCustomApplicationError,
             )
             return attach_rate_limit(
                 rest_models.UpdateCustomApplicationResponse.model_validate(
@@ -201,6 +205,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.DeleteCustomApplication,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCustomApplicationModule1.DeleteCustomApplicationError,
             )
             return attach_rate_limit(
                 rest_models.DeleteCustomApplicationResponse.model_validate(

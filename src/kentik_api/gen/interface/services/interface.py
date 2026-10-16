@@ -64,7 +64,10 @@ class InterfaceServiceWrapper:
                 },
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListInterface, _req, api_config=api_config_override
+                self._grpc_stub_1.ListInterface,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestInterfaceModule1.ListInterfaceError,
             )
             return attach_rate_limit(
                 rest_models.ListInterfaceResponse.model_validate(
@@ -106,7 +109,10 @@ class InterfaceServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateInterface, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateInterface,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestInterfaceModule1.InterfaceCreateError,
             )
             return attach_rate_limit(
                 rest_models.CreateInterfaceResponse.model_validate(
@@ -137,7 +143,10 @@ class InterfaceServiceWrapper:
                 self._grpc_pb2_1.GetInterfaceRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetInterface, _req, api_config=api_config_override
+                self._grpc_stub_1.GetInterface,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestInterfaceModule1.InterfaceGetError,
             )
             return attach_rate_limit(
                 rest_models.GetInterfaceResponse.model_validate(
@@ -174,7 +183,10 @@ class InterfaceServiceWrapper:
                 {"interface.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateInterface, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateInterface,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestInterfaceModule1.InterfaceUpdateError,
             )
             return attach_rate_limit(
                 rest_models.UpdateInterfaceResponse.model_validate(
@@ -206,7 +218,10 @@ class InterfaceServiceWrapper:
                 self._grpc_pb2_1.DeleteInterfaceRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteInterface, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteInterface,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestInterfaceModule1.InterfaceDeleteError,
             )
             return attach_rate_limit(
                 rest_models.DeleteInterfaceResponse.model_validate(
@@ -242,7 +257,10 @@ class InterfaceServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ManualClassify, _req, api_config=api_config_override
+                self._grpc_stub_1.ManualClassify,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestInterfaceModule1.ManualClassifyError,
             )
             return attach_rate_limit(
                 rest_models.ManualClassifyResponse.model_validate(

@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.credential
     participant API as Kentik REST API
 
-    C->>W: list_credential_group()
+    C->>W: list_group()
     W->>API: GET /credential/v202407alpha1/group
     alt success
         API-->>W: v202407alpha1ListCredentialGroupResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_credential_group()
+    C->>W: list_group()
     W->>R: build_grpc_request(ListCredentialGroupRequest, arguments)
     R->>API: CredentialService/ListCredentialGroup (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.credential.list_credential_group()
+response = client.credential.list_group()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.credential
     participant API as Kentik REST API
 
-    C->>W: get_credential_group(id="id-example")
+    C->>W: get_group(id="id-example")
     W->>API: GET /credential/v202407alpha1/group/{id}
     alt success
         API-->>W: v202407alpha1GetCredentialGroupResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_credential_group(id="id-example")
+    C->>W: get_group(id="id-example")
     W->>R: build_grpc_request(GetCredentialGroupRequest, arguments)
     R->>API: CredentialService/GetCredentialGroup (gRPC/TLS)
     alt success
@@ -164,7 +164,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.credential.get_credential_group(
+response = client.credential.get_group(
     id="id-example",
 )
 ```

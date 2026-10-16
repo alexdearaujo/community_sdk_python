@@ -78,19 +78,21 @@ class ConnectivityCheckerError(HTTPException):
         )
 
 
-class CreateConnectivityReportUnexpectedError(ConnectivityCheckerError):
+class CreateConnectivityReportError(ConnectivityCheckerError):
+    """Operation-local error for CreateConnectivityReport."""
+
+    response_error_map: dict[str, type[ConnectivityCheckerError]] = {}
+
+
+class CreateConnectivityReportUnexpectedError(CreateConnectivityReportError):
     """Operation-local response error for CreateConnectivityReport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateConnectivityReportError(ConnectivityCheckerError):
-    """Operation-local error for CreateConnectivityReport."""
-
-    response_error_map = {
-        "default": CreateConnectivityReportUnexpectedError,
-    }
-
+CreateConnectivityReportError.response_error_map = {
+    "default": CreateConnectivityReportUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[ConnectivityCheckerError]] = {
     "CreateConnectivityReport": CreateConnectivityReportError,

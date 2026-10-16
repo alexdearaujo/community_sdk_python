@@ -78,103 +78,123 @@ class UserError(HTTPException):
         )
 
 
-class CreateUserUnexpectedError(UserError):
+class CreateUserError(UserError):
+    """Operation-local error for CreateUser."""
+
+    response_error_map: dict[str, type[UserError]] = {}
+
+
+class CreateUserUnexpectedError(CreateUserError):
     """Operation-local response error for CreateUser (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateUserError(UserError):
-    """Operation-local error for CreateUser."""
-
-    response_error_map = {
-        "default": CreateUserUnexpectedError,
-    }
-
-
-class DeleteUserUnexpectedError(UserError):
-    """Operation-local response error for DeleteUser (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateUserError.response_error_map = {
+    "default": CreateUserUnexpectedError,
+}
 
 
 class DeleteUserError(UserError):
     """Operation-local error for DeleteUser."""
 
-    response_error_map = {
-        "default": DeleteUserUnexpectedError,
-    }
+    response_error_map: dict[str, type[UserError]] = {}
 
 
-class GetUserUnexpectedError(UserError):
-    """Operation-local response error for GetUser (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteUserUnexpectedError(DeleteUserError):
+    """Operation-local response error for DeleteUser (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteUserError.response_error_map = {
+    "default": DeleteUserUnexpectedError,
+}
 
 
 class GetUserError(UserError):
     """Operation-local error for GetUser."""
 
-    response_error_map = {
-        "default": GetUserUnexpectedError,
-    }
+    response_error_map: dict[str, type[UserError]] = {}
 
 
-class ListUsersUnexpectedError(UserError):
-    """Operation-local response error for ListUsers (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetUserUnexpectedError(GetUserError):
+    """Operation-local response error for GetUser (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetUserError.response_error_map = {
+    "default": GetUserUnexpectedError,
+}
 
 
 class ListUsersError(UserError):
     """Operation-local error for ListUsers."""
 
-    response_error_map = {
-        "default": ListUsersUnexpectedError,
-    }
+    response_error_map: dict[str, type[UserError]] = {}
 
 
-class ResetActiveSessionsUnexpectedError(UserError):
-    """Operation-local response error for ResetActiveSessions (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListUsersUnexpectedError(ListUsersError):
+    """Operation-local response error for ListUsers (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListUsersError.response_error_map = {
+    "default": ListUsersUnexpectedError,
+}
 
 
 class ResetActiveSessionsError(UserError):
     """Operation-local error for ResetActiveSessions."""
 
-    response_error_map = {
-        "default": ResetActiveSessionsUnexpectedError,
-    }
+    response_error_map: dict[str, type[UserError]] = {}
 
 
-class ResetApiTokenUnexpectedError(UserError):
-    """Operation-local response error for ResetApiToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ResetActiveSessionsUnexpectedError(ResetActiveSessionsError):
+    """Operation-local response error for ResetActiveSessions (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ResetActiveSessionsError.response_error_map = {
+    "default": ResetActiveSessionsUnexpectedError,
+}
 
 
 class ResetApiTokenError(UserError):
     """Operation-local error for ResetApiToken."""
 
-    response_error_map = {
-        "default": ResetApiTokenUnexpectedError,
-    }
+    response_error_map: dict[str, type[UserError]] = {}
 
 
-class UpdateUserUnexpectedError(UserError):
-    """Operation-local response error for UpdateUser (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ResetApiTokenUnexpectedError(ResetApiTokenError):
+    """Operation-local response error for ResetApiToken (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ResetApiTokenError.response_error_map = {
+    "default": ResetApiTokenUnexpectedError,
+}
 
 
 class UpdateUserError(UserError):
     """Operation-local error for UpdateUser."""
 
-    response_error_map = {
-        "default": UpdateUserUnexpectedError,
-    }
+    response_error_map: dict[str, type[UserError]] = {}
 
+
+class UpdateUserUnexpectedError(UpdateUserError):
+    """Operation-local response error for UpdateUser (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateUserError.response_error_map = {
+    "default": UpdateUserUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[UserError]] = {
     "CreateUser": CreateUserError,

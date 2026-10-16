@@ -45,7 +45,10 @@ class CloudExportServiceWrapper:
                 self._grpc_pb2_1.ListCloudExportsRequest, None, {}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListCloudExports, _req, api_config=api_config_override
+                self._grpc_stub_1.ListCloudExports,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCloudExportModule1.ListCloudExportsError,
             )
             return attach_rate_limit(
                 rest_models.ListCloudExportsResponse.model_validate(
@@ -83,6 +86,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1.CreateCloudExport,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCloudExportModule1.CreateCloudExportError,
             )
             return attach_rate_limit(
                 rest_models.CreateCloudExportResponse.model_validate(
@@ -113,7 +117,10 @@ class CloudExportServiceWrapper:
                 self._grpc_pb2_1.GetCloudExportRequest, None, {"id": exportid}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetCloudExport, _req, api_config=api_config_override
+                self._grpc_stub_1.GetCloudExport,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCloudExportModule1.GetCloudExportError,
             )
             return attach_rate_limit(
                 rest_models.GetCloudExportResponse.model_validate(
@@ -153,6 +160,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1.UpdateCloudExport,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCloudExportModule1.UpdateCloudExportError,
             )
             return attach_rate_limit(
                 rest_models.UpdateCloudExportResponse.model_validate(
@@ -187,6 +195,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1.DeleteCloudExport,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCloudExportModule1.DeleteCloudExportError,
             )
             return attach_rate_limit(
                 rest_models.DeleteCloudExportResponse.model_validate(

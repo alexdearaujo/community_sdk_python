@@ -64,6 +64,14 @@ def map_grpc_error(
 
     if code == grpc.StatusCode.UNAUTHENTICATED:
         return AuthenticationError(details)
+    if code == grpc.StatusCode.RESOURCE_EXHAUSTED and "larger than max" in details:
+        # Raised by the client when a response exceeds the receive limit. It is
+        # not Kentik's quota, so it must not read as a 429 that callers back off on.
+        return TransportError(
+            f"{method} {path} response exceeded the gRPC receive limit: {details}. "
+            "Pass grpc_options=[('grpc.max_receive_message_length', N)] to KentikAPI, "
+            "or use protocol='rest'."
+        )
     if code in _NO_RESPONSE_CODES:
         return TransportError(f"{method} {path} failed with {code_name}: {details}")
 
@@ -145,8 +153,32 @@ def _validate_grpc_override(api_config: APIConfig) -> None:
         )
 
 
+def _as_operation_error(
+    error: HTTPException, error_cls: type[HTTPException]
+) -> HTTPException:
+    """Re-types a mapped gRPC error as the operation's own class, as REST does.
+
+    REST picks the response class from the HTTP status, so an `except
+    ListDevicesError` clause catches the same error on either transport.
+    """
+    by_status = getattr(error_cls, "response_error_map", {})
+    target = by_status.get(str(error.status_code)) or by_status.get("default")
+    return (target or error_cls)(
+        error.status_code,
+        error.message,
+        method=error.method,
+        path=error.path,
+        details=error.details,
+        grpc_status_code=error.grpc_status_code,
+    )
+
+
 def call_grpc(
-    stub_method, proto_request, *, api_config: APIConfig | None = None
+    stub_method,
+    proto_request,
+    *,
+    api_config: APIConfig | None = None,
+    error_cls: type[HTTPException] | None = None,
 ) -> tuple[Any, RateLimit | None]:
     """Calls one unary gRPC method; returns the response and the quota it reported.
 
@@ -171,5 +203,7 @@ def call_grpc(
         return stub_method(proto_request, **kwargs), None
     except grpc.RpcError as exc:
         error = map_grpc_error(exc, method="gRPC", path=path)
+        if error_cls is not None and isinstance(error, HTTPException):
+            error = _as_operation_error(error, error_cls)
         error.rate_limit = rate_limit_of_rpc(exc)
         raise error from exc

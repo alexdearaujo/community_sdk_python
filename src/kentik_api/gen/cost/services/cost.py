@@ -33,7 +33,7 @@ class CostServiceWrapper:
                 self._grpc_pb2_1 = None
                 self._grpc_stub_1 = None
 
-    def list_cost_providers(
+    def list_providers(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCostProvidersResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -48,6 +48,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.ListCostProviders,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCostModule1.ListCostProvidersError,
             )
             return attach_rate_limit(
                 rest_models.ListCostProvidersResponse.model_validate(
@@ -65,7 +66,7 @@ class CostServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def list_cost_provider_summaries(
+    def list_provider_summaries(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -83,6 +84,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.ListCostProviderSummaries,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCostModule1.ListCostProviderSummariesError,
             )
             return attach_rate_limit(
                 rest_models.ListCostProviderSummariesResponse.model_validate(
@@ -101,7 +103,7 @@ class CostServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_cost_provider_summary(
+    def get_provider_summary(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -122,6 +124,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.GetCostProviderSummary,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCostModule1.GetCostProviderSummaryError,
             )
             return attach_rate_limit(
                 rest_models.GetCostProviderSummaryResponse.model_validate(

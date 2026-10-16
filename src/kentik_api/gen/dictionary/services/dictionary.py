@@ -43,7 +43,10 @@ class DictionaryServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.GetDictionaryRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetDictionary, _req, api_config=api_config_override
+                self._grpc_stub_1.GetDictionary,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestDictionaryModule1.GetDictionaryError,
             )
             return attach_rate_limit(
                 rest_models.GetDictionaryResponse.model_validate(

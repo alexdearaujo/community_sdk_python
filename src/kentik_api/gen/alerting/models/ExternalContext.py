@@ -1,6 +1,8 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `make generate`. Do not edit by hand.
 
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 from .JiraCloudContext import JiraCloudContext
@@ -14,6 +16,10 @@ class ExternalContext(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    servicenow: ServiceNowContext = Field(validation_alias="servicenow")
+    servicenow: Optional[ServiceNowContext] = Field(
+        validation_alias="servicenow", default=None
+    )
 
-    jiraCloud: JiraCloudContext = Field(validation_alias="jiraCloud")
+    jiraCloud: Optional[JiraCloudContext] = Field(
+        validation_alias="jiraCloud", default=None
+    )

@@ -25,6 +25,7 @@ from generation._shared import (
     SDK_OUTPUT_DIR,
 )
 from generation.endpoint_docs import EndpointDocsCollector
+from google.protobuf import descriptor_pb2
 
 # Configuration
 DEFAULT_REPO = "https://github.com/kentik/api-schema-public.git"
@@ -172,16 +173,77 @@ def _relink_pb2_dependency_imports(output_dir: Path) -> int:
     return rewritten
 
 
+def _proto_collisions(
+    selected_swagger_files: dict, openapi_base: Path, proto_base: Path
+) -> dict[str, set[str]]:
+    """Per service, the proto file stems that more than one compiled folder declares.
+
+    Every folder of a service compiles into one flat pb/ directory, so without a
+    rename the last `mitigation_pb2.py` written wins and the other is lost.
+    """
+    collisions: dict[str, set[str]] = {}
+    for service, files in selected_swagger_files.items():
+        folders: dict[str, set[Path]] = {}
+        for metadata in files:
+            folder = Path(metadata["path"]).relative_to(openapi_base).parent
+            for proto in (proto_base / "kentik" / folder).glob("*.proto"):
+                folders.setdefault(proto.stem, set()).add(folder)
+        collisions[service] = {s for s, dirs in folders.items() if len(dirs) > 1}
+    return collisions
+
+
+def _pb_stem(package: str, stem: str, collisions: dict[str, set[str]]) -> str:
+    """The pb/ module stem for proto `stem` in `package`, qualified when it collides.
+
+    `kentik.alerting.types.v202506` + `mitigation` -> `mitigation_types_v202506`.
+    """
+    parts = package.split(".")
+    if parts[0] != "kentik" or len(parts) < 3:
+        return stem
+    if stem not in collisions.get(parts[1], set()):
+        return stem
+    return "_".join([stem, *parts[2:]])
+
+
+def _qualify_colliding_imports(content: str, collisions: dict[str, set[str]]) -> str:
+    """Points protoc's `from kentik.<pkg> import <stem>_pb2` lines at renamed modules."""
+    return re.sub(
+        r"^(from (kentik(?:\.\w+)+) import )(\w+)_pb2\b",
+        lambda m: f"{m[1]}{_pb_stem(m[2], m[3], collisions)}_pb2",
+        content,
+        flags=re.MULTILINE,
+    )
+
+
 def clean_schema_names(schema: dict, version: str) -> dict:
     import copy
 
     schema = copy.deepcopy(schema)
 
+    # A versioned name whose stripped form already exists is a different schema,
+    # for example an enum `v202505AlertAcknowledgement` next to the object
+    # `AlertAcknowledgement`. Stripping it would overwrite the object, so it
+    # keeps its prefix, and so do the references that point at it.
+    keep_prefixed = {
+        old_key
+        for section in _definition_sections(schema)
+        for old_key in section
+        if old_key.startswith(version)
+        and old_key[len(version) :] in section
+        and len(old_key) > len(version)
+    }
+    for old_key in sorted(keep_prefixed):
+        print(
+            f"    ⚠️ Schema name collision: keeping `{old_key}` because "
+            f"`{old_key[len(version) :]}` already exists."
+        )
+
     def _clean_refs(node: object) -> None:
         if isinstance(node, dict):
-            if "$ref" in node and isinstance(node["$ref"], str):
-                if f"/{version}" in node["$ref"]:
-                    node["$ref"] = node["$ref"].replace(f"/{version}", "/")
+            ref = node.get("$ref")
+            if isinstance(ref, str) and f"/{version}" in ref:
+                if ref.rsplit("/", 1)[-1] not in keep_prefixed:
+                    node["$ref"] = ref.replace(f"/{version}", "/")
             for child_value in node.values():
                 _clean_refs(child_value)
         elif isinstance(node, list):
@@ -191,7 +253,11 @@ def clean_schema_names(schema: dict, version: str) -> dict:
     _clean_refs(schema)
 
     for section in _definition_sections(schema):
-        for old_key in [key for key in section if key.startswith(version)]:
+        for old_key in [
+            key
+            for key in section
+            if key.startswith(version) and key not in keep_prefixed
+        ]:
             new_key = old_key[len(version) :]
             if new_key:
                 section[new_key] = section.pop(old_key)
@@ -223,6 +289,59 @@ def inline_request_body_refs(schema: dict) -> dict:
     return schema
 
 
+def oneof_members_by_definition(
+    descriptors: descriptor_pb2.FileDescriptorSet,
+) -> dict[str, set[str]]:
+    """Maps each swagger definition name to the JSON names of its oneof members.
+
+    Keys follow protoc-gen-openapiv2's naming: the last package component, then
+    the message name chain (`v202505ExternalContext`). Proto3 `optional` fields
+    sit in synthetic oneofs and are left out.
+    """
+    members: dict[str, set[str]] = {}
+
+    def walk(prefix: str, messages) -> None:
+        for message in messages:
+            name = prefix + message.name
+            in_oneof = {
+                field.json_name
+                for field in message.field
+                if field.HasField("oneof_index") and not field.proto3_optional
+            }
+            if in_oneof:
+                members[name] = in_oneof
+            walk(name, message.nested_type)
+
+    for file in descriptors.file:
+        walk(file.package.rsplit(".", 1)[-1], file.message_type)
+    return members
+
+
+def relax_oneof_required(schema: dict, oneof_members: dict[str, set[str]]) -> dict:
+    """Returns a copy of schema with oneof members removed from `required`.
+
+    protoc-gen-openapiv2 drops the oneof grouping, so members marked REQUIRED
+    all land in `required` and no valid message can satisfy the model.
+    """
+    import copy
+
+    schema = copy.deepcopy(schema)
+    for section in _definition_sections(schema):
+        for name, definition in section.items():
+            members = oneof_members.get(name)
+            if not members or not isinstance(definition, dict):
+                continue
+            required = definition.get("required")
+            if not required:
+                continue
+            kept = [field for field in required if field not in members]
+            if kept:
+                definition["required"] = kept
+            else:
+                del definition["required"]
+    return schema
+
+
 def _definition_sections(schema: dict) -> list[dict]:
     sections: list[dict] = []
     if "definitions" in schema:
@@ -235,7 +354,11 @@ def _definition_sections(schema: dict) -> list[dict]:
 
 
 @contextlib.contextmanager
-def patched_swagger(swagger_path: Path, version: str):
+def patched_swagger(
+    swagger_path: Path,
+    version: str,
+    oneof_members: dict[str, set[str]] | None = None,
+):
     """Yields a temp-file path containing the schema with clean names and inlined request bodies.
 
     The original swagger_path is never modified, so local schema checkouts stay clean.
@@ -243,6 +366,8 @@ def patched_swagger(swagger_path: Path, version: str):
     from tempfile import NamedTemporaryFile
 
     schema = json.loads(swagger_path.read_text(encoding="utf-8"))
+    # Before clean_schema_names: oneof_members is keyed by the prefixed names.
+    schema = relax_oneof_required(schema, oneof_members or {})
     schema = clean_schema_names(schema, version)
     schema = inline_request_body_refs(schema)
     with NamedTemporaryFile(
@@ -393,6 +518,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
 
         _compile_proto_companions(schema_root)
 
+        proto_collisions = _proto_collisions(
+            selected_swagger_files, openapi_base, proto_base
+        )
+
         service_swagger_paths: dict[str, list[Path]] = {}
         endpoint_docs_collector = EndpointDocsCollector()
 
@@ -421,20 +550,9 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                 )
 
                 # -----------------------------------------------------------------
-                # 1. GENERATE OPENAPI (REST)
+                # 1. GENERATE PROTOBUF (gRPC), first: REST models need its oneofs
                 # -----------------------------------------------------------------
-                with patched_swagger(swagger_path, version) as tmp_swagger:
-                    run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
-
-                # Extract per-operation documentation now, while the swagger
-                # file is still available -- rendered as real Sphinx text
-                # later (endpoint_docs_collector.render()), once wrapper
-                # methods exist.
-                endpoint_docs_collector.extract(service, swagger_path)
-
-                # -----------------------------------------------------------------
-                # 2. GENERATE PROTOBUF (gRPC)
-                # -----------------------------------------------------------------
+                oneof_members: dict[str, set[str]] = {}
                 swagger_rel_parent = swagger_path.relative_to(openapi_base).parent
                 proto_dir = proto_base / "kentik" / swagger_rel_parent
                 print(f"    Hunting for protos in: {proto_dir}")
@@ -475,6 +593,8 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                 f"--python_out={tmp_pb_path}",
                                 f"--grpc_python_out={tmp_pb_path}",
                                 f"--pyi_out={tmp_pb_path}",
+                                f"--descriptor_set_out={tmp_pb_path / 'descriptors.pb'}",
+                                "--include_imports",
                             ]
                             cmd.extend(rel_proto_files)
 
@@ -493,12 +613,33 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                                 )
 
                                 for gen_py in generated_files:
-                                    shutil.copy(gen_py, pb_dir / gen_py.name)
+                                    package = ".".join(
+                                        gen_py.relative_to(tmp_pb_path).parent.parts
+                                    )
+                                    stem, _, suffix = gen_py.name.partition("_pb2")
+                                    target = pb_dir / (
+                                        _pb_stem(package, stem, proto_collisions)
+                                        + "_pb2"
+                                        + suffix
+                                    )
+                                    target.write_text(
+                                        _qualify_colliding_imports(
+                                            gen_py.read_text(encoding="utf-8"),
+                                            proto_collisions,
+                                        ),
+                                        encoding="utf-8",
+                                    )
 
                                 for pb_file in pb_dir.rglob("*_grpc.py"):
                                     content = pb_file.read_text(encoding="utf-8")
                                     content = _rewrite_grpc_imports(content)
                                     pb_file.write_text(content, encoding="utf-8")
+
+                                oneof_members = oneof_members_by_definition(
+                                    descriptor_pb2.FileDescriptorSet.FromString(
+                                        (tmp_pb_path / "descriptors.pb").read_bytes()
+                                    )
+                                )
 
                             except subprocess.CalledProcessError as e:
                                 print(
@@ -519,6 +660,20 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO):
                         )
                 else:
                     print("    ⚠️ No proto directory found, skipping gRPC.")
+
+                # -----------------------------------------------------------------
+                # 2. GENERATE OPENAPI (REST)
+                # -----------------------------------------------------------------
+                with patched_swagger(
+                    swagger_path, version, oneof_members
+                ) as tmp_swagger:
+                    run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
+
+                # Extract per-operation documentation now, while the swagger
+                # file is still available -- rendered as real Sphinx text
+                # later (endpoint_docs_collector.render()), once wrapper
+                # methods exist.
+                endpoint_docs_collector.extract(service, swagger_path)
 
         for service, swagger_paths in service_swagger_paths.items():
             service_dir = SDK_OUTPUT_DIR / service

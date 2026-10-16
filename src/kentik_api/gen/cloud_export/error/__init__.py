@@ -78,75 +78,89 @@ class CloudExportError(HTTPException):
         )
 
 
-class CreateCloudExportUnexpectedError(CloudExportError):
+class CreateCloudExportError(CloudExportError):
+    """Operation-local error for CreateCloudExport."""
+
+    response_error_map: dict[str, type[CloudExportError]] = {}
+
+
+class CreateCloudExportUnexpectedError(CreateCloudExportError):
     """Operation-local response error for CreateCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class CreateCloudExportError(CloudExportError):
-    """Operation-local error for CreateCloudExport."""
-
-    response_error_map = {
-        "default": CreateCloudExportUnexpectedError,
-    }
-
-
-class DeleteCloudExportUnexpectedError(CloudExportError):
-    """Operation-local response error for DeleteCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
+CreateCloudExportError.response_error_map = {
+    "default": CreateCloudExportUnexpectedError,
+}
 
 
 class DeleteCloudExportError(CloudExportError):
     """Operation-local error for DeleteCloudExport."""
 
-    response_error_map = {
-        "default": DeleteCloudExportUnexpectedError,
-    }
+    response_error_map: dict[str, type[CloudExportError]] = {}
 
 
-class GetCloudExportUnexpectedError(CloudExportError):
-    """Operation-local response error for GetCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteCloudExportUnexpectedError(DeleteCloudExportError):
+    """Operation-local response error for DeleteCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+DeleteCloudExportError.response_error_map = {
+    "default": DeleteCloudExportUnexpectedError,
+}
 
 
 class GetCloudExportError(CloudExportError):
     """Operation-local error for GetCloudExport."""
 
-    response_error_map = {
-        "default": GetCloudExportUnexpectedError,
-    }
+    response_error_map: dict[str, type[CloudExportError]] = {}
 
 
-class ListCloudExportsUnexpectedError(CloudExportError):
-    """Operation-local response error for ListCloudExports (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetCloudExportUnexpectedError(GetCloudExportError):
+    """Operation-local response error for GetCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+GetCloudExportError.response_error_map = {
+    "default": GetCloudExportUnexpectedError,
+}
 
 
 class ListCloudExportsError(CloudExportError):
     """Operation-local error for ListCloudExports."""
 
-    response_error_map = {
-        "default": ListCloudExportsUnexpectedError,
-    }
+    response_error_map: dict[str, type[CloudExportError]] = {}
 
 
-class UpdateCloudExportUnexpectedError(CloudExportError):
-    """Operation-local response error for UpdateCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListCloudExportsUnexpectedError(ListCloudExportsError):
+    """Operation-local response error for ListCloudExports (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
+
+
+ListCloudExportsError.response_error_map = {
+    "default": ListCloudExportsUnexpectedError,
+}
 
 
 class UpdateCloudExportError(CloudExportError):
     """Operation-local error for UpdateCloudExport."""
 
-    response_error_map = {
-        "default": UpdateCloudExportUnexpectedError,
-    }
+    response_error_map: dict[str, type[CloudExportError]] = {}
 
+
+class UpdateCloudExportUnexpectedError(UpdateCloudExportError):
+    """Operation-local response error for UpdateCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateCloudExportError.response_error_map = {
+    "default": UpdateCloudExportUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[CloudExportError]] = {
     "CreateCloudExport": CreateCloudExportError,

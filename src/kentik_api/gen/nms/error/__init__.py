@@ -78,19 +78,23 @@ class NmsError(HTTPException):
         )
 
 
-class MetricsSchemaService_GetMetricsSchemaUnexpectedError(NmsError):
+class MetricsSchemaService_GetMetricsSchemaError(NmsError):
+    """Operation-local error for MetricsSchemaService_GetMetricsSchema."""
+
+    response_error_map: dict[str, type[NmsError]] = {}
+
+
+class MetricsSchemaService_GetMetricsSchemaUnexpectedError(
+    MetricsSchemaService_GetMetricsSchemaError
+):
     """Operation-local response error for MetricsSchemaService_GetMetricsSchema (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class MetricsSchemaService_GetMetricsSchemaError(NmsError):
-    """Operation-local error for MetricsSchemaService_GetMetricsSchema."""
-
-    response_error_map = {
-        "default": MetricsSchemaService_GetMetricsSchemaUnexpectedError,
-    }
-
+MetricsSchemaService_GetMetricsSchemaError.response_error_map = {
+    "default": MetricsSchemaService_GetMetricsSchemaUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[NmsError]] = {
     "MetricsSchemaService_GetMetricsSchema": MetricsSchemaService_GetMetricsSchemaError,

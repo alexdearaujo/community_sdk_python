@@ -78,19 +78,21 @@ class JourneysError(HTTPException):
         )
 
 
-class GetJourneysNlqUnexpectedError(JourneysError):
+class GetJourneysNlqError(JourneysError):
+    """Operation-local error for GetJourneysNlq."""
+
+    response_error_map: dict[str, type[JourneysError]] = {}
+
+
+class GetJourneysNlqUnexpectedError(GetJourneysNlqError):
     """Operation-local response error for GetJourneysNlq (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-class GetJourneysNlqError(JourneysError):
-    """Operation-local error for GetJourneysNlq."""
-
-    response_error_map = {
-        "default": GetJourneysNlqUnexpectedError,
-    }
-
+GetJourneysNlqError.response_error_map = {
+    "default": GetJourneysNlqUnexpectedError,
+}
 
 ERROR_BY_OPERATION: dict[str, type[JourneysError]] = {
     "GetJourneysNlq": GetJourneysNlqError,

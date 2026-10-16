@@ -48,6 +48,7 @@ class CapacityPlanServiceWrapper:
                 self._grpc_stub_1.ListCapacityPlans,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCapacityPlanModule1.ListCapacityPlansError,
             )
             return attach_rate_limit(
                 rest_models.ListCapacityPlansResponse.model_validate(
@@ -80,6 +81,7 @@ class CapacityPlanServiceWrapper:
                 self._grpc_stub_1.ListCapacitySummaries,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCapacityPlanModule1.ListCapacitySummariesError,
             )
             return attach_rate_limit(
                 rest_models.ListCapacitySummariesResponse.model_validate(
@@ -109,7 +111,10 @@ class CapacityPlanServiceWrapper:
                 self._grpc_pb2_1.GetCapacityPlanRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetCapacityPlan, _req, api_config=api_config_override
+                self._grpc_stub_1.GetCapacityPlan,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCapacityPlanModule1.GetCapacityPlanError,
             )
             return attach_rate_limit(
                 rest_models.GetCapacityPlanResponse.model_validate(
@@ -143,6 +148,7 @@ class CapacityPlanServiceWrapper:
                 self._grpc_stub_1.GetCapacitySummary,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestCapacityPlanModule1.GetCapacitySummaryError,
             )
             return attach_rate_limit(
                 rest_models.GetCapacitySummaryResponse.model_validate(

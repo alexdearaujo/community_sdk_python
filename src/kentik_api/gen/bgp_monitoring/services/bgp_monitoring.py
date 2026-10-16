@@ -56,7 +56,10 @@ class BgpMonitoringServiceWrapper:
                 )
             _req = build_grpc_request(self._grpc_pb2_1.ListMonitorsRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListMonitors, _req, api_config=api_config_override
+                self._grpc_stub_1.ListMonitors,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestBgpMonitoringModule1.ListMonitorsError,
             )
             return attach_rate_limit(
                 rest_models.ListMonitorsResponse.model_validate(
@@ -91,7 +94,10 @@ class BgpMonitoringServiceWrapper:
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.CreateMonitor, _req, api_config=api_config_override
+                self._grpc_stub_1.CreateMonitor,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestBgpMonitoringModule1.CreateMonitorError,
             )
             return attach_rate_limit(
                 rest_models.CreateMonitorResponse.model_validate(
@@ -122,7 +128,10 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_1.GetMonitorRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.GetMonitor, _req, api_config=api_config_override
+                self._grpc_stub_1.GetMonitor,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestBgpMonitoringModule1.GetMonitorError,
             )
             return attach_rate_limit(
                 rest_models.GetMonitorResponse.model_validate(
@@ -159,7 +168,10 @@ class BgpMonitoringServiceWrapper:
                 {"monitor.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.UpdateMonitor, _req, api_config=api_config_override
+                self._grpc_stub_1.UpdateMonitor,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestBgpMonitoringModule1.UpdateMonitorError,
             )
             return attach_rate_limit(
                 rest_models.UpdateMonitorResponse.model_validate(
@@ -191,7 +203,10 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_pb2_1.DeleteMonitorRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.DeleteMonitor, _req, api_config=api_config_override
+                self._grpc_stub_1.DeleteMonitor,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestBgpMonitoringModule1.DeleteMonitorError,
             )
             return attach_rate_limit(
                 rest_models.DeleteMonitorResponse.model_validate(
@@ -228,7 +243,10 @@ class BgpMonitoringServiceWrapper:
                 {"id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.SetMonitorStatus, _req, api_config=api_config_override
+                self._grpc_stub_1.SetMonitorStatus,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestBgpMonitoringModule1.SetMonitorStatusError,
             )
             return attach_rate_limit(
                 rest_models.SetMonitorStatusResponse.model_validate(
@@ -268,6 +286,7 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_stub_2.GetMetricsForTarget,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestBgpMonitoringModule2.GetMetricsForTargetError,
             )
             return attach_rate_limit(
                 rest_models.GetMetricsForTargetResponse.model_validate(
@@ -306,6 +325,7 @@ class BgpMonitoringServiceWrapper:
                 self._grpc_stub_2.GetRoutesForTarget,
                 _req,
                 api_config=api_config_override,
+                error_cls=RestBgpMonitoringModule2.GetRoutesForTargetError,
             )
             return attach_rate_limit(
                 rest_models.GetRoutesForTargetResponse.model_validate(

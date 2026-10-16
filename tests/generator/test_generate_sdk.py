@@ -24,11 +24,17 @@ if str(_scripts_dir) not in sys.path:
     sys.path.insert(0, str(_scripts_dir))
 
 from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
+    _pb_stem,
+    _proto_collisions,
+    _qualify_colliding_imports,
     _rewrite_grpc_imports,
     clean_schema_names,
     inline_request_body_refs,
+    oneof_members_by_definition,
     patched_swagger,
+    relax_oneof_required,
 )
+from google.protobuf import descriptor_pb2  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # _rewrite_grpc_imports: three protoc output styles
@@ -413,6 +419,120 @@ def test_patched_swagger_does_not_modify_original(tmp_path: Path):
 
 
 # ---------------------------------------------------------------------------
+# oneof members: protoc-gen-openapiv2 marks every REQUIRED oneof member as
+# required, so the generated model rejects every valid message (B3).
+# ---------------------------------------------------------------------------
+
+
+def _descriptor_set() -> descriptor_pb2.FileDescriptorSet:
+    message = descriptor_pb2.DescriptorProto(name="ExternalContext")
+    message.oneof_decl.add(name="context")
+    message.oneof_decl.add(name="_note")
+    message.field.add(name="servicenow", json_name="servicenow", oneof_index=0)
+    message.field.add(name="jira_cloud", json_name="jiraCloud", oneof_index=0)
+    message.field.add(name="id", json_name="id")
+    message.field.add(
+        name="note", json_name="note", oneof_index=1, proto3_optional=True
+    )
+    nested = message.nested_type.add(name="Inner")
+    nested.oneof_decl.add(name="kind")
+    nested.field.add(name="a", json_name="a", oneof_index=0)
+    file = descriptor_pb2.FileDescriptorProto(package="kentik.alerting.v202505")
+    file.message_type.append(message)
+    return descriptor_pb2.FileDescriptorSet(file=[file])
+
+
+def test_oneof_members_by_definition_uses_swagger_names_and_skips_optional():
+    assert oneof_members_by_definition(_descriptor_set()) == {
+        "v202505ExternalContext": {"servicenow", "jiraCloud"},
+        "v202505ExternalContextInner": {"a"},
+    }
+
+
+def test_patched_swagger_drops_oneof_members_from_required(tmp_path: Path):
+    schema = {
+        "components": {
+            "schemas": {
+                "v202505ExternalContext": {
+                    "type": "object",
+                    "required": ["servicenow", "jiraCloud", "id"],
+                },
+                "v202505ExternalContextInner": {"required": ["a"]},
+            }
+        }
+    }
+    swagger_path = tmp_path / "alert.swagger.json"
+    swagger_path.write_text(json.dumps(schema), encoding="utf-8")
+    members = oneof_members_by_definition(_descriptor_set())
+
+    with patched_swagger(swagger_path, "v202505", members) as patched_path:
+        schemas = json.loads(patched_path.read_text())["components"]["schemas"]
+
+    assert schemas["ExternalContext"]["required"] == ["id"]
+    assert "required" not in schemas["ExternalContextInner"]
+
+
+def test_relax_oneof_required_does_not_mutate_input():
+    schema = {"definitions": {"v1Thing": {"required": ["a", "b"]}}}
+    result = relax_oneof_required(schema, {"v1Thing": {"a"}})
+    assert result["definitions"]["v1Thing"]["required"] == ["b"]
+    assert schema["definitions"]["v1Thing"]["required"] == ["a", "b"]
+
+
+# ---------------------------------------------------------------------------
+# Proto file-name collisions: every folder of a Service compiles into one flat
+# pb/ directory, so two `mitigation.proto` files overwrote each other (B4).
+# ---------------------------------------------------------------------------
+
+
+def test_proto_collisions_finds_stems_shared_across_compiled_folders(tmp_path):
+    openapi_base, proto_base = tmp_path / "openapi", tmp_path / "proto"
+    selected = {"alerting": [], "device": []}
+    for service, folder, protos in [
+        ("alerting", "alerting/public/v202505", ["mitigation", "alert"]),
+        ("alerting", "alerting/types/v202506", ["mitigation", "sorting"]),
+        ("device", "device/v202308beta1", ["device"]),
+    ]:
+        for proto in protos:
+            path = proto_base / "kentik" / folder / f"{proto}.proto"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.touch()
+        selected[service].append({"path": str(openapi_base / folder / "x.json")})
+
+    assert _proto_collisions(selected, openapi_base, proto_base) == {
+        "alerting": {"mitigation"},
+        "device": set(),
+    }
+
+
+def test_pb_stem_qualifies_only_colliding_kentik_modules():
+    collisions = {"alerting": {"mitigation"}}
+    assert (
+        _pb_stem("kentik.alerting.types.v202506", "mitigation", collisions)
+        == "mitigation_types_v202506"
+    )
+    assert _pb_stem("kentik.alerting.public.v202505", "alert", collisions) == "alert"
+    assert _pb_stem("kentik.ktbgp.v202501", "mitigation", collisions) == "mitigation"
+
+
+def test_qualify_colliding_imports_resolves_by_package_not_name():
+    content = (
+        "from kentik.alerting.types.v202506 import mitigation_pb2 as _types\n"
+        "from kentik.alerting.public.v202505 import mitigation_pb2 as _public\n"
+        "from kentik.alerting.public.v202505 import common_pb2 as _common\n"
+    )
+    result = _qualify_colliding_imports(content, {"alerting": {"mitigation"}})
+    assert result == (
+        "from kentik.alerting.types.v202506 import mitigation_types_v202506_pb2 as _types\n"
+        "from kentik.alerting.public.v202505 import mitigation_public_v202505_pb2 as _public\n"
+        "from kentik.alerting.public.v202505 import common_pb2 as _common\n"
+    )
+    assert "import mitigation_public_v202505_pb2 as _public" in _rewrite_grpc_imports(
+        result
+    )
+
+
+# ---------------------------------------------------------------------------
 # generate_modular_sdk: schema validation must run before any output is wiped
 # ---------------------------------------------------------------------------
 
@@ -450,3 +570,57 @@ def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir():
         "cleans SDK_OUTPUT_DIR, so a validation failure never leaves "
         "generated output partially wiped"
     )
+
+
+def test_clean_schema_names_keeps_the_prefix_when_stripping_would_overwrite_a_schema():
+    schema = {
+        "definitions": {
+            "AlertAcknowledgement": {
+                "type": "object",
+                "properties": {"state": {"type": "string"}},
+            },
+            "v202505AlertAcknowledgement": {"type": "string", "enum": ["A", "B"]},
+            "v202505Alert": {
+                "type": "object",
+                "properties": {
+                    "acknowledgement": {"$ref": "#/definitions/AlertAcknowledgement"},
+                    "legacy": {"$ref": "#/definitions/v202505AlertAcknowledgement"},
+                },
+            },
+        }
+    }
+
+    result = clean_schema_names(schema, "v202505")["definitions"]
+
+    assert result["AlertAcknowledgement"]["type"] == "object"
+    assert result["v202505AlertAcknowledgement"]["enum"] == ["A", "B"]
+    assert "Alert" in result
+    props = result["Alert"]["properties"]
+    assert props["acknowledgement"]["$ref"].endswith("/AlertAcknowledgement")
+    assert props["legacy"]["$ref"].endswith("/v202505AlertAcknowledgement")
+
+
+def test_the_real_alert_schema_keeps_acknowledgement_an_object():
+    import json
+
+    swagger = (
+        Path(__file__).resolve().parents[3]
+        / "api-schema-public"
+        / "gen"
+        / "openapiv3"
+        / "kentik"
+        / "alerting"
+        / "public"
+        / "v202505"
+        / "alert.swagger.json"
+    )
+    if not swagger.exists():
+        pytest.skip("local api-schema-public checkout not available")
+
+    result = clean_schema_names(
+        json.loads(swagger.read_text(encoding="utf-8")), "v202505"
+    )
+    definitions = result["components"]["schemas"]
+
+    assert definitions["AlertAcknowledgement"].get("type") == "object"
+    assert "v202505AlertAcknowledgement" in definitions
