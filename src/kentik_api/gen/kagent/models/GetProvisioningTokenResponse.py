@@ -10,7 +10,6 @@ from .ProvisioningToken import ProvisioningToken
 
 class GetProvisioningTokenResponse(BaseModel):
     """
-    GetProvisioningTokenResponse model
     GetProvisioningTokenResponse
     Response message for getting a provisioning token.
     """

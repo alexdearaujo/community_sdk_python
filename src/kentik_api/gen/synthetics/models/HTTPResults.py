@@ -11,12 +11,14 @@ from .MetricData import MetricData
 
 class HTTPResults(BaseModel):
     """
-    HTTPResults model
+    HTTPResults
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    target: Optional[str] = Field(validation_alias="target", default=None)
+    target: Optional[str] = Field(
+        validation_alias="target", default=None, description="Target probed URL"
+    )
 
     latency: Optional[MetricData] = Field(validation_alias="latency", default=None)
 
@@ -24,4 +26,8 @@ class HTTPResults(BaseModel):
         validation_alias="response", default=None
     )
 
-    dstIp: Optional[str] = Field(validation_alias="dstIp", default=None)
+    dstIp: Optional[str] = Field(
+        validation_alias="dstIp",
+        default=None,
+        description="IP address of probed target server",
+    )

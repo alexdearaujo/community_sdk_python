@@ -44,6 +44,11 @@ class FlowTagServiceWrapper:
         searchlookupValues: Optional[List[str]] = None,
         searchfieldLimit: Optional[int] = None,
     ) -> rest_models.SearchFlowTagResponse:
+        """
+        Search flow tag configuration.
+
+        Returns configuration of flow tag with search parameters.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -93,6 +98,11 @@ class FlowTagServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateFlowTagRequest,
     ) -> rest_models.CreateFlowTagResponse:
+        """
+        Create flow tag configuration.
+
+        Create a flow tag configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -129,6 +139,11 @@ class FlowTagServiceWrapper:
     def get_flow_tag(
         self, *, api_config_override: Optional[APIConfig] = None, flowTagid: str
     ) -> rest_models.GetFlowTagResponse:
+        """
+        Get flow tag configuration.
+
+        Returns configuration of flow tag with specified ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -167,6 +182,11 @@ class FlowTagServiceWrapper:
         flowTagid: str,
         data: rest_models.FlowTagServiceUpdateFlowTagBody,
     ) -> rest_models.UpdateFlowTagResponse:
+        """
+        Update flow tag configuration.
+
+        Update a flow tag configuration.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -204,6 +224,11 @@ class FlowTagServiceWrapper:
     def delete_flow_tag(
         self, *, api_config_override: Optional[APIConfig] = None, flowTagid: str
     ) -> rest_models.DeleteFlowTagResponse:
+        """
+        Delete flow tag configuration.
+
+        Delete a flow tag configuration with id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

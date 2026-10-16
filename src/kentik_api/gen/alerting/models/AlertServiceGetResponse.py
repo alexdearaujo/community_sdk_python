@@ -20,9 +20,13 @@ class AlertServiceGetResponse(BaseModel):
     alert: Optional[Alert] = Field(validation_alias="alert", default=None)
 
     history: Optional[List[Optional[AlertPhase]]] = Field(
-        validation_alias="history", default=None
+        validation_alias="history",
+        default=None,
+        description="The history of the alert.",
     )
 
     comments: Optional[List[Optional[Comment]]] = Field(
-        validation_alias="comments", default=None
+        validation_alias="comments",
+        default=None,
+        description="The comments on the alert.",
     )

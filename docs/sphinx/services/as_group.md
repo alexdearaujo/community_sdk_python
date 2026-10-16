@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_as_groups()
     W->>API: GET /as_group/v202212/as_group
     alt success
-        API-->>W: v202212ListASGroupsResponse (JSON)
-        W-->>C: v202212ListASGroupsResponse
+        API-->>W: ListASGroupsResponse (JSON)
+        W-->>C: ListASGroupsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212ListASGroupsResponse
+        W-->>C: ListASGroupsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212ListASGroupsResponse` |
+| 200 | A successful response. | `ListASGroupsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: create_as_group(data=CreateASGroupRequest(...))
     W->>API: POST /as_group/v202212/as_group
     alt success
-        API-->>W: v202212CreateASGroupResponse (JSON)
-        W-->>C: v202212CreateASGroupResponse
+        API-->>W: CreateASGroupResponse (JSON)
+        W-->>C: CreateASGroupResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212CreateASGroupResponse
+        W-->>C: CreateASGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,19 +148,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202212CreateASGroupRequest` | Yes |
+| `data` | body | `CreateASGroupRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212CreateASGroupResponse` |
+| 200 | A successful response. | `CreateASGroupResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.as_group.models import CreateASGroupRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -188,8 +189,8 @@ sequenceDiagram
     C->>W: get_as_group(asGroupid="asGroupid-example")
     W->>API: GET /as_group/v202212/as_group/{asGroup.id}
     alt success
-        API-->>W: v202212GetASGroupResponse (JSON)
-        W-->>C: v202212GetASGroupResponse
+        API-->>W: GetASGroupResponse (JSON)
+        W-->>C: GetASGroupResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -213,7 +214,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212GetASGroupResponse
+        W-->>C: GetASGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -230,7 +231,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212GetASGroupResponse` |
+| 200 | A successful response. | `GetASGroupResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -264,8 +265,8 @@ sequenceDiagram
     C->>W: update_as_group(asGroupid="asGroupid-example", data=ASGroupServiceUpdateASGroupBody(...))
     W->>API: PUT /as_group/v202212/as_group/{asGroup.id}
     alt success
-        API-->>W: v202212UpdateASGroupResponse (JSON)
-        W-->>C: v202212UpdateASGroupResponse
+        API-->>W: UpdateASGroupResponse (JSON)
+        W-->>C: UpdateASGroupResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -289,7 +290,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212UpdateASGroupResponse
+        W-->>C: UpdateASGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -307,13 +308,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212UpdateASGroupResponse` |
+| 200 | A successful response. | `UpdateASGroupResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.as_group.models import ASGroupServiceUpdateASGroupBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -342,8 +344,8 @@ sequenceDiagram
     C->>W: delete_as_group(asGroupid="asGroupid-example")
     W->>API: DELETE /as_group/v202212/as_group/{asGroup.id}
     alt success
-        API-->>W: v202212DeleteASGroupResponse (JSON)
-        W-->>C: v202212DeleteASGroupResponse
+        API-->>W: DeleteASGroupResponse (JSON)
+        W-->>C: DeleteASGroupResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -367,7 +369,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212DeleteASGroupResponse
+        W-->>C: DeleteASGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -384,7 +386,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212DeleteASGroupResponse` |
+| 200 | A successful response. | `DeleteASGroupResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -402,13 +404,26 @@ response = client.as_group.delete_as_group(
 ## Data Models
 
 <details>
-<summary>Model relationships (3 of 12 models)</summary>
+<summary>Model relationships (11 of 12 models)</summary>
 
 ```mermaid
 classDiagram
+    class ASGroupConcise
+    class ASGroupDetailed
     class ASGroupServiceUpdateASGroupBody
+    class CreateASGroupRequest
+    class CreateASGroupResponse
+    class DeleteASGroupResponse
+    class GetASGroupResponse
+    class ListASGroupsResponse
+    class UpdateASGroupResponse
     class protobufAny
     class rpcStatus
+    CreateASGroupRequest --> ASGroupConcise
+    CreateASGroupResponse --> ASGroupDetailed
+    GetASGroupResponse --> ASGroupDetailed
+    ListASGroupsResponse --> ASGroupDetailed
+    UpdateASGroupResponse --> ASGroupDetailed
     rpcStatus --> protobufAny
 ```
 

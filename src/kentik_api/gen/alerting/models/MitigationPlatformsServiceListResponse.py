@@ -21,5 +21,7 @@ class MitigationPlatformsServiceListResponse(BaseModel):
     )
 
     platforms: Optional[List[Optional[MitigationPlatform]]] = Field(
-        validation_alias="platforms", default=None
+        validation_alias="platforms",
+        default=None,
+        description="The mitigation platforms that were found matching the filters.",
     )

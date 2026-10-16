@@ -8,25 +8,47 @@ from pydantic import BaseModel, Field
 
 class kagentv202401AgentConfig(BaseModel):
     """
-    AgentConfig model
+    AgentConfig
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    created: Optional[str] = Field(validation_alias="created", default=None)
+    created: Optional[str] = Field(
+        validation_alias="created", default=None, description="Creation timestamp."
+    )
 
-    edited: Optional[str] = Field(validation_alias="edited", default=None)
+    edited: Optional[str] = Field(
+        validation_alias="edited",
+        default=None,
+        description="Last-modification timestamp.",
+    )
 
-    siteId: Optional[str] = Field(validation_alias="siteId", default=None)
+    siteId: Optional[str] = Field(
+        validation_alias="siteId",
+        default=None,
+        description="ID of the site the agent is assigned to.",
+    )
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name",
+        default=None,
+        description="User-friendly name of the agent.",
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="Description of the agent.",
+    )
 
     releaseChannel: Optional[str] = Field(
-        validation_alias="releaseChannel", default=None
+        validation_alias="releaseChannel",
+        default=None,
+        description="Release channel the agent takes software updates from.",
     )
 
     osDistribution: Optional[str] = Field(
-        validation_alias="osDistribution", default=None
+        validation_alias="osDistribution",
+        default=None,
+        description="override the OS distribution discovered by the agent\n\nOverride of the OS distribution discovered by the agent.",
     )

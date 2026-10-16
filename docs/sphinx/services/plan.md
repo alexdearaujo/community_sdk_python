@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_plans()
     W->>API: GET /plans/v202501alpha1
     alt success
-        API-->>W: v202501alpha1ListPlansResponse (JSON)
-        W-->>C: v202501alpha1ListPlansResponse
+        API-->>W: ListPlansResponse (JSON)
+        W-->>C: ListPlansResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1ListPlansResponse
+        W-->>C: ListPlansResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1ListPlansResponse` |
+| 200 | A successful response. | `ListPlansResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -96,12 +96,15 @@ response = client.plan.list_plans()
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 6 models)</summary>
+<summary>Model relationships (4 of 6 models)</summary>
 
 ```mermaid
 classDiagram
+    class ListPlansResponse
+    class Plan
     class protobufAny
     class rpcStatus
+    ListPlansResponse --> Plan
     rpcStatus --> protobufAny
 ```
 

@@ -22,6 +22,12 @@ class FlowPolicySettingsDatasetConfig(BaseModel):
 
     filters: Optional[PolicyFilters] = Field(validation_alias="filters", default=None)
 
-    dimensions: List[str] = Field(validation_alias="dimensions")
+    dimensions: List[str] = Field(
+        validation_alias="dimensions",
+        description="The dimensions of the policy used to create alert keys for activated alerts.",
+    )
 
-    metrics: List[str] = Field(validation_alias="metrics")
+    metrics: List[str] = Field(
+        validation_alias="metrics",
+        description="The metrics of the dataset that can be used for policy threshold conditions. Metrics are also provided with the activated alert context information",
+    )

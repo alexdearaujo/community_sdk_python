@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 class FlowTagServiceUpdateFlowTagBody(BaseModel):
     """
-    UpdateFlowTagRequest model
+    UpdateFlowTagRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    flowTag: Optional[Dict[str, Any]] = Field(validation_alias="flowTag", default=None)
+    flowTag: Optional[Dict[str, Any]] = Field(
+        validation_alias="flowTag", default=None, description="FlowTag"
+    )

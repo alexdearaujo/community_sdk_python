@@ -8,19 +8,31 @@ from pydantic import BaseModel, Field
 
 class CustomColumnData(BaseModel):
     """
-    CustomColumnData model
+    CustomColumnData
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    deviceId: Optional[str] = Field(validation_alias="deviceId", default=None)
+    deviceId: Optional[str] = Field(
+        validation_alias="deviceId", default=None, description="Device ID"
+    )
 
-    fieldId: Optional[str] = Field(validation_alias="fieldId", default=None)
+    fieldId: Optional[str] = Field(
+        validation_alias="fieldId", default=None, description="Field ID"
+    )
 
-    colName: Optional[str] = Field(validation_alias="colName", default=None)
+    colName: Optional[str] = Field(
+        validation_alias="colName", default=None, description="Column name"
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description", default=None, description="Description"
+    )
 
-    colType: Optional[str] = Field(validation_alias="colType", default=None)
+    colType: Optional[str] = Field(
+        validation_alias="colType", default=None, description="Column type"
+    )
 
-    deviceType: Optional[str] = Field(validation_alias="deviceType", default=None)
+    deviceType: Optional[str] = Field(
+        validation_alias="deviceType", default=None, description="Device type"
+    )

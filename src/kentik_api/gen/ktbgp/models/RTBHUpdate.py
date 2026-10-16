@@ -23,8 +23,16 @@ class RTBHUpdate(BaseModel):
 
     creationTime: Optional[str] = Field(validation_alias="creationTime", default=None)
 
-    inet: Optional[str] = Field(validation_alias="inet", default=None)
+    inet: Optional[str] = Field(
+        validation_alias="inet",
+        default=None,
+        description="deprecated: use inet_type instead",
+    )
 
     inetType: Optional[InetType] = Field(validation_alias="inetType", default=None)
 
-    key: Optional[str] = Field(validation_alias="key", default=None)
+    key: Optional[str] = Field(
+        validation_alias="key",
+        default=None,
+        description="mainly used for internal purposes",
+    )

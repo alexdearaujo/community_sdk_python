@@ -204,6 +204,11 @@ from ..models import (  # noqa: F401
 def List(
     api_config_override: Optional[APIConfig] = None, *, data: PolicyServiceListRequest
 ) -> PolicyServiceListResponse:
+    """
+    List Policies
+
+    Returns a list of alerting policies.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -233,6 +238,11 @@ def List(
 def Get(
     api_config_override: Optional[APIConfig] = None, *, policyType: str, id: str
 ) -> PolicyServiceGetResponse:
+    """
+    Get Policy
+
+    Returns an alerting policy.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -265,6 +275,11 @@ def Disable(
     id: str,
     data: PolicyServiceDisableBody,
 ) -> PolicyServiceDisableResponse:
+    """
+    Disable Policy
+
+    Disables an alerting policy.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -298,6 +313,11 @@ def Enable(
     id: str,
     data: PolicyServiceEnableBody,
 ) -> PolicyServiceEnableResponse:
+    """
+    Enable Policy
+
+    Enables an alerting policy.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

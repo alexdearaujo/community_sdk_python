@@ -8,9 +8,9 @@ from pydantic import BaseModel, Field
 
 class UserServiceUpdateUserBody(BaseModel):
     """
-    UpdateUserRequest model
+    UpdateUserRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    user: Dict[str, Any] = Field(validation_alias="user")
+    user: Dict[str, Any] = Field(validation_alias="user", description="User")

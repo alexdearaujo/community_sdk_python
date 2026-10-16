@@ -46,8 +46,8 @@ sequenceDiagram
     C->>W: get_metrics_for_target(data=GetMetricsForTargetRequest(...))
     W->>API: POST /bgp_monitoring/v202210/metrics
     alt success
-        API-->>W: v202210GetMetricsForTargetResponse (JSON)
-        W-->>C: v202210GetMetricsForTargetResponse
+        API-->>W: GetMetricsForTargetResponse (JSON)
+        W-->>C: GetMetricsForTargetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -71,7 +71,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210GetMetricsForTargetResponse
+        W-->>C: GetMetricsForTargetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -82,19 +82,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202210GetMetricsForTargetRequest` | Yes |
+| `data` | body | `GetMetricsForTargetRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210GetMetricsForTargetResponse` |
+| 200 | A successful response. | `GetMetricsForTargetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import GetMetricsForTargetRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -122,8 +123,8 @@ sequenceDiagram
     C->>W: get_routes_for_target(data=GetRoutesForTargetRequest(...))
     W->>API: POST /bgp_monitoring/v202210/routes
     alt success
-        API-->>W: v202210GetRoutesForTargetResponse (JSON)
-        W-->>C: v202210GetRoutesForTargetResponse
+        API-->>W: GetRoutesForTargetResponse (JSON)
+        W-->>C: GetRoutesForTargetResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -147,7 +148,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210GetRoutesForTargetResponse
+        W-->>C: GetRoutesForTargetResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -158,19 +159,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202210GetRoutesForTargetRequest` | Yes |
+| `data` | body | `GetRoutesForTargetRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210GetRoutesForTargetResponse` |
+| 200 | A successful response. | `GetRoutesForTargetResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import GetRoutesForTargetRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -198,8 +200,8 @@ sequenceDiagram
     C->>W: list_monitors()
     W->>API: GET /bgp_monitoring/v202210/monitors
     alt success
-        API-->>W: v202210ListMonitorsResponse (JSON)
-        W-->>C: v202210ListMonitorsResponse
+        API-->>W: ListMonitorsResponse (JSON)
+        W-->>C: ListMonitorsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -223,7 +225,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210ListMonitorsResponse
+        W-->>C: ListMonitorsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -234,7 +236,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210ListMonitorsResponse` |
+| 200 | A successful response. | `ListMonitorsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -266,8 +268,8 @@ sequenceDiagram
     C->>W: create_monitor(data=CreateMonitorRequest(...))
     W->>API: POST /bgp_monitoring/v202210/monitors
     alt success
-        API-->>W: v202210CreateMonitorResponse (JSON)
-        W-->>C: v202210CreateMonitorResponse
+        API-->>W: CreateMonitorResponse (JSON)
+        W-->>C: CreateMonitorResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -291,7 +293,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210CreateMonitorResponse
+        W-->>C: CreateMonitorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -302,19 +304,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202210CreateMonitorRequest` | Yes |
+| `data` | body | `CreateMonitorRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210CreateMonitorResponse` |
+| 200 | A successful response. | `CreateMonitorResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import CreateMonitorRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -342,8 +345,8 @@ sequenceDiagram
     C->>W: get_monitor(id="id-example")
     W->>API: GET /bgp_monitoring/v202210/monitors/{id}
     alt success
-        API-->>W: v202210GetMonitorResponse (JSON)
-        W-->>C: v202210GetMonitorResponse
+        API-->>W: GetMonitorResponse (JSON)
+        W-->>C: GetMonitorResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -367,7 +370,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210GetMonitorResponse
+        W-->>C: GetMonitorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -384,7 +387,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210GetMonitorResponse` |
+| 200 | A successful response. | `GetMonitorResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -418,8 +421,8 @@ sequenceDiagram
     C->>W: update_monitor(id="id-example", data=BgpMonitoringAdminServiceUpdateMonitorBody(...))
     W->>API: PUT /bgp_monitoring/v202210/monitors/{id}
     alt success
-        API-->>W: v202210UpdateMonitorResponse (JSON)
-        W-->>C: v202210UpdateMonitorResponse
+        API-->>W: UpdateMonitorResponse (JSON)
+        W-->>C: UpdateMonitorResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -443,7 +446,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210UpdateMonitorResponse
+        W-->>C: UpdateMonitorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -461,13 +464,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210UpdateMonitorResponse` |
+| 200 | A successful response. | `UpdateMonitorResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import BgpMonitoringAdminServiceUpdateMonitorBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -496,8 +500,8 @@ sequenceDiagram
     C->>W: delete_monitor(id="id-example")
     W->>API: DELETE /bgp_monitoring/v202210/monitors/{id}
     alt success
-        API-->>W: v202210DeleteMonitorResponse (JSON)
-        W-->>C: v202210DeleteMonitorResponse
+        API-->>W: DeleteMonitorResponse (JSON)
+        W-->>C: DeleteMonitorResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -521,7 +525,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210DeleteMonitorResponse
+        W-->>C: DeleteMonitorResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -538,7 +542,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210DeleteMonitorResponse` |
+| 200 | A successful response. | `DeleteMonitorResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -572,8 +576,8 @@ sequenceDiagram
     C->>W: set_monitor_status(id="id-example", data=BgpMonitoringAdminServiceSetMonitorStatusBody(...))
     W->>API: PUT /bgp_monitoring/v202210/monitors/{id}/status
     alt success
-        API-->>W: v202210SetMonitorStatusResponse (JSON)
-        W-->>C: v202210SetMonitorStatusResponse
+        API-->>W: SetMonitorStatusResponse (JSON)
+        W-->>C: SetMonitorStatusResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -597,7 +601,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202210SetMonitorStatusResponse
+        W-->>C: SetMonitorStatusResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -615,13 +619,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202210SetMonitorStatusResponse` |
+| 200 | A successful response. | `SetMonitorStatusResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.bgp_monitoring.models import BgpMonitoringAdminServiceSetMonitorStatusBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -634,16 +639,45 @@ response = client.bgp_monitoring.set_monitor_status(
 ## Data Models
 
 <details>
-<summary>Model relationships (5 of 28 models)</summary>
+<summary>Model relationships (21 of 28 models)</summary>
 
 ```mermaid
 classDiagram
+    class BgpMetric
+    class BgpMetricType
+    class BgpMonitor
     class BgpMonitorStatus
     class BgpMonitoringAdminServiceSetMonitorStatusBody
     class BgpMonitoringAdminServiceUpdateMonitorBody
+    class CreateMonitorRequest
+    class CreateMonitorResponse
+    class DeleteMonitorResponse
+    class GetMetricsForTargetRequest
+    class GetMetricsForTargetResponse
+    class GetMonitorResponse
+    class GetRoutesForTargetRequest
+    class GetRoutesForTargetResponse
+    class ListMonitorsResponse
+    class Nlri
+    class RouteInfo
+    class SetMonitorStatusResponse
+    class UpdateMonitorResponse
     class protobufAny
     class rpcStatus
+    BgpMetric --> Nlri
+    BgpMonitor --> BgpMonitorStatus
     BgpMonitoringAdminServiceSetMonitorStatusBody --> BgpMonitorStatus
+    CreateMonitorRequest --> BgpMonitor
+    CreateMonitorResponse --> BgpMonitor
+    GetMetricsForTargetRequest --> BgpMetricType
+    GetMetricsForTargetRequest --> Nlri
+    GetMetricsForTargetResponse --> BgpMetric
+    GetMonitorResponse --> BgpMonitor
+    GetRoutesForTargetRequest --> Nlri
+    GetRoutesForTargetResponse --> RouteInfo
+    ListMonitorsResponse --> BgpMonitor
+    RouteInfo --> Nlri
+    UpdateMonitorResponse --> BgpMonitor
     rpcStatus --> protobufAny
 ```
 

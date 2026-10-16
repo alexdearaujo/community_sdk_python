@@ -10,7 +10,7 @@ from .FilterField import FilterField
 
 class Filter(BaseModel):
     """
-    Filter model
+    Filter
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

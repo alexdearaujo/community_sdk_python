@@ -7,6 +7,7 @@ import socket
 import threading
 import time
 from types import SimpleNamespace
+from typing import Any
 
 import grpc
 import pytest
@@ -20,7 +21,7 @@ from kentik_api.transports.grpc_client import GrpcTransport, _DefaultDeadlineInt
 CREDENTIALS = KentikCredentials(email="dev@example.com", api_token="token")
 
 
-def _details(timeout: float | None) -> SimpleNamespace:
+def _details(timeout: float | None) -> Any:
     return SimpleNamespace(
         method="/svc.Service/Op",
         timeout=timeout,
@@ -36,7 +37,7 @@ def _intercepted_timeout(
 ) -> float | None:
     seen = {}
 
-    def continuation(details, request):
+    def continuation(details, request) -> Any:
         seen["timeout"] = details.timeout
         seen["method"] = details.method
         return "response"
@@ -222,7 +223,7 @@ def _call_blob(port: int, options):
     )
     stub = channel.unary_unary(
         "/svc.Service/Op",
-        request_serializer=lambda raw: raw,
+        request_serializer=lambda raw: raw,  # pyright: ignore[reportArgumentType]
         response_deserializer=lambda raw: raw,
     )
     try:

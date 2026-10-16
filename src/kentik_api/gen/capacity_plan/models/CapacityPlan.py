@@ -12,21 +12,31 @@ from .SummaryStatus import SummaryStatus
 
 class CapacityPlan(BaseModel):
     """
-    CapacityPlan model
+    CapacityPlan
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id", default=None, description="ID of capacity plan"
+    )
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name", default=None, description="Name of capacity plan"
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="Description of capacity plan",
+    )
 
-    status: Optional[str] = Field(validation_alias="status", default=None)
+    status: Optional[str] = Field(
+        validation_alias="status", default=None, description="Status of capacity plan"
+    )
 
     interfaces: Optional[List[Optional[CapacityPlanInterfaceDetail]]] = Field(
-        validation_alias="interfaces", default=None
+        validation_alias="interfaces", default=None, description="List of interfaces"
     )
 
     config: Optional[Config] = Field(validation_alias="config", default=None)

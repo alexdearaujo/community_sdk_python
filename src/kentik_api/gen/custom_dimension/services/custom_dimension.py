@@ -37,6 +37,11 @@ class CustomDimensionServiceWrapper:
     def list_custom_dimensions(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCustomDimensionsResponse:
+        """
+        List Custom Dimensions
+
+        Returns an array of custom dimension objects that each contain information about an individual custom dimension.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -70,6 +75,11 @@ class CustomDimensionServiceWrapper:
     def get_info(
         self, *, api_config_override: Optional[APIConfig] = None, customDimensionId: str
     ) -> rest_models.GetCustomDimensionInfoResponse:
+        """
+        Custom Dimension Info
+
+        Returns a custom dimension object containing information about an individual custom dimension.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -110,6 +120,11 @@ class CustomDimensionServiceWrapper:
         customDimensionId: str,
         data: rest_models.CustomDimension,
     ) -> rest_models.UpdateCustomDimensionResponse:
+        """
+        Update Custom Dimension
+
+        Updates and returns a custom dimension object containing information about an individual custom dimension (see About Custom Dimensions). Populators are not sent back in the response body. To get them use 'Custom Dimension info' API instead.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -147,6 +162,11 @@ class CustomDimensionServiceWrapper:
     def delete_custom_dimension(
         self, *, api_config_override: Optional[APIConfig] = None, customDimensionId: str
     ) -> rest_models.DeleteCustomDimensionResponse:
+        """
+        Delete Custom Dimension
+
+        Deletes a custom dimension.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -187,6 +207,11 @@ class CustomDimensionServiceWrapper:
         customDimensionId: str,
         data: rest_models.Populator,
     ) -> rest_models.CreatePopulatorResponse:
+        """
+        Create Populator
+
+        Creates and returns a populator object containing information about an individual populator.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -229,6 +254,11 @@ class CustomDimensionServiceWrapper:
         populatorId: str,
         fieldLimit: Optional[int] = None,
     ) -> rest_models.GetPopulatorResponse:
+        """
+        Get Populator
+
+        Get Populator by Dimension and Populator ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -276,6 +306,11 @@ class CustomDimensionServiceWrapper:
         populatorId: str,
         data: rest_models.Populator,
     ) -> rest_models.UpdatePopulatorResponse:
+        """
+        Update Populator
+
+        Updates and returns a populator object containing information about an individual populator.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -318,6 +353,11 @@ class CustomDimensionServiceWrapper:
         customDimensionId: str,
         populatorId: str,
     ) -> rest_models.DeletePopulatorResponse:
+        """
+        Delete Populator
+
+        Deletes a populator.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -362,6 +402,11 @@ class CustomDimensionServiceWrapper:
         offset: Optional[int] = None,
         limit: Optional[int] = None,
     ) -> rest_models.GetPopulatorFieldResponse:
+        """
+        Get Populator Field
+
+        Get Populator field by Dimension, Populator ID, and field name.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -411,6 +456,11 @@ class CustomDimensionServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CustomDimension,
     ) -> rest_models.CreateCustomDimensionResponse:
+        """
+        Create Custom Dimension
+
+        Creates and returns a custom dimension object containing information about an individual custom dimension
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

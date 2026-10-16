@@ -29,6 +29,11 @@ from ..models import (  # noqa: F401
 def ListCredentialGroup(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListCredentialGroupResponse:
+    """
+    List credential groups.
+
+    Returns list of credential group information in Kentik vault.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -57,6 +62,11 @@ def ListCredentialGroup(
 def GetCredentialGroup(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetCredentialGroupResponse:
+    """
+    Get a credential group by id.
+
+    Returns specific credential group information in Kentik vault.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

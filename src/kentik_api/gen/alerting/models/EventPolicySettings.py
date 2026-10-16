@@ -18,6 +18,9 @@ class EventPolicySettings(BaseModel):
 
     type: EventPolicySettingsEventType = Field(validation_alias="type")
 
-    dimensions: List[str] = Field(validation_alias="dimensions")
+    dimensions: List[str] = Field(
+        validation_alias="dimensions",
+        description="The dimensions of the event to trigger the policy.",
+    )
 
     filters: Optional[PolicyFilters] = Field(validation_alias="filters", default=None)

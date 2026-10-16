@@ -17,30 +17,52 @@ class Interface(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
-
-    deviceId: Optional[str] = Field(validation_alias="deviceId", default=None)
-
-    snmpId: Optional[str] = Field(validation_alias="snmpId", default=None)
-
-    snmpSpeed: Optional[int] = Field(validation_alias="snmpSpeed", default=None)
-
-    snmpType: Optional[int] = Field(validation_alias="snmpType", default=None)
-
-    snmpAlias: Optional[str] = Field(validation_alias="snmpAlias", default=None)
-
-    interfaceIp: Optional[str] = Field(validation_alias="interfaceIp", default=None)
-
-    interfaceDescription: Optional[str] = Field(
-        validation_alias="interfaceDescription", default=None
+    id: Optional[str] = Field(
+        validation_alias="id", default=None, description="ID of interface."
     )
 
-    cdate: Optional[str] = Field(validation_alias="cdate", default=None)
+    deviceId: Optional[str] = Field(
+        validation_alias="deviceId",
+        default=None,
+        description="ID of device with this interface.",
+    )
 
-    edate: Optional[str] = Field(validation_alias="edate", default=None)
+    snmpId: Optional[str] = Field(
+        validation_alias="snmpId", default=None, description="SNMP ID."
+    )
+
+    snmpSpeed: Optional[int] = Field(
+        validation_alias="snmpSpeed", default=None, description="Network speed in Mbps."
+    )
+
+    snmpType: Optional[int] = Field(
+        validation_alias="snmpType", default=None, description="Snmp Type."
+    )
+
+    snmpAlias: Optional[str] = Field(
+        validation_alias="snmpAlias", default=None, description="Interface alias."
+    )
+
+    interfaceIp: Optional[str] = Field(
+        validation_alias="interfaceIp", default=None, description="IP of interface."
+    )
+
+    interfaceDescription: Optional[str] = Field(
+        validation_alias="interfaceDescription",
+        default=None,
+        description="Readable string description of interface.",
+    )
+
+    cdate: Optional[str] = Field(
+        validation_alias="cdate", default=None, description="Create timestamp."
+    )
+
+    edate: Optional[str] = Field(
+        validation_alias="edate", default=None, description="Update Timestamp."
+    )
 
     interfaceIpNetmask: Optional[str] = Field(
-        validation_alias="interfaceIpNetmask", default=None
+        validation_alias="interfaceIpNetmask", default=None, description="Subnet mask."
     )
 
     connectivityType: Optional[ConnectivityType] = Field(
@@ -52,42 +74,58 @@ class Interface(BaseModel):
     )
 
     topNexthopAsns: Optional[List[int]] = Field(
-        validation_alias="topNexthopAsns", default=None
+        validation_alias="topNexthopAsns", default=None, description="Top asn hops."
     )
 
-    provider: Optional[str] = Field(validation_alias="provider", default=None)
+    provider: Optional[str] = Field(
+        validation_alias="provider", default=None, description="Network provider."
+    )
 
     interfaceKvs: Optional[Dict[str, Any]] = Field(
-        validation_alias="interfaceKvs", default=None
+        validation_alias="interfaceKvs", default=None, description="Interface KVs."
     )
 
     interfaceTags: Optional[Dict[str, Any]] = Field(
-        validation_alias="interfaceTags", default=None
+        validation_alias="interfaceTags", default=None, description="Interface Tags."
     )
 
     interfaceStatus: Optional[str] = Field(
-        validation_alias="interfaceStatus", default=None
+        validation_alias="interfaceStatus",
+        default=None,
+        description="Interface Status.",
     )
 
     extraInfo: Optional[Dict[str, Any]] = Field(
-        validation_alias="extraInfo", default=None
+        validation_alias="extraInfo", default=None, description="Extra Interface Info."
     )
 
-    initialSnmpId: Optional[str] = Field(validation_alias="initialSnmpId", default=None)
+    initialSnmpId: Optional[str] = Field(
+        validation_alias="initialSnmpId", default=None, description="Initial SMNP ID."
+    )
 
     initialSnmpAlias: Optional[str] = Field(
-        validation_alias="initialSnmpAlias", default=None
+        validation_alias="initialSnmpAlias",
+        default=None,
+        description="Initial Interface Alias.",
     )
 
     initialInterfaceDescription: Optional[str] = Field(
-        validation_alias="initialInterfaceDescription", default=None
+        validation_alias="initialInterfaceDescription",
+        default=None,
+        description="Initial Interface Description.",
     )
 
     initialSnmpSpeed: Optional[int] = Field(
-        validation_alias="initialSnmpSpeed", default=None
+        validation_alias="initialSnmpSpeed",
+        default=None,
+        description="Inital Network speed in Mbps.",
     )
 
-    secondaryIps: Optional[str] = Field(validation_alias="secondaryIps", default=None)
+    secondaryIps: Optional[str] = Field(
+        validation_alias="secondaryIps",
+        default=None,
+        description="Secondary Interface IP.",
+    )
 
     initialConnectivityType: Optional[ConnectivityType] = Field(
         validation_alias="initialConnectivityType", default=None
@@ -98,9 +136,15 @@ class Interface(BaseModel):
     )
 
     initialProvider: Optional[str] = Field(
-        validation_alias="initialProvider", default=None
+        validation_alias="initialProvider",
+        default=None,
+        description="Initial Network provider.",
     )
 
-    vrfId: Optional[str] = Field(validation_alias="vrfId", default=None)
+    vrfId: Optional[str] = Field(
+        validation_alias="vrfId",
+        default=None,
+        description="VRF_ID is deprecated for the API, use VRF instead\n\nDeprecated: use VRF field instead",
+    )
 
     vrf: Optional[InterfaceVrf] = Field(validation_alias="vrf", default=None)

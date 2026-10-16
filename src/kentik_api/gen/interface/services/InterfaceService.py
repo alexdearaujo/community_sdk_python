@@ -50,6 +50,11 @@ def ListInterface(
     filterssnmpSpeeds: Optional[List[int]] = None,
     filtersipTypes: Optional[List[str]] = None,
 ) -> ListInterfaceResponse:
+    """
+    Fetch Search Interfaces
+
+    Return list of interfaces matches search critera.
+    """
     query_params: Dict[str, Any] = {
         "filters.text": filterstext,
         "filters.deviceIds": filtersdeviceIds,
@@ -86,6 +91,11 @@ def ListInterface(
 def InterfaceCreate(
     api_config_override: Optional[APIConfig] = None, *, data: CreateInterfaceRequest
 ) -> CreateInterfaceResponse:
+    """
+    Create a interface.
+
+    Create a interface from request. returns created.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -115,6 +125,11 @@ def InterfaceCreate(
 def InterfaceGet(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetInterfaceResponse:
+    """
+    Get a interface.
+
+    Returns information about a interface specified with ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -146,6 +161,11 @@ def InterfaceUpdate(
     id: str,
     data: InterfaceServiceUpdateInterfaceBody,
 ) -> UpdateInterfaceResponse:
+    """
+    Update a interface.
+
+    Replaces the entire interface attributes specified with id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -175,6 +195,11 @@ def InterfaceUpdate(
 def InterfaceDelete(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteInterfaceResponse:
+    """
+    Delete a interface.
+
+    Deletes the interface specified with id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -203,6 +228,11 @@ def InterfaceDelete(
 def ManualClassify(
     api_config_override: Optional[APIConfig] = None, *, data: ManualClassifyRequest
 ) -> ManualClassifyResponse:
+    """
+    Manual Classify Interface
+
+    Manually set interface(s) classification.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

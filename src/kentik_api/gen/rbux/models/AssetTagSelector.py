@@ -8,11 +8,17 @@ from pydantic import BaseModel, Field
 
 class AssetTagSelector(BaseModel):
     """
-    AssetTagSelector model
+    AssetTagSelector
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    tagId: str = Field(validation_alias="tagId")
+    tagId: str = Field(
+        validation_alias="tagId", description="Asset tag key identifier."
+    )
 
-    values: Optional[List[str]] = Field(validation_alias="values", default=None)
+    values: Optional[List[str]] = Field(
+        validation_alias="values",
+        default=None,
+        description="Asset tag values to match for the given tag key.",
+    )

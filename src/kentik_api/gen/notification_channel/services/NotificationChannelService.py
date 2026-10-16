@@ -30,6 +30,11 @@ from ..models import (  # noqa: F401
 def ListNotificationChannels(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListNotificationChannelsResponse:
+    """
+    List available notification channels
+
+    Returns list of all configured notification channels.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -60,6 +65,11 @@ def SearchNotificationChannels(
     *,
     data: SearchNotificationChannelsRequest,
 ) -> SearchNotificationChannelsResponse:
+    """
+    Retrieve notification channels matching criteria.
+
+    Returns list of all notification channels matching request criteria. Match criteria are treated as a logical AND, i.e. all provided criteria must match in order for an entry to be included in the response.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -89,6 +99,11 @@ def SearchNotificationChannels(
 def GetNotificationChannel(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetNotificationChannelResponse:
+    """
+    Get information about a notification channel
+
+    Returns information about a notification channel with specific ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

@@ -11,13 +11,15 @@ from .GroupedAlertSettings import GroupedAlertSettings
 
 class AlertingSettings(BaseModel):
     """
-    AlertingSettings model
+    AlertingSettings
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     disableWarningNotifications: Optional[bool] = Field(
-        validation_alias="disableWarningNotifications", default=None
+        validation_alias="disableWarningNotifications",
+        default=None,
+        description="Boolean indicating whether to disable warning-level alert notifications",
     )
 
     alertingType: Optional[AlertingType] = Field(

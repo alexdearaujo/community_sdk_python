@@ -21,9 +21,13 @@ class CredentialGroup(BaseModel):
 
     name: Optional[str] = Field(validation_alias="name", default=None)
 
-    version: int = Field(validation_alias="version")
+    version: int = Field(validation_alias="version", description="The secret's version")
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="Purpose of this secret",
+    )
 
     type: Optional[v202312alpha1SecretType] = Field(
         validation_alias="type", default=None

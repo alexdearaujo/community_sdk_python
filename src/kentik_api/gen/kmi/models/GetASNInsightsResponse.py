@@ -10,11 +10,13 @@ from .Insight import Insight
 
 class GetASNInsightsResponse(BaseModel):
     """
-    GetASNInsightsResponse model
+    GetASNInsightsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     insights: Optional[List[Optional[Insight]]] = Field(
-        validation_alias="insights", default=None
+        validation_alias="insights",
+        default=None,
+        description="List of ASN-specific insights",
     )

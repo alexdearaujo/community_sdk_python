@@ -1,6 +1,9 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Unit tests for parse_wrapper_method_signatures, parse_wrapper_methods, and render_endpoint_docs."""
 
+import ast
+import importlib
+import re
 from pathlib import Path
 
 import pytest
@@ -9,6 +12,7 @@ from scripts.generation._shared import parse_wrapper_methods
 from scripts.generation.endpoint_docs import (
     EndpointDocsCollector,
     GrpcCall,
+    _example_value_for_annotation,
     _provenance,
     parse_wrapper_method_signatures,
     render_endpoint_docs,
@@ -302,8 +306,8 @@ def _ok(schema: str) -> dict:
     }
 
 
-# Three device operations rebuilt from what the committed page shows of the real
-# schema, so the rendered sections can be compared with it exactly.
+# Three device operations rebuilt from what the committed page shows of the
+# patched schema, so the rendered sections can be compared with it exactly.
 _DEVICE_SWAGGER = {
     "openapi": "3.0.1",
     "tags": [{"name": "DeviceService"}],
@@ -322,7 +326,7 @@ _DEVICE_SWAGGER = {
                     {"name": "view", "in": "query", "schema": {"type": "string"}},
                 ],
                 "responses": {
-                    "200": _ok("v202504beta2ListDevicesResponse"),
+                    "200": _ok("ListDevicesResponse"),
                     "default": _DEFAULT_ERROR,
                 },
             },
@@ -335,13 +339,13 @@ _DEVICE_SWAGGER = {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/v202504beta2CreateDeviceRequest"
+                                "$ref": "#/components/schemas/CreateDeviceRequest"
                             }
                         }
                     },
                 },
                 "responses": {
-                    "200": _ok("v202504beta2CreateDeviceResponse"),
+                    "200": _ok("CreateDeviceResponse"),
                     "default": _DEFAULT_ERROR,
                 },
             },
@@ -365,7 +369,7 @@ _DEVICE_SWAGGER = {
                     },
                 ],
                 "responses": {
-                    "200": _ok("v202504beta2GetDeviceResponse"),
+                    "200": _ok("GetDeviceResponse"),
                     "default": _DEFAULT_ERROR,
                 },
             }
@@ -535,3 +539,65 @@ def test_services_index_lists_every_sandbox_service(rendered):
 
     for service in ("alerting", "core", "device"):
         assert f"\n{service}\n" in index
+
+
+_PRIMITIVE_LABELS = {"-", "string", "boolean", "integer", "number", "object"}
+
+
+@pytest.mark.parametrize(
+    "page",
+    sorted(
+        p for p in _COMMITTED_PAGES.glob("*.md") if p.stem not in {"index", "README"}
+    ),
+    ids=lambda p: p.stem,
+)
+def test_every_model_a_committed_page_names_exists_in_the_sdk(page):
+    # Raw swagger names (v202504beta2ListDevicesResponse) mean extract() read
+    # the unpatched schema.
+    defined = {
+        p.stem
+        for p in (_REPO / "src/kentik_api/gen" / page.stem / "models").glob("*.py")
+    }
+    labels = re.findall(r"\| `([A-Za-z0-9_]+)(?:\[\])?` \|\n", page.read_text())
+
+    assert {label for label in labels if label not in _PRIMITIVE_LABELS} <= defined
+
+
+@pytest.mark.parametrize(
+    "page",
+    sorted(
+        p for p in _COMMITTED_PAGES.glob("*.md") if p.stem not in {"index", "README"}
+    ),
+    ids=lambda p: p.stem,
+)
+def test_every_committed_example_imports_what_it_uses(page):
+    for snippet in re.findall(r"```python\n(.*?)```", page.read_text(), re.S):
+        tree = ast.parse(snippet)
+        bound = {"response", "client"}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                module = importlib.import_module(node.module or "")
+                for alias in node.names:
+                    assert hasattr(module, alias.name), f"{node.module}.{alias.name}"
+                    bound.add(alias.name)
+        used = {
+            n.id
+            for n in ast.walk(tree)
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)
+        }
+
+        assert used <= bound, snippet
+
+
+@pytest.mark.parametrize(
+    ("annotation", "value", "models"),
+    [
+        ("Dict[str, Any]", "{}", set()),
+        ("Optional[List[rest_models.Label]]", "[Label(...)]", {"Label"}),
+    ],
+)
+def test_example_value_names_only_constructible_models(annotation, value, models):
+    found: set[str] = set()
+
+    assert _example_value_for_annotation(annotation, "x", found) == value
+    assert found == models

@@ -37,6 +37,11 @@ class CostServiceWrapper:
     def list_providers(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCostProvidersResponse:
+        """
+        List all cost providers.
+
+        Returns list of configured cost providers.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -73,6 +78,11 @@ class CostServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         date: Optional[str] = None,
     ) -> rest_models.ListCostProviderSummariesResponse:
+        """
+        List all cost provider summaries.
+
+        Returns list of summaries of configured cost providers.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -111,6 +121,11 @@ class CostServiceWrapper:
         id: str,
         date: Optional[str] = None,
     ) -> rest_models.GetCostProviderSummaryResponse:
+        """
+        Get cost provider summary.
+
+        Returns summary of configured cost provider.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

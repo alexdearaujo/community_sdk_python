@@ -11,7 +11,7 @@ from .SummaryStatusUtilStatus import SummaryStatusUtilStatus
 
 class SummaryStatus(BaseModel):
     """
-    SummaryStatus model
+    SummaryStatus
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
     W->>API: GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values
     alt success
-        API-->>W: v20260515beta1GetTagValuesResponse (JSON)
-        W-->>C: v20260515beta1GetTagValuesResponse
+        API-->>W: GetTagValuesResponse (JSON)
+        W-->>C: GetTagValuesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1GetTagValuesResponse
+        W-->>C: GetTagValuesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -87,7 +87,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1GetTagValuesResponse` |
+| 200 | A successful response. | `GetTagValuesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -122,8 +122,8 @@ sequenceDiagram
     C->>W: list_tag_keys()
     W->>API: GET /asset_tags/v20260515beta1/keys
     alt success
-        API-->>W: v20260515beta1ListTagKeysResponse (JSON)
-        W-->>C: v20260515beta1ListTagKeysResponse
+        API-->>W: ListTagKeysResponse (JSON)
+        W-->>C: ListTagKeysResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -147,7 +147,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1ListTagKeysResponse
+        W-->>C: ListTagKeysResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -158,7 +158,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1ListTagKeysResponse` |
+| 200 | A successful response. | `ListTagKeysResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -190,8 +190,8 @@ sequenceDiagram
     C->>W: create_tag_key(data=CreateTagKeyRequest(...))
     W->>API: POST /asset_tags/v20260515beta1/keys
     alt success
-        API-->>W: v20260515beta1CreateTagKeyResponse (JSON)
-        W-->>C: v20260515beta1CreateTagKeyResponse
+        API-->>W: CreateTagKeyResponse (JSON)
+        W-->>C: CreateTagKeyResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -215,7 +215,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1CreateTagKeyResponse
+        W-->>C: CreateTagKeyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -226,19 +226,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v20260515beta1CreateTagKeyRequest` | Yes |
+| `data` | body | `CreateTagKeyRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1CreateTagKeyResponse` |
+| 200 | A successful response. | `CreateTagKeyResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.asset_tags.models import CreateTagKeyRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -266,8 +267,8 @@ sequenceDiagram
     C->>W: get_tag_key(id="id-example")
     W->>API: GET /asset_tags/v20260515beta1/keys/{id}
     alt success
-        API-->>W: v20260515beta1GetTagKeyResponse (JSON)
-        W-->>C: v20260515beta1GetTagKeyResponse
+        API-->>W: GetTagKeyResponse (JSON)
+        W-->>C: GetTagKeyResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -291,7 +292,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1GetTagKeyResponse
+        W-->>C: GetTagKeyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -308,7 +309,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1GetTagKeyResponse` |
+| 200 | A successful response. | `GetTagKeyResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -342,8 +343,8 @@ sequenceDiagram
     C->>W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
     W->>API: PUT /asset_tags/v20260515beta1/keys/{id}
     alt success
-        API-->>W: v20260515beta1UpdateTagKeyResponse (JSON)
-        W-->>C: v20260515beta1UpdateTagKeyResponse
+        API-->>W: UpdateTagKeyResponse (JSON)
+        W-->>C: UpdateTagKeyResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -367,7 +368,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1UpdateTagKeyResponse
+        W-->>C: UpdateTagKeyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -385,13 +386,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1UpdateTagKeyResponse` |
+| 200 | A successful response. | `UpdateTagKeyResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.asset_tags.models import AssetTagsServiceUpdateTagKeyBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -420,8 +422,8 @@ sequenceDiagram
     C->>W: delete_tag_key(id="id-example")
     W->>API: DELETE /asset_tags/v20260515beta1/keys/{id}
     alt success
-        API-->>W: v20260515beta1DeleteTagKeyResponse (JSON)
-        W-->>C: v20260515beta1DeleteTagKeyResponse
+        API-->>W: DeleteTagKeyResponse (JSON)
+        W-->>C: DeleteTagKeyResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -445,7 +447,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1DeleteTagKeyResponse
+        W-->>C: DeleteTagKeyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -462,7 +464,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1DeleteTagKeyResponse` |
+| 200 | A successful response. | `DeleteTagKeyResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -496,8 +498,8 @@ sequenceDiagram
     C->>W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
     W->>API: GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values
     alt success
-        API-->>W: v20260515beta1ListTagValuesResponse (JSON)
-        W-->>C: v20260515beta1ListTagValuesResponse
+        API-->>W: ListTagValuesResponse (JSON)
+        W-->>C: ListTagValuesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -521,7 +523,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1ListTagValuesResponse
+        W-->>C: ListTagValuesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -539,7 +541,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1ListTagValuesResponse` |
+| 200 | A successful response. | `ListTagValuesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -574,8 +576,8 @@ sequenceDiagram
     C->>W: set_tag_values(data=SetTagValuesRequest(...))
     W->>API: PUT /asset_tags/v20260515beta1/values
     alt success
-        API-->>W: v20260515beta1SetTagValuesResponse (JSON)
-        W-->>C: v20260515beta1SetTagValuesResponse
+        API-->>W: SetTagValuesResponse (JSON)
+        W-->>C: SetTagValuesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -599,7 +601,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1SetTagValuesResponse
+        W-->>C: SetTagValuesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -610,19 +612,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v20260515beta1SetTagValuesRequest` | Yes |
+| `data` | body | `SetTagValuesRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1SetTagValuesResponse` |
+| 200 | A successful response. | `SetTagValuesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.asset_tags.models import SetTagValuesRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -650,8 +653,8 @@ sequenceDiagram
     C->>W: delete_tag_values(data=DeleteTagValuesRequest(...))
     W->>API: POST /asset_tags/v20260515beta1/values/delete
     alt success
-        API-->>W: v20260515beta1DeleteTagValuesResponse (JSON)
-        W-->>C: v20260515beta1DeleteTagValuesResponse
+        API-->>W: DeleteTagValuesResponse (JSON)
+        W-->>C: DeleteTagValuesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -675,7 +678,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v20260515beta1DeleteTagValuesResponse
+        W-->>C: DeleteTagValuesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -686,19 +689,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v20260515beta1DeleteTagValuesRequest` | Yes |
+| `data` | body | `DeleteTagValuesRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v20260515beta1DeleteTagValuesResponse` |
+| 200 | A successful response. | `DeleteTagValuesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.asset_tags.models import DeleteTagValuesRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -710,13 +714,38 @@ response = client.asset_tags.delete_tag_values(
 ## Data Models
 
 <details>
-<summary>Model relationships (3 of 18 models)</summary>
+<summary>Model relationships (18 of 18 models)</summary>
 
 ```mermaid
 classDiagram
     class AssetTagsServiceUpdateTagKeyBody
+    class AssetType
+    class CreateTagKeyRequest
+    class CreateTagKeyResponse
+    class DeleteTagKeyResponse
+    class DeleteTagValuesRequest
+    class DeleteTagValuesResponse
+    class GetTagKeyResponse
+    class GetTagValuesResponse
+    class ListTagKeysResponse
+    class ListTagValuesResponse
+    class SetTagValuesRequest
+    class SetTagValuesResponse
+    class TagKey
+    class TagValue
+    class UpdateTagKeyResponse
     class protobufAny
     class rpcStatus
+    CreateTagKeyResponse --> TagKey
+    DeleteTagValuesRequest --> AssetType
+    GetTagKeyResponse --> TagKey
+    GetTagValuesResponse --> TagValue
+    ListTagKeysResponse --> TagKey
+    ListTagValuesResponse --> TagValue
+    SetTagValuesRequest --> AssetType
+    SetTagValuesResponse --> TagValue
+    TagValue --> AssetType
+    UpdateTagKeyResponse --> TagKey
     rpcStatus --> protobufAny
 ```
 

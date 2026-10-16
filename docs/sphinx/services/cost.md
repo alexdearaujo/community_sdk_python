@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_providers()
     W->>API: GET /cost/v202308/cost/providers
     alt success
-        API-->>W: v202308ListCostProvidersResponse (JSON)
-        W-->>C: v202308ListCostProvidersResponse
+        API-->>W: ListCostProvidersResponse (JSON)
+        W-->>C: ListCostProvidersResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202308ListCostProvidersResponse
+        W-->>C: ListCostProvidersResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202308ListCostProvidersResponse` |
+| 200 | A successful response. | `ListCostProvidersResponse` |
 | default | An unexpected error response. | `googlerpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: list_provider_summaries()
     W->>API: GET /cost/v202308/cost/summary
     alt success
-        API-->>W: v202308ListCostProviderSummariesResponse (JSON)
-        W-->>C: v202308ListCostProviderSummariesResponse
+        API-->>W: ListCostProviderSummariesResponse (JSON)
+        W-->>C: ListCostProviderSummariesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202308ListCostProviderSummariesResponse
+        W-->>C: ListCostProviderSummariesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -154,7 +154,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202308ListCostProviderSummariesResponse` |
+| 200 | A successful response. | `ListCostProviderSummariesResponse` |
 | default | An unexpected error response. | `googlerpcStatus` |
 
 #### Example
@@ -186,8 +186,8 @@ sequenceDiagram
     C->>W: get_provider_summary(id="id-example")
     W->>API: GET /cost/v202308/cost/summary/{id}
     alt success
-        API-->>W: v202308GetCostProviderSummaryResponse (JSON)
-        W-->>C: v202308GetCostProviderSummaryResponse
+        API-->>W: GetCostProviderSummaryResponse (JSON)
+        W-->>C: GetCostProviderSummaryResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -211,7 +211,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202308GetCostProviderSummaryResponse
+        W-->>C: GetCostProviderSummaryResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -229,7 +229,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202308GetCostProviderSummaryResponse` |
+| 200 | A successful response. | `GetCostProviderSummaryResponse` |
 | default | An unexpected error response. | `googlerpcStatus` |
 
 #### Example
@@ -247,12 +247,20 @@ response = client.cost.get_provider_summary(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 8 models)</summary>
+<summary>Model relationships (7 of 8 models)</summary>
 
 ```mermaid
 classDiagram
+    class CostProviderConcise
+    class CostProviderSummary
+    class GetCostProviderSummaryResponse
+    class ListCostProviderSummariesResponse
+    class ListCostProvidersResponse
     class googlerpcStatus
     class protobufAny
+    GetCostProviderSummaryResponse --> CostProviderSummary
+    ListCostProviderSummariesResponse --> CostProviderSummary
+    ListCostProvidersResponse --> CostProviderConcise
     googlerpcStatus --> protobufAny
 ```
 

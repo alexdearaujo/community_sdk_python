@@ -83,6 +83,11 @@ from ..models import (  # noqa: F401
 def CreateConfig(
     api_config_override: Optional[APIConfig] = None, *, data: Config
 ) -> CreateConfigResponse:
+    """
+    Create a config.
+
+    Creates a new config based on the request and returns it.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -112,6 +117,11 @@ def CreateConfig(
 def GetConfig(
     api_config_override: Optional[APIConfig] = None, *, configname: str
 ) -> GetConfigResponse:
+    """
+    Get a config.
+
+    Returns the config with the specified name.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -140,6 +150,11 @@ def GetConfig(
 def DeleteConfig(
     api_config_override: Optional[APIConfig] = None, *, configname: str
 ) -> DeleteConfigResponse:
+    """
+    Delete a config.
+
+    Deletes the config with the specified name.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -171,6 +186,11 @@ def UpdateConfig(
     configname: str,
     data: ConfigServiceUpdateConfigBody,
 ) -> UpdateConfigResponse:
+    """
+    Update a config.
+
+    Updates the attributes of a config selected by the field mask in the request.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

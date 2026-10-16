@@ -10,7 +10,7 @@ from .CloudExport import CloudExport
 
 class CreateCloudExportResponse(BaseModel):
     """
-    CreateCloudExportResponse model
+    CreateCloudExportResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

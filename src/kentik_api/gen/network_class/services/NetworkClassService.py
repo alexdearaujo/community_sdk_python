@@ -22,6 +22,11 @@ from ..models import (  # noqa: F401
 def NetworkClassGet(
     api_config_override: Optional[APIConfig] = None,
 ) -> GetNetworkClassResponse:
+    """
+    Get a network classification.
+
+    Returns information about a network classification for the company.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -50,6 +55,11 @@ def NetworkClassGet(
 def NetworkClassUpdate(
     api_config_override: Optional[APIConfig] = None, *, data: UpdateNetworkClassRequest
 ) -> UpdateNetworkClassResponse:
+    """
+    Update a network classification.
+
+    Replaces the entire network classification attributes for the company.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

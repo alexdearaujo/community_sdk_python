@@ -8,7 +8,7 @@ from .ASGroupConcise import ASGroupConcise
 
 class CreateASGroupRequest(BaseModel):
     """
-    CreateASGroupRequest model
+    CreateASGroupRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

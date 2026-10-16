@@ -8,17 +8,27 @@ from pydantic import BaseModel, Field
 
 class TagKey(BaseModel):
     """
-    TagKey model
+    TagKey
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id", default=None, description="Tag key id"
+    )
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name", default=None, description="Tag key name"
+    )
 
-    displayName: Optional[str] = Field(validation_alias="displayName", default=None)
+    displayName: Optional[str] = Field(
+        validation_alias="displayName", default=None, description="Tag key display name"
+    )
 
-    color: Optional[str] = Field(validation_alias="color", default=None)
+    color: Optional[str] = Field(
+        validation_alias="color", default=None, description="Tag key hex color"
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description", default=None, description="Tag key description"
+    )

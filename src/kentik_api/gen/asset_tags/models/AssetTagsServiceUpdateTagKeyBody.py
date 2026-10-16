@@ -8,13 +8,19 @@ from pydantic import BaseModel, Field
 
 class AssetTagsServiceUpdateTagKeyBody(BaseModel):
     """
-    UpdateTagKeyRequest model
+    UpdateTagKeyRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    displayName: Optional[str] = Field(validation_alias="displayName", default=None)
+    displayName: Optional[str] = Field(
+        validation_alias="displayName", default=None, description="Tag key display name"
+    )
 
-    color: Optional[str] = Field(validation_alias="color", default=None)
+    color: Optional[str] = Field(
+        validation_alias="color", default=None, description="Tag key hex color"
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description", default=None, description="Tag key description"
+    )

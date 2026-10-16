@@ -70,7 +70,7 @@ class RestOperation:
     - tests/_discovery.py: uses http_method, expected_status, error_cls_name, operation_name
     - generation/endpoint_docs.py: uses http_method, path
     - generation/wrapper_generation.py: uses name, http_method, path, params,
-      kwonly_start, return_type, query_params
+      kwonly_start, return_type, query_params, docstring
     """
 
     name: str  # PascalCase function name
@@ -85,6 +85,7 @@ class RestOperation:
     kwonly_start: int  # params[:kwonly_start] are positional; the rest are keyword-only
     return_type: str  # annotation text as-is from the source
     query_params: tuple[tuple[str, str], ...]  # (wire name, argument name)
+    docstring: str = ""  # the operation summary and description
 
 
 def parse_generated_rest_module(path: Path) -> list[RestOperation]:
@@ -204,6 +205,7 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
                 kwonly_start=len(positional),
                 return_type=return_type,
                 query_params=query_params,
+                docstring=ast.get_docstring(node) or "",
             )
         )
 

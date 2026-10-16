@@ -10,7 +10,7 @@ from .ASNDetails import ASNDetails
 
 class GetASNDetailsResponse(BaseModel):
     """
-    GetASNDetailsResponse model
+    GetASNDetailsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

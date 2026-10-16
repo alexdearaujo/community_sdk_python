@@ -15,14 +15,33 @@ class ScopeServiceUpdateScopeBody(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    name: str = Field(validation_alias="name")
+    name: str = Field(
+        validation_alias="name",
+        description="A unique name for the Focus Scope within the company.",
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="The Focus Scope's description.",
+    )
 
     scope: ScopeConfig = Field(validation_alias="scope")
 
-    createdBy: Optional[str] = Field(validation_alias="createdBy", default=None)
+    createdBy: Optional[str] = Field(
+        validation_alias="createdBy",
+        default=None,
+        description="Identifier of the user who created the Focus Scope.",
+    )
 
-    createdDate: Optional[str] = Field(validation_alias="createdDate", default=None)
+    createdDate: Optional[str] = Field(
+        validation_alias="createdDate",
+        default=None,
+        description="Date-time of scope creation, in UTC.",
+    )
 
-    updatedDate: Optional[str] = Field(validation_alias="updatedDate", default=None)
+    updatedDate: Optional[str] = Field(
+        validation_alias="updatedDate",
+        default=None,
+        description="Date-time of most-recent scope edit, in UTC.",
+    )

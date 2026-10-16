@@ -10,7 +10,7 @@ from .TagKey import TagKey
 
 class GetTagKeyResponse(BaseModel):
     """
-    GetTagKeyResponse model
+    GetTagKeyResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

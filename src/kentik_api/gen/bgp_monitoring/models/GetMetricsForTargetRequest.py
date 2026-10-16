@@ -11,19 +11,30 @@ from .Nlri import Nlri
 
 class GetMetricsForTargetRequest(BaseModel):
     """
-    GetMetricsForTargetRequest model
+    GetMetricsForTargetRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    startTime: str = Field(validation_alias="startTime")
+    startTime: str = Field(
+        validation_alias="startTime",
+        description="UTC timestamp of the beginning of queried interval",
+    )
 
-    endTime: str = Field(validation_alias="endTime")
+    endTime: str = Field(
+        validation_alias="endTime",
+        description="UTC timestamp of the end of queried interval",
+    )
 
     target: Nlri = Field(validation_alias="target")
 
     includeCovered: Optional[bool] = Field(
-        validation_alias="includeCovered", default=None
+        validation_alias="includeCovered",
+        default=None,
+        description="Return metrics for subnets (sub-prefixes) of the target prefix (default: false)",
     )
 
-    metrics: List[BgpMetricType] = Field(validation_alias="metrics")
+    metrics: List[BgpMetricType] = Field(
+        validation_alias="metrics",
+        description="List of one or more BGP metric types to return",
+    )

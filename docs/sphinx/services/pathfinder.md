@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: create_report(data=CreatePathfinderReportRequest(...))
     W->>API: POST /pathfinder/v202505beta1/create
     alt success
-        API-->>W: v202505beta1CreatePathfinderReportResponse (JSON)
-        W-->>C: v202505beta1CreatePathfinderReportResponse
+        API-->>W: CreatePathfinderReportResponse (JSON)
+        W-->>C: CreatePathfinderReportResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202505beta1CreatePathfinderReportResponse
+        W-->>C: CreatePathfinderReportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,19 +80,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202505beta1CreatePathfinderReportRequest` | Yes |
+| `data` | body | `CreatePathfinderReportRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202505beta1CreatePathfinderReportResponse` |
+| 200 | A successful response. | `CreatePathfinderReportResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.pathfinder.models import CreatePathfinderReportRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -104,12 +105,20 @@ response = client.pathfinder.create_report(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 7 models)</summary>
+<summary>Model relationships (7 of 7 models)</summary>
 
 ```mermaid
 classDiagram
+    class CloudProvider
+    class CreatePathfinderReportRequest
+    class CreatePathfinderReportResponse
+    class EntityType
+    class PathElement
     class protobufAny
     class rpcStatus
+    CreatePathfinderReportRequest --> CloudProvider
+    CreatePathfinderReportRequest --> EntityType
+    CreatePathfinderReportResponse --> PathElement
     rpcStatus --> protobufAny
 ```
 

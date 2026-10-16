@@ -14,5 +14,7 @@ class MetricsSchema(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     measurements: Optional[Dict[str, Any]] = Field(
-        validation_alias="measurements", default=None
+        validation_alias="measurements",
+        default=None,
+        description="measurements by name",
     )

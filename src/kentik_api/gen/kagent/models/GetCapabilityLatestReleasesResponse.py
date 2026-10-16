@@ -10,11 +10,13 @@ from .CapabilityRelease import CapabilityRelease
 
 class GetCapabilityLatestReleasesResponse(BaseModel):
     """
-    GetCapabilityLatestReleasesResponse model
+    GetCapabilityLatestReleasesResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     releases: Optional[List[Optional[CapabilityRelease]]] = Field(
-        validation_alias="releases", default=None
+        validation_alias="releases",
+        default=None,
+        description="A list containing all latest releases",
     )

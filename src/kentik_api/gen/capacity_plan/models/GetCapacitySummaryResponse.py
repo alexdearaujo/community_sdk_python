@@ -10,7 +10,7 @@ from .CapacitySummary import CapacitySummary
 
 class GetCapacitySummaryResponse(BaseModel):
     """
-    GetCapacitySummaryResponse model
+    GetCapacitySummaryResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

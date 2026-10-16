@@ -11,7 +11,7 @@ from .RegistrationConfig import RegistrationConfig
 
 class CreateAgentRequest(BaseModel):
     """
-    CreateAgentRequest model
+    CreateAgentRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

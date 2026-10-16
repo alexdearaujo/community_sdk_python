@@ -10,7 +10,6 @@ from .BootstrapInfo import BootstrapInfo
 
 class GenerateInstallCommandsResponse(BaseModel):
     """
-    GenerateInstallCommandsResponse model
     GenerateInstallCommandsResponse
     Response containing install commands ready to execute.
     """

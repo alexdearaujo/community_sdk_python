@@ -12,14 +12,20 @@ from .v202303UserInfo import v202303UserInfo
 
 class BgpMonitor(BaseModel):
     """
-    BgpMonitor model
+    BgpMonitor
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="System generated unique identifier",
+    )
 
-    name: str = Field(validation_alias="name")
+    name: str = Field(
+        validation_alias="name", description="User selected name of the monitor"
+    )
 
     status: Optional[BgpMonitorStatus] = Field(validation_alias="status", default=None)
 
@@ -27,9 +33,15 @@ class BgpMonitor(BaseModel):
         validation_alias="settings", default=None
     )
 
-    cdate: Optional[str] = Field(validation_alias="cdate", default=None)
+    cdate: Optional[str] = Field(
+        validation_alias="cdate", default=None, description="Creation timestamp (UTC)"
+    )
 
-    edate: Optional[str] = Field(validation_alias="edate", default=None)
+    edate: Optional[str] = Field(
+        validation_alias="edate",
+        default=None,
+        description="Last modification timestamp (UTC)",
+    )
 
     createdBy: Optional[v202303UserInfo] = Field(
         validation_alias="createdBy", default=None

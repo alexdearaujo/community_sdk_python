@@ -64,6 +64,11 @@ from ..models import (  # noqa: F401
 
 
 def PackageList(api_config_override: Optional[APIConfig] = None) -> ListPackageResponse:
+    """
+    List MKP packages.
+
+    Returns a list of MKP packages.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -92,6 +97,11 @@ def PackageList(api_config_override: Optional[APIConfig] = None) -> ListPackageR
 def PackageCreate(
     api_config_override: Optional[APIConfig] = None, *, data: CreatePackageRequest
 ) -> CreatePackageResponse:
+    """
+    Create a package template.
+
+    Create package from request. returns created package.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -121,6 +131,11 @@ def PackageCreate(
 def PackageGet(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetPackageResponse:
+    """
+    Get information aboout a package.
+
+    Returns information about package specified with ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -152,6 +167,11 @@ def PackageUpdate(
     id: str,
     data: PackageServiceUpdatePackageBody,
 ) -> UpdatePackageResponse:
+    """
+    Update a package.
+
+    Update package attributes specified with id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -181,6 +201,11 @@ def PackageUpdate(
 def PackageDelete(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeletePackageResponse:
+    """
+    Delete a package.
+
+    Deletes the package specified with id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

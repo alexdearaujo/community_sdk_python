@@ -15,8 +15,12 @@ class ListSecretResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    secrets: List[Secret] = Field(validation_alias="secrets")
+    secrets: List[Secret] = Field(
+        validation_alias="secrets", description="List of secrets"
+    )
 
     invalidCredentialCount: Optional[int] = Field(
-        validation_alias="invalidCredentialCount", default=None
+        validation_alias="invalidCredentialCount",
+        default=None,
+        description="Number of objects with invalid data (which are not returned in the response).",
     )

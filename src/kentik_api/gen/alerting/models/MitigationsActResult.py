@@ -13,8 +13,20 @@ class MitigationsActResult(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    mitigationId: Optional[str] = Field(validation_alias="mitigationId", default=None)
+    mitigationId: Optional[str] = Field(
+        validation_alias="mitigationId",
+        default=None,
+        description="The ID of the mitigation that was acted upon.",
+    )
 
-    success: Optional[bool] = Field(validation_alias="success", default=None)
+    success: Optional[bool] = Field(
+        validation_alias="success",
+        default=None,
+        description="Whether the action was successful.",
+    )
 
-    message: Optional[str] = Field(validation_alias="message", default=None)
+    message: Optional[str] = Field(
+        validation_alias="message",
+        default=None,
+        description="A message describing the result of the action.",
+    )

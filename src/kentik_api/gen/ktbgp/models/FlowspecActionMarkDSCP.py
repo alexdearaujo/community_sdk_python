@@ -8,7 +8,6 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionMarkDSCP(BaseModel):
     """
-    FlowspecActionMarkDSCP model
     FlowspecActionMarkDSCP instructs a system to modify the DSCP bits in the IP header.
 
     Extended Community type and sub-type: 0x8009

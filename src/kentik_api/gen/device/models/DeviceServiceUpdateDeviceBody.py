@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 class DeviceServiceUpdateDeviceBody(BaseModel):
     """
-    UpdateDeviceRequest model
+    UpdateDeviceRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    device: Dict[str, Any] = Field(validation_alias="device")
+    device: Dict[str, Any] = Field(
+        validation_alias="device", description="DeviceConcise"
+    )

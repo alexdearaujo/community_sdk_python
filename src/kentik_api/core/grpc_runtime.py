@@ -11,7 +11,9 @@ from typing import Any, cast
 import grpc
 from google.protobuf.json_format import MessageToDict, ParseDict, ParseError
 from google.protobuf.message import DecodeError
-from google.rpc import error_details_pb2 as _error_details_pb2  # noqa: F401  registers the standard detail types
+from google.rpc import (
+    error_details_pb2 as _error_details_pb2,  # noqa: F401  registers the standard detail types
+)
 from google.rpc import status_pb2
 
 from kentik_api.core.api_config import APIConfig

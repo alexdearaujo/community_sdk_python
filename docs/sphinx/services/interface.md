@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_interface()
     W->>API: GET /interface/v202108alpha1/interfaces
     alt success
-        API-->>W: v202108alpha1ListInterfaceResponse (JSON)
-        W-->>C: v202108alpha1ListInterfaceResponse
+        API-->>W: ListInterfaceResponse (JSON)
+        W-->>C: ListInterfaceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202108alpha1ListInterfaceResponse
+        W-->>C: ListInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -92,7 +92,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202108alpha1ListInterfaceResponse` |
+| 200 | A successful response. | `ListInterfaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -124,8 +124,8 @@ sequenceDiagram
     C->>W: interface_create(data=CreateInterfaceRequest(...))
     W->>API: POST /interface/v202108alpha1/interfaces
     alt success
-        API-->>W: v202108alpha1CreateInterfaceResponse (JSON)
-        W-->>C: v202108alpha1CreateInterfaceResponse
+        API-->>W: CreateInterfaceResponse (JSON)
+        W-->>C: CreateInterfaceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -149,7 +149,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202108alpha1CreateInterfaceResponse
+        W-->>C: CreateInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -160,19 +160,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202108alpha1CreateInterfaceRequest` | Yes |
+| `data` | body | `CreateInterfaceRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202108alpha1CreateInterfaceResponse` |
+| 200 | A successful response. | `CreateInterfaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.interface.models import CreateInterfaceRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -200,8 +201,8 @@ sequenceDiagram
     C->>W: interface_get(id="id-example")
     W->>API: GET /interface/v202108alpha1/interfaces/{id}
     alt success
-        API-->>W: v202108alpha1GetInterfaceResponse (JSON)
-        W-->>C: v202108alpha1GetInterfaceResponse
+        API-->>W: GetInterfaceResponse (JSON)
+        W-->>C: GetInterfaceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -225,7 +226,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202108alpha1GetInterfaceResponse
+        W-->>C: GetInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -242,7 +243,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202108alpha1GetInterfaceResponse` |
+| 200 | A successful response. | `GetInterfaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -276,8 +277,8 @@ sequenceDiagram
     C->>W: interface_update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
     W->>API: PUT /interface/v202108alpha1/interfaces/{id}
     alt success
-        API-->>W: v202108alpha1UpdateInterfaceResponse (JSON)
-        W-->>C: v202108alpha1UpdateInterfaceResponse
+        API-->>W: UpdateInterfaceResponse (JSON)
+        W-->>C: UpdateInterfaceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -301,7 +302,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202108alpha1UpdateInterfaceResponse
+        W-->>C: UpdateInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -319,13 +320,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202108alpha1UpdateInterfaceResponse` |
+| 200 | A successful response. | `UpdateInterfaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.interface.models import InterfaceServiceUpdateInterfaceBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -354,8 +356,8 @@ sequenceDiagram
     C->>W: interface_delete(id="id-example")
     W->>API: DELETE /interface/v202108alpha1/interfaces/{id}
     alt success
-        API-->>W: v202108alpha1DeleteInterfaceResponse (JSON)
-        W-->>C: v202108alpha1DeleteInterfaceResponse
+        API-->>W: DeleteInterfaceResponse (JSON)
+        W-->>C: DeleteInterfaceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -379,7 +381,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202108alpha1DeleteInterfaceResponse
+        W-->>C: DeleteInterfaceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -396,7 +398,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202108alpha1DeleteInterfaceResponse` |
+| 200 | A successful response. | `DeleteInterfaceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -430,8 +432,8 @@ sequenceDiagram
     C->>W: manual_classify(data=ManualClassifyRequest(...))
     W->>API: POST /interface/v202108alpha1/manual_classify
     alt success
-        API-->>W: v202108alpha1ManualClassifyResponse (JSON)
-        W-->>C: v202108alpha1ManualClassifyResponse
+        API-->>W: ManualClassifyResponse (JSON)
+        W-->>C: ManualClassifyResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -455,7 +457,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202108alpha1ManualClassifyResponse
+        W-->>C: ManualClassifyResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -466,19 +468,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202108alpha1ManualClassifyRequest` | Yes |
+| `data` | body | `ManualClassifyRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202108alpha1ManualClassifyResponse` |
+| 200 | A successful response. | `ManualClassifyResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.interface.models import ManualClassifyRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -490,13 +493,33 @@ response = client.interface.manual_classify(
 ## Data Models
 
 <details>
-<summary>Model relationships (3 of 17 models)</summary>
+<summary>Model relationships (14 of 17 models)</summary>
 
 ```mermaid
 classDiagram
+    class ConnectivityType
+    class CreateInterfaceRequest
+    class CreateInterfaceResponse
+    class DeleteInterfaceResponse
+    class GetInterfaceResponse
+    class Interface
     class InterfaceServiceUpdateInterfaceBody
+    class ListInterfaceResponse
+    class ManualClassifyRequest
+    class ManualClassifyResponse
+    class NetworkBoundary
+    class UpdateInterfaceResponse
     class protobufAny
     class rpcStatus
+    CreateInterfaceRequest --> Interface
+    CreateInterfaceResponse --> Interface
+    GetInterfaceResponse --> Interface
+    Interface --> ConnectivityType
+    Interface --> NetworkBoundary
+    ListInterfaceResponse --> Interface
+    ManualClassifyRequest --> ConnectivityType
+    ManualClassifyRequest --> NetworkBoundary
+    UpdateInterfaceResponse --> Interface
     rpcStatus --> protobufAny
 ```
 

@@ -10,7 +10,7 @@ from .BgpMonitor import BgpMonitor
 
 class CreateMonitorResponse(BaseModel):
     """
-    CreateMonitorResponse model
+    CreateMonitorResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

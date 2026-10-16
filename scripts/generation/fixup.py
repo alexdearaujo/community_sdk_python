@@ -62,7 +62,7 @@ def _rebuild_models_init(service_dir: Path) -> None:
 def _fix_wildcard_exports(service_dir: Path) -> None:
     """Replaces `from .module import *` with explicit named imports in __init__.py files."""
     for init_file in service_dir.rglob("__init__.py"):
-        if "error" in init_file.parts:
+        if "error" in init_file.relative_to(service_dir).parts:
             continue
         content = init_file.read_text(encoding="utf-8")
         new_lines = []
@@ -106,7 +106,7 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
     ]
 
     for py_file in service_dir.rglob("*.py"):
-        if "pb" in py_file.parts or "error" in py_file.parts:
+        if _is_pb_or_error(py_file, service_dir):
             continue
         content = py_file.read_text(encoding="utf-8")
         for transform in transforms:
@@ -118,10 +118,16 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         py_file.write_text(content, encoding="utf-8")
 
 
+def _is_pb_or_error(py_file: Path, service_dir: Path) -> bool:
+    # Relative parts: a checkout under a directory named "pb" or "error" would
+    # otherwise skip every file.
+    return not {"pb", "error"}.isdisjoint(py_file.relative_to(service_dir).parts)
+
+
 def _cleanup_service_files(service_dir: Path) -> None:
     """Deletes unwanted generated files and renames mangled service file names."""
     for py_file in list(service_dir.rglob("*.py")):
-        if "pb" in py_file.parts or "error" in py_file.parts:
+        if _is_pb_or_error(py_file, service_dir):
             continue
         if py_file.name.startswith("async_") or py_file.name == "api_config.py":
             py_file.unlink()

@@ -46,6 +46,11 @@ def GetGlobalInsights(
     types: Optional[List[str]] = None,
     magnitude: Optional[int] = None,
 ) -> GetGlobalInsightsResponse:
+    """
+    List global KMI insights.
+
+    Returns list of global KMI insights.
+    """
     query_params: Dict[str, Any] = {
         "limit": limit,
         "marketId": marketId,
@@ -89,6 +94,11 @@ def GetASNInsights(
     types: Optional[List[str]] = None,
     magnitude: Optional[int] = None,
 ) -> GetASNInsightsResponse:
+    """
+    List ASN-specific KMI insights.
+
+    Returns list of KMI insights for a specific Autonomous System.
+    """
     query_params: Dict[str, Any] = {
         "limit": limit,
         "marketId": marketId,
@@ -129,6 +139,11 @@ def GetASNDetails(
     type: str,
     data: KmiServiceGetASNDetailsBody,
 ) -> GetASNDetailsResponse:
+    """
+    List metadata and list of customers, providers, and peers for an Autonomous System.
+
+    Returns metadata and list of customers, providers, and peers for an Autonomous System.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -163,6 +178,11 @@ def GetRankings(
     ip: str,
     data: KmiServiceGetRankingsBody,
 ) -> GetRankingsResponse:
+    """
+    List KMI rankings by geo market and rank type.
+
+    Returns list of KMI rankings.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -190,6 +210,11 @@ def GetRankings(
 
 
 def ListMarkets(api_config_override: Optional[APIConfig] = None) -> ListMarketsResponse:
+    """
+    List all geo markets for KMI.
+
+    Returns list of geo markets for KMI.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

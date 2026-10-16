@@ -20,9 +20,37 @@ jobs:
       - name: Build sdist and wheel
         run: uv build
 
-      - name: Verify wheel imports cleanly
+      # A clean venv, run from outside the checkout, so a module the wheel
+      # leaves out cannot be found in the dev environment or in src/.
+      - name: Verify the wheel works on its own
         run: |
-          uv run --with dist/*.whl python -c "from kentik_api.client import KentikAPI; print('import ok')"
+          uv venv "$RUNNER_TEMP/wheel-venv"
+          uv pip install --python "$RUNNER_TEMP/wheel-venv/bin/python" dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$RUNNER_TEMP/wheel-venv/bin/python" - <<'EOF'
+          import importlib
+          import pkgutil
+
+          import kentik_api
+          from kentik_api import KentikAPI
+
+          modules = [m.name for m in pkgutil.walk_packages(kentik_api.__path__, "kentik_api.")]
+          for name in modules:
+              importlib.import_module(name)
+          print(f"imported {len(modules)} modules from {kentik_api.__file__}")
+
+          with KentikAPI("ci@example.com", "token", protocol="grpc", env_file=None) as client:
+              wrappers = [w for w in vars(client).values() if type(w).__name__.endswith("ServiceWrapper")]
+              dead = [
+                  f"{type(w).__name__}.{attr}"
+                  for w in wrappers
+                  for attr, stub in vars(w).items()
+                  if attr.startswith("_grpc_stub") and stub is None
+              ]
+              assert wrappers, "no service wrapper mounted"
+              assert not dead, f"gRPC stubs failed to build: {dead}"
+          print(f"built gRPC stubs for {len(wrappers)} services")
+          EOF
 
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4

@@ -10,7 +10,7 @@ from .Scope import Scope
 
 class CreateScopeResponse(BaseModel):
     """
-    CreateScopeResponse model
+    CreateScopeResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: get_global_insights()
     W->>API: GET /kmi/v202212/insights
     alt success
-        API-->>W: v202212GetGlobalInsightsResponse (JSON)
-        W-->>C: v202212GetGlobalInsightsResponse
+        API-->>W: GetGlobalInsightsResponse (JSON)
+        W-->>C: GetGlobalInsightsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212GetGlobalInsightsResponse
+        W-->>C: GetGlobalInsightsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -91,7 +91,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212GetGlobalInsightsResponse` |
+| 200 | A successful response. | `GetGlobalInsightsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -123,8 +123,8 @@ sequenceDiagram
     C->>W: get_asn_insights(asn="asn-example")
     W->>API: GET /kmi/v202212/insights/{asn}
     alt success
-        API-->>W: v202212GetASNInsightsResponse (JSON)
-        W-->>C: v202212GetASNInsightsResponse
+        API-->>W: GetASNInsightsResponse (JSON)
+        W-->>C: GetASNInsightsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -148,7 +148,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212GetASNInsightsResponse
+        W-->>C: GetASNInsightsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -171,7 +171,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212GetASNInsightsResponse` |
+| 200 | A successful response. | `GetASNInsightsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -205,8 +205,8 @@ sequenceDiagram
     C->>W: get_asn_details(marketId="marketId-example", asn="asn-example", type="type-example", data=KmiServiceGetASNDetailsBody(...))
     W->>API: POST /kmi/v202212/market/{marketId}/network/{asn}/{type}
     alt success
-        API-->>W: v202212GetASNDetailsResponse (JSON)
-        W-->>C: v202212GetASNDetailsResponse
+        API-->>W: GetASNDetailsResponse (JSON)
+        W-->>C: GetASNDetailsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -230,7 +230,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212GetASNDetailsResponse
+        W-->>C: GetASNDetailsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -250,13 +250,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212GetASNDetailsResponse` |
+| 200 | A successful response. | `GetASNDetailsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kmi.models import KmiServiceGetASNDetailsBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -287,8 +288,8 @@ sequenceDiagram
     C->>W: get_rankings(marketId="marketId-example", rankType="rankType-example", ip="ip-example", data=KmiServiceGetRankingsBody(...))
     W->>API: POST /kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}
     alt success
-        API-->>W: v202212GetRankingsResponse (JSON)
-        W-->>C: v202212GetRankingsResponse
+        API-->>W: GetRankingsResponse (JSON)
+        W-->>C: GetRankingsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -312,7 +313,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212GetRankingsResponse
+        W-->>C: GetRankingsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -332,13 +333,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212GetRankingsResponse` |
+| 200 | A successful response. | `GetRankingsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kmi.models import KmiServiceGetRankingsBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -369,8 +371,8 @@ sequenceDiagram
     C->>W: list_markets()
     W->>API: GET /kmi/v202212/markets
     alt success
-        API-->>W: v202212ListMarketsResponse (JSON)
-        W-->>C: v202212ListMarketsResponse
+        API-->>W: ListMarketsResponse (JSON)
+        W-->>C: ListMarketsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -394,7 +396,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202212ListMarketsResponse
+        W-->>C: ListMarketsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -405,7 +407,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202212ListMarketsResponse` |
+| 200 | A successful response. | `ListMarketsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -421,14 +423,28 @@ response = client.kmi.list_markets()
 ## Data Models
 
 <details>
-<summary>Model relationships (4 of 15 models)</summary>
+<summary>Model relationships (13 of 15 models)</summary>
 
 ```mermaid
 classDiagram
+    class ASNDetails
+    class GetASNDetailsResponse
+    class GetASNInsightsResponse
+    class GetGlobalInsightsResponse
+    class GetRankingsResponse
+    class Insight
     class KmiServiceGetASNDetailsBody
     class KmiServiceGetRankingsBody
+    class ListMarketsResponse
+    class Market
+    class Ranking
     class protobufAny
     class rpcStatus
+    GetASNDetailsResponse --> ASNDetails
+    GetASNInsightsResponse --> Insight
+    GetGlobalInsightsResponse --> Insight
+    GetRankingsResponse --> Ranking
+    ListMarketsResponse --> Market
     rpcStatus --> protobufAny
 ```
 

@@ -40,6 +40,11 @@ from ..models import (  # noqa: F401
 def ListCapacityPlans(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListCapacityPlansResponse:
+    """
+    List all capacity plans.
+
+    Returns list of capacity plans.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -68,6 +73,11 @@ def ListCapacityPlans(
 def ListCapacitySummaries(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListCapacitySummariesResponse:
+    """
+    List all capacity summaries.
+
+    Returns list of capacity summaries.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -96,6 +106,11 @@ def ListCapacitySummaries(
 def GetCapacityPlan(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetCapacityPlanResponse:
+    """
+    Retrieve capacity plan.
+
+    Returns capacity plan specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -124,6 +139,11 @@ def GetCapacityPlan(
 def GetCapacitySummary(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetCapacitySummaryResponse:
+    """
+    Retrieve capacity plan summary.
+
+    Returns capacity plan summary specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

@@ -8,7 +8,6 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionRouteTargetRedirect(BaseModel):
     """
-    FlowspecActionRouteTargetRedirect model
     FlowspecActionRouteTargetRedirect allows the traffic to be redirected to a VRF
     routing instance that lists the specified route-target in its import policy.
 
@@ -21,6 +20,14 @@ class FlowspecActionRouteTargetRedirect(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    asn: Optional[int] = Field(validation_alias="asn", default=None)
+    asn: Optional[int] = Field(
+        validation_alias="asn",
+        default=None,
+        description="If 32 bits are used for the ASN, the route target can only be 16 bits long",
+    )
 
-    routeTarget: Optional[int] = Field(validation_alias="routeTarget", default=None)
+    routeTarget: Optional[int] = Field(
+        validation_alias="routeTarget",
+        default=None,
+        description="If 32 bits are used for the route target, the asn can only be 16 bits long",
+    )

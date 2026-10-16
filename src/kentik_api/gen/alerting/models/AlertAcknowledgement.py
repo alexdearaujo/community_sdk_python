@@ -19,8 +19,20 @@ class AlertAcknowledgement(BaseModel):
         validation_alias="state", default=None
     )
 
-    ackedByUser: Optional[str] = Field(validation_alias="ackedByUser", default=None)
+    ackedByUser: Optional[str] = Field(
+        validation_alias="ackedByUser",
+        default=None,
+        description="The user ID of the user who acknowledged the alert. Present only if the alert has been acknowledged manually.",
+    )
 
-    autoAckId: Optional[str] = Field(validation_alias="autoAckId", default=None)
+    autoAckId: Optional[str] = Field(
+        validation_alias="autoAckId",
+        default=None,
+        description="The ID of the auto-ack that acknowledged the alert. Present only if the alert has been auto-acknowledged.",
+    )
 
-    ackedAt: Optional[str] = Field(validation_alias="ackedAt", default=None)
+    ackedAt: Optional[str] = Field(
+        validation_alias="ackedAt",
+        default=None,
+        description="The timestamp of the acknowledgement.",
+    )

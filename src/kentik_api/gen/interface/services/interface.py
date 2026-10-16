@@ -46,6 +46,11 @@ class InterfaceServiceWrapper:
         filterssnmpSpeeds: Optional[List[int]] = None,
         filtersipTypes: Optional[List[str]] = None,
     ) -> rest_models.ListInterfaceResponse:
+        """
+        Fetch Search Interfaces
+
+        Return list of interfaces matches search critera.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -99,6 +104,11 @@ class InterfaceServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateInterfaceRequest,
     ) -> rest_models.CreateInterfaceResponse:
+        """
+        Create a interface.
+
+        Create a interface from request. returns created.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -135,6 +145,11 @@ class InterfaceServiceWrapper:
     def interface_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetInterfaceResponse:
+        """
+        Get a interface.
+
+        Returns information about a interface specified with ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -173,6 +188,11 @@ class InterfaceServiceWrapper:
         id: str,
         data: rest_models.InterfaceServiceUpdateInterfaceBody,
     ) -> rest_models.UpdateInterfaceResponse:
+        """
+        Update a interface.
+
+        Replaces the entire interface attributes specified with id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -210,6 +230,11 @@ class InterfaceServiceWrapper:
     def interface_delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteInterfaceResponse:
+        """
+        Delete a interface.
+
+        Deletes the interface specified with id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -247,6 +272,11 @@ class InterfaceServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.ManualClassifyRequest,
     ) -> rest_models.ManualClassifyResponse:
+        """
+        Manual Classify Interface
+
+        Manually set interface(s) classification.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

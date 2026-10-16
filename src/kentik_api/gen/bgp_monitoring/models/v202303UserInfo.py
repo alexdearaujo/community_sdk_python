@@ -8,13 +8,19 @@ from pydantic import BaseModel, Field
 
 class v202303UserInfo(BaseModel):
     """
-    UserInfo model
+    UserInfo
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id", default=None, description="Unique system generated ID"
+    )
 
-    email: Optional[str] = Field(validation_alias="email", default=None)
+    email: Optional[str] = Field(
+        validation_alias="email", default=None, description="E-mail address of the user"
+    )
 
-    fullName: Optional[str] = Field(validation_alias="fullName", default=None)
+    fullName: Optional[str] = Field(
+        validation_alias="fullName", default=None, description="Full name of the user"
+    )

@@ -23,6 +23,11 @@ def CreatePathfinderReport(
     *,
     data: CreatePathfinderReportRequest,
 ) -> CreatePathfinderReportResponse:
+    """
+    Create a Pathfinder Report.
+
+    Create a pathfinder report based on configuration provided in the request.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

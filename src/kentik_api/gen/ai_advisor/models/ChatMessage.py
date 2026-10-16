@@ -10,12 +10,16 @@ from .SessionStatus import SessionStatus
 
 class ChatMessage(BaseModel):
     """
-    ChatMessage model
+    ChatMessage
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="The unique identifier (UUID) for the message",
+    )
 
     status: Optional[SessionStatus] = Field(validation_alias="status", default=None)
 

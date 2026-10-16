@@ -11,7 +11,7 @@ from .v202501alpha1SavedFilterFilters import v202501alpha1SavedFilterFilters
 
 class ScopeConfig(BaseModel):
     """
-    ScopeConfig model
+    ScopeConfig
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

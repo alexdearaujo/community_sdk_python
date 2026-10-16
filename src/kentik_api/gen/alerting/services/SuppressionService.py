@@ -206,6 +206,11 @@ def Create(
     *,
     data: SuppressionServiceCreateRequest,
 ) -> SuppressionServiceCreateResponse:
+    """
+    Create Suppression
+
+    Creates a new suppression configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -237,6 +242,11 @@ def List(
     *,
     data: SuppressionServiceListRequest,
 ) -> SuppressionServiceListResponse:
+    """
+    List Suppressions
+
+    Returns a list of suppression configurations.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -266,6 +276,11 @@ def List(
 def Get(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> SuppressionServiceGetResponse:
+    """
+    Get Suppression
+
+    Returns a suppression configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -294,6 +309,11 @@ def Get(
 def Delete(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> SuppressionServiceDeleteResponse:
+    """
+    Delete Suppression
+
+    Deletes a suppression configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -325,6 +345,11 @@ def Replace(
     id: str,
     data: SuppressionServiceReplaceBody,
 ) -> SuppressionServiceReplaceResponse:
+    """
+    Replace Suppression
+
+    Replaces a suppression configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

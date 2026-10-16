@@ -17,22 +17,38 @@ from .OciProperties import OciProperties
 
 class CloudExport(BaseModel):
     """
-    CloudExport model
+    CloudExport
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="Unique identifier of the instance",
+    )
 
     type: Optional[CloudExportType] = Field(validation_alias="type", default=None)
 
-    enabled: bool = Field(validation_alias="enabled")
+    enabled: bool = Field(
+        validation_alias="enabled",
+        description="Attribute controlling whether the instance is active",
+    )
 
-    name: str = Field(validation_alias="name")
+    name: str = Field(
+        validation_alias="name", description="User selected name of the instance"
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="Description of the instance",
+    )
 
-    planId: str = Field(validation_alias="planId")
+    planId: str = Field(
+        validation_alias="planId",
+        description="Identifier of the billing plan for the instance",
+    )
 
     cloudProvider: CloudProvider = Field(validation_alias="cloudProvider")
 
@@ -48,9 +64,15 @@ class CloudExport(BaseModel):
         validation_alias="currentStatus", default=None
     )
 
-    cdate: Optional[str] = Field(validation_alias="cdate", default=None)
+    cdate: Optional[str] = Field(
+        validation_alias="cdate", default=None, description="Creation timestamp (UTC)"
+    )
 
-    edate: Optional[str] = Field(validation_alias="edate", default=None)
+    edate: Optional[str] = Field(
+        validation_alias="edate",
+        default=None,
+        description="Last modification timestamp (UTC)",
+    )
 
     sampling: Optional[CloudExportSamplingProperties] = Field(
         validation_alias="sampling", default=None

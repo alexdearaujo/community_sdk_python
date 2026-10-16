@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: network_class_get()
     W->>API: GET /network_class/v202109alpha1/network_class
     alt success
-        API-->>W: v202109alpha1GetNetworkClassResponse (JSON)
-        W-->>C: v202109alpha1GetNetworkClassResponse
+        API-->>W: GetNetworkClassResponse (JSON)
+        W-->>C: GetNetworkClassResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202109alpha1GetNetworkClassResponse
+        W-->>C: GetNetworkClassResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202109alpha1GetNetworkClassResponse` |
+| 200 | A successful response. | `GetNetworkClassResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: network_class_update(data=UpdateNetworkClassRequest(...))
     W->>API: POST /network_class/v202109alpha1/network_class
     alt success
-        API-->>W: v202109alpha1UpdateNetworkClassResponse (JSON)
-        W-->>C: v202109alpha1UpdateNetworkClassResponse
+        API-->>W: UpdateNetworkClassResponse (JSON)
+        W-->>C: UpdateNetworkClassResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202109alpha1UpdateNetworkClassResponse
+        W-->>C: UpdateNetworkClassResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -148,19 +148,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202109alpha1UpdateNetworkClassRequest` | Yes |
+| `data` | body | `UpdateNetworkClassRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202109alpha1UpdateNetworkClassResponse` |
+| 200 | A successful response. | `UpdateNetworkClassResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.network_class.models import UpdateNetworkClassRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -172,12 +173,19 @@ response = client.network_class.network_class_update(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 8 models)</summary>
+<summary>Model relationships (6 of 8 models)</summary>
 
 ```mermaid
 classDiagram
+    class GetNetworkClassResponse
+    class NetworkClass
+    class UpdateNetworkClassRequest
+    class UpdateNetworkClassResponse
     class protobufAny
     class rpcStatus
+    GetNetworkClassResponse --> NetworkClass
+    UpdateNetworkClassRequest --> NetworkClass
+    UpdateNetworkClassResponse --> NetworkClass
     rpcStatus --> protobufAny
 ```
 

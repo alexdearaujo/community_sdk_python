@@ -10,7 +10,7 @@ from .Agent import Agent
 
 class UpdateAgentResponse(BaseModel):
     """
-    UpdateAgentResponse model
+    UpdateAgentResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

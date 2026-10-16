@@ -29,6 +29,14 @@ class v202303SimpleAttributeFilter(BaseModel):
         validation_alias="in", serialization_alias="in", default=None
     )
 
-    matchesRegex: Optional[str] = Field(validation_alias="matchesRegex", default=None)
+    matchesRegex: Optional[str] = Field(
+        validation_alias="matchesRegex",
+        default=None,
+        description="Unanchored: the pattern may match anywhere in the value (`foo` matches\n`xfooy`). Use `^` / `$` to require the start or end of the string.\nCommon dialect for all use cases.\nSupported regex features: literals, `.`, `|`, `()` / `(?:)`, `*+?{n,m}`,\n`^$`, POSIX classes, `\\d \\D \\s \\S \\w \\W`.\nUnsupported regex features: `\\b \\B \\A \\z \\Q \\E \\p \\P`, and `(?` other than `(?:)`.",
+    )
 
-    any: Optional[bool] = Field(validation_alias="any", default=None)
+    any: Optional[bool] = Field(
+        validation_alias="any",
+        default=None,
+        description='The equivalent of: value="*.  To use any this value MUST be set to true.',
+    )

@@ -15,4 +15,8 @@ class CommandResult(BaseModel):
 
     success: Optional[bool] = Field(validation_alias="success", default=None)
 
-    output: Optional[str] = Field(validation_alias="output", default=None)
+    output: Optional[str] = Field(
+        validation_alias="output",
+        default=None,
+        description="if success is false, contains error message",
+    )

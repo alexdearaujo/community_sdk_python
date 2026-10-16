@@ -11,6 +11,12 @@ class FlowPolicySettingsEvaluationConfig(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    frequency: str = Field(validation_alias="frequency")
+    frequency: str = Field(
+        validation_alias="frequency",
+        description="The frequency of the policy evaluation, also known as the policy window length.",
+    )
 
-    keyCount: str = Field(validation_alias="keyCount")
+    keyCount: str = Field(
+        validation_alias="keyCount",
+        description="The number of alert keys tracked per policy window.",
+    )

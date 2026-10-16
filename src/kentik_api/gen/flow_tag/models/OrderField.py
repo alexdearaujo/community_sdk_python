@@ -11,7 +11,7 @@ from .OrderDirection import OrderDirection
 
 class OrderField(BaseModel):
     """
-    OrderField model
+    OrderField
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

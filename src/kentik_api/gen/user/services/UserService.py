@@ -39,6 +39,11 @@ from ..models import (  # noqa: F401
 
 
 def ListUsers(api_config_override: Optional[APIConfig] = None) -> ListUsersResponse:
+    """
+    List all users.
+
+    Returns a list of all user accounts in the company.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -67,6 +72,11 @@ def ListUsers(api_config_override: Optional[APIConfig] = None) -> ListUsersRespo
 def CreateUser(
     api_config_override: Optional[APIConfig] = None, *, data: CreateUserRequest
 ) -> CreateUserResponse:
+    """
+    Create new user account.
+
+    Creates new user account based on attributes in the request. Returns attributes of the newly created account.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -96,6 +106,11 @@ def CreateUser(
 def GetUser(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetUserResponse:
+    """
+    Get attributes of a user account.
+
+    Returns attributes of a user account specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -127,6 +142,11 @@ def UpdateUser(
     id: str,
     data: UserServiceUpdateUserBody,
 ) -> UpdateUserResponse:
+    """
+    Update attributes of a user account.
+
+    Replaces all attributes of a user account specified by ID with attributes in the request. Returns updated attributes.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -156,6 +176,11 @@ def UpdateUser(
 def DeleteUser(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteUserResponse:
+    """
+    Delete a user account.
+
+    Deletes user account specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -184,6 +209,11 @@ def DeleteUser(
 def ResetActiveSessions(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> ResetActiveSessionsResponse:
+    """
+    Resets active sessions for a user.
+
+    Resets active sessions for a user specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -212,6 +242,11 @@ def ResetActiveSessions(
 def ResetApiToken(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> ResetApiTokenResponse:
+    """
+    Reset API token for a user.
+
+    Resets API token for a user specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

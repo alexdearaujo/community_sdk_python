@@ -13,10 +13,22 @@ class FlowContextDeviceDetails(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id", default=None, description="The ID of the device."
+    )
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name", default=None, description="The name of the device."
+    )
 
-    type: Optional[str] = Field(validation_alias="type", default=None)
+    type: Optional[str] = Field(
+        validation_alias="type",
+        default=None,
+        description="The type of the device (e.g. 'router').",
+    )
 
-    labels: Optional[List[str]] = Field(validation_alias="labels", default=None)
+    labels: Optional[List[str]] = Field(
+        validation_alias="labels",
+        default=None,
+        description="The labels associated with the device.",
+    )

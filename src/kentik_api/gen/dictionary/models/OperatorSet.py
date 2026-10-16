@@ -11,7 +11,6 @@ from .OperatorSetKey import OperatorSetKey
 
 class OperatorSet(BaseModel):
     """
-    OperatorSet model
     A named group of operators applicable to a given data type.
     """
 
@@ -20,5 +19,7 @@ class OperatorSet(BaseModel):
     key: Optional[OperatorSetKey] = Field(validation_alias="key", default=None)
 
     operators: Optional[List[Optional[Operator]]] = Field(
-        validation_alias="operators", default=None
+        validation_alias="operators",
+        default=None,
+        description="Ordered list of operators in this set",
     )

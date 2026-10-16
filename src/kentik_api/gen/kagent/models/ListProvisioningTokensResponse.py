@@ -10,7 +10,6 @@ from .ProvisioningToken import ProvisioningToken
 
 class ListProvisioningTokensResponse(BaseModel):
     """
-    ListProvisioningTokensResponse model
     ListProvisioningTokensResponse
     Response message for listing provisioning tokens.
     """
@@ -18,5 +17,7 @@ class ListProvisioningTokensResponse(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     tokens: Optional[List[Optional[ProvisioningToken]]] = Field(
-        validation_alias="tokens", default=None
+        validation_alias="tokens",
+        default=None,
+        description="List of provisioning token objects.",
     )

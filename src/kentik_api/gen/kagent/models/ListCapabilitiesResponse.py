@@ -16,5 +16,7 @@ class ListCapabilitiesResponse(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     capabilities: Optional[List[Optional[Capability]]] = Field(
-        validation_alias="capabilities", default=None
+        validation_alias="capabilities",
+        default=None,
+        description="The list of capabilities",
     )

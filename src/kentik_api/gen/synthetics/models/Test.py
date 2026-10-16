@@ -12,24 +12,38 @@ from .v202303UserInfo import v202303UserInfo
 
 class Test(BaseModel):
     """
-    Test model
+    Test
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id", default=None, description="Unique ID of the test"
+    )
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name",
+        default=None,
+        description="User selected name of the test",
+    )
 
-    type: Optional[str] = Field(validation_alias="type", default=None)
+    type: Optional[str] = Field(
+        validation_alias="type", default=None, description="Type of the test"
+    )
 
     status: Optional[TestStatus] = Field(validation_alias="status", default=None)
 
     settings: Optional[TestSettings] = Field(validation_alias="settings", default=None)
 
-    cdate: Optional[str] = Field(validation_alias="cdate", default=None)
+    cdate: Optional[str] = Field(
+        validation_alias="cdate", default=None, description="Creation timestamp (UTC)"
+    )
 
-    edate: Optional[str] = Field(validation_alias="edate", default=None)
+    edate: Optional[str] = Field(
+        validation_alias="edate",
+        default=None,
+        description="Last modification timestamp (UTC)",
+    )
 
     createdBy: Optional[v202303UserInfo] = Field(
         validation_alias="createdBy", default=None
@@ -39,4 +53,8 @@ class Test(BaseModel):
         validation_alias="lastUpdatedBy", default=None
     )
 
-    labels: Optional[List[str]] = Field(validation_alias="labels", default=None)
+    labels: Optional[List[str]] = Field(
+        validation_alias="labels",
+        default=None,
+        description="Set of labels associated with the test",
+    )

@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 class Devices(BaseModel):
     """
-    Devices model
+    Devices
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -21,5 +21,7 @@ class MitigationsServiceListResponse(BaseModel):
     )
 
     mitigations: Optional[List[Optional[Mitigation]]] = Field(
-        validation_alias="mitigations", default=None
+        validation_alias="mitigations",
+        default=None,
+        description="The mitigations that were found matching the filters.",
     )

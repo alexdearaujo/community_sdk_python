@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class DeleteTenantResponse(BaseModel):
     """
-    DeleteTenantResponse model
+    DeleteTenantResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

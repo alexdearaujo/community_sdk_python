@@ -42,8 +42,8 @@ sequenceDiagram
     C->>W: route_service__announce(data=RouteServiceAnnounceRequest(...))
     W->>API: POST /routes/announce
     alt success
-        API-->>W: v202501RouteServiceAnnounceResponse (JSON)
-        W-->>C: v202501RouteServiceAnnounceResponse
+        API-->>W: RouteServiceAnnounceResponse (JSON)
+        W-->>C: RouteServiceAnnounceResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -67,7 +67,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501RouteServiceAnnounceResponse
+        W-->>C: RouteServiceAnnounceResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -78,19 +78,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202501RouteServiceAnnounceRequest` | Yes |
+| `data` | body | `RouteServiceAnnounceRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501RouteServiceAnnounceResponse` |
+| 200 | A successful response. | `RouteServiceAnnounceResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.ktbgp.models import RouteServiceAnnounceRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -116,8 +117,8 @@ sequenceDiagram
     C->>W: route_service__list(data=RouteServiceListRequest(...))
     W->>API: POST /routes/list
     alt success
-        API-->>W: v202501RouteServiceListResponse (JSON)
-        W-->>C: v202501RouteServiceListResponse
+        API-->>W: RouteServiceListResponse (JSON)
+        W-->>C: RouteServiceListResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -141,7 +142,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501RouteServiceListResponse
+        W-->>C: RouteServiceListResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -152,19 +153,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202501RouteServiceListRequest` | Yes |
+| `data` | body | `RouteServiceListRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501RouteServiceListResponse` |
+| 200 | A successful response. | `RouteServiceListResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.ktbgp.models import RouteServiceListRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -190,8 +192,8 @@ sequenceDiagram
     C->>W: route_service__withdraw(data=RouteServiceWithdrawRequest(...))
     W->>API: POST /routes/withdraw
     alt success
-        API-->>W: v202501RouteServiceWithdrawResponse (JSON)
-        W-->>C: v202501RouteServiceWithdrawResponse
+        API-->>W: RouteServiceWithdrawResponse (JSON)
+        W-->>C: RouteServiceWithdrawResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -215,7 +217,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501RouteServiceWithdrawResponse
+        W-->>C: RouteServiceWithdrawResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -226,19 +228,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202501RouteServiceWithdrawRequest` | Yes |
+| `data` | body | `RouteServiceWithdrawRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501RouteServiceWithdrawResponse` |
+| 200 | A successful response. | `RouteServiceWithdrawResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.ktbgp.models import RouteServiceWithdrawRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -250,12 +253,33 @@ response = client.ktbgp.route_service__withdraw(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 45 models)</summary>
+<summary>Model relationships (14 of 45 models)</summary>
 
 ```mermaid
 classDiagram
+    class DeviceAdverts
+    class FlowspecUpdate
+    class RTBHUpdate
+    class RouteServiceAnnounceRequest
+    class RouteServiceAnnounceResponse
+    class RouteServiceListRequest
+    class RouteServiceListResponse
+    class RouteServiceWithdrawRequest
+    class RouteServiceWithdrawResponse
+    class RoutesFilter
+    class UpdateResult
+    class ktbgpv202501Withdraw
     class protobufAny
     class rpcStatus
+    DeviceAdverts --> FlowspecUpdate
+    DeviceAdverts --> RTBHUpdate
+    RouteServiceAnnounceRequest --> FlowspecUpdate
+    RouteServiceAnnounceRequest --> RTBHUpdate
+    RouteServiceAnnounceResponse --> UpdateResult
+    RouteServiceListRequest --> RoutesFilter
+    RouteServiceListResponse --> DeviceAdverts
+    RouteServiceWithdrawRequest --> ktbgpv202501Withdraw
+    RouteServiceWithdrawResponse --> UpdateResult
     rpcStatus --> protobufAny
 ```
 

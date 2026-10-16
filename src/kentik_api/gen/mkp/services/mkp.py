@@ -65,6 +65,11 @@ class MkpServiceWrapper:
     def package_list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListPackageResponse:
+        """
+        List MKP packages.
+
+        Returns a list of MKP packages.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -99,6 +104,11 @@ class MkpServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreatePackageRequest,
     ) -> rest_models.CreatePackageResponse:
+        """
+        Create a package template.
+
+        Create package from request. returns created package.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -135,6 +145,11 @@ class MkpServiceWrapper:
     def package_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetPackageResponse:
+        """
+        Get information aboout a package.
+
+        Returns information about package specified with ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -173,6 +188,11 @@ class MkpServiceWrapper:
         id: str,
         data: rest_models.PackageServiceUpdatePackageBody,
     ) -> rest_models.UpdatePackageResponse:
+        """
+        Update a package.
+
+        Update package attributes specified with id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -210,6 +230,11 @@ class MkpServiceWrapper:
     def package_delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeletePackageResponse:
+        """
+        Delete a package.
+
+        Deletes the package specified with id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -244,6 +269,11 @@ class MkpServiceWrapper:
     def tenant_list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListTenantResponse:
+        """
+        List MKP tenants.
+
+        Returns a list of MKP tenants.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -278,6 +308,11 @@ class MkpServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateTenantRequest,
     ) -> rest_models.CreateTenantResponse:
+        """
+        Create a tenant.
+
+        Create tenant from request. returns created tenant.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -314,6 +349,11 @@ class MkpServiceWrapper:
     def tenant_get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetTenantResponse:
+        """
+        Get information aboout a tenant.
+
+        Returns information about package specified with ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -352,6 +392,11 @@ class MkpServiceWrapper:
         id: str,
         data: rest_models.TenantServiceUpdateTenantBody,
     ) -> rest_models.UpdateTenantResponse:
+        """
+        Update a tenant.
+
+        Update tenant attributes specified with id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -389,6 +434,11 @@ class MkpServiceWrapper:
     def tenant_delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteTenantResponse:
+        """
+        Delete a tenant.
+
+        Deletes the tenant specified with id.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_2 is None or self._grpc_stub_2 is None:
                 raise NotImplementedError(
@@ -423,6 +473,11 @@ class MkpServiceWrapper:
     def tenant_user_list(
         self, *, api_config_override: Optional[APIConfig] = None, tenantId: str
     ) -> rest_models.ListTenantUserResponse:
+        """
+        List users for a tenant.
+
+        Returns a list of users associated with the specified tenant.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
@@ -461,6 +516,11 @@ class MkpServiceWrapper:
         tenantId: str,
         data: rest_models.TenantUserServiceCreateTenantUserBody,
     ) -> rest_models.CreateTenantUserResponse:
+        """
+        Add a user to a tenant.
+
+        Creates a user association with the specified tenant.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
@@ -503,6 +563,11 @@ class MkpServiceWrapper:
         id: str,
         data: rest_models.TenantUserServiceUpdateTenantUserBody,
     ) -> rest_models.UpdateTenantUserResponse:
+        """
+        Update a tenant user.
+
+        Updates the user associated with the specified tenant and user ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(
@@ -541,6 +606,11 @@ class MkpServiceWrapper:
     def tenant_user_delete(
         self, *, api_config_override: Optional[APIConfig] = None, tenantId: str, id: str
     ) -> rest_models.DeleteTenantUserResponse:
+        """
+        Remove a user from a tenant.
+
+        Deletes the user association with the specified tenant.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_3 is None or self._grpc_stub_3 is None:
                 raise NotImplementedError(

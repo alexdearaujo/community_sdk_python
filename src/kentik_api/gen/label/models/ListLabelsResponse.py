@@ -10,13 +10,17 @@ from .labelv202210Label import labelv202210Label
 
 class ListLabelsResponse(BaseModel):
     """
-    ListLabelsResponse model
+    ListLabelsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     labels: Optional[List[Optional[labelv202210Label]]] = Field(
-        validation_alias="labels", default=None
+        validation_alias="labels", default=None, description="List of configured labels"
     )
 
-    invalidCount: Optional[int] = Field(validation_alias="invalidCount", default=None)
+    invalidCount: Optional[int] = Field(
+        validation_alias="invalidCount",
+        default=None,
+        description="Number of invalid entries encountered while collecting data (should be always 0)",
+    )

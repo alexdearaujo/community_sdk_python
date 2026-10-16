@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: fetch_values_by_ids(data=FetchValuesByIdsRequest(...))
     W->>API: POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids
     alt success
-        API-->>W: v202601alpha1FetchValuesByIdsResponse (JSON)
-        W-->>C: v202601alpha1FetchValuesByIdsResponse
+        API-->>W: FetchValuesByIdsResponse (JSON)
+        W-->>C: FetchValuesByIdsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202601alpha1FetchValuesByIdsResponse
+        W-->>C: FetchValuesByIdsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,19 +80,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202601alpha1FetchValuesByIdsRequest` | Yes |
+| `data` | body | `FetchValuesByIdsRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202601alpha1FetchValuesByIdsResponse` |
+| 200 | A successful response. | `FetchValuesByIdsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.enrichments.models import FetchValuesByIdsRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -104,10 +105,12 @@ response = client.enrichments.fetch_values_by_ids(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 4 models)</summary>
+<summary>Model relationships (4 of 4 models)</summary>
 
 ```mermaid
 classDiagram
+    class FetchValuesByIdsRequest
+    class FetchValuesByIdsResponse
     class protobufAny
     class rpcStatus
     rpcStatus --> protobufAny

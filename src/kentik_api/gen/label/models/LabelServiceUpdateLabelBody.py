@@ -8,9 +8,9 @@ from pydantic import BaseModel, Field
 
 class LabelServiceUpdateLabelBody(BaseModel):
     """
-    UpdateLabelRequest model
+    UpdateLabelRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    label: Dict[str, Any] = Field(validation_alias="label")
+    label: Dict[str, Any] = Field(validation_alias="label", description="Label")

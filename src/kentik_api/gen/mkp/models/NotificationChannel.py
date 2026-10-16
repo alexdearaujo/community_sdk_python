@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 class NotificationChannel(BaseModel):
     """
-    NotificationChannel model
+    NotificationChannel
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

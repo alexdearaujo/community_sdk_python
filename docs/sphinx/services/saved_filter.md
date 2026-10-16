@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: create_saved_filter(data=SavedFilter(...))
     W->>API: POST /saved-filter/v202501alpha1
     alt success
-        API-->>W: v202501alpha1CreateSavedFilterResponse (JSON)
-        W-->>C: v202501alpha1CreateSavedFilterResponse
+        API-->>W: CreateSavedFilterResponse (JSON)
+        W-->>C: CreateSavedFilterResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1CreateSavedFilterResponse
+        W-->>C: CreateSavedFilterResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,19 +80,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `-` | No |
+| `data` | body | `SavedFilter` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1CreateSavedFilterResponse` |
+| 200 | A successful response. | `CreateSavedFilterResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.saved_filter.models import SavedFilter
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -120,8 +121,8 @@ sequenceDiagram
     C->>W: get_saved_filter(id="id-example")
     W->>API: GET /saved-filter/v202501alpha1/{id}
     alt success
-        API-->>W: v202501alpha1GetSavedFilterResponse (JSON)
-        W-->>C: v202501alpha1GetSavedFilterResponse
+        API-->>W: GetSavedFilterResponse (JSON)
+        W-->>C: GetSavedFilterResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -145,7 +146,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1GetSavedFilterResponse
+        W-->>C: GetSavedFilterResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -162,7 +163,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1GetSavedFilterResponse` |
+| 200 | A successful response. | `GetSavedFilterResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -196,8 +197,8 @@ sequenceDiagram
     C->>W: update_saved_filter(id="id-example", data=SavedFilter(...))
     W->>API: PUT /saved-filter/v202501alpha1/{id}
     alt success
-        API-->>W: v202501alpha1UpdateSavedFilterResponse (JSON)
-        W-->>C: v202501alpha1UpdateSavedFilterResponse
+        API-->>W: UpdateSavedFilterResponse (JSON)
+        W-->>C: UpdateSavedFilterResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -221,7 +222,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1UpdateSavedFilterResponse
+        W-->>C: UpdateSavedFilterResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -233,19 +234,20 @@ sequenceDiagram
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
 | `id` | path | `string` | Yes |
-| `data` | body | `-` | No |
+| `data` | body | `SavedFilter` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1UpdateSavedFilterResponse` |
+| 200 | A successful response. | `UpdateSavedFilterResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.saved_filter.models import SavedFilter
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -274,8 +276,8 @@ sequenceDiagram
     C->>W: delete_saved_filter(id="id-example")
     W->>API: DELETE /saved-filter/v202501alpha1/{id}
     alt success
-        API-->>W: v202501alpha1DeleteSavedFilterResponse (JSON)
-        W-->>C: v202501alpha1DeleteSavedFilterResponse
+        API-->>W: DeleteSavedFilterResponse (JSON)
+        W-->>C: DeleteSavedFilterResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -299,7 +301,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1DeleteSavedFilterResponse
+        W-->>C: DeleteSavedFilterResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -316,7 +318,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1DeleteSavedFilterResponse` |
+| 200 | A successful response. | `DeleteSavedFilterResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -350,8 +352,8 @@ sequenceDiagram
     C->>W: list_saved_filters()
     W->>API: GET /saved-filters/v202501alpha1
     alt success
-        API-->>W: v202501alpha1ListSavedFiltersResponse (JSON)
-        W-->>C: v202501alpha1ListSavedFiltersResponse
+        API-->>W: ListSavedFiltersResponse (JSON)
+        W-->>C: ListSavedFiltersResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -375,7 +377,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1ListSavedFiltersResponse
+        W-->>C: ListSavedFiltersResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -386,7 +388,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1ListSavedFiltersResponse` |
+| 200 | A successful response. | `ListSavedFiltersResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -418,8 +420,8 @@ sequenceDiagram
     C->>W: list_saved_filters_all()
     W->>API: GET /saved-filters/v202501alpha1/all
     alt success
-        API-->>W: v202501alpha1ListSavedFiltersAllResponse (JSON)
-        W-->>C: v202501alpha1ListSavedFiltersAllResponse
+        API-->>W: ListSavedFiltersAllResponse (JSON)
+        W-->>C: ListSavedFiltersAllResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -443,7 +445,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202501alpha1ListSavedFiltersAllResponse
+        W-->>C: ListSavedFiltersAllResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -454,7 +456,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202501alpha1ListSavedFiltersAllResponse` |
+| 200 | A successful response. | `ListSavedFiltersAllResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -470,12 +472,28 @@ response = client.saved_filter.list_saved_filters_all()
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 16 models)</summary>
+<summary>Model relationships (11 of 16 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateSavedFilterResponse
+    class DeleteSavedFilterResponse
+    class FilterLevel
+    class GetSavedFilterResponse
+    class ListSavedFiltersAllResponse
+    class ListSavedFiltersResponse
+    class SavedFilter
+    class SavedFilterFilters
+    class UpdateSavedFilterResponse
     class protobufAny
     class rpcStatus
+    CreateSavedFilterResponse --> SavedFilter
+    GetSavedFilterResponse --> SavedFilter
+    ListSavedFiltersAllResponse --> SavedFilter
+    ListSavedFiltersResponse --> SavedFilter
+    SavedFilter --> FilterLevel
+    SavedFilter --> SavedFilterFilters
+    UpdateSavedFilterResponse --> SavedFilter
     rpcStatus --> protobufAny
 ```
 

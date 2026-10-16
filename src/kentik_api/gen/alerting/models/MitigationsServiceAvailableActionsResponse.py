@@ -23,4 +23,8 @@ class MitigationsServiceAvailableActionsResponse(BaseModel):
                 MitigationsServiceAvailableActionsResponseMitigationAvailableTransitions
             ]
         ]
-    ] = Field(validation_alias="transitions", default=None)
+    ] = Field(
+        validation_alias="transitions",
+        default=None,
+        description="The available state transitions for mitigations.",
+    )

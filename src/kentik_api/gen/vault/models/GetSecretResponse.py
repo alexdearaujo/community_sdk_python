@@ -10,7 +10,7 @@ from .Secret import Secret
 
 class GetSecretResponse(BaseModel):
     """
-    GetSecretResponse model
+    GetSecretResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

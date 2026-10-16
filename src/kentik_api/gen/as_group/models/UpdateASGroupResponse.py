@@ -10,7 +10,7 @@ from .ASGroupDetailed import ASGroupDetailed
 
 class UpdateASGroupResponse(BaseModel):
     """
-    UpdateASGroupResponse model
+    UpdateASGroupResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

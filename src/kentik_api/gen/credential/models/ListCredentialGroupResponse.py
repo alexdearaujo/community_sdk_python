@@ -10,7 +10,7 @@ from .CredentialGroup import CredentialGroup
 
 class ListCredentialGroupResponse(BaseModel):
     """
-    ListCredentialGroupResponse model
+    ListCredentialGroupResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

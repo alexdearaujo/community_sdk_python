@@ -8,11 +8,13 @@ from pydantic import BaseModel, Field
 
 class DeleteDevicesResponse(BaseModel):
     """
-    DeleteDevicesResponse model
+    DeleteDevicesResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     failedDevices: Optional[List[str]] = Field(
-        validation_alias="failedDevices", default=None
+        validation_alias="failedDevices",
+        default=None,
+        description="List of IDs of devices that failed to be deleted",
     )

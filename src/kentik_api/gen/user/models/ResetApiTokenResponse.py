@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class ResetApiTokenResponse(BaseModel):
     """
-    ResetApiTokenResponse model
+    ResetApiTokenResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

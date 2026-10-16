@@ -206,6 +206,11 @@ def Create(
     *,
     data: AlertAutoAckServiceCreateRequest,
 ) -> AlertAutoAckServiceCreateResponse:
+    """
+    Create Auto-Ack
+
+    Creates a new auto-ack configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -237,6 +242,11 @@ def List(
     *,
     data: AlertAutoAckServiceListRequest,
 ) -> AlertAutoAckServiceListResponse:
+    """
+    List Auto-Acks
+
+    Returns a list of auto-ack configurations.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -266,6 +276,11 @@ def List(
 def Get(
     api_config_override: Optional[APIConfig] = None, *, autoAckid: str
 ) -> AlertAutoAckServiceGetResponse:
+    """
+    Get Auto-Ack
+
+    Returns an auto-ack configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -294,6 +309,11 @@ def Get(
 def Delete(
     api_config_override: Optional[APIConfig] = None, *, autoAckid: str
 ) -> AlertAutoAckServiceDeleteResponse:
+    """
+    Delete Auto-Ack
+
+    Deletes an auto-ack configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -325,6 +345,11 @@ def Replace(
     autoAckid: str,
     data: AlertAutoAckServiceReplaceBody,
 ) -> AlertAutoAckServiceReplaceResponse:
+    """
+    Replace Auto-Ack
+
+    Replaces an auto-ack configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

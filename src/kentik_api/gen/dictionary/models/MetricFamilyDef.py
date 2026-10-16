@@ -11,15 +11,22 @@ from .MetricQuantity import MetricQuantity
 
 class MetricFamilyDef(BaseModel):
     """
-    MetricFamilyDef model
     Definition of a metric family grouping related metrics by quantity and unit.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    key: Optional[str] = Field(validation_alias="key", default=None)
+    key: Optional[str] = Field(
+        validation_alias="key",
+        default=None,
+        description="Unique identifier for the metric family",
+    )
 
-    label: Optional[str] = Field(validation_alias="label", default=None)
+    label: Optional[str] = Field(
+        validation_alias="label",
+        default=None,
+        description="Human-readable display name",
+    )
 
     quantity: Optional[MetricQuantity] = Field(
         validation_alias="quantity", default=None
@@ -28,9 +35,13 @@ class MetricFamilyDef(BaseModel):
     baseUnit: Optional[BaseUnit] = Field(validation_alias="baseUnit", default=None)
 
     dualAxisCompatible: Optional[List[str]] = Field(
-        validation_alias="dualAxisCompatible", default=None
+        validation_alias="dualAxisCompatible",
+        default=None,
+        description="Metric family keys compatible for dual-axis rendering",
     )
 
     incompatibleWith: Optional[List[str]] = Field(
-        validation_alias="incompatibleWith", default=None
+        validation_alias="incompatibleWith",
+        default=None,
+        description="Metric family keys that cannot be combined with this family",
     )

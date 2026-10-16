@@ -13,14 +13,32 @@ class GenericEvent(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    eventSource: Optional[str] = Field(validation_alias="eventSource", default=None)
+    eventSource: Optional[str] = Field(
+        validation_alias="eventSource",
+        default=None,
+        description="Attribute Source of Audit log",
+    )
 
-    action: Optional[str] = Field(validation_alias="action", default=None)
+    action: Optional[str] = Field(
+        validation_alias="action",
+        default=None,
+        description="Attribute Action of Audit log",
+    )
 
-    eventType: Optional[str] = Field(validation_alias="eventType", default=None)
+    eventType: Optional[str] = Field(
+        validation_alias="eventType",
+        default=None,
+        description="Attribute Type of Audit log",
+    )
 
-    owner: Optional[str] = Field(validation_alias="owner", default=None)
+    owner: Optional[str] = Field(
+        validation_alias="owner",
+        default=None,
+        description="Attribute User of Audit log",
+    )
 
     metadata: Optional[Dict[str, Any]] = Field(
-        validation_alias="metadata", default=None
+        validation_alias="metadata",
+        default=None,
+        description="generic bag of metadata about the event",
     )

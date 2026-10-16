@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: search_flow_tag()
     W->>API: GET /flow_tag/v202404alpha1/tag
     alt success
-        API-->>W: v202404alpha1SearchFlowTagResponse (JSON)
-        W-->>C: v202404alpha1SearchFlowTagResponse
+        API-->>W: SearchFlowTagResponse (JSON)
+        W-->>C: SearchFlowTagResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202404alpha1SearchFlowTagResponse
+        W-->>C: SearchFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -90,7 +90,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202404alpha1SearchFlowTagResponse` |
+| 200 | A successful response. | `SearchFlowTagResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -122,8 +122,8 @@ sequenceDiagram
     C->>W: create_flow_tag(data=CreateFlowTagRequest(...))
     W->>API: POST /flow_tag/v202404alpha1/tag
     alt success
-        API-->>W: v202404alpha1CreateFlowTagResponse (JSON)
-        W-->>C: v202404alpha1CreateFlowTagResponse
+        API-->>W: CreateFlowTagResponse (JSON)
+        W-->>C: CreateFlowTagResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -147,7 +147,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202404alpha1CreateFlowTagResponse
+        W-->>C: CreateFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -158,19 +158,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202404alpha1CreateFlowTagRequest` | Yes |
+| `data` | body | `CreateFlowTagRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202404alpha1CreateFlowTagResponse` |
+| 200 | A successful response. | `CreateFlowTagResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.flow_tag.models import CreateFlowTagRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -198,8 +199,8 @@ sequenceDiagram
     C->>W: get_flow_tag(flowTagid="flowTagid-example")
     W->>API: GET /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
-        API-->>W: v202404alpha1GetFlowTagResponse (JSON)
-        W-->>C: v202404alpha1GetFlowTagResponse
+        API-->>W: GetFlowTagResponse (JSON)
+        W-->>C: GetFlowTagResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -223,7 +224,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202404alpha1GetFlowTagResponse
+        W-->>C: GetFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -240,7 +241,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202404alpha1GetFlowTagResponse` |
+| 200 | A successful response. | `GetFlowTagResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -274,8 +275,8 @@ sequenceDiagram
     C->>W: update_flow_tag(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
     W->>API: PUT /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
-        API-->>W: v202404alpha1UpdateFlowTagResponse (JSON)
-        W-->>C: v202404alpha1UpdateFlowTagResponse
+        API-->>W: UpdateFlowTagResponse (JSON)
+        W-->>C: UpdateFlowTagResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -299,7 +300,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202404alpha1UpdateFlowTagResponse
+        W-->>C: UpdateFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -317,13 +318,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202404alpha1UpdateFlowTagResponse` |
+| 200 | A successful response. | `UpdateFlowTagResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.flow_tag.models import FlowTagServiceUpdateFlowTagBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -352,8 +354,8 @@ sequenceDiagram
     C->>W: delete_flow_tag(flowTagid="flowTagid-example")
     W->>API: DELETE /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
-        API-->>W: v202404alpha1DeleteFlowTagResponse (JSON)
-        W-->>C: v202404alpha1DeleteFlowTagResponse
+        API-->>W: DeleteFlowTagResponse (JSON)
+        W-->>C: DeleteFlowTagResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -377,7 +379,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202404alpha1DeleteFlowTagResponse
+        W-->>C: DeleteFlowTagResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -394,7 +396,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202404alpha1DeleteFlowTagResponse` |
+| 200 | A successful response. | `DeleteFlowTagResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -412,13 +414,25 @@ response = client.flow_tag.delete_flow_tag(
 ## Data Models
 
 <details>
-<summary>Model relationships (3 of 15 models)</summary>
+<summary>Model relationships (10 of 15 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreateFlowTagRequest
+    class CreateFlowTagResponse
+    class DeleteFlowTagResponse
+    class FlowTag
     class FlowTagServiceUpdateFlowTagBody
+    class GetFlowTagResponse
+    class SearchFlowTagResponse
+    class UpdateFlowTagResponse
     class protobufAny
     class rpcStatus
+    CreateFlowTagRequest --> FlowTag
+    CreateFlowTagResponse --> FlowTag
+    GetFlowTagResponse --> FlowTag
+    SearchFlowTagResponse --> FlowTag
+    UpdateFlowTagResponse --> FlowTag
     rpcStatus --> protobufAny
 ```
 

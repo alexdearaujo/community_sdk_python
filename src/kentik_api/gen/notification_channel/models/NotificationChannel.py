@@ -10,19 +10,35 @@ from .ChannelType import ChannelType
 
 class NotificationChannel(BaseModel):
     """
-    NotificationChannel model
+    NotificationChannel
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="Unique identifier of the channel",
+    )
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name",
+        default=None,
+        description="User selected name of the channel",
+    )
 
     type: Optional[ChannelType] = Field(validation_alias="type", default=None)
 
-    enabled: Optional[bool] = Field(validation_alias="enabled", default=None)
+    enabled: Optional[bool] = Field(
+        validation_alias="enabled", default=None, description="Administrative status"
+    )
 
-    cdate: Optional[str] = Field(validation_alias="cdate", default=None)
+    cdate: Optional[str] = Field(
+        validation_alias="cdate", default=None, description="Creation timestamp (UTC)"
+    )
 
-    edate: Optional[str] = Field(validation_alias="edate", default=None)
+    edate: Optional[str] = Field(
+        validation_alias="edate",
+        default=None,
+        description="Last modification timestamp (UTC)",
+    )

@@ -29,4 +29,8 @@ class FlowContextAlertKeyDetails(BaseModel):
         validation_alias="site", default=None
     )
 
-    extendedValue: Optional[str] = Field(validation_alias="extendedValue", default=None)
+    extendedValue: Optional[str] = Field(
+        validation_alias="extendedValue",
+        default=None,
+        description="The extended value of the alert key.",
+    )

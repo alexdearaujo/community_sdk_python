@@ -95,6 +95,11 @@ from ..models import (  # noqa: F401
 def GetResultsForTests(
     api_config_override: Optional[APIConfig] = None, *, data: GetResultsForTestsRequest
 ) -> GetResultsForTestsResponse:
+    """
+    Get results for tests
+
+    Returns probe results for a set of tests for specified period of time.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -126,6 +131,11 @@ def GetResultsForTestsCsv(
     *,
     data: GetResultsForTestsCsvRequest,
 ) -> GetResultsForTestsCsvResponse:
+    """
+    Get test results in CSV format
+
+    Returns probe results for tests in CSV format.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -155,6 +165,11 @@ def GetResultsForTestsCsv(
 def GetTraceForTest(
     api_config_override: Optional[APIConfig] = None, *, data: GetTraceForTestRequest
 ) -> GetTraceForTestResponse:
+    """
+    Get network trace data for a test
+
+    Get network trace data for a specific synthetic test. The test must have traceroute task configured.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

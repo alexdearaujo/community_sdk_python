@@ -11,14 +11,15 @@ from .NetworkBoundary import NetworkBoundary
 
 class ManualClassifyRequest(BaseModel):
     """
-    ManualClassifyRequest model
     Set connection type, network boundary, and provider of interface id(s) specified.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     interfaceIds: Optional[List[str]] = Field(
-        validation_alias="interfaceIds", default=None
+        validation_alias="interfaceIds",
+        default=None,
+        description="Interface ids to set the properties.",
     )
 
     connectivityType: Optional[ConnectivityType] = Field(
@@ -29,4 +30,6 @@ class ManualClassifyRequest(BaseModel):
         validation_alias="networkBoundary", default=None
     )
 
-    provider: Optional[str] = Field(validation_alias="provider", default=None)
+    provider: Optional[str] = Field(
+        validation_alias="provider", default=None, description="Network provider."
+    )

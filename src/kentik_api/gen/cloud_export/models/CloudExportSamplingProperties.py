@@ -16,11 +16,17 @@ class CloudExportSamplingProperties(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     samplingEnabled: Optional[bool] = Field(
-        validation_alias="samplingEnabled", default=None
+        validation_alias="samplingEnabled",
+        default=None,
+        description="Boolean indicating if sampling is used for this export.",
     )
 
     samplingType: Optional[CloudExportSamplingType] = Field(
         validation_alias="samplingType", default=None
     )
 
-    samplingRate: Optional[int] = Field(validation_alias="samplingRate", default=None)
+    samplingRate: Optional[int] = Field(
+        validation_alias="samplingRate",
+        default=None,
+        description="Sampling rate for the export.",
+    )

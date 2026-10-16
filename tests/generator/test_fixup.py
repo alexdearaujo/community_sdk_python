@@ -223,6 +223,25 @@ def test_fix_generated_service_smoke(tmp_path):
     )
 
 
+@pytest.mark.parametrize("parent", ["pb", "error"])
+def test_fix_generated_service_ignores_an_ancestor_named_pb_or_error(tmp_path, parent):
+    service_dir = tmp_path / parent / "device"
+    services = service_dir / "services"
+    services.mkdir(parents=True)
+    (services / "async_DeviceService.py").write_text("")
+    (services / "DeviceService.py").write_text(
+        "from ..api_config import APIConfig, HTTPException\ndef foo(): pass\n"
+    )
+
+    fix_generated_service(service_dir)
+
+    assert not (services / "async_DeviceService.py").exists()
+    assert (
+        "from kentik_api.core.api_config import APIConfig"
+        in (services / "DeviceService.py").read_text()
+    )
+
+
 # ---------------------------------------------------------------------------
 # Individual transform functions
 # ---------------------------------------------------------------------------

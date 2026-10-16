@@ -10,7 +10,7 @@ from .TenantUser import TenantUser
 
 class UpdateTenantUserResponse(BaseModel):
     """
-    UpdateTenantUserResponse model
+    UpdateTenantUserResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

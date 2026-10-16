@@ -8,11 +8,17 @@ from pydantic import BaseModel, Field
 
 class DNSResponseData(BaseModel):
     """
-    DNSResponseData model
+    DNSResponseData
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    status: Optional[int] = Field(validation_alias="status", default=None)
+    status: Optional[int] = Field(
+        validation_alias="status", default=None, description="Received DNS status"
+    )
 
-    data: Optional[str] = Field(validation_alias="data", default=None)
+    data: Optional[str] = Field(
+        validation_alias="data",
+        default=None,
+        description="Text rendering of received DNS resolution",
+    )

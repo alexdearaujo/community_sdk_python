@@ -10,7 +10,7 @@ from .TestResults import TestResults
 
 class GetResultsForTestsResponse(BaseModel):
     """
-    GetResultsForTestsResponse model
+    GetResultsForTestsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

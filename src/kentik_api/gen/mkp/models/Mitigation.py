@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 class Mitigation(BaseModel):
     """
-    Mitigation model
+    Mitigation
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

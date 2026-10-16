@@ -8,9 +8,13 @@ from pydantic import BaseModel, Field
 
 class AuthorizeResponse(BaseModel):
     """
-    AuthorizeResponse model
+    AuthorizeResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="ID assigned to the authorized agent.",
+    )

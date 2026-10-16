@@ -58,3 +58,15 @@ def test_release_notes_wait_for_publish_and_version_is_gated():
     workflow = (ROOT / ".github" / "workflows" / "release.yml").read_text("utf-8")
     assert "needs: publish" in workflow
     assert "does not match tag" in workflow
+
+
+def test_pypi_readme_links_resolve_on_pypi():
+    # PyPI renders the README without the repository, so a relative link 404s.
+    readme = PYPROJECT["project"]["readme"]
+    links = re.findall(r"\]\(([^)]+)\)", (ROOT / readme).read_text("utf-8"))
+    assert links
+    assert [link for link in links if not link.startswith("https://")] == []
+    assert (
+        f"/{readme}"
+        in PYPROJECT["tool"]["hatch"]["build"]["targets"]["sdist"]["include"]
+    )

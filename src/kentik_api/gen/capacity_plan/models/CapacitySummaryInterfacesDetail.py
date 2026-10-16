@@ -10,15 +10,21 @@ from .InterfacesDetailStatusDetail import InterfacesDetailStatusDetail
 
 class CapacitySummaryInterfacesDetail(BaseModel):
     """
-    InterfacesDetail model
+    InterfacesDetail
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    totalCount: Optional[int] = Field(validation_alias="totalCount", default=None)
+    totalCount: Optional[int] = Field(
+        validation_alias="totalCount",
+        default=None,
+        description="Total number of interfaces",
+    )
 
     totalCapacityBps: Optional[str] = Field(
-        validation_alias="totalCapacityBps", default=None
+        validation_alias="totalCapacityBps",
+        default=None,
+        description="Total capacity in bps",
     )
 
     healthy: Optional[InterfacesDetailStatusDetail] = Field(

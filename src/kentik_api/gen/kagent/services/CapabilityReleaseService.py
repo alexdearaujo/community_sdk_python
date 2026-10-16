@@ -85,6 +85,9 @@ def CapabilityReleaseService_GetCapabilityRelease(
     semver: Optional[str] = None,
     distro: Optional[str] = None,
 ) -> GetCapabilityReleaseResponse:
+    """
+    GetCapabilityRelease can be used by install/upgrade modules to fetch a single release.
+    """
     query_params: Dict[str, Any] = {
         "os": os,
         "arch": arch,
@@ -127,6 +130,9 @@ def CapabilityReleaseService_GetCapabilityLatestReleases(
     capabilities: Optional[List[str]] = None,
     distro: Optional[str] = None,
 ) -> GetCapabilityLatestReleasesResponse:
+    """
+    GetCapabilityLatestReleases can be used by install/upgrade modules to fetch the latest available releases.
+    """
     query_params: Dict[str, Any] = {
         "os": os,
         "arch": arch,

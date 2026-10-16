@@ -27,5 +27,7 @@ class NmsPolicySettingsDatasetConfig(BaseModel):
     )
 
     customDimensions: Optional[List[str]] = Field(
-        validation_alias="customDimensions", default=None
+        validation_alias="customDimensions",
+        default=None,
+        description="this might be irrelevant based on policy type - only applicable if custom type",
     )

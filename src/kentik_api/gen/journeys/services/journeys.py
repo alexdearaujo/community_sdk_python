@@ -37,6 +37,11 @@ class JourneysServiceWrapper:
     def get_nlq(
         self, *, api_config_override: Optional[APIConfig] = None, prompt: str
     ) -> rest_models.GetJourneysNlqResponse:
+        """
+        Journeys AI NLQ Service
+
+        Perform Natural Language (NLQ) to query object translation
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

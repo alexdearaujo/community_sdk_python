@@ -16,5 +16,7 @@ class AlertServiceListCommentsResponse(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     comments: Optional[List[Optional[Comment]]] = Field(
-        validation_alias="comments", default=None
+        validation_alias="comments",
+        default=None,
+        description="The comments on the alert.",
     )

@@ -22,6 +22,11 @@ def CreateConnectivityReport(
     *,
     data: CreateConnectivityReportRequest,
 ) -> CreateConnectivityReportResponse:
+    """
+    Create a Connectivity Checker Report.
+
+    Create a connectivity checker report based on configuration provided in the request.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

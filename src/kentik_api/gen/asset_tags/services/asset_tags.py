@@ -41,6 +41,11 @@ class AssetTagsServiceWrapper:
         assetType: str,
         assetId: str,
     ) -> rest_models.GetTagValuesResponse:
+        """
+        Gets tag values by asset id and type.
+
+        Returns a list of tag values.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -78,6 +83,11 @@ class AssetTagsServiceWrapper:
     def list_tag_keys(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListTagKeysResponse:
+        """
+        Lists all tag keys.
+
+        Returns a list of tag keys.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -112,6 +122,11 @@ class AssetTagsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateTagKeyRequest,
     ) -> rest_models.CreateTagKeyResponse:
+        """
+        Creates a new tag key.
+
+        Returns the created tag key.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -148,6 +163,11 @@ class AssetTagsServiceWrapper:
     def get_tag_key(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetTagKeyResponse:
+        """
+        Get a single tag key by id.
+
+        Returns a single tag key.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -186,6 +206,11 @@ class AssetTagsServiceWrapper:
         id: str,
         data: rest_models.AssetTagsServiceUpdateTagKeyBody,
     ) -> rest_models.UpdateTagKeyResponse:
+        """
+        Updates the display name of a tag key.
+
+        Returns the updated tag key.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -223,6 +248,11 @@ class AssetTagsServiceWrapper:
     def delete_tag_key(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteTagKeyResponse:
+        """
+        Deletes a tag key by id.
+
+        Returns an empty response
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -261,6 +291,11 @@ class AssetTagsServiceWrapper:
         tagId: str,
         assetType: str,
     ) -> rest_models.ListTagValuesResponse:
+        """
+        Lists all tag values by id, optionally filtered by asset type.
+
+        Returns a list of tag values.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -301,6 +336,11 @@ class AssetTagsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.SetTagValuesRequest,
     ) -> rest_models.SetTagValuesResponse:
+        """
+        Bulk upserts a tag value for a list of asset ids of a given type.
+
+        Returns a list of tag values.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -340,6 +380,11 @@ class AssetTagsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.DeleteTagValuesRequest,
     ) -> rest_models.DeleteTagValuesResponse:
+        """
+        Bulk deletes a tag values for a list of asset ids of a given type.
+
+        Returns an empty response.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

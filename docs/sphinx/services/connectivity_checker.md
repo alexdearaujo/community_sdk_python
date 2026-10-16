@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: create_connectivity_report(data=CreateConnectivityReportRequest(...))
     W->>API: POST /connectivity_checker/v202410beta1/create
     alt success
-        API-->>W: v202410beta1CreateConnectivityReportResponse (JSON)
-        W-->>C: v202410beta1CreateConnectivityReportResponse
+        API-->>W: CreateConnectivityReportResponse (JSON)
+        W-->>C: CreateConnectivityReportResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202410beta1CreateConnectivityReportResponse
+        W-->>C: CreateConnectivityReportResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,19 +80,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202410beta1CreateConnectivityReportRequest` | Yes |
+| `data` | body | `CreateConnectivityReportRequest` | Yes |
 
 #### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202410beta1CreateConnectivityReportResponse` |
+| 200 | A successful response. | `CreateConnectivityReportResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.connectivity_checker.models import CreateConnectivityReportRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -104,12 +105,18 @@ response = client.connectivity_checker.create_connectivity_report(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 6 models)</summary>
+<summary>Model relationships (6 of 6 models)</summary>
 
 ```mermaid
 classDiagram
+    class CloudProvider
+    class CreateConnectivityReportRequest
+    class CreateConnectivityReportResponse
+    class EntityType
     class protobufAny
     class rpcStatus
+    CreateConnectivityReportRequest --> CloudProvider
+    CreateConnectivityReportRequest --> EntityType
     rpcStatus --> protobufAny
 ```
 

@@ -42,6 +42,11 @@ from ..models import (  # noqa: F401
 def GetMetricsForTarget(
     api_config_override: Optional[APIConfig] = None, *, data: GetMetricsForTargetRequest
 ) -> GetMetricsForTargetResponse:
+    """
+    Get metrics for a BGP prefix.
+
+    Retrieve metric data for single BGP prefix and time interval.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -71,6 +76,11 @@ def GetMetricsForTarget(
 def GetRoutesForTarget(
     api_config_override: Optional[APIConfig] = None, *, data: GetRoutesForTargetRequest
 ) -> GetRoutesForTargetResponse:
+    """
+    Get routes for a BGP prefix.
+
+    Retrieve snapshot of route information for single BGP prefix at specific time.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

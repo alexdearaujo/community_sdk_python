@@ -18,6 +18,11 @@ from ..models import (  # noqa: F401
 def FetchValuesByIds(
     api_config_override: Optional[APIConfig] = None, *, data: FetchValuesByIdsRequest
 ) -> FetchValuesByIdsResponse:
+    """
+    Resolve enumeration IDs to values.
+
+    Return the string values for the supplied enumeration lookup IDs within the authenticated company. Unknown IDs are omitted from the response.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

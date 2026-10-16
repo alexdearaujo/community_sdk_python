@@ -44,8 +44,8 @@ sequenceDiagram
     C->>W: list_group()
     W->>API: GET /credential/v202407alpha1/group
     alt success
-        API-->>W: v202407alpha1ListCredentialGroupResponse (JSON)
-        W-->>C: v202407alpha1ListCredentialGroupResponse
+        API-->>W: ListCredentialGroupResponse (JSON)
+        W-->>C: ListCredentialGroupResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -69,7 +69,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407alpha1ListCredentialGroupResponse
+        W-->>C: ListCredentialGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -80,7 +80,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407alpha1ListCredentialGroupResponse` |
+| 200 | A successful response. | `ListCredentialGroupResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -112,8 +112,8 @@ sequenceDiagram
     C->>W: get_group(id="id-example")
     W->>API: GET /credential/v202407alpha1/group/{id}
     alt success
-        API-->>W: v202407alpha1GetCredentialGroupResponse (JSON)
-        W-->>C: v202407alpha1GetCredentialGroupResponse
+        API-->>W: GetCredentialGroupResponse (JSON)
+        W-->>C: GetCredentialGroupResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -137,7 +137,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407alpha1GetCredentialGroupResponse
+        W-->>C: GetCredentialGroupResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -154,7 +154,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407alpha1GetCredentialGroupResponse` |
+| 200 | A successful response. | `GetCredentialGroupResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 #### Example
@@ -172,12 +172,17 @@ response = client.credential.get_group(
 ## Data Models
 
 <details>
-<summary>Model relationships (2 of 11 models)</summary>
+<summary>Model relationships (5 of 11 models)</summary>
 
 ```mermaid
 classDiagram
+    class CredentialGroup
+    class GetCredentialGroupResponse
+    class ListCredentialGroupResponse
     class protobufAny
     class rpcStatus
+    GetCredentialGroupResponse --> CredentialGroup
+    ListCredentialGroupResponse --> CredentialGroup
     rpcStatus --> protobufAny
 ```
 

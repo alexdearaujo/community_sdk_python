@@ -206,6 +206,11 @@ def Create(
     *,
     data: AlertSilenceNotificationsServiceCreateRequest,
 ) -> AlertSilenceNotificationsServiceCreateResponse:
+    """
+    Create Alert Silence Notifications
+
+    Creates a new alert silence notifications configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -237,6 +242,11 @@ def List(
     *,
     data: AlertSilenceNotificationsServiceListRequest,
 ) -> AlertSilenceNotificationsServiceListResponse:
+    """
+    List Alert Notification Silences
+
+    Returns a list of alert silence notifications configurations.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -266,6 +276,11 @@ def List(
 def Get(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> AlertSilenceNotificationsServiceGetResponse:
+    """
+    Get Alert Silence Notifications
+
+    Returns an alert silence notifications configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -294,6 +309,11 @@ def Get(
 def Delete(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> AlertSilenceNotificationsServiceDeleteResponse:
+    """
+    Delete Alert Notification Silence
+
+    Deletes an alert silence notifications configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -325,6 +345,11 @@ def Replace(
     id: str,
     data: AlertSilenceNotificationsServiceReplaceBody,
 ) -> AlertSilenceNotificationsServiceReplaceResponse:
+    """
+    Replace Alert Notification Silence
+
+    Replaces an alert silence notifications configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

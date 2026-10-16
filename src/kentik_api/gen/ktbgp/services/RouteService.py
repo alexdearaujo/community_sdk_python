@@ -65,6 +65,9 @@ def RouteService_Announce(
     *,
     data: RouteServiceAnnounceRequest,
 ) -> RouteServiceAnnounceResponse:
+    """
+    Announce a BGP route to a specified set of devices
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -94,6 +97,9 @@ def RouteService_Announce(
 def RouteService_List(
     api_config_override: Optional[APIConfig] = None, *, data: RouteServiceListRequest
 ) -> RouteServiceListResponse:
+    """
+    List active BGP updates for a specified set of devices
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -125,6 +131,9 @@ def RouteService_Withdraw(
     *,
     data: RouteServiceWithdrawRequest,
 ) -> RouteServiceWithdrawResponse:
+    """
+    Withdraw active BGP updates from devices
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

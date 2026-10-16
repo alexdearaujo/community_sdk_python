@@ -13,6 +13,14 @@ class v202501alpha1SavedFilterFilterId(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    filterId: Optional[str] = Field(validation_alias="filterId", default=None)
+    filterId: Optional[str] = Field(
+        validation_alias="filterId",
+        default=None,
+        description="ID of reference saved filter.",
+    )
 
-    isNot: Optional[bool] = Field(validation_alias="isNot", default=None)
+    isNot: Optional[bool] = Field(
+        validation_alias="isNot",
+        default=None,
+        description="Include/Exclude of the reference saved filter.",
+    )

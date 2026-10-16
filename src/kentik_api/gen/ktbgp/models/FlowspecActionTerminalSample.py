@@ -8,7 +8,6 @@ from pydantic import BaseModel, Field
 
 class FlowspecActionTerminalSample(BaseModel):
     """
-    FlowspecActionTerminalSample model
     FlowspecActionTerminalSample specifies that the traffic action extended community.
 
     terminal, sample or sample-terminal action types.

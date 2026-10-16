@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class SetTestStatusResponse(BaseModel):
     """
-    SetTestStatusResponse model
+    SetTestStatusResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

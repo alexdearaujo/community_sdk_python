@@ -161,4 +161,4 @@ def test_a_non_region_value_is_a_configuration_error():
     from kentik_api.errors import ConfigurationError
 
     with pytest.raises(ConfigurationError):
-        KentikAPI("a@b.c", "token", region=None, env_file=None)  # ty: ignore[invalid-argument-type]
+        KentikAPI("a@b.c", "token", region=None, env_file=None)  # ty: ignore[invalid-argument-type]  # pyright: ignore[reportArgumentType]

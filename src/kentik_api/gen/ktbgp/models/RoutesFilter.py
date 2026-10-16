@@ -13,4 +13,8 @@ class RoutesFilter(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    deviceIds: Optional[List[str]] = Field(validation_alias="deviceIds", default=None)
+    deviceIds: Optional[List[str]] = Field(
+        validation_alias="deviceIds",
+        default=None,
+        description="TODO: we may want to search by update type or detailed attributes\n TODO: we may also want to search for historical updates",
+    )

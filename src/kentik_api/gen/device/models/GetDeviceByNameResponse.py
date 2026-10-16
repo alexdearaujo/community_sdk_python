@@ -10,7 +10,7 @@ from .DeviceDetailed import DeviceDetailed
 
 class GetDeviceByNameResponse(BaseModel):
     """
-    GetDeviceByNameResponse model
+    GetDeviceByNameResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

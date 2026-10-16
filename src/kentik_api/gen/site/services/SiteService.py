@@ -53,6 +53,11 @@ from ..models import (  # noqa: F401
 def ListSiteMarkets(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListSiteMarketsResponse:
+    """
+    List all site markets.
+
+    Returns list of configured site markets.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -81,6 +86,11 @@ def ListSiteMarkets(
 def CreateSiteMarket(
     api_config_override: Optional[APIConfig] = None, *, data: CreateSiteMarketRequest
 ) -> CreateSiteMarketResponse:
+    """
+    Configure a new site market.
+
+    Create configuration for a new site market. Returns the newly created configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -110,6 +120,11 @@ def CreateSiteMarket(
 def GetSiteMarket(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetSiteMarketResponse:
+    """
+    Retrieve configuration of a site market.
+
+    Returns configuration of a site market specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -141,6 +156,11 @@ def UpdateSiteMarket(
     id: str,
     data: SiteServiceUpdateSiteMarketBody,
 ) -> UpdateSiteMarketResponse:
+    """
+    Updates configuration of a site market.
+
+    Replaces configuration of a site market with attributes in the request. Returns the updated configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -170,6 +190,11 @@ def UpdateSiteMarket(
 def DeleteSiteMarket(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteSiteMarketResponse:
+    """
+    Delete configuration of a site market.
+
+    Deletes configuration of a site market with specific ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -196,6 +221,11 @@ def DeleteSiteMarket(
 
 
 def ListSites(api_config_override: Optional[APIConfig] = None) -> ListSitesResponse:
+    """
+    List all sites.
+
+    Returns list of configured sites.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -224,6 +254,11 @@ def ListSites(api_config_override: Optional[APIConfig] = None) -> ListSitesRespo
 def CreateSite(
     api_config_override: Optional[APIConfig] = None, *, data: CreateSiteRequest
 ) -> CreateSiteResponse:
+    """
+    Configure a new site.
+
+    Create configuration for a new site. Returns the newly created configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -253,6 +288,11 @@ def CreateSite(
 def GetSite(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> GetSiteResponse:
+    """
+    Retrieve configuration of a site.
+
+    Returns configuration of a site specified by ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -284,6 +324,11 @@ def UpdateSite(
     id: str,
     data: SiteServiceUpdateSiteBody,
 ) -> UpdateSiteResponse:
+    """
+    Updates configuration of a site.
+
+    Replaces configuration of a site with attributes in the request. Returns the updated configuration.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -313,6 +358,11 @@ def UpdateSite(
 def DeleteSite(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteSiteResponse:
+    """
+    Delete configuration of a site.
+
+    Deletes configuration of a site with specific ID.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

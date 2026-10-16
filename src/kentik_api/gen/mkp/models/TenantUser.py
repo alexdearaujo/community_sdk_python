@@ -8,15 +8,26 @@ from pydantic import BaseModel, Field
 
 class TenantUser(BaseModel):
     """
-    TenantUser model
+    TenantUser
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id",
+        default=None,
+        description="Unique system assigned identifier of the user",
+    )
 
-    tenantId: str = Field(validation_alias="tenantId")
+    tenantId: str = Field(
+        validation_alias="tenantId",
+        description="Unique identifier of the tenant the user belongs to",
+    )
 
-    userFullName: str = Field(validation_alias="userFullName")
+    userFullName: str = Field(
+        validation_alias="userFullName", description="Full name of the user"
+    )
 
-    userEmail: str = Field(validation_alias="userEmail")
+    userEmail: str = Field(
+        validation_alias="userEmail", description="Email address of the user"
+    )

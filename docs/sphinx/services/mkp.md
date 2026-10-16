@@ -46,8 +46,8 @@ sequenceDiagram
     C->>W: package_list()
     W->>API: GET /mkp/v202407/packages
     alt success
-        API-->>W: v202407ListPackageResponse (JSON)
-        W-->>C: v202407ListPackageResponse
+        API-->>W: ListPackageResponse (JSON)
+        W-->>C: ListPackageResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -71,7 +71,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407ListPackageResponse
+        W-->>C: ListPackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -82,7 +82,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407ListPackageResponse` |
+| 200 | A successful response. | `ListPackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -114,8 +114,8 @@ sequenceDiagram
     C->>W: package_create(data=CreatePackageRequest(...))
     W->>API: POST /mkp/v202407/packages
     alt success
-        API-->>W: v202407CreatePackageResponse (JSON)
-        W-->>C: v202407CreatePackageResponse
+        API-->>W: CreatePackageResponse (JSON)
+        W-->>C: CreatePackageResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -139,7 +139,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407CreatePackageResponse
+        W-->>C: CreatePackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -150,19 +150,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202407CreatePackageRequest` | Yes |
+| `data` | body | `CreatePackageRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407CreatePackageResponse` |
+| 200 | A successful response. | `CreatePackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import CreatePackageRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -190,8 +191,8 @@ sequenceDiagram
     C->>W: package_get(id="id-example")
     W->>API: GET /mkp/v202407/packages/{id}
     alt success
-        API-->>W: v202407GetPackageResponse (JSON)
-        W-->>C: v202407GetPackageResponse
+        API-->>W: GetPackageResponse (JSON)
+        W-->>C: GetPackageResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -215,7 +216,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407GetPackageResponse
+        W-->>C: GetPackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -232,7 +233,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407GetPackageResponse` |
+| 200 | A successful response. | `GetPackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -266,8 +267,8 @@ sequenceDiagram
     C->>W: package_update(id="id-example", data=PackageServiceUpdatePackageBody(...))
     W->>API: PUT /mkp/v202407/packages/{id}
     alt success
-        API-->>W: v202407UpdatePackageResponse (JSON)
-        W-->>C: v202407UpdatePackageResponse
+        API-->>W: UpdatePackageResponse (JSON)
+        W-->>C: UpdatePackageResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -291,7 +292,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407UpdatePackageResponse
+        W-->>C: UpdatePackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -309,13 +310,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407UpdatePackageResponse` |
+| 200 | A successful response. | `UpdatePackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import PackageServiceUpdatePackageBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -344,8 +346,8 @@ sequenceDiagram
     C->>W: package_delete(id="id-example")
     W->>API: DELETE /mkp/v202407/packages/{id}
     alt success
-        API-->>W: v202407DeletePackageResponse (JSON)
-        W-->>C: v202407DeletePackageResponse
+        API-->>W: DeletePackageResponse (JSON)
+        W-->>C: DeletePackageResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -369,7 +371,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407DeletePackageResponse
+        W-->>C: DeletePackageResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -386,7 +388,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407DeletePackageResponse` |
+| 200 | A successful response. | `DeletePackageResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -420,8 +422,8 @@ sequenceDiagram
     C->>W: tenant_list()
     W->>API: GET /mkp/v202407/tenants
     alt success
-        API-->>W: v202407ListTenantResponse (JSON)
-        W-->>C: v202407ListTenantResponse
+        API-->>W: ListTenantResponse (JSON)
+        W-->>C: ListTenantResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -445,7 +447,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407ListTenantResponse
+        W-->>C: ListTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -456,7 +458,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407ListTenantResponse` |
+| 200 | A successful response. | `ListTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -488,8 +490,8 @@ sequenceDiagram
     C->>W: tenant_create(data=CreateTenantRequest(...))
     W->>API: POST /mkp/v202407/tenants
     alt success
-        API-->>W: v202407CreateTenantResponse (JSON)
-        W-->>C: v202407CreateTenantResponse
+        API-->>W: CreateTenantResponse (JSON)
+        W-->>C: CreateTenantResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -513,7 +515,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407CreateTenantResponse
+        W-->>C: CreateTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -524,19 +526,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202407CreateTenantRequest` | Yes |
+| `data` | body | `CreateTenantRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407CreateTenantResponse` |
+| 200 | A successful response. | `CreateTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import CreateTenantRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -564,8 +567,8 @@ sequenceDiagram
     C->>W: tenant_get(id="id-example")
     W->>API: GET /mkp/v202407/tenants/{id}
     alt success
-        API-->>W: v202407GetTenantResponse (JSON)
-        W-->>C: v202407GetTenantResponse
+        API-->>W: GetTenantResponse (JSON)
+        W-->>C: GetTenantResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -589,7 +592,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407GetTenantResponse
+        W-->>C: GetTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -606,7 +609,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407GetTenantResponse` |
+| 200 | A successful response. | `GetTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -640,8 +643,8 @@ sequenceDiagram
     C->>W: tenant_update(id="id-example", data=TenantServiceUpdateTenantBody(...))
     W->>API: PUT /mkp/v202407/tenants/{id}
     alt success
-        API-->>W: v202407UpdateTenantResponse (JSON)
-        W-->>C: v202407UpdateTenantResponse
+        API-->>W: UpdateTenantResponse (JSON)
+        W-->>C: UpdateTenantResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -665,7 +668,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407UpdateTenantResponse
+        W-->>C: UpdateTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -683,13 +686,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407UpdateTenantResponse` |
+| 200 | A successful response. | `UpdateTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import TenantServiceUpdateTenantBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -718,8 +722,8 @@ sequenceDiagram
     C->>W: tenant_delete(id="id-example")
     W->>API: DELETE /mkp/v202407/tenants/{id}
     alt success
-        API-->>W: v202407DeleteTenantResponse (JSON)
-        W-->>C: v202407DeleteTenantResponse
+        API-->>W: DeleteTenantResponse (JSON)
+        W-->>C: DeleteTenantResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -743,7 +747,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407DeleteTenantResponse
+        W-->>C: DeleteTenantResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -760,7 +764,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407DeleteTenantResponse` |
+| 200 | A successful response. | `DeleteTenantResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -794,8 +798,8 @@ sequenceDiagram
     C->>W: tenant_user_list(tenantId="tenantId-example")
     W->>API: GET /mkp/v202407/tenants/{tenantId}/users
     alt success
-        API-->>W: v202407ListTenantUserResponse (JSON)
-        W-->>C: v202407ListTenantUserResponse
+        API-->>W: ListTenantUserResponse (JSON)
+        W-->>C: ListTenantUserResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -819,7 +823,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407ListTenantUserResponse
+        W-->>C: ListTenantUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -836,7 +840,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407ListTenantUserResponse` |
+| 200 | A successful response. | `ListTenantUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -870,8 +874,8 @@ sequenceDiagram
     C->>W: tenant_user_create(tenantId="tenantId-example", data=TenantUserServiceCreateTenantUserBody(...))
     W->>API: POST /mkp/v202407/tenants/{tenantId}/users
     alt success
-        API-->>W: v202407CreateTenantUserResponse (JSON)
-        W-->>C: v202407CreateTenantUserResponse
+        API-->>W: CreateTenantUserResponse (JSON)
+        W-->>C: CreateTenantUserResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -895,7 +899,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407CreateTenantUserResponse
+        W-->>C: CreateTenantUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -913,13 +917,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407CreateTenantUserResponse` |
+| 200 | A successful response. | `CreateTenantUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import TenantUserServiceCreateTenantUserBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -948,8 +953,8 @@ sequenceDiagram
     C->>W: tenant_user_update(tenantId="tenantId-example", id="id-example", data=TenantUserServiceUpdateTenantUserBody(...))
     W->>API: PUT /mkp/v202407/tenants/{tenantId}/users/{id}
     alt success
-        API-->>W: v202407UpdateTenantUserResponse (JSON)
-        W-->>C: v202407UpdateTenantUserResponse
+        API-->>W: UpdateTenantUserResponse (JSON)
+        W-->>C: UpdateTenantUserResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -973,7 +978,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407UpdateTenantUserResponse
+        W-->>C: UpdateTenantUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -992,13 +997,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407UpdateTenantUserResponse` |
+| 200 | A successful response. | `UpdateTenantUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.mkp.models import TenantUserServiceUpdateTenantUserBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1028,8 +1034,8 @@ sequenceDiagram
     C->>W: tenant_user_delete(tenantId="tenantId-example", id="id-example")
     W->>API: DELETE /mkp/v202407/tenants/{tenantId}/users/{id}
     alt success
-        API-->>W: v202407DeleteTenantUserResponse (JSON)
-        W-->>C: v202407DeleteTenantUserResponse
+        API-->>W: DeleteTenantUserResponse (JSON)
+        W-->>C: DeleteTenantUserResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1053,7 +1059,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202407DeleteTenantUserResponse
+        W-->>C: DeleteTenantUserResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1071,7 +1077,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202407DeleteTenantUserResponse` |
+| 200 | A successful response. | `DeleteTenantUserResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1090,16 +1096,49 @@ response = client.mkp.tenant_user_delete(
 ## Data Models
 
 <details>
-<summary>Model relationships (6 of 42 models)</summary>
+<summary>Model relationships (25 of 42 models)</summary>
 
 ```mermaid
 classDiagram
+    class CreatePackageRequest
+    class CreatePackageResponse
+    class CreateTenantRequest
+    class CreateTenantResponse
+    class CreateTenantUserResponse
+    class DeletePackageResponse
+    class DeleteTenantResponse
+    class DeleteTenantUserResponse
+    class GetPackageResponse
+    class GetTenantResponse
+    class ListPackageResponse
+    class ListTenantResponse
+    class ListTenantUserResponse
+    class Package
     class PackageServiceUpdatePackageBody
+    class Tenant
     class TenantServiceUpdateTenantBody
+    class TenantUser
     class TenantUserServiceCreateTenantUserBody
     class TenantUserServiceUpdateTenantUserBody
+    class UpdatePackageResponse
+    class UpdateTenantResponse
+    class UpdateTenantUserResponse
     class protobufAny
     class rpcStatus
+    CreatePackageRequest --> Package
+    CreatePackageResponse --> Package
+    CreateTenantRequest --> Tenant
+    CreateTenantResponse --> Tenant
+    CreateTenantUserResponse --> TenantUser
+    GetPackageResponse --> Package
+    GetTenantResponse --> Tenant
+    ListPackageResponse --> Package
+    ListTenantResponse --> Tenant
+    ListTenantUserResponse --> TenantUser
+    Tenant --> Package
+    UpdatePackageResponse --> Package
+    UpdateTenantResponse --> Tenant
+    UpdateTenantUserResponse --> TenantUser
     rpcStatus --> protobufAny
 ```
 

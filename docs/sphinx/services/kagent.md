@@ -46,8 +46,8 @@ sequenceDiagram
     C->>W: list_agents()
     W->>API: GET /kagent/v202401/agents
     alt success
-        API-->>W: v202401ListAgentsResponse (JSON)
-        W-->>C: v202401ListAgentsResponse
+        API-->>W: ListAgentsResponse (JSON)
+        W-->>C: ListAgentsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -71,7 +71,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401ListAgentsResponse
+        W-->>C: ListAgentsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -91,7 +91,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401ListAgentsResponse` |
+| 200 | A successful response. | `ListAgentsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -123,8 +123,8 @@ sequenceDiagram
     C->>W: create_agent(data=CreateAgentRequest(...))
     W->>API: POST /kagent/v202401/agents
     alt success
-        API-->>W: v202401CreateAgentResponse (JSON)
-        W-->>C: v202401CreateAgentResponse
+        API-->>W: CreateAgentResponse (JSON)
+        W-->>C: CreateAgentResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -148,7 +148,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401CreateAgentResponse
+        W-->>C: CreateAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -159,19 +159,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202401CreateAgentRequest` | Yes |
+| `data` | body | `CreateAgentRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401CreateAgentResponse` |
+| 200 | A successful response. | `CreateAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import CreateAgentRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -199,8 +200,8 @@ sequenceDiagram
     C->>W: authorize(installId="installId-example")
     W->>API: PUT /kagent/v202401/agents/authorize/{installId}
     alt success
-        API-->>W: v202401AuthorizeResponse (JSON)
-        W-->>C: v202401AuthorizeResponse
+        API-->>W: AuthorizeResponse (JSON)
+        W-->>C: AuthorizeResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -224,7 +225,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401AuthorizeResponse
+        W-->>C: AuthorizeResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -241,7 +242,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401AuthorizeResponse` |
+| 200 | A successful response. | `AuthorizeResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -275,8 +276,8 @@ sequenceDiagram
     C->>W: generate_install_commands(data=GenerateInstallCommandsRequest(...))
     W->>API: POST /kagent/v202401/agents/install-commands
     alt success
-        API-->>W: v202401GenerateInstallCommandsResponse (JSON)
-        W-->>C: v202401GenerateInstallCommandsResponse
+        API-->>W: GenerateInstallCommandsResponse (JSON)
+        W-->>C: GenerateInstallCommandsResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -300,7 +301,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GenerateInstallCommandsResponse
+        W-->>C: GenerateInstallCommandsResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -311,19 +312,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202401GenerateInstallCommandsRequest` | Yes |
+| `data` | body | `GenerateInstallCommandsRequest` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GenerateInstallCommandsResponse` |
+| 200 | A successful response. | `GenerateInstallCommandsResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import GenerateInstallCommandsRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -351,8 +353,8 @@ sequenceDiagram
     C->>W: get_agent(agentid="agentid-example")
     W->>API: GET /kagent/v202401/agents/{agent.id}
     alt success
-        API-->>W: v202401GetAgentResponse (JSON)
-        W-->>C: v202401GetAgentResponse
+        API-->>W: GetAgentResponse (JSON)
+        W-->>C: GetAgentResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -376,7 +378,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GetAgentResponse
+        W-->>C: GetAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -394,7 +396,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GetAgentResponse` |
+| 200 | A successful response. | `GetAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -428,8 +430,8 @@ sequenceDiagram
     C->>W: update_agent(agentid="agentid-example", data=AgentServiceUpdateAgentBody(...))
     W->>API: PATCH /kagent/v202401/agents/{agent.id}
     alt success
-        API-->>W: v202401UpdateAgentResponse (JSON)
-        W-->>C: v202401UpdateAgentResponse
+        API-->>W: UpdateAgentResponse (JSON)
+        W-->>C: UpdateAgentResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -453,7 +455,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401UpdateAgentResponse
+        W-->>C: UpdateAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -466,19 +468,20 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | `agentid` | path | `string` | Yes |
 | `mask` | query | `string` | No |
-| `data` | body | `object` | Yes |
+| `data` | body | `AgentServiceUpdateAgentBody` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401UpdateAgentResponse` |
+| 200 | A successful response. | `UpdateAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import AgentServiceUpdateAgentBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -507,8 +510,8 @@ sequenceDiagram
     C->>W: delete_agent(agentid="agentid-example")
     W->>API: DELETE /kagent/v202401/agents/{agent.id}
     alt success
-        API-->>W: v202401DeleteAgentResponse (JSON)
-        W-->>C: v202401DeleteAgentResponse
+        API-->>W: DeleteAgentResponse (JSON)
+        W-->>C: DeleteAgentResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -532,7 +535,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401DeleteAgentResponse
+        W-->>C: DeleteAgentResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -550,7 +553,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401DeleteAgentResponse` |
+| 200 | A successful response. | `DeleteAgentResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -584,8 +587,8 @@ sequenceDiagram
     C->>W: list_agent_capabilities(agentId="agentId-example")
     W->>API: GET /kagent/v202401/agents/{agentId}/capabilities
     alt success
-        API-->>W: v202401ListAgentCapabilitiesResponse (JSON)
-        W-->>C: v202401ListAgentCapabilitiesResponse
+        API-->>W: ListAgentCapabilitiesResponse (JSON)
+        W-->>C: ListAgentCapabilitiesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -609,7 +612,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401ListAgentCapabilitiesResponse
+        W-->>C: ListAgentCapabilitiesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -626,7 +629,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401ListAgentCapabilitiesResponse` |
+| 200 | A successful response. | `ListAgentCapabilitiesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -660,8 +663,8 @@ sequenceDiagram
     C->>W: get_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example")
     W->>API: GET /kagent/v202401/agents/{agentId}/capabilities/{capability.name}
     alt success
-        API-->>W: v202401GetAgentCapabilityResponse (JSON)
-        W-->>C: v202401GetAgentCapabilityResponse
+        API-->>W: GetAgentCapabilityResponse (JSON)
+        W-->>C: GetAgentCapabilityResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -685,7 +688,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GetAgentCapabilityResponse
+        W-->>C: GetAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -703,7 +706,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GetAgentCapabilityResponse` |
+| 200 | A successful response. | `GetAgentCapabilityResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -738,8 +741,8 @@ sequenceDiagram
     C->>W: upsert_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example", data=AgentCapabilityServiceUpsertAgentCapabilityBody(...))
     W->>API: PATCH /kagent/v202401/agents/{agentId}/capabilities/{capability.name}
     alt success
-        API-->>W: v202401UpsertAgentCapabilityResponse (JSON)
-        W-->>C: v202401UpsertAgentCapabilityResponse
+        API-->>W: UpsertAgentCapabilityResponse (JSON)
+        W-->>C: UpsertAgentCapabilityResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -763,7 +766,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401UpsertAgentCapabilityResponse
+        W-->>C: UpsertAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -777,19 +780,20 @@ sequenceDiagram
 | `agentId` | path | `string` | Yes |
 | `capabilityname` | path | `string` | Yes |
 | `mask` | query | `string` | No |
-| `data` | body | `object` | Yes |
+| `data` | body | `AgentCapabilityServiceUpsertAgentCapabilityBody` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401UpsertAgentCapabilityResponse` |
+| 200 | A successful response. | `UpsertAgentCapabilityResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import AgentCapabilityServiceUpsertAgentCapabilityBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -819,8 +823,8 @@ sequenceDiagram
     C->>W: delete_agent_capability(agentId="agentId-example", capabilityname="capabilityname-example")
     W->>API: DELETE /kagent/v202401/agents/{agentId}/capabilities/{capability.name}
     alt success
-        API-->>W: v202401DeleteAgentCapabilityResponse (JSON)
-        W-->>C: v202401DeleteAgentCapabilityResponse
+        API-->>W: DeleteAgentCapabilityResponse (JSON)
+        W-->>C: DeleteAgentCapabilityResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -844,7 +848,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401DeleteAgentCapabilityResponse
+        W-->>C: DeleteAgentCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -862,7 +866,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401DeleteAgentCapabilityResponse` |
+| 200 | A successful response. | `DeleteAgentCapabilityResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -895,8 +899,8 @@ sequenceDiagram
     C->>W: capability_admin_service__list_capabilities()
     W->>API: GET /kagent/v202401/capabilities
     alt success
-        API-->>W: v202401ListCapabilitiesResponse (JSON)
-        W-->>C: v202401ListCapabilitiesResponse
+        API-->>W: ListCapabilitiesResponse (JSON)
+        W-->>C: ListCapabilitiesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -920,7 +924,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401ListCapabilitiesResponse
+        W-->>C: ListCapabilitiesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -931,7 +935,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401ListCapabilitiesResponse` |
+| 200 | A successful response. | `ListCapabilitiesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -961,8 +965,8 @@ sequenceDiagram
     C->>W: capability_admin_service__create_capability(data=Capability(...))
     W->>API: POST /kagent/v202401/capabilities
     alt success
-        API-->>W: v202401CreateCapabilityResponse (JSON)
-        W-->>C: v202401CreateCapabilityResponse
+        API-->>W: CreateCapabilityResponse (JSON)
+        W-->>C: CreateCapabilityResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -986,7 +990,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401CreateCapabilityResponse
+        W-->>C: CreateCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -997,19 +1001,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202401Capability` | Yes |
+| `data` | body | `Capability` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401CreateCapabilityResponse` |
+| 200 | A successful response. | `CreateCapabilityResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import Capability
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1035,8 +1040,8 @@ sequenceDiagram
     C->>W: capability_admin_service__get_capability(capabilityname="capabilityname-example")
     W->>API: GET /kagent/v202401/capabilities/{capability.name}
     alt success
-        API-->>W: v202401GetCapabilityResponse (JSON)
-        W-->>C: v202401GetCapabilityResponse
+        API-->>W: GetCapabilityResponse (JSON)
+        W-->>C: GetCapabilityResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1060,7 +1065,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GetCapabilityResponse
+        W-->>C: GetCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1077,7 +1082,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GetCapabilityResponse` |
+| 200 | A successful response. | `GetCapabilityResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1109,8 +1114,8 @@ sequenceDiagram
     C->>W: capability_admin_service__update_capability(capabilityname="capabilityname-example", data=CapabilityAdminServiceUpdateCapabilityBody(...))
     W->>API: PATCH /kagent/v202401/capabilities/{capability.name}
     alt success
-        API-->>W: v202401UpdateCapabilityResponse (JSON)
-        W-->>C: v202401UpdateCapabilityResponse
+        API-->>W: UpdateCapabilityResponse (JSON)
+        W-->>C: UpdateCapabilityResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1134,7 +1139,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401UpdateCapabilityResponse
+        W-->>C: UpdateCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1146,19 +1151,20 @@ sequenceDiagram
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
 | `capabilityname` | path | `string` | Yes |
-| `data` | body | `object` | Yes |
+| `data` | body | `CapabilityAdminServiceUpdateCapabilityBody` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401UpdateCapabilityResponse` |
+| 200 | A successful response. | `UpdateCapabilityResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import CapabilityAdminServiceUpdateCapabilityBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1185,8 +1191,8 @@ sequenceDiagram
     C->>W: capability_admin_service__delete_capability(capabilityname="capabilityname-example")
     W->>API: DELETE /kagent/v202401/capabilities/{capability.name}
     alt success
-        API-->>W: v202401DeleteCapabilityResponse (JSON)
-        W-->>C: v202401DeleteCapabilityResponse
+        API-->>W: DeleteCapabilityResponse (JSON)
+        W-->>C: DeleteCapabilityResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1210,7 +1216,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401DeleteCapabilityResponse
+        W-->>C: DeleteCapabilityResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1227,7 +1233,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401DeleteCapabilityResponse` |
+| 200 | A successful response. | `DeleteCapabilityResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1259,8 +1265,8 @@ sequenceDiagram
     C->>W: capability_release_service__get_capability_release()
     W->>API: GET /kagent/v202401/releases
     alt success
-        API-->>W: v202401GetCapabilityReleaseResponse (JSON)
-        W-->>C: v202401GetCapabilityReleaseResponse
+        API-->>W: GetCapabilityReleaseResponse (JSON)
+        W-->>C: GetCapabilityReleaseResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1284,7 +1290,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GetCapabilityReleaseResponse
+        W-->>C: GetCapabilityReleaseResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1306,7 +1312,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GetCapabilityReleaseResponse` |
+| 200 | A successful response. | `GetCapabilityReleaseResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1336,8 +1342,8 @@ sequenceDiagram
     C->>W: capability_release_service__get_capability_latest_releases()
     W->>API: GET /kagent/v202401/releases/latest
     alt success
-        API-->>W: v202401GetCapabilityLatestReleasesResponse (JSON)
-        W-->>C: v202401GetCapabilityLatestReleasesResponse
+        API-->>W: GetCapabilityLatestReleasesResponse (JSON)
+        W-->>C: GetCapabilityLatestReleasesResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1361,7 +1367,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GetCapabilityLatestReleasesResponse
+        W-->>C: GetCapabilityLatestReleasesResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1383,7 +1389,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GetCapabilityLatestReleasesResponse` |
+| 200 | A successful response. | `GetCapabilityLatestReleasesResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1411,8 +1417,8 @@ sequenceDiagram
     C->>W: capability_release_service__get_capability_supported_distros()
     W->>API: GET /kagent/v202401/releases/supported_distros
     alt success
-        API-->>W: v202401GetCapabilitySupportedDistrosResponse (JSON)
-        W-->>C: v202401GetCapabilitySupportedDistrosResponse
+        API-->>W: GetCapabilitySupportedDistrosResponse (JSON)
+        W-->>C: GetCapabilitySupportedDistrosResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1436,7 +1442,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GetCapabilitySupportedDistrosResponse
+        W-->>C: GetCapabilitySupportedDistrosResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1453,7 +1459,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GetCapabilitySupportedDistrosResponse` |
+| 200 | A successful response. | `GetCapabilitySupportedDistrosResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1485,8 +1491,8 @@ sequenceDiagram
     C->>W: create_config(data=Config(...))
     W->>API: POST /kagent/v202401/config
     alt success
-        API-->>W: v202401CreateConfigResponse (JSON)
-        W-->>C: v202401CreateConfigResponse
+        API-->>W: CreateConfigResponse (JSON)
+        W-->>C: CreateConfigResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1510,7 +1516,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401CreateConfigResponse
+        W-->>C: CreateConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1521,19 +1527,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202401Config` | Yes |
+| `data` | body | `Config` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401CreateConfigResponse` |
+| 200 | A successful response. | `CreateConfigResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import Config
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1561,8 +1568,8 @@ sequenceDiagram
     C->>W: get_config(configname="configname-example")
     W->>API: GET /kagent/v202401/config/{config.name}
     alt success
-        API-->>W: v202401GetConfigResponse (JSON)
-        W-->>C: v202401GetConfigResponse
+        API-->>W: GetConfigResponse (JSON)
+        W-->>C: GetConfigResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1586,7 +1593,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GetConfigResponse
+        W-->>C: GetConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1603,7 +1610,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GetConfigResponse` |
+| 200 | A successful response. | `GetConfigResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1637,8 +1644,8 @@ sequenceDiagram
     C->>W: update_config(configname="configname-example", data=ConfigServiceUpdateConfigBody(...))
     W->>API: PATCH /kagent/v202401/config/{config.name}
     alt success
-        API-->>W: v202401UpdateConfigResponse (JSON)
-        W-->>C: v202401UpdateConfigResponse
+        API-->>W: UpdateConfigResponse (JSON)
+        W-->>C: UpdateConfigResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1662,7 +1669,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401UpdateConfigResponse
+        W-->>C: UpdateConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1680,13 +1687,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401UpdateConfigResponse` |
+| 200 | A successful response. | `UpdateConfigResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import ConfigServiceUpdateConfigBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1715,8 +1723,8 @@ sequenceDiagram
     C->>W: delete_config(configname="configname-example")
     W->>API: DELETE /kagent/v202401/config/{config.name}
     alt success
-        API-->>W: v202401DeleteConfigResponse (JSON)
-        W-->>C: v202401DeleteConfigResponse
+        API-->>W: DeleteConfigResponse (JSON)
+        W-->>C: DeleteConfigResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1740,7 +1748,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401DeleteConfigResponse
+        W-->>C: DeleteConfigResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1757,7 +1765,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401DeleteConfigResponse` |
+| 200 | A successful response. | `DeleteConfigResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1791,8 +1799,8 @@ sequenceDiagram
     C->>W: list_provisioning_tokens()
     W->>API: GET /kagent/v202401/provisioning-tokens
     alt success
-        API-->>W: v202401ListProvisioningTokensResponse (JSON)
-        W-->>C: v202401ListProvisioningTokensResponse
+        API-->>W: ListProvisioningTokensResponse (JSON)
+        W-->>C: ListProvisioningTokensResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1816,7 +1824,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401ListProvisioningTokensResponse
+        W-->>C: ListProvisioningTokensResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1827,7 +1835,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401ListProvisioningTokensResponse` |
+| 200 | A successful response. | `ListProvisioningTokensResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -1859,8 +1867,8 @@ sequenceDiagram
     C->>W: create_provisioning_token(data=ProvisioningToken(...))
     W->>API: POST /kagent/v202401/provisioning-tokens
     alt success
-        API-->>W: v202401CreateProvisioningTokenResponse (JSON)
-        W-->>C: v202401CreateProvisioningTokenResponse
+        API-->>W: CreateProvisioningTokenResponse (JSON)
+        W-->>C: CreateProvisioningTokenResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1884,7 +1892,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401CreateProvisioningTokenResponse
+        W-->>C: CreateProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1895,19 +1903,20 @@ sequenceDiagram
 
 | Name | In | Type | Required |
 | --- | --- | --- | --- |
-| `data` | body | `v202401ProvisioningToken` | Yes |
+| `data` | body | `ProvisioningToken` | Yes |
 
 ##### Responses
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401CreateProvisioningTokenResponse` |
+| 200 | A successful response. | `CreateProvisioningTokenResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import ProvisioningToken
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -1935,8 +1944,8 @@ sequenceDiagram
     C->>W: get_provisioning_token(token="token-example")
     W->>API: GET /kagent/v202401/provisioning-tokens/{token}
     alt success
-        API-->>W: v202401GetProvisioningTokenResponse (JSON)
-        W-->>C: v202401GetProvisioningTokenResponse
+        API-->>W: GetProvisioningTokenResponse (JSON)
+        W-->>C: GetProvisioningTokenResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -1960,7 +1969,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401GetProvisioningTokenResponse
+        W-->>C: GetProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -1977,7 +1986,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401GetProvisioningTokenResponse` |
+| 200 | A successful response. | `GetProvisioningTokenResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2011,8 +2020,8 @@ sequenceDiagram
     C->>W: list_agents_by_provisioning_token(token="token-example")
     W->>API: GET /kagent/v202401/provisioning-tokens/{token}/agents
     alt success
-        API-->>W: v202401ListAgentsByProvisioningTokenResponse (JSON)
-        W-->>C: v202401ListAgentsByProvisioningTokenResponse
+        API-->>W: ListAgentsByProvisioningTokenResponse (JSON)
+        W-->>C: ListAgentsByProvisioningTokenResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2036,7 +2045,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401ListAgentsByProvisioningTokenResponse
+        W-->>C: ListAgentsByProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2053,7 +2062,7 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401ListAgentsByProvisioningTokenResponse` |
+| 200 | A successful response. | `ListAgentsByProvisioningTokenResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
@@ -2087,8 +2096,8 @@ sequenceDiagram
     C->>W: revoke_provisioning_token(token="token-example", data=ProvisioningTokenServiceRevokeProvisioningTokenBody(...))
     W->>API: POST /kagent/v202401/provisioning-tokens/{token}/revoke
     alt success
-        API-->>W: v202401RevokeProvisioningTokenResponse (JSON)
-        W-->>C: v202401RevokeProvisioningTokenResponse
+        API-->>W: RevokeProvisioningTokenResponse (JSON)
+        W-->>C: RevokeProvisioningTokenResponse
     else error status
         API-->>W: error body
         W-->>C: raise AuthenticationError (401) or HTTPException
@@ -2112,7 +2121,7 @@ sequenceDiagram
     alt success
         API-->>R: response message
         R-->>W: MessageToDict(response)
-        W-->>C: v202401RevokeProvisioningTokenResponse
+        W-->>C: RevokeProvisioningTokenResponse
     else gRPC error, deadline, or unreachable
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
@@ -2130,13 +2139,14 @@ sequenceDiagram
 
 | Status | Description | Model |
 | --- | --- | --- |
-| 200 | A successful response. | `v202401RevokeProvisioningTokenResponse` |
+| 200 | A successful response. | `RevokeProvisioningTokenResponse` |
 | default | An unexpected error response. | `rpcStatus` |
 
 ##### Example
 
 ```python
 from kentik_api.client import KentikAPI
+from kentik_api.gen.kagent.models import ProvisioningTokenServiceRevokeProvisioningTokenBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
@@ -2149,15 +2159,52 @@ response = client.kagent.revoke_provisioning_token(
 ## Data Models
 
 <details>
-<summary>Model relationships (4 of 60 models)</summary>
+<summary>Model relationships (30 of 60 models)</summary>
 
 ```mermaid
 classDiagram
+    class Agent
+    class AgentCapability
+    class AgentCapabilityServiceUpsertAgentCapabilityBody
+    class AgentRegistration
+    class AgentServiceUpdateAgentBody
+    class AuthorizeResponse
+    class BootstrapInfo
+    class Capability
+    class CapabilityAdminServiceUpdateCapabilityBody
+    class CapabilityRelease
+    class CapabilitySupportedDistro
+    class Config
+    class ConfigLayer
     class ConfigServiceUpdateConfigBody
-    class ProvisioningTokenServiceRevokeProvisioningTokenBody
-    class protobufAny
-    class rpcStatus
-    rpcStatus --> protobufAny
+    class CreateAgentRequest
+    class CreateAgentResponse
+    class CreateCapabilityResponse
+    class CreateConfigResponse
+    class CreateProvisioningTokenResponse
+    class DeleteAgentCapabilityResponse
+    class DeleteAgentResponse
+    class DeleteCapabilityResponse
+    class DeleteConfigResponse
+    class GenerateInstallCommandsRequest
+    class GenerateInstallCommandsResponse
+    class GetAgentCapabilityResponse
+    class GetAgentResponse
+    class GetCapabilityLatestReleasesResponse
+    class GetCapabilityReleaseResponse
+    class GetCapabilityResponse
+    Config --> ConfigLayer
+    CreateAgentRequest --> AgentRegistration
+    CreateAgentResponse --> Agent
+    CreateAgentResponse --> BootstrapInfo
+    CreateCapabilityResponse --> Capability
+    CreateConfigResponse --> Config
+    GenerateInstallCommandsResponse --> BootstrapInfo
+    GetAgentCapabilityResponse --> AgentCapability
+    GetAgentResponse --> Agent
+    GetCapabilityLatestReleasesResponse --> CapabilityRelease
+    GetCapabilityReleaseResponse --> CapabilityRelease
+    GetCapabilityResponse --> Capability
 ```
 
 </details>

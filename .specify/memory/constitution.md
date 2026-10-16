@@ -1,35 +1,28 @@
 <!--
 Sync Impact Report
-Version change: 1.2.1 → 1.3.0
-Rationale: Principle IV assumed every declared response status would be
-observed through a generated per-operation error class, because that was
-the only dispatch path when the principle was written. Feature 003
-(specs/003-harden-runtime-and-ci/) establishes that some statuses are
-better handled in the shared runtime before per-operation dispatch: a 401
-must raise AuthenticationError on both transports, and routing that in
-`request_json()` keeps all 35 generated error packages byte-identical
-(Principle II). Under the previous wording, a suite updated to assert the
-new runtime behavior could be read as violating Principle IV, and the
-tempting "fix" would be to narrow the suite instead. Principle IV is
-therefore expanded to state that coverage means asserting the SDK's actual
-observable behavior for every declared status, whichever layer produces
-it, and to add an explicit anti-narrowing rule. No principle is removed or
-redefined, so this is MINOR rather than MAJOR.
-Modified principles: IV (materially expanded, not redefined)
+Version change: 1.3.0 → 1.4.0
+Rationale: Principle VI prescribed `load_dotenv`, which writes `.env` into
+os.environ, so every subprocess inherits the secrets. A Spec Kit run that
+followed the principle would bring that leak back. The SDK reads the file
+into a dict with `dotenv_values`, after explicit arguments and environment
+variables. Principle VI now states that order and forbids `load_dotenv`.
+This adds a MUST NOT, so it is MINOR.
+Also in this revision (factual drift fixes, no principle changed): gRPC
+routing matches a REST operation to the RPC with the same HTTP rule, not
+the same name; `make generate` clones the schema and only `make generate
+local` reads the sibling checkout, with no fallback; `make all` runs
+`services tests`, and docs are opt-in; `fixup._fix_path_parameters()` and
+the template sentinel join the guarded coupling; `api_surface` joins the
+phase modules.
+Modified principles: VI
 Added sections: none
 Removed sections: n/a
-Also in this revision: replaced four em dashes with ordinary punctuation, to
-match the repository's writing-style rule. Wording only, no meaning changed;
-folded into this MINOR bump rather than issued as a separate PATCH because
-1.3.0 is not yet committed.
 Deferred TODOs: none
-Prior report (1.2.0 → 1.2.1, retained for history): resolved the "Known
-drift" TODO under "Architecture & Generation Pipeline" by rewriting the
-gRPC bullet with the actual, fully-implemented behavior (two distinct
-NotImplementedError cases, not one), replacing the stale "intentionally a
-stub" claim. CLAUDE.md and src/kentik_api/gen/README.md's generator
-template corrected in lockstep, plus a new
-tests/e2e/test_endpoints_e2e_grpc.py (`make test-e2e-grpc`).
+Prior report (1.2.1 → 1.3.0, retained for history): Principle IV was
+expanded to state that coverage means asserting the SDK's actual
+observable behavior for every declared status, whichever layer produces
+it (a 401 raises AuthenticationError in `request_json()`), with an
+explicit anti-narrowing rule.
 -->
 
 # Kentik Community Python SDK Constitution
@@ -63,7 +56,7 @@ request logic into individual service wrappers. Extend `request_json`,
 
 `scripts/generation/` is split into single-concern phase modules (`parity`,
 `error_package`, `fixup`, `wrapper_generation`, `docs_rendering`,
-`endpoint_docs`), each independently unit-tested under `tests/generator/`.
+`endpoint_docs`, `api_surface`), each independently unit-tested under `tests/generator/`.
 Intra-subpackage imports MUST stay relative (`from ._shared import ...`); MUST
 NOT switch to absolute `scripts.generation.*` imports, since
 `generate_sdk.py`'s own direct-execution import path depends on the relative
@@ -110,9 +103,12 @@ side effect of other work.
 
 ### VI. Credentials Never Enter Code, Logs, or Prompts
 
-Credentials load only from the project-root `.env` (`KENTIK_EMAIL`,
-`KENTIK_API_TOKEN`) via `find_dotenv`/`load_dotenv`, with explicit constructor
-args to `KentikAPI(...)` overriding env values. MUST NOT hardcode credentials
+`KentikAPI` takes each credential from the first source that has it: the
+`email`/`api_token` arguments, then the `KENTIK_EMAIL`/`KENTIK_API_TOKEN`
+environment variables, then the `env_file` (`.env` by default, found with
+`find_dotenv`). The file MUST be read into a dict with `dotenv_values`, and
+MUST NOT be loaded with `load_dotenv`: writing it into `os.environ` leaks the
+secrets into every subprocess. MUST NOT hardcode credentials
 in tests or examples, and MUST NOT read or print `.env` contents in code,
 tests, or agent output.
 
@@ -126,8 +122,9 @@ tracked and reduced over time, not silently ignored.
 ## Architecture & Generation Pipeline
 
 - The SDK is generated end-to-end from Kentik's public OpenAPI v3 schema
-  (`kentik/api-schema-public`), defaulting to the local sibling checkout
-  `../api-schema-public/` and falling back to cloning it when absent.
+  (`kentik/api-schema-public`). `make generate` clones it at HEAD;
+  `make generate local` reads the sibling checkout `../api-schema-public/`
+  and fails if it is absent. Neither falls back to the other.
 - When multiple versioned swagger files exist for the same `(service,
   namespace, filename)` family, the generator MUST use only the newest
   version per family.
@@ -139,8 +136,10 @@ tracked and reduced over time, not silently ignored.
   per-operation, not per-service or all-or-nothing: a wrapper method
   raises `NotImplementedError` for `GrpcTransport` either when that
   service's proto companions failed to import (`gen/pb_companions/`) at
-  wrapper `__init__` time, or when the generator found no gRPC method
-  matching that REST operation's name. Neither case is a bug by itself.
+  wrapper `__init__` time, or when the generator found no RPC that shares
+  that REST operation's HTTP rule (proto service, verb, and path). Matching
+  by RPC name alone is wrong: `alerting` declares `Delete` on several proto
+  services. Neither case is a bug by itself.
   `tests/e2e/test_endpoints_e2e_grpc.py` (`make test-e2e-grpc`) treats
   `NotImplementedError` as an expected, passing outcome for exactly this
   reason. (This bullet previously flagged a drift against CLAUDE.md's
@@ -151,16 +150,18 @@ tracked and reduced over time, not silently ignored.
   `docs/sphinx/sdk_runtime_architecture.md` (plus
   `src/kentik_api/gen/README.md`).
 - `error_package.inject_service_error_handling()` wires each generated
-  service to the shared runtime by string-matching the `from
-  kentik_api.core.rest_runtime import request_json` import line. Renaming or
-  relocating `request_json` requires updating
-  `scripts/generation/error_package.py` in lockstep, or injection fails
-  loudly (`ValueError`) rather than silently skipping.
+  service to its error classes by replacing the
+  `# __ERROR_IMPORTS_PLACEHOLDER__` sentinel that `service.jinja2` emits,
+  falling back to the `from kentik_api.core.rest_runtime import
+  request_json` import line. `fixup._fix_path_parameters()` matches that
+  same import line. Renaming or relocating `request_json` requires updating
+  both in lockstep, or generation fails loudly (`ValueError`) rather than
+  silently skipping.
 
 ## Development Workflow & Quality Gates
 
-- Standard pipeline: `make` / `make all` runs `services docs tests` in
-  sequence.
+- Standard pipeline: `make` / `make all` runs `services tests` in
+  sequence. Docs are opt-in with `make docs`.
 - After any change to generation output: regenerate (`make generate local`),
   run the relevant focused test layer, then run the full `make test` before
   opening a PR.
@@ -200,4 +201,4 @@ and `/speckit-analyze` MUST treat this constitution as authoritative context;
 complexity or deviation from it MUST be justified explicitly in the relevant
 plan, not silently introduced.
 
-**Version**: 1.3.0 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-09-21
+**Version**: 1.4.0 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-13

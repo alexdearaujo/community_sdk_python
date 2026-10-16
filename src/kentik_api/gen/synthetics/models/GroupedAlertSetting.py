@@ -10,19 +10,27 @@ from .SrcGroupBy import SrcGroupBy
 
 class GroupedAlertSetting(BaseModel):
     """
-    GroupedAlertSetting model
+    GroupedAlertSetting
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    metric: Optional[str] = Field(validation_alias="metric", default=None)
+    metric: Optional[str] = Field(
+        validation_alias="metric", default=None, description="Metric"
+    )
 
     srcGroupBy: Optional[SrcGroupBy] = Field(
         validation_alias="srcGroupBy", default=None
     )
 
     percentOfSrcGroup: Optional[int] = Field(
-        validation_alias="percentOfSrcGroup", default=None
+        validation_alias="percentOfSrcGroup",
+        default=None,
+        description="Grouping percentage",
     )
 
-    filterIds: Optional[List[int]] = Field(validation_alias="filterIds", default=None)
+    filterIds: Optional[List[int]] = Field(
+        validation_alias="filterIds",
+        default=None,
+        description="List of IDs to include in the group",
+    )

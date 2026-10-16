@@ -21,5 +21,7 @@ class AlertAutoAckServiceListResponse(BaseModel):
     )
 
     autoAcks: Optional[List[Optional[AlertAutoAck]]] = Field(
-        validation_alias="autoAcks", default=None
+        validation_alias="autoAcks",
+        default=None,
+        description="The auto-ack configurations that were found matching the filters.",
     )

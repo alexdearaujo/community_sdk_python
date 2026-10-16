@@ -22,7 +22,8 @@ class FlowPolicyLevelSettings(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     conditions: List[FlowPolicyLevelSettingsConditions] = Field(
-        validation_alias="conditions"
+        validation_alias="conditions",
+        description="The conditions of the policy level settings.",
     )
 
     activation: Optional[FlowPolicyLevelSettingsActivationSettings] = Field(
@@ -30,5 +31,6 @@ class FlowPolicyLevelSettings(BaseModel):
     )
 
     mitigationAssociations: List[FlowPolicyLevelSettingsMitigationAssociation] = Field(
-        validation_alias="mitigationAssociations"
+        validation_alias="mitigationAssociations",
+        description="in future: dimension filters for sub-policies\n\nThe mitigation associations of the given policy level (when alert is activated with the level severity, these mitigation methods will be applied).",
     )

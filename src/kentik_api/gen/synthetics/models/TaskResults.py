@@ -12,7 +12,7 @@ from .PingResults import PingResults
 
 class TaskResults(BaseModel):
     """
-    TaskResults model
+    TaskResults
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
@@ -23,4 +23,6 @@ class TaskResults(BaseModel):
 
     dns: Optional[DNSResults] = Field(validation_alias="dns", default=None)
 
-    health: Optional[str] = Field(validation_alias="health", default=None)
+    health: Optional[str] = Field(
+        validation_alias="health", default=None, description="Health status of the task"
+    )

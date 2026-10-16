@@ -10,7 +10,7 @@ from .SiteMarket import SiteMarket
 
 class UpdateSiteMarketResponse(BaseModel):
     """
-    UpdateSiteMarketResponse model
+    UpdateSiteMarketResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

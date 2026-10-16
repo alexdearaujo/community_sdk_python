@@ -16,7 +16,11 @@ class MitigationStateEntry(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    timestamp: Optional[str] = Field(validation_alias="timestamp", default=None)
+    timestamp: Optional[str] = Field(
+        validation_alias="timestamp",
+        default=None,
+        description="The timestamp when the state change occurred.",
+    )
 
     state: Optional[MitigationState] = Field(validation_alias="state", default=None)
 

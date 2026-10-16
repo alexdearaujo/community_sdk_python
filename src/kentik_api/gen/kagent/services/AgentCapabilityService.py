@@ -83,6 +83,11 @@ from ..models import (  # noqa: F401
 def ListAgentCapabilities(
     api_config_override: Optional[APIConfig] = None, *, agentId: str
 ) -> ListAgentCapabilitiesResponse:
+    """
+    List agent capabilities.
+
+    Returns a list of all capabilities of the specified agent.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -114,6 +119,11 @@ def GetAgentCapability(
     agentId: str,
     capabilityname: str,
 ) -> GetAgentCapabilityResponse:
+    """
+    Get an agent capability.
+
+    Returns configuration of the named capability of the specified agent.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -145,6 +155,11 @@ def DeleteAgentCapability(
     agentId: str,
     capabilityname: str,
 ) -> DeleteAgentCapabilityResponse:
+    """
+    Delete an agent capability.
+
+    Removes the named capability from the specified agent.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -178,6 +193,11 @@ def UpsertAgentCapability(
     data: AgentCapabilityServiceUpsertAgentCapabilityBody,
     mask: Optional[str] = None,
 ) -> UpsertAgentCapabilityResponse:
+    """
+    Create or update an agent capability.
+
+    Adds the capability to the agent, or updates it if already present.
+    """
     query_params: Dict[str, Any] = {"mask": mask}
 
     header_params: Dict[str, Any] = {}

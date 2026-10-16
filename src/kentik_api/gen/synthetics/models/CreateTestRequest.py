@@ -8,7 +8,7 @@ from .Test import Test
 
 class CreateTestRequest(BaseModel):
     """
-    CreateTestRequest model
+    CreateTestRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

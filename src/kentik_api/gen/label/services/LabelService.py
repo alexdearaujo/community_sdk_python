@@ -30,6 +30,11 @@ from ..models import (  # noqa: F401
 
 
 def ListLabels(api_config_override: Optional[APIConfig] = None) -> ListLabelsResponse:
+    """
+    List all configured labels
+
+    Returns list of all labels configured in the account.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -58,6 +63,11 @@ def ListLabels(api_config_override: Optional[APIConfig] = None) -> ListLabelsRes
 def CreateLabel(
     api_config_override: Optional[APIConfig] = None, *, data: CreateLabelRequest
 ) -> CreateLabelResponse:
+    """
+    Create a new label.
+
+    Creates a new label based on data in the request.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -90,6 +100,11 @@ def UpdateLabel(
     id: str,
     data: LabelServiceUpdateLabelBody,
 ) -> UpdateLabelResponse:
+    """
+    Update an existing label.
+
+    Updates configuration of a label.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -119,6 +134,11 @@ def UpdateLabel(
 def DeleteLabel(
     api_config_override: Optional[APIConfig] = None, *, id: str
 ) -> DeleteLabelResponse:
+    """
+    Delete a label.
+
+    Deletes label with specified with id.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

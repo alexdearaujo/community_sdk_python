@@ -8,7 +8,7 @@ from .Site import Site
 
 class CreateSiteRequest(BaseModel):
     """
-    CreateSiteRequest model
+    CreateSiteRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

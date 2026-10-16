@@ -8,9 +8,13 @@ from pydantic import BaseModel, Field
 
 class NetworkMeshTest(BaseModel):
     """
-    NetworkMeshTest model
+    NetworkMeshTest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    useLocalIp: Optional[bool] = Field(validation_alias="useLocalIp", default=None)
+    useLocalIp: Optional[bool] = Field(
+        validation_alias="useLocalIp",
+        default=None,
+        description="Boolean value indicating whether to use local (private) IP address of the target agents",
+    )

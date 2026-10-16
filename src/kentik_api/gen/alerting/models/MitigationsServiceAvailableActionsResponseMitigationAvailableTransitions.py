@@ -23,5 +23,7 @@ class MitigationsServiceAvailableActionsResponseMitigationAvailableTransitions(
     )
 
     availableActions: Optional[List[Optional[MitigationActionDetail]]] = Field(
-        validation_alias="availableActions", default=None
+        validation_alias="availableActions",
+        default=None,
+        description="The available actions from this state.",
     )

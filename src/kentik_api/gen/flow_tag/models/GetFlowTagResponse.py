@@ -10,7 +10,7 @@ from .FlowTag import FlowTag
 
 class GetFlowTagResponse(BaseModel):
     """
-    GetFlowTagResponse model
+    GetFlowTagResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

@@ -37,6 +37,11 @@ class VaultServiceWrapper:
     def list_secret(
         self, *, api_config_override: Optional[APIConfig] = None, names: List[str]
     ) -> rest_models.ListSecretResponse:
+        """
+        List secrets.
+
+        Returns list of secret values stored in Kentik vault.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -71,6 +76,11 @@ class VaultServiceWrapper:
     def get_secret(
         self, *, api_config_override: Optional[APIConfig] = None, name: str
     ) -> rest_models.GetSecretResponse:
+        """
+        Get a secret by name.
+
+        Returns a secret value stored in Kentik vault.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

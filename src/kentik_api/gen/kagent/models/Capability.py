@@ -13,12 +13,30 @@ class Capability(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name",
+        default=None,
+        description="The capability name: one of kagent, kproxy, ranger and so on.",
+    )
 
-    displayName: Optional[str] = Field(validation_alias="displayName", default=None)
+    displayName: Optional[str] = Field(
+        validation_alias="displayName",
+        default=None,
+        description="The capability display name",
+    )
 
-    description: Optional[str] = Field(validation_alias="description", default=None)
+    description: Optional[str] = Field(
+        validation_alias="description",
+        default=None,
+        description="The capability description",
+    )
 
-    seedBundleId: Optional[str] = Field(validation_alias="seedBundleId", default=None)
+    seedBundleId: Optional[str] = Field(
+        validation_alias="seedBundleId", default=None, description="The seed bundle ID"
+    )
 
-    seedConfig: Optional[str] = Field(validation_alias="seedConfig", default=None)
+    seedConfig: Optional[str] = Field(
+        validation_alias="seedConfig",
+        default=None,
+        description="The seed config for the capability",
+    )

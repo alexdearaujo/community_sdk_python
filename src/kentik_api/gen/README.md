@@ -43,10 +43,11 @@ one shared function: `request_json()` in
 implements its own HTTP, auth, or retry logic. The gRPC transport is
 fully implemented too: a wrapper method routes through `call_grpc()`
 in [`kentik_api.core`](../core/README.md) whenever the generator
-found a gRPC method matching that REST operation's name. A wrapper
-method raises `NotImplementedError` for `GrpcTransport` only when
-that service's proto companions failed to import, or when no
-matching gRPC method name was found for that operation.
+found an RPC that shares that REST operation's HTTP rule (proto
+service, verb, and path). A wrapper method raises
+`NotImplementedError` for `GrpcTransport` only when that service's
+proto companions failed to import, or when no RPC shares that
+operation's HTTP rule.
 
 ## Full reference
 

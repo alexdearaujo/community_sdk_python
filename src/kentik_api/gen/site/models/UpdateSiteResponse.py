@@ -10,7 +10,7 @@ from .Site import Site
 
 class UpdateSiteResponse(BaseModel):
     """
-    UpdateSiteResponse model
+    UpdateSiteResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

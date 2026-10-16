@@ -30,6 +30,11 @@ from ..models import (  # noqa: F401
 def ListCostProviders(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListCostProvidersResponse:
+    """
+    List all cost providers.
+
+    Returns list of configured cost providers.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -58,6 +63,11 @@ def ListCostProviders(
 def ListCostProviderSummaries(
     api_config_override: Optional[APIConfig] = None, *, date: Optional[str] = None
 ) -> ListCostProviderSummariesResponse:
+    """
+    List all cost provider summaries.
+
+    Returns list of summaries of configured cost providers.
+    """
     query_params: Dict[str, Any] = {"date": date}
 
     header_params: Dict[str, Any] = {}
@@ -89,6 +99,11 @@ def GetCostProviderSummary(
     id: str,
     date: Optional[str] = None,
 ) -> GetCostProviderSummaryResponse:
+    """
+    Get cost provider summary.
+
+    Returns summary of configured cost provider.
+    """
     query_params: Dict[str, Any] = {"date": date}
 
     header_params: Dict[str, Any] = {}

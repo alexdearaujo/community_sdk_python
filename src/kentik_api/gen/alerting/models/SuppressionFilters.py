@@ -17,14 +17,22 @@ class SuppressionFilters(BaseModel):
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     suppressionIds: Optional[List[str]] = Field(
-        validation_alias="suppressionIds", default=None
+        validation_alias="suppressionIds",
+        default=None,
+        description="The IDs of the suppression configurations to list.",
     )
 
     sources: Optional[List[Optional[Source]]] = Field(
-        validation_alias="sources", default=None
+        validation_alias="sources",
+        default=None,
+        description="The source policies the suppression configurations are applied to.",
     )
 
-    userIds: Optional[List[str]] = Field(validation_alias="userIds", default=None)
+    userIds: Optional[List[str]] = Field(
+        validation_alias="userIds",
+        default=None,
+        description="The IDs of the users who created the suppression configurations.",
+    )
 
     createdAt: Optional[v202303TimeRange] = Field(
         validation_alias="createdAt", default=None

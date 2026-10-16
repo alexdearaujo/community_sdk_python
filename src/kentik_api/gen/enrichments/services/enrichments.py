@@ -40,6 +40,11 @@ class EnrichmentsServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.FetchValuesByIdsRequest,
     ) -> rest_models.FetchValuesByIdsResponse:
+        """
+        Resolve enumeration IDs to values.
+
+        Return the string values for the supplied enumeration lookup IDs within the authenticated company. Unknown IDs are omitted from the response.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

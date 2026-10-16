@@ -11,14 +11,22 @@ from .DeviceNmsStConfig import DeviceNmsStConfig
 
 class DeviceNmsConfig(BaseModel):
     """
-    DeviceNmsConfig model
+    DeviceNmsConfig
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    agentId: Optional[str] = Field(validation_alias="agentId", default=None)
+    agentId: Optional[str] = Field(
+        validation_alias="agentId",
+        default=None,
+        description="ID of the agent that is monitoring this device.",
+    )
 
-    ipAddress: Optional[str] = Field(validation_alias="ipAddress", default=None)
+    ipAddress: Optional[str] = Field(
+        validation_alias="ipAddress",
+        default=None,
+        description="Local IP address of this device.",
+    )
 
     snmp: Optional[DeviceNmsSnmpConfig] = Field(validation_alias="snmp", default=None)
 

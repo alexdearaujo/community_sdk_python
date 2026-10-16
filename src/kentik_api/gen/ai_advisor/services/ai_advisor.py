@@ -40,6 +40,11 @@ class AiAdvisorServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CreateChatSessionRequest,
     ) -> rest_models.CreateChatSessionResponse:
+        """
+        Create AI Advisor Chat Session
+
+        Create a new AI Advisor Chat session with a prompt
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -79,6 +84,11 @@ class AiAdvisorServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.UpdateChatSessionRequest,
     ) -> rest_models.UpdateChatSessionResponse:
+        """
+        Update AI Advisor Chat Session
+
+        Update AI Advisor Chat session with a prompt
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -115,6 +125,11 @@ class AiAdvisorServiceWrapper:
     def get_chat_session(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetChatSessionResponse:
+        """
+        Get AI Advisor Chat Session
+
+        Retrieve the status and results of an AI Advisor chat session
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

@@ -10,13 +10,19 @@ from .DeviceDetailed import DeviceDetailed
 
 class ListDevicesResponse(BaseModel):
     """
-    ListDevicesResponse model
+    ListDevicesResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     devices: Optional[List[Optional[DeviceDetailed]]] = Field(
-        validation_alias="devices", default=None
+        validation_alias="devices",
+        default=None,
+        description="List of configurations of devices",
     )
 
-    invalidCount: Optional[int] = Field(validation_alias="invalidCount", default=None)
+    invalidCount: Optional[int] = Field(
+        validation_alias="invalidCount",
+        default=None,
+        description="Number of invalid entries encountered while collecting data",
+    )

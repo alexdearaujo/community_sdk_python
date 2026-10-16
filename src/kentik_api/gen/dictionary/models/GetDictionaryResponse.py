@@ -12,19 +12,25 @@ from .OperatorSet import OperatorSet
 
 class GetDictionaryResponse(BaseModel):
     """
-    GetDictionaryResponse model
+    GetDictionaryResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     measurements: Optional[List[Optional[MeasurementDetail]]] = Field(
-        validation_alias="measurements", default=None
+        validation_alias="measurements",
+        default=None,
+        description="All measurements available for this company",
     )
 
     operatorSets: Optional[List[Optional[OperatorSet]]] = Field(
-        validation_alias="operatorSets", default=None
+        validation_alias="operatorSets",
+        default=None,
+        description="All operator sets used across dimension fields",
     )
 
     metricFamilies: Optional[List[Optional[MetricFamilyDef]]] = Field(
-        validation_alias="metricFamilies", default=None
+        validation_alias="metricFamilies",
+        default=None,
+        description="All metric family definitions",
     )

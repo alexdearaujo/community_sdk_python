@@ -37,6 +37,11 @@ class NotificationChannelServiceWrapper:
     def list_notification_channels(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListNotificationChannelsResponse:
+        """
+        List available notification channels
+
+        Returns list of all configured notification channels.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -73,6 +78,11 @@ class NotificationChannelServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.SearchNotificationChannelsRequest,
     ) -> rest_models.SearchNotificationChannelsResponse:
+        """
+        Retrieve notification channels matching criteria.
+
+        Returns list of all notification channels matching request criteria. Match criteria are treated as a logical AND, i.e. all provided criteria must match in order for an entry to be included in the response.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -109,6 +119,11 @@ class NotificationChannelServiceWrapper:
     def get_notification_channel(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetNotificationChannelResponse:
+        """
+        Get information about a notification channel
+
+        Returns information about a notification channel with specific ID.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

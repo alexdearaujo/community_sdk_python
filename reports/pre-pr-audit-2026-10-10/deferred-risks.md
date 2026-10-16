@@ -36,7 +36,7 @@ This ledger records findings that are intentionally deferred.
 | L8 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | L9 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | L10 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| L11 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| L11 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | L12 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | L13 | latent | Not triggered by the current schema; the fix needs a generator design choice. | A future upstream schema change can break generation or the release gate (latent generator hazard). | Regenerate and review the diff on every schema sync. | sdk-generation | Revisit at the next schema sync. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | R2 | runtime | JSON null and list shapes need generated-code changes. | Edge-case behavior differs from the documented contract. | Callers catch KentikError broadly. | sdk-runtime | Revisit at the next runtime hardening batch. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
@@ -59,17 +59,17 @@ This ledger records findings that are intentionally deferred.
 | T7 | test gap | Needs a committed swagger-derived record. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | T9 | test gap | Needs a sampler that fills every request-body field. | A defect in that area can pass the mocked suite. | The e2e layer and manual review cover it until then. | sdk-tests | Revisit when the test harness is next extended. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | K1 | release or docs | dist/ is local build output; the owner deletes it. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| K2 | release or docs | Trusted publishing needs PyPI-side setup. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| K8 | release or docs | Needs a clean-venv wheel job in CI. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D1 | release or docs | Generator must run extract() on the patched swagger. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D2 | release or docs | Generator example snippets need import fixes. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D3 | release or docs | CLAUDE.md rewrite needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D4 | release or docs | Constitution change needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D5 | release or docs | docs_rendering text needs a generator change. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| K2 | release or docs | Publishing keeps the legacy SDK's `PYPI_TOKEN` setup until the PR is accepted and a release validates it; the owner of the PyPI project and token is not yet known. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | unknown (under investigation) | Revisit once the PyPI owner is found and the first 2.0.0 release has run. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| K3 | release or docs | Needs a docs site or a short PyPI README. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| K8 | release or docs | Needs a clean-venv wheel job in CI. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D1 | release or docs | Generator must run extract() on the patched swagger. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| D2 | release or docs | Generator example snippets need import fixes. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
+| D3 | release or docs | CLAUDE.md rewrite needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D4 | release or docs | Constitution change needs owner review. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D5 | release or docs | docs_rendering text needs a generator change. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
 | D6 | release or docs | Waits for B4. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D11 | release or docs | Spec 001 quickstart commands need a rewrite. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
-| D12 | release or docs | Needs template changes for docstrings. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | open | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D11 | release or docs | Spec 001 quickstart commands need a rewrite. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-12 |
+| D12 | release or docs | Needs template changes for docstrings. | Published artifacts or guidance stay partly inaccurate. | Reviewers read the PR description for the known list. | sdk-release | Revisit before the first 2.0.0 release. | resolved | [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) | 2026-10-14 |
 
 ## Closure notes
 
@@ -174,3 +174,59 @@ This ledger records findings that are intentionally deferred.
   `NotImplementedError` naming it, chained with `from`. The import still
   degrades instead of failing the client, so REST keeps working. 33 entries
   remain open.
+- D3 is resolved (2026-10-13). CLAUDE.md now says: `make generate` clones
+  and `local` reads the sibling checkout, with no fallback; `make all` builds
+  no docs, and `make docs` regenerates from GitHub first; the guarded
+  couplings name the template sentinel and `_fix_path_parameters`;
+  `api_surface.py` is listed; the commit hashes that only the local
+  `refactor` branch has are gone; the pre-PR steps list the five other CI
+  gates. Owner review happens in the PR. 32 entries remain open.
+- D4 is resolved (2026-10-13). Constitution 1.4.0: Principle VI states the
+  real resolution order and forbids `load_dotenv`. The same revision fixes
+  the schema-source, `make all`, gRPC-routing, and guarded-coupling drift.
+  31 entries remain open.
+- D5 is resolved (2026-10-13). `docs_rendering` and the regenerated
+  `gen/README.md` say gRPC routing matches by HTTP rule. 30 entries remain
+  open.
+- D11 is resolved (2026-10-13). The spec 001 quickstart picks one file into
+  `$target` before it truncates or restores, so a zsh redirect to a glob can
+  no longer write to every device swagger version. 29 entries remain open.
+- K8 is resolved (2026-10-13). The `build` workflow installs the wheel into a
+  clean venv, runs from outside the checkout, imports every module (1317
+  today), and builds a gRPC client whose 36 mounted wrappers must all have
+  live stubs. Verified locally against a fresh `uv build`. 28 entries remain
+  open.
+- L11 is resolved (2026-10-13). fixup tests for `pb` and `error` against the
+  path parts below the service directory, so a checkout under a directory
+  with either name no longer skips every fixup. 27 entries remain open.
+- K2 stays open (2026-10-14), by decision. `release.yml` already publishes
+  the way the legacy SDK's workflow does: on a published GitHub release, with
+  the `PYPI_TOKEN` secret. It keeps that setup until the PR is accepted and a
+  release validates it. Trusted publishing needs the PyPI project owner, who
+  is not yet known. The other K2 parts (`needs: publish`, the tag version
+  gate, the pre-release rule) are already in place.
+- K3 is resolved (2026-10-14). The package metadata now renders
+  `README.pypi.md`, a short README with absolute links only. A packaging test
+  fails on any relative link in it, or if the sdist leaves it out. The
+  repository `README.md` is unchanged. A docs site is not part of this fix.
+  26 entries remain open.
+- D1 is resolved (2026-10-14). The generator passes the patched swagger to
+  `extract()`, so every model name on a service page exists in the SDK, all
+  10 required bodies show as required, and 21 of the 24 two-node model
+  diagrams now show the operation models. A test fails when a committed page
+  names a model the SDK does not define. 25 entries remain open.
+- D2 is resolved (2026-10-14). Each service page example imports the models
+  it constructs from `kentik_api.gen.<service>.models`, and a `Dict`
+  argument renders as `{}`. R16 had already removed the 4 `Dict` bodies. A
+  test parses every committed example and fails on a name it uses but does
+  not define, or an import that does not resolve. 24 entries remain open.
+- D12 is resolved (2026-10-14). The generator renders with `autoescape=True`,
+  which caused the `&#34;` and `&#39;` in 5 model docstrings. Custom templates
+  now escape schema text for Python instead. Each REST function and its
+  wrapper method get the operation summary and description (232 of 234; two
+  operations have neither). A custom model template adds
+  `Field(description=...)` to 1447 of 2421 fields, every field the v3 schema
+  describes. The v3 schema drops the description next to a `$ref`, so about
+  390 such fields stay undescribed until upstream keeps it. The Sphinx
+  build escapes RST markup in field descriptions, so text like `c_` renders
+  as written. 23 entries remain open.

@@ -29,6 +29,11 @@ def ListAuditEvents(
     offset: Optional[str] = None,
     limit: Optional[str] = None,
 ) -> ListAuditEventsResponse:
+    """
+    List Audit Events.
+
+    Returns a list of audit events.
+    """
     query_params: Dict[str, Any] = {
         "startTime": startTime,
         "endTime": endTime,
@@ -65,6 +70,11 @@ def GetAuditEvent(
     id: str,
     ctime: Optional[str] = None,
 ) -> GetAuditEventResponse:
+    """
+    Get an Audit Event
+
+    Return a specific audit event.
+    """
     query_params: Dict[str, Any] = {"ctime": ctime}
 
     header_params: Dict[str, Any] = {}
@@ -93,6 +103,11 @@ def GetAuditEvent(
 def GetAuditEvent_2(
     api_config_override: Optional[APIConfig] = None, *, id: str, ctime: str
 ) -> GetAuditEventResponse:
+    """
+    Get an Audit Event
+
+    Return a specific audit event.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

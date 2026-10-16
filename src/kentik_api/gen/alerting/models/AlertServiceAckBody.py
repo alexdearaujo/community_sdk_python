@@ -13,4 +13,8 @@ class AlertServiceAckBody(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    comment: Optional[str] = Field(validation_alias="comment", default=None)
+    comment: Optional[str] = Field(
+        validation_alias="comment",
+        default=None,
+        description="The comment to add to the acknowledgement.",
+    )

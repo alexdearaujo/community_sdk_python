@@ -13,6 +13,14 @@ class ConditionsInterfaceCapacityCondition(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    absolute: Optional[float] = Field(validation_alias="absolute", default=None)
+    absolute: Optional[float] = Field(
+        validation_alias="absolute",
+        default=None,
+        description="The absolute value used for the policy level condition.",
+    )
 
-    percentage: Optional[str] = Field(validation_alias="percentage", default=None)
+    percentage: Optional[str] = Field(
+        validation_alias="percentage",
+        default=None,
+        description="The percentage value used for the policy level condition.",
+    )

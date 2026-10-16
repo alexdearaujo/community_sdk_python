@@ -84,6 +84,11 @@ from ..models import (  # noqa: F401
 def ListProvisioningTokens(
     api_config_override: Optional[APIConfig] = None,
 ) -> ListProvisioningTokensResponse:
+    """
+    List provisioning tokens.
+
+    Returns a list of all provisioning tokens in the account.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -112,6 +117,11 @@ def ListProvisioningTokens(
 def CreateProvisioningToken(
     api_config_override: Optional[APIConfig] = None, *, data: ProvisioningToken
 ) -> CreateProvisioningTokenResponse:
+    """
+    Create a provisioning token.
+
+    Creates a new provisioning token based on configuration in the request and returns it, including its secret value.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -141,6 +151,11 @@ def CreateProvisioningToken(
 def GetProvisioningToken(
     api_config_override: Optional[APIConfig] = None, *, token: str
 ) -> GetProvisioningTokenResponse:
+    """
+    Get provisioning token configuration and status.
+
+    Returns configuration, usage and revocation status of the provisioning token with the specified value.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -169,6 +184,11 @@ def GetProvisioningToken(
 def ListAgentsByProvisioningToken(
     api_config_override: Optional[APIConfig] = None, *, token: str
 ) -> ListAgentsByProvisioningTokenResponse:
+    """
+    List agents registered with a provisioning token.
+
+    Returns the IDs of all agents that have registered with the provisioning token with the specified value.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}
@@ -200,6 +220,11 @@ def RevokeProvisioningToken(
     token: str,
     data: ProvisioningTokenServiceRevokeProvisioningTokenBody,
 ) -> RevokeProvisioningTokenResponse:
+    """
+    Revoke a provisioning token.
+
+    Revokes the provisioning token with the specified value. Agents already registered with the token are not affected, but the token can no longer be used for new registrations.
+    """
     query_params: Dict[str, Any] = {}
 
     header_params: Dict[str, Any] = {}

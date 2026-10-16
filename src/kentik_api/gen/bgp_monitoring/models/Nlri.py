@@ -11,7 +11,7 @@ from .v202303Safi import v202303Safi
 
 class Nlri(BaseModel):
     """
-    Nlri model
+    Nlri
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
@@ -20,4 +20,8 @@ class Nlri(BaseModel):
 
     safi: v202303Safi = Field(validation_alias="safi")
 
-    prefix: Optional[str] = Field(validation_alias="prefix", default=None)
+    prefix: Optional[str] = Field(
+        validation_alias="prefix",
+        default=None,
+        description="Actual prefix data (format depends on AFI)",
+    )

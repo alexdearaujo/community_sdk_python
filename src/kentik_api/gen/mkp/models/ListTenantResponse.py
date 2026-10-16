@@ -10,7 +10,7 @@ from .Tenant import Tenant
 
 class ListTenantResponse(BaseModel):
     """
-    ListTenantResponse model
+    ListTenantResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

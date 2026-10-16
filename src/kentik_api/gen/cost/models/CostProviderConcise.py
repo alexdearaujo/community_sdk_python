@@ -8,11 +8,13 @@ from pydantic import BaseModel, Field
 
 class CostProviderConcise(BaseModel):
     """
-    CostProviderConcise model
+    CostProviderConcise
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(validation_alias="id", default=None)
+    id: Optional[str] = Field(
+        validation_alias="id", default=None, description="ID of the cost provider"
+    )
 
-    name: str = Field(validation_alias="name")
+    name: str = Field(validation_alias="name", description="Name of the cost provider")

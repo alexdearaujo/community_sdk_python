@@ -8,7 +8,7 @@ from .SiteMarket import SiteMarket
 
 class CreateSiteMarketRequest(BaseModel):
     """
-    CreateSiteMarketRequest model
+    CreateSiteMarketRequest
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

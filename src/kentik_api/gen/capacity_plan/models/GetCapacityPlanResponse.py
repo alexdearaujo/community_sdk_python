@@ -10,7 +10,7 @@ from .CapacityPlan import CapacityPlan
 
 class GetCapacityPlanResponse(BaseModel):
     """
-    GetCapacityPlanResponse model
+    GetCapacityPlanResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}

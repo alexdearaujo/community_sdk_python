@@ -37,6 +37,11 @@ class CustomApplicationServiceWrapper:
     def list_custom_applications(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCustomApplicationsResponse:
+        """
+        List Custom Applications
+
+        Returns an array of custom application objects that each contain information about an individual custom application.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -73,6 +78,11 @@ class CustomApplicationServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         data: rest_models.CustomApplication,
     ) -> rest_models.CreateCustomApplicationResponse:
+        """
+        Create Custom Application
+
+        Creates and returns a custom application object containing information about an individual custom application.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -112,6 +122,11 @@ class CustomApplicationServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         customApplicationId: str,
     ) -> rest_models.GetCustomApplicationResponse:
+        """
+        Custom Application Info
+
+        Returns a custom application object containing information about an individual custom application.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -152,6 +167,11 @@ class CustomApplicationServiceWrapper:
         customApplicationId: str,
         data: rest_models.CustomApplication,
     ) -> rest_models.UpdateCustomApplicationResponse:
+        """
+        Update Custom Application
+
+        Updates and returns a custom application object containing information about an individual custom application.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -192,6 +212,11 @@ class CustomApplicationServiceWrapper:
         api_config_override: Optional[APIConfig] = None,
         customApplicationId: str,
     ) -> rest_models.DeleteCustomApplicationResponse:
+        """
+        Delete Custom Application
+
+        Deletes a custom application.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

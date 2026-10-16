@@ -21,5 +21,7 @@ class AlertSilenceNotificationsServiceListResponse(BaseModel):
     )
 
     silences: Optional[List[Optional[AlertSilenceNotificationsDefinition]]] = Field(
-        validation_alias="silences", default=None
+        validation_alias="silences",
+        default=None,
+        description="The alert silence notifications configurations that were found matching the filters.",
     )

@@ -10,11 +10,13 @@ from .Layer import Layer
 
 class LayerSet(BaseModel):
     """
-    LayerSet model
+    LayerSet
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
     layers: Optional[List[Optional[Layer]]] = Field(
-        validation_alias="layers", default=None
+        validation_alias="layers",
+        default=None,
+        description="List of parallel network layers",
     )

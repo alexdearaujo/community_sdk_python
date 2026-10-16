@@ -10,11 +10,13 @@ from .ConfigLayerLayerType import ConfigLayerLayerType
 
 class ConfigLayer(BaseModel):
     """
-    ConfigLayer model
+    ConfigLayer
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    name: Optional[str] = Field(validation_alias="name", default=None)
+    name: Optional[str] = Field(
+        validation_alias="name", default=None, description="Name of the layer."
+    )
 
     type: Optional[ConfigLayerLayerType] = Field(validation_alias="type", default=None)

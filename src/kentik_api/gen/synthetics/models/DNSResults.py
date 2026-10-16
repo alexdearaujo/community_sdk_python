@@ -11,14 +11,20 @@ from .MetricData import MetricData
 
 class DNSResults(BaseModel):
     """
-    DNSResults model
+    DNSResults
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    target: Optional[str] = Field(validation_alias="target", default=None)
+    target: Optional[str] = Field(
+        validation_alias="target", default=None, description="Queried DNS record"
+    )
 
-    server: Optional[str] = Field(validation_alias="server", default=None)
+    server: Optional[str] = Field(
+        validation_alias="server",
+        default=None,
+        description="DNS server used for the query",
+    )
 
     latency: Optional[MetricData] = Field(validation_alias="latency", default=None)
 

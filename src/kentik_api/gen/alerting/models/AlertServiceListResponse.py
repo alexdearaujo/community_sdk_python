@@ -21,5 +21,5 @@ class AlertServiceListResponse(BaseModel):
     )
 
     alerts: Optional[List[Optional[Alert]]] = Field(
-        validation_alias="alerts", default=None
+        validation_alias="alerts", default=None, description="The alerts result set."
     )

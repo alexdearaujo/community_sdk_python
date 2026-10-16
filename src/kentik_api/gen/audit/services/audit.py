@@ -43,6 +43,11 @@ class AuditServiceWrapper:
         offset: Optional[str] = None,
         limit: Optional[str] = None,
     ) -> rest_models.ListAuditEventsResponse:
+        """
+        List Audit Events.
+
+        Returns a list of audit events.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -91,6 +96,11 @@ class AuditServiceWrapper:
         id: str,
         ctime: Optional[str] = None,
     ) -> rest_models.GetAuditEventResponse:
+        """
+        Get an Audit Event
+
+        Return a specific audit event.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
@@ -126,6 +136,11 @@ class AuditServiceWrapper:
     def get_event_by_ctime(
         self, *, api_config_override: Optional[APIConfig] = None, id: str, ctime: str
     ) -> rest_models.GetAuditEventResponse:
+        """
+        Get an Audit Event
+
+        Return a specific audit event.
+        """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(

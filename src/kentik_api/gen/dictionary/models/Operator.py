@@ -8,12 +8,15 @@ from pydantic import BaseModel, Field
 
 class Operator(BaseModel):
     """
-    Operator model
-    An individual filter operator (e.g. &#34;equals&#34;, &#34;contains&#34;).
+    An individual filter operator (e.g. "equals", "contains").
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    key: Optional[str] = Field(validation_alias="key", default=None)
+    key: Optional[str] = Field(
+        validation_alias="key", default=None, description="Operator key"
+    )
 
-    label: Optional[str] = Field(validation_alias="label", default=None)
+    label: Optional[str] = Field(
+        validation_alias="label", default=None, description="Operator display label"
+    )
