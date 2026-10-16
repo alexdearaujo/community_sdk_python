@@ -19,8 +19,8 @@ from ..error import (
     GetDeviceError,
     ListDevicesError,
     UpdateDeviceError,
-    UpdateDeviceLabelsError,
     UpdateDevicesError,
+    UpdateLabelsError,
 )
 from ..models import (  # noqa: F401
     CreateDeviceRequest,
@@ -401,7 +401,7 @@ def UpdateDeviceLabels(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateDeviceLabels",
-        error_cls=UpdateDeviceLabelsError,
+        error_cls=UpdateLabelsError,
     )
 
     return parse_response_model(

@@ -13,7 +13,6 @@ from typing import Callable
 from pydantic import BaseModel
 
 from ._shared import discover_service_model_classes, normalize_symbol
-from .error_package import inject_service_error_handling
 
 
 def fix_generated_service(service_dir: Path) -> None:
@@ -112,10 +111,6 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         content = py_file.read_text(encoding="utf-8")
         for transform in transforms:
             content = transform(content)
-        if py_file.parent.name in ("services", "service") and py_file.name not in (
-            "__init__.py",
-        ):
-            content = inject_service_error_handling(content)
         py_file.write_text(content, encoding="utf-8")
 
 

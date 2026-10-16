@@ -15,9 +15,9 @@ from ..error import (
     ActError,
     AvailableActionsError,
     AvailableActionsForMitigationError,
-    CreateError,
-    GetError,
-    ListError,
+    MitigationsCreateError,
+    MitigationsGetError,
+    MitigationsListError,
 )
 from ..models import (  # noqa: F401
     AggregationType,
@@ -258,7 +258,7 @@ def List(
         header_params=header_params,
         expected_status=200,
         operation_name="List",
-        error_cls=ListError,
+        error_cls=MitigationsListError,
     )
 
     return parse_response_model(
@@ -294,7 +294,7 @@ def Create(
         header_params=header_params,
         expected_status=200,
         operation_name="Create",
-        error_cls=CreateError,
+        error_cls=MitigationsCreateError,
     )
 
     return parse_response_model(
@@ -360,7 +360,7 @@ def Get(
         header_params=header_params,
         expected_status=200,
         operation_name="Get",
-        error_cls=GetError,
+        error_cls=MitigationsGetError,
     )
 
     return parse_response_model(

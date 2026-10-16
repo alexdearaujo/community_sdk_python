@@ -78,9 +78,9 @@ class DeviceconfError(HTTPException):
         )
 
 
-ERROR_BY_OPERATION: dict[str, type[DeviceconfError]] = {}
+ERROR_BY_METHOD: dict[str, type[DeviceconfError]] = {}
 
 __all__ = [
     "DeviceconfError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

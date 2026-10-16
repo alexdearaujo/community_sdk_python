@@ -7,9 +7,9 @@ from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import (
-    CapabilityReleaseService_GetCapabilityLatestReleasesError,
-    CapabilityReleaseService_GetCapabilityReleaseError,
-    CapabilityReleaseService_GetCapabilitySupportedDistrosError,
+    GetCapabilityLatestReleasesError,
+    GetCapabilityReleaseError,
+    GetCapabilitySupportedDistrosError,
 )
 from ..models import (  # noqa: F401
     Agent,
@@ -108,7 +108,7 @@ def CapabilityReleaseService_GetCapabilityRelease(
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityReleaseService_GetCapabilityRelease",
-        error_cls=CapabilityReleaseService_GetCapabilityReleaseError,
+        error_cls=GetCapabilityReleaseError,
     )
 
     return parse_response_model(
@@ -153,7 +153,7 @@ def CapabilityReleaseService_GetCapabilityLatestReleases(
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityReleaseService_GetCapabilityLatestReleases",
-        error_cls=CapabilityReleaseService_GetCapabilityLatestReleasesError,
+        error_cls=GetCapabilityLatestReleasesError,
     )
 
     return parse_response_model(
@@ -183,7 +183,7 @@ def CapabilityReleaseService_GetCapabilitySupportedDistros(
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityReleaseService_GetCapabilitySupportedDistros",
-        error_cls=CapabilityReleaseService_GetCapabilitySupportedDistrosError,
+        error_cls=GetCapabilitySupportedDistrosError,
     )
 
     return parse_response_model(

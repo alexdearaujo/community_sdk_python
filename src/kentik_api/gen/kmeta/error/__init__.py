@@ -79,13 +79,13 @@ class KmetaError(HTTPException):
 
 
 class CreateServiceNowConfigError(KmetaError):
-    """Operation-local error for CreateServiceNowConfig."""
+    """Operation-local error for client.kmeta.create_service_now_config()."""
 
     response_error_map: dict[str, type[KmetaError]] = {}
 
 
 class CreateServiceNowConfigUnexpectedError(CreateServiceNowConfigError):
-    """Operation-local response error for CreateServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_service_now_config (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ CreateServiceNowConfigError.response_error_map = {
 
 
 class DeleteServiceNowConfigError(KmetaError):
-    """Operation-local error for DeleteServiceNowConfig."""
+    """Operation-local error for client.kmeta.delete_service_now_config()."""
 
     response_error_map: dict[str, type[KmetaError]] = {}
 
 
 class DeleteServiceNowConfigUnexpectedError(DeleteServiceNowConfigError):
-    """Operation-local response error for DeleteServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for delete_service_now_config (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ DeleteServiceNowConfigError.response_error_map = {
 
 
 class GetServiceNowConfigError(KmetaError):
-    """Operation-local error for GetServiceNowConfig."""
+    """Operation-local error for client.kmeta.get_service_now_config()."""
 
     response_error_map: dict[str, type[KmetaError]] = {}
 
 
 class GetServiceNowConfigUnexpectedError(GetServiceNowConfigError):
-    """Operation-local response error for GetServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_service_now_config (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ GetServiceNowConfigError.response_error_map = {
 
 
 class ListServiceNowConfigsError(KmetaError):
-    """Operation-local error for ListServiceNowConfigs."""
+    """Operation-local error for client.kmeta.list_service_now_configs()."""
 
     response_error_map: dict[str, type[KmetaError]] = {}
 
 
 class ListServiceNowConfigsUnexpectedError(ListServiceNowConfigsError):
-    """Operation-local response error for ListServiceNowConfigs (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_service_now_configs (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +147,13 @@ ListServiceNowConfigsError.response_error_map = {
 
 
 class UpdateServiceNowConfigError(KmetaError):
-    """Operation-local error for UpdateServiceNowConfig."""
+    """Operation-local error for client.kmeta.update_service_now_config()."""
 
     response_error_map: dict[str, type[KmetaError]] = {}
 
 
 class UpdateServiceNowConfigUnexpectedError(UpdateServiceNowConfigError):
-    """Operation-local response error for UpdateServiceNowConfig (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_service_now_config (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -162,12 +162,12 @@ UpdateServiceNowConfigError.response_error_map = {
     "default": UpdateServiceNowConfigUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[KmetaError]] = {
-    "CreateServiceNowConfig": CreateServiceNowConfigError,
-    "DeleteServiceNowConfig": DeleteServiceNowConfigError,
-    "GetServiceNowConfig": GetServiceNowConfigError,
-    "ListServiceNowConfigs": ListServiceNowConfigsError,
-    "UpdateServiceNowConfig": UpdateServiceNowConfigError,
+ERROR_BY_METHOD: dict[str, type[KmetaError]] = {
+    "create_service_now_config": CreateServiceNowConfigError,
+    "delete_service_now_config": DeleteServiceNowConfigError,
+    "get_service_now_config": GetServiceNowConfigError,
+    "list_service_now_configs": ListServiceNowConfigsError,
+    "update_service_now_config": UpdateServiceNowConfigError,
 }
 
 __all__ = [
@@ -182,5 +182,5 @@ __all__ = [
     "GetServiceNowConfigError",
     "ListServiceNowConfigsError",
     "UpdateServiceNowConfigError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

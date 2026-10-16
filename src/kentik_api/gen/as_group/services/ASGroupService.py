@@ -11,11 +11,11 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    CreateASGroupError,
-    DeleteASGroupError,
-    GetASGroupError,
-    ListASGroupsError,
-    UpdateASGroupError,
+    CreateAsGroupError,
+    DeleteAsGroupError,
+    GetAsGroupError,
+    ListAsGroupsError,
+    UpdateAsGroupError,
 )
 from ..models import (  # noqa: F401
     ASGroupConcise,
@@ -54,7 +54,7 @@ def ListASGroups(
         header_params=header_params,
         expected_status=200,
         operation_name="ListASGroups",
-        error_cls=ListASGroupsError,
+        error_cls=ListAsGroupsError,
     )
 
     return parse_response_model(
@@ -88,7 +88,7 @@ def CreateASGroup(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateASGroup",
-        error_cls=CreateASGroupError,
+        error_cls=CreateAsGroupError,
     )
 
     return parse_response_model(
@@ -121,7 +121,7 @@ def GetASGroup(
         header_params=header_params,
         expected_status=200,
         operation_name="GetASGroup",
-        error_cls=GetASGroupError,
+        error_cls=GetAsGroupError,
     )
 
     return parse_response_model(
@@ -158,7 +158,7 @@ def UpdateASGroup(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateASGroup",
-        error_cls=UpdateASGroupError,
+        error_cls=UpdateAsGroupError,
     )
 
     return parse_response_model(
@@ -191,7 +191,7 @@ def DeleteASGroup(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteASGroup",
-        error_cls=DeleteASGroupError,
+        error_cls=DeleteAsGroupError,
     )
 
     return parse_response_model(

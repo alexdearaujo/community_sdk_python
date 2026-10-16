@@ -58,7 +58,7 @@ class KtbgpServiceWrapper:
                 self._grpc_stub_1.Announce,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKtbgpModule1.RouteService_AnnounceError,
+                error_cls=RestKtbgpModule1.RouteAnnounceError,
             )
             return parse_grpc_response(
                 rest_models.RouteServiceAnnounceResponse,
@@ -101,7 +101,7 @@ class KtbgpServiceWrapper:
                 self._grpc_stub_1.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKtbgpModule1.RouteService_ListError,
+                error_cls=RestKtbgpModule1.RouteListError,
             )
             return parse_grpc_response(
                 rest_models.RouteServiceListResponse,
@@ -144,7 +144,7 @@ class KtbgpServiceWrapper:
                 self._grpc_stub_1.Withdraw,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKtbgpModule1.RouteService_WithdrawError,
+                error_cls=RestKtbgpModule1.RouteWithdrawError,
             )
             return parse_grpc_response(
                 rest_models.RouteServiceWithdrawResponse,

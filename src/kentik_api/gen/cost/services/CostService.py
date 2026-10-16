@@ -11,9 +11,9 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    GetCostProviderSummaryError,
-    ListCostProvidersError,
-    ListCostProviderSummariesError,
+    GetProviderSummaryError,
+    ListProvidersError,
+    ListProviderSummariesError,
 )
 from ..models import (  # noqa: F401
     CostProviderConcise,
@@ -48,7 +48,7 @@ def ListCostProviders(
         header_params=header_params,
         expected_status=200,
         operation_name="ListCostProviders",
-        error_cls=ListCostProvidersError,
+        error_cls=ListProvidersError,
     )
 
     return parse_response_model(
@@ -81,7 +81,7 @@ def ListCostProviderSummaries(
         header_params=header_params,
         expected_status=200,
         operation_name="ListCostProviderSummaries",
-        error_cls=ListCostProviderSummariesError,
+        error_cls=ListProviderSummariesError,
     )
 
     return parse_response_model(
@@ -117,7 +117,7 @@ def GetCostProviderSummary(
         header_params=header_params,
         expected_status=200,
         operation_name="GetCostProviderSummary",
-        error_cls=GetCostProviderSummaryError,
+        error_cls=GetProviderSummaryError,
     )
 
     return parse_response_model(

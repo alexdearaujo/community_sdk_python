@@ -136,7 +136,7 @@ class KmiServiceWrapper:
                 self._grpc_stub_1.GetASNInsights,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKmiModule1.GetASNInsightsError,
+                error_cls=RestKmiModule1.GetAsnInsightsError,
             )
             return parse_grpc_response(
                 rest_models.GetASNInsightsResponse,
@@ -190,7 +190,7 @@ class KmiServiceWrapper:
                 self._grpc_stub_1.GetASNDetails,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKmiModule1.GetASNDetailsError,
+                error_cls=RestKmiModule1.GetAsnDetailsError,
             )
             return parse_grpc_response(
                 rest_models.GetASNDetailsResponse,

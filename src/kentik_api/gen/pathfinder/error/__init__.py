@@ -78,29 +78,29 @@ class PathfinderError(HTTPException):
         )
 
 
-class CreatePathfinderReportError(PathfinderError):
-    """Operation-local error for CreatePathfinderReport."""
+class CreateReportError(PathfinderError):
+    """Operation-local error for client.pathfinder.create_report()."""
 
     response_error_map: dict[str, type[PathfinderError]] = {}
 
 
-class CreatePathfinderReportUnexpectedError(CreatePathfinderReportError):
-    """Operation-local response error for CreatePathfinderReport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateReportUnexpectedError(CreateReportError):
+    """Operation-local response error for create_report (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-CreatePathfinderReportError.response_error_map = {
-    "default": CreatePathfinderReportUnexpectedError,
+CreateReportError.response_error_map = {
+    "default": CreateReportUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[PathfinderError]] = {
-    "CreatePathfinderReport": CreatePathfinderReportError,
+ERROR_BY_METHOD: dict[str, type[PathfinderError]] = {
+    "create_report": CreateReportError,
 }
 
 __all__ = [
     "PathfinderError",
-    "CreatePathfinderReportUnexpectedError",
-    "CreatePathfinderReportError",
-    "ERROR_BY_OPERATION",
+    "CreateReportUnexpectedError",
+    "CreateReportError",
+    "ERROR_BY_METHOD",
 ]

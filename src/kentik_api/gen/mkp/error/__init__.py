@@ -79,13 +79,13 @@ class MkpError(HTTPException):
 
 
 class PackageCreateError(MkpError):
-    """Operation-local error for PackageCreate."""
+    """Operation-local error for client.mkp.package_create()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class PackageCreateUnexpectedError(PackageCreateError):
-    """Operation-local response error for PackageCreate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for package_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ PackageCreateError.response_error_map = {
 
 
 class PackageDeleteError(MkpError):
-    """Operation-local error for PackageDelete."""
+    """Operation-local error for client.mkp.package_delete()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class PackageDeleteUnexpectedError(PackageDeleteError):
-    """Operation-local response error for PackageDelete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for package_delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ PackageDeleteError.response_error_map = {
 
 
 class PackageGetError(MkpError):
-    """Operation-local error for PackageGet."""
+    """Operation-local error for client.mkp.package_get()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class PackageGetUnexpectedError(PackageGetError):
-    """Operation-local response error for PackageGet (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for package_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ PackageGetError.response_error_map = {
 
 
 class PackageListError(MkpError):
-    """Operation-local error for PackageList."""
+    """Operation-local error for client.mkp.package_list()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class PackageListUnexpectedError(PackageListError):
-    """Operation-local response error for PackageList (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for package_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +147,13 @@ PackageListError.response_error_map = {
 
 
 class PackageUpdateError(MkpError):
-    """Operation-local error for PackageUpdate."""
+    """Operation-local error for client.mkp.package_update()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class PackageUpdateUnexpectedError(PackageUpdateError):
-    """Operation-local response error for PackageUpdate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for package_update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -164,13 +164,13 @@ PackageUpdateError.response_error_map = {
 
 
 class TenantCreateError(MkpError):
-    """Operation-local error for TenantCreate."""
+    """Operation-local error for client.mkp.tenant_create()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantCreateUnexpectedError(TenantCreateError):
-    """Operation-local response error for TenantCreate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -181,13 +181,13 @@ TenantCreateError.response_error_map = {
 
 
 class TenantDeleteError(MkpError):
-    """Operation-local error for TenantDelete."""
+    """Operation-local error for client.mkp.tenant_delete()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantDeleteUnexpectedError(TenantDeleteError):
-    """Operation-local response error for TenantDelete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -198,13 +198,13 @@ TenantDeleteError.response_error_map = {
 
 
 class TenantGetError(MkpError):
-    """Operation-local error for TenantGet."""
+    """Operation-local error for client.mkp.tenant_get()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantGetUnexpectedError(TenantGetError):
-    """Operation-local response error for TenantGet (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -215,13 +215,13 @@ TenantGetError.response_error_map = {
 
 
 class TenantListError(MkpError):
-    """Operation-local error for TenantList."""
+    """Operation-local error for client.mkp.tenant_list()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantListUnexpectedError(TenantListError):
-    """Operation-local response error for TenantList (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -232,13 +232,13 @@ TenantListError.response_error_map = {
 
 
 class TenantUpdateError(MkpError):
-    """Operation-local error for TenantUpdate."""
+    """Operation-local error for client.mkp.tenant_update()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantUpdateUnexpectedError(TenantUpdateError):
-    """Operation-local response error for TenantUpdate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -249,13 +249,13 @@ TenantUpdateError.response_error_map = {
 
 
 class TenantUserCreateError(MkpError):
-    """Operation-local error for TenantUserCreate."""
+    """Operation-local error for client.mkp.tenant_user_create()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantUserCreateUnexpectedError(TenantUserCreateError):
-    """Operation-local response error for TenantUserCreate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_user_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -266,13 +266,13 @@ TenantUserCreateError.response_error_map = {
 
 
 class TenantUserDeleteError(MkpError):
-    """Operation-local error for TenantUserDelete."""
+    """Operation-local error for client.mkp.tenant_user_delete()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantUserDeleteUnexpectedError(TenantUserDeleteError):
-    """Operation-local response error for TenantUserDelete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_user_delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -283,13 +283,13 @@ TenantUserDeleteError.response_error_map = {
 
 
 class TenantUserListError(MkpError):
-    """Operation-local error for TenantUserList."""
+    """Operation-local error for client.mkp.tenant_user_list()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantUserListUnexpectedError(TenantUserListError):
-    """Operation-local response error for TenantUserList (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_user_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -300,13 +300,13 @@ TenantUserListError.response_error_map = {
 
 
 class TenantUserUpdateError(MkpError):
-    """Operation-local error for TenantUserUpdate."""
+    """Operation-local error for client.mkp.tenant_user_update()."""
 
     response_error_map: dict[str, type[MkpError]] = {}
 
 
 class TenantUserUpdateUnexpectedError(TenantUserUpdateError):
-    """Operation-local response error for TenantUserUpdate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for tenant_user_update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -315,21 +315,21 @@ TenantUserUpdateError.response_error_map = {
     "default": TenantUserUpdateUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[MkpError]] = {
-    "PackageCreate": PackageCreateError,
-    "PackageDelete": PackageDeleteError,
-    "PackageGet": PackageGetError,
-    "PackageList": PackageListError,
-    "PackageUpdate": PackageUpdateError,
-    "TenantCreate": TenantCreateError,
-    "TenantDelete": TenantDeleteError,
-    "TenantGet": TenantGetError,
-    "TenantList": TenantListError,
-    "TenantUpdate": TenantUpdateError,
-    "TenantUserCreate": TenantUserCreateError,
-    "TenantUserDelete": TenantUserDeleteError,
-    "TenantUserList": TenantUserListError,
-    "TenantUserUpdate": TenantUserUpdateError,
+ERROR_BY_METHOD: dict[str, type[MkpError]] = {
+    "package_create": PackageCreateError,
+    "package_delete": PackageDeleteError,
+    "package_get": PackageGetError,
+    "package_list": PackageListError,
+    "package_update": PackageUpdateError,
+    "tenant_create": TenantCreateError,
+    "tenant_delete": TenantDeleteError,
+    "tenant_get": TenantGetError,
+    "tenant_list": TenantListError,
+    "tenant_update": TenantUpdateError,
+    "tenant_user_create": TenantUserCreateError,
+    "tenant_user_delete": TenantUserDeleteError,
+    "tenant_user_list": TenantUserListError,
+    "tenant_user_update": TenantUserUpdateError,
 }
 
 __all__ = [
@@ -362,5 +362,5 @@ __all__ = [
     "TenantUserDeleteError",
     "TenantUserListError",
     "TenantUserUpdateError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

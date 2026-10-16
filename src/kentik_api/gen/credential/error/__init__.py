@@ -78,49 +78,49 @@ class CredentialError(HTTPException):
         )
 
 
-class GetCredentialGroupError(CredentialError):
-    """Operation-local error for GetCredentialGroup."""
+class GetGroupError(CredentialError):
+    """Operation-local error for client.credential.get_group()."""
 
     response_error_map: dict[str, type[CredentialError]] = {}
 
 
-class GetCredentialGroupUnexpectedError(GetCredentialGroupError):
-    """Operation-local response error for GetCredentialGroup (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetGroupUnexpectedError(GetGroupError):
+    """Operation-local response error for get_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetCredentialGroupError.response_error_map = {
-    "default": GetCredentialGroupUnexpectedError,
+GetGroupError.response_error_map = {
+    "default": GetGroupUnexpectedError,
 }
 
 
-class ListCredentialGroupError(CredentialError):
-    """Operation-local error for ListCredentialGroup."""
+class ListGroupError(CredentialError):
+    """Operation-local error for client.credential.list_group()."""
 
     response_error_map: dict[str, type[CredentialError]] = {}
 
 
-class ListCredentialGroupUnexpectedError(ListCredentialGroupError):
-    """Operation-local response error for ListCredentialGroup (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListGroupUnexpectedError(ListGroupError):
+    """Operation-local response error for list_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ListCredentialGroupError.response_error_map = {
-    "default": ListCredentialGroupUnexpectedError,
+ListGroupError.response_error_map = {
+    "default": ListGroupUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[CredentialError]] = {
-    "GetCredentialGroup": GetCredentialGroupError,
-    "ListCredentialGroup": ListCredentialGroupError,
+ERROR_BY_METHOD: dict[str, type[CredentialError]] = {
+    "get_group": GetGroupError,
+    "list_group": ListGroupError,
 }
 
 __all__ = [
     "CredentialError",
-    "GetCredentialGroupUnexpectedError",
-    "ListCredentialGroupUnexpectedError",
-    "GetCredentialGroupError",
-    "ListCredentialGroupError",
-    "ERROR_BY_OPERATION",
+    "GetGroupUnexpectedError",
+    "ListGroupUnexpectedError",
+    "GetGroupError",
+    "ListGroupError",
+    "ERROR_BY_METHOD",
 ]

@@ -60,7 +60,7 @@ class PathfinderServiceWrapper:
                 self._grpc_stub_1.CreatePathfinderReport,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestPathfinderModule1.CreatePathfinderReportError,
+                error_cls=RestPathfinderModule1.CreateReportError,
             )
             return parse_grpc_response(
                 rest_models.CreatePathfinderReportResponse,

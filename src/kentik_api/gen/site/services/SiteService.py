@@ -11,16 +11,16 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
+    CreateMarketError,
     CreateSiteError,
-    CreateSiteMarketError,
+    DeleteMarketError,
     DeleteSiteError,
-    DeleteSiteMarketError,
+    GetMarketError,
     GetSiteError,
-    GetSiteMarketError,
-    ListSiteMarketsError,
+    ListMarketsError,
     ListSitesError,
+    UpdateMarketError,
     UpdateSiteError,
-    UpdateSiteMarketError,
 )
 from ..models import (  # noqa: F401
     CreateSiteMarketRequest,
@@ -71,7 +71,7 @@ def ListSiteMarkets(
         header_params=header_params,
         expected_status=200,
         operation_name="ListSiteMarkets",
-        error_cls=ListSiteMarketsError,
+        error_cls=ListMarketsError,
     )
 
     return parse_response_model(
@@ -105,7 +105,7 @@ def CreateSiteMarket(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateSiteMarket",
-        error_cls=CreateSiteMarketError,
+        error_cls=CreateMarketError,
     )
 
     return parse_response_model(
@@ -138,7 +138,7 @@ def GetSiteMarket(
         header_params=header_params,
         expected_status=200,
         operation_name="GetSiteMarket",
-        error_cls=GetSiteMarketError,
+        error_cls=GetMarketError,
     )
 
     return parse_response_model(
@@ -175,7 +175,7 @@ def UpdateSiteMarket(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateSiteMarket",
-        error_cls=UpdateSiteMarketError,
+        error_cls=UpdateMarketError,
     )
 
     return parse_response_model(
@@ -208,7 +208,7 @@ def DeleteSiteMarket(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteSiteMarket",
-        error_cls=DeleteSiteMarketError,
+        error_cls=DeleteMarketError,
     )
 
     return parse_response_model(

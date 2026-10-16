@@ -114,15 +114,17 @@ subpackage of independently testable phase modules (see
 - `error_package.py` — per-service error class generation
   (`generate_service_error_package()`) and the error-dispatch
   injection (`inject_service_error_handling()`; see the
-  guarded-coupling note below).
+  guarded-coupling note below). It runs after fixup, because each
+  operation's error classes are named after its client method
+  (`list_labels` raises `ListLabelsError`), not its operationId.
 - `fixup.py` — generated-code post-processing, called once per
   service directory after the schema availability window closes.
   Single public entrypoint: `fix_generated_service(service_dir)`.
   Internally: rebuilds `models/__init__.py` from a full directory
   scan, replaces wildcard exports with explicit named imports, and
   applies all file-level content patches (import aliases, path
-  parameter sanitization, docstring normalization,
-  duplicate function renaming, and error-handling injection).
+  parameter sanitization, docstring normalization, and
+  duplicate function renaming).
 - `wrapper_generation.py` — generates service wrappers and the
   client mixin, collapsed into a single `generate()` entrypoint
   (wrappers first, then the mixin that imports them).
@@ -266,8 +268,9 @@ structurally, not just by convention or discipline.
 ### Guarded couplings worth knowing about
 
 `error_package.inject_service_error_handling()` wires each freshly
-generated per-service REST module to its error classes. It replaces
-the `# __ERROR_IMPORTS_PLACEHOLDER__` sentinel that
+generated per-service REST module to its error classes. It points each
+function's `error_cls=` at the class named after its client method, and
+replaces the `# __ERROR_IMPORTS_PLACEHOLDER__` sentinel that
 `scripts/openapi_templates/service.jinja2` emits with a
 `from ..error import ...` line. For a file without the sentinel it
 falls back to inserting that line after
@@ -298,8 +301,9 @@ first name of a new thing.
 - Changing a naming rule does not rename anything that already has an
   entry. To rename a public name, change its key and record the
   breaking change in `CHANGELOG.md`.
-- Error class names, parameter names, model fields, and enum values
-  still come from the schema.
+- Error class names follow the client method name, so the file names
+  them too. Parameter names, model fields, and enum values still come
+  from the schema.
 - Commit `public_names.json` with every regeneration that adds
   entries, or CI's drift check fails.
 

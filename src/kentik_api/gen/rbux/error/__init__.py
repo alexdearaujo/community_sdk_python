@@ -79,13 +79,13 @@ class RbuxError(HTTPException):
 
 
 class CreateScopeError(RbuxError):
-    """Operation-local error for CreateScope."""
+    """Operation-local error for client.rbux.create_scope()."""
 
     response_error_map: dict[str, type[RbuxError]] = {}
 
 
 class CreateScopeUnexpectedError(CreateScopeError):
-    """Operation-local response error for CreateScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_scope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ CreateScopeError.response_error_map = {
 
 
 class DeleteScopeError(RbuxError):
-    """Operation-local error for DeleteScope."""
+    """Operation-local error for client.rbux.delete_scope()."""
 
     response_error_map: dict[str, type[RbuxError]] = {}
 
 
 class DeleteScopeUnexpectedError(DeleteScopeError):
-    """Operation-local response error for DeleteScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for delete_scope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ DeleteScopeError.response_error_map = {
 
 
 class GetScopeError(RbuxError):
-    """Operation-local error for GetScope."""
+    """Operation-local error for client.rbux.get_scope()."""
 
     response_error_map: dict[str, type[RbuxError]] = {}
 
 
 class GetScopeUnexpectedError(GetScopeError):
-    """Operation-local response error for GetScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_scope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ GetScopeError.response_error_map = {
 
 
 class ListScopesError(RbuxError):
-    """Operation-local error for ListScopes."""
+    """Operation-local error for client.rbux.list_scopes()."""
 
     response_error_map: dict[str, type[RbuxError]] = {}
 
 
 class ListScopesUnexpectedError(ListScopesError):
-    """Operation-local response error for ListScopes (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_scopes (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +147,13 @@ ListScopesError.response_error_map = {
 
 
 class UpdateScopeError(RbuxError):
-    """Operation-local error for UpdateScope."""
+    """Operation-local error for client.rbux.update_scope()."""
 
     response_error_map: dict[str, type[RbuxError]] = {}
 
 
 class UpdateScopeUnexpectedError(UpdateScopeError):
-    """Operation-local response error for UpdateScope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_scope (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -162,12 +162,12 @@ UpdateScopeError.response_error_map = {
     "default": UpdateScopeUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[RbuxError]] = {
-    "CreateScope": CreateScopeError,
-    "DeleteScope": DeleteScopeError,
-    "GetScope": GetScopeError,
-    "ListScopes": ListScopesError,
-    "UpdateScope": UpdateScopeError,
+ERROR_BY_METHOD: dict[str, type[RbuxError]] = {
+    "create_scope": CreateScopeError,
+    "delete_scope": DeleteScopeError,
+    "get_scope": GetScopeError,
+    "list_scopes": ListScopesError,
+    "update_scope": UpdateScopeError,
 }
 
 __all__ = [
@@ -182,5 +182,5 @@ __all__ = [
     "GetScopeError",
     "ListScopesError",
     "UpdateScopeError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

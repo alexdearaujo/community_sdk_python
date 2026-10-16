@@ -78,9 +78,9 @@ class CoreError(HTTPException):
         )
 
 
-ERROR_BY_OPERATION: dict[str, type[CoreError]] = {}
+ERROR_BY_METHOD: dict[str, type[CoreError]] = {}
 
 __all__ = [
     "CoreError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

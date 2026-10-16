@@ -10,7 +10,13 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import CreateError, DeleteError, GetError, ListError, ReplaceError
+from ..error import (
+    AutoAckCreateError,
+    AutoAckDeleteError,
+    AutoAckGetError,
+    AutoAckListError,
+    AutoAckReplaceError,
+)
 from ..models import (  # noqa: F401
     AggregationType,
     Alert,
@@ -225,7 +231,7 @@ def Create(
         header_params=header_params,
         expected_status=200,
         operation_name="Create",
-        error_cls=CreateError,
+        error_cls=AutoAckCreateError,
     )
 
     return parse_response_model(
@@ -261,7 +267,7 @@ def List(
         header_params=header_params,
         expected_status=200,
         operation_name="List",
-        error_cls=ListError,
+        error_cls=AutoAckListError,
     )
 
     return parse_response_model(
@@ -294,7 +300,7 @@ def Get(
         header_params=header_params,
         expected_status=200,
         operation_name="Get",
-        error_cls=GetError,
+        error_cls=AutoAckGetError,
     )
 
     return parse_response_model(
@@ -327,7 +333,7 @@ def Delete(
         header_params=header_params,
         expected_status=200,
         operation_name="Delete",
-        error_cls=DeleteError,
+        error_cls=AutoAckDeleteError,
     )
 
     return parse_response_model(
@@ -364,7 +370,7 @@ def Replace(
         header_params=header_params,
         expected_status=200,
         operation_name="Replace",
-        error_cls=ReplaceError,
+        error_cls=AutoAckReplaceError,
     )
 
     return parse_response_model(

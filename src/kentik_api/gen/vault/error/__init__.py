@@ -79,13 +79,13 @@ class VaultError(HTTPException):
 
 
 class GetSecretError(VaultError):
-    """Operation-local error for GetSecret."""
+    """Operation-local error for client.vault.get_secret()."""
 
     response_error_map: dict[str, type[VaultError]] = {}
 
 
 class GetSecretUnexpectedError(GetSecretError):
-    """Operation-local response error for GetSecret (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_secret (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ GetSecretError.response_error_map = {
 
 
 class ListSecretError(VaultError):
-    """Operation-local error for ListSecret."""
+    """Operation-local error for client.vault.list_secret()."""
 
     response_error_map: dict[str, type[VaultError]] = {}
 
 
 class ListSecretUnexpectedError(ListSecretError):
-    """Operation-local response error for ListSecret (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_secret (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -111,9 +111,9 @@ ListSecretError.response_error_map = {
     "default": ListSecretUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[VaultError]] = {
-    "GetSecret": GetSecretError,
-    "ListSecret": ListSecretError,
+ERROR_BY_METHOD: dict[str, type[VaultError]] = {
+    "get_secret": GetSecretError,
+    "list_secret": ListSecretError,
 }
 
 __all__ = [
@@ -122,5 +122,5 @@ __all__ = [
     "ListSecretUnexpectedError",
     "GetSecretError",
     "ListSecretError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

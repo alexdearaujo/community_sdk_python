@@ -79,13 +79,13 @@ class DeviceError(HTTPException):
 
 
 class CreateDeviceError(DeviceError):
-    """Operation-local error for CreateDevice."""
+    """Operation-local error for client.device.create_device()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class CreateDeviceUnexpectedError(CreateDeviceError):
-    """Operation-local response error for CreateDevice (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_device (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ CreateDeviceError.response_error_map = {
 
 
 class CreateDevicesError(DeviceError):
-    """Operation-local error for CreateDevices."""
+    """Operation-local error for client.device.create_devices()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class CreateDevicesUnexpectedError(CreateDevicesError):
-    """Operation-local response error for CreateDevices (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_devices (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ CreateDevicesError.response_error_map = {
 
 
 class DeleteDeviceError(DeviceError):
-    """Operation-local error for DeleteDevice."""
+    """Operation-local error for client.device.delete_device()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class DeleteDeviceUnexpectedError(DeleteDeviceError):
-    """Operation-local response error for DeleteDevice (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for delete_device (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ DeleteDeviceError.response_error_map = {
 
 
 class DeleteDevicesError(DeviceError):
-    """Operation-local error for DeleteDevices."""
+    """Operation-local error for client.device.delete_devices()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class DeleteDevicesUnexpectedError(DeleteDevicesError):
-    """Operation-local response error for DeleteDevices (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for delete_devices (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +147,13 @@ DeleteDevicesError.response_error_map = {
 
 
 class GetDeviceError(DeviceError):
-    """Operation-local error for GetDevice."""
+    """Operation-local error for client.device.get_device()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class GetDeviceUnexpectedError(GetDeviceError):
-    """Operation-local response error for GetDevice (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_device (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -164,13 +164,13 @@ GetDeviceError.response_error_map = {
 
 
 class GetDeviceByNameError(DeviceError):
-    """Operation-local error for GetDeviceByName."""
+    """Operation-local error for client.device.get_device_by_name()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class GetDeviceByNameUnexpectedError(GetDeviceByNameError):
-    """Operation-local response error for GetDeviceByName (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_device_by_name (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -181,13 +181,13 @@ GetDeviceByNameError.response_error_map = {
 
 
 class ListDevicesError(DeviceError):
-    """Operation-local error for ListDevices."""
+    """Operation-local error for client.device.list_devices()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class ListDevicesUnexpectedError(ListDevicesError):
-    """Operation-local response error for ListDevices (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_devices (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -198,13 +198,13 @@ ListDevicesError.response_error_map = {
 
 
 class UpdateDeviceError(DeviceError):
-    """Operation-local error for UpdateDevice."""
+    """Operation-local error for client.device.update_device()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class UpdateDeviceUnexpectedError(UpdateDeviceError):
-    """Operation-local response error for UpdateDevice (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_device (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -214,31 +214,14 @@ UpdateDeviceError.response_error_map = {
 }
 
 
-class UpdateDeviceLabelsError(DeviceError):
-    """Operation-local error for UpdateDeviceLabels."""
-
-    response_error_map: dict[str, type[DeviceError]] = {}
-
-
-class UpdateDeviceLabelsUnexpectedError(UpdateDeviceLabelsError):
-    """Operation-local response error for UpdateDeviceLabels (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-UpdateDeviceLabelsError.response_error_map = {
-    "default": UpdateDeviceLabelsUnexpectedError,
-}
-
-
 class UpdateDevicesError(DeviceError):
-    """Operation-local error for UpdateDevices."""
+    """Operation-local error for client.device.update_devices()."""
 
     response_error_map: dict[str, type[DeviceError]] = {}
 
 
 class UpdateDevicesUnexpectedError(UpdateDevicesError):
-    """Operation-local response error for UpdateDevices (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_devices (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -247,17 +230,34 @@ UpdateDevicesError.response_error_map = {
     "default": UpdateDevicesUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[DeviceError]] = {
-    "CreateDevice": CreateDeviceError,
-    "CreateDevices": CreateDevicesError,
-    "DeleteDevice": DeleteDeviceError,
-    "DeleteDevices": DeleteDevicesError,
-    "GetDevice": GetDeviceError,
-    "GetDeviceByName": GetDeviceByNameError,
-    "ListDevices": ListDevicesError,
-    "UpdateDevice": UpdateDeviceError,
-    "UpdateDeviceLabels": UpdateDeviceLabelsError,
-    "UpdateDevices": UpdateDevicesError,
+
+class UpdateLabelsError(DeviceError):
+    """Operation-local error for client.device.update_labels()."""
+
+    response_error_map: dict[str, type[DeviceError]] = {}
+
+
+class UpdateLabelsUnexpectedError(UpdateLabelsError):
+    """Operation-local response error for update_labels (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateLabelsError.response_error_map = {
+    "default": UpdateLabelsUnexpectedError,
+}
+
+ERROR_BY_METHOD: dict[str, type[DeviceError]] = {
+    "create_device": CreateDeviceError,
+    "create_devices": CreateDevicesError,
+    "delete_device": DeleteDeviceError,
+    "delete_devices": DeleteDevicesError,
+    "get_device": GetDeviceError,
+    "get_device_by_name": GetDeviceByNameError,
+    "list_devices": ListDevicesError,
+    "update_device": UpdateDeviceError,
+    "update_devices": UpdateDevicesError,
+    "update_labels": UpdateLabelsError,
 }
 
 __all__ = [
@@ -270,8 +270,8 @@ __all__ = [
     "GetDeviceByNameUnexpectedError",
     "ListDevicesUnexpectedError",
     "UpdateDeviceUnexpectedError",
-    "UpdateDeviceLabelsUnexpectedError",
     "UpdateDevicesUnexpectedError",
+    "UpdateLabelsUnexpectedError",
     "CreateDeviceError",
     "CreateDevicesError",
     "DeleteDeviceError",
@@ -280,7 +280,7 @@ __all__ = [
     "GetDeviceByNameError",
     "ListDevicesError",
     "UpdateDeviceError",
-    "UpdateDeviceLabelsError",
     "UpdateDevicesError",
-    "ERROR_BY_OPERATION",
+    "UpdateLabelsError",
+    "ERROR_BY_METHOD",
 ]

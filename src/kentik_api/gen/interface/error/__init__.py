@@ -79,13 +79,13 @@ class InterfaceError(HTTPException):
 
 
 class InterfaceCreateError(InterfaceError):
-    """Operation-local error for InterfaceCreate."""
+    """Operation-local error for client.interface.interface_create()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
 class InterfaceCreateUnexpectedError(InterfaceCreateError):
-    """Operation-local response error for InterfaceCreate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for interface_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ InterfaceCreateError.response_error_map = {
 
 
 class InterfaceDeleteError(InterfaceError):
-    """Operation-local error for InterfaceDelete."""
+    """Operation-local error for client.interface.interface_delete()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
 class InterfaceDeleteUnexpectedError(InterfaceDeleteError):
-    """Operation-local response error for InterfaceDelete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for interface_delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ InterfaceDeleteError.response_error_map = {
 
 
 class InterfaceGetError(InterfaceError):
-    """Operation-local error for InterfaceGet."""
+    """Operation-local error for client.interface.interface_get()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
 class InterfaceGetUnexpectedError(InterfaceGetError):
-    """Operation-local response error for InterfaceGet (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for interface_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ InterfaceGetError.response_error_map = {
 
 
 class InterfaceUpdateError(InterfaceError):
-    """Operation-local error for InterfaceUpdate."""
+    """Operation-local error for client.interface.interface_update()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
 class InterfaceUpdateUnexpectedError(InterfaceUpdateError):
-    """Operation-local response error for InterfaceUpdate (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for interface_update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +147,13 @@ InterfaceUpdateError.response_error_map = {
 
 
 class ListInterfaceError(InterfaceError):
-    """Operation-local error for ListInterface."""
+    """Operation-local error for client.interface.list_interface()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
 class ListInterfaceUnexpectedError(ListInterfaceError):
-    """Operation-local response error for ListInterface (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_interface (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -164,13 +164,13 @@ ListInterfaceError.response_error_map = {
 
 
 class ManualClassifyError(InterfaceError):
-    """Operation-local error for ManualClassify."""
+    """Operation-local error for client.interface.manual_classify()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
 class ManualClassifyUnexpectedError(ManualClassifyError):
-    """Operation-local response error for ManualClassify (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for manual_classify (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -179,13 +179,13 @@ ManualClassifyError.response_error_map = {
     "default": ManualClassifyUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[InterfaceError]] = {
-    "InterfaceCreate": InterfaceCreateError,
-    "InterfaceDelete": InterfaceDeleteError,
-    "InterfaceGet": InterfaceGetError,
-    "InterfaceUpdate": InterfaceUpdateError,
-    "ListInterface": ListInterfaceError,
-    "ManualClassify": ManualClassifyError,
+ERROR_BY_METHOD: dict[str, type[InterfaceError]] = {
+    "interface_create": InterfaceCreateError,
+    "interface_delete": InterfaceDeleteError,
+    "interface_get": InterfaceGetError,
+    "interface_update": InterfaceUpdateError,
+    "list_interface": ListInterfaceError,
+    "manual_classify": ManualClassifyError,
 }
 
 __all__ = [
@@ -202,5 +202,5 @@ __all__ = [
     "InterfaceUpdateError",
     "ListInterfaceError",
     "ManualClassifyError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

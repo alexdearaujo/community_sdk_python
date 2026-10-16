@@ -53,7 +53,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.ListSiteMarkets,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.ListSiteMarketsError,
+                error_cls=RestSiteModule1.ListMarketsError,
             )
             return parse_grpc_response(
                 rest_models.ListSiteMarketsResponse,
@@ -97,7 +97,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.CreateSiteMarket,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.CreateSiteMarketError,
+                error_cls=RestSiteModule1.CreateMarketError,
             )
             return parse_grpc_response(
                 rest_models.CreateSiteMarketResponse,
@@ -137,7 +137,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.GetSiteMarket,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.GetSiteMarketError,
+                error_cls=RestSiteModule1.GetMarketError,
             )
             return parse_grpc_response(
                 rest_models.GetSiteMarketResponse,
@@ -183,7 +183,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.UpdateSiteMarket,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.UpdateSiteMarketError,
+                error_cls=RestSiteModule1.UpdateMarketError,
             )
             return parse_grpc_response(
                 rest_models.UpdateSiteMarketResponse,
@@ -224,7 +224,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.DeleteSiteMarket,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.DeleteSiteMarketError,
+                error_cls=RestSiteModule1.DeleteMarketError,
             )
             return parse_grpc_response(
                 rest_models.DeleteSiteMarketResponse,

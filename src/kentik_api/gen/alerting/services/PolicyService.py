@@ -10,7 +10,7 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import DisableError, EnableError, GetError, ListError
+from ..error import DisableError, EnableError, PolicyGetError, PolicyListError
 from ..models import (  # noqa: F401
     AggregationType,
     Alert,
@@ -223,7 +223,7 @@ def List(
         header_params=header_params,
         expected_status=200,
         operation_name="List",
-        error_cls=ListError,
+        error_cls=PolicyListError,
     )
 
     return parse_response_model(
@@ -256,7 +256,7 @@ def Get(
         header_params=header_params,
         expected_status=200,
         operation_name="Get",
-        error_cls=GetError,
+        error_cls=PolicyGetError,
     )
 
     return parse_response_model(

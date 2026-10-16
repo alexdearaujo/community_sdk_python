@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import parse_response_model, request_json
 
-from ..error import MetricsSchemaService_GetMetricsSchemaError
+from ..error import GetMetricsSchemaError
 from ..models import (  # noqa: F401
     FieldDisplay,
     FieldSchema,
@@ -36,7 +36,7 @@ def MetricsSchemaService_GetMetricsSchema(
         header_params=header_params,
         expected_status=200,
         operation_name="MetricsSchemaService_GetMetricsSchema",
-        error_cls=MetricsSchemaService_GetMetricsSchemaError,
+        error_cls=GetMetricsSchemaError,
     )
 
     return parse_response_model(

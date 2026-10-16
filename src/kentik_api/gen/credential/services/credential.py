@@ -55,7 +55,7 @@ class CredentialServiceWrapper:
                 self._grpc_stub_1.ListCredentialGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCredentialModule1.ListCredentialGroupError,
+                error_cls=RestCredentialModule1.ListGroupError,
             )
             return parse_grpc_response(
                 rest_models.ListCredentialGroupResponse,
@@ -94,7 +94,7 @@ class CredentialServiceWrapper:
                 self._grpc_stub_1.GetCredentialGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCredentialModule1.GetCredentialGroupError,
+                error_cls=RestCredentialModule1.GetGroupError,
             )
             return parse_grpc_response(
                 rest_models.GetCredentialGroupResponse,

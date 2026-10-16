@@ -79,13 +79,13 @@ class LabelError(HTTPException):
 
 
 class CreateLabelError(LabelError):
-    """Operation-local error for CreateLabel."""
+    """Operation-local error for client.label.create_label()."""
 
     response_error_map: dict[str, type[LabelError]] = {}
 
 
 class CreateLabelUnexpectedError(CreateLabelError):
-    """Operation-local response error for CreateLabel (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_label (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ CreateLabelError.response_error_map = {
 
 
 class DeleteLabelError(LabelError):
-    """Operation-local error for DeleteLabel."""
+    """Operation-local error for client.label.delete_label()."""
 
     response_error_map: dict[str, type[LabelError]] = {}
 
 
 class DeleteLabelUnexpectedError(DeleteLabelError):
-    """Operation-local response error for DeleteLabel (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for delete_label (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ DeleteLabelError.response_error_map = {
 
 
 class ListLabelsError(LabelError):
-    """Operation-local error for ListLabels."""
+    """Operation-local error for client.label.list_labels()."""
 
     response_error_map: dict[str, type[LabelError]] = {}
 
 
 class ListLabelsUnexpectedError(ListLabelsError):
-    """Operation-local response error for ListLabels (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_labels (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ ListLabelsError.response_error_map = {
 
 
 class UpdateLabelError(LabelError):
-    """Operation-local error for UpdateLabel."""
+    """Operation-local error for client.label.update_label()."""
 
     response_error_map: dict[str, type[LabelError]] = {}
 
 
 class UpdateLabelUnexpectedError(UpdateLabelError):
-    """Operation-local response error for UpdateLabel (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_label (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -145,11 +145,11 @@ UpdateLabelError.response_error_map = {
     "default": UpdateLabelUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[LabelError]] = {
-    "CreateLabel": CreateLabelError,
-    "DeleteLabel": DeleteLabelError,
-    "ListLabels": ListLabelsError,
-    "UpdateLabel": UpdateLabelError,
+ERROR_BY_METHOD: dict[str, type[LabelError]] = {
+    "create_label": CreateLabelError,
+    "delete_label": DeleteLabelError,
+    "list_labels": ListLabelsError,
+    "update_label": UpdateLabelError,
 }
 
 __all__ = [
@@ -162,5 +162,5 @@ __all__ = [
     "DeleteLabelError",
     "ListLabelsError",
     "UpdateLabelError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

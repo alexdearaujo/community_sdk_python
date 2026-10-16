@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import parse_response_model, request_json
 
-from ..error import GetJourneysNlqError
+from ..error import GetNlqError
 from ..models import (  # noqa: F401
     GetJourneysNlqResponse,
     ResultFormat,
@@ -37,7 +37,7 @@ def GetJourneysNlq(
         header_params=header_params,
         expected_status=200,
         operation_name="GetJourneysNlq",
-        error_cls=GetJourneysNlqError,
+        error_cls=GetNlqError,
     )
 
     return parse_response_model(

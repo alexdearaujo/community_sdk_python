@@ -53,7 +53,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.ListASGroups,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.ListASGroupsError,
+                error_cls=RestAsGroupModule1.ListAsGroupsError,
             )
             return parse_grpc_response(
                 rest_models.ListASGroupsResponse,
@@ -97,7 +97,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.CreateASGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.CreateASGroupError,
+                error_cls=RestAsGroupModule1.CreateAsGroupError,
             )
             return parse_grpc_response(
                 rest_models.CreateASGroupResponse,
@@ -137,7 +137,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.GetASGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.GetASGroupError,
+                error_cls=RestAsGroupModule1.GetAsGroupError,
             )
             return parse_grpc_response(
                 rest_models.GetASGroupResponse,
@@ -183,7 +183,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.UpdateASGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.UpdateASGroupError,
+                error_cls=RestAsGroupModule1.UpdateAsGroupError,
             )
             return parse_grpc_response(
                 rest_models.UpdateASGroupResponse,
@@ -224,7 +224,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.DeleteASGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.DeleteASGroupError,
+                error_cls=RestAsGroupModule1.DeleteAsGroupError,
             )
             return parse_grpc_response(
                 rest_models.DeleteASGroupResponse,

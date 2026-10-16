@@ -10,7 +10,7 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import GetAuditEventError, ListAuditEventsError
+from ..error import GetEventByCtimeError, GetEventError, ListEventsError
 from ..models import (  # noqa: F401
     AuditEvent,
     GenericEvent,
@@ -52,7 +52,7 @@ def ListAuditEvents(
         header_params=header_params,
         expected_status=200,
         operation_name="ListAuditEvents",
-        error_cls=ListAuditEventsError,
+        error_cls=ListEventsError,
     )
 
     return parse_response_model(
@@ -88,7 +88,7 @@ def GetAuditEvent(
         header_params=header_params,
         expected_status=200,
         operation_name="GetAuditEvent",
-        error_cls=GetAuditEventError,
+        error_cls=GetEventError,
     )
 
     return parse_response_model(
@@ -121,7 +121,7 @@ def GetAuditEvent_2(
         header_params=header_params,
         expected_status=200,
         operation_name="GetAuditEvent",
-        error_cls=GetAuditEventError,
+        error_cls=GetEventByCtimeError,
     )
 
     return parse_response_model(

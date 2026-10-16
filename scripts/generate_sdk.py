@@ -24,6 +24,7 @@ from generation import (
 from generation._shared import (
     PROJECT_ROOT,
     SDK_OUTPUT_DIR,
+    iter_service_dirs,
     normalize_symbol,
 )
 from generation.endpoint_docs import SCHEMA_RECORD_FILE, EndpointDocsCollector
@@ -1015,14 +1016,13 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                     # The patched swagger, so pages name the models the SDK defines.
                     endpoint_docs_collector.extract(service, tmp_swagger)
 
-        for service, swagger_paths in service_swagger_paths.items():
-            service_dir = SDK_OUTPUT_DIR / service
-            if service_dir.exists():
-                error_package.generate_service_error_package(
-                    service_dir,
-                    swagger_paths,
-                    status_model=model_renames[service].get("rpcStatus"),
-                )
+        # Swagger files exist only inside this block; packages are written after fixup.
+        operation_errors = {
+            service: error_package.merge_operation_error_responses(
+                [error_package.collect_operation_error_responses(p) for p in paths]
+            )
+            for service, paths in service_swagger_paths.items()
+        }
 
     parity.validate_generated_service_parity(
         {public_service[s] for s in source_services}, SDK_OUTPUT_DIR
@@ -1037,6 +1037,15 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
     for service_dir in SDK_OUTPUT_DIR.iterdir():
         if service_dir.is_dir() and service_dir.name != "__pycache__":
             fixup.fix_generated_service(service_dir)
+
+    # Error classes are named after client methods, so this needs fixed-up REST modules.
+    for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
+        error_package.generate_service_error_package(
+            service_dir,
+            operation_errors[service_dir.name],
+            wrapper_generation.public_method_names(service_dir, names),
+            status_model=model_renames[service_dir.name].get("rpcStatus"),
+        )
 
     # Runs once every pb/ directory exists, so cross-service targets resolve.
     relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR, pb_owners)

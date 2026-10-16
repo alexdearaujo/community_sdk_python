@@ -15,7 +15,7 @@ from ..error import (
     CreatePopulatorError,
     DeleteCustomDimensionError,
     DeletePopulatorError,
-    GetCustomDimensionInfoError,
+    GetInfoError,
     GetPopulatorError,
     GetPopulatorFieldError,
     ListCustomDimensionsError,
@@ -95,7 +95,7 @@ def GetCustomDimensionInfo(
         header_params=header_params,
         expected_status=200,
         operation_name="GetCustomDimensionInfo",
-        error_cls=GetCustomDimensionInfoError,
+        error_cls=GetInfoError,
     )
 
     return parse_response_model(

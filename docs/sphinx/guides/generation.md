@@ -149,8 +149,10 @@ run `make generate`. To rename an existing public name, change the key. That
 is a breaking change for users, so record it in `CHANGELOG.md`.
 
 > [!NOTE]
-> Parameter names, model fields, enum values, and error class names come from
-> the schema, not from this file. `make check-changelog` reports their changes.
+> Each operation's error classes follow its client method name
+> (`list_labels` raises `ListLabelsError`), so this file names them too.
+> Parameter names, model fields, and enum values come from the schema.
+> `make check-changelog` reports their changes.
 
 ## Test after regeneration
 

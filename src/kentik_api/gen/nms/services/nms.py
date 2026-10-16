@@ -50,7 +50,7 @@ class NmsServiceWrapper:
                 self._grpc_stub_1.GetMetricsSchema,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestNmsModule1.MetricsSchemaService_GetMetricsSchemaError,
+                error_cls=RestNmsModule1.GetMetricsSchemaError,
             )
             return parse_grpc_response(
                 rest_models.GetMetricsSchemaResponse,

@@ -322,3 +322,8 @@ This ledger records findings that are intentionally deferred.
   (label version bump, operationId rename, moved DELETE path) failed once,
   naming only `delete_label`; after a one-line fix every label name was
   unchanged. Error class names still follow the operationId.
+- 2026-10-15: error classes now follow the client method name
+  (`list_labels` raises `ListLabelsError`), so `public_names.json` protects
+  them too. An operationId rename no longer renames an error class, and
+  operations that share an operationId (eight `List` in `alerting`) no longer
+  share one class. `ERROR_BY_OPERATION` became `ERROR_BY_METHOD`.

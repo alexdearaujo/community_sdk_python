@@ -96,7 +96,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.GetCustomDimensionInfo,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomDimensionModule1.GetCustomDimensionInfoError,
+                error_cls=RestCustomDimensionModule1.GetInfoError,
             )
             return parse_grpc_response(
                 rest_models.GetCustomDimensionInfoResponse,

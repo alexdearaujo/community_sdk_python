@@ -472,7 +472,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.UpdateDeviceLabels,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.UpdateDeviceLabelsError,
+                error_cls=RestDeviceModule1.UpdateLabelsError,
             )
             return parse_grpc_response(
                 rest_models.UpdateDeviceLabelsResponse,

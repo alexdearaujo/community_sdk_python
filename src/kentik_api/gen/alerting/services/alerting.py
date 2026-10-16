@@ -160,7 +160,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_2.Create,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule1.CreateError,
+                error_cls=RestAlertingModule1.AutoAckCreateError,
             )
             return parse_grpc_response(
                 rest_models.AlertAutoAckServiceCreateResponse,
@@ -205,7 +205,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_2.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule1.ListError,
+                error_cls=RestAlertingModule1.AutoAckListError,
             )
             return parse_grpc_response(
                 rest_models.AlertAutoAckServiceListResponse,
@@ -245,7 +245,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_2.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule1.GetError,
+                error_cls=RestAlertingModule1.AutoAckGetError,
             )
             return parse_grpc_response(
                 rest_models.AlertAutoAckServiceGetResponse,
@@ -287,7 +287,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_2.Delete,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule1.DeleteError,
+                error_cls=RestAlertingModule1.AutoAckDeleteError,
             )
             return parse_grpc_response(
                 rest_models.AlertAutoAckServiceDeleteResponse,
@@ -333,7 +333,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_2.Replace,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule1.ReplaceError,
+                error_cls=RestAlertingModule1.AutoAckReplaceError,
             )
             return parse_grpc_response(
                 rest_models.AlertAutoAckServiceReplaceResponse,
@@ -379,7 +379,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_1.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule2.ListError,
+                error_cls=RestAlertingModule2.AlertListError,
             )
             return parse_grpc_response(
                 rest_models.AlertServiceListResponse,
@@ -600,7 +600,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_1.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule2.GetError,
+                error_cls=RestAlertingModule2.AlertGetError,
             )
             return parse_grpc_response(
                 rest_models.AlertServiceGetResponse,
@@ -739,7 +739,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_7.Create,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule3.CreateError,
+                error_cls=RestAlertingModule3.SilenceNotificationsCreateError,
             )
             return parse_grpc_response(
                 rest_models.AlertSilenceNotificationsServiceCreateResponse,
@@ -784,7 +784,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_7.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule3.ListError,
+                error_cls=RestAlertingModule3.SilenceNotificationsListError,
             )
             return parse_grpc_response(
                 rest_models.AlertSilenceNotificationsServiceListResponse,
@@ -826,7 +826,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_7.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule3.GetError,
+                error_cls=RestAlertingModule3.SilenceNotificationsGetError,
             )
             return parse_grpc_response(
                 rest_models.AlertSilenceNotificationsServiceGetResponse,
@@ -868,7 +868,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_7.Delete,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule3.DeleteError,
+                error_cls=RestAlertingModule3.SilenceNotificationsDeleteError,
             )
             return parse_grpc_response(
                 rest_models.AlertSilenceNotificationsServiceDeleteResponse,
@@ -914,7 +914,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_7.Replace,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule3.ReplaceError,
+                error_cls=RestAlertingModule3.SilenceNotificationsReplaceError,
             )
             return parse_grpc_response(
                 rest_models.AlertSilenceNotificationsServiceReplaceResponse,
@@ -978,7 +978,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_3.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule4.ListError,
+                error_cls=RestAlertingModule4.MitigationMethodsListError,
             )
             return parse_grpc_response(
                 rest_models.MitigationMethodsServiceListResponse,
@@ -1026,7 +1026,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_3.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule4.GetError,
+                error_cls=RestAlertingModule4.MitigationMethodsGetError,
             )
             return parse_grpc_response(
                 rest_models.MitigationMethodsServiceGetResponse,
@@ -1089,7 +1089,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_4.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule5.ListError,
+                error_cls=RestAlertingModule5.MitigationPlatformsListError,
             )
             return parse_grpc_response(
                 rest_models.MitigationPlatformsServiceListResponse,
@@ -1137,7 +1137,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_4.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule5.GetError,
+                error_cls=RestAlertingModule5.MitigationPlatformsGetError,
             )
             return parse_grpc_response(
                 rest_models.MitigationPlatformsServiceGetResponse,
@@ -1208,7 +1208,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_5.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule6.ListError,
+                error_cls=RestAlertingModule6.MitigationsListError,
             )
             return parse_grpc_response(
                 rest_models.MitigationsServiceListResponse,
@@ -1265,7 +1265,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_5.Create,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule6.CreateError,
+                error_cls=RestAlertingModule6.MitigationsCreateError,
             )
             return parse_grpc_response(
                 rest_models.MitigationsServiceCreateResponse,
@@ -1344,7 +1344,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_5.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule6.GetError,
+                error_cls=RestAlertingModule6.MitigationsGetError,
             )
             return parse_grpc_response(
                 rest_models.MitigationsServiceGetResponse,
@@ -1478,7 +1478,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_6.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule7.ListError,
+                error_cls=RestAlertingModule7.PolicyListError,
             )
             return parse_grpc_response(
                 rest_models.PolicyServiceListResponse,
@@ -1524,7 +1524,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_6.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule7.GetError,
+                error_cls=RestAlertingModule7.PolicyGetError,
             )
             return parse_grpc_response(
                 rest_models.PolicyServiceGetResponse,
@@ -1668,7 +1668,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_8.Create,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule8.CreateError,
+                error_cls=RestAlertingModule8.SuppressionCreateError,
             )
             return parse_grpc_response(
                 rest_models.SuppressionServiceCreateResponse,
@@ -1713,7 +1713,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_8.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule8.ListError,
+                error_cls=RestAlertingModule8.SuppressionListError,
             )
             return parse_grpc_response(
                 rest_models.SuppressionServiceListResponse,
@@ -1753,7 +1753,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_8.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule8.GetError,
+                error_cls=RestAlertingModule8.SuppressionGetError,
             )
             return parse_grpc_response(
                 rest_models.SuppressionServiceGetResponse,
@@ -1793,7 +1793,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_8.Delete,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule8.DeleteError,
+                error_cls=RestAlertingModule8.SuppressionDeleteError,
             )
             return parse_grpc_response(
                 rest_models.SuppressionServiceDeleteResponse,
@@ -1839,7 +1839,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_8.Replace,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule8.ReplaceError,
+                error_cls=RestAlertingModule8.SuppressionReplaceError,
             )
             return parse_grpc_response(
                 rest_models.SuppressionServiceReplaceResponse,

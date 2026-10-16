@@ -6,11 +6,7 @@ from typing import Any, Dict, Optional
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import parse_response_model, request_json
 
-from ..error import (
-    RouteService_AnnounceError,
-    RouteService_ListError,
-    RouteService_WithdrawError,
-)
+from ..error import RouteAnnounceError, RouteListError, RouteWithdrawError
 from ..models import (  # noqa: F401
     AdvertStatus,
     BitwiseOp,
@@ -82,7 +78,7 @@ def RouteService_Announce(
         header_params=header_params,
         expected_status=200,
         operation_name="RouteService_Announce",
-        error_cls=RouteService_AnnounceError,
+        error_cls=RouteAnnounceError,
     )
 
     return parse_response_model(
@@ -114,7 +110,7 @@ def RouteService_List(
         header_params=header_params,
         expected_status=200,
         operation_name="RouteService_List",
-        error_cls=RouteService_ListError,
+        error_cls=RouteListError,
     )
 
     return parse_response_model(
@@ -148,7 +144,7 @@ def RouteService_Withdraw(
         header_params=header_params,
         expected_status=200,
         operation_name="RouteService_Withdraw",
-        error_cls=RouteService_WithdrawError,
+        error_cls=RouteWithdrawError,
     )
 
     return parse_response_model(

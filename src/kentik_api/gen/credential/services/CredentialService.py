@@ -10,7 +10,7 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import GetCredentialGroupError, ListCredentialGroupError
+from ..error import GetGroupError, ListGroupError
 from ..models import (  # noqa: F401
     CredentialGroup,
     GetCredentialGroupResponse,
@@ -47,7 +47,7 @@ def ListCredentialGroup(
         header_params=header_params,
         expected_status=200,
         operation_name="ListCredentialGroup",
-        error_cls=ListCredentialGroupError,
+        error_cls=ListGroupError,
     )
 
     return parse_response_model(
@@ -80,7 +80,7 @@ def GetCredentialGroup(
         header_params=header_params,
         expected_status=200,
         operation_name="GetCredentialGroup",
-        error_cls=GetCredentialGroupError,
+        error_cls=GetGroupError,
     )
 
     return parse_response_model(

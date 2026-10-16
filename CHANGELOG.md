@@ -47,6 +47,8 @@ Each change below can stop an existing `except` clause or call from working.
 | `kmeta` `ServiceNowConfig.credentialVaultId` held a credential vault entry ID | Upstream renamed it `credentialVaultName`; it holds the entry's name and always resolves to the entry's latest version | Read and send `credentialVaultName` |
 | Client method names depended on module and route order, and many repeated the Service name (`client.audit.get_audit_event`) | Names no longer depend on order and drop the Service word when two or more words remain. See [Renamed client methods](#renamed-client-methods) | Use the new names in the table below |
 | 50 model names held a schema version (`labelv202210Label`), so a version bump renamed them | The version and its package prefix are gone (`Label`). See [Renamed models](#renamed-models) | Use the new names in the table below |
+| Error classes were named after the upstream operationId, and operations that share one (`alerting` has eight `List` operations) shared one class | Each operation has its own class, named after its client method: `client.label.list_labels` raises `ListLabelsError`. See [Renamed error classes](#renamed-error-classes) | Catch the new names in the table below |
+| Each error package exported `ERROR_BY_OPERATION`, keyed by operationId | It exports `ERROR_BY_METHOD`, keyed by client method name | Look up `ERROR_BY_METHOD["list_labels"]` |
 
 #### Renamed client methods
 
@@ -160,10 +162,42 @@ These fields keep their names, but their type is now the renamed model:
 - `rbux`: `ScopeConfig.filters`
 - `synthetics`: `NetNode.location`, `Test.createdBy`, `Test.lastUpdatedBy`
 
+#### Renamed error classes
+
+An error class is now named after its client method, so it keeps its name
+when upstream changes the operationId. Each response class follows its
+operation class: `ListLabelsNotFoundError` extends `ListLabelsError`. A name
+that would match a Python builtin exception gets the Service name in front.
+Acronyms are no longer all capitals, because method names are lowercase
+(`ListASGroupsError` is now `ListAsGroupsError`).
+
+In `alerting`, `CreateError`, `DeleteError`, `GetError`, `ListError`, and
+`ReplaceError` are split into one class per method. Each class name is the
+method name in PascalCase with `Error` added: `alert_list` raises
+`AlertListError`, `auto_ack_get` raises `AutoAckGetError`, and
+`suppression_delete` raises `SuppressionDeleteError`.
+
+| Service | Before | After |
+| --- | --- | --- |
+| `as_group` | `ListASGroupsError`, `GetASGroupError`, `CreateASGroupError`, `UpdateASGroupError`, `DeleteASGroupError` | `ListAsGroupsError`, `GetAsGroupError`, `CreateAsGroupError`, `UpdateAsGroupError`, `DeleteAsGroupError` |
+| `audit` | `ListAuditEventsError`, `GetAuditEventError` (both routes) | `ListEventsError`, `GetEventError`, `GetEventByCtimeError` |
+| `cost` | `ListCostProvidersError`, `ListCostProviderSummariesError`, `GetCostProviderSummaryError` | `ListProvidersError`, `ListProviderSummariesError`, `GetProviderSummaryError` |
+| `credential` | `ListCredentialGroupError`, `GetCredentialGroupError` | `ListGroupError`, `GetGroupError` |
+| `custom_dimension` | `GetCustomDimensionInfoError` | `GetInfoError` |
+| `device` | `UpdateDeviceLabelsError` | `UpdateLabelsError` |
+| `journeys` | `GetJourneysNlqError` | `GetNlqError` |
+| `kagent` | `CapabilityAdminService_ListCapabilitiesError`, `CapabilityAdminService_GetCapabilityError`, `CapabilityAdminService_CreateCapabilityError`, `CapabilityAdminService_UpdateCapabilityError`, `CapabilityAdminService_DeleteCapabilityError` | `ListCapabilitiesError`, `GetCapabilityError`, `CreateCapabilityError`, `UpdateCapabilityError`, `DeleteCapabilityError` |
+| `kagent` | `CapabilityReleaseService_GetCapabilityReleaseError`, `CapabilityReleaseService_GetCapabilityLatestReleasesError`, `CapabilityReleaseService_GetCapabilitySupportedDistrosError` | `GetCapabilityReleaseError`, `GetCapabilityLatestReleasesError`, `GetCapabilitySupportedDistrosError` |
+| `kmi` | `GetASNInsightsError`, `GetASNDetailsError` | `GetAsnInsightsError`, `GetAsnDetailsError` |
+| `ktbgp` | `RouteService_ListError`, `RouteService_AnnounceError`, `RouteService_WithdrawError` | `RouteListError`, `RouteAnnounceError`, `RouteWithdrawError` |
+| `nms` | `MetricsSchemaService_GetMetricsSchemaError` | `GetMetricsSchemaError` |
+| `pathfinder` | `CreatePathfinderReportError` | `CreateReportError` |
+| `site` | `ListSiteMarketsError`, `GetSiteMarketError`, `CreateSiteMarketError`, `UpdateSiteMarketError`, `DeleteSiteMarketError` | `ListMarketsError`, `GetMarketError`, `CreateMarketError`, `UpdateMarketError`, `DeleteMarketError` |
+
 ### Added
 
 - **Stable public names.** `public_names.json` sets the name of every Service,
-  client method, and model. A version bump or a new operationId upstream no
+  client method, and model, and each method's error classes follow its name. A version bump or a new operationId upstream no
   longer renames anything. When upstream moves or renames something,
   generation fails and names the entry to update. See "Keep public names
   stable" in [the generation guide](docs/sphinx/guides/generation.md).
