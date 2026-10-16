@@ -620,6 +620,12 @@ generates. To link work to its Jira ticket, put the ticket key (for
 example `FA-2`) at the start of the pull request title. Jira also
 links a commit that names the key.
 
+Until the V6 work merges into `main`, `feat/v6-sdk` is the base
+branch. `main` does not have the V6 SDK yet. Create each new branch
+from `feat/v6-sdk`, and merge it back with `git merge --no-ff`. The
+maintainer opens the pull request from `feat/v6-sdk` into `main` by
+hand.
+
 <!-- shared-rules:start -->
 <!-- Synced from ~/.claude/CLAUDE.md; regenerate by re-running the
      agents-md skill instead of hand-editing this block. AGENTS.md
