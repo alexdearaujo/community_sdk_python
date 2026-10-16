@@ -79,13 +79,13 @@ class CloudExportError(HTTPException):
 
 
 class CreateCloudExportError(CloudExportError):
-    """Operation-local error for CreateCloudExport."""
+    """Operation-local error for client.cloud_export.create_cloud_export()."""
 
     response_error_map: dict[str, type[CloudExportError]] = {}
 
 
 class CreateCloudExportUnexpectedError(CreateCloudExportError):
-    """Operation-local response error for CreateCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_cloud_export (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ CreateCloudExportError.response_error_map = {
 
 
 class DeleteCloudExportError(CloudExportError):
-    """Operation-local error for DeleteCloudExport."""
+    """Operation-local error for client.cloud_export.delete_cloud_export()."""
 
     response_error_map: dict[str, type[CloudExportError]] = {}
 
 
 class DeleteCloudExportUnexpectedError(DeleteCloudExportError):
-    """Operation-local response error for DeleteCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for delete_cloud_export (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ DeleteCloudExportError.response_error_map = {
 
 
 class GetCloudExportError(CloudExportError):
-    """Operation-local error for GetCloudExport."""
+    """Operation-local error for client.cloud_export.get_cloud_export()."""
 
     response_error_map: dict[str, type[CloudExportError]] = {}
 
 
 class GetCloudExportUnexpectedError(GetCloudExportError):
-    """Operation-local response error for GetCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_cloud_export (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ GetCloudExportError.response_error_map = {
 
 
 class ListCloudExportsError(CloudExportError):
-    """Operation-local error for ListCloudExports."""
+    """Operation-local error for client.cloud_export.list_cloud_exports()."""
 
     response_error_map: dict[str, type[CloudExportError]] = {}
 
 
 class ListCloudExportsUnexpectedError(ListCloudExportsError):
-    """Operation-local response error for ListCloudExports (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_cloud_exports (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +147,13 @@ ListCloudExportsError.response_error_map = {
 
 
 class UpdateCloudExportError(CloudExportError):
-    """Operation-local error for UpdateCloudExport."""
+    """Operation-local error for client.cloud_export.update_cloud_export()."""
 
     response_error_map: dict[str, type[CloudExportError]] = {}
 
 
 class UpdateCloudExportUnexpectedError(UpdateCloudExportError):
-    """Operation-local response error for UpdateCloudExport (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_cloud_export (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -162,12 +162,12 @@ UpdateCloudExportError.response_error_map = {
     "default": UpdateCloudExportUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[CloudExportError]] = {
-    "CreateCloudExport": CreateCloudExportError,
-    "DeleteCloudExport": DeleteCloudExportError,
-    "GetCloudExport": GetCloudExportError,
-    "ListCloudExports": ListCloudExportsError,
-    "UpdateCloudExport": UpdateCloudExportError,
+ERROR_BY_METHOD: dict[str, type[CloudExportError]] = {
+    "create_cloud_export": CreateCloudExportError,
+    "delete_cloud_export": DeleteCloudExportError,
+    "get_cloud_export": GetCloudExportError,
+    "list_cloud_exports": ListCloudExportsError,
+    "update_cloud_export": UpdateCloudExportError,
 }
 
 __all__ = [
@@ -182,5 +182,5 @@ __all__ = [
     "GetCloudExportError",
     "ListCloudExportsError",
     "UpdateCloudExportError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

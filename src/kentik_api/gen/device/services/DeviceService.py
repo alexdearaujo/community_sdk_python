@@ -19,8 +19,8 @@ from ..error import (
     GetDeviceError,
     ListDevicesError,
     UpdateDeviceError,
-    UpdateDeviceLabelsError,
     UpdateDevicesError,
+    UpdateLabelsError,
 )
 from ..models import (  # noqa: F401
     CreateDeviceRequest,
@@ -45,6 +45,7 @@ from ..models import (  # noqa: F401
     GetDeviceResponse,
     GnmiV1Conf,
     Interface,
+    Label,
     LabelConcise,
     ListDevicesResponse,
     Plan,
@@ -53,7 +54,6 @@ from ..models import (  # noqa: F401
     UpdateDeviceResponse,
     UpdateDevicesRequest,
     UpdateDevicesResponse,
-    devicev202504beta2Label,
     protobufAny,
     rpcStatus,
 )
@@ -401,7 +401,7 @@ def UpdateDeviceLabels(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateDeviceLabels",
-        error_cls=UpdateDeviceLabelsError,
+        error_cls=UpdateLabelsError,
     )
 
     return parse_response_model(

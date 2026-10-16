@@ -79,13 +79,13 @@ class CapacityPlanError(HTTPException):
 
 
 class GetCapacityPlanError(CapacityPlanError):
-    """Operation-local error for GetCapacityPlan."""
+    """Operation-local error for client.capacity_plan.get_capacity_plan()."""
 
     response_error_map: dict[str, type[CapacityPlanError]] = {}
 
 
 class GetCapacityPlanUnexpectedError(GetCapacityPlanError):
-    """Operation-local response error for GetCapacityPlan (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_capacity_plan (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ GetCapacityPlanError.response_error_map = {
 
 
 class GetCapacitySummaryError(CapacityPlanError):
-    """Operation-local error for GetCapacitySummary."""
+    """Operation-local error for client.capacity_plan.get_capacity_summary()."""
 
     response_error_map: dict[str, type[CapacityPlanError]] = {}
 
 
 class GetCapacitySummaryUnexpectedError(GetCapacitySummaryError):
-    """Operation-local response error for GetCapacitySummary (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_capacity_summary (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ GetCapacitySummaryError.response_error_map = {
 
 
 class ListCapacityPlansError(CapacityPlanError):
-    """Operation-local error for ListCapacityPlans."""
+    """Operation-local error for client.capacity_plan.list_capacity_plans()."""
 
     response_error_map: dict[str, type[CapacityPlanError]] = {}
 
 
 class ListCapacityPlansUnexpectedError(ListCapacityPlansError):
-    """Operation-local response error for ListCapacityPlans (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_capacity_plans (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ ListCapacityPlansError.response_error_map = {
 
 
 class ListCapacitySummariesError(CapacityPlanError):
-    """Operation-local error for ListCapacitySummaries."""
+    """Operation-local error for client.capacity_plan.list_capacity_summaries()."""
 
     response_error_map: dict[str, type[CapacityPlanError]] = {}
 
 
 class ListCapacitySummariesUnexpectedError(ListCapacitySummariesError):
-    """Operation-local response error for ListCapacitySummaries (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_capacity_summaries (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -145,11 +145,11 @@ ListCapacitySummariesError.response_error_map = {
     "default": ListCapacitySummariesUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[CapacityPlanError]] = {
-    "GetCapacityPlan": GetCapacityPlanError,
-    "GetCapacitySummary": GetCapacitySummaryError,
-    "ListCapacityPlans": ListCapacityPlansError,
-    "ListCapacitySummaries": ListCapacitySummariesError,
+ERROR_BY_METHOD: dict[str, type[CapacityPlanError]] = {
+    "get_capacity_plan": GetCapacityPlanError,
+    "get_capacity_summary": GetCapacitySummaryError,
+    "list_capacity_plans": ListCapacityPlansError,
+    "list_capacity_summaries": ListCapacitySummariesError,
 }
 
 __all__ = [
@@ -162,5 +162,5 @@ __all__ = [
     "GetCapacitySummaryError",
     "ListCapacityPlansError",
     "ListCapacitySummariesError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

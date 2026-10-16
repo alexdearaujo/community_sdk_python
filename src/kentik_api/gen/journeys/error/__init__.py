@@ -78,29 +78,29 @@ class JourneysError(HTTPException):
         )
 
 
-class GetJourneysNlqError(JourneysError):
-    """Operation-local error for GetJourneysNlq."""
+class GetNlqError(JourneysError):
+    """Operation-local error for client.journeys.get_nlq()."""
 
     response_error_map: dict[str, type[JourneysError]] = {}
 
 
-class GetJourneysNlqUnexpectedError(GetJourneysNlqError):
-    """Operation-local response error for GetJourneysNlq (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetNlqUnexpectedError(GetNlqError):
+    """Operation-local response error for get_nlq (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetJourneysNlqError.response_error_map = {
-    "default": GetJourneysNlqUnexpectedError,
+GetNlqError.response_error_map = {
+    "default": GetNlqUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[JourneysError]] = {
-    "GetJourneysNlq": GetJourneysNlqError,
+ERROR_BY_METHOD: dict[str, type[JourneysError]] = {
+    "get_nlq": GetNlqError,
 }
 
 __all__ = [
     "JourneysError",
-    "GetJourneysNlqUnexpectedError",
-    "GetJourneysNlqError",
-    "ERROR_BY_OPERATION",
+    "GetNlqUnexpectedError",
+    "GetNlqError",
+    "ERROR_BY_METHOD",
 ]

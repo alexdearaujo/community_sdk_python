@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from .labelv202210Label import labelv202210Label
+from .Label import Label
 
 
 class ListLabelsResponse(BaseModel):
@@ -15,7 +15,7 @@ class ListLabelsResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    labels: Optional[List[Optional[labelv202210Label]]] = Field(
+    labels: Optional[List[Optional[Label]]] = Field(
         validation_alias="labels", default=None, description="List of configured labels"
     )
 

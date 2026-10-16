@@ -197,7 +197,34 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autoclass:: kentik_api.gen.credential.models.LandingType
+   :members:
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.credential.models.ListCredentialGroupResponse
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.credential.models.PermissionEntry
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.credential.models.Role
+   :members:
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.credential.models.Secret
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.credential.models.SecretType
+   :members:
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.credential.models.User
 ```
 
 ```{eval-rst}
@@ -206,31 +233,4 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.credential.models.rpcStatus
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.credential.models.v202211LandingType
-   :members:
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.credential.models.v202211PermissionEntry
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.credential.models.v202211Role
-   :members:
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.credential.models.v202211User
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.credential.models.v202312alpha1Secret
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.credential.models.v202312alpha1SecretType
-   :members:
 ```

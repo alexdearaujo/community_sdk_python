@@ -44,9 +44,10 @@ _Avoid_: generator step, stage
 
 **Service error package**:
 The `error/__init__.py` file that the `error_package` phase module
-generates for one service. It defines a base error class, one leaf
-class per declared error response, and one class per operation. The
-runtime dispatches errors through `error_cls.from_response`.
+generates for one service. It defines a base error class, one class
+per operation, named after the operation's client method
+(`ListLabelsError`), and one leaf class per declared error response.
+The runtime dispatches errors through `error_cls.from_response`.
 
 **Parity validation**:
 The check that compares the set of generated service directories

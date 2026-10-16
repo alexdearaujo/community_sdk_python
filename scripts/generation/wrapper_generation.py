@@ -19,6 +19,7 @@ from ._shared import (
     parse_generated_rest_module,
     service_to_pascal_case,
 )
+from .public_names import PublicNames, operation_key
 
 
 @dataclass(frozen=True)
@@ -247,7 +248,18 @@ def _wrapper_method_names(
         routes: dict[str, list[RestOperation]] = {}
         for op in ops:
             # fixup suffixes a repeated operationId: GetAuditEvent, GetAuditEvent_2.
-            routes.setdefault(re.sub(r"_\d+$", "", op.name), []).append(op)
+            base = re.sub(r"_\d+$", "", op.name)
+            # protoc's default operationId is `<Module>_<Method>`; the Module is noise,
+            # unless only one word is left (`RouteService_List` -> `route_list`).
+            method = base.removeprefix(f"{rest_file.stem}_")
+            if method != base:
+                one_word = re.fullmatch(r"[A-Z][a-z0-9]*", method)
+                base = (
+                    rest_file.stem.removesuffix("Service") + method
+                    if one_word
+                    else method
+                )
+            routes.setdefault(base, []).append(op)
         for base, group in routes.items():
             fewest = min(len(_PLACEHOLDER.findall(op.path)) for op in group)
             shortest = [
@@ -287,7 +299,53 @@ def _wrapper_method_names(
     return names
 
 
-def _generate_service_wrappers():
+def _public_method_names(
+    service: str,
+    ops_by_file: dict[Path, list[RestOperation]],
+    names: PublicNames,
+) -> dict[tuple[Path, str], str]:
+    """Names each wrapper method from public_names.json; a new operation gets its default name."""
+    defaults = _wrapper_method_names(service, ops_by_file)
+    keys = {
+        (rest_file, op.name): operation_key(op.http_method, op.path)
+        for rest_file, ops in ops_by_file.items()
+        for op in ops
+    }
+    if len(set(keys.values())) < len(keys):
+        raise ValueError(f"{service}: two operations share one operation key")
+    public = names.methods(service, {keys[op]: defaults[op] for op in sorted(keys)})
+    return {op: public[key] for op, key in keys.items()}
+
+
+def _rest_modules(service_dir: Path) -> list[Path]:
+    """The generated REST modules of a Service (DeviceService.py, ...), sorted."""
+    services_folder = service_dir / "services"
+    if not services_folder.exists():
+        services_folder = service_dir / "service"
+    return [
+        f
+        for f in sorted(services_folder.glob("*.py"))
+        if f.name != "__init__.py"
+        and f.name != f"{service_dir.name}.py"
+        and not f.name.startswith("async_")
+        and f.stem.endswith("Service")
+    ]
+
+
+def public_method_names(
+    service_dir: Path, names: PublicNames
+) -> dict[tuple[Path, str], str]:
+    """Maps each (REST module, function) of a Service to its client method name.
+
+    Fails when public_names.json names a method the Service no longer has.
+    """
+    ops_by_file = {
+        f: parse_generated_rest_module(f) for f in _rest_modules(service_dir)
+    }
+    return _public_method_names(service_dir.name, ops_by_file, names)
+
+
+def _generate_service_wrappers(names: PublicNames):
     """Auto-generates the dual-transport wrapper classes for every service."""
     print("Generating unified service wrappers...")
 
@@ -295,29 +353,15 @@ def _generate_service_wrappers():
         service = service_dir.name
         title = service_to_pascal_case(service)
         model_classes = discover_service_model_classes(service_dir)
-
-        # 1. Dynamically find the services directory
-        services_folder = service_dir / "services"
-        if not services_folder.exists():
-            services_folder = service_dir / "service"
-            if not services_folder.exists():
-                continue
-
-        # 2. Collect generated REST service modules (e.g. DeviceService.py, SyntheticsAdminService.py)
-        rest_files = [
-            f
-            for f in sorted(services_folder.glob("*.py"))
-            if f.name != "__init__.py"
-            and f.name != f"{service}.py"
-            and not f.name.startswith("async_")
-            and f.stem.endswith("Service")
-        ]
+        rest_files = _rest_modules(service_dir)
+        method_names = public_method_names(service_dir, names)
 
         if not rest_files:
             print(
                 f"    ⚠️ Could not find REST functions for {service}, skipping wrapper."
             )
             continue
+        services_folder = rest_files[0].parent
 
         required_typing_symbols = {"Union", "cast"}
 
@@ -412,7 +456,6 @@ def _generate_service_wrappers():
             wrapper_code.insert(grpc_import_idx, "")
 
         ops_by_file = {f: parse_generated_rest_module(f) for f in rest_files}
-        method_names = _wrapper_method_names(service, ops_by_file)
 
         for idx, service_py in enumerate(rest_files, start=1):
             rest_module_name = service_py.stem
@@ -681,7 +724,7 @@ def _generate_client_mixin():
     mixin_file.write_text("\n".join(mixin_code), encoding="utf-8")
 
 
-def generate() -> None:
+def generate(names: PublicNames) -> None:
     """Generates service wrappers, then the client mixin that mounts them."""
-    _generate_service_wrappers()
+    _generate_service_wrappers(names)
     _generate_client_mixin()

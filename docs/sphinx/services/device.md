@@ -931,6 +931,10 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.device.models.Label
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.device.models.LabelConcise
 ```
 
@@ -960,10 +964,6 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.device.models.UpdateDevicesResponse
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.device.models.devicev202504beta2Label
 ```
 
 ```{eval-rst}

@@ -8,9 +8,9 @@ from pydantic import BaseModel, Field
 from .CustomColumnData import CustomColumnData
 from .DeviceNmsConfig import DeviceNmsConfig
 from .DeviceSnmpV3Conf import DeviceSnmpV3Conf
-from .devicev202504beta2Label import devicev202504beta2Label
 from .GnmiV1Conf import GnmiV1Conf
 from .Interface import Interface
+from .Label import Label
 from .Plan import Plan
 from .Site import Site
 
@@ -54,7 +54,7 @@ class DeviceDetailed(BaseModel):
 
     plan: Optional[Plan] = Field(validation_alias="plan", default=None)
 
-    labels: Optional[List[Optional[devicev202504beta2Label]]] = Field(
+    labels: Optional[List[Optional[Label]]] = Field(
         validation_alias="labels", default=None, description="List of labels"
     )
 

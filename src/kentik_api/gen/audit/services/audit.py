@@ -68,7 +68,7 @@ class AuditServiceWrapper:
                 self._grpc_stub_1.ListAuditEvents,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAuditModule1.ListAuditEventsError,
+                error_cls=RestAuditModule1.ListEventsError,
             )
             return parse_grpc_response(
                 rest_models.ListAuditEventsResponse,
@@ -115,7 +115,7 @@ class AuditServiceWrapper:
                 self._grpc_stub_1.GetAuditEvent,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAuditModule1.GetAuditEventError,
+                error_cls=RestAuditModule1.GetEventError,
             )
             return parse_grpc_response(
                 rest_models.GetAuditEventResponse,
@@ -156,7 +156,7 @@ class AuditServiceWrapper:
                 self._grpc_stub_1.GetAuditEvent,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAuditModule1.GetAuditEventError,
+                error_cls=RestAuditModule1.GetEventByCtimeError,
             )
             return parse_grpc_response(
                 rest_models.GetAuditEventResponse,

@@ -14,9 +14,10 @@ package owns one concern of SDK generation.
 | [`error_package.py`](error_package.py) | Error class generation and error dispatch | `generate_service_error_package()`, `inject_service_error_handling()` |
 | [`fixup.py`](fixup.py) | Generated-code post-processing: import patching, model init rebuild, file cleanup | `fix_generated_service()` |
 | [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation | `generate()` |
+| [`public_names.py`](public_names.py) | The public name of every Service, client method, and model, read from and added to `public_names.json`. Fails when an entry no longer matches the schema | `PublicNames`, `operation_key()`, `model_key()`, `NameDriftError` |
 | [`docs_rendering.py`](docs_rendering.py) | Architecture diagrams, service READMEs, and generated-example snippets injected into `docs/sphinx/guides/*.md` | `generate()` |
 | [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation, and `schema_operations.json`, the swagger-derived operation record | `EndpointDocsCollector` |
-| [`api_surface.py`](api_surface.py) | Records the public API surface (operations with their gRPC routes, model fields, enum values) to `api_surface.json`, and diffs two recordings into release notes | `generate()`, `capture()`, `diff()`, `breaking_changes()`, `render_markdown()` |
+| [`api_surface.py`](api_surface.py) | Records the public API surface (operations with their client methods, gRPC routes, and error classes, model fields, enum values) to `api_surface.json`, and diffs two recordings into release notes | `generate()`, `capture()`, `diff()`, `breaking_changes()`, `render_markdown()` |
 | [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `INTERNAL_GEN_DIRS`, `iter_service_dirs()`, `discover_service_model_classes()`, `service_to_pascal_case()`, `normalize_symbol()`, `RestOperation`, `parse_generated_rest_module()`, `WrapperMethod`, `parse_wrapper_methods()`, `GrpcCall`, `grpc_call()`, `grpc_stub_services()` |
 
 Keep a helper in `_shared.py` only when two or more phase modules call
@@ -30,12 +31,12 @@ modules in this order:
 
 ```mermaid
 flowchart TD
-    A["1. parity.select_latest_swagger_files_by_service()"] --> A2["2. parity.validate_schema_files_or_raise()<br/>parity.drop_superseded_swagger_files()"]
+    A["1. parity.select_latest_swagger_files_by_service()"] --> A2["2. parity.validate_schema_files_or_raise()<br/>parity.drop_superseded_swagger_files()<br/>PublicNames.services() and .models()"]
     A2 --> B["3. Generate REST code per swagger file<br/>(endpoint_docs_collector.extract() runs here)"]
-    B --> C["4. error_package.generate_service_error_package()<br/>(once per service)"]
-    C --> D["5. parity.validate_generated_service_parity()"]
-    D --> E["6. fixup.fix_generated_service()<br/>(once per service — import patching, model init, file cleanup)"]
-    E --> F["7. wrapper_generation.generate()"]
+    B --> D["4. parity.validate_generated_service_parity()"]
+    D --> E["5. fixup.fix_generated_service()<br/>(once per service — import patching, model init, file cleanup)"]
+    E --> C["6. error_package.generate_service_error_package()<br/>(once per service, named after client methods)"]
+    C --> F["7. wrapper_generation.generate()<br/>(PublicNames.methods(), then public_names.json is saved)"]
     F --> G["8. docs_rendering.generate()"]
     G --> H["9. endpoint_docs_collector.render()"]
     H --> I["10. api_surface.generate()<br/>(last — must see the final formatted output)"]

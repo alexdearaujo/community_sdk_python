@@ -12,13 +12,13 @@ from datetime import UTC, datetime, timedelta
 from kentik_api.client import KentikAPI
 from kentik_api.errors import KentikError
 from kentik_api.gen.alerting.models import AlertFilters, AlertServiceListRequest
-from kentik_api.gen.alerting.models.v202303TimeRange import v202303TimeRange
+from kentik_api.gen.alerting.models import TimeRange
 
 
 def main() -> None:
     client = KentikAPI(protocol="grpc")
     now = datetime.now(UTC)
-    started_at = v202303TimeRange(
+    started_at = TimeRange(
         start=(now - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%SZ"),
         end=now.strftime("%Y-%m-%dT%H:%M:%SZ"),
     )

@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 from .TestSettings import TestSettings
 from .TestStatus import TestStatus
-from .v202303UserInfo import v202303UserInfo
+from .UserInfo import UserInfo
 
 
 class Test(BaseModel):
@@ -45,11 +45,9 @@ class Test(BaseModel):
         description="Last modification timestamp (UTC)",
     )
 
-    createdBy: Optional[v202303UserInfo] = Field(
-        validation_alias="createdBy", default=None
-    )
+    createdBy: Optional[UserInfo] = Field(validation_alias="createdBy", default=None)
 
-    lastUpdatedBy: Optional[v202303UserInfo] = Field(
+    lastUpdatedBy: Optional[UserInfo] = Field(
         validation_alias="lastUpdatedBy", default=None
     )
 

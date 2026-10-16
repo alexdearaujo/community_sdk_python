@@ -78,9 +78,9 @@ class MonitoringError(HTTPException):
         )
 
 
-ERROR_BY_OPERATION: dict[str, type[MonitoringError]] = {}
+ERROR_BY_METHOD: dict[str, type[MonitoringError]] = {}
 
 __all__ = [
     "MonitoringError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

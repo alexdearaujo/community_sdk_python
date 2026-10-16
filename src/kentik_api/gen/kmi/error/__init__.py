@@ -78,48 +78,48 @@ class KmiError(HTTPException):
         )
 
 
-class GetASNDetailsError(KmiError):
-    """Operation-local error for GetASNDetails."""
+class GetAsnDetailsError(KmiError):
+    """Operation-local error for client.kmi.get_asn_details()."""
 
     response_error_map: dict[str, type[KmiError]] = {}
 
 
-class GetASNDetailsUnexpectedError(GetASNDetailsError):
-    """Operation-local response error for GetASNDetails (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetAsnDetailsUnexpectedError(GetAsnDetailsError):
+    """Operation-local response error for get_asn_details (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetASNDetailsError.response_error_map = {
-    "default": GetASNDetailsUnexpectedError,
+GetAsnDetailsError.response_error_map = {
+    "default": GetAsnDetailsUnexpectedError,
 }
 
 
-class GetASNInsightsError(KmiError):
-    """Operation-local error for GetASNInsights."""
+class GetAsnInsightsError(KmiError):
+    """Operation-local error for client.kmi.get_asn_insights()."""
 
     response_error_map: dict[str, type[KmiError]] = {}
 
 
-class GetASNInsightsUnexpectedError(GetASNInsightsError):
-    """Operation-local response error for GetASNInsights (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetAsnInsightsUnexpectedError(GetAsnInsightsError):
+    """Operation-local response error for get_asn_insights (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetASNInsightsError.response_error_map = {
-    "default": GetASNInsightsUnexpectedError,
+GetAsnInsightsError.response_error_map = {
+    "default": GetAsnInsightsUnexpectedError,
 }
 
 
 class GetGlobalInsightsError(KmiError):
-    """Operation-local error for GetGlobalInsights."""
+    """Operation-local error for client.kmi.get_global_insights()."""
 
     response_error_map: dict[str, type[KmiError]] = {}
 
 
 class GetGlobalInsightsUnexpectedError(GetGlobalInsightsError):
-    """Operation-local response error for GetGlobalInsights (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_global_insights (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ GetGlobalInsightsError.response_error_map = {
 
 
 class GetRankingsError(KmiError):
-    """Operation-local error for GetRankings."""
+    """Operation-local error for client.kmi.get_rankings()."""
 
     response_error_map: dict[str, type[KmiError]] = {}
 
 
 class GetRankingsUnexpectedError(GetRankingsError):
-    """Operation-local response error for GetRankings (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_rankings (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +147,13 @@ GetRankingsError.response_error_map = {
 
 
 class ListMarketsError(KmiError):
-    """Operation-local error for ListMarkets."""
+    """Operation-local error for client.kmi.list_markets()."""
 
     response_error_map: dict[str, type[KmiError]] = {}
 
 
 class ListMarketsUnexpectedError(ListMarketsError):
-    """Operation-local response error for ListMarkets (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_markets (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -162,25 +162,25 @@ ListMarketsError.response_error_map = {
     "default": ListMarketsUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[KmiError]] = {
-    "GetASNDetails": GetASNDetailsError,
-    "GetASNInsights": GetASNInsightsError,
-    "GetGlobalInsights": GetGlobalInsightsError,
-    "GetRankings": GetRankingsError,
-    "ListMarkets": ListMarketsError,
+ERROR_BY_METHOD: dict[str, type[KmiError]] = {
+    "get_asn_details": GetAsnDetailsError,
+    "get_asn_insights": GetAsnInsightsError,
+    "get_global_insights": GetGlobalInsightsError,
+    "get_rankings": GetRankingsError,
+    "list_markets": ListMarketsError,
 }
 
 __all__ = [
     "KmiError",
-    "GetASNDetailsUnexpectedError",
-    "GetASNInsightsUnexpectedError",
+    "GetAsnDetailsUnexpectedError",
+    "GetAsnInsightsUnexpectedError",
     "GetGlobalInsightsUnexpectedError",
     "GetRankingsUnexpectedError",
     "ListMarketsUnexpectedError",
-    "GetASNDetailsError",
-    "GetASNInsightsError",
+    "GetAsnDetailsError",
+    "GetAsnInsightsError",
     "GetGlobalInsightsError",
     "GetRankingsError",
     "ListMarketsError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

@@ -78,9 +78,9 @@ class DiagnosticError(HTTPException):
         )
 
 
-ERROR_BY_OPERATION: dict[str, type[DiagnosticError]] = {}
+ERROR_BY_METHOD: dict[str, type[DiagnosticError]] = {}
 
 __all__ = [
     "DiagnosticError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

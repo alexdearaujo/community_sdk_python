@@ -6,7 +6,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from .NmsActivateOrClearConditions import NmsActivateOrClearConditions
-from .v202303Severity import v202303Severity
+from .Severity import Severity
 
 
 class NmsContextActivationInfo(BaseModel):
@@ -20,9 +20,7 @@ class NmsContextActivationInfo(BaseModel):
         validation_alias="activate", default=None
     )
 
-    severity: Optional[v202303Severity] = Field(
-        validation_alias="severity", default=None
-    )
+    severity: Optional[Severity] = Field(validation_alias="severity", default=None)
 
     clearManual: Optional[bool] = Field(validation_alias="clearManual", default=None)
 

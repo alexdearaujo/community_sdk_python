@@ -11,8 +11,8 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    GetASNDetailsError,
-    GetASNInsightsError,
+    GetAsnDetailsError,
+    GetAsnInsightsError,
     GetGlobalInsightsError,
     GetRankingsError,
     ListMarketsError,
@@ -119,7 +119,7 @@ def GetASNInsights(
         header_params=header_params,
         expected_status=200,
         operation_name="GetASNInsights",
-        error_cls=GetASNInsightsError,
+        error_cls=GetAsnInsightsError,
     )
 
     return parse_response_model(
@@ -158,7 +158,7 @@ def GetASNDetails(
         header_params=header_params,
         expected_status=200,
         operation_name="GetASNDetails",
-        error_cls=GetASNDetailsError,
+        error_cls=GetAsnDetailsError,
     )
 
     return parse_response_model(

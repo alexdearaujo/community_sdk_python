@@ -1,5 +1,5 @@
 {
-  "schema_version": 6,
+  "schema_version": 7,
   "requirements": {
     "googleapis-common-protos": "googleapis-common-protos>=1.73.1",
     "grpcio": "grpcio>=1.84.0",
@@ -29,7 +29,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetChatSessionResponse"
+          "returns": "GetChatSessionResponse",
+          "error": "GetChatSessionError",
+          "error_responses": {
+            "default": "GetChatSessionUnexpectedError"
+          }
         },
         "POST /ai_advisor/v202511/chat": {
           "operation": "CreateChatSession",
@@ -43,7 +47,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateChatSessionRequest"
           },
-          "returns": "CreateChatSessionResponse"
+          "returns": "CreateChatSessionResponse",
+          "error": "CreateChatSessionError",
+          "error_responses": {
+            "default": "CreateChatSessionUnexpectedError"
+          }
         },
         "PUT /ai_advisor/v202511/chat": {
           "operation": "UpdateChatSession",
@@ -57,7 +65,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "UpdateChatSessionRequest"
           },
-          "returns": "UpdateChatSessionResponse"
+          "returns": "UpdateChatSessionResponse",
+          "error": "UpdateChatSessionError",
+          "error_responses": {
+            "default": "UpdateChatSessionUnexpectedError"
+          }
         }
       },
       "models": [
@@ -207,7 +219,11 @@
             "api_config_override": "Optional[APIConfig]",
             "autoAckid": "str"
           },
-          "returns": "AlertAutoAckServiceDeleteResponse"
+          "returns": "AlertAutoAckServiceDeleteResponse",
+          "error": "AutoAckDeleteError",
+          "error_responses": {
+            "default": "AutoAckDeleteUnexpectedError"
+          }
         },
         "DELETE /v202505/alerts/silence/{id}": {
           "operation": "Delete",
@@ -221,7 +237,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "AlertSilenceNotificationsServiceDeleteResponse"
+          "returns": "AlertSilenceNotificationsServiceDeleteResponse",
+          "error": "SilenceNotificationsDeleteError",
+          "error_responses": {
+            "default": "SilenceNotificationsDeleteUnexpectedError"
+          }
         },
         "DELETE /v202505/suppressions/{id}": {
           "operation": "Delete",
@@ -235,7 +255,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "SuppressionServiceDeleteResponse"
+          "returns": "SuppressionServiceDeleteResponse",
+          "error": "SuppressionDeleteError",
+          "error_responses": {
+            "default": "SuppressionDeleteUnexpectedError"
+          }
         },
         "GET /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Get",
@@ -249,7 +273,11 @@
             "api_config_override": "Optional[APIConfig]",
             "autoAckid": "str"
           },
-          "returns": "AlertAutoAckServiceGetResponse"
+          "returns": "AlertAutoAckServiceGetResponse",
+          "error": "AutoAckGetError",
+          "error_responses": {
+            "default": "AutoAckGetUnexpectedError"
+          }
         },
         "GET /v202505/alerts/silence/{id}": {
           "operation": "Get",
@@ -263,7 +291,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "AlertSilenceNotificationsServiceGetResponse"
+          "returns": "AlertSilenceNotificationsServiceGetResponse",
+          "error": "SilenceNotificationsGetError",
+          "error_responses": {
+            "default": "SilenceNotificationsGetUnexpectedError"
+          }
         },
         "GET /v202505/alerts/{alertId}/comments": {
           "operation": "ListComments",
@@ -277,7 +309,11 @@
             "api_config_override": "Optional[APIConfig]",
             "alertId": "str"
           },
-          "returns": "AlertServiceListCommentsResponse"
+          "returns": "AlertServiceListCommentsResponse",
+          "error": "ListCommentsError",
+          "error_responses": {
+            "default": "ListCommentsUnexpectedError"
+          }
         },
         "GET /v202505/alerts/{id}": {
           "operation": "Get",
@@ -291,7 +327,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "AlertServiceGetResponse"
+          "returns": "AlertServiceGetResponse",
+          "error": "AlertGetError",
+          "error_responses": {
+            "default": "AlertGetUnexpectedError"
+          }
         },
         "GET /v202505/mitigations": {
           "operation": "List",
@@ -315,7 +355,11 @@
             "filtersipCidrPattern": "Optional[str]",
             "filterstypes": "Optional[TypingList[str]]"
           },
-          "returns": "MitigationsServiceListResponse"
+          "returns": "MitigationsServiceListResponse",
+          "error": "MitigationsListError",
+          "error_responses": {
+            "default": "MitigationsListUnexpectedError"
+          }
         },
         "GET /v202505/mitigations/actions": {
           "operation": "AvailableActions",
@@ -326,7 +370,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "MitigationsServiceAvailableActionsResponse"
+          "returns": "MitigationsServiceAvailableActionsResponse",
+          "error": "AvailableActionsError",
+          "error_responses": {
+            "default": "AvailableActionsUnexpectedError"
+          }
         },
         "GET /v202505/mitigations/methods": {
           "operation": "List",
@@ -346,7 +394,11 @@
             "filtersmodifiedAtstart": "Optional[str]",
             "filtersmodifiedAtend": "Optional[str]"
           },
-          "returns": "MitigationMethodsServiceListResponse"
+          "returns": "MitigationMethodsServiceListResponse",
+          "error": "MitigationMethodsListError",
+          "error_responses": {
+            "default": "MitigationMethodsListUnexpectedError"
+          }
         },
         "GET /v202505/mitigations/methods/{id}": {
           "operation": "Get",
@@ -360,7 +412,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "MitigationMethodsServiceGetResponse"
+          "returns": "MitigationMethodsServiceGetResponse",
+          "error": "MitigationMethodsGetError",
+          "error_responses": {
+            "default": "MitigationMethodsGetUnexpectedError"
+          }
         },
         "GET /v202505/mitigations/platforms": {
           "operation": "List",
@@ -380,7 +436,11 @@
             "filtersmodifiedAtstart": "Optional[str]",
             "filtersmodifiedAtend": "Optional[str]"
           },
-          "returns": "MitigationPlatformsServiceListResponse"
+          "returns": "MitigationPlatformsServiceListResponse",
+          "error": "MitigationPlatformsListError",
+          "error_responses": {
+            "default": "MitigationPlatformsListUnexpectedError"
+          }
         },
         "GET /v202505/mitigations/platforms/{id}": {
           "operation": "Get",
@@ -394,7 +454,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "MitigationPlatformsServiceGetResponse"
+          "returns": "MitigationPlatformsServiceGetResponse",
+          "error": "MitigationPlatformsGetError",
+          "error_responses": {
+            "default": "MitigationPlatformsGetUnexpectedError"
+          }
         },
         "GET /v202505/mitigations/{action}": {
           "operation": "Get",
@@ -408,7 +472,11 @@
             "api_config_override": "Optional[APIConfig]",
             "action": "str"
           },
-          "returns": "MitigationsServiceGetResponse"
+          "returns": "MitigationsServiceGetResponse",
+          "error": "MitigationsGetError",
+          "error_responses": {
+            "default": "MitigationsGetUnexpectedError"
+          }
         },
         "GET /v202505/mitigations/{id}/actions": {
           "operation": "AvailableActionsForMitigation",
@@ -422,7 +490,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "MitigationsServiceAvailableActionsForMitigationResponse"
+          "returns": "MitigationsServiceAvailableActionsForMitigationResponse",
+          "error": "AvailableActionsForMitigationError",
+          "error_responses": {
+            "default": "AvailableActionsForMitigationUnexpectedError"
+          }
         },
         "GET /v202505/policies/{policyType}/{id}": {
           "operation": "Get",
@@ -438,7 +510,11 @@
             "policyType": "str",
             "id": "str"
           },
-          "returns": "PolicyServiceGetResponse"
+          "returns": "PolicyServiceGetResponse",
+          "error": "PolicyGetError",
+          "error_responses": {
+            "default": "PolicyGetUnexpectedError"
+          }
         },
         "GET /v202505/suppressions/{id}": {
           "operation": "Get",
@@ -452,7 +528,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "SuppressionServiceGetResponse"
+          "returns": "SuppressionServiceGetResponse",
+          "error": "SuppressionGetError",
+          "error_responses": {
+            "default": "SuppressionGetUnexpectedError"
+          }
         },
         "PATCH /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Replace",
@@ -468,7 +548,11 @@
             "autoAckid": "str",
             "data": "AlertAutoAckServiceReplaceBody"
           },
-          "returns": "AlertAutoAckServiceReplaceResponse"
+          "returns": "AlertAutoAckServiceReplaceResponse",
+          "error": "AutoAckReplaceError",
+          "error_responses": {
+            "default": "AutoAckReplaceUnexpectedError"
+          }
         },
         "PATCH /v202505/alerts/silence/{id}": {
           "operation": "Replace",
@@ -484,7 +568,11 @@
             "id": "str",
             "data": "AlertSilenceNotificationsServiceReplaceBody"
           },
-          "returns": "AlertSilenceNotificationsServiceReplaceResponse"
+          "returns": "AlertSilenceNotificationsServiceReplaceResponse",
+          "error": "SilenceNotificationsReplaceError",
+          "error_responses": {
+            "default": "SilenceNotificationsReplaceUnexpectedError"
+          }
         },
         "PATCH /v202505/suppressions/{id}": {
           "operation": "Replace",
@@ -500,7 +588,11 @@
             "id": "str",
             "data": "SuppressionServiceReplaceBody"
           },
-          "returns": "SuppressionServiceReplaceResponse"
+          "returns": "SuppressionServiceReplaceResponse",
+          "error": "SuppressionReplaceError",
+          "error_responses": {
+            "default": "SuppressionReplaceUnexpectedError"
+          }
         },
         "POST /v202505/alerts": {
           "operation": "List",
@@ -514,7 +606,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "AlertServiceListRequest"
           },
-          "returns": "AlertServiceListResponse"
+          "returns": "AlertServiceListResponse",
+          "error": "AlertListError",
+          "error_responses": {
+            "default": "AlertListUnexpectedError"
+          }
         },
         "POST /v202505/alerts/ack/auto": {
           "operation": "Create",
@@ -528,7 +624,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "AlertAutoAckServiceCreateRequest"
           },
-          "returns": "AlertAutoAckServiceCreateResponse"
+          "returns": "AlertAutoAckServiceCreateResponse",
+          "error": "AutoAckCreateError",
+          "error_responses": {
+            "default": "AutoAckCreateUnexpectedError"
+          }
         },
         "POST /v202505/alerts/ack/auto/list": {
           "operation": "List",
@@ -542,7 +642,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "AlertAutoAckServiceListRequest"
           },
-          "returns": "AlertAutoAckServiceListResponse"
+          "returns": "AlertAutoAckServiceListResponse",
+          "error": "AutoAckListError",
+          "error_responses": {
+            "default": "AutoAckListUnexpectedError"
+          }
         },
         "POST /v202505/alerts/clear": {
           "operation": "Clear",
@@ -556,7 +660,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "AlertServiceClearRequest"
           },
-          "returns": "AlertServiceClearResponse"
+          "returns": "AlertServiceClearResponse",
+          "error": "ClearError",
+          "error_responses": {
+            "default": "ClearUnexpectedError"
+          }
         },
         "POST /v202505/alerts/silence": {
           "operation": "Create",
@@ -570,7 +678,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "AlertSilenceNotificationsServiceCreateRequest"
           },
-          "returns": "AlertSilenceNotificationsServiceCreateResponse"
+          "returns": "AlertSilenceNotificationsServiceCreateResponse",
+          "error": "SilenceNotificationsCreateError",
+          "error_responses": {
+            "default": "SilenceNotificationsCreateUnexpectedError"
+          }
         },
         "POST /v202505/alerts/silence/list": {
           "operation": "List",
@@ -584,7 +696,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "AlertSilenceNotificationsServiceListRequest"
           },
-          "returns": "AlertSilenceNotificationsServiceListResponse"
+          "returns": "AlertSilenceNotificationsServiceListResponse",
+          "error": "SilenceNotificationsListError",
+          "error_responses": {
+            "default": "SilenceNotificationsListUnexpectedError"
+          }
         },
         "POST /v202505/alerts/{alertId}/comments": {
           "operation": "AddComment",
@@ -600,7 +716,11 @@
             "alertId": "str",
             "data": "AlertServiceAddCommentBody"
           },
-          "returns": "AlertServiceAddCommentResponse"
+          "returns": "AlertServiceAddCommentResponse",
+          "error": "AddCommentError",
+          "error_responses": {
+            "default": "AddCommentUnexpectedError"
+          }
         },
         "POST /v202505/alerts/{id}/ack": {
           "operation": "Ack",
@@ -616,7 +736,11 @@
             "id": "str",
             "data": "AlertServiceAckBody"
           },
-          "returns": "AlertServiceAckResponse"
+          "returns": "AlertServiceAckResponse",
+          "error": "AckError",
+          "error_responses": {
+            "default": "AckUnexpectedError"
+          }
         },
         "POST /v202505/alerts/{id}/unack": {
           "operation": "UnAck",
@@ -632,7 +756,11 @@
             "id": "str",
             "data": "AlertServiceUnAckBody"
           },
-          "returns": "AlertServiceUnAckResponse"
+          "returns": "AlertServiceUnAckResponse",
+          "error": "UnAckError",
+          "error_responses": {
+            "default": "UnAckUnexpectedError"
+          }
         },
         "POST /v202505/mitigations": {
           "operation": "Create",
@@ -646,7 +774,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "MitigationsServiceCreateRequest"
           },
-          "returns": "MitigationsServiceCreateResponse"
+          "returns": "MitigationsServiceCreateResponse",
+          "error": "MitigationsCreateError",
+          "error_responses": {
+            "default": "MitigationsCreateUnexpectedError"
+          }
         },
         "POST /v202505/mitigations/{action}": {
           "operation": "Act",
@@ -662,7 +794,11 @@
             "action": "str",
             "data": "MitigationsServiceActBody"
           },
-          "returns": "MitigationsServiceActResponse"
+          "returns": "MitigationsServiceActResponse",
+          "error": "ActError",
+          "error_responses": {
+            "default": "ActUnexpectedError"
+          }
         },
         "POST /v202505/policies/list": {
           "operation": "List",
@@ -676,7 +812,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "PolicyServiceListRequest"
           },
-          "returns": "PolicyServiceListResponse"
+          "returns": "PolicyServiceListResponse",
+          "error": "PolicyListError",
+          "error_responses": {
+            "default": "PolicyListUnexpectedError"
+          }
         },
         "POST /v202505/policies/{policyType}/{id}/disable": {
           "operation": "Disable",
@@ -694,7 +834,11 @@
             "id": "str",
             "data": "PolicyServiceDisableBody"
           },
-          "returns": "PolicyServiceDisableResponse"
+          "returns": "PolicyServiceDisableResponse",
+          "error": "DisableError",
+          "error_responses": {
+            "default": "DisableUnexpectedError"
+          }
         },
         "POST /v202505/policies/{policyType}/{id}/enable": {
           "operation": "Enable",
@@ -712,7 +856,11 @@
             "id": "str",
             "data": "PolicyServiceEnableBody"
           },
-          "returns": "PolicyServiceEnableResponse"
+          "returns": "PolicyServiceEnableResponse",
+          "error": "EnableError",
+          "error_responses": {
+            "default": "EnableUnexpectedError"
+          }
         },
         "POST /v202505/suppressions": {
           "operation": "Create",
@@ -726,7 +874,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "SuppressionServiceCreateRequest"
           },
-          "returns": "SuppressionServiceCreateResponse"
+          "returns": "SuppressionServiceCreateResponse",
+          "error": "SuppressionCreateError",
+          "error_responses": {
+            "default": "SuppressionCreateUnexpectedError"
+          }
         },
         "POST /v202505/suppressions/list": {
           "operation": "List",
@@ -740,7 +892,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "SuppressionServiceListRequest"
           },
-          "returns": "SuppressionServiceListResponse"
+          "returns": "SuppressionServiceListResponse",
+          "error": "SuppressionListError",
+          "error_responses": {
+            "default": "SuppressionListUnexpectedError"
+          }
         },
         "PUT /v202505/alerts/{alertId}/external-context": {
           "operation": "SetExternalContext",
@@ -756,7 +912,11 @@
             "alertId": "str",
             "data": "AlertServiceSetExternalContextBody"
           },
-          "returns": "AlertServiceSetExternalContextResponse"
+          "returns": "AlertServiceSetExternalContextResponse",
+          "error": "SetExternalContextError",
+          "error_responses": {
+            "default": "SetExternalContextUnexpectedError"
+          }
         }
       },
       "models": [
@@ -800,8 +960,11 @@
         "AlertSilenceNotificationsServiceReplaceBody",
         "AlertSilenceNotificationsServiceReplaceResponse",
         "AlertState",
+        "AttributeFilter",
+        "AttributeFilterStringArray",
         "BaselineConditionDeltaType",
         "BaselineConfigCompareMode",
+        "BitwiseOp",
         "Comment",
         "ConditionsBaselineCondition",
         "ConditionsForecastCondition",
@@ -830,7 +993,14 @@
         "FlowPolicySettingsBaselineConfig",
         "FlowPolicySettingsDatasetConfig",
         "FlowPolicySettingsEvaluationConfig",
+        "FlowspecMatch",
+        "Fragment",
+        "FragmentFormula",
+        "FragmentPredicate",
+        "FragmentPredicateGroup",
         "JiraCloudContext",
+        "KeyValue",
+        "KeyValueFilter",
         "Mitigation",
         "MitigationActionDetail",
         "MitigationEvent",
@@ -846,6 +1016,7 @@
         "MitigationPlatformsServiceListResponse",
         "MitigationState",
         "MitigationStateEntry",
+        "MitigationTarget",
         "MitigationType",
         "MitigationUserAction",
         "MitigationsActResult",
@@ -858,6 +1029,7 @@
         "MitigationsServiceCreateResponse",
         "MitigationsServiceGetResponse",
         "MitigationsServiceListResponse",
+        "MultiAttributeFilter",
         "NmsActivateOrClearConditions",
         "NmsCondition",
         "NmsConditionConnector",
@@ -877,6 +1049,12 @@
         "NmsStateSet",
         "NmsThresholdCondition",
         "NotificationChannelAssociation",
+        "NumericFormula",
+        "NumericOp",
+        "NumericPredicate",
+        "NumericPredicateGroup",
+        "PaginationConfig",
+        "PaginationInfo",
         "Policy",
         "PolicyDataSources",
         "PolicyDataSourcesDeviceTag",
@@ -902,6 +1080,10 @@
         "PolicyType",
         "RatioConditionDirection",
         "ServiceNowContext",
+        "Severity",
+        "SimpleAttributeFilter",
+        "SimpleAttributeFilterStringArray",
+        "SortingConfig",
         "SortingConfigField",
         "SortingConfigOrder",
         "Source",
@@ -915,37 +1097,15 @@
         "SuppressionServiceListResponse",
         "SuppressionServiceReplaceBody",
         "SuppressionServiceReplaceResponse",
+        "TCPFlag",
+        "TCPFlagsFormula",
+        "TCPFlagsPredicate",
+        "TCPFlagsPredicateGroup",
+        "TimeRange",
         "TopKeysConditionTopKeysEvent",
         "protobufAny",
         "rpcStatus",
-        "typesv202506PaginationConfig",
-        "typesv202506PaginationInfo",
-        "typesv202506SortingConfig",
-        "v202303AttributeFilter",
-        "v202303AttributeFilterStringArray",
-        "v202303KeyValue",
-        "v202303KeyValueFilter",
-        "v202303MultiAttributeFilter",
-        "v202303Severity",
-        "v202303SimpleAttributeFilter",
-        "v202303SimpleAttributeFilterStringArray",
-        "v202303TimeRange",
-        "v202501BitwiseOp",
-        "v202501FlowspecMatch",
-        "v202501Fragment",
-        "v202501FragmentFormula",
-        "v202501FragmentPredicate",
-        "v202501FragmentPredicateGroup",
-        "v202501NumericFormula",
-        "v202501NumericOp",
-        "v202501NumericPredicate",
-        "v202501NumericPredicateGroup",
-        "v202501TCPFlag",
-        "v202501TCPFlagsFormula",
-        "v202501TCPFlagsPredicate",
-        "v202501TCPFlagsPredicateGroup",
-        "v202505AlertAcknowledgement",
-        "v202506MitigationTarget"
+        "v202505AlertAcknowledgement"
       ],
       "fields": {
         "Alert": {
@@ -970,11 +1130,11 @@
             "required": false
           },
           "severity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "highestSeverity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "acknowledgement": {
@@ -1034,7 +1194,7 @@
             "required": false
           },
           "key": {
-            "type": "Optional[v202303KeyValue]",
+            "type": "Optional[KeyValue]",
             "required": false
           },
           "startTimeAt": {
@@ -1064,7 +1224,7 @@
             "required": false
           },
           "keys": {
-            "type": "Optional[List[Optional[v202303KeyValue]]]",
+            "type": "Optional[List[Optional[KeyValue]]]",
             "required": false
           },
           "userIds": {
@@ -1072,19 +1232,19 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "startTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "endTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -1109,11 +1269,11 @@
         },
         "AlertAutoAckServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -1123,7 +1283,7 @@
         },
         "AlertAutoAckServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "autoAcks": {
@@ -1145,7 +1305,7 @@
         },
         "AlertFilters": {
           "severities": {
-            "type": "Optional[List[Optional[v202303Severity]]]",
+            "type": "Optional[List[Optional[Severity]]]",
             "required": false
           },
           "alertIds": {
@@ -1157,7 +1317,7 @@
             "required": false
           },
           "keys": {
-            "type": "Optional[v202303MultiAttributeFilter]",
+            "type": "Optional[MultiAttributeFilter]",
             "required": false
           },
           "states": {
@@ -1165,19 +1325,19 @@
             "required": false
           },
           "startedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "endedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "highestSeverities": {
-            "type": "Optional[List[Optional[v202303Severity]]]",
+            "type": "Optional[List[Optional[Severity]]]",
             "required": false
           },
           "recentSeverities": {
-            "type": "Optional[List[Optional[v202303Severity]]]",
+            "type": "Optional[List[Optional[Severity]]]",
             "required": false
           },
           "ackStates": {
@@ -1185,7 +1345,7 @@
             "required": false
           },
           "activeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "ackedByUserIds": {
@@ -1203,7 +1363,7 @@
         },
         "AlertPhase": {
           "severity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "startTimeAt": {
@@ -1281,11 +1441,11 @@
         },
         "AlertServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -1295,7 +1455,7 @@
         },
         "AlertServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "alerts": {
@@ -1336,23 +1496,23 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "startTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "endTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "keys": {
-            "type": "Optional[List[Optional[v202303KeyValue]]]",
+            "type": "Optional[List[Optional[KeyValue]]]",
             "required": false
           }
         },
@@ -1370,7 +1530,7 @@
             "required": false
           },
           "key": {
-            "type": "Optional[v202303KeyValue]",
+            "type": "Optional[KeyValue]",
             "required": false
           },
           "startTimeAt": {
@@ -1411,11 +1571,11 @@
         },
         "AlertSilenceNotificationsServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -1425,7 +1585,7 @@
         },
         "AlertSilenceNotificationsServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "silences": {
@@ -1442,6 +1602,50 @@
         "AlertSilenceNotificationsServiceReplaceResponse": {
           "silence": {
             "type": "Optional[AlertSilenceNotificationsDefinition]",
+            "required": false
+          }
+        },
+        "AttributeFilter": {
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "empty": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "equals": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "startsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "endsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "contains": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "in_": {
+            "type": "Optional[AttributeFilterStringArray]",
+            "required": false
+          },
+          "matchesRegex": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "any": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "AttributeFilterStringArray": {
+          "values": {
+            "type": "Optional[List[str]]",
             "required": false
           }
         },
@@ -1857,6 +2061,74 @@
             "required": true
           }
         },
+        "FlowspecMatch": {
+          "dstPrefix": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "srcPrefix": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "ipProtocol": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "dstPort": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "srcPort": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "icmpType": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "icmpCode": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "tcpFlags": {
+            "type": "Optional[TCPFlagsFormula]",
+            "required": false
+          },
+          "packetLength": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "dscp": {
+            "type": "Optional[NumericFormula]",
+            "required": false
+          },
+          "fragments": {
+            "type": "Optional[FragmentFormula]",
+            "required": false
+          }
+        },
+        "FragmentFormula": {
+          "or_": {
+            "type": "Optional[List[Optional[FragmentPredicateGroup]]]",
+            "required": false
+          }
+        },
+        "FragmentPredicate": {
+          "operator": {
+            "type": "Optional[BitwiseOp]",
+            "required": false
+          },
+          "values": {
+            "type": "Optional[List[Optional[Fragment]]]",
+            "required": false
+          }
+        },
+        "FragmentPredicateGroup": {
+          "and_": {
+            "type": "Optional[List[Optional[FragmentPredicate]]]",
+            "required": false
+          }
+        },
         "JiraCloudContext": {
           "issueKey": {
             "type": "str",
@@ -1865,6 +2137,22 @@
           "issueUrl": {
             "type": "str",
             "required": true
+          }
+        },
+        "KeyValue": {
+          "value": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          }
+        },
+        "KeyValueFilter": {
+          "key": {
+            "type": "Optional[SimpleAttributeFilter]",
+            "required": false
+          },
+          "value": {
+            "type": "Optional[AttributeFilter]",
+            "required": false
           }
         },
         "Mitigation": {
@@ -1881,7 +2169,7 @@
             "required": false
           },
           "target": {
-            "type": "Optional[v202506MitigationTarget]",
+            "type": "Optional[MitigationTarget]",
             "required": false
           },
           "currentState": {
@@ -1949,7 +2237,7 @@
         },
         "MitigationFilters": {
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "mitigationIds": {
@@ -2041,11 +2329,11 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -2057,7 +2345,7 @@
         },
         "MitigationMethodsServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "methods": {
@@ -2105,11 +2393,11 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -2121,7 +2409,7 @@
         },
         "MitigationPlatformsServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "platforms": {
@@ -2140,6 +2428,20 @@
           },
           "event": {
             "type": "Optional[MitigationEvent]",
+            "required": false
+          }
+        },
+        "MitigationTarget": {
+          "ipCidr": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "flowspec": {
+            "type": "Optional[FlowspecMatch]",
+            "required": false
+          },
+          "adaptiveFlowspec": {
+            "type": "Optional[KeyValue]",
             "required": false
           }
         },
@@ -2235,11 +2537,25 @@
         },
         "MitigationsServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "mitigations": {
             "type": "Optional[List[Optional[Mitigation]]]",
+            "required": false
+          }
+        },
+        "MultiAttributeFilter": {
+          "filter": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          },
+          "filters": {
+            "type": "Optional[List[Optional[KeyValueFilter]]]",
+            "required": false
+          },
+          "strict": {
+            "type": "Optional[bool]",
             "required": false
           }
         },
@@ -2329,7 +2645,7 @@
             "required": false
           },
           "severity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "clearManual": {
@@ -2461,6 +2777,52 @@
           "channelId": {
             "type": "str",
             "required": true
+          }
+        },
+        "NumericFormula": {
+          "or_": {
+            "type": "Optional[List[Optional[NumericPredicateGroup]]]",
+            "required": false
+          }
+        },
+        "NumericPredicate": {
+          "operator": {
+            "type": "Optional[NumericOp]",
+            "required": false
+          },
+          "value": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "NumericPredicateGroup": {
+          "and_": {
+            "type": "Optional[List[Optional[NumericPredicate]]]",
+            "required": false
+          }
+        },
+        "PaginationConfig": {
+          "limit": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "offset": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "includeTotalCount": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "PaginationInfo": {
+          "totalCount": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "hasMoreResults": {
+            "type": "Optional[bool]",
+            "required": false
           }
         },
         "Policy": {
@@ -2653,11 +3015,11 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -2673,7 +3035,7 @@
         },
         "PolicyPolicyLevel": {
           "severity": {
-            "type": "Optional[v202303Severity]",
+            "type": "Optional[Severity]",
             "required": false
           },
           "description": {
@@ -2723,11 +3085,11 @@
         },
         "PolicyServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -2737,7 +3099,7 @@
         },
         "PolicyServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "policies": {
@@ -2753,6 +3115,48 @@
           "incidentUrl": {
             "type": "str",
             "required": true
+          }
+        },
+        "SimpleAttributeFilter": {
+          "equals": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "startsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "endsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "contains": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "in_": {
+            "type": "Optional[SimpleAttributeFilterStringArray]",
+            "required": false
+          },
+          "matchesRegex": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "any": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "SimpleAttributeFilterStringArray": {
+          "values": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "SortingConfig": {
+          "fields": {
+            "type": "Optional[List[Optional[SortingConfigField]]]",
+            "required": false
           }
         },
         "SortingConfigField": {
@@ -2789,7 +3193,7 @@
             "required": false
           },
           "keyFilter": {
-            "type": "Optional[v202303MultiAttributeFilter]",
+            "type": "Optional[MultiAttributeFilter]",
             "required": false
           },
           "strict": {
@@ -2821,7 +3225,7 @@
             "required": false
           },
           "severities": {
-            "type": "Optional[List[Optional[v202303Severity]]]",
+            "type": "Optional[List[Optional[Severity]]]",
             "required": false
           }
         },
@@ -2839,19 +3243,19 @@
             "required": false
           },
           "createdAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "modifiedAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "startTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           },
           "endTimeAt": {
-            "type": "Optional[v202303TimeRange]",
+            "type": "Optional[TimeRange]",
             "required": false
           }
         },
@@ -2876,11 +3280,11 @@
         },
         "SuppressionServiceListRequest": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationConfig]",
+            "type": "Optional[PaginationConfig]",
             "required": false
           },
           "sorting": {
-            "type": "Optional[typesv202506SortingConfig]",
+            "type": "Optional[SortingConfig]",
             "required": false
           },
           "filters": {
@@ -2890,7 +3294,7 @@
         },
         "SuppressionServiceListResponse": {
           "pagination": {
-            "type": "Optional[typesv202506PaginationInfo]",
+            "type": "Optional[PaginationInfo]",
             "required": false
           },
           "suppressions": {
@@ -2907,6 +3311,38 @@
         "SuppressionServiceReplaceResponse": {
           "suppression": {
             "type": "Optional[Suppression]",
+            "required": false
+          }
+        },
+        "TCPFlagsFormula": {
+          "or_": {
+            "type": "Optional[List[Optional[TCPFlagsPredicateGroup]]]",
+            "required": false
+          }
+        },
+        "TCPFlagsPredicate": {
+          "operator": {
+            "type": "Optional[BitwiseOp]",
+            "required": false
+          },
+          "values": {
+            "type": "Optional[List[Optional[TCPFlag]]]",
+            "required": false
+          }
+        },
+        "TCPFlagsPredicateGroup": {
+          "and_": {
+            "type": "Optional[List[Optional[TCPFlagsPredicate]]]",
+            "required": false
+          }
+        },
+        "TimeRange": {
+          "start": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "end": {
+            "type": "Optional[str]",
             "required": false
           }
         },
@@ -2927,282 +3363,6 @@
           },
           "details": {
             "type": "Optional[List[Optional[protobufAny]]]",
-            "required": false
-          }
-        },
-        "typesv202506PaginationConfig": {
-          "limit": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "offset": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "includeTotalCount": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "typesv202506PaginationInfo": {
-          "totalCount": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "hasMoreResults": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "typesv202506SortingConfig": {
-          "fields": {
-            "type": "Optional[List[Optional[SortingConfigField]]]",
-            "required": false
-          }
-        },
-        "v202303AttributeFilter": {
-          "not_": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "empty": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "equals": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "startsWith": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "endsWith": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "contains": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "in_": {
-            "type": "Optional[v202303AttributeFilterStringArray]",
-            "required": false
-          },
-          "matchesRegex": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "any": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "v202303AttributeFilterStringArray": {
-          "values": {
-            "type": "Optional[List[str]]",
-            "required": false
-          }
-        },
-        "v202303KeyValue": {
-          "value": {
-            "type": "Optional[Dict[str, Any]]",
-            "required": false
-          }
-        },
-        "v202303KeyValueFilter": {
-          "key": {
-            "type": "Optional[v202303SimpleAttributeFilter]",
-            "required": false
-          },
-          "value": {
-            "type": "Optional[v202303AttributeFilter]",
-            "required": false
-          }
-        },
-        "v202303MultiAttributeFilter": {
-          "filter": {
-            "type": "Optional[Dict[str, Any]]",
-            "required": false
-          },
-          "filters": {
-            "type": "Optional[List[Optional[v202303KeyValueFilter]]]",
-            "required": false
-          },
-          "strict": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "v202303SimpleAttributeFilter": {
-          "equals": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "startsWith": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "endsWith": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "contains": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "in_": {
-            "type": "Optional[v202303SimpleAttributeFilterStringArray]",
-            "required": false
-          },
-          "matchesRegex": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "any": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "v202303SimpleAttributeFilterStringArray": {
-          "values": {
-            "type": "Optional[List[str]]",
-            "required": false
-          }
-        },
-        "v202303TimeRange": {
-          "start": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "end": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202501FlowspecMatch": {
-          "dstPrefix": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "srcPrefix": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "ipProtocol": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "dstPort": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "srcPort": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "icmpType": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "icmpCode": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "tcpFlags": {
-            "type": "Optional[v202501TCPFlagsFormula]",
-            "required": false
-          },
-          "packetLength": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "dscp": {
-            "type": "Optional[v202501NumericFormula]",
-            "required": false
-          },
-          "fragments": {
-            "type": "Optional[v202501FragmentFormula]",
-            "required": false
-          }
-        },
-        "v202501FragmentFormula": {
-          "or_": {
-            "type": "Optional[List[Optional[v202501FragmentPredicateGroup]]]",
-            "required": false
-          }
-        },
-        "v202501FragmentPredicate": {
-          "operator": {
-            "type": "Optional[v202501BitwiseOp]",
-            "required": false
-          },
-          "values": {
-            "type": "Optional[List[Optional[v202501Fragment]]]",
-            "required": false
-          }
-        },
-        "v202501FragmentPredicateGroup": {
-          "and_": {
-            "type": "Optional[List[Optional[v202501FragmentPredicate]]]",
-            "required": false
-          }
-        },
-        "v202501NumericFormula": {
-          "or_": {
-            "type": "Optional[List[Optional[v202501NumericPredicateGroup]]]",
-            "required": false
-          }
-        },
-        "v202501NumericPredicate": {
-          "operator": {
-            "type": "Optional[v202501NumericOp]",
-            "required": false
-          },
-          "value": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202501NumericPredicateGroup": {
-          "and_": {
-            "type": "Optional[List[Optional[v202501NumericPredicate]]]",
-            "required": false
-          }
-        },
-        "v202501TCPFlagsFormula": {
-          "or_": {
-            "type": "Optional[List[Optional[v202501TCPFlagsPredicateGroup]]]",
-            "required": false
-          }
-        },
-        "v202501TCPFlagsPredicate": {
-          "operator": {
-            "type": "Optional[v202501BitwiseOp]",
-            "required": false
-          },
-          "values": {
-            "type": "Optional[List[Optional[v202501TCPFlag]]]",
-            "required": false
-          }
-        },
-        "v202501TCPFlagsPredicateGroup": {
-          "and_": {
-            "type": "Optional[List[Optional[v202501TCPFlagsPredicate]]]",
-            "required": false
-          }
-        },
-        "v202506MitigationTarget": {
-          "ipCidr": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "flowspec": {
-            "type": "Optional[v202501FlowspecMatch]",
-            "required": false
-          },
-          "adaptiveFlowspec": {
-            "type": "Optional[v202303KeyValue]",
             "required": false
           }
         }
@@ -3239,6 +3399,13 @@
           "COMPARE_MODE_PREVIOUS_DAYS",
           "COMPARE_MODE_PREVIOUS_DAYS_DISTINGUISH_WEEKENDS",
           "COMPARE_MODE_PREVIOUS_WEEKS"
+        ],
+        "BitwiseOp": [
+          "BITWISE_OP_UNSPECIFIED",
+          "BITWISE_OP_ANY",
+          "BITWISE_OP_NONE",
+          "BITWISE_OP_ALL",
+          "BITWISE_OP_NOT_ALL"
         ],
         "EventPolicySettingsEventType": [
           "EVENT_TYPE_UNSPECIFIED",
@@ -3292,6 +3459,13 @@
           "OPERATOR_LESS_THAN_OR_EQUALS",
           "OPERATOR_IN_SET",
           "OPERATOR_NOT_IN_SET"
+        ],
+        "Fragment": [
+          "FRAGMENT_UNSPECIFIED",
+          "FRAGMENT_DF",
+          "FRAGMENT_ISF",
+          "FRAGMENT_FF",
+          "FRAGMENT_LF"
         ],
         "MitigationEvent": [
           "MITIGATION_EVENT_UNSPECIFIED",
@@ -3375,6 +3549,15 @@
           "CLEAR_TYPE_CLEAR_MANUAL",
           "CLEAR_TYPE_CLEAR_UNLESS_ACTIVATED"
         ],
+        "NumericOp": [
+          "NUMERIC_OP_UNSPECIFIED",
+          "NUMERIC_OP_EQUALS",
+          "NUMERIC_OP_NOT_EQUALS",
+          "NUMERIC_OP_LESS_THAN",
+          "NUMERIC_OP_GREATER_THAN",
+          "NUMERIC_OP_LESS_THAN_OR_EQUALS",
+          "NUMERIC_OP_GREATER_THAN_OR_EQUALS"
+        ],
         "PolicyFiltersFilterConnector": [
           "FILTER_CONNECTOR_UNSPECIFIED",
           "FILTER_CONNECTOR_AND",
@@ -3422,17 +3605,7 @@
           "DIRECTION_RIGHT",
           "DIRECTION_LEFT"
         ],
-        "SortingConfigOrder": [
-          "ORDER_UNSPECIFIED",
-          "ORDER_ASCENDING",
-          "ORDER_DESCENDING"
-        ],
-        "TopKeysConditionTopKeysEvent": [
-          "TOP_KEYS_EVENT_UNSPECIFIED",
-          "TOP_KEYS_EVENT_JOINS",
-          "TOP_KEYS_EVENT_LEAVES"
-        ],
-        "v202303Severity": [
+        "Severity": [
           "SEVERITY_UNSPECIFIED",
           "SEVERITY_CLEAR",
           "SEVERITY_MINOR",
@@ -3441,30 +3614,12 @@
           "SEVERITY_SEVERE",
           "SEVERITY_CRITICAL"
         ],
-        "v202501BitwiseOp": [
-          "BITWISE_OP_UNSPECIFIED",
-          "BITWISE_OP_ANY",
-          "BITWISE_OP_NONE",
-          "BITWISE_OP_ALL",
-          "BITWISE_OP_NOT_ALL"
+        "SortingConfigOrder": [
+          "ORDER_UNSPECIFIED",
+          "ORDER_ASCENDING",
+          "ORDER_DESCENDING"
         ],
-        "v202501Fragment": [
-          "FRAGMENT_UNSPECIFIED",
-          "FRAGMENT_DF",
-          "FRAGMENT_ISF",
-          "FRAGMENT_FF",
-          "FRAGMENT_LF"
-        ],
-        "v202501NumericOp": [
-          "NUMERIC_OP_UNSPECIFIED",
-          "NUMERIC_OP_EQUALS",
-          "NUMERIC_OP_NOT_EQUALS",
-          "NUMERIC_OP_LESS_THAN",
-          "NUMERIC_OP_GREATER_THAN",
-          "NUMERIC_OP_LESS_THAN_OR_EQUALS",
-          "NUMERIC_OP_GREATER_THAN_OR_EQUALS"
-        ],
-        "v202501TCPFlag": [
+        "TCPFlag": [
           "TCP_FLAG_UNSPECIFIED",
           "TCP_FLAG_FIN",
           "TCP_FLAG_SYN",
@@ -3474,6 +3629,11 @@
           "TCP_FLAG_URG",
           "TCP_FLAG_ECE",
           "TCP_FLAG_CWR"
+        ],
+        "TopKeysConditionTopKeysEvent": [
+          "TOP_KEYS_EVENT_UNSPECIFIED",
+          "TOP_KEYS_EVENT_JOINS",
+          "TOP_KEYS_EVENT_LEAVES"
         ],
         "v202505AlertAcknowledgement": [
           "ALERT_ACKNOWLEDGEMENT_UNSPECIFIED",
@@ -3498,7 +3658,11 @@
             "api_config_override": "Optional[APIConfig]",
             "asGroupid": "str"
           },
-          "returns": "DeleteASGroupResponse"
+          "returns": "DeleteASGroupResponse",
+          "error": "DeleteAsGroupError",
+          "error_responses": {
+            "default": "DeleteAsGroupUnexpectedError"
+          }
         },
         "GET /as_group/v202212/as_group": {
           "operation": "ListASGroups",
@@ -3509,7 +3673,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListASGroupsResponse"
+          "returns": "ListASGroupsResponse",
+          "error": "ListAsGroupsError",
+          "error_responses": {
+            "default": "ListAsGroupsUnexpectedError"
+          }
         },
         "GET /as_group/v202212/as_group/{asGroupid}": {
           "operation": "GetASGroup",
@@ -3523,7 +3691,11 @@
             "api_config_override": "Optional[APIConfig]",
             "asGroupid": "str"
           },
-          "returns": "GetASGroupResponse"
+          "returns": "GetASGroupResponse",
+          "error": "GetAsGroupError",
+          "error_responses": {
+            "default": "GetAsGroupUnexpectedError"
+          }
         },
         "POST /as_group/v202212/as_group": {
           "operation": "CreateASGroup",
@@ -3537,7 +3709,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateASGroupRequest"
           },
-          "returns": "CreateASGroupResponse"
+          "returns": "CreateASGroupResponse",
+          "error": "CreateAsGroupError",
+          "error_responses": {
+            "default": "CreateAsGroupUnexpectedError"
+          }
         },
         "PUT /as_group/v202212/as_group/{asGroupid}": {
           "operation": "UpdateASGroup",
@@ -3553,7 +3729,11 @@
             "asGroupid": "str",
             "data": "ASGroupServiceUpdateASGroupBody"
           },
-          "returns": "UpdateASGroupResponse"
+          "returns": "UpdateASGroupResponse",
+          "error": "UpdateAsGroupError",
+          "error_responses": {
+            "default": "UpdateAsGroupUnexpectedError"
+          }
         }
       },
       "models": [
@@ -3704,7 +3884,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteTagKeyResponse"
+          "returns": "DeleteTagKeyResponse",
+          "error": "DeleteTagKeyError",
+          "error_responses": {
+            "default": "DeleteTagKeyUnexpectedError"
+          }
         },
         "GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values": {
           "operation": "GetTagValues",
@@ -3720,7 +3904,11 @@
             "assetType": "str",
             "assetId": "str"
           },
-          "returns": "GetTagValuesResponse"
+          "returns": "GetTagValuesResponse",
+          "error": "GetTagValuesError",
+          "error_responses": {
+            "default": "GetTagValuesUnexpectedError"
+          }
         },
         "GET /asset_tags/v20260515beta1/keys": {
           "operation": "ListTagKeys",
@@ -3731,7 +3919,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListTagKeysResponse"
+          "returns": "ListTagKeysResponse",
+          "error": "ListTagKeysError",
+          "error_responses": {
+            "default": "ListTagKeysUnexpectedError"
+          }
         },
         "GET /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "GetTagKey",
@@ -3745,7 +3937,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetTagKeyResponse"
+          "returns": "GetTagKeyResponse",
+          "error": "GetTagKeyError",
+          "error_responses": {
+            "default": "GetTagKeyUnexpectedError"
+          }
         },
         "GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values": {
           "operation": "ListTagValues",
@@ -3761,7 +3957,11 @@
             "tagId": "str",
             "assetType": "str"
           },
-          "returns": "ListTagValuesResponse"
+          "returns": "ListTagValuesResponse",
+          "error": "ListTagValuesError",
+          "error_responses": {
+            "default": "ListTagValuesUnexpectedError"
+          }
         },
         "POST /asset_tags/v20260515beta1/keys": {
           "operation": "CreateTagKey",
@@ -3775,7 +3975,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateTagKeyRequest"
           },
-          "returns": "CreateTagKeyResponse"
+          "returns": "CreateTagKeyResponse",
+          "error": "CreateTagKeyError",
+          "error_responses": {
+            "default": "CreateTagKeyUnexpectedError"
+          }
         },
         "POST /asset_tags/v20260515beta1/values/delete": {
           "operation": "DeleteTagValues",
@@ -3789,7 +3993,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "DeleteTagValuesRequest"
           },
-          "returns": "DeleteTagValuesResponse"
+          "returns": "DeleteTagValuesResponse",
+          "error": "DeleteTagValuesError",
+          "error_responses": {
+            "default": "DeleteTagValuesUnexpectedError"
+          }
         },
         "PUT /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "UpdateTagKey",
@@ -3805,7 +4013,11 @@
             "id": "str",
             "data": "AssetTagsServiceUpdateTagKeyBody"
           },
-          "returns": "UpdateTagKeyResponse"
+          "returns": "UpdateTagKeyResponse",
+          "error": "UpdateTagKeyError",
+          "error_responses": {
+            "default": "UpdateTagKeyUnexpectedError"
+          }
         },
         "PUT /asset_tags/v20260515beta1/values": {
           "operation": "SetTagValues",
@@ -3819,7 +4031,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "SetTagValuesRequest"
           },
-          "returns": "SetTagValuesResponse"
+          "returns": "SetTagValuesResponse",
+          "error": "SetTagValuesError",
+          "error_responses": {
+            "default": "SetTagValuesUnexpectedError"
+          }
         }
       },
       "models": [
@@ -4035,7 +4251,11 @@
             "offset": "Optional[str]",
             "limit": "Optional[str]"
           },
-          "returns": "ListAuditEventsResponse"
+          "returns": "ListAuditEventsResponse",
+          "error": "ListEventsError",
+          "error_responses": {
+            "default": "ListEventsUnexpectedError"
+          }
         },
         "GET /audit/v202601/events/{id}": {
           "operation": "GetAuditEvent",
@@ -4050,7 +4270,11 @@
             "id": "str",
             "ctime": "Optional[str]"
           },
-          "returns": "GetAuditEventResponse"
+          "returns": "GetAuditEventResponse",
+          "error": "GetEventError",
+          "error_responses": {
+            "default": "GetEventUnexpectedError"
+          }
         },
         "GET /audit/v202601/events/{id}/{ctime}": {
           "operation": "GetAuditEvent",
@@ -4066,7 +4290,11 @@
             "id": "str",
             "ctime": "str"
           },
-          "returns": "GetAuditEventResponse"
+          "returns": "GetAuditEventResponse",
+          "error": "GetEventByCtimeError",
+          "error_responses": {
+            "default": "GetEventByCtimeUnexpectedError"
+          }
         }
       },
       "models": [
@@ -4232,7 +4460,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteMonitorResponse"
+          "returns": "DeleteMonitorResponse",
+          "error": "DeleteMonitorError",
+          "error_responses": {
+            "default": "DeleteMonitorUnexpectedError"
+          }
         },
         "GET /bgp_monitoring/v202210/monitors": {
           "operation": "ListMonitors",
@@ -4243,7 +4475,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListMonitorsResponse"
+          "returns": "ListMonitorsResponse",
+          "error": "ListMonitorsError",
+          "error_responses": {
+            "default": "ListMonitorsUnexpectedError"
+          }
         },
         "GET /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "GetMonitor",
@@ -4257,7 +4493,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetMonitorResponse"
+          "returns": "GetMonitorResponse",
+          "error": "GetMonitorError",
+          "error_responses": {
+            "default": "GetMonitorUnexpectedError"
+          }
         },
         "POST /bgp_monitoring/v202210/metrics": {
           "operation": "GetMetricsForTarget",
@@ -4271,7 +4511,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "GetMetricsForTargetRequest"
           },
-          "returns": "GetMetricsForTargetResponse"
+          "returns": "GetMetricsForTargetResponse",
+          "error": "GetMetricsForTargetError",
+          "error_responses": {
+            "default": "GetMetricsForTargetUnexpectedError"
+          }
         },
         "POST /bgp_monitoring/v202210/monitors": {
           "operation": "CreateMonitor",
@@ -4285,7 +4529,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateMonitorRequest"
           },
-          "returns": "CreateMonitorResponse"
+          "returns": "CreateMonitorResponse",
+          "error": "CreateMonitorError",
+          "error_responses": {
+            "default": "CreateMonitorUnexpectedError"
+          }
         },
         "POST /bgp_monitoring/v202210/routes": {
           "operation": "GetRoutesForTarget",
@@ -4299,7 +4547,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "GetRoutesForTargetRequest"
           },
-          "returns": "GetRoutesForTargetResponse"
+          "returns": "GetRoutesForTargetResponse",
+          "error": "GetRoutesForTargetError",
+          "error_responses": {
+            "default": "GetRoutesForTargetUnexpectedError"
+          }
         },
         "PUT /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "UpdateMonitor",
@@ -4315,7 +4567,11 @@
             "id": "str",
             "data": "BgpMonitoringAdminServiceUpdateMonitorBody"
           },
-          "returns": "UpdateMonitorResponse"
+          "returns": "UpdateMonitorResponse",
+          "error": "UpdateMonitorError",
+          "error_responses": {
+            "default": "UpdateMonitorUnexpectedError"
+          }
         },
         "PUT /bgp_monitoring/v202210/monitors/{id}/status": {
           "operation": "SetMonitorStatus",
@@ -4331,10 +4587,15 @@
             "id": "str",
             "data": "BgpMonitoringAdminServiceSetMonitorStatusBody"
           },
-          "returns": "SetMonitorStatusResponse"
+          "returns": "SetMonitorStatusResponse",
+          "error": "SetMonitorStatusError",
+          "error_responses": {
+            "default": "SetMonitorStatusUnexpectedError"
+          }
         }
       },
       "models": [
+        "Afi",
         "BgpHealthSettings",
         "BgpMetric",
         "BgpMetricType",
@@ -4354,15 +4615,14 @@
         "ListMonitorsResponse",
         "Nlri",
         "RouteInfo",
+        "RpkiStatus",
+        "Safi",
         "SetMonitorStatusResponse",
         "UpdateMonitorResponse",
+        "UserInfo",
+        "VantagePoint",
         "protobufAny",
-        "rpcStatus",
-        "v202303Afi",
-        "v202303RpkiStatus",
-        "v202303Safi",
-        "v202303UserInfo",
-        "v202303VantagePoint"
+        "rpcStatus"
       ],
       "fields": {
         "BgpHealthSettings": {
@@ -4419,11 +4679,11 @@
             "required": false
           },
           "createdBy": {
-            "type": "Optional[v202303UserInfo]",
+            "type": "Optional[UserInfo]",
             "required": false
           },
           "lastUpdatedBy": {
-            "type": "Optional[v202303UserInfo]",
+            "type": "Optional[UserInfo]",
             "required": false
           },
           "labels": {
@@ -4564,11 +4824,11 @@
         },
         "Nlri": {
           "afi": {
-            "type": "v202303Afi",
+            "type": "Afi",
             "required": true
           },
           "safi": {
-            "type": "v202303Safi",
+            "type": "Safi",
             "required": true
           },
           "prefix": {
@@ -4590,11 +4850,11 @@
             "required": false
           },
           "vantagePoint": {
-            "type": "Optional[v202303VantagePoint]",
+            "type": "Optional[VantagePoint]",
             "required": false
           },
           "rpkiStatus": {
-            "type": "Optional[v202303RpkiStatus]",
+            "type": "Optional[RpkiStatus]",
             "required": false
           },
           "nexthop": {
@@ -4606,6 +4866,38 @@
         "UpdateMonitorResponse": {
           "monitor": {
             "type": "Optional[BgpMonitor]",
+            "required": false
+          }
+        },
+        "UserInfo": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "email": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fullName": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "VantagePoint": {
+          "dataset": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "collector": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "peerAsn": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "peerIp": {
+            "type": "Optional[str]",
             "required": false
           }
         },
@@ -4628,41 +4920,14 @@
             "type": "Optional[List[Optional[protobufAny]]]",
             "required": false
           }
-        },
-        "v202303UserInfo": {
-          "id": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "email": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "fullName": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202303VantagePoint": {
-          "dataset": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "collector": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "peerAsn": {
-            "type": "Optional[int]",
-            "required": false
-          },
-          "peerIp": {
-            "type": "Optional[str]",
-            "required": false
-          }
         }
       },
       "enums": {
+        "Afi": [
+          "AFI_UNSPECIFIED",
+          "AFI_IP4",
+          "AFI_IP6"
+        ],
         "BgpMetricType": [
           "BGP_METRIC_TYPE_UNSPECIFIED",
           "BGP_METRIC_TYPE_REACHABILITY",
@@ -4674,12 +4939,7 @@
           "BGP_MONITOR_STATUS_PAUSED",
           "BGP_MONITOR_STATUS_DELETED"
         ],
-        "v202303Afi": [
-          "AFI_UNSPECIFIED",
-          "AFI_IP4",
-          "AFI_IP6"
-        ],
-        "v202303RpkiStatus": [
+        "RpkiStatus": [
           "RPKI_STATUS_UNSPECIFIED",
           "RPKI_STATUS_NOT_FOUND",
           "RPKI_STATUS_EXPLICIT_INVALID",
@@ -4688,7 +4948,7 @@
           "RPKI_STATUS_VALID",
           "RPKI_STATUS_ERROR"
         ],
-        "v202303Safi": [
+        "Safi": [
           "SAFI_UNSPECIFIED",
           "SAFI_UNICAST",
           "SAFI_MPLS",
@@ -4708,7 +4968,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCapacityPlansResponse"
+          "returns": "ListCapacityPlansResponse",
+          "error": "ListCapacityPlansError",
+          "error_responses": {
+            "default": "ListCapacityPlansUnexpectedError"
+          }
         },
         "GET /capacity_plan/v202212/capacity_plan/summary": {
           "operation": "ListCapacitySummaries",
@@ -4719,7 +4983,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCapacitySummariesResponse"
+          "returns": "ListCapacitySummariesResponse",
+          "error": "ListCapacitySummariesError",
+          "error_responses": {
+            "default": "ListCapacitySummariesUnexpectedError"
+          }
         },
         "GET /capacity_plan/v202212/capacity_plan/{id}": {
           "operation": "GetCapacityPlan",
@@ -4733,7 +5001,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetCapacityPlanResponse"
+          "returns": "GetCapacityPlanResponse",
+          "error": "GetCapacityPlanError",
+          "error_responses": {
+            "default": "GetCapacityPlanUnexpectedError"
+          }
         },
         "GET /capacity_plan/v202212/capacity_plan/{id}/summary": {
           "operation": "GetCapacitySummary",
@@ -4747,7 +5019,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetCapacitySummaryResponse"
+          "returns": "GetCapacitySummaryResponse",
+          "error": "GetCapacitySummaryError",
+          "error_responses": {
+            "default": "GetCapacitySummaryUnexpectedError"
+          }
         }
       },
       "models": [
@@ -5070,7 +5346,11 @@
             "api_config_override": "Optional[APIConfig]",
             "exportid": "str"
           },
-          "returns": "DeleteCloudExportResponse"
+          "returns": "DeleteCloudExportResponse",
+          "error": "DeleteCloudExportError",
+          "error_responses": {
+            "default": "DeleteCloudExportUnexpectedError"
+          }
         },
         "GET /cloud_export/v202506/exports": {
           "operation": "ListCloudExports",
@@ -5081,7 +5361,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCloudExportsResponse"
+          "returns": "ListCloudExportsResponse",
+          "error": "ListCloudExportsError",
+          "error_responses": {
+            "default": "ListCloudExportsUnexpectedError"
+          }
         },
         "GET /cloud_export/v202506/exports/{exportid}": {
           "operation": "GetCloudExport",
@@ -5095,7 +5379,11 @@
             "api_config_override": "Optional[APIConfig]",
             "exportid": "str"
           },
-          "returns": "GetCloudExportResponse"
+          "returns": "GetCloudExportResponse",
+          "error": "GetCloudExportError",
+          "error_responses": {
+            "default": "GetCloudExportUnexpectedError"
+          }
         },
         "POST /cloud_export/v202506/exports": {
           "operation": "CreateCloudExport",
@@ -5109,7 +5397,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateCloudExportRequest"
           },
-          "returns": "CreateCloudExportResponse"
+          "returns": "CreateCloudExportResponse",
+          "error": "CreateCloudExportError",
+          "error_responses": {
+            "default": "CreateCloudExportUnexpectedError"
+          }
         },
         "PUT /cloud_export/v202506/exports/{exportid}": {
           "operation": "UpdateCloudExport",
@@ -5125,7 +5417,11 @@
             "exportid": "str",
             "data": "CloudExportAdminServiceUpdateCloudExportBody"
           },
-          "returns": "UpdateCloudExportResponse"
+          "returns": "UpdateCloudExportResponse",
+          "error": "UpdateCloudExportError",
+          "error_responses": {
+            "default": "UpdateCloudExportUnexpectedError"
+          }
         }
       },
       "models": [
@@ -5489,7 +5785,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateConnectivityReportRequest"
           },
-          "returns": "CreateConnectivityReportResponse"
+          "returns": "CreateConnectivityReportResponse",
+          "error": "CreateConnectivityReportError",
+          "error_responses": {
+            "default": "CreateConnectivityReportUnexpectedError"
+          }
         }
       },
       "models": [
@@ -5651,7 +5951,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCostProvidersResponse"
+          "returns": "ListCostProvidersResponse",
+          "error": "ListProvidersError",
+          "error_responses": {
+            "default": "ListProvidersUnexpectedError"
+          }
         },
         "GET /cost/v202308/cost/summary": {
           "operation": "ListCostProviderSummaries",
@@ -5663,7 +5967,11 @@
             "api_config_override": "Optional[APIConfig]",
             "date": "Optional[str]"
           },
-          "returns": "ListCostProviderSummariesResponse"
+          "returns": "ListCostProviderSummariesResponse",
+          "error": "ListProviderSummariesError",
+          "error_responses": {
+            "default": "ListProviderSummariesUnexpectedError"
+          }
         },
         "GET /cost/v202308/cost/summary/{id}": {
           "operation": "GetCostProviderSummary",
@@ -5678,7 +5986,11 @@
             "id": "str",
             "date": "Optional[str]"
           },
-          "returns": "GetCostProviderSummaryResponse"
+          "returns": "GetCostProviderSummaryResponse",
+          "error": "GetProviderSummaryError",
+          "error_responses": {
+            "default": "GetProviderSummaryUnexpectedError"
+          }
         }
       },
       "models": [
@@ -5687,7 +5999,7 @@
         "GetCostProviderSummaryResponse",
         "ListCostProviderSummariesResponse",
         "ListCostProvidersResponse",
-        "costv202308Status",
+        "Status",
         "googlerpcStatus",
         "protobufAny"
       ],
@@ -5708,7 +6020,7 @@
             "required": false
           },
           "status": {
-            "type": "Optional[costv202308Status]",
+            "type": "Optional[Status]",
             "required": false
           },
           "totalCost": {
@@ -5828,7 +6140,7 @@
         }
       },
       "enums": {
-        "costv202308Status": [
+        "Status": [
           "STATUS_UNSPECIFIED",
           "STATUS_INCOMPLETE",
           "STATUS_COMPLETE"
@@ -5847,7 +6159,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCredentialGroupResponse"
+          "returns": "ListCredentialGroupResponse",
+          "error": "ListGroupError",
+          "error_responses": {
+            "default": "ListGroupUnexpectedError"
+          }
         },
         "GET /credential/v202407alpha1/group/{id}": {
           "operation": "GetCredentialGroup",
@@ -5861,21 +6177,25 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetCredentialGroupResponse"
+          "returns": "GetCredentialGroupResponse",
+          "error": "GetGroupError",
+          "error_responses": {
+            "default": "GetGroupUnexpectedError"
+          }
         }
       },
       "models": [
         "CredentialGroup",
         "GetCredentialGroupResponse",
+        "LandingType",
         "ListCredentialGroupResponse",
+        "PermissionEntry",
+        "Role",
+        "Secret",
+        "SecretType",
+        "User",
         "protobufAny",
-        "rpcStatus",
-        "v202211LandingType",
-        "v202211PermissionEntry",
-        "v202211Role",
-        "v202211User",
-        "v202312alpha1Secret",
-        "v202312alpha1SecretType"
+        "rpcStatus"
       ],
       "fields": {
         "CredentialGroup": {
@@ -5896,7 +6216,7 @@
             "required": false
           },
           "type": {
-            "type": "Optional[v202312alpha1SecretType]",
+            "type": "Optional[SecretType]",
             "required": false
           },
           "cdate": {
@@ -5908,11 +6228,11 @@
             "required": false
           },
           "createdBy": {
-            "type": "Optional[v202211User]",
+            "type": "Optional[User]",
             "required": false
           },
           "credentials": {
-            "type": "Optional[List[Optional[v202312alpha1Secret]]]",
+            "type": "Optional[List[Optional[Secret]]]",
             "required": false
           },
           "labels": {
@@ -5936,27 +6256,7 @@
             "required": false
           }
         },
-        "protobufAny": {
-          "type": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "rpcStatus": {
-          "code": {
-            "type": "Optional[int]",
-            "required": false
-          },
-          "message": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "details": {
-            "type": "Optional[List[Optional[protobufAny]]]",
-            "required": false
-          }
-        },
-        "v202211PermissionEntry": {
+        "PermissionEntry": {
           "capability": {
             "type": "str",
             "required": true
@@ -5966,7 +6266,33 @@
             "required": true
           }
         },
-        "v202211User": {
+        "Secret": {
+          "name": {
+            "type": "str",
+            "required": true
+          },
+          "value": {
+            "type": "str",
+            "required": true
+          },
+          "version": {
+            "type": "int",
+            "required": true
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "type": {
+            "type": "Optional[SecretType]",
+            "required": false
+          },
+          "id": {
+            "type": "str",
+            "required": true
+          }
+        },
+        "User": {
           "id": {
             "type": "Optional[str]",
             "required": false
@@ -5980,11 +6306,11 @@
             "required": true
           },
           "role": {
-            "type": "v202211Role",
+            "type": "Role",
             "required": true
           },
           "permissions": {
-            "type": "Optional[List[Optional[v202211PermissionEntry]]]",
+            "type": "Optional[List[Optional[PermissionEntry]]]",
             "required": false
           },
           "filter": {
@@ -6004,7 +6330,7 @@
             "required": false
           },
           "defaultLandingPageType": {
-            "type": "Optional[v202211LandingType]",
+            "type": "Optional[LandingType]",
             "required": false
           },
           "defaultLandingPageValue": {
@@ -6020,35 +6346,29 @@
             "required": false
           }
         },
-        "v202312alpha1Secret": {
-          "name": {
-            "type": "str",
-            "required": true
+        "protobufAny": {
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "rpcStatus": {
+          "code": {
+            "type": "Optional[int]",
+            "required": false
           },
-          "value": {
-            "type": "str",
-            "required": true
-          },
-          "version": {
-            "type": "int",
-            "required": true
-          },
-          "description": {
+          "message": {
             "type": "Optional[str]",
             "required": false
           },
-          "type": {
-            "type": "Optional[v202312alpha1SecretType]",
+          "details": {
+            "type": "Optional[List[Optional[protobufAny]]]",
             "required": false
-          },
-          "id": {
-            "type": "str",
-            "required": true
           }
         }
       },
       "enums": {
-        "v202211LandingType": [
+        "LandingType": [
           "LANDING_TYPE_UNSPECIFIED",
           "LANDING_TYPE_LOCAL",
           "LANDING_TYPE_OBSERVATION_DECK",
@@ -6065,13 +6385,13 @@
           "LANDING_TYPE_MARKET_INTELLIGENCE",
           "LANDING_TYPE_AI_ADVISOR"
         ],
-        "v202211Role": [
+        "Role": [
           "ROLE_UNSPECIFIED",
           "ROLE_MEMBER",
           "ROLE_ADMINISTRATOR",
           "ROLE_SUPER_ADMINISTRATOR"
         ],
-        "v202312alpha1SecretType": [
+        "SecretType": [
           "SECRET_TYPE_UNSPECIFIED",
           "SECRET_TYPE_BASIC_AUTH",
           "SECRET_TYPE_SNMP_V1",
@@ -6099,7 +6419,11 @@
             "api_config_override": "Optional[APIConfig]",
             "customApplicationId": "str"
           },
-          "returns": "DeleteCustomApplicationResponse"
+          "returns": "DeleteCustomApplicationResponse",
+          "error": "DeleteCustomApplicationError",
+          "error_responses": {
+            "default": "DeleteCustomApplicationUnexpectedError"
+          }
         },
         "GET /custom_application/v202501alpha1": {
           "operation": "ListCustomApplications",
@@ -6110,7 +6434,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCustomApplicationsResponse"
+          "returns": "ListCustomApplicationsResponse",
+          "error": "ListCustomApplicationsError",
+          "error_responses": {
+            "default": "ListCustomApplicationsUnexpectedError"
+          }
         },
         "GET /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "GetCustomApplication",
@@ -6124,7 +6452,11 @@
             "api_config_override": "Optional[APIConfig]",
             "customApplicationId": "str"
           },
-          "returns": "GetCustomApplicationResponse"
+          "returns": "GetCustomApplicationResponse",
+          "error": "GetCustomApplicationError",
+          "error_responses": {
+            "default": "GetCustomApplicationUnexpectedError"
+          }
         },
         "POST /custom_application/v202501alpha1": {
           "operation": "CreateCustomApplication",
@@ -6138,7 +6470,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CustomApplication"
           },
-          "returns": "CreateCustomApplicationResponse"
+          "returns": "CreateCustomApplicationResponse",
+          "error": "CreateCustomApplicationError",
+          "error_responses": {
+            "default": "CreateCustomApplicationUnexpectedError"
+          }
         },
         "PUT /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "UpdateCustomApplication",
@@ -6154,7 +6490,11 @@
             "customApplicationId": "str",
             "data": "CustomApplication"
           },
-          "returns": "UpdateCustomApplicationResponse"
+          "returns": "UpdateCustomApplicationResponse",
+          "error": "UpdateCustomApplicationError",
+          "error_responses": {
+            "default": "UpdateCustomApplicationUnexpectedError"
+          }
         }
       },
       "models": [
@@ -6273,7 +6613,11 @@
             "api_config_override": "Optional[APIConfig]",
             "customDimensionId": "str"
           },
-          "returns": "DeleteCustomDimensionResponse"
+          "returns": "DeleteCustomDimensionResponse",
+          "error": "DeleteCustomDimensionError",
+          "error_responses": {
+            "default": "DeleteCustomDimensionUnexpectedError"
+          }
         },
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "DeletePopulator",
@@ -6289,7 +6633,11 @@
             "customDimensionId": "str",
             "populatorId": "str"
           },
-          "returns": "DeletePopulatorResponse"
+          "returns": "DeletePopulatorResponse",
+          "error": "DeletePopulatorError",
+          "error_responses": {
+            "default": "DeletePopulatorUnexpectedError"
+          }
         },
         "GET /custom_dimensions/v202411alpha1": {
           "operation": "ListCustomDimensions",
@@ -6300,7 +6648,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCustomDimensionsResponse"
+          "returns": "ListCustomDimensionsResponse",
+          "error": "ListCustomDimensionsError",
+          "error_responses": {
+            "default": "ListCustomDimensionsUnexpectedError"
+          }
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "GetCustomDimensionInfo",
@@ -6314,7 +6666,11 @@
             "api_config_override": "Optional[APIConfig]",
             "customDimensionId": "str"
           },
-          "returns": "GetCustomDimensionInfoResponse"
+          "returns": "GetCustomDimensionInfoResponse",
+          "error": "GetInfoError",
+          "error_responses": {
+            "default": "GetInfoUnexpectedError"
+          }
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "GetPopulator",
@@ -6331,7 +6687,11 @@
             "populatorId": "str",
             "fieldLimit": "Optional[int]"
           },
-          "returns": "GetPopulatorResponse"
+          "returns": "GetPopulatorResponse",
+          "error": "GetPopulatorError",
+          "error_responses": {
+            "default": "GetPopulatorUnexpectedError"
+          }
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}/field/{fieldName}": {
           "operation": "GetPopulatorField",
@@ -6351,7 +6711,11 @@
             "offset": "Optional[int]",
             "limit": "Optional[int]"
           },
-          "returns": "GetPopulatorFieldResponse"
+          "returns": "GetPopulatorFieldResponse",
+          "error": "GetPopulatorFieldError",
+          "error_responses": {
+            "default": "GetPopulatorFieldUnexpectedError"
+          }
         },
         "POST /custom_dimensions/v202411alpha1/{customDimensionId}/populator": {
           "operation": "CreatePopulator",
@@ -6367,7 +6731,11 @@
             "customDimensionId": "str",
             "data": "Populator"
           },
-          "returns": "CreatePopulatorResponse"
+          "returns": "CreatePopulatorResponse",
+          "error": "CreatePopulatorError",
+          "error_responses": {
+            "default": "CreatePopulatorUnexpectedError"
+          }
         },
         "POST /v1/customdimension": {
           "operation": "CreateCustomDimension",
@@ -6381,7 +6749,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CustomDimension"
           },
-          "returns": "CreateCustomDimensionResponse"
+          "returns": "CreateCustomDimensionResponse",
+          "error": "CreateCustomDimensionError",
+          "error_responses": {
+            "default": "CreateCustomDimensionUnexpectedError"
+          }
         },
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "UpdateCustomDimension",
@@ -6397,7 +6769,11 @@
             "customDimensionId": "str",
             "data": "CustomDimension"
           },
-          "returns": "UpdateCustomDimensionResponse"
+          "returns": "UpdateCustomDimensionResponse",
+          "error": "UpdateCustomDimensionError",
+          "error_responses": {
+            "default": "UpdateCustomDimensionUnexpectedError"
+          }
         },
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
           "operation": "UpdatePopulator",
@@ -6415,7 +6791,11 @@
             "populatorId": "str",
             "data": "Populator"
           },
-          "returns": "UpdatePopulatorResponse"
+          "returns": "UpdatePopulatorResponse",
+          "error": "UpdatePopulatorError",
+          "error_responses": {
+            "default": "UpdatePopulatorUnexpectedError"
+          }
         }
       },
       "models": [
@@ -6686,7 +7066,11 @@
             "api_config_override": "Optional[APIConfig]",
             "deviceid": "str"
           },
-          "returns": "DeleteDeviceResponse"
+          "returns": "DeleteDeviceResponse",
+          "error": "DeleteDeviceError",
+          "error_responses": {
+            "default": "DeleteDeviceUnexpectedError"
+          }
         },
         "GET /device/v202504beta2/device": {
           "operation": "ListDevices",
@@ -6699,7 +7083,11 @@
             "querynoCustomColumns": "Optional[bool]",
             "view": "Optional[str]"
           },
-          "returns": "ListDevicesResponse"
+          "returns": "ListDevicesResponse",
+          "error": "ListDevicesError",
+          "error_responses": {
+            "default": "ListDevicesUnexpectedError"
+          }
         },
         "GET /device/v202504beta2/device/name/{deviceName}": {
           "operation": "GetDeviceByName",
@@ -6714,7 +7102,11 @@
             "deviceName": "str",
             "querynoCustomColumns": "Optional[bool]"
           },
-          "returns": "GetDeviceByNameResponse"
+          "returns": "GetDeviceByNameResponse",
+          "error": "GetDeviceByNameError",
+          "error_responses": {
+            "default": "GetDeviceByNameUnexpectedError"
+          }
         },
         "GET /device/v202504beta2/device/{deviceid}": {
           "operation": "GetDevice",
@@ -6729,7 +7121,11 @@
             "deviceid": "str",
             "querynoCustomColumns": "Optional[bool]"
           },
-          "returns": "GetDeviceResponse"
+          "returns": "GetDeviceResponse",
+          "error": "GetDeviceError",
+          "error_responses": {
+            "default": "GetDeviceUnexpectedError"
+          }
         },
         "POST /device/v202504beta2/device": {
           "operation": "CreateDevice",
@@ -6743,7 +7139,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateDeviceRequest"
           },
-          "returns": "CreateDeviceResponse"
+          "returns": "CreateDeviceResponse",
+          "error": "CreateDeviceError",
+          "error_responses": {
+            "default": "CreateDeviceUnexpectedError"
+          }
         },
         "POST /device/v202504beta2/device/batch_create": {
           "operation": "CreateDevices",
@@ -6757,7 +7157,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateDevicesRequest"
           },
-          "returns": "CreateDevicesResponse"
+          "returns": "CreateDevicesResponse",
+          "error": "CreateDevicesError",
+          "error_responses": {
+            "default": "CreateDevicesUnexpectedError"
+          }
         },
         "POST /device/v202504beta2/device/batch_delete": {
           "operation": "DeleteDevices",
@@ -6771,7 +7175,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "DeleteDevicesRequest"
           },
-          "returns": "DeleteDevicesResponse"
+          "returns": "DeleteDevicesResponse",
+          "error": "DeleteDevicesError",
+          "error_responses": {
+            "default": "DeleteDevicesUnexpectedError"
+          }
         },
         "PUT /device/v202504beta2/device/batch_update": {
           "operation": "UpdateDevices",
@@ -6785,7 +7193,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "UpdateDevicesRequest"
           },
-          "returns": "UpdateDevicesResponse"
+          "returns": "UpdateDevicesResponse",
+          "error": "UpdateDevicesError",
+          "error_responses": {
+            "default": "UpdateDevicesUnexpectedError"
+          }
         },
         "PUT /device/v202504beta2/device/{deviceid}": {
           "operation": "UpdateDevice",
@@ -6801,7 +7213,11 @@
             "deviceid": "str",
             "data": "DeviceServiceUpdateDeviceBody"
           },
-          "returns": "UpdateDeviceResponse"
+          "returns": "UpdateDeviceResponse",
+          "error": "UpdateDeviceError",
+          "error_responses": {
+            "default": "UpdateDeviceUnexpectedError"
+          }
         },
         "PUT /device/v202504beta2/device/{id}/labels": {
           "operation": "UpdateDeviceLabels",
@@ -6817,7 +7233,11 @@
             "id": "str",
             "data": "DeviceServiceUpdateDeviceLabelsBody"
           },
-          "returns": "UpdateDeviceLabelsResponse"
+          "returns": "UpdateDeviceLabelsResponse",
+          "error": "UpdateLabelsError",
+          "error_responses": {
+            "default": "UpdateLabelsUnexpectedError"
+          }
         }
       },
       "models": [
@@ -6843,6 +7263,7 @@
         "GetDeviceResponse",
         "GnmiV1Conf",
         "Interface",
+        "Label",
         "LabelConcise",
         "ListDevicesResponse",
         "Plan",
@@ -6851,7 +7272,6 @@
         "UpdateDeviceResponse",
         "UpdateDevicesRequest",
         "UpdateDevicesResponse",
-        "devicev202504beta2Label",
         "protobufAny",
         "rpcStatus"
       ],
@@ -7059,7 +7479,7 @@
             "required": false
           },
           "labels": {
-            "type": "Optional[List[Optional[devicev202504beta2Label]]]",
+            "type": "Optional[List[Optional[Label]]]",
             "required": false
           },
           "allInterfaces": {
@@ -7441,6 +7861,52 @@
             "required": false
           }
         },
+        "Label": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "edate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "cdate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "userId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "companyId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "color": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "order": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "pivotDeviceId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "pivotLabelId": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "LabelConcise": {
           "id": {
             "type": "Optional[int]",
@@ -7570,52 +8036,6 @@
           },
           "failedDevices": {
             "type": "Optional[List[str]]",
-            "required": false
-          }
-        },
-        "devicev202504beta2Label": {
-          "id": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "name": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "description": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "edate": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "cdate": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "userId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "companyId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "color": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "order": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "pivotDeviceId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "pivotLabelId": {
-            "type": "Optional[str]",
             "required": false
           }
         },
@@ -8049,7 +8469,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "GetDictionaryResponse"
+          "returns": "GetDictionaryResponse",
+          "error": "GetDictionaryError",
+          "error_responses": {
+            "default": "GetDictionaryUnexpectedError"
+          }
         }
       },
       "models": [
@@ -8399,7 +8823,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "FetchValuesByIdsRequest"
           },
-          "returns": "FetchValuesByIdsResponse"
+          "returns": "FetchValuesByIdsResponse",
+          "error": "FetchValuesByIdsError",
+          "error_responses": {
+            "default": "FetchValuesByIdsUnexpectedError"
+          }
         }
       },
       "models": [
@@ -8459,7 +8887,11 @@
             "api_config_override": "Optional[APIConfig]",
             "flowTagid": "str"
           },
-          "returns": "DeleteFlowTagResponse"
+          "returns": "DeleteFlowTagResponse",
+          "error": "DeleteFlowTagError",
+          "error_responses": {
+            "default": "DeleteFlowTagUnexpectedError"
+          }
         },
         "GET /flow_tag/v202404alpha1/tag": {
           "operation": "SearchFlowTag",
@@ -8475,7 +8907,11 @@
             "searchlookupValues": "Optional[List[str]]",
             "searchfieldLimit": "Optional[int]"
           },
-          "returns": "SearchFlowTagResponse"
+          "returns": "SearchFlowTagResponse",
+          "error": "SearchFlowTagError",
+          "error_responses": {
+            "default": "SearchFlowTagUnexpectedError"
+          }
         },
         "GET /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "GetFlowTag",
@@ -8489,7 +8925,11 @@
             "api_config_override": "Optional[APIConfig]",
             "flowTagid": "str"
           },
-          "returns": "GetFlowTagResponse"
+          "returns": "GetFlowTagResponse",
+          "error": "GetFlowTagError",
+          "error_responses": {
+            "default": "GetFlowTagUnexpectedError"
+          }
         },
         "POST /flow_tag/v202404alpha1/tag": {
           "operation": "CreateFlowTag",
@@ -8503,7 +8943,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateFlowTagRequest"
           },
-          "returns": "CreateFlowTagResponse"
+          "returns": "CreateFlowTagResponse",
+          "error": "CreateFlowTagError",
+          "error_responses": {
+            "default": "CreateFlowTagUnexpectedError"
+          }
         },
         "PUT /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "UpdateFlowTag",
@@ -8519,7 +8963,11 @@
             "flowTagid": "str",
             "data": "FlowTagServiceUpdateFlowTagBody"
           },
-          "returns": "UpdateFlowTagResponse"
+          "returns": "UpdateFlowTagResponse",
+          "error": "UpdateFlowTagError",
+          "error_responses": {
+            "default": "UpdateFlowTagUnexpectedError"
+          }
         }
       },
       "models": [
@@ -8777,7 +9225,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteInterfaceResponse"
+          "returns": "DeleteInterfaceResponse",
+          "error": "InterfaceDeleteError",
+          "error_responses": {
+            "default": "InterfaceDeleteUnexpectedError"
+          }
         },
         "GET /interface/v202108alpha1/interfaces": {
           "operation": "ListInterface",
@@ -8795,7 +9247,11 @@
             "filterssnmpSpeeds": "Optional[List[int]]",
             "filtersipTypes": "Optional[List[str]]"
           },
-          "returns": "ListInterfaceResponse"
+          "returns": "ListInterfaceResponse",
+          "error": "ListInterfaceError",
+          "error_responses": {
+            "default": "ListInterfaceUnexpectedError"
+          }
         },
         "GET /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceGet",
@@ -8809,7 +9265,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetInterfaceResponse"
+          "returns": "GetInterfaceResponse",
+          "error": "InterfaceGetError",
+          "error_responses": {
+            "default": "InterfaceGetUnexpectedError"
+          }
         },
         "POST /interface/v202108alpha1/interfaces": {
           "operation": "InterfaceCreate",
@@ -8823,7 +9283,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateInterfaceRequest"
           },
-          "returns": "CreateInterfaceResponse"
+          "returns": "CreateInterfaceResponse",
+          "error": "InterfaceCreateError",
+          "error_responses": {
+            "default": "InterfaceCreateUnexpectedError"
+          }
         },
         "POST /interface/v202108alpha1/manual_classify": {
           "operation": "ManualClassify",
@@ -8837,7 +9301,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "ManualClassifyRequest"
           },
-          "returns": "ManualClassifyResponse"
+          "returns": "ManualClassifyResponse",
+          "error": "ManualClassifyError",
+          "error_responses": {
+            "default": "ManualClassifyUnexpectedError"
+          }
         },
         "PUT /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceUpdate",
@@ -8853,7 +9321,11 @@
             "id": "str",
             "data": "InterfaceServiceUpdateInterfaceBody"
           },
-          "returns": "UpdateInterfaceResponse"
+          "returns": "UpdateInterfaceResponse",
+          "error": "InterfaceUpdateError",
+          "error_responses": {
+            "default": "InterfaceUpdateUnexpectedError"
+          }
         }
       },
       "models": [
@@ -9199,7 +9671,11 @@
             "api_config_override": "Optional[APIConfig]",
             "prompt": "str"
           },
-          "returns": "GetJourneysNlqResponse"
+          "returns": "GetJourneysNlqResponse",
+          "error": "GetNlqError",
+          "error_responses": {
+            "default": "GetNlqUnexpectedError"
+          }
         }
       },
       "models": [
@@ -9279,7 +9755,11 @@
             "agentId": "str",
             "capabilityname": "str"
           },
-          "returns": "DeleteAgentCapabilityResponse"
+          "returns": "DeleteAgentCapabilityResponse",
+          "error": "DeleteAgentCapabilityError",
+          "error_responses": {
+            "default": "DeleteAgentCapabilityUnexpectedError"
+          }
         },
         "DELETE /kagent/v202401/agents/{agentid}": {
           "operation": "DeleteAgent",
@@ -9294,11 +9774,15 @@
             "agentid": "str",
             "unregistered": "Optional[bool]"
           },
-          "returns": "DeleteAgentResponse"
+          "returns": "DeleteAgentResponse",
+          "error": "DeleteAgentError",
+          "error_responses": {
+            "default": "DeleteAgentUnexpectedError"
+          }
         },
         "DELETE /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_DeleteCapability",
-          "method": "capability_admin_service__delete_capability",
+          "method": "delete_capability",
           "grpc": "CapabilityAdminService/DeleteCapability",
           "status": 200,
           "required_params": [
@@ -9308,7 +9792,11 @@
             "api_config_override": "Optional[APIConfig]",
             "capabilityname": "str"
           },
-          "returns": "DeleteCapabilityResponse"
+          "returns": "DeleteCapabilityResponse",
+          "error": "DeleteCapabilityError",
+          "error_responses": {
+            "default": "DeleteCapabilityUnexpectedError"
+          }
         },
         "DELETE /kagent/v202401/config/{configname}": {
           "operation": "DeleteConfig",
@@ -9322,7 +9810,11 @@
             "api_config_override": "Optional[APIConfig]",
             "configname": "str"
           },
-          "returns": "DeleteConfigResponse"
+          "returns": "DeleteConfigResponse",
+          "error": "DeleteConfigError",
+          "error_responses": {
+            "default": "DeleteConfigUnexpectedError"
+          }
         },
         "GET /kagent/v202401/agents": {
           "operation": "ListAgents",
@@ -9337,7 +9829,11 @@
             "capabilities": "Optional[List[str]]",
             "includeDesiredState": "Optional[bool]"
           },
-          "returns": "ListAgentsResponse"
+          "returns": "ListAgentsResponse",
+          "error": "ListAgentsError",
+          "error_responses": {
+            "default": "ListAgentsUnexpectedError"
+          }
         },
         "GET /kagent/v202401/agents/{agentId}/capabilities": {
           "operation": "ListAgentCapabilities",
@@ -9351,7 +9847,11 @@
             "api_config_override": "Optional[APIConfig]",
             "agentId": "str"
           },
-          "returns": "ListAgentCapabilitiesResponse"
+          "returns": "ListAgentCapabilitiesResponse",
+          "error": "ListAgentCapabilitiesError",
+          "error_responses": {
+            "default": "ListAgentCapabilitiesUnexpectedError"
+          }
         },
         "GET /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "GetAgentCapability",
@@ -9367,7 +9867,11 @@
             "agentId": "str",
             "capabilityname": "str"
           },
-          "returns": "GetAgentCapabilityResponse"
+          "returns": "GetAgentCapabilityResponse",
+          "error": "GetAgentCapabilityError",
+          "error_responses": {
+            "default": "GetAgentCapabilityUnexpectedError"
+          }
         },
         "GET /kagent/v202401/agents/{agentid}": {
           "operation": "GetAgent",
@@ -9382,22 +9886,30 @@
             "agentid": "str",
             "unregistered": "Optional[bool]"
           },
-          "returns": "GetAgentResponse"
+          "returns": "GetAgentResponse",
+          "error": "GetAgentError",
+          "error_responses": {
+            "default": "GetAgentUnexpectedError"
+          }
         },
         "GET /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_ListCapabilities",
-          "method": "capability_admin_service__list_capabilities",
+          "method": "list_capabilities",
           "grpc": "CapabilityAdminService/ListCapabilities",
           "status": 200,
           "required_params": [],
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCapabilitiesResponse"
+          "returns": "ListCapabilitiesResponse",
+          "error": "ListCapabilitiesError",
+          "error_responses": {
+            "default": "ListCapabilitiesUnexpectedError"
+          }
         },
         "GET /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_GetCapability",
-          "method": "capability_admin_service__get_capability",
+          "method": "get_capability",
           "grpc": "CapabilityAdminService/GetCapability",
           "status": 200,
           "required_params": [
@@ -9407,7 +9919,11 @@
             "api_config_override": "Optional[APIConfig]",
             "capabilityname": "str"
           },
-          "returns": "GetCapabilityResponse"
+          "returns": "GetCapabilityResponse",
+          "error": "GetCapabilityError",
+          "error_responses": {
+            "default": "GetCapabilityUnexpectedError"
+          }
         },
         "GET /kagent/v202401/config/{configname}": {
           "operation": "GetConfig",
@@ -9421,7 +9937,11 @@
             "api_config_override": "Optional[APIConfig]",
             "configname": "str"
           },
-          "returns": "GetConfigResponse"
+          "returns": "GetConfigResponse",
+          "error": "GetConfigError",
+          "error_responses": {
+            "default": "GetConfigUnexpectedError"
+          }
         },
         "GET /kagent/v202401/provisioning-tokens": {
           "operation": "ListProvisioningTokens",
@@ -9432,7 +9952,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListProvisioningTokensResponse"
+          "returns": "ListProvisioningTokensResponse",
+          "error": "ListProvisioningTokensError",
+          "error_responses": {
+            "default": "ListProvisioningTokensUnexpectedError"
+          }
         },
         "GET /kagent/v202401/provisioning-tokens/{token}": {
           "operation": "GetProvisioningToken",
@@ -9446,7 +9970,11 @@
             "api_config_override": "Optional[APIConfig]",
             "token": "str"
           },
-          "returns": "GetProvisioningTokenResponse"
+          "returns": "GetProvisioningTokenResponse",
+          "error": "GetProvisioningTokenError",
+          "error_responses": {
+            "default": "GetProvisioningTokenUnexpectedError"
+          }
         },
         "GET /kagent/v202401/provisioning-tokens/{token}/agents": {
           "operation": "ListAgentsByProvisioningToken",
@@ -9460,11 +9988,15 @@
             "api_config_override": "Optional[APIConfig]",
             "token": "str"
           },
-          "returns": "ListAgentsByProvisioningTokenResponse"
+          "returns": "ListAgentsByProvisioningTokenResponse",
+          "error": "ListAgentsByProvisioningTokenError",
+          "error_responses": {
+            "default": "ListAgentsByProvisioningTokenUnexpectedError"
+          }
         },
         "GET /kagent/v202401/releases": {
           "operation": "CapabilityReleaseService_GetCapabilityRelease",
-          "method": "capability_release_service__get_capability_release",
+          "method": "get_capability_release",
           "grpc": "CapabilityReleaseService/GetCapabilityRelease",
           "status": 200,
           "required_params": [],
@@ -9477,11 +10009,15 @@
             "semver": "Optional[str]",
             "distro": "Optional[str]"
           },
-          "returns": "GetCapabilityReleaseResponse"
+          "returns": "GetCapabilityReleaseResponse",
+          "error": "GetCapabilityReleaseError",
+          "error_responses": {
+            "default": "GetCapabilityReleaseUnexpectedError"
+          }
         },
         "GET /kagent/v202401/releases/latest": {
           "operation": "CapabilityReleaseService_GetCapabilityLatestReleases",
-          "method": "capability_release_service__get_capability_latest_releases",
+          "method": "get_capability_latest_releases",
           "grpc": "CapabilityReleaseService/GetCapabilityLatestReleases",
           "status": 200,
           "required_params": [],
@@ -9494,11 +10030,15 @@
             "capabilities": "Optional[List[str]]",
             "distro": "Optional[str]"
           },
-          "returns": "GetCapabilityLatestReleasesResponse"
+          "returns": "GetCapabilityLatestReleasesResponse",
+          "error": "GetCapabilityLatestReleasesError",
+          "error_responses": {
+            "default": "GetCapabilityLatestReleasesUnexpectedError"
+          }
         },
         "GET /kagent/v202401/releases/supported_distros": {
           "operation": "CapabilityReleaseService_GetCapabilitySupportedDistros",
-          "method": "capability_release_service__get_capability_supported_distros",
+          "method": "get_capability_supported_distros",
           "grpc": "CapabilityReleaseService/GetCapabilitySupportedDistros",
           "status": 200,
           "required_params": [],
@@ -9506,7 +10046,11 @@
             "api_config_override": "Optional[APIConfig]",
             "capabilities": "Optional[List[str]]"
           },
-          "returns": "GetCapabilitySupportedDistrosResponse"
+          "returns": "GetCapabilitySupportedDistrosResponse",
+          "error": "GetCapabilitySupportedDistrosError",
+          "error_responses": {
+            "default": "GetCapabilitySupportedDistrosUnexpectedError"
+          }
         },
         "PATCH /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "UpsertAgentCapability",
@@ -9525,7 +10069,11 @@
             "data": "AgentCapabilityServiceUpsertAgentCapabilityBody",
             "mask": "Optional[str]"
           },
-          "returns": "UpsertAgentCapabilityResponse"
+          "returns": "UpsertAgentCapabilityResponse",
+          "error": "UpsertAgentCapabilityError",
+          "error_responses": {
+            "default": "UpsertAgentCapabilityUnexpectedError"
+          }
         },
         "PATCH /kagent/v202401/agents/{agentid}": {
           "operation": "UpdateAgent",
@@ -9542,11 +10090,15 @@
             "data": "AgentServiceUpdateAgentBody",
             "mask": "Optional[str]"
           },
-          "returns": "UpdateAgentResponse"
+          "returns": "UpdateAgentResponse",
+          "error": "UpdateAgentError",
+          "error_responses": {
+            "default": "UpdateAgentUnexpectedError"
+          }
         },
         "PATCH /kagent/v202401/capabilities/{capabilityname}": {
           "operation": "CapabilityAdminService_UpdateCapability",
-          "method": "capability_admin_service__update_capability",
+          "method": "update_capability",
           "grpc": "CapabilityAdminService/UpdateCapability",
           "status": 200,
           "required_params": [
@@ -9558,7 +10110,11 @@
             "capabilityname": "str",
             "data": "CapabilityAdminServiceUpdateCapabilityBody"
           },
-          "returns": "UpdateCapabilityResponse"
+          "returns": "UpdateCapabilityResponse",
+          "error": "UpdateCapabilityError",
+          "error_responses": {
+            "default": "UpdateCapabilityUnexpectedError"
+          }
         },
         "PATCH /kagent/v202401/config/{configname}": {
           "operation": "UpdateConfig",
@@ -9574,7 +10130,11 @@
             "configname": "str",
             "data": "ConfigServiceUpdateConfigBody"
           },
-          "returns": "UpdateConfigResponse"
+          "returns": "UpdateConfigResponse",
+          "error": "UpdateConfigError",
+          "error_responses": {
+            "default": "UpdateConfigUnexpectedError"
+          }
         },
         "POST /kagent/v202401/agents": {
           "operation": "CreateAgent",
@@ -9588,7 +10148,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateAgentRequest"
           },
-          "returns": "CreateAgentResponse"
+          "returns": "CreateAgentResponse",
+          "error": "CreateAgentError",
+          "error_responses": {
+            "default": "CreateAgentUnexpectedError"
+          }
         },
         "POST /kagent/v202401/agents/install-commands": {
           "operation": "GenerateInstallCommands",
@@ -9602,11 +10166,15 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "GenerateInstallCommandsRequest"
           },
-          "returns": "GenerateInstallCommandsResponse"
+          "returns": "GenerateInstallCommandsResponse",
+          "error": "GenerateInstallCommandsError",
+          "error_responses": {
+            "default": "GenerateInstallCommandsUnexpectedError"
+          }
         },
         "POST /kagent/v202401/capabilities": {
           "operation": "CapabilityAdminService_CreateCapability",
-          "method": "capability_admin_service__create_capability",
+          "method": "create_capability",
           "grpc": "CapabilityAdminService/CreateCapability",
           "status": 200,
           "required_params": [
@@ -9616,7 +10184,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "Capability"
           },
-          "returns": "CreateCapabilityResponse"
+          "returns": "CreateCapabilityResponse",
+          "error": "CreateCapabilityError",
+          "error_responses": {
+            "default": "CreateCapabilityUnexpectedError"
+          }
         },
         "POST /kagent/v202401/config": {
           "operation": "CreateConfig",
@@ -9630,7 +10202,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "Config"
           },
-          "returns": "CreateConfigResponse"
+          "returns": "CreateConfigResponse",
+          "error": "CreateConfigError",
+          "error_responses": {
+            "default": "CreateConfigUnexpectedError"
+          }
         },
         "POST /kagent/v202401/provisioning-tokens": {
           "operation": "CreateProvisioningToken",
@@ -9644,7 +10220,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "ProvisioningToken"
           },
-          "returns": "CreateProvisioningTokenResponse"
+          "returns": "CreateProvisioningTokenResponse",
+          "error": "CreateProvisioningTokenError",
+          "error_responses": {
+            "default": "CreateProvisioningTokenUnexpectedError"
+          }
         },
         "POST /kagent/v202401/provisioning-tokens/{token}/revoke": {
           "operation": "RevokeProvisioningToken",
@@ -9660,7 +10240,11 @@
             "token": "str",
             "data": "ProvisioningTokenServiceRevokeProvisioningTokenBody"
           },
-          "returns": "RevokeProvisioningTokenResponse"
+          "returns": "RevokeProvisioningTokenResponse",
+          "error": "RevokeProvisioningTokenError",
+          "error_responses": {
+            "default": "RevokeProvisioningTokenUnexpectedError"
+          }
         },
         "PUT /kagent/v202401/agents/authorize/{installId}": {
           "operation": "Authorize",
@@ -9674,13 +10258,18 @@
             "api_config_override": "Optional[APIConfig]",
             "installId": "str"
           },
-          "returns": "AuthorizeResponse"
+          "returns": "AuthorizeResponse",
+          "error": "AuthorizeError",
+          "error_responses": {
+            "default": "AuthorizeUnexpectedError"
+          }
         }
       },
       "models": [
         "Agent",
         "AgentCapability",
         "AgentCapabilityServiceUpsertAgentCapabilityBody",
+        "AgentConfig",
         "AgentRegistration",
         "AgentServiceUpdateAgentBody",
         "AuthorizeResponse",
@@ -9735,7 +10324,6 @@
         "UpdateCapabilityResponse",
         "UpdateConfigResponse",
         "UpsertAgentCapabilityResponse",
-        "kagentv202401AgentConfig",
         "protobufAny",
         "rpcStatus"
       ],
@@ -9762,7 +10350,7 @@
             "required": false
           },
           "config": {
-            "type": "Optional[kagentv202401AgentConfig]",
+            "type": "Optional[AgentConfig]",
             "required": false
           },
           "install": {
@@ -9834,6 +10422,36 @@
             "required": false
           }
         },
+        "AgentConfig": {
+          "created": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "edited": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "siteId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "releaseChannel": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "osDistribution": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "AgentRegistration": {
           "publicKey": {
             "type": "Optional[str]",
@@ -9878,7 +10496,7 @@
             "required": false
           },
           "config": {
-            "type": "Optional[kagentv202401AgentConfig]",
+            "type": "Optional[AgentConfig]",
             "required": false
           },
           "install": {
@@ -10413,36 +11031,6 @@
             "required": false
           }
         },
-        "kagentv202401AgentConfig": {
-          "created": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "edited": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "siteId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "name": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "description": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "releaseChannel": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "osDistribution": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
         "protobufAny": {
           "type": {
             "type": "Optional[str]",
@@ -10495,7 +11083,11 @@
             "cid": "str",
             "id": "str"
           },
-          "returns": "DeleteServiceNowConfigResponse"
+          "returns": "DeleteServiceNowConfigResponse",
+          "error": "DeleteServiceNowConfigError",
+          "error_responses": {
+            "default": "DeleteServiceNowConfigUnexpectedError"
+          }
         },
         "GET /kmeta/v202607alpha1/{cid}/servicenow/config": {
           "operation": "ListServiceNowConfigs",
@@ -10509,7 +11101,11 @@
             "api_config_override": "Optional[APIConfig]",
             "cid": "str"
           },
-          "returns": "ListServiceNowConfigsResponse"
+          "returns": "ListServiceNowConfigsResponse",
+          "error": "ListServiceNowConfigsError",
+          "error_responses": {
+            "default": "ListServiceNowConfigsUnexpectedError"
+          }
         },
         "GET /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "GetServiceNowConfig",
@@ -10525,7 +11121,11 @@
             "cid": "str",
             "id": "str"
           },
-          "returns": "GetServiceNowConfigResponse"
+          "returns": "GetServiceNowConfigResponse",
+          "error": "GetServiceNowConfigError",
+          "error_responses": {
+            "default": "GetServiceNowConfigUnexpectedError"
+          }
         },
         "POST /kmeta/v202607alpha1/{cid}/servicenow/config": {
           "operation": "CreateServiceNowConfig",
@@ -10541,7 +11141,11 @@
             "cid": "str",
             "data": "ServiceNowConfig"
           },
-          "returns": "CreateServiceNowConfigResponse"
+          "returns": "CreateServiceNowConfigResponse",
+          "error": "CreateServiceNowConfigError",
+          "error_responses": {
+            "default": "CreateServiceNowConfigUnexpectedError"
+          }
         },
         "PUT /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "UpdateServiceNowConfig",
@@ -10559,7 +11163,11 @@
             "id": "str",
             "data": "ServiceNowConfig"
           },
-          "returns": "UpdateServiceNowConfigResponse"
+          "returns": "UpdateServiceNowConfigResponse",
+          "error": "UpdateServiceNowConfigError",
+          "error_responses": {
+            "default": "UpdateServiceNowConfigUnexpectedError"
+          }
         }
       },
       "models": [
@@ -10681,7 +11289,11 @@
             "types": "Optional[List[str]]",
             "magnitude": "Optional[int]"
           },
-          "returns": "GetGlobalInsightsResponse"
+          "returns": "GetGlobalInsightsResponse",
+          "error": "GetGlobalInsightsError",
+          "error_responses": {
+            "default": "GetGlobalInsightsUnexpectedError"
+          }
         },
         "GET /kmi/v202212/insights/{asn}": {
           "operation": "GetASNInsights",
@@ -10701,7 +11313,11 @@
             "types": "Optional[List[str]]",
             "magnitude": "Optional[int]"
           },
-          "returns": "GetASNInsightsResponse"
+          "returns": "GetASNInsightsResponse",
+          "error": "GetAsnInsightsError",
+          "error_responses": {
+            "default": "GetAsnInsightsUnexpectedError"
+          }
         },
         "GET /kmi/v202212/markets": {
           "operation": "ListMarkets",
@@ -10712,7 +11328,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListMarketsResponse"
+          "returns": "ListMarketsResponse",
+          "error": "ListMarketsError",
+          "error_responses": {
+            "default": "ListMarketsUnexpectedError"
+          }
         },
         "POST /kmi/v202212/market/{marketId}/network/{asn}/{type}": {
           "operation": "GetASNDetails",
@@ -10732,7 +11352,11 @@
             "type": "str",
             "data": "KmiServiceGetASNDetailsBody"
           },
-          "returns": "GetASNDetailsResponse"
+          "returns": "GetASNDetailsResponse",
+          "error": "GetAsnDetailsError",
+          "error_responses": {
+            "default": "GetAsnDetailsUnexpectedError"
+          }
         },
         "POST /kmi/v202212/market/{marketId}/rankings/{rankType}/ip/{ip}": {
           "operation": "GetRankings",
@@ -10752,7 +11376,11 @@
             "ip": "str",
             "data": "KmiServiceGetRankingsBody"
           },
-          "returns": "GetRankingsResponse"
+          "returns": "GetRankingsResponse",
+          "error": "GetRankingsError",
+          "error_responses": {
+            "default": "GetRankingsUnexpectedError"
+          }
         }
       },
       "models": [
@@ -11060,7 +11688,7 @@
       "operations": {
         "POST /routes/announce": {
           "operation": "RouteService_Announce",
-          "method": "route_service__announce",
+          "method": "route_announce",
           "grpc": "RouteService/Announce",
           "status": 200,
           "required_params": [
@@ -11070,11 +11698,15 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "RouteServiceAnnounceRequest"
           },
-          "returns": "RouteServiceAnnounceResponse"
+          "returns": "RouteServiceAnnounceResponse",
+          "error": "RouteAnnounceError",
+          "error_responses": {
+            "default": "RouteAnnounceUnexpectedError"
+          }
         },
         "POST /routes/list": {
           "operation": "RouteService_List",
-          "method": "route_service__list",
+          "method": "route_list",
           "grpc": "RouteService/List",
           "status": 200,
           "required_params": [
@@ -11084,11 +11716,15 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "RouteServiceListRequest"
           },
-          "returns": "RouteServiceListResponse"
+          "returns": "RouteServiceListResponse",
+          "error": "RouteListError",
+          "error_responses": {
+            "default": "RouteListUnexpectedError"
+          }
         },
         "POST /routes/withdraw": {
           "operation": "RouteService_Withdraw",
-          "method": "route_service__withdraw",
+          "method": "route_withdraw",
           "grpc": "RouteService/Withdraw",
           "status": 200,
           "required_params": [
@@ -11098,7 +11734,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "RouteServiceWithdrawRequest"
           },
-          "returns": "RouteServiceWithdrawResponse"
+          "returns": "RouteServiceWithdrawResponse",
+          "error": "RouteWithdrawError",
+          "error_responses": {
+            "default": "RouteWithdrawUnexpectedError"
+          }
         }
       },
       "models": [
@@ -11144,7 +11784,7 @@
         "TCPFlagsPredicate",
         "TCPFlagsPredicateGroup",
         "UpdateResult",
-        "ktbgpv202501Withdraw",
+        "Withdraw",
         "protobufAny",
         "rpcStatus"
       ],
@@ -11545,7 +12185,7 @@
             "required": false
           },
           "withdraw": {
-            "type": "Optional[ktbgpv202501Withdraw]",
+            "type": "Optional[Withdraw]",
             "required": false
           }
         },
@@ -11597,7 +12237,7 @@
             "required": false
           }
         },
-        "ktbgpv202501Withdraw": {
+        "Withdraw": {
           "flowspec": {
             "type": "Optional[FlowspecMatch]",
             "required": false
@@ -11697,7 +12337,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteLabelResponse"
+          "returns": "DeleteLabelResponse",
+          "error": "DeleteLabelError",
+          "error_responses": {
+            "default": "DeleteLabelUnexpectedError"
+          }
         },
         "GET /label/v202210/labels": {
           "operation": "ListLabels",
@@ -11708,7 +12352,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListLabelsResponse"
+          "returns": "ListLabelsResponse",
+          "error": "ListLabelsError",
+          "error_responses": {
+            "default": "ListLabelsUnexpectedError"
+          }
         },
         "POST /label/v202210/labels": {
           "operation": "CreateLabel",
@@ -11722,7 +12370,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateLabelRequest"
           },
-          "returns": "CreateLabelResponse"
+          "returns": "CreateLabelResponse",
+          "error": "CreateLabelError",
+          "error_responses": {
+            "default": "CreateLabelUnexpectedError"
+          }
         },
         "POST /label/v202210/labels/{id}": {
           "operation": "UpdateLabel",
@@ -11738,57 +12390,39 @@
             "id": "str",
             "data": "LabelServiceUpdateLabelBody"
           },
-          "returns": "UpdateLabelResponse"
+          "returns": "UpdateLabelResponse",
+          "error": "UpdateLabelError",
+          "error_responses": {
+            "default": "UpdateLabelUnexpectedError"
+          }
         }
       },
       "models": [
         "CreateLabelRequest",
         "CreateLabelResponse",
         "DeleteLabelResponse",
+        "Label",
         "LabelServiceUpdateLabelBody",
         "ListLabelsResponse",
         "UpdateLabelResponse",
-        "labelv202210Label",
         "protobufAny",
         "rpcStatus"
       ],
       "fields": {
         "CreateLabelRequest": {
           "label": {
-            "type": "labelv202210Label",
+            "type": "Label",
             "required": true
           }
         },
         "CreateLabelResponse": {
           "label": {
-            "type": "Optional[labelv202210Label]",
+            "type": "Optional[Label]",
             "required": false
           }
         },
         "DeleteLabelResponse": {},
-        "LabelServiceUpdateLabelBody": {
-          "label": {
-            "type": "Dict[str, Any]",
-            "required": true
-          }
-        },
-        "ListLabelsResponse": {
-          "labels": {
-            "type": "Optional[List[Optional[labelv202210Label]]]",
-            "required": false
-          },
-          "invalidCount": {
-            "type": "Optional[int]",
-            "required": false
-          }
-        },
-        "UpdateLabelResponse": {
-          "label": {
-            "type": "Optional[labelv202210Label]",
-            "required": false
-          }
-        },
-        "labelv202210Label": {
+        "Label": {
           "id": {
             "type": "Optional[str]",
             "required": false
@@ -11811,6 +12445,28 @@
           },
           "edate": {
             "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "LabelServiceUpdateLabelBody": {
+          "label": {
+            "type": "Dict[str, Any]",
+            "required": true
+          }
+        },
+        "ListLabelsResponse": {
+          "labels": {
+            "type": "Optional[List[Optional[Label]]]",
+            "required": false
+          },
+          "invalidCount": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "UpdateLabelResponse": {
+          "label": {
+            "type": "Optional[Label]",
             "required": false
           }
         },
@@ -11852,7 +12508,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeletePackageResponse"
+          "returns": "DeletePackageResponse",
+          "error": "PackageDeleteError",
+          "error_responses": {
+            "default": "PackageDeleteUnexpectedError"
+          }
         },
         "DELETE /mkp/v202407/tenants/{id}": {
           "operation": "TenantDelete",
@@ -11866,7 +12526,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteTenantResponse"
+          "returns": "DeleteTenantResponse",
+          "error": "TenantDeleteError",
+          "error_responses": {
+            "default": "TenantDeleteUnexpectedError"
+          }
         },
         "DELETE /mkp/v202407/tenants/{tenantId}/users/{id}": {
           "operation": "TenantUserDelete",
@@ -11882,7 +12546,11 @@
             "tenantId": "str",
             "id": "str"
           },
-          "returns": "DeleteTenantUserResponse"
+          "returns": "DeleteTenantUserResponse",
+          "error": "TenantUserDeleteError",
+          "error_responses": {
+            "default": "TenantUserDeleteUnexpectedError"
+          }
         },
         "GET /mkp/v202407/packages": {
           "operation": "PackageList",
@@ -11893,7 +12561,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListPackageResponse"
+          "returns": "ListPackageResponse",
+          "error": "PackageListError",
+          "error_responses": {
+            "default": "PackageListUnexpectedError"
+          }
         },
         "GET /mkp/v202407/packages/{id}": {
           "operation": "PackageGet",
@@ -11907,7 +12579,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetPackageResponse"
+          "returns": "GetPackageResponse",
+          "error": "PackageGetError",
+          "error_responses": {
+            "default": "PackageGetUnexpectedError"
+          }
         },
         "GET /mkp/v202407/tenants": {
           "operation": "TenantList",
@@ -11918,7 +12594,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListTenantResponse"
+          "returns": "ListTenantResponse",
+          "error": "TenantListError",
+          "error_responses": {
+            "default": "TenantListUnexpectedError"
+          }
         },
         "GET /mkp/v202407/tenants/{id}": {
           "operation": "TenantGet",
@@ -11932,7 +12612,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetTenantResponse"
+          "returns": "GetTenantResponse",
+          "error": "TenantGetError",
+          "error_responses": {
+            "default": "TenantGetUnexpectedError"
+          }
         },
         "GET /mkp/v202407/tenants/{tenantId}/users": {
           "operation": "TenantUserList",
@@ -11946,7 +12630,11 @@
             "api_config_override": "Optional[APIConfig]",
             "tenantId": "str"
           },
-          "returns": "ListTenantUserResponse"
+          "returns": "ListTenantUserResponse",
+          "error": "TenantUserListError",
+          "error_responses": {
+            "default": "TenantUserListUnexpectedError"
+          }
         },
         "POST /mkp/v202407/packages": {
           "operation": "PackageCreate",
@@ -11960,7 +12648,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreatePackageRequest"
           },
-          "returns": "CreatePackageResponse"
+          "returns": "CreatePackageResponse",
+          "error": "PackageCreateError",
+          "error_responses": {
+            "default": "PackageCreateUnexpectedError"
+          }
         },
         "POST /mkp/v202407/tenants": {
           "operation": "TenantCreate",
@@ -11974,7 +12666,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateTenantRequest"
           },
-          "returns": "CreateTenantResponse"
+          "returns": "CreateTenantResponse",
+          "error": "TenantCreateError",
+          "error_responses": {
+            "default": "TenantCreateUnexpectedError"
+          }
         },
         "POST /mkp/v202407/tenants/{tenantId}/users": {
           "operation": "TenantUserCreate",
@@ -11990,7 +12686,11 @@
             "tenantId": "str",
             "data": "TenantUserServiceCreateTenantUserBody"
           },
-          "returns": "CreateTenantUserResponse"
+          "returns": "CreateTenantUserResponse",
+          "error": "TenantUserCreateError",
+          "error_responses": {
+            "default": "TenantUserCreateUnexpectedError"
+          }
         },
         "PUT /mkp/v202407/packages/{id}": {
           "operation": "PackageUpdate",
@@ -12006,7 +12706,11 @@
             "id": "str",
             "data": "PackageServiceUpdatePackageBody"
           },
-          "returns": "UpdatePackageResponse"
+          "returns": "UpdatePackageResponse",
+          "error": "PackageUpdateError",
+          "error_responses": {
+            "default": "PackageUpdateUnexpectedError"
+          }
         },
         "PUT /mkp/v202407/tenants/{id}": {
           "operation": "TenantUpdate",
@@ -12022,7 +12726,11 @@
             "id": "str",
             "data": "TenantServiceUpdateTenantBody"
           },
-          "returns": "UpdateTenantResponse"
+          "returns": "UpdateTenantResponse",
+          "error": "TenantUpdateError",
+          "error_responses": {
+            "default": "TenantUpdateUnexpectedError"
+          }
         },
         "PUT /mkp/v202407/tenants/{tenantId}/users/{id}": {
           "operation": "TenantUserUpdate",
@@ -12040,7 +12748,11 @@
             "id": "str",
             "data": "TenantUserServiceUpdateTenantUserBody"
           },
-          "returns": "UpdateTenantUserResponse"
+          "returns": "UpdateTenantUserResponse",
+          "error": "TenantUserUpdateError",
+          "error_responses": {
+            "default": "TenantUserUpdateUnexpectedError"
+          }
         }
       },
       "models": [
@@ -12063,6 +12775,7 @@
         "FilterField",
         "GetPackageResponse",
         "GetTenantResponse",
+        "LandingType",
         "ListPackageResponse",
         "ListTenantResponse",
         "ListTenantUserResponse",
@@ -12070,6 +12783,8 @@
         "NotificationChannel",
         "Package",
         "PackageServiceUpdatePackageBody",
+        "PermissionEntry",
+        "Role",
         "Tenant",
         "TenantLink",
         "TenantServiceUpdateTenantBody",
@@ -12080,12 +12795,9 @@
         "UpdatePackageResponse",
         "UpdateTenantResponse",
         "UpdateTenantUserResponse",
+        "User",
         "protobufAny",
-        "rpcStatus",
-        "v202211LandingType",
-        "v202211PermissionEntry",
-        "v202211Role",
-        "v202211User"
+        "rpcStatus"
       ],
       "fields": {
         "Activate": {
@@ -12441,6 +13153,16 @@
             "required": false
           }
         },
+        "PermissionEntry": {
+          "capability": {
+            "type": "str",
+            "required": true
+          },
+          "allowed": {
+            "type": "bool",
+            "required": true
+          }
+        },
         "Tenant": {
           "id": {
             "type": "Optional[str]",
@@ -12507,7 +13229,7 @@
             "required": false
           },
           "users": {
-            "type": "Optional[List[Optional[v202211User]]]",
+            "type": "Optional[List[Optional[User]]]",
             "required": false
           },
           "templateId": {
@@ -12621,37 +13343,7 @@
             "required": false
           }
         },
-        "protobufAny": {
-          "type": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "rpcStatus": {
-          "code": {
-            "type": "Optional[int]",
-            "required": false
-          },
-          "message": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "details": {
-            "type": "Optional[List[Optional[protobufAny]]]",
-            "required": false
-          }
-        },
-        "v202211PermissionEntry": {
-          "capability": {
-            "type": "str",
-            "required": true
-          },
-          "allowed": {
-            "type": "bool",
-            "required": true
-          }
-        },
-        "v202211User": {
+        "User": {
           "id": {
             "type": "Optional[str]",
             "required": false
@@ -12665,11 +13357,11 @@
             "required": true
           },
           "role": {
-            "type": "v202211Role",
+            "type": "Role",
             "required": true
           },
           "permissions": {
-            "type": "Optional[List[Optional[v202211PermissionEntry]]]",
+            "type": "Optional[List[Optional[PermissionEntry]]]",
             "required": false
           },
           "filter": {
@@ -12689,7 +13381,7 @@
             "required": false
           },
           "defaultLandingPageType": {
-            "type": "Optional[v202211LandingType]",
+            "type": "Optional[LandingType]",
             "required": false
           },
           "defaultLandingPageValue": {
@@ -12704,10 +13396,30 @@
             "type": "Optional[List[str]]",
             "required": false
           }
+        },
+        "protobufAny": {
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "rpcStatus": {
+          "code": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "message": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "details": {
+            "type": "Optional[List[Optional[protobufAny]]]",
+            "required": false
+          }
         }
       },
       "enums": {
-        "v202211LandingType": [
+        "LandingType": [
           "LANDING_TYPE_UNSPECIFIED",
           "LANDING_TYPE_LOCAL",
           "LANDING_TYPE_OBSERVATION_DECK",
@@ -12724,7 +13436,7 @@
           "LANDING_TYPE_MARKET_INTELLIGENCE",
           "LANDING_TYPE_AI_ADVISOR"
         ],
-        "v202211Role": [
+        "Role": [
           "ROLE_UNSPECIFIED",
           "ROLE_MEMBER",
           "ROLE_ADMINISTRATOR",
@@ -12806,7 +13518,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "GetNetworkClassResponse"
+          "returns": "GetNetworkClassResponse",
+          "error": "NetworkClassGetError",
+          "error_responses": {
+            "default": "NetworkClassGetUnexpectedError"
+          }
         },
         "POST /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassUpdate",
@@ -12820,7 +13536,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "UpdateNetworkClassRequest"
           },
-          "returns": "UpdateNetworkClassResponse"
+          "returns": "UpdateNetworkClassResponse",
+          "error": "NetworkClassUpdateError",
+          "error_responses": {
+            "default": "NetworkClassUpdateUnexpectedError"
+          }
         }
       },
       "models": [
@@ -12920,14 +13640,18 @@
       "operations": {
         "GET /nms/v202505/metrics_schema": {
           "operation": "MetricsSchemaService_GetMetricsSchema",
-          "method": "metrics_schema_service__get_metrics_schema",
+          "method": "get_metrics_schema",
           "grpc": "MetricsSchemaService/GetMetricsSchema",
           "status": 200,
           "required_params": [],
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "GetMetricsSchemaResponse"
+          "returns": "GetMetricsSchemaResponse",
+          "error": "GetMetricsSchemaError",
+          "error_responses": {
+            "default": "GetMetricsSchemaUnexpectedError"
+          }
         }
       },
       "models": [
@@ -13100,7 +13824,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListNotificationChannelsResponse"
+          "returns": "ListNotificationChannelsResponse",
+          "error": "ListNotificationChannelsError",
+          "error_responses": {
+            "default": "ListNotificationChannelsUnexpectedError"
+          }
         },
         "GET /notification_channel/v202210/notification_channels/{id}": {
           "operation": "GetNotificationChannel",
@@ -13114,7 +13842,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetNotificationChannelResponse"
+          "returns": "GetNotificationChannelResponse",
+          "error": "GetNotificationChannelError",
+          "error_responses": {
+            "default": "GetNotificationChannelUnexpectedError"
+          }
         },
         "POST /notification_channel/v202210/notification_channels/search": {
           "operation": "SearchNotificationChannels",
@@ -13128,7 +13860,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "SearchNotificationChannelsRequest"
           },
-          "returns": "SearchNotificationChannelsResponse"
+          "returns": "SearchNotificationChannelsResponse",
+          "error": "SearchNotificationChannelsError",
+          "error_responses": {
+            "default": "SearchNotificationChannelsUnexpectedError"
+          }
         }
       },
       "models": [
@@ -13262,7 +13998,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreatePathfinderReportRequest"
           },
-          "returns": "CreatePathfinderReportResponse"
+          "returns": "CreatePathfinderReportResponse",
+          "error": "CreateReportError",
+          "error_responses": {
+            "default": "CreateReportUnexpectedError"
+          }
         }
       },
       "models": [
@@ -13412,7 +14152,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListPlansResponse"
+          "returns": "ListPlansResponse",
+          "error": "ListPlansError",
+          "error_responses": {
+            "default": "ListPlansUnexpectedError"
+          }
         }
       },
       "models": [
@@ -13603,7 +14347,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteScopeResponse"
+          "returns": "DeleteScopeResponse",
+          "error": "DeleteScopeError",
+          "error_responses": {
+            "default": "DeleteScopeUnexpectedError"
+          }
         },
         "GET /rbux/v202607alpha1/scopes": {
           "operation": "ListScopes",
@@ -13614,7 +14362,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListScopesResponse"
+          "returns": "ListScopesResponse",
+          "error": "ListScopesError",
+          "error_responses": {
+            "default": "ListScopesUnexpectedError"
+          }
         },
         "GET /rbux/v202607alpha1/scopes/{id}": {
           "operation": "GetScope",
@@ -13628,7 +14380,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetScopeResponse"
+          "returns": "GetScopeResponse",
+          "error": "GetScopeError",
+          "error_responses": {
+            "default": "GetScopeUnexpectedError"
+          }
         },
         "POST /rbux/v202607alpha1/scopes": {
           "operation": "CreateScope",
@@ -13642,7 +14398,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "Scope"
           },
-          "returns": "CreateScopeResponse"
+          "returns": "CreateScopeResponse",
+          "error": "CreateScopeError",
+          "error_responses": {
+            "default": "CreateScopeUnexpectedError"
+          }
         },
         "PUT /rbux/v202607alpha1/scopes/{id}": {
           "operation": "UpdateScope",
@@ -13658,28 +14418,32 @@
             "id": "str",
             "data": "ScopeServiceUpdateScopeBody"
           },
-          "returns": "UpdateScopeResponse"
+          "returns": "UpdateScopeResponse",
+          "error": "UpdateScopeError",
+          "error_responses": {
+            "default": "UpdateScopeUnexpectedError"
+          }
         }
       },
       "models": [
         "AssetTagSelector",
         "CreateScopeResponse",
         "DeleteScopeResponse",
+        "FilterField",
+        "FilterOperator",
         "GetScopeResponse",
         "ListScopesResponse",
+        "SavedFilterFilter",
+        "SavedFilterFilterGroup",
+        "SavedFilterFilterId",
+        "SavedFilterFilters",
         "Scope",
         "ScopeConfig",
         "ScopeDimensions",
         "ScopeServiceUpdateScopeBody",
         "UpdateScopeResponse",
         "protobufAny",
-        "rpcStatus",
-        "v202501alpha1FilterField",
-        "v202501alpha1FilterOperator",
-        "v202501alpha1SavedFilterFilter",
-        "v202501alpha1SavedFilterFilterGroup",
-        "v202501alpha1SavedFilterFilterId",
-        "v202501alpha1SavedFilterFilters"
+        "rpcStatus"
       ],
       "fields": {
         "AssetTagSelector": {
@@ -13709,6 +14473,78 @@
           "scopes": {
             "type": "Optional[List[Optional[Scope]]]",
             "required": false
+          }
+        },
+        "SavedFilterFilter": {
+          "filterField": {
+            "type": "Optional[FilterField]",
+            "required": false
+          },
+          "operator": {
+            "type": "Optional[FilterOperator]",
+            "required": false
+          },
+          "filterValue": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "filterFieldString": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "metric": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "aggregate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "rightFilterField": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "SavedFilterFilterGroup": {
+          "any": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "filters": {
+            "type": "Optional[List[Optional[SavedFilterFilter]]]",
+            "required": false
+          },
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "savedFilterIds": {
+            "type": "Optional[List[Optional[SavedFilterFilterId]]]",
+            "required": false
+          },
+          "nestedFilterGroups": {
+            "type": "Optional[List[Optional['SavedFilterFilterGroup']]]",
+            "required": false
+          }
+        },
+        "SavedFilterFilterId": {
+          "filterId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "isNot": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "SavedFilterFilters": {
+          "any": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "filterGroups": {
+            "type": "List[SavedFilterFilterGroup]",
+            "required": true
           }
         },
         "Scope": {
@@ -13747,7 +14583,7 @@
             "required": false
           },
           "filters": {
-            "type": "Optional[v202501alpha1SavedFilterFilters]",
+            "type": "Optional[SavedFilterFilters]",
             "required": false
           }
         },
@@ -13816,82 +14652,10 @@
             "type": "Optional[List[Optional[protobufAny]]]",
             "required": false
           }
-        },
-        "v202501alpha1SavedFilterFilter": {
-          "filterField": {
-            "type": "Optional[v202501alpha1FilterField]",
-            "required": false
-          },
-          "operator": {
-            "type": "Optional[v202501alpha1FilterOperator]",
-            "required": false
-          },
-          "filterValue": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "filterFieldString": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "metric": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "aggregate": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "rightFilterField": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202501alpha1SavedFilterFilterGroup": {
-          "any": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "filters": {
-            "type": "Optional[List[Optional[v202501alpha1SavedFilterFilter]]]",
-            "required": false
-          },
-          "not_": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "savedFilterIds": {
-            "type": "Optional[List[Optional[v202501alpha1SavedFilterFilterId]]]",
-            "required": false
-          },
-          "nestedFilterGroups": {
-            "type": "Optional[List[Optional['v202501alpha1SavedFilterFilterGroup']]]",
-            "required": false
-          }
-        },
-        "v202501alpha1SavedFilterFilterId": {
-          "filterId": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "isNot": {
-            "type": "Optional[bool]",
-            "required": false
-          }
-        },
-        "v202501alpha1SavedFilterFilters": {
-          "any": {
-            "type": "Optional[bool]",
-            "required": false
-          },
-          "filterGroups": {
-            "type": "List[v202501alpha1SavedFilterFilterGroup]",
-            "required": true
-          }
         }
       },
       "enums": {
-        "v202501alpha1FilterField": [
+        "FilterField": [
           "FILTER_FIELD_UNSPECIFIED",
           "FILTER_FIELD_DST_AS",
           "FILTER_FIELD_DST_NEXTHOP_AS",
@@ -13941,7 +14705,7 @@
           "FILTER_FIELD_VLAN_IN",
           "FILTER_FIELD_VLAN_OUT"
         ],
-        "v202501alpha1FilterOperator": [
+        "FilterOperator": [
           "FILTER_OPERATOR_UNSPECIFIED",
           "FILTER_OPERATOR_EQUAL",
           "FILTER_OPERATOR_NOT_EQUAL",
@@ -13970,7 +14734,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteSavedFilterResponse"
+          "returns": "DeleteSavedFilterResponse",
+          "error": "DeleteSavedFilterError",
+          "error_responses": {
+            "default": "DeleteSavedFilterUnexpectedError"
+          }
         },
         "GET /saved-filter/v202501alpha1/{id}": {
           "operation": "GetSavedFilter",
@@ -13984,7 +14752,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetSavedFilterResponse"
+          "returns": "GetSavedFilterResponse",
+          "error": "GetSavedFilterError",
+          "error_responses": {
+            "default": "GetSavedFilterUnexpectedError"
+          }
         },
         "GET /saved-filters/v202501alpha1": {
           "operation": "ListSavedFilters",
@@ -13995,7 +14767,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListSavedFiltersResponse"
+          "returns": "ListSavedFiltersResponse",
+          "error": "ListSavedFiltersError",
+          "error_responses": {
+            "default": "ListSavedFiltersUnexpectedError"
+          }
         },
         "GET /saved-filters/v202501alpha1/all": {
           "operation": "ListSavedFiltersAll",
@@ -14006,7 +14782,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListSavedFiltersAllResponse"
+          "returns": "ListSavedFiltersAllResponse",
+          "error": "ListSavedFiltersAllError",
+          "error_responses": {
+            "default": "ListSavedFiltersAllUnexpectedError"
+          }
         },
         "POST /saved-filter/v202501alpha1": {
           "operation": "CreateSavedFilter",
@@ -14020,7 +14800,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "SavedFilter"
           },
-          "returns": "CreateSavedFilterResponse"
+          "returns": "CreateSavedFilterResponse",
+          "error": "CreateSavedFilterError",
+          "error_responses": {
+            "default": "CreateSavedFilterUnexpectedError"
+          }
         },
         "PUT /saved-filter/v202501alpha1/{id}": {
           "operation": "UpdateSavedFilter",
@@ -14036,7 +14820,11 @@
             "id": "str",
             "data": "SavedFilter"
           },
-          "returns": "UpdateSavedFilterResponse"
+          "returns": "UpdateSavedFilterResponse",
+          "error": "UpdateSavedFilterError",
+          "error_responses": {
+            "default": "UpdateSavedFilterUnexpectedError"
+          }
         }
       },
       "models": [
@@ -14298,7 +15086,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteSiteMarketResponse"
+          "returns": "DeleteSiteMarketResponse",
+          "error": "DeleteMarketError",
+          "error_responses": {
+            "default": "DeleteMarketUnexpectedError"
+          }
         },
         "DELETE /site/v202509/sites/{id}": {
           "operation": "DeleteSite",
@@ -14312,7 +15104,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteSiteResponse"
+          "returns": "DeleteSiteResponse",
+          "error": "DeleteSiteError",
+          "error_responses": {
+            "default": "DeleteSiteUnexpectedError"
+          }
         },
         "GET /site/v202509/site_markets": {
           "operation": "ListSiteMarkets",
@@ -14323,7 +15119,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListSiteMarketsResponse"
+          "returns": "ListSiteMarketsResponse",
+          "error": "ListMarketsError",
+          "error_responses": {
+            "default": "ListMarketsUnexpectedError"
+          }
         },
         "GET /site/v202509/site_markets/{id}": {
           "operation": "GetSiteMarket",
@@ -14337,7 +15137,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetSiteMarketResponse"
+          "returns": "GetSiteMarketResponse",
+          "error": "GetMarketError",
+          "error_responses": {
+            "default": "GetMarketUnexpectedError"
+          }
         },
         "GET /site/v202509/sites": {
           "operation": "ListSites",
@@ -14348,7 +15152,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListSitesResponse"
+          "returns": "ListSitesResponse",
+          "error": "ListSitesError",
+          "error_responses": {
+            "default": "ListSitesUnexpectedError"
+          }
         },
         "GET /site/v202509/sites/{id}": {
           "operation": "GetSite",
@@ -14362,7 +15170,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetSiteResponse"
+          "returns": "GetSiteResponse",
+          "error": "GetSiteError",
+          "error_responses": {
+            "default": "GetSiteUnexpectedError"
+          }
         },
         "POST /site/v202509/site_markets": {
           "operation": "CreateSiteMarket",
@@ -14376,7 +15188,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateSiteMarketRequest"
           },
-          "returns": "CreateSiteMarketResponse"
+          "returns": "CreateSiteMarketResponse",
+          "error": "CreateMarketError",
+          "error_responses": {
+            "default": "CreateMarketUnexpectedError"
+          }
         },
         "POST /site/v202509/sites": {
           "operation": "CreateSite",
@@ -14390,7 +15206,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateSiteRequest"
           },
-          "returns": "CreateSiteResponse"
+          "returns": "CreateSiteResponse",
+          "error": "CreateSiteError",
+          "error_responses": {
+            "default": "CreateSiteUnexpectedError"
+          }
         },
         "PUT /site/v202509/site_markets/{id}": {
           "operation": "UpdateSiteMarket",
@@ -14406,7 +15226,11 @@
             "id": "str",
             "data": "SiteServiceUpdateSiteMarketBody"
           },
-          "returns": "UpdateSiteMarketResponse"
+          "returns": "UpdateSiteMarketResponse",
+          "error": "UpdateMarketError",
+          "error_responses": {
+            "default": "UpdateMarketUnexpectedError"
+          }
         },
         "PUT /site/v202509/sites/{id}": {
           "operation": "UpdateSite",
@@ -14422,7 +15246,11 @@
             "id": "str",
             "data": "SiteServiceUpdateSiteBody"
           },
-          "returns": "UpdateSiteResponse"
+          "returns": "UpdateSiteResponse",
+          "error": "UpdateSiteError",
+          "error_responses": {
+            "default": "UpdateSiteUnexpectedError"
+          }
         }
       },
       "models": [
@@ -14728,7 +15556,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteAgentAlertResponse"
+          "returns": "DeleteAgentAlertResponse",
+          "error": "DeleteAgentAlertError",
+          "error_responses": {
+            "default": "DeleteAgentAlertUnexpectedError"
+          }
         },
         "DELETE /synthetics/v202309/agents/{agentid}": {
           "operation": "DeleteAgent",
@@ -14742,7 +15574,11 @@
             "api_config_override": "Optional[APIConfig]",
             "agentid": "str"
           },
-          "returns": "DeleteAgentResponse"
+          "returns": "DeleteAgentResponse",
+          "error": "DeleteAgentError",
+          "error_responses": {
+            "default": "DeleteAgentUnexpectedError"
+          }
         },
         "DELETE /synthetics/v202309/tests/{id}": {
           "operation": "DeleteTest",
@@ -14756,7 +15592,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteTestResponse"
+          "returns": "DeleteTestResponse",
+          "error": "DeleteTestError",
+          "error_responses": {
+            "default": "DeleteTestUnexpectedError"
+          }
         },
         "GET /synthetics/v202309/agentAlerts": {
           "operation": "ListAgentAlerts",
@@ -14768,7 +15608,11 @@
             "api_config_override": "Optional[APIConfig]",
             "agentIds": "Optional[List[str]]"
           },
-          "returns": "ListAgentAlertsResponse"
+          "returns": "ListAgentAlertsResponse",
+          "error": "ListAgentAlertsError",
+          "error_responses": {
+            "default": "ListAgentAlertsUnexpectedError"
+          }
         },
         "GET /synthetics/v202309/agentAlerts/{id}": {
           "operation": "GetAgentAlert",
@@ -14782,7 +15626,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetAgentAlertResponse"
+          "returns": "GetAgentAlertResponse",
+          "error": "GetAgentAlertError",
+          "error_responses": {
+            "default": "GetAgentAlertUnexpectedError"
+          }
         },
         "GET /synthetics/v202309/agents": {
           "operation": "ListAgents",
@@ -14793,7 +15641,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListAgentsResponse"
+          "returns": "ListAgentsResponse",
+          "error": "ListAgentsError",
+          "error_responses": {
+            "default": "ListAgentsUnexpectedError"
+          }
         },
         "GET /synthetics/v202309/agents/{agentid}": {
           "operation": "GetAgent",
@@ -14807,7 +15659,11 @@
             "api_config_override": "Optional[APIConfig]",
             "agentid": "str"
           },
-          "returns": "GetAgentResponse"
+          "returns": "GetAgentResponse",
+          "error": "GetAgentError",
+          "error_responses": {
+            "default": "GetAgentUnexpectedError"
+          }
         },
         "GET /synthetics/v202309/tests": {
           "operation": "ListTests",
@@ -14818,7 +15674,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListTestsResponse"
+          "returns": "ListTestsResponse",
+          "error": "ListTestsError",
+          "error_responses": {
+            "default": "ListTestsUnexpectedError"
+          }
         },
         "GET /synthetics/v202309/tests/{id}": {
           "operation": "GetTest",
@@ -14832,7 +15692,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetTestResponse"
+          "returns": "GetTestResponse",
+          "error": "GetTestError",
+          "error_responses": {
+            "default": "GetTestUnexpectedError"
+          }
         },
         "POST /synthetics/v202309/agentAlerts": {
           "operation": "CreateAgentAlert",
@@ -14846,7 +15710,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateAgentAlertRequest"
           },
-          "returns": "CreateAgentAlertResponse"
+          "returns": "CreateAgentAlertResponse",
+          "error": "CreateAgentAlertError",
+          "error_responses": {
+            "default": "CreateAgentAlertUnexpectedError"
+          }
         },
         "POST /synthetics/v202309/results": {
           "operation": "GetResultsForTests",
@@ -14860,7 +15728,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "GetResultsForTestsRequest"
           },
-          "returns": "GetResultsForTestsResponse"
+          "returns": "GetResultsForTestsResponse",
+          "error": "GetResultsForTestsError",
+          "error_responses": {
+            "default": "GetResultsForTestsUnexpectedError"
+          }
         },
         "POST /synthetics/v202309/results/csv": {
           "operation": "GetResultsForTestsCsv",
@@ -14874,7 +15746,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "GetResultsForTestsCsvRequest"
           },
-          "returns": "GetResultsForTestsCsvResponse"
+          "returns": "GetResultsForTestsCsvResponse",
+          "error": "GetResultsForTestsCsvError",
+          "error_responses": {
+            "default": "GetResultsForTestsCsvUnexpectedError"
+          }
         },
         "POST /synthetics/v202309/tests": {
           "operation": "CreateTest",
@@ -14888,7 +15764,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateTestRequest"
           },
-          "returns": "CreateTestResponse"
+          "returns": "CreateTestResponse",
+          "error": "CreateTestError",
+          "error_responses": {
+            "default": "CreateTestUnexpectedError"
+          }
         },
         "POST /synthetics/v202309/trace": {
           "operation": "GetTraceForTest",
@@ -14902,7 +15782,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "GetTraceForTestRequest"
           },
-          "returns": "GetTraceForTestResponse"
+          "returns": "GetTraceForTestResponse",
+          "error": "GetTraceForTestError",
+          "error_responses": {
+            "default": "GetTraceForTestUnexpectedError"
+          }
         },
         "PUT /synthetics/v202309/agentAlerts/{id}": {
           "operation": "UpdateAgentAlert",
@@ -14918,7 +15802,11 @@
             "id": "str",
             "data": "SyntheticsAdminServiceUpdateAgentAlertBody"
           },
-          "returns": "UpdateAgentAlertResponse"
+          "returns": "UpdateAgentAlertResponse",
+          "error": "UpdateAgentAlertError",
+          "error_responses": {
+            "default": "UpdateAgentAlertUnexpectedError"
+          }
         },
         "PUT /synthetics/v202309/agents/{agentid}": {
           "operation": "UpdateAgent",
@@ -14934,7 +15822,11 @@
             "agentid": "str",
             "data": "SyntheticsAdminServiceUpdateAgentBody"
           },
-          "returns": "UpdateAgentResponse"
+          "returns": "UpdateAgentResponse",
+          "error": "UpdateAgentError",
+          "error_responses": {
+            "default": "UpdateAgentUnexpectedError"
+          }
         },
         "PUT /synthetics/v202309/tests/{id}": {
           "operation": "UpdateTest",
@@ -14950,7 +15842,11 @@
             "id": "str",
             "data": "SyntheticsAdminServiceUpdateTestBody"
           },
-          "returns": "UpdateTestResponse"
+          "returns": "UpdateTestResponse",
+          "error": "UpdateTestError",
+          "error_responses": {
+            "default": "UpdateTestUnexpectedError"
+          }
         },
         "PUT /synthetics/v202309/tests/{id}/status": {
           "operation": "SetTestStatus",
@@ -14966,7 +15862,11 @@
             "id": "str",
             "data": "SyntheticsAdminServiceSetTestStatusBody"
           },
-          "returns": "SetTestStatusResponse"
+          "returns": "SetTestStatusResponse",
+          "error": "SetTestStatusError",
+          "error_responses": {
+            "default": "SetTestStatusUnexpectedError"
+          }
         }
       },
       "models": [
@@ -15014,6 +15914,7 @@
         "ListAgentAlertsResponse",
         "ListAgentsResponse",
         "ListTestsResponse",
+        "Location",
         "MetricData",
         "NetNode",
         "NetworkMeshTest",
@@ -15043,10 +15944,9 @@
         "UpdateAgentResponse",
         "UpdateTestResponse",
         "UrlTest",
+        "UserInfo",
         "protobufAny",
-        "rpcStatus",
-        "syntheticsv202309Location",
-        "v202303UserInfo"
+        "rpcStatus"
       ],
       "fields": {
         "ActivationSettings": {
@@ -15776,6 +16676,28 @@
             "required": false
           }
         },
+        "Location": {
+          "latitude": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "longitude": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "country": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "region": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "city": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "MetricData": {
           "current": {
             "type": "Optional[int]",
@@ -15808,7 +16730,7 @@
             "required": false
           },
           "location": {
-            "type": "Optional[syntheticsv202309Location]",
+            "type": "Optional[Location]",
             "required": false
           },
           "dnsName": {
@@ -16029,11 +16951,11 @@
             "required": false
           },
           "createdBy": {
-            "type": "Optional[v202303UserInfo]",
+            "type": "Optional[UserInfo]",
             "required": false
           },
           "lastUpdatedBy": {
-            "type": "Optional[v202303UserInfo]",
+            "type": "Optional[UserInfo]",
             "required": false
           },
           "labels": {
@@ -16285,6 +17207,20 @@
             "required": false
           }
         },
+        "UserInfo": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "email": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fullName": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "protobufAny": {
           "type": {
             "type": "Optional[str]",
@@ -16302,42 +17238,6 @@
           },
           "details": {
             "type": "Optional[List[Optional[protobufAny]]]",
-            "required": false
-          }
-        },
-        "syntheticsv202309Location": {
-          "latitude": {
-            "type": "Optional[float]",
-            "required": false
-          },
-          "longitude": {
-            "type": "Optional[float]",
-            "required": false
-          },
-          "country": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "region": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "city": {
-            "type": "Optional[str]",
-            "required": false
-          }
-        },
-        "v202303UserInfo": {
-          "id": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "email": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "fullName": {
-            "type": "Optional[str]",
             "required": false
           }
         }
@@ -16408,7 +17308,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "DeleteUserResponse"
+          "returns": "DeleteUserResponse",
+          "error": "DeleteUserError",
+          "error_responses": {
+            "default": "DeleteUserUnexpectedError"
+          }
         },
         "GET /user/v202211/users": {
           "operation": "ListUsers",
@@ -16419,7 +17323,11 @@
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListUsersResponse"
+          "returns": "ListUsersResponse",
+          "error": "ListUsersError",
+          "error_responses": {
+            "default": "ListUsersUnexpectedError"
+          }
         },
         "GET /user/v202211/users/{id}": {
           "operation": "GetUser",
@@ -16433,7 +17341,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "GetUserResponse"
+          "returns": "GetUserResponse",
+          "error": "GetUserError",
+          "error_responses": {
+            "default": "GetUserUnexpectedError"
+          }
         },
         "POST /user/v202211/users": {
           "operation": "CreateUser",
@@ -16447,7 +17359,11 @@
             "api_config_override": "Optional[APIConfig]",
             "data": "CreateUserRequest"
           },
-          "returns": "CreateUserResponse"
+          "returns": "CreateUserResponse",
+          "error": "CreateUserError",
+          "error_responses": {
+            "default": "CreateUserUnexpectedError"
+          }
         },
         "PUT /user/v202211/users/{id}": {
           "operation": "UpdateUser",
@@ -16463,7 +17379,11 @@
             "id": "str",
             "data": "UserServiceUpdateUserBody"
           },
-          "returns": "UpdateUserResponse"
+          "returns": "UpdateUserResponse",
+          "error": "UpdateUserError",
+          "error_responses": {
+            "default": "UpdateUserUnexpectedError"
+          }
         },
         "PUT /user/v202211/users/{id}/reset_active_sessions": {
           "operation": "ResetActiveSessions",
@@ -16477,7 +17397,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "ResetActiveSessionsResponse"
+          "returns": "ResetActiveSessionsResponse",
+          "error": "ResetActiveSessionsError",
+          "error_responses": {
+            "default": "ResetActiveSessionsUnexpectedError"
+          }
         },
         "PUT /user/v202211/users/{id}/reset_api_token": {
           "operation": "ResetApiToken",
@@ -16491,7 +17415,11 @@
             "api_config_override": "Optional[APIConfig]",
             "id": "str"
           },
-          "returns": "ResetApiTokenResponse"
+          "returns": "ResetApiTokenResponse",
+          "error": "ResetApiTokenError",
+          "error_responses": {
+            "default": "ResetApiTokenUnexpectedError"
+          }
         }
       },
       "models": [
@@ -16681,7 +17609,11 @@
             "api_config_override": "Optional[APIConfig]",
             "names": "List[str]"
           },
-          "returns": "ListSecretResponse"
+          "returns": "ListSecretResponse",
+          "error": "ListSecretError",
+          "error_responses": {
+            "default": "ListSecretUnexpectedError"
+          }
         },
         "GET /vault/v202312alpha1/secrets/{name}": {
           "operation": "GetSecret",
@@ -16695,7 +17627,11 @@
             "api_config_override": "Optional[APIConfig]",
             "name": "str"
           },
-          "returns": "GetSecretResponse"
+          "returns": "GetSecretResponse",
+          "error": "GetSecretError",
+          "error_responses": {
+            "default": "GetSecretUnexpectedError"
+          }
         }
       },
       "models": [

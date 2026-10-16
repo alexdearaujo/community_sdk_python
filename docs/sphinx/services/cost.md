@@ -287,7 +287,7 @@ classDiagram
 ```
 
 ```{eval-rst}
-.. autoclass:: kentik_api.gen.cost.models.costv202308Status
+.. autoclass:: kentik_api.gen.cost.models.Status
    :members:
 ```
 

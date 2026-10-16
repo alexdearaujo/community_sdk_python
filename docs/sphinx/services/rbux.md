@@ -442,11 +442,37 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autoclass:: kentik_api.gen.rbux.models.FilterField
+   :members:
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.rbux.models.FilterOperator
+   :members:
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.rbux.models.GetScopeResponse
 ```
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.rbux.models.ListScopesResponse
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.rbux.models.SavedFilterFilter
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.rbux.models.SavedFilterFilterGroup
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.rbux.models.SavedFilterFilterId
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.rbux.models.SavedFilterFilters
 ```
 
 ```{eval-rst}
@@ -475,30 +501,4 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.rbux.models.rpcStatus
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.rbux.models.v202501alpha1FilterField
-   :members:
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.rbux.models.v202501alpha1FilterOperator
-   :members:
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.rbux.models.v202501alpha1SavedFilterFilter
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.rbux.models.v202501alpha1SavedFilterFilterGroup
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.rbux.models.v202501alpha1SavedFilterFilterId
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.rbux.models.v202501alpha1SavedFilterFilters
 ```

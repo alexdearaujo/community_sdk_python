@@ -5,8 +5,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from .KeyValue import KeyValue
 from .Source import Source
-from .v202303KeyValue import v202303KeyValue
 
 
 class AlertSilenceNotificationsDefinition(BaseModel):
@@ -30,7 +30,7 @@ class AlertSilenceNotificationsDefinition(BaseModel):
 
     source: Optional[Source] = Field(validation_alias="source", default=None)
 
-    key: Optional[v202303KeyValue] = Field(validation_alias="key", default=None)
+    key: Optional[KeyValue] = Field(validation_alias="key", default=None)
 
     startTimeAt: str = Field(
         validation_alias="startTimeAt",

@@ -684,6 +684,11 @@ classDiagram
 </details>
 
 ```{eval-rst}
+.. autoclass:: kentik_api.gen.bgp_monitoring.models.Afi
+   :members:
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.BgpHealthSettings
 ```
 
@@ -762,6 +767,16 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autoclass:: kentik_api.gen.bgp_monitoring.models.RpkiStatus
+   :members:
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.bgp_monitoring.models.Safi
+   :members:
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.SetMonitorStatusResponse
 ```
 
@@ -770,32 +785,17 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.UserInfo
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.VantagePoint
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.protobufAny
 ```
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.rpcStatus
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.bgp_monitoring.models.v202303Afi
-   :members:
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.bgp_monitoring.models.v202303RpkiStatus
-   :members:
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.bgp_monitoring.models.v202303Safi
-   :members:
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.v202303UserInfo
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.bgp_monitoring.models.v202303VantagePoint
 ```

@@ -49,6 +49,7 @@ from .models import (  # noqa: F401
     ListAgentAlertsResponse,
     ListAgentsResponse,
     ListTestsResponse,
+    Location,
     MetricData,
     NetNode,
     NetworkMeshTest,
@@ -78,9 +79,8 @@ from .models import (  # noqa: F401
     UpdateAgentResponse,
     UpdateTestResponse,
     UrlTest,
+    UserInfo,
     protobufAny,
     rpcStatus,
-    syntheticsv202309Location,
-    v202303UserInfo,
 )
 from .services import *

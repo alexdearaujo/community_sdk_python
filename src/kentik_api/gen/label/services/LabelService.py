@@ -20,10 +20,10 @@ from ..models import (  # noqa: F401
     CreateLabelRequest,
     CreateLabelResponse,
     DeleteLabelResponse,
+    Label,
     LabelServiceUpdateLabelBody,
     ListLabelsResponse,
     UpdateLabelResponse,
-    labelv202210Label,
     protobufAny,
     rpcStatus,
 )

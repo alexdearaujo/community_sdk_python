@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from .MitigationState import MitigationState
 from .MitigationType import MitigationType
 from .Source import Source
-from .v202303TimeRange import v202303TimeRange
+from .TimeRange import TimeRange
 
 
 class MitigationFilters(BaseModel):
@@ -18,9 +18,7 @@ class MitigationFilters(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    createdAt: Optional[v202303TimeRange] = Field(
-        validation_alias="createdAt", default=None
-    )
+    createdAt: Optional[TimeRange] = Field(validation_alias="createdAt", default=None)
 
     mitigationIds: Optional[List[str]] = Field(
         validation_alias="mitigationIds",

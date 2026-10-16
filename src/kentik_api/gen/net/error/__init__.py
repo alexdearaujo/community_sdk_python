@@ -78,9 +78,9 @@ class NetError(HTTPException):
         )
 
 
-ERROR_BY_OPERATION: dict[str, type[NetError]] = {}
+ERROR_BY_METHOD: dict[str, type[NetError]] = {}
 
 __all__ = [
     "NetError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

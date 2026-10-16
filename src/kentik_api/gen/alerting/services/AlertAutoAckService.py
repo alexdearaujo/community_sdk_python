@@ -10,7 +10,13 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import CreateError, DeleteError, GetError, ListError, ReplaceError
+from ..error import (
+    AutoAckCreateError,
+    AutoAckDeleteError,
+    AutoAckGetError,
+    AutoAckListError,
+    AutoAckReplaceError,
+)
 from ..models import (  # noqa: F401
     AggregationType,
     Alert,
@@ -52,8 +58,11 @@ from ..models import (  # noqa: F401
     AlertSilenceNotificationsServiceReplaceBody,
     AlertSilenceNotificationsServiceReplaceResponse,
     AlertState,
+    AttributeFilter,
+    AttributeFilterStringArray,
     BaselineConditionDeltaType,
     BaselineConfigCompareMode,
+    BitwiseOp,
     Comment,
     ConditionsBaselineCondition,
     ConditionsForecastCondition,
@@ -82,7 +91,14 @@ from ..models import (  # noqa: F401
     FlowPolicySettingsBaselineConfig,
     FlowPolicySettingsDatasetConfig,
     FlowPolicySettingsEvaluationConfig,
+    FlowspecMatch,
+    Fragment,
+    FragmentFormula,
+    FragmentPredicate,
+    FragmentPredicateGroup,
     JiraCloudContext,
+    KeyValue,
+    KeyValueFilter,
     Mitigation,
     MitigationActionDetail,
     MitigationEvent,
@@ -108,8 +124,10 @@ from ..models import (  # noqa: F401
     MitigationsServiceListResponse,
     MitigationState,
     MitigationStateEntry,
+    MitigationTarget,
     MitigationType,
     MitigationUserAction,
+    MultiAttributeFilter,
     NmsActivateOrClearConditions,
     NmsCondition,
     NmsConditionConnector,
@@ -129,6 +147,12 @@ from ..models import (  # noqa: F401
     NmsStateSet,
     NmsThresholdCondition,
     NotificationChannelAssociation,
+    NumericFormula,
+    NumericOp,
+    NumericPredicate,
+    NumericPredicateGroup,
+    PaginationConfig,
+    PaginationInfo,
     Policy,
     PolicyDataSources,
     PolicyDataSourcesDeviceTag,
@@ -154,6 +178,10 @@ from ..models import (  # noqa: F401
     PolicyType,
     RatioConditionDirection,
     ServiceNowContext,
+    Severity,
+    SimpleAttributeFilter,
+    SimpleAttributeFilterStringArray,
+    SortingConfig,
     SortingConfigField,
     SortingConfigOrder,
     Source,
@@ -167,37 +195,15 @@ from ..models import (  # noqa: F401
     SuppressionServiceListResponse,
     SuppressionServiceReplaceBody,
     SuppressionServiceReplaceResponse,
+    TCPFlag,
+    TCPFlagsFormula,
+    TCPFlagsPredicate,
+    TCPFlagsPredicateGroup,
+    TimeRange,
     TopKeysConditionTopKeysEvent,
     protobufAny,
     rpcStatus,
-    typesv202506PaginationConfig,
-    typesv202506PaginationInfo,
-    typesv202506SortingConfig,
-    v202303AttributeFilter,
-    v202303AttributeFilterStringArray,
-    v202303KeyValue,
-    v202303KeyValueFilter,
-    v202303MultiAttributeFilter,
-    v202303Severity,
-    v202303SimpleAttributeFilter,
-    v202303SimpleAttributeFilterStringArray,
-    v202303TimeRange,
-    v202501BitwiseOp,
-    v202501FlowspecMatch,
-    v202501Fragment,
-    v202501FragmentFormula,
-    v202501FragmentPredicate,
-    v202501FragmentPredicateGroup,
-    v202501NumericFormula,
-    v202501NumericOp,
-    v202501NumericPredicate,
-    v202501NumericPredicateGroup,
-    v202501TCPFlag,
-    v202501TCPFlagsFormula,
-    v202501TCPFlagsPredicate,
-    v202501TCPFlagsPredicateGroup,
     v202505AlertAcknowledgement,
-    v202506MitigationTarget,
 )
 
 
@@ -225,7 +231,7 @@ def Create(
         header_params=header_params,
         expected_status=200,
         operation_name="Create",
-        error_cls=CreateError,
+        error_cls=AutoAckCreateError,
     )
 
     return parse_response_model(
@@ -261,7 +267,7 @@ def List(
         header_params=header_params,
         expected_status=200,
         operation_name="List",
-        error_cls=ListError,
+        error_cls=AutoAckListError,
     )
 
     return parse_response_model(
@@ -294,7 +300,7 @@ def Get(
         header_params=header_params,
         expected_status=200,
         operation_name="Get",
-        error_cls=GetError,
+        error_cls=AutoAckGetError,
     )
 
     return parse_response_model(
@@ -327,7 +333,7 @@ def Delete(
         header_params=header_params,
         expected_status=200,
         operation_name="Delete",
-        error_cls=DeleteError,
+        error_cls=AutoAckDeleteError,
     )
 
     return parse_response_model(
@@ -364,7 +370,7 @@ def Replace(
         header_params=header_params,
         expected_status=200,
         operation_name="Replace",
-        error_cls=ReplaceError,
+        error_cls=AutoAckReplaceError,
     )
 
     return parse_response_model(

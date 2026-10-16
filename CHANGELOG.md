@@ -46,6 +46,9 @@ Each change below can stop an existing `except` clause or call from working.
 | `KentikAPI(...)` loaded every key of the nearest `.env` into `os.environ`, even when you passed credentials | It reads only `KENTIK_EMAIL` and `KENTIK_API_TOKEN`, into memory, and only when an argument or environment variable is missing | Load other `.env` keys yourself, for example with `dotenv.load_dotenv()` |
 | `kmeta` `ServiceNowConfig.credentialVaultId` held a credential vault entry ID | Upstream renamed it `credentialVaultName`; it holds the entry's name and always resolves to the entry's latest version | Read and send `credentialVaultName` |
 | Client method names depended on module and route order, and many repeated the Service name (`client.audit.get_audit_event`) | Names no longer depend on order and drop the Service word when two or more words remain. See [Renamed client methods](#renamed-client-methods) | Use the new names in the table below |
+| 50 model names held a schema version (`labelv202210Label`), so a version bump renamed them | The version and its package prefix are gone (`Label`). See [Renamed models](#renamed-models) | Use the new names in the table below |
+| Error classes were named after the upstream operationId, and operations that share one (`alerting` has eight `List` operations) shared one class | Each operation has its own class, named after its client method: `client.label.list_labels` raises `ListLabelsError`. See [Renamed error classes](#renamed-error-classes) | Catch the new names in the table below |
+| Each error package exported `ERROR_BY_OPERATION`, keyed by operationId | It exports `ERROR_BY_METHOD`, keyed by client method name | Look up `ERROR_BY_METHOD["list_labels"]` |
 
 #### Renamed client methods
 
@@ -54,7 +57,10 @@ in every module, so a client method name never moves to another operation. A
 second HTTP route of one operation is named by its extra path parameters, not
 by a number. The Service word stays when it is the object of the call
 (`client.device.get_device`) or when removing it would leave one word
-(`client.alerting.alert_list`).
+(`client.alerting.alert_list`). A protoc default operationId
+(`RouteService_List`) loses its module prefix, so no name holds a double
+underscore; if one word is left, the module noun stays
+(`client.ktbgp.route_list`).
 
 | Service | Before | After |
 | --- | --- | --- |
@@ -66,6 +72,10 @@ by a number. The Service word stays when it is the object of the call
 | `custom_dimension` | `get_custom_dimension_info` | `get_info` |
 | `device` | `update_device_labels` | `update_labels` |
 | `journeys` | `get_journeys_nlq` | `get_nlq` |
+| `kagent` | `capability_admin_service__list_capabilities`, `capability_admin_service__get_capability`, `capability_admin_service__create_capability`, `capability_admin_service__update_capability`, `capability_admin_service__delete_capability` | `list_capabilities`, `get_capability`, `create_capability`, `update_capability`, `delete_capability` |
+| `kagent` | `capability_release_service__get_capability_release`, `capability_release_service__get_capability_latest_releases`, `capability_release_service__get_capability_supported_distros` | `get_capability_release`, `get_capability_latest_releases`, `get_capability_supported_distros` |
+| `ktbgp` | `route_service__list`, `route_service__announce`, `route_service__withdraw` | `route_list`, `route_announce`, `route_withdraw` |
+| `nms` | `metrics_schema_service__get_metrics_schema` | `get_metrics_schema` |
 | `pathfinder` | `create_pathfinder_report` | `create_report` |
 | `site` | `list_site_markets`, `get_site_market`, `create_site_market`, `update_site_market`, `delete_site_market` | `list_markets`, `get_market`, `create_market`, `update_market`, `delete_market` |
 
@@ -74,12 +84,127 @@ by a number. The Service word stays when it is the object of the call
 records the gRPC method each operation calls, so an operation that stops
 working over gRPC is a breaking change too.
 
+#### Renamed models
+
+Each model module is renamed too: import from
+`kentik_api.gen.<service>.models`, for example
+`from kentik_api.gen.label.models import Label`.
+`v202505AlertAcknowledgement` in `alerting` keeps its name, because
+`AlertAcknowledgement` is a different model.
+
+| Service | Before | After |
+| --- | --- | --- |
+| `alerting` | `typesv202506PaginationConfig`, `typesv202506PaginationInfo`, `typesv202506SortingConfig` | `PaginationConfig`, `PaginationInfo`, `SortingConfig` |
+| `alerting` | `v202303AttributeFilter`, `v202303AttributeFilterStringArray`, `v202303KeyValue`, `v202303KeyValueFilter`, `v202303MultiAttributeFilter`, `v202303Severity`, `v202303SimpleAttributeFilter`, `v202303SimpleAttributeFilterStringArray`, `v202303TimeRange` | `AttributeFilter`, `AttributeFilterStringArray`, `KeyValue`, `KeyValueFilter`, `MultiAttributeFilter`, `Severity`, `SimpleAttributeFilter`, `SimpleAttributeFilterStringArray`, `TimeRange` |
+| `alerting` | `v202501BitwiseOp`, `v202501FlowspecMatch`, `v202501Fragment`, `v202501FragmentFormula`, `v202501FragmentPredicate`, `v202501FragmentPredicateGroup`, `v202501NumericFormula`, `v202501NumericOp`, `v202501NumericPredicate`, `v202501NumericPredicateGroup`, `v202501TCPFlag`, `v202501TCPFlagsFormula`, `v202501TCPFlagsPredicate`, `v202501TCPFlagsPredicateGroup` | `BitwiseOp`, `FlowspecMatch`, `Fragment`, `FragmentFormula`, `FragmentPredicate`, `FragmentPredicateGroup`, `NumericFormula`, `NumericOp`, `NumericPredicate`, `NumericPredicateGroup`, `TCPFlag`, `TCPFlagsFormula`, `TCPFlagsPredicate`, `TCPFlagsPredicateGroup` |
+| `alerting` | `v202506MitigationTarget` | `MitigationTarget` |
+| `bgp_monitoring` | `v202303Afi`, `v202303RpkiStatus`, `v202303Safi`, `v202303UserInfo`, `v202303VantagePoint` | `Afi`, `RpkiStatus`, `Safi`, `UserInfo`, `VantagePoint` |
+| `cost` | `costv202308Status` | `Status` |
+| `credential` | `v202211LandingType`, `v202211PermissionEntry`, `v202211Role`, `v202211User`, `v202312alpha1Secret`, `v202312alpha1SecretType` | `LandingType`, `PermissionEntry`, `Role`, `User`, `Secret`, `SecretType` |
+| `device` | `devicev202504beta2Label` | `Label` |
+| `kagent` | `kagentv202401AgentConfig` | `AgentConfig` |
+| `ktbgp` | `ktbgpv202501Withdraw` | `Withdraw` |
+| `label` | `labelv202210Label` | `Label` |
+| `mkp` | `v202211LandingType`, `v202211PermissionEntry`, `v202211Role`, `v202211User` | `LandingType`, `PermissionEntry`, `Role`, `User` |
+| `rbux` | `v202501alpha1FilterField`, `v202501alpha1FilterOperator`, `v202501alpha1SavedFilterFilter`, `v202501alpha1SavedFilterFilterGroup`, `v202501alpha1SavedFilterFilterId`, `v202501alpha1SavedFilterFilters` | `FilterField`, `FilterOperator`, `SavedFilterFilter`, `SavedFilterFilterGroup`, `SavedFilterFilterId`, `SavedFilterFilters` |
+| `synthetics` | `syntheticsv202309Location`, `v202303UserInfo` | `Location`, `UserInfo` |
+
+These fields keep their names, but their type is now the renamed model:
+
+- `alerting`: `Alert.highestSeverity`, `Alert.severity`, `AlertAutoAck.key`,
+  `AlertAutoAckFilters.createdAt`, `AlertAutoAckFilters.endTimeAt`,
+  `AlertAutoAckFilters.keys`, `AlertAutoAckFilters.modifiedAt`,
+  `AlertAutoAckFilters.startTimeAt`,
+  `AlertAutoAckServiceListRequest.pagination`,
+  `AlertAutoAckServiceListRequest.sorting`,
+  `AlertAutoAckServiceListResponse.pagination`, `AlertFilters.activeAt`,
+  `AlertFilters.endedAt`, `AlertFilters.highestSeverities`,
+  `AlertFilters.keys`, `AlertFilters.recentSeverities`,
+  `AlertFilters.severities`, `AlertFilters.startedAt`, `AlertPhase.severity`,
+  `AlertServiceListRequest.pagination`, `AlertServiceListRequest.sorting`,
+  `AlertServiceListResponse.pagination`,
+  `AlertSilenceNotificationFilters.createdAt`,
+  `AlertSilenceNotificationFilters.endTimeAt`,
+  `AlertSilenceNotificationFilters.keys`,
+  `AlertSilenceNotificationFilters.modifiedAt`,
+  `AlertSilenceNotificationFilters.startTimeAt`,
+  `AlertSilenceNotificationsDefinition.key`,
+  `AlertSilenceNotificationsServiceListRequest.pagination`,
+  `AlertSilenceNotificationsServiceListRequest.sorting`,
+  `AlertSilenceNotificationsServiceListResponse.pagination`,
+  `Mitigation.target`, `MitigationFilters.createdAt`,
+  `MitigationMethodsFilters.createdAt`, `MitigationMethodsFilters.modifiedAt`,
+  `MitigationMethodsServiceListResponse.pagination`,
+  `MitigationPlatformsFilters.createdAt`,
+  `MitigationPlatformsFilters.modifiedAt`,
+  `MitigationPlatformsServiceListResponse.pagination`,
+  `MitigationsServiceListResponse.pagination`,
+  `NmsContextActivationInfo.severity`, `PolicyListFilters.createdAt`,
+  `PolicyListFilters.modifiedAt`, `PolicyPolicyLevel.severity`,
+  `PolicyServiceListRequest.pagination`, `PolicyServiceListRequest.sorting`,
+  `PolicyServiceListResponse.pagination`, `Suppression.keyFilter`,
+  `Suppression.severities`, `SuppressionFilters.createdAt`,
+  `SuppressionFilters.endTimeAt`, `SuppressionFilters.modifiedAt`,
+  `SuppressionFilters.startTimeAt`, `SuppressionServiceListRequest.pagination`,
+  `SuppressionServiceListRequest.sorting`,
+  `SuppressionServiceListResponse.pagination`
+- `bgp_monitoring`: `BgpMonitor.createdBy`, `BgpMonitor.lastUpdatedBy`,
+  `Nlri.afi`, `Nlri.safi`, `RouteInfo.rpkiStatus`, `RouteInfo.vantagePoint`
+- `cost`: `CostProviderSummary.status`
+- `credential`: `CredentialGroup.createdBy`, `CredentialGroup.credentials`,
+  `CredentialGroup.type`
+- `device`: `DeviceDetailed.labels`
+- `kagent`: `Agent.config`, `AgentServiceUpdateAgentBody.config`
+- `ktbgp`: `RouteServiceWithdrawRequest.withdraw`
+- `label`: `CreateLabelRequest.label`, `CreateLabelResponse.label`,
+  `ListLabelsResponse.labels`, `UpdateLabelResponse.label`
+- `mkp`: `Tenant.users`
+- `rbux`: `ScopeConfig.filters`
+- `synthetics`: `NetNode.location`, `Test.createdBy`, `Test.lastUpdatedBy`
+
+#### Renamed error classes
+
+An error class is now named after its client method, so it keeps its name
+when upstream changes the operationId. Each response class follows its
+operation class: `ListLabelsNotFoundError` extends `ListLabelsError`. A name
+that would match a Python builtin exception gets the Service name in front.
+Acronyms are no longer all capitals, because method names are lowercase
+(`ListASGroupsError` is now `ListAsGroupsError`).
+
+In `alerting`, `CreateError`, `DeleteError`, `GetError`, `ListError`, and
+`ReplaceError` are split into one class per method. Each class name is the
+method name in PascalCase with `Error` added: `alert_list` raises
+`AlertListError`, `auto_ack_get` raises `AutoAckGetError`, and
+`suppression_delete` raises `SuppressionDeleteError`.
+
+| Service | Before | After |
+| --- | --- | --- |
+| `as_group` | `ListASGroupsError`, `GetASGroupError`, `CreateASGroupError`, `UpdateASGroupError`, `DeleteASGroupError` | `ListAsGroupsError`, `GetAsGroupError`, `CreateAsGroupError`, `UpdateAsGroupError`, `DeleteAsGroupError` |
+| `audit` | `ListAuditEventsError`, `GetAuditEventError` (both routes) | `ListEventsError`, `GetEventError`, `GetEventByCtimeError` |
+| `cost` | `ListCostProvidersError`, `ListCostProviderSummariesError`, `GetCostProviderSummaryError` | `ListProvidersError`, `ListProviderSummariesError`, `GetProviderSummaryError` |
+| `credential` | `ListCredentialGroupError`, `GetCredentialGroupError` | `ListGroupError`, `GetGroupError` |
+| `custom_dimension` | `GetCustomDimensionInfoError` | `GetInfoError` |
+| `device` | `UpdateDeviceLabelsError` | `UpdateLabelsError` |
+| `journeys` | `GetJourneysNlqError` | `GetNlqError` |
+| `kagent` | `CapabilityAdminService_ListCapabilitiesError`, `CapabilityAdminService_GetCapabilityError`, `CapabilityAdminService_CreateCapabilityError`, `CapabilityAdminService_UpdateCapabilityError`, `CapabilityAdminService_DeleteCapabilityError` | `ListCapabilitiesError`, `GetCapabilityError`, `CreateCapabilityError`, `UpdateCapabilityError`, `DeleteCapabilityError` |
+| `kagent` | `CapabilityReleaseService_GetCapabilityReleaseError`, `CapabilityReleaseService_GetCapabilityLatestReleasesError`, `CapabilityReleaseService_GetCapabilitySupportedDistrosError` | `GetCapabilityReleaseError`, `GetCapabilityLatestReleasesError`, `GetCapabilitySupportedDistrosError` |
+| `kmi` | `GetASNInsightsError`, `GetASNDetailsError` | `GetAsnInsightsError`, `GetAsnDetailsError` |
+| `ktbgp` | `RouteService_ListError`, `RouteService_AnnounceError`, `RouteService_WithdrawError` | `RouteListError`, `RouteAnnounceError`, `RouteWithdrawError` |
+| `nms` | `MetricsSchemaService_GetMetricsSchemaError` | `GetMetricsSchemaError` |
+| `pathfinder` | `CreatePathfinderReportError` | `CreateReportError` |
+| `site` | `ListSiteMarketsError`, `GetSiteMarketError`, `CreateSiteMarketError`, `UpdateSiteMarketError`, `DeleteSiteMarketError` | `ListMarketsError`, `GetMarketError`, `CreateMarketError`, `UpdateMarketError`, `DeleteMarketError` |
+
 ### Added
 
+- **Stable public names.** `public_names.json` sets the name of every Service,
+  client method, and model, and each method's error classes follow its name. A version bump or a new operationId upstream no
+  longer renames anything. When upstream moves or renames something,
+  generation fails and names the entry to update. See "Keep public names
+  stable" in [the generation guide](docs/sphinx/guides/generation.md).
 - **`kmeta` service.** `client.kmeta` manages ServiceNow configurations: list,
   get, create, update, and delete. It predates `api_surface.json`, so
   `make release-notes` does not list it.
-- **`nms` service.** `client.nms.metrics_schema_service__get_metrics_schema()`
+- **`nms` service.** `client.nms.get_metrics_schema()`
   returns the NMS metrics schema: each measurement and its fields, on REST
   and gRPC. The response's `schema` field is `schema_` in Python, because
   `schema` is a `BaseModel` attribute.
@@ -182,7 +307,7 @@ working over gRPC is a breaking change too.
   now takes a typed model:
   - `kagent` `upsert_agent_capability`: `AgentCapabilityServiceUpsertAgentCapabilityBody`
   - `kagent` `update_agent`: `AgentServiceUpdateAgentBody`
-  - `kagent` `capability_admin_service__update_capability`:
+  - `kagent` `update_capability`:
     `CapabilityAdminServiceUpdateCapabilityBody`
   - `rbux` `update_scope`: `ScopeServiceUpdateScopeBody`
 - **A misspelled key or enum value in a gRPC body raises an error.** gRPC
@@ -197,7 +322,7 @@ working over gRPC is a breaking change too.
   one field, grpc-gateway builds the request's `update_mask` from the keys in
   the REST body. The gRPC call sent an empty mask instead, which updates every
   field and can clear the ones you left out. gRPC now builds the same mask.
-  This applies to `client.kagent.capability_admin_service__update_capability`.
+  This applies to `client.kagent.update_capability`.
 - **A success status with an unusable body raises a 502.** A REST success
   whose body is not JSON raised the operation's error class with the message
   "failed with status code: 200". A JSON `null` body returned an empty model

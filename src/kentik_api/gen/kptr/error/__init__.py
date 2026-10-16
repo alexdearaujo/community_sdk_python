@@ -78,9 +78,9 @@ class KptrError(HTTPException):
         )
 
 
-ERROR_BY_OPERATION: dict[str, type[KptrError]] = {}
+ERROR_BY_METHOD: dict[str, type[KptrError]] = {}
 
 __all__ = [
     "KptrError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

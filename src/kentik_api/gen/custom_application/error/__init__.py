@@ -79,13 +79,13 @@ class CustomApplicationError(HTTPException):
 
 
 class CreateCustomApplicationError(CustomApplicationError):
-    """Operation-local error for CreateCustomApplication."""
+    """Operation-local error for client.custom_application.create_custom_application()."""
 
     response_error_map: dict[str, type[CustomApplicationError]] = {}
 
 
 class CreateCustomApplicationUnexpectedError(CreateCustomApplicationError):
-    """Operation-local response error for CreateCustomApplication (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_custom_application (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ CreateCustomApplicationError.response_error_map = {
 
 
 class DeleteCustomApplicationError(CustomApplicationError):
-    """Operation-local error for DeleteCustomApplication."""
+    """Operation-local error for client.custom_application.delete_custom_application()."""
 
     response_error_map: dict[str, type[CustomApplicationError]] = {}
 
 
 class DeleteCustomApplicationUnexpectedError(DeleteCustomApplicationError):
-    """Operation-local response error for DeleteCustomApplication (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for delete_custom_application (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ DeleteCustomApplicationError.response_error_map = {
 
 
 class GetCustomApplicationError(CustomApplicationError):
-    """Operation-local error for GetCustomApplication."""
+    """Operation-local error for client.custom_application.get_custom_application()."""
 
     response_error_map: dict[str, type[CustomApplicationError]] = {}
 
 
 class GetCustomApplicationUnexpectedError(GetCustomApplicationError):
-    """Operation-local response error for GetCustomApplication (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_custom_application (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -130,13 +130,13 @@ GetCustomApplicationError.response_error_map = {
 
 
 class ListCustomApplicationsError(CustomApplicationError):
-    """Operation-local error for ListCustomApplications."""
+    """Operation-local error for client.custom_application.list_custom_applications()."""
 
     response_error_map: dict[str, type[CustomApplicationError]] = {}
 
 
 class ListCustomApplicationsUnexpectedError(ListCustomApplicationsError):
-    """Operation-local response error for ListCustomApplications (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_custom_applications (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +147,13 @@ ListCustomApplicationsError.response_error_map = {
 
 
 class UpdateCustomApplicationError(CustomApplicationError):
-    """Operation-local error for UpdateCustomApplication."""
+    """Operation-local error for client.custom_application.update_custom_application()."""
 
     response_error_map: dict[str, type[CustomApplicationError]] = {}
 
 
 class UpdateCustomApplicationUnexpectedError(UpdateCustomApplicationError):
-    """Operation-local response error for UpdateCustomApplication (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_custom_application (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -162,12 +162,12 @@ UpdateCustomApplicationError.response_error_map = {
     "default": UpdateCustomApplicationUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[CustomApplicationError]] = {
-    "CreateCustomApplication": CreateCustomApplicationError,
-    "DeleteCustomApplication": DeleteCustomApplicationError,
-    "GetCustomApplication": GetCustomApplicationError,
-    "ListCustomApplications": ListCustomApplicationsError,
-    "UpdateCustomApplication": UpdateCustomApplicationError,
+ERROR_BY_METHOD: dict[str, type[CustomApplicationError]] = {
+    "create_custom_application": CreateCustomApplicationError,
+    "delete_custom_application": DeleteCustomApplicationError,
+    "get_custom_application": GetCustomApplicationError,
+    "list_custom_applications": ListCustomApplicationsError,
+    "update_custom_application": UpdateCustomApplicationError,
 }
 
 __all__ = [
@@ -182,5 +182,5 @@ __all__ = [
     "GetCustomApplicationError",
     "ListCustomApplicationsError",
     "UpdateCustomApplicationError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

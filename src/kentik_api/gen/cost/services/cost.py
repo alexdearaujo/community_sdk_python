@@ -55,7 +55,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.ListCostProviders,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCostModule1.ListCostProvidersError,
+                error_cls=RestCostModule1.ListProvidersError,
             )
             return parse_grpc_response(
                 rest_models.ListCostProvidersResponse,
@@ -97,7 +97,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.ListCostProviderSummaries,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCostModule1.ListCostProviderSummariesError,
+                error_cls=RestCostModule1.ListProviderSummariesError,
             )
             return parse_grpc_response(
                 rest_models.ListCostProviderSummariesResponse,
@@ -143,7 +143,7 @@ class CostServiceWrapper:
                 self._grpc_stub_1.GetCostProviderSummary,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCostModule1.GetCostProviderSummaryError,
+                error_cls=RestCostModule1.GetProviderSummaryError,
             )
             return parse_grpc_response(
                 rest_models.GetCostProviderSummaryResponse,

@@ -79,13 +79,13 @@ class AiAdvisorError(HTTPException):
 
 
 class CreateChatSessionError(AiAdvisorError):
-    """Operation-local error for CreateChatSession."""
+    """Operation-local error for client.ai_advisor.create_chat_session()."""
 
     response_error_map: dict[str, type[AiAdvisorError]] = {}
 
 
 class CreateChatSessionUnexpectedError(CreateChatSessionError):
-    """Operation-local response error for CreateChatSession (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_chat_session (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ CreateChatSessionError.response_error_map = {
 
 
 class GetChatSessionError(AiAdvisorError):
-    """Operation-local error for GetChatSession."""
+    """Operation-local error for client.ai_advisor.get_chat_session()."""
 
     response_error_map: dict[str, type[AiAdvisorError]] = {}
 
 
 class GetChatSessionUnexpectedError(GetChatSessionError):
-    """Operation-local response error for GetChatSession (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_chat_session (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ GetChatSessionError.response_error_map = {
 
 
 class UpdateChatSessionError(AiAdvisorError):
-    """Operation-local error for UpdateChatSession."""
+    """Operation-local error for client.ai_advisor.update_chat_session()."""
 
     response_error_map: dict[str, type[AiAdvisorError]] = {}
 
 
 class UpdateChatSessionUnexpectedError(UpdateChatSessionError):
-    """Operation-local response error for UpdateChatSession (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_chat_session (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -128,10 +128,10 @@ UpdateChatSessionError.response_error_map = {
     "default": UpdateChatSessionUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[AiAdvisorError]] = {
-    "CreateChatSession": CreateChatSessionError,
-    "GetChatSession": GetChatSessionError,
-    "UpdateChatSession": UpdateChatSessionError,
+ERROR_BY_METHOD: dict[str, type[AiAdvisorError]] = {
+    "create_chat_session": CreateChatSessionError,
+    "get_chat_session": GetChatSessionError,
+    "update_chat_session": UpdateChatSessionError,
 }
 
 __all__ = [
@@ -142,5 +142,5 @@ __all__ = [
     "CreateChatSessionError",
     "GetChatSessionError",
     "UpdateChatSessionError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

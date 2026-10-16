@@ -34,7 +34,10 @@ repo.
 - `scripts/generation/` — the generator's phase modules
   (`parity.py`, `error_package.py`, `fixup.py`,
   `wrapper_generation.py`, `docs_rendering.py`, `endpoint_docs.py`,
-  `_shared.py`), orchestrated by `scripts/generate_sdk.py`
+  `public_names.py`, `_shared.py`), orchestrated by `scripts/generate_sdk.py`
+- `public_names.json` — the public name of every Service, client
+  method, and model. Edited by hand; a run only adds entries (see
+  "Public names" below)
 
 **Fully generated, wiped and rebuilt on every `make generate` run:**
 
@@ -111,15 +114,17 @@ subpackage of independently testable phase modules (see
 - `error_package.py` — per-service error class generation
   (`generate_service_error_package()`) and the error-dispatch
   injection (`inject_service_error_handling()`; see the
-  guarded-coupling note below).
+  guarded-coupling note below). It runs after fixup, because each
+  operation's error classes are named after its client method
+  (`list_labels` raises `ListLabelsError`), not its operationId.
 - `fixup.py` — generated-code post-processing, called once per
   service directory after the schema availability window closes.
   Single public entrypoint: `fix_generated_service(service_dir)`.
   Internally: rebuilds `models/__init__.py` from a full directory
   scan, replaces wildcard exports with explicit named imports, and
   applies all file-level content patches (import aliases, path
-  parameter sanitization, docstring normalization,
-  duplicate function renaming, and error-handling injection).
+  parameter sanitization, docstring normalization, and
+  duplicate function renaming).
 - `wrapper_generation.py` — generates service wrappers and the
   client mixin, collapsed into a single `generate()` entrypoint
   (wrappers first, then the mixin that imports them).
@@ -141,6 +146,9 @@ subpackage of independently testable phase modules (see
   `api_surface.json` on every run, and diffs two recordings. `make
   release-notes`, `make check-changelog`, and the end-of-run
   `API SURFACE CHANGED` alert all read it.
+- `public_names.py` — reads `public_names.json`, adds an entry for
+  each new Service, operation, and model, and raises `NameDriftError`
+  when an entry no longer matches the schema. See "Public names".
 - `_shared.py` — `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, and the helpers
   that more than one phase module genuinely uses:
   `iter_service_dirs()` and `INTERNAL_GEN_DIRS` (the single answer to
@@ -260,8 +268,9 @@ structurally, not just by convention or discipline.
 ### Guarded couplings worth knowing about
 
 `error_package.inject_service_error_handling()` wires each freshly
-generated per-service REST module to its error classes. It replaces
-the `# __ERROR_IMPORTS_PLACEHOLDER__` sentinel that
+generated per-service REST module to its error classes. It points each
+function's `error_cls=` at the class named after its client method, and
+replaces the `# __ERROR_IMPORTS_PLACEHOLDER__` sentinel that
 `scripts/openapi_templates/service.jinja2` emits with a
 `from ..error import ...` line. For a file without the sentinel it
 falls back to inserting that line after
@@ -273,6 +282,30 @@ inject) rather than silently skipping.
 import line to add the `path_segment` import next to it, and raises
 `ValueError` when the line is missing. Rename or move `request_json`
 only together with both functions and the template.
+
+## Public names
+
+`public_names.json` is the one place that sets the public name of
+every Service (`client.<service>`, `kentik_api.gen.<service>`), client
+method, and model. Each entry maps a public name to a version-free
+upstream value: the schema directory, `VERB /path` with `<version>`
+and `{}`, or the schema model name with `<version>`. The generator
+only adds entries; it never changes one. Its naming rules
+(`_wrapper_method_names()`, `default_model_name()`) give only the
+first name of a new thing.
+
+- When upstream renames or moves something, the run fails with
+  `NameDriftError` before it touches `gen/`. Fix it by changing the
+  entry's value in `public_names.json`, never by changing a naming rule
+  or hand-editing generated code.
+- Changing a naming rule does not rename anything that already has an
+  entry. To rename a public name, change its key and record the
+  breaking change in `CHANGELOG.md`.
+- Error class names follow the client method name, so the file names
+  them too. Parameter names, model fields, and enum values still come
+  from the schema.
+- Commit `public_names.json` with every regeneration that adds
+  entries, or CI's drift check fails.
 
 ### Services without a wrapper: out of scope, on purpose
 

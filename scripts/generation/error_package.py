@@ -1,6 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Service-local error class generation and runtime error-dispatch injection."""
 
+import builtins
 import json
 import re
 from pathlib import Path
@@ -8,9 +9,22 @@ from typing import TypedDict
 
 from ._shared import (
     discover_service_model_classes,
-    normalize_symbol,
+    parse_generated_rest_module,
     service_to_pascal_case,
 )
+from .public_names import operation_key
+
+
+def error_class_base(method: str, title: str) -> str:
+    """The PascalCase stem of a client method's error classes: `list_labels` is `ListLabels`.
+
+    A stem that would make a builtin exception name (`import_` and ImportError)
+    gets the Service title in front.
+    """
+    base = "".join(
+        part[:1].upper() + part[1:] for part in method.rstrip("_").split("_")
+    )
+    return title + base if hasattr(builtins, f"{base}Error") else base
 
 
 def service_error_class_name(operation_id: str) -> str:
@@ -57,7 +71,7 @@ class OperationErrorMetadata(TypedDict):
 def collect_operation_error_responses(
     swagger_path: Path,
 ) -> dict[str, OperationErrorMetadata]:
-    """Extracts non-2xx response metadata for each operation from a swagger file."""
+    """Extracts non-2xx response metadata for each operation, keyed by operation_key()."""
     with open(swagger_path, "r", encoding="utf-8") as f:
         schema = json.load(f)
 
@@ -70,12 +84,6 @@ def collect_operation_error_responses(
         for method, operation in methods.items():
             if not isinstance(operation, dict):
                 continue
-
-            # Named as the REST module names it, which `error_cls=` refers to.
-            raw_id = operation.get("operationId")
-            operation_id = normalize_symbol(
-                raw_id if isinstance(raw_id, str) and raw_id else f"{method}_{path}"
-            )
 
             responses_obj = operation.get("responses", {})
             error_responses: dict[str, ErrorResponseMetadata] = {}
@@ -108,8 +116,8 @@ def collect_operation_error_responses(
                         "schema_ref": schema_ref,
                     }
 
-            # Every operation: its REST module imports <Operation>Error regardless.
-            operation_errors[operation_id] = {
+            # Every operation: its REST module imports its error class regardless.
+            operation_errors[operation_key(str(method), path)] = {
                 "path": path,
                 "method": str(method).upper(),
                 "responses": error_responses,
@@ -141,18 +149,37 @@ def merge_operation_error_responses(
 
 
 def generate_service_error_package(
-    service_dir: Path, swagger_paths: list[Path]
+    service_dir: Path,
+    operation_errors: dict[str, OperationErrorMetadata],
+    method_names: dict[tuple[Path, str], str],
+    status_model: str | None = "rpcStatus",
 ) -> None:
-    """Generates a service-local error package from one or more swagger files."""
+    """Writes a Service's error package and points each REST function at its error class.
+
+    method_names maps each (REST module, function) to its client method, which
+    names the operation's error classes. status_model is the public name of the
+    schema's `rpcStatus` model.
+    """
     service = service_dir.name
     title = service_to_pascal_case(service)
     model_classes = discover_service_model_classes(service_dir)
-    operation_errors = merge_operation_error_responses(
-        [
-            collect_operation_error_responses(swagger_path)
-            for swagger_path in swagger_paths
-        ]
-    )
+    functions = {
+        rest_file: {op.name: op for op in parse_generated_rest_module(rest_file)}
+        for rest_file, _ in method_names
+    }
+    method_by_key = {
+        operation_key(op.http_method, op.path): method
+        for (rest_file, name), method in method_names.items()
+        for op in [functions[rest_file][name]]
+    }
+    if set(method_by_key) != set(operation_errors):
+        raise ValueError(
+            f"{service}: the swagger and REST operations differ: "
+            f"{sorted(set(method_by_key) ^ set(operation_errors))}"
+        )
+    base_by_method = {
+        method: error_class_base(method, title) for method in method_by_key.values()
+    }
 
     error_dir = service_dir / "error"
     error_dir.mkdir(exist_ok=True)
@@ -166,8 +193,8 @@ def generate_service_error_package(
     ]
 
     model_import_line = None
-    if "rpcStatus" in model_classes:
-        model_import_line = "from ..models import rpcStatus"
+    if status_model in model_classes:
+        model_import_line = f"from ..models import {status_model}"
         base_imports.extend(["", model_import_line])
 
     lines = [
@@ -194,11 +221,11 @@ def generate_service_error_package(
         '            details["response_json"] = payload',
     ]
 
-    if "rpcStatus" in model_classes:
+    if status_model in model_classes:
         lines.extend(
             [
                 "            try:",
-                "                status = rpcStatus.model_validate(payload)",
+                f"                status = {status_model}.model_validate(payload)",
                 "            except Exception:",
                 "                status = None",
                 "            if status is not None:",
@@ -250,8 +277,10 @@ def generate_service_error_package(
 
     leaf_class_names: list[str] = []
     operation_class_names: list[str] = []
-    for operation_id, metadata in sorted(operation_errors.items()):
-        operation_class = service_error_class_name(operation_id)
+    for key, method in sorted(method_by_key.items(), key=lambda item: item[1]):
+        metadata = operation_errors[key]
+        base = base_by_method[method]
+        operation_class = service_error_class_name(base)
         operation_class_names.append(operation_class)
         response_mapping_entries: list[str] = []
         # The operation class comes first so each response class can extend it,
@@ -260,7 +289,7 @@ def generate_service_error_package(
             [
                 "",
                 f"class {operation_class}({title}Error):",
-                f'    """Operation-local error for {operation_id}."""',
+                f'    """Operation-local error for client.{service}.{method}()."""',
                 f"    response_error_map: dict[str, type[{title}Error]] = {{}}",
             ]
         )
@@ -269,13 +298,13 @@ def generate_service_error_package(
         ):
             description = " ".join((response["description"] or "").split())
             schema_ref = response["schema_ref"] or ""
-            leaf_class = service_error_response_class_name(operation_id, status_code)
+            leaf_class = service_error_response_class_name(base, status_code)
             leaf_class_names.append(leaf_class)
             response_bits = f"{status_code}: {description} {schema_ref}".strip()
             leaf_doc = (
-                f"Operation-local response error for {operation_id} ({response_bits})."
+                f"Operation-local response error for {method} ({response_bits})."
                 if response_bits
-                else f"Operation-local response error for {operation_id}."
+                else f"Operation-local response error for {method}."
             )
             # Schema text: escaped like the templates' docstring macro.
             leaf_doc = leaf_doc.replace("\\", "\\\\").replace('"""', '\\"\\"\\"')
@@ -301,12 +330,14 @@ def generate_service_error_package(
     lines.extend(
         [
             "",
-            f"ERROR_BY_OPERATION: dict[str, type[{title}Error]] = {{",
+            f"ERROR_BY_METHOD: dict[str, type[{title}Error]] = {{",
         ]
     )
 
-    for operation_id in sorted(operation_errors):
-        lines.append(f'    "{operation_id}": {service_error_class_name(operation_id)},')
+    for method in sorted(base_by_method):
+        lines.append(
+            f'    "{method}": {service_error_class_name(base_by_method[method])},'
+        )
 
     lines.extend(
         [
@@ -321,45 +352,61 @@ def generate_service_error_package(
         lines.append(f'    "{operation_class}",')
     lines.extend(
         [
-            '    "ERROR_BY_OPERATION",',
+            '    "ERROR_BY_METHOD",',
             "]",
             "",
         ]
     )
 
+    class_names = [f"{title}Error", *operation_class_names, *leaf_class_names]
+    repeated = sorted({n for n in class_names if class_names.count(n) > 1})
+    if repeated:
+        raise ValueError(f"{service}: error class names are not unique: {repeated}")
+
     (error_dir / "__init__.py").write_text("\n".join(lines), encoding="utf-8")
 
+    for rest_file in functions:
+        error_classes = {
+            name: service_error_class_name(base_by_method[method])
+            for (path, name), method in method_names.items()
+            if path == rest_file
+        }
+        content = rest_file.read_text(encoding="utf-8")
+        rest_file.write_text(
+            inject_service_error_handling(content, error_classes), encoding="utf-8"
+        )
 
-def inject_service_error_handling(content: str) -> str:
-    """Adds the per-operation error import line to generated REST modules.
 
-    Replaces the # __ERROR_IMPORTS_PLACEHOLDER__ sentinel that service.jinja2
-    emits. Falls back to the legacy request_json import anchor for files
-    generated before the sentinel was added.
+def inject_service_error_handling(content: str, error_classes: dict[str, str]) -> str:
+    """Points each REST function at its error class and imports those classes.
+
+    error_classes maps function name to error class. Replaces the
+    # __ERROR_IMPORTS_PLACEHOLDER__ sentinel that service.jinja2 emits, or
+    falls back to the request_json import anchor.
     """
     _PLACEHOLDER = "# __ERROR_IMPORTS_PLACEHOLDER__"
 
-    operation_ids = sorted(
-        set(re.findall(r"operation_name=['\"]([A-Za-z0-9_]+)['\"]", content))
-    )
+    parts = re.split(r"(?m)^(?=def \w+\()", content)
+    for i, part in enumerate(parts):
+        function = re.match(r"def (\w+)\(", part)
+        if function and function.group(1) in error_classes:
+            parts[i] = re.sub(
+                r"error_cls=\w+", f"error_cls={error_classes[function.group(1)]}", part
+            )
+    content = "".join(parts)
 
-    if not operation_ids:
+    if not error_classes:
         # Nothing to import; clean up the placeholder if present.
         return content.replace("\n" + _PLACEHOLDER, "")
 
-    error_class_names = [
-        service_error_class_name(operation_id) for operation_id in operation_ids
-    ]
-    import_line = "from ..error import " + ", ".join(error_class_names)
-
-    if "from ..error import" in content:
-        # Already injected (e.g. multi-pass or manually edited); just remove sentinel.
-        return content.replace("\n" + _PLACEHOLDER, "")
+    import_line = "from ..error import " + ", ".join(
+        sorted(set(error_classes.values()))
+    )
 
     if _PLACEHOLDER in content:
         return content.replace(_PLACEHOLDER, import_line)
 
-    # Fallback: legacy anchor for files generated before service.jinja2 had the sentinel.
+    # Fallback: the anchor for files generated before service.jinja2 had the sentinel.
     runtime_import = "from kentik_api.core.rest_runtime import request_json\n"
     if runtime_import in content:
         return content.replace(

@@ -37,6 +37,7 @@ from ..models import (  # noqa: F401
     FilterField,
     GetPackageResponse,
     GetTenantResponse,
+    LandingType,
     ListPackageResponse,
     ListTenantResponse,
     ListTenantUserResponse,
@@ -44,6 +45,8 @@ from ..models import (  # noqa: F401
     NotificationChannel,
     Package,
     PackageServiceUpdatePackageBody,
+    PermissionEntry,
+    Role,
     Tenant,
     TenantLink,
     TenantServiceUpdateTenantBody,
@@ -54,12 +57,9 @@ from ..models import (  # noqa: F401
     UpdatePackageResponse,
     UpdateTenantResponse,
     UpdateTenantUserResponse,
+    User,
     protobufAny,
     rpcStatus,
-    v202211LandingType,
-    v202211PermissionEntry,
-    v202211Role,
-    v202211User,
 )
 
 

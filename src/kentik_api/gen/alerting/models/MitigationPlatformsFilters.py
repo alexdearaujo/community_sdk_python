@@ -6,7 +6,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from .MitigationPlatformType import MitigationPlatformType
-from .v202303TimeRange import v202303TimeRange
+from .TimeRange import TimeRange
 
 
 class MitigationPlatformsFilters(BaseModel):
@@ -28,10 +28,6 @@ class MitigationPlatformsFilters(BaseModel):
         description="The types of mitigation platforms to filter by.",
     )
 
-    createdAt: Optional[v202303TimeRange] = Field(
-        validation_alias="createdAt", default=None
-    )
+    createdAt: Optional[TimeRange] = Field(validation_alias="createdAt", default=None)
 
-    modifiedAt: Optional[v202303TimeRange] = Field(
-        validation_alias="modifiedAt", default=None
-    )
+    modifiedAt: Optional[TimeRange] = Field(validation_alias="modifiedAt", default=None)

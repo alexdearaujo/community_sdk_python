@@ -55,7 +55,7 @@ class JourneysServiceWrapper:
                 self._grpc_stub_1.GetJourneysNlq,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestJourneysModule1.GetJourneysNlqError,
+                error_cls=RestJourneysModule1.GetNlqError,
             )
             return parse_grpc_response(
                 rest_models.GetJourneysNlqResponse,

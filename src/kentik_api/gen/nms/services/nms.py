@@ -35,7 +35,7 @@ class NmsServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def metrics_schema_service__get_metrics_schema(
+    def get_metrics_schema(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.GetMetricsSchemaResponse:
         if isinstance(self._transport, GrpcTransport):
@@ -50,7 +50,7 @@ class NmsServiceWrapper:
                 self._grpc_stub_1.GetMetricsSchema,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestNmsModule1.MetricsSchemaService_GetMetricsSchemaError,
+                error_cls=RestNmsModule1.GetMetricsSchemaError,
             )
             return parse_grpc_response(
                 rest_models.GetMetricsSchemaResponse,

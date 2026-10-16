@@ -621,7 +621,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__list_capabilities(
+    def list_capabilities(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCapabilitiesResponse:
         """
@@ -639,7 +639,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_4.ListCapabilities,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKagentModule3.CapabilityAdminService_ListCapabilitiesError,
+                error_cls=RestKagentModule3.ListCapabilitiesError,
             )
             return parse_grpc_response(
                 rest_models.ListCapabilitiesResponse,
@@ -658,7 +658,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__create_capability(
+    def create_capability(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -681,7 +681,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_4.CreateCapability,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKagentModule3.CapabilityAdminService_CreateCapabilityError,
+                error_cls=RestKagentModule3.CreateCapabilityError,
             )
             return parse_grpc_response(
                 rest_models.CreateCapabilityResponse,
@@ -701,7 +701,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__get_capability(
+    def get_capability(
         self, *, api_config_override: Optional[APIConfig] = None, capabilityname: str
     ) -> rest_models.GetCapabilityResponse:
         """
@@ -719,7 +719,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_4.GetCapability,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKagentModule3.CapabilityAdminService_GetCapabilityError,
+                error_cls=RestKagentModule3.GetCapabilityError,
             )
             return parse_grpc_response(
                 rest_models.GetCapabilityResponse,
@@ -739,7 +739,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__delete_capability(
+    def delete_capability(
         self, *, api_config_override: Optional[APIConfig] = None, capabilityname: str
     ) -> rest_models.DeleteCapabilityResponse:
         """
@@ -757,7 +757,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_4.DeleteCapability,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKagentModule3.CapabilityAdminService_DeleteCapabilityError,
+                error_cls=RestKagentModule3.DeleteCapabilityError,
             )
             return parse_grpc_response(
                 rest_models.DeleteCapabilityResponse,
@@ -777,7 +777,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_admin_service__update_capability(
+    def update_capability(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -802,7 +802,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_4.UpdateCapability,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKagentModule3.CapabilityAdminService_UpdateCapabilityError,
+                error_cls=RestKagentModule3.UpdateCapabilityError,
             )
             return parse_grpc_response(
                 rest_models.UpdateCapabilityResponse,
@@ -823,7 +823,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_release_service__get_capability_release(
+    def get_capability_release(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -858,7 +858,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_3.GetCapabilityRelease,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilityReleaseError,
+                error_cls=RestKagentModule4.GetCapabilityReleaseError,
             )
             return parse_grpc_response(
                 rest_models.GetCapabilityReleaseResponse,
@@ -883,7 +883,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_release_service__get_capability_latest_releases(
+    def get_capability_latest_releases(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -918,7 +918,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_3.GetCapabilityLatestReleases,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilityLatestReleasesError,
+                error_cls=RestKagentModule4.GetCapabilityLatestReleasesError,
             )
             return parse_grpc_response(
                 rest_models.GetCapabilityLatestReleasesResponse,
@@ -946,7 +946,7 @@ class KagentServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def capability_release_service__get_capability_supported_distros(
+    def get_capability_supported_distros(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -966,7 +966,7 @@ class KagentServiceWrapper:
                 self._grpc_stub_3.GetCapabilitySupportedDistros,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestKagentModule4.CapabilityReleaseService_GetCapabilitySupportedDistrosError,
+                error_cls=RestKagentModule4.GetCapabilitySupportedDistrosError,
             )
             return parse_grpc_response(
                 rest_models.GetCapabilitySupportedDistrosResponse,

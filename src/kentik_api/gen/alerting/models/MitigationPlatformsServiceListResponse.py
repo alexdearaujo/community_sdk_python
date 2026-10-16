@@ -6,7 +6,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from .MitigationPlatform import MitigationPlatform
-from .typesv202506PaginationInfo import typesv202506PaginationInfo
+from .PaginationInfo import PaginationInfo
 
 
 class MitigationPlatformsServiceListResponse(BaseModel):
@@ -16,7 +16,7 @@ class MitigationPlatformsServiceListResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    pagination: Optional[typesv202506PaginationInfo] = Field(
+    pagination: Optional[PaginationInfo] = Field(
         validation_alias="pagination", default=None
     )
 

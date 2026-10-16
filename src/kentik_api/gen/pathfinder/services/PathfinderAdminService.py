@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import parse_response_model, request_json
 
-from ..error import CreatePathfinderReportError
+from ..error import CreateReportError
 from ..models import (  # noqa: F401
     CloudProvider,
     CreatePathfinderReportRequest,
@@ -42,7 +42,7 @@ def CreatePathfinderReport(
         header_params=header_params,
         expected_status=200,
         operation_name="CreatePathfinderReport",
-        error_cls=CreatePathfinderReportError,
+        error_cls=CreateReportError,
     )
 
     return parse_response_model(

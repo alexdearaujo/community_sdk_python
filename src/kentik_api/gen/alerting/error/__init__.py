@@ -79,13 +79,13 @@ class AlertingError(HTTPException):
 
 
 class AckError(AlertingError):
-    """Operation-local error for Ack."""
+    """Operation-local error for client.alerting.ack()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class AckUnexpectedError(AckError):
-    """Operation-local response error for Ack (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for ack (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ AckError.response_error_map = {
 
 
 class ActError(AlertingError):
-    """Operation-local error for Act."""
+    """Operation-local error for client.alerting.act()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class ActUnexpectedError(ActError):
-    """Operation-local response error for Act (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for act (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ ActError.response_error_map = {
 
 
 class AddCommentError(AlertingError):
-    """Operation-local error for AddComment."""
+    """Operation-local error for client.alerting.add_comment()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class AddCommentUnexpectedError(AddCommentError):
-    """Operation-local response error for AddComment (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for add_comment (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -129,14 +129,133 @@ AddCommentError.response_error_map = {
 }
 
 
+class AlertGetError(AlertingError):
+    """Operation-local error for client.alerting.alert_get()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class AlertGetUnexpectedError(AlertGetError):
+    """Operation-local response error for alert_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+AlertGetError.response_error_map = {
+    "default": AlertGetUnexpectedError,
+}
+
+
+class AlertListError(AlertingError):
+    """Operation-local error for client.alerting.alert_list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class AlertListUnexpectedError(AlertListError):
+    """Operation-local response error for alert_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+AlertListError.response_error_map = {
+    "default": AlertListUnexpectedError,
+}
+
+
+class AutoAckCreateError(AlertingError):
+    """Operation-local error for client.alerting.auto_ack_create()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class AutoAckCreateUnexpectedError(AutoAckCreateError):
+    """Operation-local response error for auto_ack_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+AutoAckCreateError.response_error_map = {
+    "default": AutoAckCreateUnexpectedError,
+}
+
+
+class AutoAckDeleteError(AlertingError):
+    """Operation-local error for client.alerting.auto_ack_delete()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class AutoAckDeleteUnexpectedError(AutoAckDeleteError):
+    """Operation-local response error for auto_ack_delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+AutoAckDeleteError.response_error_map = {
+    "default": AutoAckDeleteUnexpectedError,
+}
+
+
+class AutoAckGetError(AlertingError):
+    """Operation-local error for client.alerting.auto_ack_get()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class AutoAckGetUnexpectedError(AutoAckGetError):
+    """Operation-local response error for auto_ack_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+AutoAckGetError.response_error_map = {
+    "default": AutoAckGetUnexpectedError,
+}
+
+
+class AutoAckListError(AlertingError):
+    """Operation-local error for client.alerting.auto_ack_list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class AutoAckListUnexpectedError(AutoAckListError):
+    """Operation-local response error for auto_ack_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+AutoAckListError.response_error_map = {
+    "default": AutoAckListUnexpectedError,
+}
+
+
+class AutoAckReplaceError(AlertingError):
+    """Operation-local error for client.alerting.auto_ack_replace()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class AutoAckReplaceUnexpectedError(AutoAckReplaceError):
+    """Operation-local response error for auto_ack_replace (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+AutoAckReplaceError.response_error_map = {
+    "default": AutoAckReplaceUnexpectedError,
+}
+
+
 class AvailableActionsError(AlertingError):
-    """Operation-local error for AvailableActions."""
+    """Operation-local error for client.alerting.available_actions()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class AvailableActionsUnexpectedError(AvailableActionsError):
-    """Operation-local response error for AvailableActions (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for available_actions (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -147,13 +266,13 @@ AvailableActionsError.response_error_map = {
 
 
 class AvailableActionsForMitigationError(AlertingError):
-    """Operation-local error for AvailableActionsForMitigation."""
+    """Operation-local error for client.alerting.available_actions_for_mitigation()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class AvailableActionsForMitigationUnexpectedError(AvailableActionsForMitigationError):
-    """Operation-local response error for AvailableActionsForMitigation (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for available_actions_for_mitigation (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -164,13 +283,13 @@ AvailableActionsForMitigationError.response_error_map = {
 
 
 class ClearError(AlertingError):
-    """Operation-local error for Clear."""
+    """Operation-local error for client.alerting.clear()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class ClearUnexpectedError(ClearError):
-    """Operation-local response error for Clear (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for clear (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -180,48 +299,14 @@ ClearError.response_error_map = {
 }
 
 
-class CreateError(AlertingError):
-    """Operation-local error for Create."""
-
-    response_error_map: dict[str, type[AlertingError]] = {}
-
-
-class CreateUnexpectedError(CreateError):
-    """Operation-local response error for Create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-CreateError.response_error_map = {
-    "default": CreateUnexpectedError,
-}
-
-
-class DeleteError(AlertingError):
-    """Operation-local error for Delete."""
-
-    response_error_map: dict[str, type[AlertingError]] = {}
-
-
-class DeleteUnexpectedError(DeleteError):
-    """Operation-local response error for Delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-DeleteError.response_error_map = {
-    "default": DeleteUnexpectedError,
-}
-
-
 class DisableError(AlertingError):
-    """Operation-local error for Disable."""
+    """Operation-local error for client.alerting.disable()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class DisableUnexpectedError(DisableError):
-    """Operation-local response error for Disable (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for disable (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -232,13 +317,13 @@ DisableError.response_error_map = {
 
 
 class EnableError(AlertingError):
-    """Operation-local error for Enable."""
+    """Operation-local error for client.alerting.enable()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class EnableUnexpectedError(EnableError):
-    """Operation-local response error for Enable (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for enable (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -248,48 +333,14 @@ EnableError.response_error_map = {
 }
 
 
-class GetError(AlertingError):
-    """Operation-local error for Get."""
-
-    response_error_map: dict[str, type[AlertingError]] = {}
-
-
-class GetUnexpectedError(GetError):
-    """Operation-local response error for Get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-GetError.response_error_map = {
-    "default": GetUnexpectedError,
-}
-
-
-class ListError(AlertingError):
-    """Operation-local error for List."""
-
-    response_error_map: dict[str, type[AlertingError]] = {}
-
-
-class ListUnexpectedError(ListError):
-    """Operation-local response error for List (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-ListError.response_error_map = {
-    "default": ListUnexpectedError,
-}
-
-
 class ListCommentsError(AlertingError):
-    """Operation-local error for ListComments."""
+    """Operation-local error for client.alerting.list_comments()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class ListCommentsUnexpectedError(ListCommentsError):
-    """Operation-local response error for ListComments (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_comments (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -299,31 +350,167 @@ ListCommentsError.response_error_map = {
 }
 
 
-class ReplaceError(AlertingError):
-    """Operation-local error for Replace."""
+class MitigationMethodsGetError(AlertingError):
+    """Operation-local error for client.alerting.mitigation_methods_get()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
-class ReplaceUnexpectedError(ReplaceError):
-    """Operation-local response error for Replace (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class MitigationMethodsGetUnexpectedError(MitigationMethodsGetError):
+    """Operation-local response error for mitigation_methods_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ReplaceError.response_error_map = {
-    "default": ReplaceUnexpectedError,
+MitigationMethodsGetError.response_error_map = {
+    "default": MitigationMethodsGetUnexpectedError,
+}
+
+
+class MitigationMethodsListError(AlertingError):
+    """Operation-local error for client.alerting.mitigation_methods_list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class MitigationMethodsListUnexpectedError(MitigationMethodsListError):
+    """Operation-local response error for mitigation_methods_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+MitigationMethodsListError.response_error_map = {
+    "default": MitigationMethodsListUnexpectedError,
+}
+
+
+class MitigationPlatformsGetError(AlertingError):
+    """Operation-local error for client.alerting.mitigation_platforms_get()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class MitigationPlatformsGetUnexpectedError(MitigationPlatformsGetError):
+    """Operation-local response error for mitigation_platforms_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+MitigationPlatformsGetError.response_error_map = {
+    "default": MitigationPlatformsGetUnexpectedError,
+}
+
+
+class MitigationPlatformsListError(AlertingError):
+    """Operation-local error for client.alerting.mitigation_platforms_list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class MitigationPlatformsListUnexpectedError(MitigationPlatformsListError):
+    """Operation-local response error for mitigation_platforms_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+MitigationPlatformsListError.response_error_map = {
+    "default": MitigationPlatformsListUnexpectedError,
+}
+
+
+class MitigationsCreateError(AlertingError):
+    """Operation-local error for client.alerting.mitigations_create()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class MitigationsCreateUnexpectedError(MitigationsCreateError):
+    """Operation-local response error for mitigations_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+MitigationsCreateError.response_error_map = {
+    "default": MitigationsCreateUnexpectedError,
+}
+
+
+class MitigationsGetError(AlertingError):
+    """Operation-local error for client.alerting.mitigations_get()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class MitigationsGetUnexpectedError(MitigationsGetError):
+    """Operation-local response error for mitigations_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+MitigationsGetError.response_error_map = {
+    "default": MitigationsGetUnexpectedError,
+}
+
+
+class MitigationsListError(AlertingError):
+    """Operation-local error for client.alerting.mitigations_list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class MitigationsListUnexpectedError(MitigationsListError):
+    """Operation-local response error for mitigations_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+MitigationsListError.response_error_map = {
+    "default": MitigationsListUnexpectedError,
+}
+
+
+class PolicyGetError(AlertingError):
+    """Operation-local error for client.alerting.policy_get()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class PolicyGetUnexpectedError(PolicyGetError):
+    """Operation-local response error for policy_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+PolicyGetError.response_error_map = {
+    "default": PolicyGetUnexpectedError,
+}
+
+
+class PolicyListError(AlertingError):
+    """Operation-local error for client.alerting.policy_list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class PolicyListUnexpectedError(PolicyListError):
+    """Operation-local response error for policy_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+PolicyListError.response_error_map = {
+    "default": PolicyListUnexpectedError,
 }
 
 
 class SetExternalContextError(AlertingError):
-    """Operation-local error for SetExternalContext."""
+    """Operation-local error for client.alerting.set_external_context()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class SetExternalContextUnexpectedError(SetExternalContextError):
-    """Operation-local response error for SetExternalContext (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for set_external_context (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -333,14 +520,184 @@ SetExternalContextError.response_error_map = {
 }
 
 
+class SilenceNotificationsCreateError(AlertingError):
+    """Operation-local error for client.alerting.silence_notifications_create()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SilenceNotificationsCreateUnexpectedError(SilenceNotificationsCreateError):
+    """Operation-local response error for silence_notifications_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SilenceNotificationsCreateError.response_error_map = {
+    "default": SilenceNotificationsCreateUnexpectedError,
+}
+
+
+class SilenceNotificationsDeleteError(AlertingError):
+    """Operation-local error for client.alerting.silence_notifications_delete()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SilenceNotificationsDeleteUnexpectedError(SilenceNotificationsDeleteError):
+    """Operation-local response error for silence_notifications_delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SilenceNotificationsDeleteError.response_error_map = {
+    "default": SilenceNotificationsDeleteUnexpectedError,
+}
+
+
+class SilenceNotificationsGetError(AlertingError):
+    """Operation-local error for client.alerting.silence_notifications_get()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SilenceNotificationsGetUnexpectedError(SilenceNotificationsGetError):
+    """Operation-local response error for silence_notifications_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SilenceNotificationsGetError.response_error_map = {
+    "default": SilenceNotificationsGetUnexpectedError,
+}
+
+
+class SilenceNotificationsListError(AlertingError):
+    """Operation-local error for client.alerting.silence_notifications_list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SilenceNotificationsListUnexpectedError(SilenceNotificationsListError):
+    """Operation-local response error for silence_notifications_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SilenceNotificationsListError.response_error_map = {
+    "default": SilenceNotificationsListUnexpectedError,
+}
+
+
+class SilenceNotificationsReplaceError(AlertingError):
+    """Operation-local error for client.alerting.silence_notifications_replace()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SilenceNotificationsReplaceUnexpectedError(SilenceNotificationsReplaceError):
+    """Operation-local response error for silence_notifications_replace (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SilenceNotificationsReplaceError.response_error_map = {
+    "default": SilenceNotificationsReplaceUnexpectedError,
+}
+
+
+class SuppressionCreateError(AlertingError):
+    """Operation-local error for client.alerting.suppression_create()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SuppressionCreateUnexpectedError(SuppressionCreateError):
+    """Operation-local response error for suppression_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SuppressionCreateError.response_error_map = {
+    "default": SuppressionCreateUnexpectedError,
+}
+
+
+class SuppressionDeleteError(AlertingError):
+    """Operation-local error for client.alerting.suppression_delete()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SuppressionDeleteUnexpectedError(SuppressionDeleteError):
+    """Operation-local response error for suppression_delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SuppressionDeleteError.response_error_map = {
+    "default": SuppressionDeleteUnexpectedError,
+}
+
+
+class SuppressionGetError(AlertingError):
+    """Operation-local error for client.alerting.suppression_get()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SuppressionGetUnexpectedError(SuppressionGetError):
+    """Operation-local response error for suppression_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SuppressionGetError.response_error_map = {
+    "default": SuppressionGetUnexpectedError,
+}
+
+
+class SuppressionListError(AlertingError):
+    """Operation-local error for client.alerting.suppression_list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SuppressionListUnexpectedError(SuppressionListError):
+    """Operation-local response error for suppression_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SuppressionListError.response_error_map = {
+    "default": SuppressionListUnexpectedError,
+}
+
+
+class SuppressionReplaceError(AlertingError):
+    """Operation-local error for client.alerting.suppression_replace()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class SuppressionReplaceUnexpectedError(SuppressionReplaceError):
+    """Operation-local response error for suppression_replace (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+SuppressionReplaceError.response_error_map = {
+    "default": SuppressionReplaceUnexpectedError,
+}
+
+
 class UnAckError(AlertingError):
-    """Operation-local error for UnAck."""
+    """Operation-local error for client.alerting.un_ack()."""
 
     response_error_map: dict[str, type[AlertingError]] = {}
 
 
 class UnAckUnexpectedError(UnAckError):
-    """Operation-local response error for UnAck (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for un_ack (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -349,23 +706,44 @@ UnAckError.response_error_map = {
     "default": UnAckUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[AlertingError]] = {
-    "Ack": AckError,
-    "Act": ActError,
-    "AddComment": AddCommentError,
-    "AvailableActions": AvailableActionsError,
-    "AvailableActionsForMitigation": AvailableActionsForMitigationError,
-    "Clear": ClearError,
-    "Create": CreateError,
-    "Delete": DeleteError,
-    "Disable": DisableError,
-    "Enable": EnableError,
-    "Get": GetError,
-    "List": ListError,
-    "ListComments": ListCommentsError,
-    "Replace": ReplaceError,
-    "SetExternalContext": SetExternalContextError,
-    "UnAck": UnAckError,
+ERROR_BY_METHOD: dict[str, type[AlertingError]] = {
+    "ack": AckError,
+    "act": ActError,
+    "add_comment": AddCommentError,
+    "alert_get": AlertGetError,
+    "alert_list": AlertListError,
+    "auto_ack_create": AutoAckCreateError,
+    "auto_ack_delete": AutoAckDeleteError,
+    "auto_ack_get": AutoAckGetError,
+    "auto_ack_list": AutoAckListError,
+    "auto_ack_replace": AutoAckReplaceError,
+    "available_actions": AvailableActionsError,
+    "available_actions_for_mitigation": AvailableActionsForMitigationError,
+    "clear": ClearError,
+    "disable": DisableError,
+    "enable": EnableError,
+    "list_comments": ListCommentsError,
+    "mitigation_methods_get": MitigationMethodsGetError,
+    "mitigation_methods_list": MitigationMethodsListError,
+    "mitigation_platforms_get": MitigationPlatformsGetError,
+    "mitigation_platforms_list": MitigationPlatformsListError,
+    "mitigations_create": MitigationsCreateError,
+    "mitigations_get": MitigationsGetError,
+    "mitigations_list": MitigationsListError,
+    "policy_get": PolicyGetError,
+    "policy_list": PolicyListError,
+    "set_external_context": SetExternalContextError,
+    "silence_notifications_create": SilenceNotificationsCreateError,
+    "silence_notifications_delete": SilenceNotificationsDeleteError,
+    "silence_notifications_get": SilenceNotificationsGetError,
+    "silence_notifications_list": SilenceNotificationsListError,
+    "silence_notifications_replace": SilenceNotificationsReplaceError,
+    "suppression_create": SuppressionCreateError,
+    "suppression_delete": SuppressionDeleteError,
+    "suppression_get": SuppressionGetError,
+    "suppression_list": SuppressionListError,
+    "suppression_replace": SuppressionReplaceError,
+    "un_ack": UnAckError,
 }
 
 __all__ = [
@@ -373,34 +751,76 @@ __all__ = [
     "AckUnexpectedError",
     "ActUnexpectedError",
     "AddCommentUnexpectedError",
+    "AlertGetUnexpectedError",
+    "AlertListUnexpectedError",
+    "AutoAckCreateUnexpectedError",
+    "AutoAckDeleteUnexpectedError",
+    "AutoAckGetUnexpectedError",
+    "AutoAckListUnexpectedError",
+    "AutoAckReplaceUnexpectedError",
     "AvailableActionsUnexpectedError",
     "AvailableActionsForMitigationUnexpectedError",
     "ClearUnexpectedError",
-    "CreateUnexpectedError",
-    "DeleteUnexpectedError",
     "DisableUnexpectedError",
     "EnableUnexpectedError",
-    "GetUnexpectedError",
-    "ListUnexpectedError",
     "ListCommentsUnexpectedError",
-    "ReplaceUnexpectedError",
+    "MitigationMethodsGetUnexpectedError",
+    "MitigationMethodsListUnexpectedError",
+    "MitigationPlatformsGetUnexpectedError",
+    "MitigationPlatformsListUnexpectedError",
+    "MitigationsCreateUnexpectedError",
+    "MitigationsGetUnexpectedError",
+    "MitigationsListUnexpectedError",
+    "PolicyGetUnexpectedError",
+    "PolicyListUnexpectedError",
     "SetExternalContextUnexpectedError",
+    "SilenceNotificationsCreateUnexpectedError",
+    "SilenceNotificationsDeleteUnexpectedError",
+    "SilenceNotificationsGetUnexpectedError",
+    "SilenceNotificationsListUnexpectedError",
+    "SilenceNotificationsReplaceUnexpectedError",
+    "SuppressionCreateUnexpectedError",
+    "SuppressionDeleteUnexpectedError",
+    "SuppressionGetUnexpectedError",
+    "SuppressionListUnexpectedError",
+    "SuppressionReplaceUnexpectedError",
     "UnAckUnexpectedError",
     "AckError",
     "ActError",
     "AddCommentError",
+    "AlertGetError",
+    "AlertListError",
+    "AutoAckCreateError",
+    "AutoAckDeleteError",
+    "AutoAckGetError",
+    "AutoAckListError",
+    "AutoAckReplaceError",
     "AvailableActionsError",
     "AvailableActionsForMitigationError",
     "ClearError",
-    "CreateError",
-    "DeleteError",
     "DisableError",
     "EnableError",
-    "GetError",
-    "ListError",
     "ListCommentsError",
-    "ReplaceError",
+    "MitigationMethodsGetError",
+    "MitigationMethodsListError",
+    "MitigationPlatformsGetError",
+    "MitigationPlatformsListError",
+    "MitigationsCreateError",
+    "MitigationsGetError",
+    "MitigationsListError",
+    "PolicyGetError",
+    "PolicyListError",
     "SetExternalContextError",
+    "SilenceNotificationsCreateError",
+    "SilenceNotificationsDeleteError",
+    "SilenceNotificationsGetError",
+    "SilenceNotificationsListError",
+    "SilenceNotificationsReplaceError",
+    "SuppressionCreateError",
+    "SuppressionDeleteError",
+    "SuppressionGetError",
+    "SuppressionListError",
+    "SuppressionReplaceError",
     "UnAckError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

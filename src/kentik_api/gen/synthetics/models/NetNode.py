@@ -5,7 +5,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .syntheticsv202309Location import syntheticsv202309Location
+from .Location import Location
 
 
 class NetNode(BaseModel):
@@ -33,9 +33,7 @@ class NetNode(BaseModel):
         description="Name of the AS owning the address of the node",
     )
 
-    location: Optional[syntheticsv202309Location] = Field(
-        validation_alias="location", default=None
-    )
+    location: Optional[Location] = Field(validation_alias="location", default=None)
 
     dnsName: Optional[str] = Field(
         validation_alias="dnsName",

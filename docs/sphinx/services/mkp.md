@@ -1221,6 +1221,11 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autoclass:: kentik_api.gen.mkp.models.LandingType
+   :members:
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.mkp.models.ListPackageResponse
 ```
 
@@ -1246,6 +1251,15 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.mkp.models.PackageServiceUpdatePackageBody
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.mkp.models.PermissionEntry
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.mkp.models.Role
+   :members:
 ```
 
 ```{eval-rst}
@@ -1289,27 +1303,13 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.mkp.models.User
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.mkp.models.protobufAny
 ```
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.mkp.models.rpcStatus
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.mkp.models.v202211LandingType
-   :members:
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.mkp.models.v202211PermissionEntry
-```
-
-```{eval-rst}
-.. autoclass:: kentik_api.gen.mkp.models.v202211Role
-   :members:
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.mkp.models.v202211User
 ```

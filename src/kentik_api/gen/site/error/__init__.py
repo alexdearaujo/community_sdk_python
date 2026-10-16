@@ -78,14 +78,31 @@ class SiteError(HTTPException):
         )
 
 
+class CreateMarketError(SiteError):
+    """Operation-local error for client.site.create_market()."""
+
+    response_error_map: dict[str, type[SiteError]] = {}
+
+
+class CreateMarketUnexpectedError(CreateMarketError):
+    """Operation-local response error for create_market (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+CreateMarketError.response_error_map = {
+    "default": CreateMarketUnexpectedError,
+}
+
+
 class CreateSiteError(SiteError):
-    """Operation-local error for CreateSite."""
+    """Operation-local error for client.site.create_site()."""
 
     response_error_map: dict[str, type[SiteError]] = {}
 
 
 class CreateSiteUnexpectedError(CreateSiteError):
-    """Operation-local response error for CreateSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for create_site (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -95,31 +112,31 @@ CreateSiteError.response_error_map = {
 }
 
 
-class CreateSiteMarketError(SiteError):
-    """Operation-local error for CreateSiteMarket."""
+class DeleteMarketError(SiteError):
+    """Operation-local error for client.site.delete_market()."""
 
     response_error_map: dict[str, type[SiteError]] = {}
 
 
-class CreateSiteMarketUnexpectedError(CreateSiteMarketError):
-    """Operation-local response error for CreateSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteMarketUnexpectedError(DeleteMarketError):
+    """Operation-local response error for delete_market (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-CreateSiteMarketError.response_error_map = {
-    "default": CreateSiteMarketUnexpectedError,
+DeleteMarketError.response_error_map = {
+    "default": DeleteMarketUnexpectedError,
 }
 
 
 class DeleteSiteError(SiteError):
-    """Operation-local error for DeleteSite."""
+    """Operation-local error for client.site.delete_site()."""
 
     response_error_map: dict[str, type[SiteError]] = {}
 
 
 class DeleteSiteUnexpectedError(DeleteSiteError):
-    """Operation-local response error for DeleteSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for delete_site (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -129,31 +146,31 @@ DeleteSiteError.response_error_map = {
 }
 
 
-class DeleteSiteMarketError(SiteError):
-    """Operation-local error for DeleteSiteMarket."""
+class GetMarketError(SiteError):
+    """Operation-local error for client.site.get_market()."""
 
     response_error_map: dict[str, type[SiteError]] = {}
 
 
-class DeleteSiteMarketUnexpectedError(DeleteSiteMarketError):
-    """Operation-local response error for DeleteSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetMarketUnexpectedError(GetMarketError):
+    """Operation-local response error for get_market (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-DeleteSiteMarketError.response_error_map = {
-    "default": DeleteSiteMarketUnexpectedError,
+GetMarketError.response_error_map = {
+    "default": GetMarketUnexpectedError,
 }
 
 
 class GetSiteError(SiteError):
-    """Operation-local error for GetSite."""
+    """Operation-local error for client.site.get_site()."""
 
     response_error_map: dict[str, type[SiteError]] = {}
 
 
 class GetSiteUnexpectedError(GetSiteError):
-    """Operation-local response error for GetSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_site (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -163,48 +180,31 @@ GetSiteError.response_error_map = {
 }
 
 
-class GetSiteMarketError(SiteError):
-    """Operation-local error for GetSiteMarket."""
+class ListMarketsError(SiteError):
+    """Operation-local error for client.site.list_markets()."""
 
     response_error_map: dict[str, type[SiteError]] = {}
 
 
-class GetSiteMarketUnexpectedError(GetSiteMarketError):
-    """Operation-local response error for GetSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListMarketsUnexpectedError(ListMarketsError):
+    """Operation-local response error for list_markets (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetSiteMarketError.response_error_map = {
-    "default": GetSiteMarketUnexpectedError,
-}
-
-
-class ListSiteMarketsError(SiteError):
-    """Operation-local error for ListSiteMarkets."""
-
-    response_error_map: dict[str, type[SiteError]] = {}
-
-
-class ListSiteMarketsUnexpectedError(ListSiteMarketsError):
-    """Operation-local response error for ListSiteMarkets (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-ListSiteMarketsError.response_error_map = {
-    "default": ListSiteMarketsUnexpectedError,
+ListMarketsError.response_error_map = {
+    "default": ListMarketsUnexpectedError,
 }
 
 
 class ListSitesError(SiteError):
-    """Operation-local error for ListSites."""
+    """Operation-local error for client.site.list_sites()."""
 
     response_error_map: dict[str, type[SiteError]] = {}
 
 
 class ListSitesUnexpectedError(ListSitesError):
-    """Operation-local response error for ListSites (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_sites (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -214,14 +214,31 @@ ListSitesError.response_error_map = {
 }
 
 
+class UpdateMarketError(SiteError):
+    """Operation-local error for client.site.update_market()."""
+
+    response_error_map: dict[str, type[SiteError]] = {}
+
+
+class UpdateMarketUnexpectedError(UpdateMarketError):
+    """Operation-local response error for update_market (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateMarketError.response_error_map = {
+    "default": UpdateMarketUnexpectedError,
+}
+
+
 class UpdateSiteError(SiteError):
-    """Operation-local error for UpdateSite."""
+    """Operation-local error for client.site.update_site()."""
 
     response_error_map: dict[str, type[SiteError]] = {}
 
 
 class UpdateSiteUnexpectedError(UpdateSiteError):
-    """Operation-local response error for UpdateSite (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for update_site (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -230,57 +247,40 @@ UpdateSiteError.response_error_map = {
     "default": UpdateSiteUnexpectedError,
 }
 
-
-class UpdateSiteMarketError(SiteError):
-    """Operation-local error for UpdateSiteMarket."""
-
-    response_error_map: dict[str, type[SiteError]] = {}
-
-
-class UpdateSiteMarketUnexpectedError(UpdateSiteMarketError):
-    """Operation-local response error for UpdateSiteMarket (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-UpdateSiteMarketError.response_error_map = {
-    "default": UpdateSiteMarketUnexpectedError,
-}
-
-ERROR_BY_OPERATION: dict[str, type[SiteError]] = {
-    "CreateSite": CreateSiteError,
-    "CreateSiteMarket": CreateSiteMarketError,
-    "DeleteSite": DeleteSiteError,
-    "DeleteSiteMarket": DeleteSiteMarketError,
-    "GetSite": GetSiteError,
-    "GetSiteMarket": GetSiteMarketError,
-    "ListSiteMarkets": ListSiteMarketsError,
-    "ListSites": ListSitesError,
-    "UpdateSite": UpdateSiteError,
-    "UpdateSiteMarket": UpdateSiteMarketError,
+ERROR_BY_METHOD: dict[str, type[SiteError]] = {
+    "create_market": CreateMarketError,
+    "create_site": CreateSiteError,
+    "delete_market": DeleteMarketError,
+    "delete_site": DeleteSiteError,
+    "get_market": GetMarketError,
+    "get_site": GetSiteError,
+    "list_markets": ListMarketsError,
+    "list_sites": ListSitesError,
+    "update_market": UpdateMarketError,
+    "update_site": UpdateSiteError,
 }
 
 __all__ = [
     "SiteError",
+    "CreateMarketUnexpectedError",
     "CreateSiteUnexpectedError",
-    "CreateSiteMarketUnexpectedError",
+    "DeleteMarketUnexpectedError",
     "DeleteSiteUnexpectedError",
-    "DeleteSiteMarketUnexpectedError",
+    "GetMarketUnexpectedError",
     "GetSiteUnexpectedError",
-    "GetSiteMarketUnexpectedError",
-    "ListSiteMarketsUnexpectedError",
+    "ListMarketsUnexpectedError",
     "ListSitesUnexpectedError",
+    "UpdateMarketUnexpectedError",
     "UpdateSiteUnexpectedError",
-    "UpdateSiteMarketUnexpectedError",
+    "CreateMarketError",
     "CreateSiteError",
-    "CreateSiteMarketError",
+    "DeleteMarketError",
     "DeleteSiteError",
-    "DeleteSiteMarketError",
+    "GetMarketError",
     "GetSiteError",
-    "GetSiteMarketError",
-    "ListSiteMarketsError",
+    "ListMarketsError",
     "ListSitesError",
+    "UpdateMarketError",
     "UpdateSiteError",
-    "UpdateSiteMarketError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

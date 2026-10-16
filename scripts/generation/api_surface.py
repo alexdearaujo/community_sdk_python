@@ -36,7 +36,7 @@ from ._shared import (
 )
 
 SURFACE_FILE = PROJECT_ROOT / "api_surface.json"
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 # Before schema_version 6 a record held only these requirements.
 _LEGACY_REQUIREMENTS = ("grpcio", "protobuf", "httpx", "pydantic")
@@ -181,6 +181,31 @@ def _wrapper_method_by_rest_call(
     return methods
 
 
+def _error_responses(service_dir: Path) -> dict[str, dict[str, str]]:
+    """Maps each operation error class to its per-status classes, as `response_error_map` sets them."""
+    error_file = service_dir / "error" / "__init__.py"
+    if not error_file.exists():
+        return {}
+    responses: dict[str, dict[str, str]] = {}
+    for node in ast.parse(error_file.read_text(encoding="utf-8")).body:
+        if not (
+            isinstance(node, ast.Assign)
+            and isinstance(target := node.targets[0], ast.Attribute)
+            and target.attr == "response_error_map"
+            and isinstance(target.value, ast.Name)
+            and isinstance(node.value, ast.Dict)
+        ):
+            continue
+        responses[target.value.id] = {
+            key.value: value.id
+            for key, value in zip(node.value.keys, node.value.values, strict=True)
+            if isinstance(key, ast.Constant)
+            and isinstance(key.value, str)
+            and isinstance(value, ast.Name)
+        }
+    return responses
+
+
 def capture(output_dir: Path | None = None) -> dict[str, Any]:
     """Builds a snapshot of the generated SDK's public surface."""
     root = SDK_OUTPUT_DIR if output_dir is None else output_dir
@@ -189,6 +214,7 @@ def capture(output_dir: Path | None = None) -> dict[str, Any]:
 
     for service_dir in iter_service_dirs(root):
         wrapper_methods = _wrapper_method_by_rest_call(service_dir)
+        error_responses = _error_responses(service_dir)
         operations: dict[str, Any] = {}
         for module in sorted((service_dir / "services").glob("*.py")):
             for op in parse_generated_rest_module(module):
@@ -205,6 +231,8 @@ def capture(output_dir: Path | None = None) -> dict[str, Any]:
                     ),
                     "params": {name: annotation for name, annotation, _ in op.params},
                     "returns": op.return_type,
+                    "error": op.error_cls_name,
+                    "error_responses": error_responses.get(op.error_cls_name, {}),
                 }
 
         fields, enums = _model_shapes(service_dir)
@@ -372,6 +400,19 @@ def _changed_operations(
         grpc_change = (
             [old_route, new_route] if "grpc" in old and old_route != new_route else None
         )
+        # Before schema_version 7 a record has no error classes.
+        error_change, removed_errors, added_errors = None, [], []
+        if "error" in old:
+            if old["error"] != new["error"]:
+                error_change = [old["error"], new["error"]]
+            old_errors, new_errors = old["error_responses"], new["error_responses"]
+            # A status class renamed with its operation class is in error_change.
+            removed_errors = sorted(
+                old_errors[status] for status in set(old_errors) - set(new_errors)
+            )
+            added_errors = sorted(
+                new_errors[status] for status in set(new_errors) - set(old_errors)
+            )
         if (
             old.get("status") == new.get("status")
             and old_required == new_required
@@ -380,6 +421,9 @@ def _changed_operations(
             and return_change is None
             and method_change is None
             and grpc_change is None
+            and error_change is None
+            and not removed_errors
+            and not added_errors
         ):
             continue
         changes.append(
@@ -393,6 +437,9 @@ def _changed_operations(
                 "return_change": return_change,
                 "method_change": method_change,
                 "grpc_change": grpc_change,
+                "error_change": error_change,
+                "removed_errors": removed_errors,
+                "added_errors": added_errors,
             }
         )
     return changes
@@ -509,6 +556,17 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
                         after,
                     )
                 )
+            if change.get("error_change"):
+                before, after = change["error_change"]
+                breaking.append(
+                    (
+                        f"- `{name}`: `{change['operation']}` raises `{after}`, "
+                        f"not `{before}`",
+                        before,
+                    )
+                )
+            for error in change.get("removed_errors", []):
+                breaking.append((f"- `{name}`: error class removed, `{error}`", error))
         for field in entry.get("added_fields", []):
             if field["required"]:
                 breaking.append(
@@ -611,6 +669,15 @@ def _service_bullets(entry: dict[str, Any]) -> list[str]:
             bullets.append(
                 f"  - **`{change['operation']}` now returns** `{after}`, not `{before}`"
             )
+        if change.get("error_change"):
+            before, after = change["error_change"]
+            bullets.append(
+                f"  - **`{change['operation']}` raises** `{after}`, not `{before}`"
+            )
+        for error in change.get("removed_errors", []):
+            bullets.append(f"  - **error class removed**, `{error}`")
+        for error in change.get("added_errors", []):
+            bullets.append(f"  - error class added, `{error}`")
     for field in entry.get("added_fields", []):
         bullets.append(f"  - field added, `{field['name']}` ({_describe(field)})")
     for field in entry.get("removed_fields", []):

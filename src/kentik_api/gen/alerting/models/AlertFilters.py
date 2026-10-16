@@ -6,10 +6,10 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from .AlertState import AlertState
+from .MultiAttributeFilter import MultiAttributeFilter
+from .Severity import Severity
 from .Source import Source
-from .v202303MultiAttributeFilter import v202303MultiAttributeFilter
-from .v202303Severity import v202303Severity
-from .v202303TimeRange import v202303TimeRange
+from .TimeRange import TimeRange
 from .v202505AlertAcknowledgement import v202505AlertAcknowledgement
 
 
@@ -20,7 +20,7 @@ class AlertFilters(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    severities: Optional[List[Optional[v202303Severity]]] = Field(
+    severities: Optional[List[Optional[Severity]]] = Field(
         validation_alias="severities",
         default=None,
         description="The severities of the alerts to list.",
@@ -38,9 +38,7 @@ class AlertFilters(BaseModel):
         description="The source policies of the alerts to list.",
     )
 
-    keys: Optional[v202303MultiAttributeFilter] = Field(
-        validation_alias="keys", default=None
-    )
+    keys: Optional[MultiAttributeFilter] = Field(validation_alias="keys", default=None)
 
     states: Optional[List[Optional[AlertState]]] = Field(
         validation_alias="states",
@@ -48,21 +46,17 @@ class AlertFilters(BaseModel):
         description="The states of the alerts to list.",
     )
 
-    startedAt: Optional[v202303TimeRange] = Field(
-        validation_alias="startedAt", default=None
-    )
+    startedAt: Optional[TimeRange] = Field(validation_alias="startedAt", default=None)
 
-    endedAt: Optional[v202303TimeRange] = Field(
-        validation_alias="endedAt", default=None
-    )
+    endedAt: Optional[TimeRange] = Field(validation_alias="endedAt", default=None)
 
-    highestSeverities: Optional[List[Optional[v202303Severity]]] = Field(
+    highestSeverities: Optional[List[Optional[Severity]]] = Field(
         validation_alias="highestSeverities",
         default=None,
         description="Filter alerts by the highest reached severity.",
     )
 
-    recentSeverities: Optional[List[Optional[v202303Severity]]] = Field(
+    recentSeverities: Optional[List[Optional[Severity]]] = Field(
         validation_alias="recentSeverities",
         default=None,
         description="Filter alerts by the most recent (for active ones) and last (for cleared ones) severity.",
@@ -74,9 +68,7 @@ class AlertFilters(BaseModel):
         description="The acknowledgement states of the alerts to list.",
     )
 
-    activeAt: Optional[v202303TimeRange] = Field(
-        validation_alias="activeAt", default=None
-    )
+    activeAt: Optional[TimeRange] = Field(validation_alias="activeAt", default=None)
 
     ackedByUserIds: Optional[List[str]] = Field(
         validation_alias="ackedByUserIds",

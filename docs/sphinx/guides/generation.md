@@ -94,6 +94,66 @@ Hand-written code that [`make generate`](../../../Makefile) never touches:
 - [`scripts/openapi_templates/`](https://github.com/kentik/community_sdk_python/blob/main/scripts/openapi_templates/README.md)
 - [`scripts/generation/`](https://github.com/kentik/community_sdk_python/blob/main/scripts/generation/README.md)
 
+## Keep public names stable
+
+[`public_names.json`](https://github.com/kentik/community_sdk_python/blob/main/public_names.json)
+sets the public name of every Service, client method, and model. Each entry
+maps a public name to what the schema calls that thing today:
+
+```json
+"label": {
+  "upstream": "label",
+  "methods": {"list_labels": "GET /label/<version>/labels"},
+  "models": {"Label": "label<version>Label"}
+}
+```
+
+- `upstream` is the Service's schema directory. The public name is the
+  `client.<service>` attribute and the `kentik_api.gen.<service>` package.
+- A method's value is its HTTP verb and path. `<version>` replaces the path
+  version, and `{}` replaces each path parameter.
+- A model's value is its schema name, with `<version>` in place of the
+  version.
+
+These rules apply on every run:
+
+- A version bump, a new operationId, or a renamed path parameter does not
+  change a public name. Their values ignore those parts.
+- A new Service, operation, or model gets an entry with its default name. The
+  run writes the entry into the file. Commit the file with the regenerated
+  code.
+- A run never changes an existing entry.
+
+### Fix a public name that no longer matches the schema
+
+When upstream renames or moves something that an entry points at, generation
+fails before it changes any file. The error names the entry and lists the
+values that have no entry yet:
+
+```text
+NameDriftError: public_names.json, label methods: the schema no longer has
+`delete_label` ('DELETE /label/<version>/labels/{}'). The schema has these
+unnamed: 'DELETE /label/<version>/labels/{}:remove'. Point each entry at its
+new value, or delete it if upstream removed it.
+```
+
+1. Open `public_names.json` and find the entry from the error.
+2. If upstream moved the thing, set the entry's value to the new value from
+   the error. Users keep the same name.
+3. If upstream removed the thing, delete the entry. Record the removal as a
+   breaking change in `CHANGELOG.md`.
+4. Run `make generate` again.
+
+To give a new thing a name other than its default, add its entry before you
+run `make generate`. To rename an existing public name, change the key. That
+is a breaking change for users, so record it in `CHANGELOG.md`.
+
+> [!NOTE]
+> Each operation's error classes follow its client method name
+> (`list_labels` raises `ListLabelsError`), so this file names them too.
+> Parameter names, model fields, and enum values come from the schema.
+> `make check-changelog` reports their changes.
+
 ## Test after regeneration
 
 ```bash
@@ -159,10 +219,15 @@ The alert lists a change as breaking when it can stop existing caller code
 from working:
 
 - A service, operation, model, field, or enum value is removed.
+- A service is no longer mounted on the client.
+- A client method is renamed, or an operation no longer routes to gRPC.
+- An operation raises a different error class, or loses the error class for
+  a status code.
+- An operation requires a new parameter, drops a parameter, or changes a
+  parameter or return type.
 - A field changes its type.
 - A field becomes required, or a new field is required.
-- An operation requires a new parameter.
-- A dependency floor goes up, or a new dependency is required.
+- A dependency requirement narrows, or a new dependency is required.
 
 A renamed field shows as one removed field and one added field. The removed
 name is the breaking change.

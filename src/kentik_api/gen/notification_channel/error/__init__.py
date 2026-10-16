@@ -79,13 +79,13 @@ class NotificationChannelError(HTTPException):
 
 
 class GetNotificationChannelError(NotificationChannelError):
-    """Operation-local error for GetNotificationChannel."""
+    """Operation-local error for client.notification_channel.get_notification_channel()."""
 
     response_error_map: dict[str, type[NotificationChannelError]] = {}
 
 
 class GetNotificationChannelUnexpectedError(GetNotificationChannelError):
-    """Operation-local response error for GetNotificationChannel (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for get_notification_channel (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -96,13 +96,13 @@ GetNotificationChannelError.response_error_map = {
 
 
 class ListNotificationChannelsError(NotificationChannelError):
-    """Operation-local error for ListNotificationChannels."""
+    """Operation-local error for client.notification_channel.list_notification_channels()."""
 
     response_error_map: dict[str, type[NotificationChannelError]] = {}
 
 
 class ListNotificationChannelsUnexpectedError(ListNotificationChannelsError):
-    """Operation-local response error for ListNotificationChannels (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for list_notification_channels (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -113,13 +113,13 @@ ListNotificationChannelsError.response_error_map = {
 
 
 class SearchNotificationChannelsError(NotificationChannelError):
-    """Operation-local error for SearchNotificationChannels."""
+    """Operation-local error for client.notification_channel.search_notification_channels()."""
 
     response_error_map: dict[str, type[NotificationChannelError]] = {}
 
 
 class SearchNotificationChannelsUnexpectedError(SearchNotificationChannelsError):
-    """Operation-local response error for SearchNotificationChannels (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+    """Operation-local response error for search_notification_channels (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
@@ -128,10 +128,10 @@ SearchNotificationChannelsError.response_error_map = {
     "default": SearchNotificationChannelsUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[NotificationChannelError]] = {
-    "GetNotificationChannel": GetNotificationChannelError,
-    "ListNotificationChannels": ListNotificationChannelsError,
-    "SearchNotificationChannels": SearchNotificationChannelsError,
+ERROR_BY_METHOD: dict[str, type[NotificationChannelError]] = {
+    "get_notification_channel": GetNotificationChannelError,
+    "list_notification_channels": ListNotificationChannelsError,
+    "search_notification_channels": SearchNotificationChannelsError,
 }
 
 __all__ = [
@@ -142,5 +142,5 @@ __all__ = [
     "GetNotificationChannelError",
     "ListNotificationChannelsError",
     "SearchNotificationChannelsError",
-    "ERROR_BY_OPERATION",
+    "ERROR_BY_METHOD",
 ]

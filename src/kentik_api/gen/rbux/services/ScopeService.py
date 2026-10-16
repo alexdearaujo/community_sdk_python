@@ -21,8 +21,14 @@ from ..models import (  # noqa: F401
     AssetTagSelector,
     CreateScopeResponse,
     DeleteScopeResponse,
+    FilterField,
+    FilterOperator,
     GetScopeResponse,
     ListScopesResponse,
+    SavedFilterFilter,
+    SavedFilterFilterGroup,
+    SavedFilterFilterId,
+    SavedFilterFilters,
     Scope,
     ScopeConfig,
     ScopeDimensions,
@@ -30,12 +36,6 @@ from ..models import (  # noqa: F401
     UpdateScopeResponse,
     protobufAny,
     rpcStatus,
-    v202501alpha1FilterField,
-    v202501alpha1FilterOperator,
-    v202501alpha1SavedFilterFilter,
-    v202501alpha1SavedFilterFilterGroup,
-    v202501alpha1SavedFilterFilterId,
-    v202501alpha1SavedFilterFilters,
 )
 
 

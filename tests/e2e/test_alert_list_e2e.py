@@ -18,13 +18,13 @@ from kentik_api.gen.alerting.models import (
     AlertFilters,
     AlertServiceListRequest,
 )
-from kentik_api.gen.alerting.models.v202303TimeRange import v202303TimeRange
+from kentik_api.gen.alerting.models import TimeRange
 
 
 def _last_30_days_request() -> AlertServiceListRequest:
     now = datetime.now(UTC)
     fmt = "%Y-%m-%dT%H:%M:%SZ"
-    started_at = v202303TimeRange(
+    started_at = TimeRange(
         start=(now - timedelta(days=30)).strftime(fmt), end=now.strftime(fmt)
     )
     return AlertServiceListRequest(filters=AlertFilters(startedAt=started_at))

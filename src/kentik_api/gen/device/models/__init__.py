@@ -22,12 +22,12 @@ from .DeviceServiceUpdateDeviceLabelsBody import (
     DeviceServiceUpdateDeviceLabelsBody as DeviceServiceUpdateDeviceLabelsBody,
 )
 from .DeviceSnmpV3Conf import DeviceSnmpV3Conf as DeviceSnmpV3Conf
-from .devicev202504beta2Label import devicev202504beta2Label as devicev202504beta2Label
 from .DeviceView import DeviceView as DeviceView
 from .GetDeviceByNameResponse import GetDeviceByNameResponse as GetDeviceByNameResponse
 from .GetDeviceResponse import GetDeviceResponse as GetDeviceResponse
 from .GnmiV1Conf import GnmiV1Conf as GnmiV1Conf
 from .Interface import Interface as Interface
+from .Label import Label as Label
 from .LabelConcise import LabelConcise as LabelConcise
 from .ListDevicesResponse import ListDevicesResponse as ListDevicesResponse
 from .Plan import Plan as Plan

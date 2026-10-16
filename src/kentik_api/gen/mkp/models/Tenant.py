@@ -11,7 +11,7 @@ from .CustomDimension import CustomDimension
 from .Devices import Devices
 from .Filter import Filter
 from .Package import Package
-from .v202211User import v202211User
+from .User import User
 
 
 class Tenant(BaseModel):
@@ -95,7 +95,7 @@ class Tenant(BaseModel):
         description="Packages associated with the tenant.",
     )
 
-    users: Optional[List[Optional[v202211User]]] = Field(
+    users: Optional[List[Optional[User]]] = Field(
         validation_alias="users",
         default=None,
         description="Users associated with the tenant (deprecated; use ListTenantUser).",

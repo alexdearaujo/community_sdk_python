@@ -1628,6 +1628,10 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.synthetics.models.Location
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.synthetics.models.MetricData
 ```
 
@@ -1746,17 +1750,13 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.synthetics.models.UserInfo
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.synthetics.models.protobufAny
 ```
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.synthetics.models.rpcStatus
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.synthetics.models.syntheticsv202309Location
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.synthetics.models.v202303UserInfo
 ```

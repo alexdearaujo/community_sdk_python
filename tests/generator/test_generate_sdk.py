@@ -45,7 +45,9 @@ from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
     read_schema_pin,
     relax_oneof_required,
     relax_response_message_required,
+    rename_models,
     restored_on_failure,
+    schema_model_names,
 )
 from google.protobuf import descriptor_pb2  # noqa: E402
 
@@ -395,6 +397,54 @@ def test_patched_swagger_does_not_modify_original(tmp_path: Path):
     assert swagger_path.read_text() == original_text
     # The temp file must be cleaned up
     assert not tmp_path_arg.exists()
+
+
+def test_patched_swagger_gives_each_model_and_reference_its_public_name(
+    tmp_path: Path,
+):
+    schema = {
+        "paths": {},
+        "components": {
+            "schemas": {
+                "labelv202210Label": {"type": "object"},
+                "ListLabelsResponse": {
+                    "properties": {
+                        "labels": {
+                            "type": "array",
+                            "items": {"$ref": "#/components/schemas/labelv202210Label"},
+                        }
+                    }
+                },
+            }
+        },
+    }
+    swagger_path = tmp_path / "label.swagger.json"
+    swagger_path.write_text(json.dumps(schema), encoding="utf-8")
+
+    assert schema_model_names(swagger_path, "v202210") == [
+        "labelv202210Label",
+        "ListLabelsResponse",
+    ]
+    with patched_swagger(
+        swagger_path, "v202210", model_renames={"labelv202210Label": "Label"}
+    ) as patched_path:
+        schemas = json.loads(patched_path.read_text())["components"]["schemas"]
+
+    assert list(schemas) == ["Label", "ListLabelsResponse"]
+    items = schemas["ListLabelsResponse"]["properties"]["labels"]["items"]
+    assert items == {"$ref": "#/components/schemas/Label"}
+
+
+def test_rename_models_can_swap_two_names():
+    schema = {
+        "components": {"schemas": {"A": {"$ref": "#/components/schemas/B"}, "B": {}}}
+    }
+    result = rename_models(schema, {"A": "B", "B": "A"})
+    assert result["components"]["schemas"] == {
+        "B": {"$ref": "#/components/schemas/A"},
+        "A": {},
+    }
+    assert schema["components"]["schemas"]["A"] == {"$ref": "#/components/schemas/B"}
 
 
 # ---------------------------------------------------------------------------

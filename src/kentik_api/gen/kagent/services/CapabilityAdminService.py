@@ -11,16 +11,17 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    CapabilityAdminService_CreateCapabilityError,
-    CapabilityAdminService_DeleteCapabilityError,
-    CapabilityAdminService_GetCapabilityError,
-    CapabilityAdminService_ListCapabilitiesError,
-    CapabilityAdminService_UpdateCapabilityError,
+    CreateCapabilityError,
+    DeleteCapabilityError,
+    GetCapabilityError,
+    ListCapabilitiesError,
+    UpdateCapabilityError,
 )
 from ..models import (  # noqa: F401
     Agent,
     AgentCapability,
     AgentCapabilityServiceUpsertAgentCapabilityBody,
+    AgentConfig,
     AgentRegistration,
     AgentServiceUpdateAgentBody,
     AuthorizeResponse,
@@ -75,7 +76,6 @@ from ..models import (  # noqa: F401
     UpdateCapabilityResponse,
     UpdateConfigResponse,
     UpsertAgentCapabilityResponse,
-    kagentv202401AgentConfig,
     protobufAny,
     rpcStatus,
 )
@@ -100,7 +100,7 @@ def CapabilityAdminService_ListCapabilities(
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityAdminService_ListCapabilities",
-        error_cls=CapabilityAdminService_ListCapabilitiesError,
+        error_cls=ListCapabilitiesError,
     )
 
     return parse_response_model(
@@ -132,7 +132,7 @@ def CapabilityAdminService_CreateCapability(
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityAdminService_CreateCapability",
-        error_cls=CapabilityAdminService_CreateCapabilityError,
+        error_cls=CreateCapabilityError,
     )
 
     return parse_response_model(
@@ -163,7 +163,7 @@ def CapabilityAdminService_GetCapability(
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityAdminService_GetCapability",
-        error_cls=CapabilityAdminService_GetCapabilityError,
+        error_cls=GetCapabilityError,
     )
 
     return parse_response_model(
@@ -194,7 +194,7 @@ def CapabilityAdminService_DeleteCapability(
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityAdminService_DeleteCapability",
-        error_cls=CapabilityAdminService_DeleteCapabilityError,
+        error_cls=DeleteCapabilityError,
     )
 
     return parse_response_model(
@@ -229,7 +229,7 @@ def CapabilityAdminService_UpdateCapability(
         header_params=header_params,
         expected_status=200,
         operation_name="CapabilityAdminService_UpdateCapability",
-        error_cls=CapabilityAdminService_UpdateCapabilityError,
+        error_cls=UpdateCapabilityError,
     )
 
     return parse_response_model(

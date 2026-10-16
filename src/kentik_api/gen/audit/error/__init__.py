@@ -78,49 +78,69 @@ class AuditError(HTTPException):
         )
 
 
-class GetAuditEventError(AuditError):
-    """Operation-local error for GetAuditEvent."""
+class GetEventError(AuditError):
+    """Operation-local error for client.audit.get_event()."""
 
     response_error_map: dict[str, type[AuditError]] = {}
 
 
-class GetAuditEventUnexpectedError(GetAuditEventError):
-    """Operation-local response error for GetAuditEvent (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetEventUnexpectedError(GetEventError):
+    """Operation-local response error for get_event (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetAuditEventError.response_error_map = {
-    "default": GetAuditEventUnexpectedError,
+GetEventError.response_error_map = {
+    "default": GetEventUnexpectedError,
 }
 
 
-class ListAuditEventsError(AuditError):
-    """Operation-local error for ListAuditEvents."""
+class GetEventByCtimeError(AuditError):
+    """Operation-local error for client.audit.get_event_by_ctime()."""
 
     response_error_map: dict[str, type[AuditError]] = {}
 
 
-class ListAuditEventsUnexpectedError(ListAuditEventsError):
-    """Operation-local response error for ListAuditEvents (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetEventByCtimeUnexpectedError(GetEventByCtimeError):
+    """Operation-local response error for get_event_by_ctime (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ListAuditEventsError.response_error_map = {
-    "default": ListAuditEventsUnexpectedError,
+GetEventByCtimeError.response_error_map = {
+    "default": GetEventByCtimeUnexpectedError,
 }
 
-ERROR_BY_OPERATION: dict[str, type[AuditError]] = {
-    "GetAuditEvent": GetAuditEventError,
-    "ListAuditEvents": ListAuditEventsError,
+
+class ListEventsError(AuditError):
+    """Operation-local error for client.audit.list_events()."""
+
+    response_error_map: dict[str, type[AuditError]] = {}
+
+
+class ListEventsUnexpectedError(ListEventsError):
+    """Operation-local response error for list_events (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+ListEventsError.response_error_map = {
+    "default": ListEventsUnexpectedError,
+}
+
+ERROR_BY_METHOD: dict[str, type[AuditError]] = {
+    "get_event": GetEventError,
+    "get_event_by_ctime": GetEventByCtimeError,
+    "list_events": ListEventsError,
 }
 
 __all__ = [
     "AuditError",
-    "GetAuditEventUnexpectedError",
-    "ListAuditEventsUnexpectedError",
-    "GetAuditEventError",
-    "ListAuditEventsError",
-    "ERROR_BY_OPERATION",
+    "GetEventUnexpectedError",
+    "GetEventByCtimeUnexpectedError",
+    "ListEventsUnexpectedError",
+    "GetEventError",
+    "GetEventByCtimeError",
+    "ListEventsError",
+    "ERROR_BY_METHOD",
 ]

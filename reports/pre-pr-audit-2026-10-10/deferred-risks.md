@@ -307,3 +307,23 @@ This ledger records findings that are intentionally deferred.
   can leave a half-built tree. A run against a schema with a broken
   `user/v202211/user.proto` failed after the wipe, restored the tree with no
   differences, and `import kentik_api` still worked. 15 entries remain open.
+- 2026-10-15: B11's second rule is fixed. An audit of all 234 client methods
+  found 12 that broke snake_case, all with a double underscore from protoc's
+  default operationId `<Module>_<Method>`. The wrapper now drops the module
+  prefix; if one word is left, the module noun stays (`ktbgp.route_list`).
+  Renamed: 8 in kagent, 3 in ktbgp, 1 in nms. Every other name is already
+  snake_case. B11's third rule (version strings in 50 model class names) is
+  still open.
+- 2026-10-15: B11 is fully resolved. `public_names.json` now holds the public
+  name of every Service, client method, and model, keyed by version-free
+  upstream values. A run only adds entries, and fails with `NameDriftError`
+  when an entry no longer matches the schema. 50 versioned model names lost
+  their version (`labelv202210Label` to `Label`). A simulated upstream change
+  (label version bump, operationId rename, moved DELETE path) failed once,
+  naming only `delete_label`; after a one-line fix every label name was
+  unchanged. Error class names still follow the operationId.
+- 2026-10-15: error classes now follow the client method name
+  (`list_labels` raises `ListLabelsError`), so `public_names.json` protects
+  them too. An operationId rename no longer renames an error class, and
+  operations that share an operationId (eight `List` in `alerting`) no longer
+  share one class. `ERROR_BY_OPERATION` became `ERROR_BY_METHOD`.
