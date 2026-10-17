@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.user
     participant API as Kentik REST API
 
-    C->>W: list_users()
+    C->>W: list()
     W->>API: GET /user/v202211/users
     alt success
         API-->>W: ListUsersResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_users()
+    C->>W: list()
     W->>R: build_grpc_request(ListUsersRequest, arguments)
     R->>API: UserService/ListUsers (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.user.list_users()
+response = client.user.list()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.user
     participant API as Kentik REST API
 
-    C->>W: create_user(data=CreateUserRequest(...))
+    C->>W: create(data=CreateUserRequest(...))
     W->>API: POST /user/v202211/users
     alt success
         API-->>W: CreateUserResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_user(data=CreateUserRequest(...))
+    C->>W: create(data=CreateUserRequest(...))
     W->>R: build_grpc_request(CreateUserRequest, arguments)
     R->>API: UserService/CreateUser (gRPC/TLS)
     alt success
@@ -165,7 +165,7 @@ from kentik_api.gen.user.models import CreateUserRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.user.create_user(
+response = client.user.create(
     data=CreateUserRequest(...),
 )
 ```
@@ -186,7 +186,7 @@ sequenceDiagram
     participant W as client.user
     participant API as Kentik REST API
 
-    C->>W: get_user(id="id-example")
+    C->>W: get(id="id-example")
     W->>API: GET /user/v202211/users/{id}
     alt success
         API-->>W: GetUserResponse (JSON)
@@ -208,7 +208,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_user(id="id-example")
+    C->>W: get(id="id-example")
     W->>R: build_grpc_request(GetUserRequest, arguments)
     R->>API: UserService/GetUser (gRPC/TLS)
     alt success
@@ -241,7 +241,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.user.get_user(
+response = client.user.get(
     id="id-example",
 )
 ```
@@ -262,7 +262,7 @@ sequenceDiagram
     participant W as client.user
     participant API as Kentik REST API
 
-    C->>W: update_user(id="id-example", data=UserServiceUpdateUserBody(...))
+    C->>W: update(id="id-example", data=UserServiceUpdateUserBody(...))
     W->>API: PUT /user/v202211/users/{id}
     alt success
         API-->>W: UpdateUserResponse (JSON)
@@ -284,7 +284,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_user(id="id-example", data=UserServiceUpdateUserBody(...))
+    C->>W: update(id="id-example", data=UserServiceUpdateUserBody(...))
     W->>R: build_grpc_request(UpdateUserRequest, arguments)
     R->>API: UserService/UpdateUser (gRPC/TLS)
     alt success
@@ -319,7 +319,7 @@ from kentik_api.gen.user.models import UserServiceUpdateUserBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.user.update_user(
+response = client.user.update(
     id="id-example",
     data=UserServiceUpdateUserBody(...),
 )
@@ -341,7 +341,7 @@ sequenceDiagram
     participant W as client.user
     participant API as Kentik REST API
 
-    C->>W: delete_user(id="id-example")
+    C->>W: delete(id="id-example")
     W->>API: DELETE /user/v202211/users/{id}
     alt success
         API-->>W: DeleteUserResponse (JSON)
@@ -363,7 +363,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_user(id="id-example")
+    C->>W: delete(id="id-example")
     W->>R: build_grpc_request(DeleteUserRequest, arguments)
     R->>API: UserService/DeleteUser (gRPC/TLS)
     alt success
@@ -396,7 +396,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.user.delete_user(
+response = client.user.delete(
     id="id-example",
 )
 ```

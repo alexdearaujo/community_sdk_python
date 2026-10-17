@@ -1,7 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """List alerts from the last 30 days.
 
-Uses the alert_list operation from the AlertService group.
+Uses the list operation from the AlertService group.
 The Kentik backend rejects the call with a 400 unless the filters carry a
 startedAt time range, although the schema marks every field optional.
 """
@@ -22,7 +22,7 @@ def main() -> None:
         end=now.strftime("%Y-%m-%dT%H:%M:%SZ"),
     )
     request = AlertServiceListRequest(filters=AlertFilters(startedAt=started_at))
-    response = client.alerting.alert_list(data=request)
+    response = client.alerting.list(data=request)
     alerts = [alert for alert in (response.alerts or []) if alert is not None]
     print(f"Found {len(alerts)} alert(s) in the last 30 days.")
     for alert in alerts[:10]:

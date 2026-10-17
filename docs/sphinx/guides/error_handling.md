@@ -41,7 +41,7 @@ classDiagram
 | `ConfigurationError` | `KentikAPI(...)` gets missing or empty credentials, an unknown region or protocol, or a timeout that is not a positive number. A gRPC call gets an unknown body key or enum name, or an `api_config_override` that `with_timeout()` did not build. A call runs after `close()`. |
 | `AuthenticationError` | Credentials are rejected: a REST 401 or a gRPC `UNAUTHENTICATED` status |
 | `TransportError` | No response arrived: connection failure, timeout, or a gRPC `CANCELLED`, `DEADLINE_EXCEEDED`, or `UNAVAILABLE` status. A gRPC response larger than the receive limit also raises `TransportError`. |
-| `HTTPException` | The API responded with a fault. Both transports raise the operation's generated class, such as `ListDevicesError`. A subclass exists for each status that the schema declares, such as `ListDevicesUnexpectedError` for the `default` response. gRPC sets `grpc_status_code` as well. A success status whose body the SDK cannot use (not JSON, JSON `null`, or the wrong shape) raises a plain `HTTPException` with status 502 |
+| `HTTPException` | The API responded with a fault. Both transports raise the operation's generated class, such as `ListError` from `client.device.list`. A subclass exists for each status that the schema declares, such as `ListUnexpectedError` for the `default` response. gRPC sets `grpc_status_code` as well. A success status whose body the SDK cannot use (not JSON, JSON `null`, or the wrong shape) raises a plain `HTTPException` with status 502 |
 
 Every exception carries a `rate_limit` attribute with the quota the API
 reported on the failing call, or `None` when no response arrived. See the
@@ -66,7 +66,7 @@ from kentik_api.errors import (
 client = KentikAPI(protocol="rest")  # or protocol="grpc": same exceptions
 
 try:
-    response = client.device.list_devices()
+    response = client.device.list()
 except AuthenticationError as exc:
     print(f"Bad credentials: {exc}")
 except HTTPException as exc:

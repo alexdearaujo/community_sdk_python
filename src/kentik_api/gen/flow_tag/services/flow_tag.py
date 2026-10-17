@@ -35,7 +35,7 @@ class FlowTagServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def search_flow_tag(
+    def search(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -70,7 +70,7 @@ class FlowTagServiceWrapper:
                 self._grpc_stub_1.SearchFlowTag,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestFlowTagModule1.SearchFlowTagError,
+                error_cls=RestFlowTagModule1.SearchError,
             )
             return parse_grpc_response(
                 rest_models.SearchFlowTagResponse,
@@ -94,7 +94,7 @@ class FlowTagServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_flow_tag(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -119,7 +119,7 @@ class FlowTagServiceWrapper:
                 self._grpc_stub_1.CreateFlowTag,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestFlowTagModule1.CreateFlowTagError,
+                error_cls=RestFlowTagModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateFlowTagResponse,
@@ -139,7 +139,7 @@ class FlowTagServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_flow_tag(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, flowTagid: str
     ) -> rest_models.GetFlowTagResponse:
         """
@@ -159,7 +159,7 @@ class FlowTagServiceWrapper:
                 self._grpc_stub_1.GetFlowTag,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestFlowTagModule1.GetFlowTagError,
+                error_cls=RestFlowTagModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetFlowTagResponse,
@@ -179,7 +179,7 @@ class FlowTagServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_flow_tag(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -205,7 +205,7 @@ class FlowTagServiceWrapper:
                 self._grpc_stub_1.UpdateFlowTag,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestFlowTagModule1.UpdateFlowTagError,
+                error_cls=RestFlowTagModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateFlowTagResponse,
@@ -226,7 +226,7 @@ class FlowTagServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_flow_tag(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, flowTagid: str
     ) -> rest_models.DeleteFlowTagResponse:
         """
@@ -246,7 +246,7 @@ class FlowTagServiceWrapper:
                 self._grpc_stub_1.DeleteFlowTag,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestFlowTagModule1.DeleteFlowTagError,
+                error_cls=RestFlowTagModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteFlowTagResponse,

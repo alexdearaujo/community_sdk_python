@@ -78,20 +78,20 @@ class CapacityPlanError(HTTPException):
         )
 
 
-class GetCapacityPlanError(CapacityPlanError):
-    """Operation-local error for client.capacity_plan.get_capacity_plan()."""
+class GetError(CapacityPlanError):
+    """Operation-local error for client.capacity_plan.get()."""
 
     response_error_map: dict[str, type[CapacityPlanError]] = {}
 
 
-class GetCapacityPlanUnexpectedError(GetCapacityPlanError):
-    """Operation-local response error for get_capacity_plan (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetUnexpectedError(GetError):
+    """Operation-local response error for get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetCapacityPlanError.response_error_map = {
-    "default": GetCapacityPlanUnexpectedError,
+GetError.response_error_map = {
+    "default": GetUnexpectedError,
 }
 
 
@@ -112,20 +112,20 @@ GetCapacitySummaryError.response_error_map = {
 }
 
 
-class ListCapacityPlansError(CapacityPlanError):
-    """Operation-local error for client.capacity_plan.list_capacity_plans()."""
+class ListError(CapacityPlanError):
+    """Operation-local error for client.capacity_plan.list()."""
 
     response_error_map: dict[str, type[CapacityPlanError]] = {}
 
 
-class ListCapacityPlansUnexpectedError(ListCapacityPlansError):
-    """Operation-local response error for list_capacity_plans (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListUnexpectedError(ListError):
+    """Operation-local response error for list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ListCapacityPlansError.response_error_map = {
-    "default": ListCapacityPlansUnexpectedError,
+ListError.response_error_map = {
+    "default": ListUnexpectedError,
 }
 
 
@@ -146,21 +146,21 @@ ListCapacitySummariesError.response_error_map = {
 }
 
 ERROR_BY_METHOD: dict[str, type[CapacityPlanError]] = {
-    "get_capacity_plan": GetCapacityPlanError,
+    "get": GetError,
     "get_capacity_summary": GetCapacitySummaryError,
-    "list_capacity_plans": ListCapacityPlansError,
+    "list": ListError,
     "list_capacity_summaries": ListCapacitySummariesError,
 }
 
 __all__ = [
     "CapacityPlanError",
-    "GetCapacityPlanUnexpectedError",
+    "GetUnexpectedError",
     "GetCapacitySummaryUnexpectedError",
-    "ListCapacityPlansUnexpectedError",
+    "ListUnexpectedError",
     "ListCapacitySummariesUnexpectedError",
-    "GetCapacityPlanError",
+    "GetError",
     "GetCapacitySummaryError",
-    "ListCapacityPlansError",
+    "ListError",
     "ListCapacitySummariesError",
     "ERROR_BY_METHOD",
 ]

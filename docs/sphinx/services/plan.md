@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.plan
     participant API as Kentik REST API
 
-    C->>W: list_plans()
+    C->>W: list()
     W->>API: GET /plans/v202501alpha1
     alt success
         API-->>W: ListPlansResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_plans()
+    C->>W: list()
     W->>R: build_grpc_request(ListPlansRequest, arguments)
     R->>API: PlanService/ListPlans (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.plan.list_plans()
+response = client.plan.list()
 ```
 
 ## Data Models

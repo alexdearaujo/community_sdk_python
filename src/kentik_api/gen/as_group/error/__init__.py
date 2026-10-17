@@ -78,109 +78,109 @@ class AsGroupError(HTTPException):
         )
 
 
-class CreateAsGroupError(AsGroupError):
-    """Operation-local error for client.as_group.create_as_group()."""
+class CreateError(AsGroupError):
+    """Operation-local error for client.as_group.create()."""
 
     response_error_map: dict[str, type[AsGroupError]] = {}
 
 
-class CreateAsGroupUnexpectedError(CreateAsGroupError):
-    """Operation-local response error for create_as_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateUnexpectedError(CreateError):
+    """Operation-local response error for create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-CreateAsGroupError.response_error_map = {
-    "default": CreateAsGroupUnexpectedError,
+CreateError.response_error_map = {
+    "default": CreateUnexpectedError,
 }
 
 
-class DeleteAsGroupError(AsGroupError):
-    """Operation-local error for client.as_group.delete_as_group()."""
+class DeleteError(AsGroupError):
+    """Operation-local error for client.as_group.delete()."""
 
     response_error_map: dict[str, type[AsGroupError]] = {}
 
 
-class DeleteAsGroupUnexpectedError(DeleteAsGroupError):
-    """Operation-local response error for delete_as_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteUnexpectedError(DeleteError):
+    """Operation-local response error for delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-DeleteAsGroupError.response_error_map = {
-    "default": DeleteAsGroupUnexpectedError,
+DeleteError.response_error_map = {
+    "default": DeleteUnexpectedError,
 }
 
 
-class GetAsGroupError(AsGroupError):
-    """Operation-local error for client.as_group.get_as_group()."""
+class GetError(AsGroupError):
+    """Operation-local error for client.as_group.get()."""
 
     response_error_map: dict[str, type[AsGroupError]] = {}
 
 
-class GetAsGroupUnexpectedError(GetAsGroupError):
-    """Operation-local response error for get_as_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetUnexpectedError(GetError):
+    """Operation-local response error for get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetAsGroupError.response_error_map = {
-    "default": GetAsGroupUnexpectedError,
+GetError.response_error_map = {
+    "default": GetUnexpectedError,
 }
 
 
-class ListAsGroupsError(AsGroupError):
-    """Operation-local error for client.as_group.list_as_groups()."""
+class ListError(AsGroupError):
+    """Operation-local error for client.as_group.list()."""
 
     response_error_map: dict[str, type[AsGroupError]] = {}
 
 
-class ListAsGroupsUnexpectedError(ListAsGroupsError):
-    """Operation-local response error for list_as_groups (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListUnexpectedError(ListError):
+    """Operation-local response error for list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ListAsGroupsError.response_error_map = {
-    "default": ListAsGroupsUnexpectedError,
+ListError.response_error_map = {
+    "default": ListUnexpectedError,
 }
 
 
-class UpdateAsGroupError(AsGroupError):
-    """Operation-local error for client.as_group.update_as_group()."""
+class UpdateError(AsGroupError):
+    """Operation-local error for client.as_group.update()."""
 
     response_error_map: dict[str, type[AsGroupError]] = {}
 
 
-class UpdateAsGroupUnexpectedError(UpdateAsGroupError):
-    """Operation-local response error for update_as_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateUnexpectedError(UpdateError):
+    """Operation-local response error for update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-UpdateAsGroupError.response_error_map = {
-    "default": UpdateAsGroupUnexpectedError,
+UpdateError.response_error_map = {
+    "default": UpdateUnexpectedError,
 }
 
 ERROR_BY_METHOD: dict[str, type[AsGroupError]] = {
-    "create_as_group": CreateAsGroupError,
-    "delete_as_group": DeleteAsGroupError,
-    "get_as_group": GetAsGroupError,
-    "list_as_groups": ListAsGroupsError,
-    "update_as_group": UpdateAsGroupError,
+    "create": CreateError,
+    "delete": DeleteError,
+    "get": GetError,
+    "list": ListError,
+    "update": UpdateError,
 }
 
 __all__ = [
     "AsGroupError",
-    "CreateAsGroupUnexpectedError",
-    "DeleteAsGroupUnexpectedError",
-    "GetAsGroupUnexpectedError",
-    "ListAsGroupsUnexpectedError",
-    "UpdateAsGroupUnexpectedError",
-    "CreateAsGroupError",
-    "DeleteAsGroupError",
-    "GetAsGroupError",
-    "ListAsGroupsError",
-    "UpdateAsGroupError",
+    "CreateUnexpectedError",
+    "DeleteUnexpectedError",
+    "GetUnexpectedError",
+    "ListUnexpectedError",
+    "UpdateUnexpectedError",
+    "CreateError",
+    "DeleteError",
+    "GetError",
+    "ListError",
+    "UpdateError",
     "ERROR_BY_METHOD",
 ]

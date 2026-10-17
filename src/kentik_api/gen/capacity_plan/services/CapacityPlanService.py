@@ -11,10 +11,10 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    GetCapacityPlanError,
     GetCapacitySummaryError,
-    ListCapacityPlansError,
+    GetError,
     ListCapacitySummariesError,
+    ListError,
 )
 from ..models import (  # noqa: F401
     CapacityPlan,
@@ -58,7 +58,7 @@ def ListCapacityPlans(
         header_params=header_params,
         expected_status=200,
         operation_name="ListCapacityPlans",
-        error_cls=ListCapacityPlansError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -124,7 +124,7 @@ def GetCapacityPlan(
         header_params=header_params,
         expected_status=200,
         operation_name="GetCapacityPlan",
-        error_cls=GetCapacityPlanError,
+        error_cls=GetError,
     )
 
     return parse_response_model(

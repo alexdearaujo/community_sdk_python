@@ -11,16 +11,16 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
+    CreateError,
     CreateMarketError,
-    CreateSiteError,
+    DeleteError,
     DeleteMarketError,
-    DeleteSiteError,
+    GetError,
     GetMarketError,
-    GetSiteError,
+    ListError,
     ListMarketsError,
-    ListSitesError,
+    UpdateError,
     UpdateMarketError,
-    UpdateSiteError,
 )
 from ..models import (  # noqa: F401
     CreateSiteMarketRequest,
@@ -239,7 +239,7 @@ def ListSites(api_config_override: Optional[APIConfig] = None) -> ListSitesRespo
         header_params=header_params,
         expected_status=200,
         operation_name="ListSites",
-        error_cls=ListSitesError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -273,7 +273,7 @@ def CreateSite(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateSite",
-        error_cls=CreateSiteError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -306,7 +306,7 @@ def GetSite(
         header_params=header_params,
         expected_status=200,
         operation_name="GetSite",
-        error_cls=GetSiteError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -343,7 +343,7 @@ def UpdateSite(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateSite",
-        error_cls=UpdateSiteError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -376,7 +376,7 @@ def DeleteSite(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteSite",
-        error_cls=DeleteSiteError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(

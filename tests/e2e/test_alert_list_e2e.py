@@ -1,5 +1,5 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
-"""Live check of alert_list, a read-only POST the auto-discovered suite skips.
+"""Live check of alerting.list, a read-only POST the auto-discovered suite skips.
 
 The Kentik backend returns a 400 unless the filters carry a startedAt range,
 although the schema marks every field optional. Every alert returned must also
@@ -38,14 +38,14 @@ def _assert_alerts_parse(response) -> None:
 
 @pytest.mark.e2e
 def test_alert_list_with_started_at_over_rest(real_client):
-    response = real_client.alerting.alert_list(data=_last_30_days_request())
+    response = real_client.alerting.list(data=_last_30_days_request())
     _assert_alerts_parse(response)
 
 
 @pytest.mark.e2e_grpc
 def test_alert_list_with_started_at_over_grpc(grpc_real_client):
     try:
-        response = grpc_real_client.alerting.alert_list(data=_last_30_days_request())
+        response = grpc_real_client.alerting.list(data=_last_30_days_request())
     except HTTPException as exc:
         # Observed 2026-10-13: every alerting gRPC RPC fails server-side, even
         # for Get with one id, while the REST routes work.

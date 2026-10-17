@@ -35,7 +35,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_custom_applications(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCustomApplicationsResponse:
         """
@@ -55,7 +55,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.ListCustomApplications,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomApplicationModule1.ListCustomApplicationsError,
+                error_cls=RestCustomApplicationModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListCustomApplicationsResponse,
@@ -74,7 +74,7 @@ class CustomApplicationServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_custom_application(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -99,7 +99,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.CreateCustomApplication,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomApplicationModule1.CreateCustomApplicationError,
+                error_cls=RestCustomApplicationModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateCustomApplicationResponse,
@@ -119,7 +119,7 @@ class CustomApplicationServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_custom_application(
+    def get(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -144,7 +144,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.GetCustomApplication,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomApplicationModule1.GetCustomApplicationError,
+                error_cls=RestCustomApplicationModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetCustomApplicationResponse,
@@ -164,7 +164,7 @@ class CustomApplicationServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_custom_application(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -190,7 +190,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.UpdateCustomApplication,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomApplicationModule1.UpdateCustomApplicationError,
+                error_cls=RestCustomApplicationModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateCustomApplicationResponse,
@@ -211,7 +211,7 @@ class CustomApplicationServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_custom_application(
+    def delete(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -236,7 +236,7 @@ class CustomApplicationServiceWrapper:
                 self._grpc_stub_1.DeleteCustomApplication,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomApplicationModule1.DeleteCustomApplicationError,
+                error_cls=RestCustomApplicationModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteCustomApplicationResponse,

@@ -78,71 +78,71 @@ class UserError(HTTPException):
         )
 
 
-class CreateUserError(UserError):
-    """Operation-local error for client.user.create_user()."""
+class CreateError(UserError):
+    """Operation-local error for client.user.create()."""
 
     response_error_map: dict[str, type[UserError]] = {}
 
 
-class CreateUserUnexpectedError(CreateUserError):
-    """Operation-local response error for create_user (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateUnexpectedError(CreateError):
+    """Operation-local response error for create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-CreateUserError.response_error_map = {
-    "default": CreateUserUnexpectedError,
+CreateError.response_error_map = {
+    "default": CreateUnexpectedError,
 }
 
 
-class DeleteUserError(UserError):
-    """Operation-local error for client.user.delete_user()."""
+class DeleteError(UserError):
+    """Operation-local error for client.user.delete()."""
 
     response_error_map: dict[str, type[UserError]] = {}
 
 
-class DeleteUserUnexpectedError(DeleteUserError):
-    """Operation-local response error for delete_user (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteUnexpectedError(DeleteError):
+    """Operation-local response error for delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-DeleteUserError.response_error_map = {
-    "default": DeleteUserUnexpectedError,
+DeleteError.response_error_map = {
+    "default": DeleteUnexpectedError,
 }
 
 
-class GetUserError(UserError):
-    """Operation-local error for client.user.get_user()."""
+class GetError(UserError):
+    """Operation-local error for client.user.get()."""
 
     response_error_map: dict[str, type[UserError]] = {}
 
 
-class GetUserUnexpectedError(GetUserError):
-    """Operation-local response error for get_user (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetUnexpectedError(GetError):
+    """Operation-local response error for get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetUserError.response_error_map = {
-    "default": GetUserUnexpectedError,
+GetError.response_error_map = {
+    "default": GetUnexpectedError,
 }
 
 
-class ListUsersError(UserError):
-    """Operation-local error for client.user.list_users()."""
+class ListError(UserError):
+    """Operation-local error for client.user.list()."""
 
     response_error_map: dict[str, type[UserError]] = {}
 
 
-class ListUsersUnexpectedError(ListUsersError):
-    """Operation-local response error for list_users (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListUnexpectedError(ListError):
+    """Operation-local response error for list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ListUsersError.response_error_map = {
-    "default": ListUsersUnexpectedError,
+ListError.response_error_map = {
+    "default": ListUnexpectedError,
 }
 
 
@@ -180,47 +180,47 @@ ResetApiTokenError.response_error_map = {
 }
 
 
-class UpdateUserError(UserError):
-    """Operation-local error for client.user.update_user()."""
+class UpdateError(UserError):
+    """Operation-local error for client.user.update()."""
 
     response_error_map: dict[str, type[UserError]] = {}
 
 
-class UpdateUserUnexpectedError(UpdateUserError):
-    """Operation-local response error for update_user (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateUnexpectedError(UpdateError):
+    """Operation-local response error for update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-UpdateUserError.response_error_map = {
-    "default": UpdateUserUnexpectedError,
+UpdateError.response_error_map = {
+    "default": UpdateUnexpectedError,
 }
 
 ERROR_BY_METHOD: dict[str, type[UserError]] = {
-    "create_user": CreateUserError,
-    "delete_user": DeleteUserError,
-    "get_user": GetUserError,
-    "list_users": ListUsersError,
+    "create": CreateError,
+    "delete": DeleteError,
+    "get": GetError,
+    "list": ListError,
     "reset_active_sessions": ResetActiveSessionsError,
     "reset_api_token": ResetApiTokenError,
-    "update_user": UpdateUserError,
+    "update": UpdateError,
 }
 
 __all__ = [
     "UserError",
-    "CreateUserUnexpectedError",
-    "DeleteUserUnexpectedError",
-    "GetUserUnexpectedError",
-    "ListUsersUnexpectedError",
+    "CreateUnexpectedError",
+    "DeleteUnexpectedError",
+    "GetUnexpectedError",
+    "ListUnexpectedError",
     "ResetActiveSessionsUnexpectedError",
     "ResetApiTokenUnexpectedError",
-    "UpdateUserUnexpectedError",
-    "CreateUserError",
-    "DeleteUserError",
-    "GetUserError",
-    "ListUsersError",
+    "UpdateUnexpectedError",
+    "CreateError",
+    "DeleteError",
+    "GetError",
+    "ListError",
     "ResetActiveSessionsError",
     "ResetApiTokenError",
-    "UpdateUserError",
+    "UpdateError",
     "ERROR_BY_METHOD",
 ]

@@ -10,13 +10,7 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import (
-    CreateFlowTagError,
-    DeleteFlowTagError,
-    GetFlowTagError,
-    SearchFlowTagError,
-    UpdateFlowTagError,
-)
+from ..error import CreateError, DeleteError, GetError, SearchError, UpdateError
 from ..models import (  # noqa: F401
     AddressInfo,
     CreateFlowTagRequest,
@@ -69,7 +63,7 @@ def SearchFlowTag(
         header_params=header_params,
         expected_status=200,
         operation_name="SearchFlowTag",
-        error_cls=SearchFlowTagError,
+        error_cls=SearchError,
     )
 
     return parse_response_model(
@@ -103,7 +97,7 @@ def CreateFlowTag(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateFlowTag",
-        error_cls=CreateFlowTagError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -136,7 +130,7 @@ def GetFlowTag(
         header_params=header_params,
         expected_status=200,
         operation_name="GetFlowTag",
-        error_cls=GetFlowTagError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -173,7 +167,7 @@ def UpdateFlowTag(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateFlowTag",
-        error_cls=UpdateFlowTagError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -206,7 +200,7 @@ def DeleteFlowTag(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteFlowTag",
-        error_cls=DeleteFlowTagError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(

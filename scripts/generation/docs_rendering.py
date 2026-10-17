@@ -491,11 +491,11 @@ def _discover_example_ops(
     """Scans generated *ServiceWrapper files to find representative operations.
 
     Returns (list_ops, body_op).
-    list_ops: up to max_list_ops list_* operations, each {service, method, response_class}.
+    list_ops: up to max_list_ops `list` or list_* operations, each {service, method, response_class}.
     body_op: first operation with a data: parameter, {service, method, request_class}.
 
     Both are chosen to be directly callable with no arguments, so the
-    generated example snippets actually run: list_ops only includes list_*
+    generated example snippets actually run: list_ops only includes `list` and list_*
     methods with zero required parameters, and body_op only includes a
     data-param operation whose request model has zero required fields
     (RequestClass() alone constructs successfully).
@@ -519,7 +519,7 @@ def _discover_example_ops(
             for method in parse_wrapper_methods(wrapper_file):
                 if (
                     len(list_ops) < max_list_ops
-                    and method.name.lower().startswith("list_")
+                    and re.match(r"list(_|$)", method.name.lower())
                     and method.return_type
                     and all(not is_required for _, _, is_required in method.params)
                 ):

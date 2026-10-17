@@ -35,7 +35,7 @@ class InterfaceServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_interface(
+    def list(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -74,7 +74,7 @@ class InterfaceServiceWrapper:
                 self._grpc_stub_1.ListInterface,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestInterfaceModule1.ListInterfaceError,
+                error_cls=RestInterfaceModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListInterfaceResponse,
@@ -100,7 +100,7 @@ class InterfaceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def interface_create(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -125,7 +125,7 @@ class InterfaceServiceWrapper:
                 self._grpc_stub_1.CreateInterface,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestInterfaceModule1.InterfaceCreateError,
+                error_cls=RestInterfaceModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateInterfaceResponse,
@@ -145,7 +145,7 @@ class InterfaceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def interface_get(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetInterfaceResponse:
         """
@@ -165,7 +165,7 @@ class InterfaceServiceWrapper:
                 self._grpc_stub_1.GetInterface,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestInterfaceModule1.InterfaceGetError,
+                error_cls=RestInterfaceModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetInterfaceResponse,
@@ -185,7 +185,7 @@ class InterfaceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def interface_update(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -211,7 +211,7 @@ class InterfaceServiceWrapper:
                 self._grpc_stub_1.UpdateInterface,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestInterfaceModule1.InterfaceUpdateError,
+                error_cls=RestInterfaceModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateInterfaceResponse,
@@ -232,7 +232,7 @@ class InterfaceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def interface_delete(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteInterfaceResponse:
         """
@@ -252,7 +252,7 @@ class InterfaceServiceWrapper:
                 self._grpc_stub_1.DeleteInterface,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestInterfaceModule1.InterfaceDeleteError,
+                error_cls=RestInterfaceModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteInterfaceResponse,

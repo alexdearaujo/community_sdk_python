@@ -78,29 +78,29 @@ class PlanError(HTTPException):
         )
 
 
-class ListPlansError(PlanError):
-    """Operation-local error for client.plan.list_plans()."""
+class ListError(PlanError):
+    """Operation-local error for client.plan.list()."""
 
     response_error_map: dict[str, type[PlanError]] = {}
 
 
-class ListPlansUnexpectedError(ListPlansError):
-    """Operation-local response error for list_plans (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListUnexpectedError(ListError):
+    """Operation-local response error for list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ListPlansError.response_error_map = {
-    "default": ListPlansUnexpectedError,
+ListError.response_error_map = {
+    "default": ListUnexpectedError,
 }
 
 ERROR_BY_METHOD: dict[str, type[PlanError]] = {
-    "list_plans": ListPlansError,
+    "list": ListError,
 }
 
 __all__ = [
     "PlanError",
-    "ListPlansUnexpectedError",
-    "ListPlansError",
+    "ListUnexpectedError",
+    "ListError",
     "ERROR_BY_METHOD",
 ]

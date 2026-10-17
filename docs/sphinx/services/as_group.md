@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.as_group
     participant API as Kentik REST API
 
-    C->>W: list_as_groups()
+    C->>W: list()
     W->>API: GET /as_group/v202212/as_group
     alt success
         API-->>W: ListASGroupsResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_as_groups()
+    C->>W: list()
     W->>R: build_grpc_request(ListASGroupsRequest, arguments)
     R->>API: ASGroupService/ListASGroups (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.as_group.list_as_groups()
+response = client.as_group.list()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.as_group
     participant API as Kentik REST API
 
-    C->>W: create_as_group(data=CreateASGroupRequest(...))
+    C->>W: create(data=CreateASGroupRequest(...))
     W->>API: POST /as_group/v202212/as_group
     alt success
         API-->>W: CreateASGroupResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_as_group(data=CreateASGroupRequest(...))
+    C->>W: create(data=CreateASGroupRequest(...))
     W->>R: build_grpc_request(CreateASGroupRequest, arguments)
     R->>API: ASGroupService/CreateASGroup (gRPC/TLS)
     alt success
@@ -165,7 +165,7 @@ from kentik_api.gen.as_group.models import CreateASGroupRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.as_group.create_as_group(
+response = client.as_group.create(
     data=CreateASGroupRequest(...),
 )
 ```
@@ -186,7 +186,7 @@ sequenceDiagram
     participant W as client.as_group
     participant API as Kentik REST API
 
-    C->>W: get_as_group(asGroupid="asGroupid-example")
+    C->>W: get(asGroupid="asGroupid-example")
     W->>API: GET /as_group/v202212/as_group/{asGroup.id}
     alt success
         API-->>W: GetASGroupResponse (JSON)
@@ -208,7 +208,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_as_group(asGroupid="asGroupid-example")
+    C->>W: get(asGroupid="asGroupid-example")
     W->>R: build_grpc_request(GetASGroupRequest, arguments)
     R->>API: ASGroupService/GetASGroup (gRPC/TLS)
     alt success
@@ -241,7 +241,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.as_group.get_as_group(
+response = client.as_group.get(
     asGroupid="asGroupid-example",
 )
 ```
@@ -262,7 +262,7 @@ sequenceDiagram
     participant W as client.as_group
     participant API as Kentik REST API
 
-    C->>W: update_as_group(asGroupid="asGroupid-example", data=ASGroupServiceUpdateASGroupBody(...))
+    C->>W: update(asGroupid="asGroupid-example", data=ASGroupServiceUpdateASGroupBody(...))
     W->>API: PUT /as_group/v202212/as_group/{asGroup.id}
     alt success
         API-->>W: UpdateASGroupResponse (JSON)
@@ -284,7 +284,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_as_group(asGroupid="asGroupid-example", data=ASGroupServiceUpdateASGroupBody(...))
+    C->>W: update(asGroupid="asGroupid-example", data=ASGroupServiceUpdateASGroupBody(...))
     W->>R: build_grpc_request(UpdateASGroupRequest, arguments)
     R->>API: ASGroupService/UpdateASGroup (gRPC/TLS)
     alt success
@@ -319,7 +319,7 @@ from kentik_api.gen.as_group.models import ASGroupServiceUpdateASGroupBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.as_group.update_as_group(
+response = client.as_group.update(
     asGroupid="asGroupid-example",
     data=ASGroupServiceUpdateASGroupBody(...),
 )
@@ -341,7 +341,7 @@ sequenceDiagram
     participant W as client.as_group
     participant API as Kentik REST API
 
-    C->>W: delete_as_group(asGroupid="asGroupid-example")
+    C->>W: delete(asGroupid="asGroupid-example")
     W->>API: DELETE /as_group/v202212/as_group/{asGroup.id}
     alt success
         API-->>W: DeleteASGroupResponse (JSON)
@@ -363,7 +363,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_as_group(asGroupid="asGroupid-example")
+    C->>W: delete(asGroupid="asGroupid-example")
     W->>R: build_grpc_request(DeleteASGroupRequest, arguments)
     R->>API: ASGroupService/DeleteASGroup (gRPC/TLS)
     alt success
@@ -396,7 +396,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.as_group.delete_as_group(
+response = client.as_group.delete(
     asGroupid="asGroupid-example",
 )
 ```

@@ -4,7 +4,7 @@
 Mocked forwarding tests cannot see either failure this file guards against:
 a call routed to another proto service's RPC of the same name (alerting's
 AlertAutoAck `Delete` once went to SuppressionService), and an argument that
-matches no request field (`get_device(deviceid=...)` once sent an empty `id`).
+matches no request field (`device.get(deviceid=...)` once sent an empty `id`).
 """
 
 from __future__ import annotations
@@ -198,7 +198,7 @@ def _sent_device_request(monkeypatch, method_name: str, **kwargs) -> Any:
 
 def test_get_device_sends_the_id_and_query_options(monkeypatch):
     sent = _sent_device_request(
-        monkeypatch, "get_device", deviceid="42", querynoCustomColumns=True
+        monkeypatch, "get", deviceid="42", querynoCustomColumns=True
     )
 
     assert sent["rpc_path"].endswith("DeviceService/GetDevice")
@@ -207,7 +207,7 @@ def test_get_device_sends_the_id_and_query_options(monkeypatch):
 
 
 def test_delete_device_sends_the_id(monkeypatch):
-    sent = _sent_device_request(monkeypatch, "delete_device", deviceid="42")
+    sent = _sent_device_request(monkeypatch, "delete", deviceid="42")
 
     assert sent["rpc_path"].endswith("DeviceService/DeleteDevice")
     assert sent["request"].id == "42"

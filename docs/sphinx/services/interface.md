@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.interface
     participant API as Kentik REST API
 
-    C->>W: list_interface()
+    C->>W: list()
     W->>API: GET /interface/v202108alpha1/interfaces
     alt success
         API-->>W: ListInterfaceResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_interface()
+    C->>W: list()
     W->>R: build_grpc_request(ListInterfaceRequest, arguments)
     R->>API: InterfaceService/ListInterface (gRPC/TLS)
     alt success
@@ -102,7 +102,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.interface.list_interface()
+response = client.interface.list()
 ```
 
 ---
@@ -121,7 +121,7 @@ sequenceDiagram
     participant W as client.interface
     participant API as Kentik REST API
 
-    C->>W: interface_create(data=CreateInterfaceRequest(...))
+    C->>W: create(data=CreateInterfaceRequest(...))
     W->>API: POST /interface/v202108alpha1/interfaces
     alt success
         API-->>W: CreateInterfaceResponse (JSON)
@@ -143,7 +143,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: interface_create(data=CreateInterfaceRequest(...))
+    C->>W: create(data=CreateInterfaceRequest(...))
     W->>R: build_grpc_request(CreateInterfaceRequest, arguments)
     R->>API: InterfaceService/CreateInterface (gRPC/TLS)
     alt success
@@ -177,7 +177,7 @@ from kentik_api.gen.interface.models import CreateInterfaceRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.interface.interface_create(
+response = client.interface.create(
     data=CreateInterfaceRequest(...),
 )
 ```
@@ -198,7 +198,7 @@ sequenceDiagram
     participant W as client.interface
     participant API as Kentik REST API
 
-    C->>W: interface_get(id="id-example")
+    C->>W: get(id="id-example")
     W->>API: GET /interface/v202108alpha1/interfaces/{id}
     alt success
         API-->>W: GetInterfaceResponse (JSON)
@@ -220,7 +220,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: interface_get(id="id-example")
+    C->>W: get(id="id-example")
     W->>R: build_grpc_request(GetInterfaceRequest, arguments)
     R->>API: InterfaceService/GetInterface (gRPC/TLS)
     alt success
@@ -253,7 +253,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.interface.interface_get(
+response = client.interface.get(
     id="id-example",
 )
 ```
@@ -274,7 +274,7 @@ sequenceDiagram
     participant W as client.interface
     participant API as Kentik REST API
 
-    C->>W: interface_update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
+    C->>W: update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
     W->>API: PUT /interface/v202108alpha1/interfaces/{id}
     alt success
         API-->>W: UpdateInterfaceResponse (JSON)
@@ -296,7 +296,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: interface_update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
+    C->>W: update(id="id-example", data=InterfaceServiceUpdateInterfaceBody(...))
     W->>R: build_grpc_request(UpdateInterfaceRequest, arguments)
     R->>API: InterfaceService/UpdateInterface (gRPC/TLS)
     alt success
@@ -331,7 +331,7 @@ from kentik_api.gen.interface.models import InterfaceServiceUpdateInterfaceBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.interface.interface_update(
+response = client.interface.update(
     id="id-example",
     data=InterfaceServiceUpdateInterfaceBody(...),
 )
@@ -353,7 +353,7 @@ sequenceDiagram
     participant W as client.interface
     participant API as Kentik REST API
 
-    C->>W: interface_delete(id="id-example")
+    C->>W: delete(id="id-example")
     W->>API: DELETE /interface/v202108alpha1/interfaces/{id}
     alt success
         API-->>W: DeleteInterfaceResponse (JSON)
@@ -375,7 +375,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: interface_delete(id="id-example")
+    C->>W: delete(id="id-example")
     W->>R: build_grpc_request(DeleteInterfaceRequest, arguments)
     R->>API: InterfaceService/DeleteInterface (gRPC/TLS)
     alt success
@@ -408,7 +408,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.interface.interface_delete(
+response = client.interface.delete(
     id="id-example",
 )
 ```

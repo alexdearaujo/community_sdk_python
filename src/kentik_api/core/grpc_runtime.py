@@ -223,7 +223,7 @@ def _as_operation_error(
     """Re-types a mapped gRPC error as the operation's own class, as REST does.
 
     REST picks the response class from the HTTP status, so an `except
-    ListDevicesError` clause catches the same error on either transport.
+    ListError` clause catches the same error on either transport.
     """
     by_status = getattr(error_cls, "response_error_map", {})
     target = by_status.get(str(error.status_code)) or by_status.get("default")

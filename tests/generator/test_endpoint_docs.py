@@ -523,8 +523,8 @@ def test_reused_operation_ids_resolve_to_the_right_wrapper_method(rendered):
     ack = _section(page, "### `POST` `/v202505/alerts/ack/auto/list`\n")
     alerts = _section(page, "### `POST` `/v202505/alerts`\n")
     assert "client.alerting.auto_ack_list(" in ack
-    assert "client.alerting.alert_list(" in alerts
-    assert "alert_list(" not in ack
+    assert "client.alerting.list(" in alerts
+    assert "client.alerting.list(" not in ack
 
 
 def test_render_removes_pages_for_services_that_no_longer_exist(rendered):

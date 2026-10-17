@@ -1,5 +1,5 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 # Examples for the Kentik Community Python SDK.
 # Each script demonstrates one service. Run any script directly:
-#   uv run python examples/device/list_devices.py
+#   uv run python examples/device/rest.py
 # All scripts read credentials from a .env file in the repo root.

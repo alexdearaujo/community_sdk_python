@@ -35,7 +35,7 @@ class NotificationChannelServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_notification_channels(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListNotificationChannelsResponse:
         """
@@ -55,7 +55,7 @@ class NotificationChannelServiceWrapper:
                 self._grpc_stub_1.ListNotificationChannels,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestNotificationChannelModule1.ListNotificationChannelsError,
+                error_cls=RestNotificationChannelModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListNotificationChannelsResponse,
@@ -74,7 +74,7 @@ class NotificationChannelServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def search_notification_channels(
+    def search(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -99,7 +99,7 @@ class NotificationChannelServiceWrapper:
                 self._grpc_stub_1.SearchNotificationChannels,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestNotificationChannelModule1.SearchNotificationChannelsError,
+                error_cls=RestNotificationChannelModule1.SearchError,
             )
             return parse_grpc_response(
                 rest_models.SearchNotificationChannelsResponse,
@@ -119,7 +119,7 @@ class NotificationChannelServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_notification_channel(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetNotificationChannelResponse:
         """
@@ -139,7 +139,7 @@ class NotificationChannelServiceWrapper:
                 self._grpc_stub_1.GetNotificationChannel,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestNotificationChannelModule1.GetNotificationChannelError,
+                error_cls=RestNotificationChannelModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetNotificationChannelResponse,

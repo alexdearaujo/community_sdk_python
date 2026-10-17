@@ -35,13 +35,11 @@ class DeviceLookup:
         """Loads every device and interface. Deleted devices only on request."""
         devices = [
             d
-            for d in client.device.list_devices().devices or []
+            for d in client.device.list().devices or []
             if d is not None and (include_deleted or d.deviceStatus != "D")
         ]
         interfaces = [
-            i
-            for i in client.interface.list_interface().interfaces or []
-            if i is not None
+            i for i in client.interface.list().interfaces or [] if i is not None
         ]
         return cls(devices, interfaces, labels)
 

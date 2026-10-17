@@ -78,49 +78,49 @@ class NetworkClassError(HTTPException):
         )
 
 
-class NetworkClassGetError(NetworkClassError):
-    """Operation-local error for client.network_class.network_class_get()."""
+class GetError(NetworkClassError):
+    """Operation-local error for client.network_class.get()."""
 
     response_error_map: dict[str, type[NetworkClassError]] = {}
 
 
-class NetworkClassGetUnexpectedError(NetworkClassGetError):
-    """Operation-local response error for network_class_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetUnexpectedError(GetError):
+    """Operation-local response error for get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-NetworkClassGetError.response_error_map = {
-    "default": NetworkClassGetUnexpectedError,
+GetError.response_error_map = {
+    "default": GetUnexpectedError,
 }
 
 
-class NetworkClassUpdateError(NetworkClassError):
-    """Operation-local error for client.network_class.network_class_update()."""
+class UpdateError(NetworkClassError):
+    """Operation-local error for client.network_class.update()."""
 
     response_error_map: dict[str, type[NetworkClassError]] = {}
 
 
-class NetworkClassUpdateUnexpectedError(NetworkClassUpdateError):
-    """Operation-local response error for network_class_update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateUnexpectedError(UpdateError):
+    """Operation-local response error for update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-NetworkClassUpdateError.response_error_map = {
-    "default": NetworkClassUpdateUnexpectedError,
+UpdateError.response_error_map = {
+    "default": UpdateUnexpectedError,
 }
 
 ERROR_BY_METHOD: dict[str, type[NetworkClassError]] = {
-    "network_class_get": NetworkClassGetError,
-    "network_class_update": NetworkClassUpdateError,
+    "get": GetError,
+    "update": UpdateError,
 }
 
 __all__ = [
     "NetworkClassError",
-    "NetworkClassGetUnexpectedError",
-    "NetworkClassUpdateUnexpectedError",
-    "NetworkClassGetError",
-    "NetworkClassUpdateError",
+    "GetUnexpectedError",
+    "UpdateUnexpectedError",
+    "GetError",
+    "UpdateError",
     "ERROR_BY_METHOD",
 ]

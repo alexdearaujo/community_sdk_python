@@ -354,7 +354,7 @@ def test_a_success_status_with_an_unusable_body_raises_502(
     client = KentikAPI(email="dev@example.com", api_token="token", env_file=None)
     try:
         with pytest.raises(HTTPException) as exc:
-            client.site.get_site(id="1")
+            client.site.get(id="1")
     finally:
         client.close()
 

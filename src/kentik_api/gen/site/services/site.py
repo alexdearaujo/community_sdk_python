@@ -244,7 +244,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def list_sites(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSitesResponse:
         """
@@ -262,7 +262,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.ListSites,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.ListSitesError,
+                error_cls=RestSiteModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListSitesResponse,
@@ -281,7 +281,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_site(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -306,7 +306,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.CreateSite,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.CreateSiteError,
+                error_cls=RestSiteModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateSiteResponse,
@@ -326,7 +326,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_site(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetSiteResponse:
         """
@@ -344,7 +344,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.GetSite,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.GetSiteError,
+                error_cls=RestSiteModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetSiteResponse,
@@ -364,7 +364,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_site(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -390,7 +390,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.UpdateSite,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.UpdateSiteError,
+                error_cls=RestSiteModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateSiteResponse,
@@ -411,7 +411,7 @@ class SiteServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_site(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteSiteResponse:
         """
@@ -431,7 +431,7 @@ class SiteServiceWrapper:
                 self._grpc_stub_1.DeleteSite,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSiteModule1.DeleteSiteError,
+                error_cls=RestSiteModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteSiteResponse,

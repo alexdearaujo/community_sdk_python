@@ -214,20 +214,21 @@ def _to_snake_case(name: str) -> str:
 
 
 def _drop_service_word(service: str, name: str) -> str:
-    """Removes the Service's own word where it only qualifies another word.
+    """Removes the Service's own word, because `client.<service>` already says it.
 
-    `client.audit.get_audit_event` reads `audit` twice, so it becomes `get_event`.
-    The word stays when it is the object (`device.get_device`) or when removing
-    it would leave one word (`alerting.alert_list`, not a bare `list`).
+    `client.site.create_site` becomes `client.site.create`, `list_sites` becomes
+    `list`, and `audit.get_audit_event` becomes `get_event`. A route suffix
+    (`_by_...`) is never shortened.
     """
     head, sep, tail = name.partition("_by_")
     words = head.split("_")
     service_words = service.split("_")
-    singular = [*service_words[:-1], re.sub(r"(ing|s)$", "", service_words[-1])]
-    for form in (service_words, singular):
+    stem = re.sub(r"(ing|s)$", "", service_words[-1])
+    for last in dict.fromkeys((service_words[-1], stem, stem + "s")):
+        form = [*service_words[:-1], last]
         n = len(form)
-        for i in range(len(words) - n):
-            if words[i : i + n] == form and len(words) - n >= 2:
+        for i in range(len(words) - n + 1):
+            if words[i : i + n] == form and len(words) > n:
                 return "_".join(words[:i] + words[i + n :]) + sep + tail
     return name
 
@@ -284,14 +285,21 @@ def _wrapper_method_names(
     for (rest_file, _), name in base_names.items():
         declared_by.setdefault(name, set()).add(rest_file)
 
-    names: dict[tuple[Path, str], str] = {}
+    long_names: dict[tuple[Path, str], str] = {}
     for (rest_file, op_name), name in base_names.items():
         if len(declared_by[name]) > 1:
             prefix = _to_snake_case(re.sub(r"Service$", "", rest_file.stem))
             name = f"{prefix}_{name}"
-        name = _drop_service_word(service, name)
+        long_names[(rest_file, op_name)] = name
+
+    short = {op: _drop_service_word(service, n) for op, n in long_names.items()}
+    # `create_device` and `create_devices` both shorten to `create`: keep both long.
+    clashes = {n for n in short.values() if list(short.values()).count(n) > 1}
+    names: dict[tuple[Path, str], str] = {}
+    for op, name in short.items():
+        name = long_names[op] if name in clashes else name
         # PEP 8: `Import` becomes `import_`, never the statement `def import(`.
-        names[(rest_file, op_name)] = name + "_" if keyword.iskeyword(name) else name
+        names[op] = name + "_" if keyword.iskeyword(name) else name
 
     duplicates = {n for n in names.values() if list(names.values()).count(n) > 1}
     if duplicates:

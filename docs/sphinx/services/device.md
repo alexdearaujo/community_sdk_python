@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: list_devices()
+    C->>W: list()
     W->>API: GET /device/v202504beta2/device
     alt success
         API-->>W: ListDevicesResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_devices()
+    C->>W: list()
     W->>R: build_grpc_request(ListDevicesRequest, arguments)
     R->>API: DeviceService/ListDevices (gRPC/TLS)
     alt success
@@ -97,7 +97,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.list_devices()
+response = client.device.list()
 ```
 
 ---
@@ -116,7 +116,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: create_device(data=CreateDeviceRequest(...))
+    C->>W: create(data=CreateDeviceRequest(...))
     W->>API: POST /device/v202504beta2/device
     alt success
         API-->>W: CreateDeviceResponse (JSON)
@@ -138,7 +138,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_device(data=CreateDeviceRequest(...))
+    C->>W: create(data=CreateDeviceRequest(...))
     W->>R: build_grpc_request(CreateDeviceRequest, arguments)
     R->>API: DeviceService/CreateDevice (gRPC/TLS)
     alt success
@@ -172,7 +172,7 @@ from kentik_api.gen.device.models import CreateDeviceRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.create_device(
+response = client.device.create(
     data=CreateDeviceRequest(...),
 )
 ```
@@ -193,7 +193,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: create_devices(data=CreateDevicesRequest(...))
+    C->>W: create_bulk(data=CreateDevicesRequest(...))
     W->>API: POST /device/v202504beta2/device/batch_create
     alt success
         API-->>W: CreateDevicesResponse (JSON)
@@ -215,7 +215,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_devices(data=CreateDevicesRequest(...))
+    C->>W: create_bulk(data=CreateDevicesRequest(...))
     W->>R: build_grpc_request(CreateDevicesRequest, arguments)
     R->>API: DeviceService/CreateDevices (gRPC/TLS)
     alt success
@@ -249,7 +249,7 @@ from kentik_api.gen.device.models import CreateDevicesRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.create_devices(
+response = client.device.create_bulk(
     data=CreateDevicesRequest(...),
 )
 ```
@@ -270,7 +270,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: delete_devices(data=DeleteDevicesRequest(...))
+    C->>W: delete_bulk(data=DeleteDevicesRequest(...))
     W->>API: POST /device/v202504beta2/device/batch_delete
     alt success
         API-->>W: DeleteDevicesResponse (JSON)
@@ -292,7 +292,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_devices(data=DeleteDevicesRequest(...))
+    C->>W: delete_bulk(data=DeleteDevicesRequest(...))
     W->>R: build_grpc_request(DeleteDevicesRequest, arguments)
     R->>API: DeviceService/DeleteDevices (gRPC/TLS)
     alt success
@@ -326,7 +326,7 @@ from kentik_api.gen.device.models import DeleteDevicesRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.delete_devices(
+response = client.device.delete_bulk(
     data=DeleteDevicesRequest(...),
 )
 ```
@@ -347,7 +347,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: update_devices(data=UpdateDevicesRequest(...))
+    C->>W: update_bulk(data=UpdateDevicesRequest(...))
     W->>API: PUT /device/v202504beta2/device/batch_update
     alt success
         API-->>W: UpdateDevicesResponse (JSON)
@@ -369,7 +369,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_devices(data=UpdateDevicesRequest(...))
+    C->>W: update_bulk(data=UpdateDevicesRequest(...))
     W->>R: build_grpc_request(UpdateDevicesRequest, arguments)
     R->>API: DeviceService/UpdateDevices (gRPC/TLS)
     alt success
@@ -403,7 +403,7 @@ from kentik_api.gen.device.models import UpdateDevicesRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.update_devices(
+response = client.device.update_bulk(
     data=UpdateDevicesRequest(...),
 )
 ```
@@ -424,7 +424,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: get_device_by_name(deviceName="deviceName-example")
+    C->>W: get_by_name(deviceName="deviceName-example")
     W->>API: GET /device/v202504beta2/device/name/{deviceName}
     alt success
         API-->>W: GetDeviceByNameResponse (JSON)
@@ -446,7 +446,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_device_by_name(deviceName="deviceName-example")
+    C->>W: get_by_name(deviceName="deviceName-example")
     W->>R: build_grpc_request(GetDeviceByNameRequest, arguments)
     R->>API: DeviceService/GetDeviceByName (gRPC/TLS)
     alt success
@@ -480,7 +480,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.get_device_by_name(
+response = client.device.get_by_name(
     deviceName="deviceName-example",
 )
 ```
@@ -501,7 +501,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: get_device(deviceid="deviceid-example")
+    C->>W: get(deviceid="deviceid-example")
     W->>API: GET /device/v202504beta2/device/{device.id}
     alt success
         API-->>W: GetDeviceResponse (JSON)
@@ -523,7 +523,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_device(deviceid="deviceid-example")
+    C->>W: get(deviceid="deviceid-example")
     W->>R: build_grpc_request(GetDeviceRequest, arguments)
     R->>API: DeviceService/GetDevice (gRPC/TLS)
     alt success
@@ -557,7 +557,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.get_device(
+response = client.device.get(
     deviceid="deviceid-example",
 )
 ```
@@ -578,7 +578,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: update_device(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
+    C->>W: update(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
     W->>API: PUT /device/v202504beta2/device/{device.id}
     alt success
         API-->>W: UpdateDeviceResponse (JSON)
@@ -600,7 +600,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_device(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
+    C->>W: update(deviceid="deviceid-example", data=DeviceServiceUpdateDeviceBody(...))
     W->>R: build_grpc_request(UpdateDeviceRequest, arguments)
     R->>API: DeviceService/UpdateDevice (gRPC/TLS)
     alt success
@@ -635,7 +635,7 @@ from kentik_api.gen.device.models import DeviceServiceUpdateDeviceBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.update_device(
+response = client.device.update(
     deviceid="deviceid-example",
     data=DeviceServiceUpdateDeviceBody(...),
 )
@@ -657,7 +657,7 @@ sequenceDiagram
     participant W as client.device
     participant API as Kentik REST API
 
-    C->>W: delete_device(deviceid="deviceid-example")
+    C->>W: delete(deviceid="deviceid-example")
     W->>API: DELETE /device/v202504beta2/device/{device.id}
     alt success
         API-->>W: DeleteDeviceResponse (JSON)
@@ -679,7 +679,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_device(deviceid="deviceid-example")
+    C->>W: delete(deviceid="deviceid-example")
     W->>R: build_grpc_request(DeleteDeviceRequest, arguments)
     R->>API: DeviceService/DeleteDevice (gRPC/TLS)
     alt success
@@ -712,7 +712,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.device.delete_device(
+response = client.device.delete(
     deviceid="deviceid-example",
 )
 ```

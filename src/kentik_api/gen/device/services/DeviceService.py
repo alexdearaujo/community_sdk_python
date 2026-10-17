@@ -11,15 +11,15 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    CreateDeviceError,
-    CreateDevicesError,
-    DeleteDeviceError,
-    DeleteDevicesError,
-    GetDeviceByNameError,
-    GetDeviceError,
-    ListDevicesError,
-    UpdateDeviceError,
-    UpdateDevicesError,
+    CreateBulkError,
+    CreateError,
+    DeleteBulkError,
+    DeleteError,
+    GetByNameError,
+    GetError,
+    ListError,
+    UpdateBulkError,
+    UpdateError,
     UpdateLabelsError,
 )
 from ..models import (  # noqa: F401
@@ -86,7 +86,7 @@ def ListDevices(
         header_params=header_params,
         expected_status=200,
         operation_name="ListDevices",
-        error_cls=ListDevicesError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -120,7 +120,7 @@ def CreateDevice(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateDevice",
-        error_cls=CreateDeviceError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -154,7 +154,7 @@ def CreateDevices(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateDevices",
-        error_cls=CreateDevicesError,
+        error_cls=CreateBulkError,
     )
 
     return parse_response_model(
@@ -188,7 +188,7 @@ def DeleteDevices(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteDevices",
-        error_cls=DeleteDevicesError,
+        error_cls=DeleteBulkError,
     )
 
     return parse_response_model(
@@ -222,7 +222,7 @@ def UpdateDevices(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateDevices",
-        error_cls=UpdateDevicesError,
+        error_cls=UpdateBulkError,
     )
 
     return parse_response_model(
@@ -258,7 +258,7 @@ def GetDeviceByName(
         header_params=header_params,
         expected_status=200,
         operation_name="GetDeviceByName",
-        error_cls=GetDeviceByNameError,
+        error_cls=GetByNameError,
     )
 
     return parse_response_model(
@@ -294,7 +294,7 @@ def GetDevice(
         header_params=header_params,
         expected_status=200,
         operation_name="GetDevice",
-        error_cls=GetDeviceError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -331,7 +331,7 @@ def UpdateDevice(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateDevice",
-        error_cls=UpdateDeviceError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -364,7 +364,7 @@ def DeleteDevice(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteDevice",
-        error_cls=DeleteDeviceError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(

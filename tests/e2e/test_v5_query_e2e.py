@@ -16,7 +16,7 @@ from kentik_api.v5_tools import decode_chart
 
 
 def _query_item(client) -> QueryItem:
-    devices = client.device.list_devices().devices or []
+    devices = client.device.list().devices or []
     names = [d.deviceName for d in devices if d is not None and d.deviceName]
     if not names:
         pytest.skip("The account has no device to query.")

@@ -11,13 +11,13 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    CreateUserError,
-    DeleteUserError,
-    GetUserError,
-    ListUsersError,
+    CreateError,
+    DeleteError,
+    GetError,
+    ListError,
     ResetActiveSessionsError,
     ResetApiTokenError,
-    UpdateUserError,
+    UpdateError,
 )
 from ..models import (  # noqa: F401
     CreateUserRequest,
@@ -57,7 +57,7 @@ def ListUsers(api_config_override: Optional[APIConfig] = None) -> ListUsersRespo
         header_params=header_params,
         expected_status=200,
         operation_name="ListUsers",
-        error_cls=ListUsersError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -91,7 +91,7 @@ def CreateUser(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateUser",
-        error_cls=CreateUserError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -124,7 +124,7 @@ def GetUser(
         header_params=header_params,
         expected_status=200,
         operation_name="GetUser",
-        error_cls=GetUserError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -161,7 +161,7 @@ def UpdateUser(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateUser",
-        error_cls=UpdateUserError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -194,7 +194,7 @@ def DeleteUser(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteUser",
-        error_cls=DeleteUserError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(

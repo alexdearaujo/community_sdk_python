@@ -11,12 +11,12 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    InterfaceCreateError,
-    InterfaceDeleteError,
-    InterfaceGetError,
-    InterfaceUpdateError,
-    ListInterfaceError,
+    CreateError,
+    DeleteError,
+    GetError,
+    ListError,
     ManualClassifyError,
+    UpdateError,
 )
 from ..models import (  # noqa: F401
     ConnectivityType,
@@ -76,7 +76,7 @@ def ListInterface(
         header_params=header_params,
         expected_status=200,
         operation_name="ListInterface",
-        error_cls=ListInterfaceError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -110,7 +110,7 @@ def InterfaceCreate(
         header_params=header_params,
         expected_status=200,
         operation_name="InterfaceCreate",
-        error_cls=InterfaceCreateError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -143,7 +143,7 @@ def InterfaceGet(
         header_params=header_params,
         expected_status=200,
         operation_name="InterfaceGet",
-        error_cls=InterfaceGetError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -180,7 +180,7 @@ def InterfaceUpdate(
         header_params=header_params,
         expected_status=200,
         operation_name="InterfaceUpdate",
-        error_cls=InterfaceUpdateError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -213,7 +213,7 @@ def InterfaceDelete(
         header_params=header_params,
         expected_status=200,
         operation_name="InterfaceDelete",
-        error_cls=InterfaceDeleteError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(

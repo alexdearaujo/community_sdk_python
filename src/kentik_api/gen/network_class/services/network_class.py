@@ -35,7 +35,7 @@ class NetworkClassServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def network_class_get(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.GetNetworkClassResponse:
         """
@@ -53,7 +53,7 @@ class NetworkClassServiceWrapper:
                 self._grpc_stub_1.GetNetworkClass,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestNetworkClassModule1.NetworkClassGetError,
+                error_cls=RestNetworkClassModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetNetworkClassResponse,
@@ -72,7 +72,7 @@ class NetworkClassServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def network_class_update(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -97,7 +97,7 @@ class NetworkClassServiceWrapper:
                 self._grpc_stub_1.UpdateNetworkClass,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestNetworkClassModule1.NetworkClassUpdateError,
+                error_cls=RestNetworkClassModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateNetworkClassResponse,

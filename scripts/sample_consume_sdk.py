@@ -48,21 +48,21 @@ def run_real_call(region: str = "us") -> None:
 
         # Try the device inventory endpoint first.
         try:
-            result = client.device.list_devices()
-            print("SDK sample succeeded (real mode): device.list_devices")
+            result = client.device.list()
+            print("SDK sample succeeded (real mode): device.list")
             print(result)
             return
         except HTTPException as exc:
-            failures.append(f"device.list_devices -> {exc}")
+            failures.append(f"device.list -> {exc}")
 
         # Fallback endpoint with broader availability.
         try:
-            result = client.user.list_users()
-            print("SDK sample succeeded (real mode): user.list_users")
+            result = client.user.list()
+            print("SDK sample succeeded (real mode): user.list")
             print(result)
             return
         except HTTPException as exc:
-            failures.append(f"user.list_users -> {exc}")
+            failures.append(f"user.list -> {exc}")
 
         joined = "\n".join(failures)
         raise RuntimeError(

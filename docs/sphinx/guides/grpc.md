@@ -23,7 +23,7 @@ Every service method call works the same as REST:
 from kentik_api.client import KentikAPI
 
 client = KentikAPI(protocol="grpc")
-response = client.as_group.list_as_groups()
+response = client.as_group.list()
 print(response)  # ListASGroupsResponse
 ```
 <!-- /kentik-gen:grpc-usage-example -->
@@ -40,7 +40,7 @@ sequenceDiagram
     participant RJ as request_json()
     participant API as Kentik REST API
 
-    C->>W: list_as_groups()
+    C->>W: list()
     W->>RJ: api_config, method, path, params
     RJ->>API: HTTP request (HTTPS)
     alt success
@@ -74,7 +74,7 @@ sequenceDiagram
     participant S as gRPC stub
     participant API as Kentik gRPC API
 
-    C->>W: list_as_groups()
+    C->>W: list()
     W->>W: build ListASGroupsRequest proto<br/>(ParseDict for operations with a body)
     W->>CG: stub method + proto request
     CG->>S: ListASGroups (gRPC/TLS, deadline set by the channel)
@@ -98,7 +98,7 @@ The gRPC path uses:
    build the proto request the way grpc-gateway transcodes the REST call. The
    body becomes the request, or the field the RPC's HTTP rule names. Each path
    and query argument sets the field that its HTTP rule placeholder or wire
-   name gives: `get_device(deviceid=...)` sets `id`. It uses
+   name gives: `device.get(deviceid=...)` sets `id`. It uses
    [`ParseDict`](https://googleapis.dev/python/protobuf/latest/) from
    `google.protobuf.json_format`. An unknown body key or enum name raises
    `ConfigurationError`. On a PATCH call, the SDK fills an empty

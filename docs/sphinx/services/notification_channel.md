@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.notification_channel
     participant API as Kentik REST API
 
-    C->>W: list_notification_channels()
+    C->>W: list()
     W->>API: GET /notification_channel/v202210/notification_channels
     alt success
         API-->>W: ListNotificationChannelsResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_notification_channels()
+    C->>W: list()
     W->>R: build_grpc_request(ListNotificationChannelsRequest, arguments)
     R->>API: NotificationChannelService/ListNotificationChannels (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.notification_channel.list_notification_channels()
+response = client.notification_channel.list()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.notification_channel
     participant API as Kentik REST API
 
-    C->>W: search_notification_channels(data=SearchNotificationChannelsRequest(...))
+    C->>W: search(data=SearchNotificationChannelsRequest(...))
     W->>API: POST /notification_channel/v202210/notification_channels/search
     alt success
         API-->>W: SearchNotificationChannelsResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: search_notification_channels(data=SearchNotificationChannelsRequest(...))
+    C->>W: search(data=SearchNotificationChannelsRequest(...))
     W->>R: build_grpc_request(SearchNotificationChannelsRequest, arguments)
     R->>API: NotificationChannelService/SearchNotificationChannels (gRPC/TLS)
     alt success
@@ -165,7 +165,7 @@ from kentik_api.gen.notification_channel.models import SearchNotificationChannel
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.notification_channel.search_notification_channels(
+response = client.notification_channel.search(
     data=SearchNotificationChannelsRequest(...),
 )
 ```
@@ -186,7 +186,7 @@ sequenceDiagram
     participant W as client.notification_channel
     participant API as Kentik REST API
 
-    C->>W: get_notification_channel(id="id-example")
+    C->>W: get(id="id-example")
     W->>API: GET /notification_channel/v202210/notification_channels/{id}
     alt success
         API-->>W: GetNotificationChannelResponse (JSON)
@@ -208,7 +208,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_notification_channel(id="id-example")
+    C->>W: get(id="id-example")
     W->>R: build_grpc_request(GetNotificationChannelRequest, arguments)
     R->>API: NotificationChannelService/GetNotificationChannel (gRPC/TLS)
     alt success
@@ -241,7 +241,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.notification_channel.get_notification_channel(
+response = client.notification_channel.get(
     id="id-example",
 )
 ```

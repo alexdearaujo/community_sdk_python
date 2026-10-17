@@ -44,7 +44,7 @@ hierarchy as REST.
 
 ```python
 client = KentikAPI(protocol="grpc")
-response = client.device.list_devices()  # works the same as REST
+response = client.device.list()  # works the same as REST
 ```
 
 ## Adding a transport

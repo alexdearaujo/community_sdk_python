@@ -35,7 +35,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_as_groups(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListASGroupsResponse:
         """
@@ -53,7 +53,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.ListASGroups,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.ListAsGroupsError,
+                error_cls=RestAsGroupModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListASGroupsResponse,
@@ -72,7 +72,7 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_as_group(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -97,7 +97,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.CreateASGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.CreateAsGroupError,
+                error_cls=RestAsGroupModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateASGroupResponse,
@@ -117,7 +117,7 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_as_group(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, asGroupid: str
     ) -> rest_models.GetASGroupResponse:
         """
@@ -137,7 +137,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.GetASGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.GetAsGroupError,
+                error_cls=RestAsGroupModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetASGroupResponse,
@@ -157,7 +157,7 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_as_group(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -183,7 +183,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.UpdateASGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.UpdateAsGroupError,
+                error_cls=RestAsGroupModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateASGroupResponse,
@@ -204,7 +204,7 @@ class AsGroupServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_as_group(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, asGroupid: str
     ) -> rest_models.DeleteASGroupResponse:
         """
@@ -224,7 +224,7 @@ class AsGroupServiceWrapper:
                 self._grpc_stub_1.DeleteASGroup,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAsGroupModule1.DeleteAsGroupError,
+                error_cls=RestAsGroupModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteASGroupResponse,

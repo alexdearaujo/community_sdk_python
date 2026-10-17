@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.dictionary
     participant API as Kentik REST API
 
-    C->>W: get_dictionary()
+    C->>W: get()
     W->>API: GET /dictionary/v20260604alpha1
     alt success
         API-->>W: GetDictionaryResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_dictionary()
+    C->>W: get()
     W->>R: build_grpc_request(GetDictionaryRequest, arguments)
     R->>API: DictionaryService/GetDictionary (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.dictionary.get_dictionary()
+response = client.dictionary.get()
 ```
 
 ## Data Models

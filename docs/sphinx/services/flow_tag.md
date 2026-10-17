@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.flow_tag
     participant API as Kentik REST API
 
-    C->>W: search_flow_tag()
+    C->>W: search()
     W->>API: GET /flow_tag/v202404alpha1/tag
     alt success
         API-->>W: SearchFlowTagResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: search_flow_tag()
+    C->>W: search()
     W->>R: build_grpc_request(SearchFlowTagRequest, arguments)
     R->>API: FlowTagService/SearchFlowTag (gRPC/TLS)
     alt success
@@ -100,7 +100,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.flow_tag.search_flow_tag()
+response = client.flow_tag.search()
 ```
 
 ---
@@ -119,7 +119,7 @@ sequenceDiagram
     participant W as client.flow_tag
     participant API as Kentik REST API
 
-    C->>W: create_flow_tag(data=CreateFlowTagRequest(...))
+    C->>W: create(data=CreateFlowTagRequest(...))
     W->>API: POST /flow_tag/v202404alpha1/tag
     alt success
         API-->>W: CreateFlowTagResponse (JSON)
@@ -141,7 +141,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_flow_tag(data=CreateFlowTagRequest(...))
+    C->>W: create(data=CreateFlowTagRequest(...))
     W->>R: build_grpc_request(CreateFlowTagRequest, arguments)
     R->>API: FlowTagService/CreateFlowTag (gRPC/TLS)
     alt success
@@ -175,7 +175,7 @@ from kentik_api.gen.flow_tag.models import CreateFlowTagRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.flow_tag.create_flow_tag(
+response = client.flow_tag.create(
     data=CreateFlowTagRequest(...),
 )
 ```
@@ -196,7 +196,7 @@ sequenceDiagram
     participant W as client.flow_tag
     participant API as Kentik REST API
 
-    C->>W: get_flow_tag(flowTagid="flowTagid-example")
+    C->>W: get(flowTagid="flowTagid-example")
     W->>API: GET /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
         API-->>W: GetFlowTagResponse (JSON)
@@ -218,7 +218,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_flow_tag(flowTagid="flowTagid-example")
+    C->>W: get(flowTagid="flowTagid-example")
     W->>R: build_grpc_request(GetFlowTagRequest, arguments)
     R->>API: FlowTagService/GetFlowTag (gRPC/TLS)
     alt success
@@ -251,7 +251,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.flow_tag.get_flow_tag(
+response = client.flow_tag.get(
     flowTagid="flowTagid-example",
 )
 ```
@@ -272,7 +272,7 @@ sequenceDiagram
     participant W as client.flow_tag
     participant API as Kentik REST API
 
-    C->>W: update_flow_tag(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
+    C->>W: update(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
     W->>API: PUT /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
         API-->>W: UpdateFlowTagResponse (JSON)
@@ -294,7 +294,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_flow_tag(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
+    C->>W: update(flowTagid="flowTagid-example", data=FlowTagServiceUpdateFlowTagBody(...))
     W->>R: build_grpc_request(UpdateFlowTagRequest, arguments)
     R->>API: FlowTagService/UpdateFlowTag (gRPC/TLS)
     alt success
@@ -329,7 +329,7 @@ from kentik_api.gen.flow_tag.models import FlowTagServiceUpdateFlowTagBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.flow_tag.update_flow_tag(
+response = client.flow_tag.update(
     flowTagid="flowTagid-example",
     data=FlowTagServiceUpdateFlowTagBody(...),
 )
@@ -351,7 +351,7 @@ sequenceDiagram
     participant W as client.flow_tag
     participant API as Kentik REST API
 
-    C->>W: delete_flow_tag(flowTagid="flowTagid-example")
+    C->>W: delete(flowTagid="flowTagid-example")
     W->>API: DELETE /flow_tag/v202404alpha1/tag/{flowTag.id}
     alt success
         API-->>W: DeleteFlowTagResponse (JSON)
@@ -373,7 +373,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_flow_tag(flowTagid="flowTagid-example")
+    C->>W: delete(flowTagid="flowTagid-example")
     W->>R: build_grpc_request(DeleteFlowTagRequest, arguments)
     R->>API: FlowTagService/DeleteFlowTag (gRPC/TLS)
     alt success
@@ -406,7 +406,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.flow_tag.delete_flow_tag(
+response = client.flow_tag.delete(
     flowTagid="flowTagid-example",
 )
 ```

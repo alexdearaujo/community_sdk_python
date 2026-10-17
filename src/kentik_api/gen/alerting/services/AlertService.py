@@ -13,10 +13,10 @@ from kentik_api.core.rest_runtime import (
 from ..error import (
     AckError,
     AddCommentError,
-    AlertGetError,
-    AlertListError,
     ClearError,
+    GetError,
     ListCommentsError,
+    ListError,
     SetExternalContextError,
     UnAckError,
 )
@@ -232,7 +232,7 @@ def List(
         header_params=header_params,
         expected_status=200,
         operation_name="List",
-        error_cls=AlertListError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -406,7 +406,7 @@ def Get(
         header_params=header_params,
         expected_status=200,
         operation_name="Get",
-        error_cls=AlertGetError,
+        error_cls=GetError,
     )
 
     return parse_response_model(

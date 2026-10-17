@@ -78,88 +78,71 @@ class InterfaceError(HTTPException):
         )
 
 
-class InterfaceCreateError(InterfaceError):
-    """Operation-local error for client.interface.interface_create()."""
+class CreateError(InterfaceError):
+    """Operation-local error for client.interface.create()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
-class InterfaceCreateUnexpectedError(InterfaceCreateError):
-    """Operation-local response error for interface_create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateUnexpectedError(CreateError):
+    """Operation-local response error for create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-InterfaceCreateError.response_error_map = {
-    "default": InterfaceCreateUnexpectedError,
+CreateError.response_error_map = {
+    "default": CreateUnexpectedError,
 }
 
 
-class InterfaceDeleteError(InterfaceError):
-    """Operation-local error for client.interface.interface_delete()."""
+class DeleteError(InterfaceError):
+    """Operation-local error for client.interface.delete()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
-class InterfaceDeleteUnexpectedError(InterfaceDeleteError):
-    """Operation-local response error for interface_delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteUnexpectedError(DeleteError):
+    """Operation-local response error for delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-InterfaceDeleteError.response_error_map = {
-    "default": InterfaceDeleteUnexpectedError,
+DeleteError.response_error_map = {
+    "default": DeleteUnexpectedError,
 }
 
 
-class InterfaceGetError(InterfaceError):
-    """Operation-local error for client.interface.interface_get()."""
+class GetError(InterfaceError):
+    """Operation-local error for client.interface.get()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
-class InterfaceGetUnexpectedError(InterfaceGetError):
-    """Operation-local response error for interface_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetUnexpectedError(GetError):
+    """Operation-local response error for get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-InterfaceGetError.response_error_map = {
-    "default": InterfaceGetUnexpectedError,
+GetError.response_error_map = {
+    "default": GetUnexpectedError,
 }
 
 
-class InterfaceUpdateError(InterfaceError):
-    """Operation-local error for client.interface.interface_update()."""
+class ListError(InterfaceError):
+    """Operation-local error for client.interface.list()."""
 
     response_error_map: dict[str, type[InterfaceError]] = {}
 
 
-class InterfaceUpdateUnexpectedError(InterfaceUpdateError):
-    """Operation-local response error for interface_update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListUnexpectedError(ListError):
+    """Operation-local response error for list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-InterfaceUpdateError.response_error_map = {
-    "default": InterfaceUpdateUnexpectedError,
-}
-
-
-class ListInterfaceError(InterfaceError):
-    """Operation-local error for client.interface.list_interface()."""
-
-    response_error_map: dict[str, type[InterfaceError]] = {}
-
-
-class ListInterfaceUnexpectedError(ListInterfaceError):
-    """Operation-local response error for list_interface (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-ListInterfaceError.response_error_map = {
-    "default": ListInterfaceUnexpectedError,
+ListError.response_error_map = {
+    "default": ListUnexpectedError,
 }
 
 
@@ -179,28 +162,45 @@ ManualClassifyError.response_error_map = {
     "default": ManualClassifyUnexpectedError,
 }
 
+
+class UpdateError(InterfaceError):
+    """Operation-local error for client.interface.update()."""
+
+    response_error_map: dict[str, type[InterfaceError]] = {}
+
+
+class UpdateUnexpectedError(UpdateError):
+    """Operation-local response error for update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+UpdateError.response_error_map = {
+    "default": UpdateUnexpectedError,
+}
+
 ERROR_BY_METHOD: dict[str, type[InterfaceError]] = {
-    "interface_create": InterfaceCreateError,
-    "interface_delete": InterfaceDeleteError,
-    "interface_get": InterfaceGetError,
-    "interface_update": InterfaceUpdateError,
-    "list_interface": ListInterfaceError,
+    "create": CreateError,
+    "delete": DeleteError,
+    "get": GetError,
+    "list": ListError,
     "manual_classify": ManualClassifyError,
+    "update": UpdateError,
 }
 
 __all__ = [
     "InterfaceError",
-    "InterfaceCreateUnexpectedError",
-    "InterfaceDeleteUnexpectedError",
-    "InterfaceGetUnexpectedError",
-    "InterfaceUpdateUnexpectedError",
-    "ListInterfaceUnexpectedError",
+    "CreateUnexpectedError",
+    "DeleteUnexpectedError",
+    "GetUnexpectedError",
+    "ListUnexpectedError",
     "ManualClassifyUnexpectedError",
-    "InterfaceCreateError",
-    "InterfaceDeleteError",
-    "InterfaceGetError",
-    "InterfaceUpdateError",
-    "ListInterfaceError",
+    "UpdateUnexpectedError",
+    "CreateError",
+    "DeleteError",
+    "GetError",
+    "ListError",
     "ManualClassifyError",
+    "UpdateError",
     "ERROR_BY_METHOD",
 ]

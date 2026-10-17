@@ -11,12 +11,12 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    CreateSavedFilterError,
-    DeleteSavedFilterError,
-    GetSavedFilterError,
-    ListSavedFiltersAllError,
-    ListSavedFiltersError,
-    UpdateSavedFilterError,
+    CreateError,
+    DeleteError,
+    GetError,
+    ListAllError,
+    ListError,
+    UpdateError,
 )
 from ..models import (  # noqa: F401
     CreateSavedFilterResponse,
@@ -60,7 +60,7 @@ def CreateSavedFilter(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateSavedFilter",
-        error_cls=CreateSavedFilterError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -93,7 +93,7 @@ def GetSavedFilter(
         header_params=header_params,
         expected_status=200,
         operation_name="GetSavedFilter",
-        error_cls=GetSavedFilterError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -127,7 +127,7 @@ def UpdateSavedFilter(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateSavedFilter",
-        error_cls=UpdateSavedFilterError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -160,7 +160,7 @@ def DeleteSavedFilter(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteSavedFilter",
-        error_cls=DeleteSavedFilterError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(
@@ -193,7 +193,7 @@ def ListSavedFilters(
         header_params=header_params,
         expected_status=200,
         operation_name="ListSavedFilters",
-        error_cls=ListSavedFiltersError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -226,7 +226,7 @@ def ListSavedFiltersAll(
         header_params=header_params,
         expected_status=200,
         operation_name="ListSavedFiltersAll",
-        error_cls=ListSavedFiltersAllError,
+        error_cls=ListAllError,
     )
 
     return parse_response_model(

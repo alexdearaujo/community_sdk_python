@@ -35,7 +35,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_devices(
+    def list(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -61,7 +61,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.ListDevices,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.ListDevicesError,
+                error_cls=RestDeviceModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListDevicesResponse,
@@ -82,7 +82,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_device(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -107,7 +107,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.CreateDevice,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.CreateDeviceError,
+                error_cls=RestDeviceModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateDeviceResponse,
@@ -127,7 +127,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_devices(
+    def create_bulk(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -152,7 +152,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.CreateDevices,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.CreateDevicesError,
+                error_cls=RestDeviceModule1.CreateBulkError,
             )
             return parse_grpc_response(
                 rest_models.CreateDevicesResponse,
@@ -172,7 +172,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_devices(
+    def delete_bulk(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -197,7 +197,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.DeleteDevices,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.DeleteDevicesError,
+                error_cls=RestDeviceModule1.DeleteBulkError,
             )
             return parse_grpc_response(
                 rest_models.DeleteDevicesResponse,
@@ -217,7 +217,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_devices(
+    def update_bulk(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -242,7 +242,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.UpdateDevices,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.UpdateDevicesError,
+                error_cls=RestDeviceModule1.UpdateBulkError,
             )
             return parse_grpc_response(
                 rest_models.UpdateDevicesResponse,
@@ -262,7 +262,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_device_by_name(
+    def get_by_name(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -291,7 +291,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.GetDeviceByName,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.GetDeviceByNameError,
+                error_cls=RestDeviceModule1.GetByNameError,
             )
             return parse_grpc_response(
                 rest_models.GetDeviceByNameResponse,
@@ -312,7 +312,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_device(
+    def get(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -338,7 +338,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.GetDevice,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.GetDeviceError,
+                error_cls=RestDeviceModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetDeviceResponse,
@@ -359,7 +359,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_device(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -385,7 +385,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.UpdateDevice,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.UpdateDeviceError,
+                error_cls=RestDeviceModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateDeviceResponse,
@@ -406,7 +406,7 @@ class DeviceServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_device(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, deviceid: str
     ) -> rest_models.DeleteDeviceResponse:
         """
@@ -426,7 +426,7 @@ class DeviceServiceWrapper:
                 self._grpc_stub_1.DeleteDevice,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDeviceModule1.DeleteDeviceError,
+                error_cls=RestDeviceModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteDeviceResponse,

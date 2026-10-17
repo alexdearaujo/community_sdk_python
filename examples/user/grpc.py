@@ -8,7 +8,7 @@ from kentik_api.errors import KentikError
 def main() -> None:
     client = KentikAPI(protocol="grpc")
     try:
-        response = client.user.list_users()
+        response = client.user.list()
         users = [user for user in (response.users or []) if user is not None]
         print(f"Found {len(users)} user(s).")
         for user in users[:10]:

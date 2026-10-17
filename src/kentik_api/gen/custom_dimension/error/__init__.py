@@ -78,20 +78,20 @@ class CustomDimensionError(HTTPException):
         )
 
 
-class CreateCustomDimensionError(CustomDimensionError):
-    """Operation-local error for client.custom_dimension.create_custom_dimension()."""
+class CreateError(CustomDimensionError):
+    """Operation-local error for client.custom_dimension.create()."""
 
     response_error_map: dict[str, type[CustomDimensionError]] = {}
 
 
-class CreateCustomDimensionUnexpectedError(CreateCustomDimensionError):
-    """Operation-local response error for create_custom_dimension (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class CreateUnexpectedError(CreateError):
+    """Operation-local response error for create (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-CreateCustomDimensionError.response_error_map = {
-    "default": CreateCustomDimensionUnexpectedError,
+CreateError.response_error_map = {
+    "default": CreateUnexpectedError,
 }
 
 
@@ -112,20 +112,20 @@ CreatePopulatorError.response_error_map = {
 }
 
 
-class DeleteCustomDimensionError(CustomDimensionError):
-    """Operation-local error for client.custom_dimension.delete_custom_dimension()."""
+class DeleteError(CustomDimensionError):
+    """Operation-local error for client.custom_dimension.delete()."""
 
     response_error_map: dict[str, type[CustomDimensionError]] = {}
 
 
-class DeleteCustomDimensionUnexpectedError(DeleteCustomDimensionError):
-    """Operation-local response error for delete_custom_dimension (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class DeleteUnexpectedError(DeleteError):
+    """Operation-local response error for delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-DeleteCustomDimensionError.response_error_map = {
-    "default": DeleteCustomDimensionUnexpectedError,
+DeleteError.response_error_map = {
+    "default": DeleteUnexpectedError,
 }
 
 
@@ -197,37 +197,37 @@ GetPopulatorFieldError.response_error_map = {
 }
 
 
-class ListCustomDimensionsError(CustomDimensionError):
-    """Operation-local error for client.custom_dimension.list_custom_dimensions()."""
+class ListError(CustomDimensionError):
+    """Operation-local error for client.custom_dimension.list()."""
 
     response_error_map: dict[str, type[CustomDimensionError]] = {}
 
 
-class ListCustomDimensionsUnexpectedError(ListCustomDimensionsError):
-    """Operation-local response error for list_custom_dimensions (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListUnexpectedError(ListError):
+    """Operation-local response error for list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ListCustomDimensionsError.response_error_map = {
-    "default": ListCustomDimensionsUnexpectedError,
+ListError.response_error_map = {
+    "default": ListUnexpectedError,
 }
 
 
-class UpdateCustomDimensionError(CustomDimensionError):
-    """Operation-local error for client.custom_dimension.update_custom_dimension()."""
+class UpdateError(CustomDimensionError):
+    """Operation-local error for client.custom_dimension.update()."""
 
     response_error_map: dict[str, type[CustomDimensionError]] = {}
 
 
-class UpdateCustomDimensionUnexpectedError(UpdateCustomDimensionError):
-    """Operation-local response error for update_custom_dimension (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class UpdateUnexpectedError(UpdateError):
+    """Operation-local response error for update (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-UpdateCustomDimensionError.response_error_map = {
-    "default": UpdateCustomDimensionUnexpectedError,
+UpdateError.response_error_map = {
+    "default": UpdateUnexpectedError,
 }
 
 
@@ -248,39 +248,39 @@ UpdatePopulatorError.response_error_map = {
 }
 
 ERROR_BY_METHOD: dict[str, type[CustomDimensionError]] = {
-    "create_custom_dimension": CreateCustomDimensionError,
+    "create": CreateError,
     "create_populator": CreatePopulatorError,
-    "delete_custom_dimension": DeleteCustomDimensionError,
+    "delete": DeleteError,
     "delete_populator": DeletePopulatorError,
     "get_info": GetInfoError,
     "get_populator": GetPopulatorError,
     "get_populator_field": GetPopulatorFieldError,
-    "list_custom_dimensions": ListCustomDimensionsError,
-    "update_custom_dimension": UpdateCustomDimensionError,
+    "list": ListError,
+    "update": UpdateError,
     "update_populator": UpdatePopulatorError,
 }
 
 __all__ = [
     "CustomDimensionError",
-    "CreateCustomDimensionUnexpectedError",
+    "CreateUnexpectedError",
     "CreatePopulatorUnexpectedError",
-    "DeleteCustomDimensionUnexpectedError",
+    "DeleteUnexpectedError",
     "DeletePopulatorUnexpectedError",
     "GetInfoUnexpectedError",
     "GetPopulatorUnexpectedError",
     "GetPopulatorFieldUnexpectedError",
-    "ListCustomDimensionsUnexpectedError",
-    "UpdateCustomDimensionUnexpectedError",
+    "ListUnexpectedError",
+    "UpdateUnexpectedError",
     "UpdatePopulatorUnexpectedError",
-    "CreateCustomDimensionError",
+    "CreateError",
     "CreatePopulatorError",
-    "DeleteCustomDimensionError",
+    "DeleteError",
     "DeletePopulatorError",
     "GetInfoError",
     "GetPopulatorError",
     "GetPopulatorFieldError",
-    "ListCustomDimensionsError",
-    "UpdateCustomDimensionError",
+    "ListError",
+    "UpdateError",
     "UpdatePopulatorError",
     "ERROR_BY_METHOD",
 ]

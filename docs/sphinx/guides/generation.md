@@ -124,7 +124,7 @@ maps a public name to what the schema calls that thing today:
 ```json
 "label": {
   "upstream": "label",
-  "methods": {"list_labels": "GET /label/<version>/labels"},
+  "methods": {"list": "GET /label/<version>/labels"},
   "models": {"Label": "label<version>Label"}
 }
 ```
@@ -153,7 +153,7 @@ values that have no entry yet:
 
 ```text
 NameDriftError: public_names.json, label methods: the schema no longer has
-`delete_label` ('DELETE /label/<version>/labels/{}'). The schema has these
+`delete` ('DELETE /label/<version>/labels/{}'). The schema has these
 unnamed: 'DELETE /label/<version>/labels/{}:remove'. Point each entry at its
 new value, or delete it if upstream removed it.
 ```
@@ -171,7 +171,7 @@ is a breaking change for users, so record it in `CHANGELOG.md`.
 
 > [!NOTE]
 > Each operation's error classes follow its client method name
-> (`list_labels` raises `ListLabelsError`), so this file names them too.
+> (`client.label.list` raises `ListError`), so this file names them too.
 > Parameter names, model fields, and enum values come from the schema.
 > `make check-changelog` reports their changes.
 

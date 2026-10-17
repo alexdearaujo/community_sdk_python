@@ -53,7 +53,7 @@ service wrapper implements its own HTTP, auth, or error-parsing logic.
 from kentik_api.client import KentikAPI
 
 client = KentikAPI(protocol="rest")  # KENTIK_EMAIL/KENTIK_API_TOKEN from the environment or .env
-devices = client.device.list_devices()
+devices = client.device.list()
 ```
 
 `KentikAPI` never implements per-service logic itself. It wires

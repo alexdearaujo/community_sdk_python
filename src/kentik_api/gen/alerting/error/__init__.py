@@ -129,40 +129,6 @@ AddCommentError.response_error_map = {
 }
 
 
-class AlertGetError(AlertingError):
-    """Operation-local error for client.alerting.alert_get()."""
-
-    response_error_map: dict[str, type[AlertingError]] = {}
-
-
-class AlertGetUnexpectedError(AlertGetError):
-    """Operation-local response error for alert_get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-AlertGetError.response_error_map = {
-    "default": AlertGetUnexpectedError,
-}
-
-
-class AlertListError(AlertingError):
-    """Operation-local error for client.alerting.alert_list()."""
-
-    response_error_map: dict[str, type[AlertingError]] = {}
-
-
-class AlertListUnexpectedError(AlertListError):
-    """Operation-local response error for alert_list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-AlertListError.response_error_map = {
-    "default": AlertListUnexpectedError,
-}
-
-
 class AutoAckCreateError(AlertingError):
     """Operation-local error for client.alerting.auto_ack_create()."""
 
@@ -330,6 +296,40 @@ class EnableUnexpectedError(EnableError):
 
 EnableError.response_error_map = {
     "default": EnableUnexpectedError,
+}
+
+
+class GetError(AlertingError):
+    """Operation-local error for client.alerting.get()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class GetUnexpectedError(GetError):
+    """Operation-local response error for get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+GetError.response_error_map = {
+    "default": GetUnexpectedError,
+}
+
+
+class ListError(AlertingError):
+    """Operation-local error for client.alerting.list()."""
+
+    response_error_map: dict[str, type[AlertingError]] = {}
+
+
+class ListUnexpectedError(ListError):
+    """Operation-local response error for list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+ListError.response_error_map = {
+    "default": ListUnexpectedError,
 }
 
 
@@ -710,8 +710,6 @@ ERROR_BY_METHOD: dict[str, type[AlertingError]] = {
     "ack": AckError,
     "act": ActError,
     "add_comment": AddCommentError,
-    "alert_get": AlertGetError,
-    "alert_list": AlertListError,
     "auto_ack_create": AutoAckCreateError,
     "auto_ack_delete": AutoAckDeleteError,
     "auto_ack_get": AutoAckGetError,
@@ -722,6 +720,8 @@ ERROR_BY_METHOD: dict[str, type[AlertingError]] = {
     "clear": ClearError,
     "disable": DisableError,
     "enable": EnableError,
+    "get": GetError,
+    "list": ListError,
     "list_comments": ListCommentsError,
     "mitigation_methods_get": MitigationMethodsGetError,
     "mitigation_methods_list": MitigationMethodsListError,
@@ -751,8 +751,6 @@ __all__ = [
     "AckUnexpectedError",
     "ActUnexpectedError",
     "AddCommentUnexpectedError",
-    "AlertGetUnexpectedError",
-    "AlertListUnexpectedError",
     "AutoAckCreateUnexpectedError",
     "AutoAckDeleteUnexpectedError",
     "AutoAckGetUnexpectedError",
@@ -763,6 +761,8 @@ __all__ = [
     "ClearUnexpectedError",
     "DisableUnexpectedError",
     "EnableUnexpectedError",
+    "GetUnexpectedError",
+    "ListUnexpectedError",
     "ListCommentsUnexpectedError",
     "MitigationMethodsGetUnexpectedError",
     "MitigationMethodsListUnexpectedError",
@@ -788,8 +788,6 @@ __all__ = [
     "AckError",
     "ActError",
     "AddCommentError",
-    "AlertGetError",
-    "AlertListError",
     "AutoAckCreateError",
     "AutoAckDeleteError",
     "AutoAckGetError",
@@ -800,6 +798,8 @@ __all__ = [
     "ClearError",
     "DisableError",
     "EnableError",
+    "GetError",
+    "ListError",
     "ListCommentsError",
     "MitigationMethodsGetError",
     "MitigationMethodsListError",

@@ -10,7 +10,7 @@ import pytest
 
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
-from kentik_api.gen.device.error import GetDeviceUnexpectedError
+from kentik_api.gen.device.error import GetUnexpectedError
 from kentik_api.gen.device.pb import device_pb2, device_pb2_grpc
 from kentik_api.gen.device.services.device import DeviceServiceWrapper
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -67,7 +67,7 @@ def served(monkeypatch):
 def test_a_wrapper_call_sends_auth_a_deadline_and_the_path_argument(served):
     servicer, device = served
 
-    device.get_device(deviceid="42")
+    device.get(deviceid="42")
 
     assert servicer.seen["id"] == "42"
     assert servicer.seen["metadata"]["x-ch-auth-email"] == "dev@example.com"
@@ -78,7 +78,7 @@ def test_a_wrapper_call_sends_auth_a_deadline_and_the_path_argument(served):
 def test_a_populated_response_parses_into_the_rest_model(served):
     _, device = served
 
-    response = device.get_device(deviceid="42")
+    response = device.get(deviceid="42")
 
     assert response.device is not None
     assert response.device.id == "42"
@@ -92,7 +92,7 @@ def test_a_populated_response_parses_into_the_rest_model(served):
 def test_a_server_error_raises_the_operations_error_class(served):
     _, device = served
 
-    with pytest.raises(GetDeviceUnexpectedError) as exc_info:
-        device.get_device(deviceid="missing")
+    with pytest.raises(GetUnexpectedError) as exc_info:
+        device.get(deviceid="missing")
 
     assert exc_info.value.status_code == 404

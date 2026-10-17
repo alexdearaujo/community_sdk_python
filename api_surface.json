@@ -319,7 +319,7 @@
         },
         "GET /v202505/alerts/{id}": {
           "operation": "Get",
-          "method": "alert_get",
+          "method": "get",
           "grpc": "AlertService/Get",
           "status": 200,
           "required_params": [
@@ -330,9 +330,9 @@
             "id": "str"
           },
           "returns": "AlertServiceGetResponse",
-          "error": "AlertGetError",
+          "error": "GetError",
           "error_responses": {
-            "default": "AlertGetUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "GET /v202505/mitigations": {
@@ -598,7 +598,7 @@
         },
         "POST /v202505/alerts": {
           "operation": "List",
-          "method": "alert_list",
+          "method": "list",
           "grpc": "AlertService/List",
           "status": 200,
           "required_params": [
@@ -609,9 +609,9 @@
             "data": "AlertServiceListRequest"
           },
           "returns": "AlertServiceListResponse",
-          "error": "AlertListError",
+          "error": "ListError",
           "error_responses": {
-            "default": "AlertListUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "POST /v202505/alerts/ack/auto": {
@@ -3651,7 +3651,7 @@
       "operations": {
         "DELETE /as_group/v202212/as_group/{asGroupid}": {
           "operation": "DeleteASGroup",
-          "method": "delete_as_group",
+          "method": "delete",
           "grpc": "ASGroupService/DeleteASGroup",
           "status": 200,
           "required_params": [
@@ -3662,14 +3662,14 @@
             "asGroupid": "str"
           },
           "returns": "DeleteASGroupResponse",
-          "error": "DeleteAsGroupError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteAsGroupUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /as_group/v202212/as_group": {
           "operation": "ListASGroups",
-          "method": "list_as_groups",
+          "method": "list",
           "grpc": "ASGroupService/ListASGroups",
           "status": 200,
           "required_params": [],
@@ -3677,14 +3677,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListASGroupsResponse",
-          "error": "ListAsGroupsError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListAsGroupsUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /as_group/v202212/as_group/{asGroupid}": {
           "operation": "GetASGroup",
-          "method": "get_as_group",
+          "method": "get",
           "grpc": "ASGroupService/GetASGroup",
           "status": 200,
           "required_params": [
@@ -3695,14 +3695,14 @@
             "asGroupid": "str"
           },
           "returns": "GetASGroupResponse",
-          "error": "GetAsGroupError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetAsGroupUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /as_group/v202212/as_group": {
           "operation": "CreateASGroup",
-          "method": "create_as_group",
+          "method": "create",
           "grpc": "ASGroupService/CreateASGroup",
           "status": 200,
           "required_params": [
@@ -3713,14 +3713,14 @@
             "data": "CreateASGroupRequest"
           },
           "returns": "CreateASGroupResponse",
-          "error": "CreateAsGroupError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateAsGroupUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "PUT /as_group/v202212/as_group/{asGroupid}": {
           "operation": "UpdateASGroup",
-          "method": "update_as_group",
+          "method": "update",
           "grpc": "ASGroupService/UpdateASGroup",
           "status": 200,
           "required_params": [
@@ -3733,9 +3733,9 @@
             "data": "ASGroupServiceUpdateASGroupBody"
           },
           "returns": "UpdateASGroupResponse",
-          "error": "UpdateAsGroupError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateAsGroupUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -4968,7 +4968,7 @@
       "operations": {
         "GET /capacity_plan/v202212/capacity_plan": {
           "operation": "ListCapacityPlans",
-          "method": "list_capacity_plans",
+          "method": "list",
           "grpc": "CapacityPlanService/ListCapacityPlans",
           "status": 200,
           "required_params": [],
@@ -4976,9 +4976,9 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListCapacityPlansResponse",
-          "error": "ListCapacityPlansError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListCapacityPlansUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /capacity_plan/v202212/capacity_plan/summary": {
@@ -4998,7 +4998,7 @@
         },
         "GET /capacity_plan/v202212/capacity_plan/{id}": {
           "operation": "GetCapacityPlan",
-          "method": "get_capacity_plan",
+          "method": "get",
           "grpc": "CapacityPlanService/GetCapacityPlan",
           "status": 200,
           "required_params": [
@@ -5009,9 +5009,9 @@
             "id": "str"
           },
           "returns": "GetCapacityPlanResponse",
-          "error": "GetCapacityPlanError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetCapacityPlanUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "GET /capacity_plan/v202212/capacity_plan/{id}/summary": {
@@ -5344,7 +5344,7 @@
       "operations": {
         "DELETE /cloud_export/v202506/exports/{exportid}": {
           "operation": "DeleteCloudExport",
-          "method": "delete_cloud_export",
+          "method": "delete",
           "grpc": "CloudExportAdminService/DeleteCloudExport",
           "status": 200,
           "required_params": [
@@ -5355,14 +5355,14 @@
             "exportid": "str"
           },
           "returns": "DeleteCloudExportResponse",
-          "error": "DeleteCloudExportError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteCloudExportUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /cloud_export/v202506/exports": {
           "operation": "ListCloudExports",
-          "method": "list_cloud_exports",
+          "method": "list",
           "grpc": "CloudExportAdminService/ListCloudExports",
           "status": 200,
           "required_params": [],
@@ -5370,14 +5370,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListCloudExportsResponse",
-          "error": "ListCloudExportsError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListCloudExportsUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /cloud_export/v202506/exports/{exportid}": {
           "operation": "GetCloudExport",
-          "method": "get_cloud_export",
+          "method": "get",
           "grpc": "CloudExportAdminService/GetCloudExport",
           "status": 200,
           "required_params": [
@@ -5388,14 +5388,14 @@
             "exportid": "str"
           },
           "returns": "GetCloudExportResponse",
-          "error": "GetCloudExportError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetCloudExportUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /cloud_export/v202506/exports": {
           "operation": "CreateCloudExport",
-          "method": "create_cloud_export",
+          "method": "create",
           "grpc": "CloudExportAdminService/CreateCloudExport",
           "status": 200,
           "required_params": [
@@ -5406,14 +5406,14 @@
             "data": "CreateCloudExportRequest"
           },
           "returns": "CreateCloudExportResponse",
-          "error": "CreateCloudExportError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateCloudExportUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "PUT /cloud_export/v202506/exports/{exportid}": {
           "operation": "UpdateCloudExport",
-          "method": "update_cloud_export",
+          "method": "update",
           "grpc": "CloudExportAdminService/UpdateCloudExport",
           "status": 200,
           "required_params": [
@@ -5426,9 +5426,9 @@
             "data": "CloudExportAdminServiceUpdateCloudExportBody"
           },
           "returns": "UpdateCloudExportResponse",
-          "error": "UpdateCloudExportError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateCloudExportUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -6422,7 +6422,7 @@
       "operations": {
         "DELETE /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "DeleteCustomApplication",
-          "method": "delete_custom_application",
+          "method": "delete",
           "grpc": "CustomApplicationService/DeleteCustomApplication",
           "status": 200,
           "required_params": [
@@ -6433,14 +6433,14 @@
             "customApplicationId": "str"
           },
           "returns": "DeleteCustomApplicationResponse",
-          "error": "DeleteCustomApplicationError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteCustomApplicationUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /custom_application/v202501alpha1": {
           "operation": "ListCustomApplications",
-          "method": "list_custom_applications",
+          "method": "list",
           "grpc": "CustomApplicationService/ListCustomApplications",
           "status": 200,
           "required_params": [],
@@ -6448,14 +6448,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListCustomApplicationsResponse",
-          "error": "ListCustomApplicationsError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListCustomApplicationsUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "GetCustomApplication",
-          "method": "get_custom_application",
+          "method": "get",
           "grpc": "CustomApplicationService/GetCustomApplication",
           "status": 200,
           "required_params": [
@@ -6466,14 +6466,14 @@
             "customApplicationId": "str"
           },
           "returns": "GetCustomApplicationResponse",
-          "error": "GetCustomApplicationError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetCustomApplicationUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /custom_application/v202501alpha1": {
           "operation": "CreateCustomApplication",
-          "method": "create_custom_application",
+          "method": "create",
           "grpc": "CustomApplicationService/CreateCustomApplication",
           "status": 200,
           "required_params": [
@@ -6484,14 +6484,14 @@
             "data": "CustomApplication"
           },
           "returns": "CreateCustomApplicationResponse",
-          "error": "CreateCustomApplicationError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateCustomApplicationUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "PUT /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "UpdateCustomApplication",
-          "method": "update_custom_application",
+          "method": "update",
           "grpc": "CustomApplicationService/UpdateCustomApplication",
           "status": 200,
           "required_params": [
@@ -6504,9 +6504,9 @@
             "data": "CustomApplication"
           },
           "returns": "UpdateCustomApplicationResponse",
-          "error": "UpdateCustomApplicationError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateCustomApplicationUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -6617,7 +6617,7 @@
       "operations": {
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "DeleteCustomDimension",
-          "method": "delete_custom_dimension",
+          "method": "delete",
           "grpc": "CustomDimensionService/DeleteCustomDimension",
           "status": 200,
           "required_params": [
@@ -6628,9 +6628,9 @@
             "customDimensionId": "str"
           },
           "returns": "DeleteCustomDimensionResponse",
-          "error": "DeleteCustomDimensionError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteCustomDimensionUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
@@ -6655,7 +6655,7 @@
         },
         "GET /custom_dimensions/v202411alpha1": {
           "operation": "ListCustomDimensions",
-          "method": "list_custom_dimensions",
+          "method": "list",
           "grpc": "CustomDimensionService/ListCustomDimensions",
           "status": 200,
           "required_params": [],
@@ -6663,9 +6663,9 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListCustomDimensionsResponse",
-          "error": "ListCustomDimensionsError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListCustomDimensionsUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /custom_dimensions/v202411alpha1/{customDimensionId}": {
@@ -6753,7 +6753,7 @@
         },
         "POST /v1/customdimension": {
           "operation": "CreateCustomDimension",
-          "method": "create_custom_dimension",
+          "method": "create",
           "grpc": "CustomDimensionService/CreateCustomDimension",
           "status": 200,
           "required_params": [
@@ -6764,14 +6764,14 @@
             "data": "CustomDimension"
           },
           "returns": "CreateCustomDimensionResponse",
-          "error": "CreateCustomDimensionError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateCustomDimensionUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "UpdateCustomDimension",
-          "method": "update_custom_dimension",
+          "method": "update",
           "grpc": "CustomDimensionService/UpdateCustomDimension",
           "status": 200,
           "required_params": [
@@ -6784,9 +6784,9 @@
             "data": "CustomDimension"
           },
           "returns": "UpdateCustomDimensionResponse",
-          "error": "UpdateCustomDimensionError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateCustomDimensionUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         },
         "PUT /custom_dimensions/v202411alpha1/{customDimensionId}/populator/{populatorId}": {
@@ -7071,7 +7071,7 @@
       "operations": {
         "DELETE /device/v202504beta2/device/{deviceid}": {
           "operation": "DeleteDevice",
-          "method": "delete_device",
+          "method": "delete",
           "grpc": "DeviceService/DeleteDevice",
           "status": 200,
           "required_params": [
@@ -7082,14 +7082,14 @@
             "deviceid": "str"
           },
           "returns": "DeleteDeviceResponse",
-          "error": "DeleteDeviceError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteDeviceUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /device/v202504beta2/device": {
           "operation": "ListDevices",
-          "method": "list_devices",
+          "method": "list",
           "grpc": "DeviceService/ListDevices",
           "status": 200,
           "required_params": [],
@@ -7099,14 +7099,14 @@
             "view": "Optional[str]"
           },
           "returns": "ListDevicesResponse",
-          "error": "ListDevicesError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListDevicesUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /device/v202504beta2/device/name/{deviceName}": {
           "operation": "GetDeviceByName",
-          "method": "get_device_by_name",
+          "method": "get_by_name",
           "grpc": "DeviceService/GetDeviceByName",
           "status": 200,
           "required_params": [
@@ -7118,14 +7118,14 @@
             "querynoCustomColumns": "Optional[bool]"
           },
           "returns": "GetDeviceByNameResponse",
-          "error": "GetDeviceByNameError",
+          "error": "GetByNameError",
           "error_responses": {
-            "default": "GetDeviceByNameUnexpectedError"
+            "default": "GetByNameUnexpectedError"
           }
         },
         "GET /device/v202504beta2/device/{deviceid}": {
           "operation": "GetDevice",
-          "method": "get_device",
+          "method": "get",
           "grpc": "DeviceService/GetDevice",
           "status": 200,
           "required_params": [
@@ -7137,14 +7137,14 @@
             "querynoCustomColumns": "Optional[bool]"
           },
           "returns": "GetDeviceResponse",
-          "error": "GetDeviceError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetDeviceUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /device/v202504beta2/device": {
           "operation": "CreateDevice",
-          "method": "create_device",
+          "method": "create",
           "grpc": "DeviceService/CreateDevice",
           "status": 200,
           "required_params": [
@@ -7155,14 +7155,14 @@
             "data": "CreateDeviceRequest"
           },
           "returns": "CreateDeviceResponse",
-          "error": "CreateDeviceError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateDeviceUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "POST /device/v202504beta2/device/batch_create": {
           "operation": "CreateDevices",
-          "method": "create_devices",
+          "method": "create_bulk",
           "grpc": "DeviceService/CreateDevices",
           "status": 200,
           "required_params": [
@@ -7173,14 +7173,14 @@
             "data": "CreateDevicesRequest"
           },
           "returns": "CreateDevicesResponse",
-          "error": "CreateDevicesError",
+          "error": "CreateBulkError",
           "error_responses": {
-            "default": "CreateDevicesUnexpectedError"
+            "default": "CreateBulkUnexpectedError"
           }
         },
         "POST /device/v202504beta2/device/batch_delete": {
           "operation": "DeleteDevices",
-          "method": "delete_devices",
+          "method": "delete_bulk",
           "grpc": "DeviceService/DeleteDevices",
           "status": 200,
           "required_params": [
@@ -7191,14 +7191,14 @@
             "data": "DeleteDevicesRequest"
           },
           "returns": "DeleteDevicesResponse",
-          "error": "DeleteDevicesError",
+          "error": "DeleteBulkError",
           "error_responses": {
-            "default": "DeleteDevicesUnexpectedError"
+            "default": "DeleteBulkUnexpectedError"
           }
         },
         "PUT /device/v202504beta2/device/batch_update": {
           "operation": "UpdateDevices",
-          "method": "update_devices",
+          "method": "update_bulk",
           "grpc": "DeviceService/UpdateDevices",
           "status": 200,
           "required_params": [
@@ -7209,14 +7209,14 @@
             "data": "UpdateDevicesRequest"
           },
           "returns": "UpdateDevicesResponse",
-          "error": "UpdateDevicesError",
+          "error": "UpdateBulkError",
           "error_responses": {
-            "default": "UpdateDevicesUnexpectedError"
+            "default": "UpdateBulkUnexpectedError"
           }
         },
         "PUT /device/v202504beta2/device/{deviceid}": {
           "operation": "UpdateDevice",
-          "method": "update_device",
+          "method": "update",
           "grpc": "DeviceService/UpdateDevice",
           "status": 200,
           "required_params": [
@@ -7229,9 +7229,9 @@
             "data": "DeviceServiceUpdateDeviceBody"
           },
           "returns": "UpdateDeviceResponse",
-          "error": "UpdateDeviceError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateDeviceUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         },
         "PUT /device/v202504beta2/device/{id}/labels": {
@@ -8480,7 +8480,7 @@
       "operations": {
         "GET /dictionary/v20260604alpha1": {
           "operation": "GetDictionary",
-          "method": "get_dictionary",
+          "method": "get",
           "grpc": "DictionaryService/GetDictionary",
           "status": 200,
           "required_params": [],
@@ -8488,9 +8488,9 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "GetDictionaryResponse",
-          "error": "GetDictionaryError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetDictionaryUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         }
       },
@@ -8897,7 +8897,7 @@
       "operations": {
         "DELETE /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "DeleteFlowTag",
-          "method": "delete_flow_tag",
+          "method": "delete",
           "grpc": "FlowTagService/DeleteFlowTag",
           "status": 200,
           "required_params": [
@@ -8908,14 +8908,14 @@
             "flowTagid": "str"
           },
           "returns": "DeleteFlowTagResponse",
-          "error": "DeleteFlowTagError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteFlowTagUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /flow_tag/v202404alpha1/tag": {
           "operation": "SearchFlowTag",
-          "method": "search_flow_tag",
+          "method": "search",
           "grpc": "FlowTagService/SearchFlowTag",
           "status": 200,
           "required_params": [],
@@ -8928,14 +8928,14 @@
             "searchfieldLimit": "Optional[int]"
           },
           "returns": "SearchFlowTagResponse",
-          "error": "SearchFlowTagError",
+          "error": "SearchError",
           "error_responses": {
-            "default": "SearchFlowTagUnexpectedError"
+            "default": "SearchUnexpectedError"
           }
         },
         "GET /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "GetFlowTag",
-          "method": "get_flow_tag",
+          "method": "get",
           "grpc": "FlowTagService/GetFlowTag",
           "status": 200,
           "required_params": [
@@ -8946,14 +8946,14 @@
             "flowTagid": "str"
           },
           "returns": "GetFlowTagResponse",
-          "error": "GetFlowTagError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetFlowTagUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /flow_tag/v202404alpha1/tag": {
           "operation": "CreateFlowTag",
-          "method": "create_flow_tag",
+          "method": "create",
           "grpc": "FlowTagService/CreateFlowTag",
           "status": 200,
           "required_params": [
@@ -8964,14 +8964,14 @@
             "data": "CreateFlowTagRequest"
           },
           "returns": "CreateFlowTagResponse",
-          "error": "CreateFlowTagError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateFlowTagUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "PUT /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "UpdateFlowTag",
-          "method": "update_flow_tag",
+          "method": "update",
           "grpc": "FlowTagService/UpdateFlowTag",
           "status": 200,
           "required_params": [
@@ -8984,9 +8984,9 @@
             "data": "FlowTagServiceUpdateFlowTagBody"
           },
           "returns": "UpdateFlowTagResponse",
-          "error": "UpdateFlowTagError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateFlowTagUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -9236,7 +9236,7 @@
       "operations": {
         "DELETE /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceDelete",
-          "method": "interface_delete",
+          "method": "delete",
           "grpc": "InterfaceService/DeleteInterface",
           "status": 200,
           "required_params": [
@@ -9247,14 +9247,14 @@
             "id": "str"
           },
           "returns": "DeleteInterfaceResponse",
-          "error": "InterfaceDeleteError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "InterfaceDeleteUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /interface/v202108alpha1/interfaces": {
           "operation": "ListInterface",
-          "method": "list_interface",
+          "method": "list",
           "grpc": "InterfaceService/ListInterface",
           "status": 200,
           "required_params": [],
@@ -9269,14 +9269,14 @@
             "filtersipTypes": "Optional[List[str]]"
           },
           "returns": "ListInterfaceResponse",
-          "error": "ListInterfaceError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListInterfaceUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceGet",
-          "method": "interface_get",
+          "method": "get",
           "grpc": "InterfaceService/GetInterface",
           "status": 200,
           "required_params": [
@@ -9287,14 +9287,14 @@
             "id": "str"
           },
           "returns": "GetInterfaceResponse",
-          "error": "InterfaceGetError",
+          "error": "GetError",
           "error_responses": {
-            "default": "InterfaceGetUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /interface/v202108alpha1/interfaces": {
           "operation": "InterfaceCreate",
-          "method": "interface_create",
+          "method": "create",
           "grpc": "InterfaceService/CreateInterface",
           "status": 200,
           "required_params": [
@@ -9305,9 +9305,9 @@
             "data": "CreateInterfaceRequest"
           },
           "returns": "CreateInterfaceResponse",
-          "error": "InterfaceCreateError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "InterfaceCreateUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "POST /interface/v202108alpha1/manual_classify": {
@@ -9330,7 +9330,7 @@
         },
         "PUT /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceUpdate",
-          "method": "interface_update",
+          "method": "update",
           "grpc": "InterfaceService/UpdateInterface",
           "status": 200,
           "required_params": [
@@ -9343,9 +9343,9 @@
             "data": "InterfaceServiceUpdateInterfaceBody"
           },
           "returns": "UpdateInterfaceResponse",
-          "error": "InterfaceUpdateError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "InterfaceUpdateUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -12355,7 +12355,7 @@
       "operations": {
         "DELETE /label/v202210/labels/{id}": {
           "operation": "DeleteLabel",
-          "method": "delete_label",
+          "method": "delete",
           "grpc": "LabelService/DeleteLabel",
           "status": 200,
           "required_params": [
@@ -12366,14 +12366,14 @@
             "id": "str"
           },
           "returns": "DeleteLabelResponse",
-          "error": "DeleteLabelError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteLabelUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /label/v202210/labels": {
           "operation": "ListLabels",
-          "method": "list_labels",
+          "method": "list",
           "grpc": "LabelService/ListLabels",
           "status": 200,
           "required_params": [],
@@ -12381,14 +12381,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListLabelsResponse",
-          "error": "ListLabelsError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListLabelsUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "POST /label/v202210/labels": {
           "operation": "CreateLabel",
-          "method": "create_label",
+          "method": "create",
           "grpc": "LabelService/CreateLabel",
           "status": 200,
           "required_params": [
@@ -12399,14 +12399,14 @@
             "data": "CreateLabelRequest"
           },
           "returns": "CreateLabelResponse",
-          "error": "CreateLabelError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateLabelUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "POST /label/v202210/labels/{id}": {
           "operation": "UpdateLabel",
-          "method": "update_label",
+          "method": "update",
           "grpc": "LabelService/UpdateLabel",
           "status": 200,
           "required_params": [
@@ -12419,9 +12419,9 @@
             "data": "LabelServiceUpdateLabelBody"
           },
           "returns": "UpdateLabelResponse",
-          "error": "UpdateLabelError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateLabelUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -13543,7 +13543,7 @@
       "operations": {
         "GET /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassGet",
-          "method": "network_class_get",
+          "method": "get",
           "grpc": "NetworkClassService/GetNetworkClass",
           "status": 200,
           "required_params": [],
@@ -13551,14 +13551,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "GetNetworkClassResponse",
-          "error": "NetworkClassGetError",
+          "error": "GetError",
           "error_responses": {
-            "default": "NetworkClassGetUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassUpdate",
-          "method": "network_class_update",
+          "method": "update",
           "grpc": "NetworkClassService/UpdateNetworkClass",
           "status": 200,
           "required_params": [
@@ -13569,9 +13569,9 @@
             "data": "UpdateNetworkClassRequest"
           },
           "returns": "UpdateNetworkClassResponse",
-          "error": "NetworkClassUpdateError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "NetworkClassUpdateUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -13851,7 +13851,7 @@
       "operations": {
         "GET /notification_channel/v202210/notification_channels": {
           "operation": "ListNotificationChannels",
-          "method": "list_notification_channels",
+          "method": "list",
           "grpc": "NotificationChannelService/ListNotificationChannels",
           "status": 200,
           "required_params": [],
@@ -13859,14 +13859,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListNotificationChannelsResponse",
-          "error": "ListNotificationChannelsError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListNotificationChannelsUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /notification_channel/v202210/notification_channels/{id}": {
           "operation": "GetNotificationChannel",
-          "method": "get_notification_channel",
+          "method": "get",
           "grpc": "NotificationChannelService/GetNotificationChannel",
           "status": 200,
           "required_params": [
@@ -13877,14 +13877,14 @@
             "id": "str"
           },
           "returns": "GetNotificationChannelResponse",
-          "error": "GetNotificationChannelError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetNotificationChannelUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /notification_channel/v202210/notification_channels/search": {
           "operation": "SearchNotificationChannels",
-          "method": "search_notification_channels",
+          "method": "search",
           "grpc": "NotificationChannelService/SearchNotificationChannels",
           "status": 200,
           "required_params": [
@@ -13895,9 +13895,9 @@
             "data": "SearchNotificationChannelsRequest"
           },
           "returns": "SearchNotificationChannelsResponse",
-          "error": "SearchNotificationChannelsError",
+          "error": "SearchError",
           "error_responses": {
-            "default": "SearchNotificationChannelsUnexpectedError"
+            "default": "SearchUnexpectedError"
           }
         }
       },
@@ -14181,7 +14181,7 @@
       "operations": {
         "GET /plans/v202501alpha1": {
           "operation": "ListPlans",
-          "method": "list_plans",
+          "method": "list",
           "grpc": "PlanService/ListPlans",
           "status": 200,
           "required_params": [],
@@ -14189,9 +14189,9 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListPlansResponse",
-          "error": "ListPlansError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListPlansUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         }
       },
@@ -14762,7 +14762,7 @@
       "operations": {
         "DELETE /saved-filter/v202501alpha1/{id}": {
           "operation": "DeleteSavedFilter",
-          "method": "delete_saved_filter",
+          "method": "delete",
           "grpc": "SavedFilterService/DeleteSavedFilter",
           "status": 200,
           "required_params": [
@@ -14773,14 +14773,14 @@
             "id": "str"
           },
           "returns": "DeleteSavedFilterResponse",
-          "error": "DeleteSavedFilterError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteSavedFilterUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /saved-filter/v202501alpha1/{id}": {
           "operation": "GetSavedFilter",
-          "method": "get_saved_filter",
+          "method": "get",
           "grpc": "SavedFilterService/GetSavedFilter",
           "status": 200,
           "required_params": [
@@ -14791,14 +14791,14 @@
             "id": "str"
           },
           "returns": "GetSavedFilterResponse",
-          "error": "GetSavedFilterError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetSavedFilterUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "GET /saved-filters/v202501alpha1": {
           "operation": "ListSavedFilters",
-          "method": "list_saved_filters",
+          "method": "list",
           "grpc": "SavedFilterService/ListSavedFilters",
           "status": 200,
           "required_params": [],
@@ -14806,14 +14806,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListSavedFiltersResponse",
-          "error": "ListSavedFiltersError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListSavedFiltersUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /saved-filters/v202501alpha1/all": {
           "operation": "ListSavedFiltersAll",
-          "method": "list_saved_filters_all",
+          "method": "list_all",
           "grpc": "SavedFilterService/ListSavedFiltersAll",
           "status": 200,
           "required_params": [],
@@ -14821,14 +14821,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListSavedFiltersAllResponse",
-          "error": "ListSavedFiltersAllError",
+          "error": "ListAllError",
           "error_responses": {
-            "default": "ListSavedFiltersAllUnexpectedError"
+            "default": "ListAllUnexpectedError"
           }
         },
         "POST /saved-filter/v202501alpha1": {
           "operation": "CreateSavedFilter",
-          "method": "create_saved_filter",
+          "method": "create",
           "grpc": "SavedFilterService/CreateSavedFilter",
           "status": 200,
           "required_params": [
@@ -14839,14 +14839,14 @@
             "data": "SavedFilter"
           },
           "returns": "CreateSavedFilterResponse",
-          "error": "CreateSavedFilterError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateSavedFilterUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "PUT /saved-filter/v202501alpha1/{id}": {
           "operation": "UpdateSavedFilter",
-          "method": "update_saved_filter",
+          "method": "update",
           "grpc": "SavedFilterService/UpdateSavedFilter",
           "status": 200,
           "required_params": [
@@ -14859,9 +14859,9 @@
             "data": "SavedFilter"
           },
           "returns": "UpdateSavedFilterResponse",
-          "error": "UpdateSavedFilterError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateSavedFilterUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -15133,7 +15133,7 @@
         },
         "DELETE /site/v202509/sites/{id}": {
           "operation": "DeleteSite",
-          "method": "delete_site",
+          "method": "delete",
           "grpc": "SiteService/DeleteSite",
           "status": 200,
           "required_params": [
@@ -15144,9 +15144,9 @@
             "id": "str"
           },
           "returns": "DeleteSiteResponse",
-          "error": "DeleteSiteError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteSiteUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /site/v202509/site_markets": {
@@ -15184,7 +15184,7 @@
         },
         "GET /site/v202509/sites": {
           "operation": "ListSites",
-          "method": "list_sites",
+          "method": "list",
           "grpc": "SiteService/ListSites",
           "status": 200,
           "required_params": [],
@@ -15192,14 +15192,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListSitesResponse",
-          "error": "ListSitesError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListSitesUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /site/v202509/sites/{id}": {
           "operation": "GetSite",
-          "method": "get_site",
+          "method": "get",
           "grpc": "SiteService/GetSite",
           "status": 200,
           "required_params": [
@@ -15210,9 +15210,9 @@
             "id": "str"
           },
           "returns": "GetSiteResponse",
-          "error": "GetSiteError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetSiteUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /site/v202509/site_markets": {
@@ -15235,7 +15235,7 @@
         },
         "POST /site/v202509/sites": {
           "operation": "CreateSite",
-          "method": "create_site",
+          "method": "create",
           "grpc": "SiteService/CreateSite",
           "status": 200,
           "required_params": [
@@ -15246,9 +15246,9 @@
             "data": "CreateSiteRequest"
           },
           "returns": "CreateSiteResponse",
-          "error": "CreateSiteError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateSiteUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "PUT /site/v202509/site_markets/{id}": {
@@ -15273,7 +15273,7 @@
         },
         "PUT /site/v202509/sites/{id}": {
           "operation": "UpdateSite",
-          "method": "update_site",
+          "method": "update",
           "grpc": "SiteService/UpdateSite",
           "status": 200,
           "required_params": [
@@ -15286,9 +15286,9 @@
             "data": "SiteServiceUpdateSiteBody"
           },
           "returns": "UpdateSiteResponse",
-          "error": "UpdateSiteError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateSiteUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         }
       },
@@ -17339,7 +17339,7 @@
       "operations": {
         "DELETE /user/v202211/users/{id}": {
           "operation": "DeleteUser",
-          "method": "delete_user",
+          "method": "delete",
           "grpc": "UserService/DeleteUser",
           "status": 200,
           "required_params": [
@@ -17350,14 +17350,14 @@
             "id": "str"
           },
           "returns": "DeleteUserResponse",
-          "error": "DeleteUserError",
+          "error": "DeleteError",
           "error_responses": {
-            "default": "DeleteUserUnexpectedError"
+            "default": "DeleteUnexpectedError"
           }
         },
         "GET /user/v202211/users": {
           "operation": "ListUsers",
-          "method": "list_users",
+          "method": "list",
           "grpc": "UserService/ListUsers",
           "status": 200,
           "required_params": [],
@@ -17365,14 +17365,14 @@
             "api_config_override": "Optional[APIConfig]"
           },
           "returns": "ListUsersResponse",
-          "error": "ListUsersError",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListUsersUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
         "GET /user/v202211/users/{id}": {
           "operation": "GetUser",
-          "method": "get_user",
+          "method": "get",
           "grpc": "UserService/GetUser",
           "status": 200,
           "required_params": [
@@ -17383,14 +17383,14 @@
             "id": "str"
           },
           "returns": "GetUserResponse",
-          "error": "GetUserError",
+          "error": "GetError",
           "error_responses": {
-            "default": "GetUserUnexpectedError"
+            "default": "GetUnexpectedError"
           }
         },
         "POST /user/v202211/users": {
           "operation": "CreateUser",
-          "method": "create_user",
+          "method": "create",
           "grpc": "UserService/CreateUser",
           "status": 200,
           "required_params": [
@@ -17401,14 +17401,14 @@
             "data": "CreateUserRequest"
           },
           "returns": "CreateUserResponse",
-          "error": "CreateUserError",
+          "error": "CreateError",
           "error_responses": {
-            "default": "CreateUserUnexpectedError"
+            "default": "CreateUnexpectedError"
           }
         },
         "PUT /user/v202211/users/{id}": {
           "operation": "UpdateUser",
-          "method": "update_user",
+          "method": "update",
           "grpc": "UserService/UpdateUser",
           "status": 200,
           "required_params": [
@@ -17421,9 +17421,9 @@
             "data": "UserServiceUpdateUserBody"
           },
           "returns": "UpdateUserResponse",
-          "error": "UpdateUserError",
+          "error": "UpdateError",
           "error_responses": {
-            "default": "UpdateUserUnexpectedError"
+            "default": "UpdateUnexpectedError"
           }
         },
         "PUT /user/v202211/users/{id}/reset_active_sessions": {

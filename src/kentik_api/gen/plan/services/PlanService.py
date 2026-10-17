@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import parse_response_model, request_json
 
-from ..error import ListPlansError
+from ..error import ListError
 from ..models import (  # noqa: F401
     DeviceSubtype,
     ListPlansResponse,
@@ -36,7 +36,7 @@ def ListPlans(api_config_override: Optional[APIConfig] = None) -> ListPlansRespo
         header_params=header_params,
         expected_status=200,
         operation_name="ListPlans",
-        error_cls=ListPlansError,
+        error_cls=ListError,
     )
 
     return parse_response_model(

@@ -43,7 +43,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: alert_list(data=AlertServiceListRequest(...))
+    C->>W: list(data=AlertServiceListRequest(...))
     W->>API: POST /v202505/alerts
     alt success
         API-->>W: AlertServiceListResponse (JSON)
@@ -65,7 +65,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: alert_list(data=AlertServiceListRequest(...))
+    C->>W: list(data=AlertServiceListRequest(...))
     W->>R: build_grpc_request(AlertServiceListRequest, arguments)
     R->>API: AlertService/List (gRPC/TLS)
     alt success
@@ -99,7 +99,7 @@ from kentik_api.gen.alerting.models import AlertServiceListRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.alert_list(
+response = client.alerting.list(
     data=AlertServiceListRequest(...),
 )
 ```
@@ -431,7 +431,7 @@ sequenceDiagram
     participant W as client.alerting
     participant API as Kentik REST API
 
-    C->>W: alert_get(id="id-example")
+    C->>W: get(id="id-example")
     W->>API: GET /v202505/alerts/{id}
     alt success
         API-->>W: AlertServiceGetResponse (JSON)
@@ -453,7 +453,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: alert_get(id="id-example")
+    C->>W: get(id="id-example")
     W->>R: build_grpc_request(AlertServiceGetRequest, arguments)
     R->>API: AlertService/Get (gRPC/TLS)
     alt success
@@ -486,7 +486,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.alerting.alert_get(
+response = client.alerting.get(
     id="id-example",
 )
 ```

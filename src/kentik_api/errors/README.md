@@ -51,7 +51,7 @@ runtimes set it to the quota the API reported on the failing call, or leave it
 
 Each service's generated `error/__init__.py` declares a service base class,
 such as `DeviceError`. It declares one class for each operation, named after
-the client method, such as `ListDevicesError`. It also declares a subclass for
+the client method, such as `ListError` for `device.list`. It also declares a subclass for
 each status that the schema declares for that operation. Each operation class
 has a `response_error_map` from status code to subclass. `ERROR_BY_METHOD`
 maps each client method name to its class.

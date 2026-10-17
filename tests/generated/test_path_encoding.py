@@ -1,7 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """Verifies every REST path parameter is encoded into its own segment.
 
-An unencoded id like "../../user/7" would send `delete_device` to another
+An unencoded id like "../../user/7" would send `device.delete` to another
 resource, so every placeholder of every operation is checked, not a sample.
 """
 
