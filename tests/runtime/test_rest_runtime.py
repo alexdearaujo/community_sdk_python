@@ -71,8 +71,9 @@ def test_query_values_encode_a_space_as_percent_20(monkeypatch: pytest.MonkeyPat
     monkeypatch.setattr(
         httpx.Client,
         "request",
-        lambda self, method, url, **_: sent.append(str(url))
-        or httpx.Response(200, json={}),
+        lambda self, method, url, **_: (
+            sent.append(str(url)) or httpx.Response(200, json={})
+        ),
     )
 
     request_json(

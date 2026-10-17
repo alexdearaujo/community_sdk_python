@@ -73,7 +73,7 @@ dev = [
     "grpcio-tools==1.84.0",
     "types-protobuf>=6.30.0",
     "ty>=0.0.73",
-    "ruff==0.14.11",
+    "ruff==0.17.1",
     "openapi-python-generator==2.1.2",
     "packaging>=24",
 ]
@@ -96,6 +96,12 @@ docs = [
 [tool.ruff]
 # Spec Kit owns these scripts and rewrites them on every upgrade.
 extend-exclude = [".specify"]
+# Ruff 0.17 also formats Markdown; generated pages under docs/sphinx/services/ must stay as the generator writes them.
+include = ["*.py", "*.pyi", "*.ipynb", "**/pyproject.toml"]
+
+[tool.ruff.lint]
+# Ruff 0.14's default rules. Ruff 0.17 widened the default set; adopting it is a separate change.
+select = ["E4", "E7", "E9", "F"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
