@@ -23,5 +23,6 @@ guides/v5
 guides/generation
 local_generation_workflow
 sdk_runtime_architecture
+dependencies
 services/index
 :::

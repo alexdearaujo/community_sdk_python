@@ -260,25 +260,25 @@ test.
 
 ### Tests for User Story 5
 
-- [ ] T034 [US5] Create tests/smoke/test_declared_dependencies.py: every
+- [X] T034 [US5] Create tests/smoke/test_declared_dependencies.py: every
   third-party top-level import in src/, scripts/, and tests/ maps through
   `importlib.metadata.packages_distributions()` to a dependency declared
   in pyproject.toml, and the table in docs/sphinx/dependencies.md names
   exactly the declared dependencies; failures name the file and module, or
   the missing and extra rows (research R10; contracts/dependency-records.md;
   FR-011, FR-012); see the table half fail before T035
-- [ ] T035 [US5] Create docs/sphinx/dependencies.md with one row per
+- [X] T035 [US5] Create docs/sphinx/dependencies.md with one row per
   declared dependency: "Dependency", "Group", "Purpose", "Decision (audit
   2026-10-17)", from the spec's inventory table; the openapi-python-generator
   row records the upstream state and the fork conditions from research.md
   R12; add a note that CI decides when rumdl and the editor disagree; add
   the page to the toctree in docs/sphinx/index.md (FR-012)
-- [ ] T036 [P] [US5] Write the issue draft in
+- [X] T036 [P] [US5] Write the issue draft in
   reports/upstream-openapi-python-generator-optional-formatters.md: the
   `--formatter none` call, Black, isort, and orjson in the lock, no import
   of them in project code, and the ask to make them optional extras; the
   maintainer files it (research R12; FR-013)
-- [ ] T037 [US5] Add `test_declared_dependencies.py` to the table in
+- [X] T037 [US5] Add `test_declared_dependencies.py` to the table in
   tests/smoke/README.md, run T034, and run quickstart.md step 7 (SC-006)
 
 **Checkpoint**: The new test passes, and an undeclared import fails it.

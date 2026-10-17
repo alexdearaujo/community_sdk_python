@@ -553,8 +553,10 @@ analytics = [
 dev = [
     { name = "autodoc-pydantic" },
     { name = "grpcio-tools" },
+    { name = "httpcore" },
     { name = "jinja2" },
     { name = "kentik-api", extra = ["analytics"] },
+    { name = "markdown-it-py" },
     { name = "myst-parser" },
     { name = "openapi-python-generator" },
     { name = "packaging" },
@@ -576,6 +578,7 @@ docs = [
     { name = "sphinxcontrib-mermaid" },
 ]
 test = [
+    { name = "httpcore" },
     { name = "jinja2" },
     { name = "kentik-api", extra = ["analytics"] },
     { name = "pytest" },
@@ -600,8 +603,10 @@ provides-extras = ["analytics"]
 dev = [
     { name = "autodoc-pydantic", specifier = ">=2.2.0" },
     { name = "grpcio-tools", specifier = "==1.84.0" },
+    { name = "httpcore", specifier = ">=1.0.9" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "kentik-api", extras = ["analytics"] },
+    { name = "markdown-it-py", specifier = ">=4.2.0" },
     { name = "myst-parser", specifier = ">=5.1.0" },
     { name = "openapi-python-generator", specifier = "==2.1.2" },
     { name = "packaging", specifier = ">=24" },
@@ -623,6 +628,7 @@ docs = [
     { name = "sphinxcontrib-mermaid", specifier = ">=1.0.0" },
 ]
 test = [
+    { name = "httpcore", specifier = ">=1.0.9" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "kentik-api", extras = ["analytics"] },
     { name = "pytest", specifier = ">=9.0.2" },

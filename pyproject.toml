@@ -77,12 +77,14 @@ dev = [
     "openapi-python-generator==2.1.2",
     "packaging>=24",
     "rumdl==0.3.0",
+    "markdown-it-py>=4.2.0",
 ]
 
 test = [
     "pytest>=9.0.2",
     "respx>=0.22.0",
     "jinja2>=3.1.6",
+    "httpcore>=1.0.9",
     # tests/analytics/ needs the extra, and must never skip for lack of it.
     "kentik-api[analytics]",
 ]

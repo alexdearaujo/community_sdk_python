@@ -248,6 +248,12 @@ MyST-Parser 5.1.0, Sphinx 9.1.0, uv 0.13.0.
   - The table check keeps the inventory true on the next Dependabot change.
 - **Alternatives considered**: deptry: rejected, it adds a dependency for
   one check.
+- **Found during implementation**: the check found two more undeclared
+  imports, `markdown_it` in `scripts/impact_report.py` and `httpcore` in
+  `tests/runtime/test_connection_reuse.py`. Both are now declared at their
+  locked versions (`markdown-it-py` in `dev`, `httpcore` in `test`), so the
+  lock gains no package. The project's own `kentik-api[analytics]` entry and
+  the `{include-group = ...}` tables are not counted as declared packages.
 
 ## R11. Vulnerability audit in CI
 
@@ -263,7 +269,8 @@ MyST-Parser 5.1.0, Sphinx 9.1.0, uv 0.13.0.
 
 - **Decision**: Draft the issue text in
   `reports/upstream-openapi-python-generator-optional-formatters.md`. The
-  maintainer files it, and the inventory row links the issue.
+  maintainer files it, and the inventory row links the issue. The draft stays
+  untracked, as `reports/.gitignore` keeps every report but the audit record.
 - **Rationale**: Filing an issue in a third-party repository is a public
   action, so a person does it. The draft gives the evidence:
   `--formatter none`, Black, isort, and orjson in the lock, and no import
