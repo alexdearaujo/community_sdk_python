@@ -1,4 +1,4 @@
-# HAND-WRITTEN: orchestrates `make generate`. Not itself generated.
+# HAND-WRITTEN: orchestrates `uv run poe generate`. Not itself generated.
 """SDK generation entrypoint: downloads/validates the OpenAPI schema, runs every
 phase module in scripts/generation/, and writes src/kentik_api/gen/,
 client_mixin.py, the docs, the API records, and the schema.lock pin. A failed run
@@ -25,6 +25,7 @@ from generation import (
 )
 from generation._shared import (
     PROJECT_ROOT,
+    REGENERATE_COMMAND,
     SDK_OUTPUT_DIR,
     iter_service_dirs,
     normalize_symbol,
@@ -94,7 +95,7 @@ def is_remote(repo_source: str) -> bool:
 def read_schema_pin(path: Path = SCHEMA_PIN) -> str:
     if not path.exists():
         raise ValueError(
-            f"{path.name} is missing. Run `make sync-schema` to pin upstream HEAD."
+            f"{path.name} is missing. Run `uv run poe sync-schema` to pin upstream HEAD."
         )
     commit = path.read_text(encoding="utf-8").strip()
     if not _COMMIT_SHA.fullmatch(commit):
@@ -1187,7 +1188,7 @@ def _inject_generated_headers(output_dir: Path) -> None:
 
         header = (
             f"# AUTO-GENERATED: {source}, {generator_func_name}\n"
-            "# Rebuilt on every `make generate`. Do not edit by hand.\n"
+            f"# Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand.\n"
             "\n"
         )
         py_file.write_text(header + content, encoding="utf-8")

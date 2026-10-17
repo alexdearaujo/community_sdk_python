@@ -554,8 +554,8 @@ def test_regeneration_alert_lists_changes_and_next_steps():
 
     assert "API SURFACE CHANGED since HEAD: 1 BREAKING change" in alert
     assert "`kmeta`: field removed, `Config.vaultId`" in alert
-    assert "make check-changelog SINCE=HEAD" in alert
-    assert "make release-notes SINCE=HEAD" in alert
+    assert "uv run poe check-changelog --since HEAD" in alert
+    assert "uv run poe release-notes --since HEAD" in alert
 
 
 def test_regeneration_alert_is_quiet_when_nothing_changed():

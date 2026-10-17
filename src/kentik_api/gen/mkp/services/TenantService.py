@@ -1,5 +1,5 @@
 # AUTO-GENERATED: scripts/openapi_templates/service.jinja2 via openapi-python-generator
-# Rebuilt on every `make generate`. Do not edit by hand.
+# Rebuilt on every `uv run poe generate`. Do not edit by hand.
 
 from typing import Any, Dict, Optional
 

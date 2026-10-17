@@ -917,7 +917,7 @@ def test_a_malformed_pin_is_rejected(tmp_path, content):
 
 
 def test_a_missing_pin_names_the_command_that_writes_it(tmp_path):
-    with pytest.raises(ValueError, match="make sync-schema"):
+    with pytest.raises(ValueError, match="uv run poe sync-schema"):
         read_schema_pin(tmp_path / "schema.lock")
 
 

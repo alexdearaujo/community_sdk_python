@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Runtime architecture docs (inline Mermaid), the gen/ root README, and per-service READMEs.
 
 Also updates <!-- kentik-gen:MARKER --> blocks in docs/sphinx/guides/ files so every
@@ -12,6 +12,7 @@ from pathlib import Path
 
 from ._shared import (
     PROJECT_ROOT,
+    REGENERATE_COMMAND,
     SDK_OUTPUT_DIR,
     iter_service_dirs,
     parse_generated_rest_module,
@@ -21,14 +22,14 @@ from ._shared import (
 _GUIDES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "guides"
 
 # Top-level README for src/kentik_api/gen/. This lives inside the fully-wiped
-# gen/ tree, so it is generated here rather than hand-written: `make clean`
-# (rm -rf gen/) would otherwise delete it with no way to regenerate it.
-_GEN_ROOT_README = """\
+# gen/ tree, so it is generated here rather than hand-written: `uv run poe clean`
+# (which removes gen/) would otherwise delete it with no way to regenerate it.
+_GEN_ROOT_README = f"""\
 <!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_gen_root_readme() -->
-<!-- Rebuilt on every `make generate`. Do not edit by hand. -->
+<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->
 # Generated Services (`kentik_api.gen`)
 
-Fully generated. Every [`make generate`](../../../Makefile) run wipes and rebuilds every
+Fully generated. Every [`{REGENERATE_COMMAND}`](../../../pyproject.toml) run wipes and rebuilds every
 subdirectory here, and rewrites this file too. **Never hand-edit
 anything under this folder**, including this README. If output here is
 wrong, fix the generator ([`scripts/generate_sdk.py`](../../../scripts/generate_sdk.py), a phase module in
@@ -158,7 +159,7 @@ def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
 
         lines = [
             "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_service_readmes() -->",
-            "<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
+            f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
             f"# {service_name.replace('_', ' ').title()} Service",
             "",
             f"This module was automatically generated from {source}",
@@ -372,7 +373,7 @@ def _generate_runtime_architecture_docs(
 
     architecture_md = [
         "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_runtime_architecture_docs() -->",
-        "<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
+        f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
         "",
         "# SDK Runtime Architecture",
         "",

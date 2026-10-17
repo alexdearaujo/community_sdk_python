@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_runtime_architecture_docs() -->
-<!-- Rebuilt on every `make generate`. Do not edit by hand. -->
+<!-- Rebuilt on every `uv run poe generate`. Do not edit by hand. -->
 
 # SDK Runtime Architecture
 

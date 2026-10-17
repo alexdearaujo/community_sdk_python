@@ -214,19 +214,19 @@ template header test pass, and a regeneration changes only header lines.
 
 ### Tests for User Story 4
 
-- [ ] T021 [P] [US4] Add
+- [X] T021 [P] [US4] Add
   `test_service_template_header_names_the_regenerate_command` to
   tests/generator/test_openapi_templates.py: the header in
   scripts/openapi_templates/service.jinja2 contains `REGENERATE_COMMAND`;
   see it fail (FR-010)
-- [ ] T022 [US4] Add `test_agent_skill_matches_locked_poe` and
+- [X] T022 [US4] Add `test_agent_skill_matches_locked_poe` and
   `test_agents_md_is_a_regular_file_and_claude_md_imports_it` to
   tests/smoke/test_task_runner.py: `.claude/skills/poethepoet/version.txt`
   equals `importlib.metadata.version("poethepoet")` and the failure message
   names `uv run poe _install_skill .claude/skills --upgrade`; `AGENTS.md` is
   not a link in the index (`git ls-files -s` mode `100644`) and CLAUDE.md is
   exactly `@AGENTS.md`; see both fail (FR-012, FR-014)
-- [ ] T023 [US4] Add `test_no_make_commands_outside_past_specs` to
+- [X] T023 [US4] Add `test_no_make_commands_outside_past_specs` to
   tests/smoke/test_task_runner.py: scan every file from `git ls-files` that
   decodes as UTF-8 for a `make <target>` command (any task or former target
   name) or `Makefile`, skipping `specs/001-*` to `specs/007-*`, `reports/`,
@@ -235,17 +235,17 @@ template header test pass, and a regeneration changes only header lines.
 
 ### Implementation for User Story 4
 
-- [ ] T024 [US4] Replace the 8 hard-coded header literals in
+- [X] T024 [US4] Replace the 8 hard-coded header literals in
   scripts/generation/endpoint_docs.py, scripts/generation/docs_rendering.py,
   and scripts/generation/wrapper_generation.py, and the header in
   `_inject_generated_headers()` and the printed messages in
   scripts/generate_sdk.py, with `REGENERATE_COMMAND` through the relative
   `._shared` import (FR-010, R8)
-- [ ] T025 [US4] Change the header text in
+- [X] T025 [US4] Change the header text in
   scripts/openapi_templates/service.jinja2 to `uv run poe generate`, and any
   message in scripts/generation/api_surface.py that names `make generate`;
   T021 passes (FR-010)
-- [ ] T026 [US4] Run `uv run poe generate`, then confirm with
+- [X] T026 [US4] Run `uv run poe generate`, then confirm with
   `git diff --stat` and `git diff -U0 | grep '^[+-][^+-]'` that only header
   lines changed under src/kentik_api/gen/, src/kentik_api/client_mixin.py,
   docs/sphinx/services/, and the other generated pages, and that
