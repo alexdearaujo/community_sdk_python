@@ -138,14 +138,14 @@ examples.
 
 ### Tests for User Story 4
 
-- [ ] T033 [P] [US4] Add tests/smoke/test_examples_v5.py that imports each script in examples/v5/ and runs it against a mocked API, so the test fails when an example no longer matches the SDK (FR-024)
+- [X] T033 [P] [US4] Add tests/smoke/test_examples_v5.py that imports each script in examples/v5/ and runs it against a mocked API, so the test fails when an example no longer matches the SDK (FR-024)
 
 ### Implementation for User Story 4
 
-- [ ] T034 [P] [US4] Write the V5 to 2.x map in docs/sphinx/guides/migrating-from-1x.md: every V5 call from reports/v5-feature-parity-audit.md (including the endpoints that already have a V6 equivalent), old and new field names, and a reason for each call with no equivalent, such as the retired SQL endpoint; list `analytics_example_sql.py` as "No port: the SQL endpoint was retired on 2025-05-01. See `examples/v5/analytics_topx.py`." (FR-023, FR-024, SC-001)
-- [ ] T035 [P] [US4] Write docs/sphinx/guides/v5.md: what `client.v5` covers, that it is a bridge until the V6 query service ships, the V5 host and `v5_base_url`, the chart call marked as not verified, and a section "Test the chart call by hand" with the steps, the timeout, and how to report the result; add it to the toctree in docs/sphinx/index.md (FR-004, FR-004a, FR-025, SC-008)
-- [ ] T036 [P] [US4] Update docs/sphinx/guides/rate_limiting.md: V5 calls report no quota, and a 429 retry recipe with a fixed backoff that does not need quota headers (FR-026)
-- [ ] T037 [US4] Port examples/queries_example.py and examples/batch_example.py from origin/main to examples/v5/query.py and examples/v5/batch.py, and list them in examples/README.md (FR-024, SC-002)
+- [X] T034 [P] [US4] Write the V5 to 2.x map in docs/sphinx/guides/migrating-from-1x.md: every V5 call from reports/v5-feature-parity-audit.md (including the endpoints that already have a V6 equivalent), old and new field names, and a reason for each call with no equivalent, such as the retired SQL endpoint; list `analytics_example_sql.py` as "No port: the SQL endpoint was retired on 2025-05-01. See `examples/v5/analytics_topx.py`." (FR-023, FR-024, SC-001)
+- [X] T035 [P] [US4] Write docs/sphinx/guides/v5.md: what `client.v5` covers, that it is a bridge until the V6 query service ships, the V5 host and `v5_base_url`, the chart call marked as not verified, and a section "Test the chart call by hand" with the steps, the timeout, and how to report the result; add it to the toctree in docs/sphinx/index.md (FR-004, FR-004a, FR-025, SC-008)
+- [X] T036 [P] [US4] Update docs/sphinx/guides/rate_limiting.md: V5 calls report no quota, and a 429 retry recipe with a fixed backoff that does not need quota headers (FR-026)
+- [X] T037 [US4] Port examples/queries_example.py and examples/batch_example.py from origin/main to examples/v5/query.py and examples/v5/batch.py, and list them in examples/README.md (FR-024, SC-002)
 
 **Checkpoint**: The migration path is documented and the ported examples
 pass their test.
@@ -191,7 +191,7 @@ change to a `v5` public name.
 schema, regenerates, and sees both services with no public name change.
 
 - [ ] T049 [US5] Add a generator test in tests/generator/test_public_names.py that adds a fake upstream `query` service next to the local `v5` service and asserts that both resolve, that no `v5` entry changes, and that no `NameDriftError` is raised (SC-006)
-- [ ] T050 [US5] Add to docs/sphinx/guides/v5.md a "When the V6 query service ships" section that says the `v5` calls keep working until Kentik retires the endpoints and that this guide will name the V6 replacement of each call (FR-025)
+- [X] T050 [US5] Add to docs/sphinx/guides/v5.md a "When the V6 query service ships" section that says the `v5` calls keep working until Kentik retires the endpoints and that this guide will name the V6 replacement of each call (FR-025)
 
 **Checkpoint**: All user stories work on their own.
 

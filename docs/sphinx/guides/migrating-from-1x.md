@@ -4,11 +4,14 @@
 
 Version 2 is a new SDK with the same package name. It shares no code with
 [kentik-api 1.x](https://github.com/kentik/community_sdk_python/tree/v1.0.7).
-Version 1 wrapped the V5 REST API, which Kentik discontinued in January 2025,
-plus two V6 gRPC services. Version 2 is generated from Kentik's V6 API schema,
-and it covers every V6 service that the schema publishes.
+Version 1 wrapped the V5 REST API, which Kentik marks as deprecated, plus two
+V6 gRPC services. Version 2 is generated from Kentik's V6 API schema, and it
+covers every V6 service that the schema publishes. Where V6 has no equivalent
+of a V5 endpoint (the query and batch APIs), `client.v5` calls the V5 endpoint
+itself. See [V5 query and batch calls](v5.md).
 
 There is no compatibility layer. Rewrite each call against the new client.
+The table "Every 1.x call in 2.x" below lists the replacement of each call.
 
 ## At a glance
 
@@ -82,11 +85,68 @@ A gRPC response larger than 40 MiB raises `TransportError`, not a 429. 1.x
 allowed 40 MB, and grpcio alone allows only 4 MiB. To change the limit, pass
 `grpc_options=[("grpc.max_receive_message_length", N)]` to `KentikAPI`.
 
+## Every 1.x call in 2.x
+
+2.x adds a V5 call only when V6 has no equivalent, so each 1.x call has one
+replacement. Method arguments are keyword only, and models are in
+`kentik_api.gen.<service>.models`.
+
+| 1.x call | 2.x call | Notes |
+| --- | --- | --- |
+| `sites.get_all`, `get`, `create`, `update`, `delete` | `site.list_sites`, `get_site`, `create_site`, `update_site`, `delete_site` | `site_name` is `title`, `latitude` is `lat`, `longitude` is `lon` |
+| `devices.get_all`, `get`, `create`, `update`, `delete` | `device.list_devices`, `get_device`, `create_device`, `update_device`, `delete_device` | `device_name` is `deviceName`. 2.x adds bulk calls and `get_device_by_name` |
+| `devices.apply_labels` | `device.update_labels` | |
+| `devices.interfaces.get_all(device_id)` | `interface.list_interface` | Filter on the device ID in the request |
+| `devices.interfaces.get`, `create`, `update`, `delete` | `interface.interface_get`, `interface_create`, `interface_update`, `interface_delete` | |
+| `device_labels.get_all`, `create`, `update`, `delete` | `label.list_labels`, `create_label`, `update_label`, `delete_label` | |
+| `device_labels.get` | `label.list_labels` | No get call. List the labels and filter |
+| `users.get_all`, `get`, `create`, `update`, `delete` | `user.list_users`, `get_user`, `create_user`, `update_user`, `delete_user` | 2.x adds token and session reset |
+| `tags.get_all` | `flow_tag.search_flow_tag` | Page through the search |
+| `tags.get`, `create`, `update`, `delete` | `flow_tag.get_flow_tag`, `create_flow_tag`, `update_flow_tag`, `delete_flow_tag` | |
+| `saved_filters.get_all`, `get`, `create`, `update`, `delete` | `saved_filter.list_saved_filters`, `get_saved_filter`, `create_saved_filter`, `update_saved_filter`, `delete_saved_filter` | |
+| `custom_dimensions.get_all`, `get`, `create`, `update`, `delete` | `custom_dimension.list_custom_dimensions`, `get_info`, `create_custom_dimension`, `update_custom_dimension`, `delete_custom_dimension` | |
+| `custom_dimensions.populators.create`, `update`, `delete` | `custom_dimension.create_populator`, `update_populator`, `delete_populator` | 2.x adds `get_populator` |
+| `custom_applications.get_all`, `create`, `update`, `delete` | `custom_application.list_custom_applications`, `create_custom_application`, `update_custom_application`, `delete_custom_application` | 2.x adds `get_custom_application` |
+| `plans.get_all` | `plan.list_plans` | |
+| `my_kentik_portal.get_all`, `get`, `create_tenant_user`, `delete_tenant_user` | `mkp.tenant_list`, `tenant_get`, `tenant_user_create`, `tenant_user_delete` | 2.x adds tenant and package management |
+| `alerting.create_manual_mitigation` | `alerting.mitigations_create` | The request names a platform ID and a method ID |
+| `alerting.get_active_alerts` | `alerting.alert_list` | Filters move into the request body |
+| `alerting.get_alerts_history` | `alerting.alert_list` | Set `filters.states` and a `filters.startedAt` range |
+| `query.data` | `v5.top_x_data` | A V5 call. See [V5 query and batch calls](v5.md) |
+| `query.chart` | `v5.top_x_chart`, then `kentik_api.v5_tools.decode_chart()` | Not verified: the endpoint gave no response in a live check |
+| `query.url` | `v5.query_url` | Returns the link as `str` |
+| `query.sql` | None | Kentik retired the V5 SQL endpoint on 2025-05-01. Query the same data with `v5.top_x_data` |
+| `batch.batch_operation_on_flow_tags` | `v5.batch_tags` | Use `split_batch()` and `send_batch()` for a large set |
+| `batch.batch_operation_on_populators(dimension_name, ...)` | `v5.batch_populators(dimensionName=..., data=...)` | |
+| `batch.get_status(guid)` | `v5.batch_status(guid=...)` | `wait_for_batch()` polls it |
+| `synthetics.*` | `synthetics.*` | `private_only` filtering moves to the caller |
+| `cloud_export.get_all`, `get`, `create`, `update`, `delete` | `cloud_export.list_cloud_exports`, `get_cloud_export`, `create_cloud_export`, `update_cloud_export`, `delete_cloud_export` | |
+| `cloud_export.patch` | `cloud_export.update_cloud_export` | No field mask. Read the export, change it, and write it back |
+| `kentik_api.utils.DeviceCache` | `kentik_api.devices.DeviceLookup` | Saves to JSON, not pickle |
+| `kentik_api.analytics` | `kentik_api.analytics`, with `pip install "kentik-api[analytics]"` | Top-X definitions only. A SQL definition or an `@fixup:` mapping raises `ValueError` |
+
+### V5 query field names
+
+`client.v5` models use the V5 wire names, as 1.x sent them. A 1.x
+`QueryObject` becomes a `QueryRequest`, and a `QueryArrayItem` becomes a
+`QueryItem`. 1.x enums such as `MetricType.bytes` become plain strings such as
+`"bytes"`. `metric` and `device_name` take a string or a list. A query model
+keeps every field it gets, so query JSON copied from Data Explorer works
+unchanged.
+
+### 1.x examples
+
+| 1.x example | 2.x |
+| --- | --- |
+| `queries_example.py` | [`examples/v5/query.py`](../../../examples/v5/query.py) |
+| `batch_example.py` | [`examples/v5/batch.py`](../../../examples/v5/batch.py) |
+| `analytics_example_topx.py` | [`examples/v5/analytics_topx.py`](../../../examples/v5/analytics_topx.py) |
+| `analytics_example_sql.py` | No port: the SQL endpoint was retired on 2025-05-01. See `examples/v5/analytics_topx.py` |
+| `demos/queries_visualisation_demo.ipynb` | No port |
+
 ## Features that 1.x had and 2.x does not
 
 | 1.x feature | In 2.x |
 | --- | --- |
-| `client.query` (V5 query API) | V5 is discontinued. There is no V6 equivalent in the schema. |
-| `client.batch` (V5 batch API) | V5 is discontinued. |
-| `kentik_api.analytics` (pandas helpers) | Removed. |
+| `client.query.sql` (V5 SQL query) | Kentik retired the endpoint on 2025-05-01. |
 | `retry_strategy` | Removed. See the [rate limiting guide](rate_limiting.md) for why the SDK does not retry after a response. |

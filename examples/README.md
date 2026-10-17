@@ -50,6 +50,20 @@ against the real client, so an example that stops matching the SDK fails
 | [`synthetics/`](synthetics/) | Synthetic tests | [`rest.py`](synthetics/rest.py) | [`grpc.py`](synthetics/grpc.py) |
 | [`common/`](common/) | Error handling on either transport | [`error_handling.py`](common/error_handling.py) | same file, `grpc` argument |
 
+### V5 query and batch examples
+
+[`v5/`](v5/) holds ports of the 1.x query, batch, and analytics examples.
+`client.v5` always uses REST, so these scripts have no gRPC variant. See the
+[V5 guide](../docs/sphinx/guides/v5.md).
+
+| Script | What it does |
+| --- | --- |
+| [`v5/query.py`](v5/query.py) | Top-X data, Data Explorer URL, and chart queries. Read-only |
+| [`v5/batch.py`](v5/batch.py) | Flow tag batch. A dry run unless you pass `--send`, which writes to your account |
+
+[`tests/smoke/test_examples_v5.py`](../tests/smoke/test_examples_v5.py) runs
+each one against a mocked API.
+
 ## Transport selection
 
 Both transports return the same Pydantic models. Switch with one argument:
