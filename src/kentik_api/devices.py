@@ -35,7 +35,7 @@ class DeviceLookup:
         """Loads every device and interface. Deleted devices only on request."""
         devices = [
             d
-            for d in client.device.list().devices or []
+            for d in client.device.list(  ).devices or []
             if d is not None and (include_deleted or d.deviceStatus != "D")
         ]
         interfaces = [
