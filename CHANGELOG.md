@@ -49,6 +49,8 @@ Each change below can stop an existing `except` clause or call from working.
 | 55 model names held a schema version (`labelv202210Label`), so a version bump renamed them | The version and its package prefix are gone (`Label`). See [Renamed models](#renamed-models) | Use the new names in the table below |
 | Error classes were named after the upstream operationId, and operations that share one (`alerting` has eight `List` operations) shared one class | Each operation has its own class, named after its client method: `client.label.list` raises `ListError`. See [Renamed error classes](#renamed-error-classes) | Catch the new names in the table below |
 | Each error package exported `ERROR_BY_OPERATION`, keyed by operationId | It exports `ERROR_BY_METHOD`, keyed by client method name | Look up `ERROR_BY_METHOD["list"]` |
+| The SDK accepted `pydantic>=2.12.5` | It needs `pydantic>=2.14.0`, for thread-safe model rebuilds and constant-time secret comparison | Upgrade Pydantic to 2.14.0 or later |
+| The SDK accepted `python-dotenv>=1.2.1` | It needs `python-dotenv>=1.2.4`. Earlier versions drop the first variable after a byte order mark, and read `KEY= # comment` as the comment text | Upgrade python-dotenv to 1.2.4 or later |
 
 #### Renamed client methods
 

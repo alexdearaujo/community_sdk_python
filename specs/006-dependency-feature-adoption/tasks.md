@@ -37,7 +37,7 @@ and checked on its own.
 **Purpose**: Add the two new packages once, so later stories never fight
 over `uv.lock`.
 
-- [ ] T001 Add `rumdl==0.3.0` to the `dev` group and `jinja2>=3.1.6` to the
+- [X] T001 Add `rumdl==0.3.0` to the `dev` group and `jinja2>=3.1.6` to the
   `test` group in pyproject.toml, run `uv lock` and `uv sync`, and confirm
   with `git diff uv.lock` that the lock adds only rumdl and changes no
   locked version (SC-004, FR-008, FR-011)
@@ -51,7 +51,7 @@ nothing.
 
 **Critical**: No user story work starts before this phase is complete.
 
-- [ ] T002 Run `make test`, `make typecheck`, `make check-specs`,
+- [X] T002 Run `make test`, `make typecheck`, `make check-specs`,
   `uv run ruff check .`, `uv run ruff format --check .`, and
   `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`,
   confirm all pass, and copy api_surface.json to
@@ -71,7 +71,7 @@ step 6) and confirm each floor. Run `make check-changelog SINCE=HEAD`.
 
 ### Tests for User Story 1
 
-- [ ] T003 [P] [US1] Add two tests to tests/smoke/test_client_mounts_and_calls.py
+- [X] T003 [P] [US1] Add two tests to tests/smoke/test_client_mounts_and_calls.py
   next to `test_explicit_env_file_path_is_used`: an `env_file` that starts
   with a UTF-8 byte order mark still gives `KENTIK_EMAIL`, and
   `KENTIK_API_TOKEN= # set me` reads as empty, so `KentikAPI` raises
@@ -79,24 +79,24 @@ step 6) and confirm each floor. Run `make check-changelog SINCE=HEAD`.
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Raise the floors in pyproject.toml exactly as in
+- [X] T004 [US1] Raise the floors in pyproject.toml exactly as in
   contracts/dependency-records.md: `python-dotenv>=1.2.4` and
   `pydantic>=2.14.0` in `[project.dependencies]`, `ty>=0.0.84` in `dev`,
   `myst-parser>=5.1.0` in `docs`; keep `sphinxcontrib-mermaid>=1.0.0`; run
   `uv lock` and confirm no locked version changes (FR-001, FR-002, FR-003,
   FR-015, SC-004)
-- [ ] T005 [US1] Run `make generate` and confirm that the only change in
+- [X] T005 [US1] Run `make generate` and confirm that the only change in
   api_surface.json is `requirements` for python-dotenv and pydantic (FR-017)
-- [ ] T006 [US1] Add both raised runtime floors to the Unreleased section of
+- [X] T006 [US1] Add both raised runtime floors to the Unreleased section of
   CHANGELOG.md as breaking changes, named the way the `API SURFACE CHANGED`
   alert from T005 names them, then run `make check-changelog SINCE=HEAD`
   (FR-017)
-- [ ] T007 [P] [US1] Add an `audit` job to .github/workflows/tests.yml with
+- [X] T007 [P] [US1] Add an `audit` job to .github/workflows/tests.yml with
   the same pinned checkout and setup-uv actions as the other jobs, running
   `uv audit --preview-features audit-command` with
   `continue-on-error: true` and a one-line comment that the command is
   experimental (FR-014, research R11)
-- [ ] T008 [US1] Run quickstart.md step 6 and confirm ty 0.0.84,
+- [X] T008 [US1] Run quickstart.md step 6 and confirm ty 0.0.84,
   pydantic 2.14.0, python-dotenv 1.2.4, MyST-Parser 5.1.0, and a docs build
   that exits 0; if any result differs, update research.md R7 and the floor
   (FR-003, SC-001)

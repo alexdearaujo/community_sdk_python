@@ -109,6 +109,27 @@ def test_explicit_env_file_path_is_used(no_env_credentials):
         assert _credentials(client) == ("path@example.com", "path-token")
 
 
+# python-dotenv before 1.2.3 dropped the first variable after a byte order mark.
+def test_env_file_with_byte_order_mark_keeps_first_variable(no_env_credentials):
+    (no_env_credentials / ".env").write_text(
+        "\ufeffKENTIK_EMAIL=bom@example.com\nKENTIK_API_TOKEN=bom-token\n",
+        encoding="utf-8",
+    )
+
+    with KentikAPI() as client:
+        assert _credentials(client) == ("bom@example.com", "bom-token")
+
+
+# python-dotenv before 1.2.4 read the comment text as the value.
+def test_env_file_empty_value_with_comment_is_missing(no_env_credentials):
+    (no_env_credentials / ".env").write_text(
+        "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN= # set me\n"
+    )
+
+    with pytest.raises(ConfigurationError, match="Missing Kentik credentials"):
+        KentikAPI()
+
+
 def test_env_file_none_disables_file_lookup(no_env_credentials):
     (no_env_credentials / ".env").write_text(
         "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN=file-token\n"
