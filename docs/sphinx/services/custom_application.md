@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.custom_application
     participant API as Kentik REST API
 
-    C->>W: list_custom_applications()
+    C->>W: list()
     W->>API: GET /custom_application/v202501alpha1
     alt success
         API-->>W: ListCustomApplicationsResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_custom_applications()
+    C->>W: list()
     W->>R: build_grpc_request(ListCustomApplicationsRequest, arguments)
     R->>API: CustomApplicationService/ListCustomApplications (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_application.list_custom_applications()
+response = client.custom_application.list()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.custom_application
     participant API as Kentik REST API
 
-    C->>W: create_custom_application(data=CustomApplication(...))
+    C->>W: create(data=CustomApplication(...))
     W->>API: POST /custom_application/v202501alpha1
     alt success
         API-->>W: CreateCustomApplicationResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_custom_application(data=CustomApplication(...))
+    C->>W: create(data=CustomApplication(...))
     W->>R: build_grpc_request(CreateCustomApplicationRequest, arguments)
     R->>API: CustomApplicationService/CreateCustomApplication (gRPC/TLS)
     alt success
@@ -165,7 +165,7 @@ from kentik_api.gen.custom_application.models import CustomApplication
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_application.create_custom_application(
+response = client.custom_application.create(
     data=CustomApplication(...),
 )
 ```
@@ -186,7 +186,7 @@ sequenceDiagram
     participant W as client.custom_application
     participant API as Kentik REST API
 
-    C->>W: get_custom_application(customApplicationId="customApplicationId-example")
+    C->>W: get(customApplicationId="customApplicationId-example")
     W->>API: GET /custom_application/v202501alpha1/{customApplicationId}
     alt success
         API-->>W: GetCustomApplicationResponse (JSON)
@@ -208,7 +208,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_custom_application(customApplicationId="customApplicationId-example")
+    C->>W: get(customApplicationId="customApplicationId-example")
     W->>R: build_grpc_request(GetCustomApplicationRequest, arguments)
     R->>API: CustomApplicationService/GetCustomApplication (gRPC/TLS)
     alt success
@@ -241,7 +241,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_application.get_custom_application(
+response = client.custom_application.get(
     customApplicationId="customApplicationId-example",
 )
 ```
@@ -262,7 +262,7 @@ sequenceDiagram
     participant W as client.custom_application
     participant API as Kentik REST API
 
-    C->>W: update_custom_application(customApplicationId="customApplicationId-example", data=CustomApplication(...))
+    C->>W: update(customApplicationId="customApplicationId-example", data=CustomApplication(...))
     W->>API: PUT /custom_application/v202501alpha1/{customApplicationId}
     alt success
         API-->>W: UpdateCustomApplicationResponse (JSON)
@@ -284,7 +284,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_custom_application(customApplicationId="customApplicationId-example", data=CustomApplication(...))
+    C->>W: update(customApplicationId="customApplicationId-example", data=CustomApplication(...))
     W->>R: build_grpc_request(UpdateCustomApplicationRequest, arguments)
     R->>API: CustomApplicationService/UpdateCustomApplication (gRPC/TLS)
     alt success
@@ -319,7 +319,7 @@ from kentik_api.gen.custom_application.models import CustomApplication
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_application.update_custom_application(
+response = client.custom_application.update(
     customApplicationId="customApplicationId-example",
     data=CustomApplication(...),
 )
@@ -341,7 +341,7 @@ sequenceDiagram
     participant W as client.custom_application
     participant API as Kentik REST API
 
-    C->>W: delete_custom_application(customApplicationId="customApplicationId-example")
+    C->>W: delete(customApplicationId="customApplicationId-example")
     W->>API: DELETE /custom_application/v202501alpha1/{customApplicationId}
     alt success
         API-->>W: DeleteCustomApplicationResponse (JSON)
@@ -363,7 +363,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_custom_application(customApplicationId="customApplicationId-example")
+    C->>W: delete(customApplicationId="customApplicationId-example")
     W->>R: build_grpc_request(DeleteCustomApplicationRequest, arguments)
     R->>API: CustomApplicationService/DeleteCustomApplication (gRPC/TLS)
     alt success
@@ -396,7 +396,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_application.delete_custom_application(
+response = client.custom_application.delete(
     customApplicationId="customApplicationId-example",
 )
 ```

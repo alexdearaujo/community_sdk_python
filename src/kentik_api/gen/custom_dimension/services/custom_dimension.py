@@ -35,7 +35,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_custom_dimensions(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCustomDimensionsResponse:
         """
@@ -55,7 +55,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.ListCustomDimensions,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomDimensionModule1.ListCustomDimensionsError,
+                error_cls=RestCustomDimensionModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListCustomDimensionsResponse,
@@ -116,7 +116,7 @@ class CustomDimensionServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_custom_dimension(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -142,7 +142,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.UpdateCustomDimension,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomDimensionModule1.UpdateCustomDimensionError,
+                error_cls=RestCustomDimensionModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateCustomDimensionResponse,
@@ -163,7 +163,7 @@ class CustomDimensionServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_custom_dimension(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, customDimensionId: str
     ) -> rest_models.DeleteCustomDimensionResponse:
         """
@@ -185,7 +185,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.DeleteCustomDimension,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomDimensionModule1.DeleteCustomDimensionError,
+                error_cls=RestCustomDimensionModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteCustomDimensionResponse,
@@ -460,7 +460,7 @@ class CustomDimensionServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_custom_dimension(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -485,7 +485,7 @@ class CustomDimensionServiceWrapper:
                 self._grpc_stub_1.CreateCustomDimension,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCustomDimensionModule1.CreateCustomDimensionError,
+                error_cls=RestCustomDimensionModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateCustomDimensionResponse,

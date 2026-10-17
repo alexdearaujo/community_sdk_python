@@ -78,29 +78,29 @@ class DictionaryError(HTTPException):
         )
 
 
-class GetDictionaryError(DictionaryError):
-    """Operation-local error for client.dictionary.get_dictionary()."""
+class GetError(DictionaryError):
+    """Operation-local error for client.dictionary.get()."""
 
     response_error_map: dict[str, type[DictionaryError]] = {}
 
 
-class GetDictionaryUnexpectedError(GetDictionaryError):
-    """Operation-local response error for get_dictionary (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class GetUnexpectedError(GetError):
+    """Operation-local response error for get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-GetDictionaryError.response_error_map = {
-    "default": GetDictionaryUnexpectedError,
+GetError.response_error_map = {
+    "default": GetUnexpectedError,
 }
 
 ERROR_BY_METHOD: dict[str, type[DictionaryError]] = {
-    "get_dictionary": GetDictionaryError,
+    "get": GetError,
 }
 
 __all__ = [
     "DictionaryError",
-    "GetDictionaryUnexpectedError",
-    "GetDictionaryError",
+    "GetUnexpectedError",
+    "GetError",
     "ERROR_BY_METHOD",
 ]

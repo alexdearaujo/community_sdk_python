@@ -8,7 +8,7 @@ from kentik_api.errors import KentikError
 def main() -> None:
     client = KentikAPI(protocol="grpc")
     try:
-        response = client.label.list_labels()
+        response = client.label.list()
         labels = [label for label in (response.labels or []) if label is not None]
         print(f"Found {len(labels)} label(s).")
         for label in labels:

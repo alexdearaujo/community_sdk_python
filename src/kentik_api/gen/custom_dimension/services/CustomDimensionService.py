@@ -11,15 +11,15 @@ from kentik_api.core.rest_runtime import (
 )
 
 from ..error import (
-    CreateCustomDimensionError,
+    CreateError,
     CreatePopulatorError,
-    DeleteCustomDimensionError,
+    DeleteError,
     DeletePopulatorError,
     GetInfoError,
     GetPopulatorError,
     GetPopulatorFieldError,
-    ListCustomDimensionsError,
-    UpdateCustomDimensionError,
+    ListError,
+    UpdateError,
     UpdatePopulatorError,
 )
 from ..models import (  # noqa: F401
@@ -62,7 +62,7 @@ def ListCustomDimensions(
         header_params=header_params,
         expected_status=200,
         operation_name="ListCustomDimensions",
-        error_cls=ListCustomDimensionsError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -132,7 +132,7 @@ def UpdateCustomDimension(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateCustomDimension",
-        error_cls=UpdateCustomDimensionError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -165,7 +165,7 @@ def DeleteCustomDimension(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteCustomDimension",
-        error_cls=DeleteCustomDimensionError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(
@@ -386,7 +386,7 @@ def CreateCustomDimension(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateCustomDimension",
-        error_cls=CreateCustomDimensionError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(

@@ -1,7 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 """List alerts from the last 30 days, gRPC transport.
 
-Uses the alert_list operation from the AlertService group.
+Uses the list operation from the AlertService group.
 The Kentik backend rejects the call unless the filters carry a startedAt time
 range, although the schema marks every field optional.
 On the test account every alerting gRPC call fails with a server 500 RangeError; REST works.
@@ -11,8 +11,11 @@ from datetime import UTC, datetime, timedelta
 
 from kentik_api.client import KentikAPI
 from kentik_api.errors import KentikError
-from kentik_api.gen.alerting.models import AlertFilters, AlertServiceListRequest
-from kentik_api.gen.alerting.models import TimeRange
+from kentik_api.gen.alerting.models import (
+    AlertFilters,
+    AlertServiceListRequest,
+    TimeRange,
+)
 
 
 def main() -> None:
@@ -24,7 +27,7 @@ def main() -> None:
     )
     request = AlertServiceListRequest(filters=AlertFilters(startedAt=started_at))
     try:
-        response = client.alerting.alert_list(data=request)
+        response = client.alerting.list(data=request)
         alerts = [alert for alert in (response.alerts or []) if alert is not None]
         print(f"Found {len(alerts)} alert(s) in the last 30 days.")
         for alert in alerts[:10]:

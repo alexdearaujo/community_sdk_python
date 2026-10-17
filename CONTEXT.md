@@ -54,7 +54,7 @@ _Avoid_: generator step, stage
 The `error/__init__.py` file that the `error_package` phase module
 generates for one service. It defines a base error class, one class
 per operation, named after the operation's client method
-(`ListLabelsError`), and one leaf class per declared error response.
+(`label.list` raises `ListError`), and one leaf class per declared error response.
 The runtime dispatches errors through `error_cls.from_response`.
 
 **Parity validation**:

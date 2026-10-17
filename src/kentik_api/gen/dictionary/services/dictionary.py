@@ -35,7 +35,7 @@ class DictionaryServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def get_dictionary(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.GetDictionaryResponse:
         """
@@ -53,7 +53,7 @@ class DictionaryServiceWrapper:
                 self._grpc_stub_1.GetDictionary,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestDictionaryModule1.GetDictionaryError,
+                error_cls=RestDictionaryModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetDictionaryResponse,

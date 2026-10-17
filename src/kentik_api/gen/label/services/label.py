@@ -35,7 +35,7 @@ class LabelServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_labels(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListLabelsResponse:
         """
@@ -53,7 +53,7 @@ class LabelServiceWrapper:
                 self._grpc_stub_1.ListLabels,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestLabelModule1.ListLabelsError,
+                error_cls=RestLabelModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListLabelsResponse,
@@ -72,7 +72,7 @@ class LabelServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_label(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -97,7 +97,7 @@ class LabelServiceWrapper:
                 self._grpc_stub_1.CreateLabel,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestLabelModule1.CreateLabelError,
+                error_cls=RestLabelModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateLabelResponse,
@@ -117,7 +117,7 @@ class LabelServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_label(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -143,7 +143,7 @@ class LabelServiceWrapper:
                 self._grpc_stub_1.UpdateLabel,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestLabelModule1.UpdateLabelError,
+                error_cls=RestLabelModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateLabelResponse,
@@ -164,7 +164,7 @@ class LabelServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_label(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteLabelResponse:
         """
@@ -184,7 +184,7 @@ class LabelServiceWrapper:
                 self._grpc_stub_1.DeleteLabel,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestLabelModule1.DeleteLabelError,
+                error_cls=RestLabelModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteLabelResponse,

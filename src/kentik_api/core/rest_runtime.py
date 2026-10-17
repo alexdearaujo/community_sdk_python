@@ -177,7 +177,7 @@ def path_segment(value: Any) -> str:
     """Encodes one path parameter so its value cannot leave its own segment.
 
     "/", "?" and "#" are percent-encoded, and the dot segments, which encoding
-    cannot neutralize, are refused: `delete_device(deviceid="../../user/7")`
+    cannot neutralize, are refused: `device.delete(deviceid="../../user/7")`
     must not delete a user.
     """
     segment = format(_wire_scalar(value))

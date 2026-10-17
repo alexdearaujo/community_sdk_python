@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.network_class
     participant API as Kentik REST API
 
-    C->>W: network_class_get()
+    C->>W: get()
     W->>API: GET /network_class/v202109alpha1/network_class
     alt success
         API-->>W: GetNetworkClassResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: network_class_get()
+    C->>W: get()
     W->>R: build_grpc_request(GetNetworkClassRequest, arguments)
     R->>API: NetworkClassService/GetNetworkClass (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.network_class.network_class_get()
+response = client.network_class.get()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.network_class
     participant API as Kentik REST API
 
-    C->>W: network_class_update(data=UpdateNetworkClassRequest(...))
+    C->>W: update(data=UpdateNetworkClassRequest(...))
     W->>API: POST /network_class/v202109alpha1/network_class
     alt success
         API-->>W: UpdateNetworkClassResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: network_class_update(data=UpdateNetworkClassRequest(...))
+    C->>W: update(data=UpdateNetworkClassRequest(...))
     W->>R: build_grpc_request(UpdateNetworkClassRequest, arguments)
     R->>API: NetworkClassService/UpdateNetworkClass (gRPC/TLS)
     alt success
@@ -165,7 +165,7 @@ from kentik_api.gen.network_class.models import UpdateNetworkClassRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.network_class.network_class_update(
+response = client.network_class.update(
     data=UpdateNetworkClassRequest(...),
 )
 ```

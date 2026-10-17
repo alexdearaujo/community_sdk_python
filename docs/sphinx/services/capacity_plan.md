@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.capacity_plan
     participant API as Kentik REST API
 
-    C->>W: list_capacity_plans()
+    C->>W: list()
     W->>API: GET /capacity_plan/v202212/capacity_plan
     alt success
         API-->>W: ListCapacityPlansResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_capacity_plans()
+    C->>W: list()
     W->>R: build_grpc_request(ListCapacityPlansRequest, arguments)
     R->>API: CapacityPlanService/ListCapacityPlans (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.capacity_plan.list_capacity_plans()
+response = client.capacity_plan.list()
 ```
 
 ---
@@ -177,7 +177,7 @@ sequenceDiagram
     participant W as client.capacity_plan
     participant API as Kentik REST API
 
-    C->>W: get_capacity_plan(id="id-example")
+    C->>W: get(id="id-example")
     W->>API: GET /capacity_plan/v202212/capacity_plan/{id}
     alt success
         API-->>W: GetCapacityPlanResponse (JSON)
@@ -199,7 +199,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_capacity_plan(id="id-example")
+    C->>W: get(id="id-example")
     W->>R: build_grpc_request(GetCapacityPlanRequest, arguments)
     R->>API: CapacityPlanService/GetCapacityPlan (gRPC/TLS)
     alt success
@@ -232,7 +232,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.capacity_plan.get_capacity_plan(
+response = client.capacity_plan.get(
     id="id-example",
 )
 ```

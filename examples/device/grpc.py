@@ -8,7 +8,7 @@ from kentik_api.errors import KentikError
 def main() -> None:
     client = KentikAPI(protocol="grpc")
     try:
-        response = client.device.list_devices()
+        response = client.device.list()
         devices = [device for device in (response.devices or []) if device is not None]
         print(f"Found {len(devices)} device(s).")
         for device in devices[:5]:

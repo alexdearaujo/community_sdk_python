@@ -243,10 +243,8 @@ def test_one_call_can_override_the_timeout_without_affecting_the_next(monkeypatc
     monkeypatch.setattr(httpx.Client, "request", _capture)
 
     with KentikAPI(email="a@b.com", api_token="t") as client:
-        client.device.list_devices(
-            api_config_override=client.api_config.with_timeout(300)
-        )
-        client.device.list_devices()
+        client.device.list(api_config_override=client.api_config.with_timeout(300))
+        client.device.list()
 
     (slow_client, slow_timeout), (normal_client, normal_timeout) = sent
     assert slow_timeout == httpx.Timeout(300)
@@ -268,7 +266,7 @@ def test_result_carries_the_quota_of_the_call_that_produced_it(monkeypatch):
     )
 
     with KentikAPI(email="a@b.com", api_token="t") as client:
-        result = client.device.list_devices()
+        result = client.device.list()
 
     rate_limit = rate_limit_of(result)
     assert rate_limit is not None

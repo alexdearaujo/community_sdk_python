@@ -10,13 +10,7 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import (
-    CreateCustomApplicationError,
-    DeleteCustomApplicationError,
-    GetCustomApplicationError,
-    ListCustomApplicationsError,
-    UpdateCustomApplicationError,
-)
+from ..error import CreateError, DeleteError, GetError, ListError, UpdateError
 from ..models import (  # noqa: F401
     CreateCustomApplicationResponse,
     CustomApplication,
@@ -50,7 +44,7 @@ def ListCustomApplications(
         header_params=header_params,
         expected_status=200,
         operation_name="ListCustomApplications",
-        error_cls=ListCustomApplicationsError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -84,7 +78,7 @@ def CreateCustomApplication(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateCustomApplication",
-        error_cls=CreateCustomApplicationError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -117,7 +111,7 @@ def GetCustomApplication(
         header_params=header_params,
         expected_status=200,
         operation_name="GetCustomApplication",
-        error_cls=GetCustomApplicationError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -154,7 +148,7 @@ def UpdateCustomApplication(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateCustomApplication",
-        error_cls=UpdateCustomApplicationError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -187,7 +181,7 @@ def DeleteCustomApplication(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteCustomApplication",
-        error_cls=DeleteCustomApplicationError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(

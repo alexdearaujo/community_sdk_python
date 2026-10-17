@@ -261,12 +261,12 @@ def run_c4() -> dict[str, Any]:
 
     try:
         with KentikAPI(protocol="rest", env_file=".env", timeout=20) as rest_client:
-            rest_baseline = rest_client.user.list_users()
+            rest_baseline = rest_client.user.list()
             live_api_used = True
             details["rest_baseline_user_count"] = _users_count(rest_baseline)
 
             try:
-                rest_client.user.list_users(api_config_override=override_bad)
+                rest_client.user.list(api_config_override=override_bad)
                 details["rest_bad_override"] = {"outcome": "succeeded"}
             except Exception as exc:  # pragma: no cover - runtime behavior capture
                 details["rest_bad_override"] = {
@@ -275,7 +275,7 @@ def run_c4() -> dict[str, Any]:
                 }
 
             try:
-                rest_client.user.list_users(api_config_override=override_no_creds)
+                rest_client.user.list(api_config_override=override_no_creds)
                 details["rest_no_creds_override"] = {"outcome": "succeeded"}
             except Exception as exc:  # pragma: no cover - runtime behavior capture
                 details["rest_no_creds_override"] = {
@@ -289,12 +289,12 @@ def run_c4() -> dict[str, Any]:
             timeout=20,
             grpc_deadline=20,
         ) as grpc_client:
-            grpc_baseline = grpc_client.user.list_users()
+            grpc_baseline = grpc_client.user.list()
             live_api_used = True
             details["grpc_baseline_user_count"] = _users_count(grpc_baseline)
 
             try:
-                grpc_client.user.list_users(api_config_override=override_bad)
+                grpc_client.user.list(api_config_override=override_bad)
                 details["grpc_bad_override"] = {"outcome": "succeeded"}
             except Exception as exc:  # pragma: no cover - runtime behavior capture
                 details["grpc_bad_override"] = {
@@ -303,7 +303,7 @@ def run_c4() -> dict[str, Any]:
                 }
 
             try:
-                grpc_client.user.list_users(api_config_override=override_no_creds)
+                grpc_client.user.list(api_config_override=override_no_creds)
                 details["grpc_no_creds_override"] = {"outcome": "succeeded"}
             except Exception as exc:  # pragma: no cover - runtime behavior capture
                 details["grpc_no_creds_override"] = {
@@ -366,7 +366,7 @@ def run_c5() -> dict[str, Any]:
     live_api_used = False
 
     with KentikAPI(protocol="rest", env_file=".env", timeout=20) as client:
-        response = client.user.list_users()
+        response = client.user.list()
         live_api_used = True
         details["live_user_count"] = _users_count(response)
         payload = response.model_dump(by_alias=True, exclude_none=False)

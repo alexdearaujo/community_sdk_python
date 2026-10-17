@@ -58,7 +58,7 @@ def test_shared_operation_names_are_prefixed_in_every_module():
     )
     assert names == {
         "AlertAutoAckService.List": "auto_ack_list",
-        "AlertService.List": "alert_list",
+        "AlertService.List": "list",
         "AlertService.Ack": "ack",
     }
 
@@ -98,17 +98,38 @@ def test_second_http_route_is_named_by_its_extra_path_parameters():
         ("alerting", "alert_silence_notifications_get", "silence_notifications_get"),
         ("site", "update_site_market", "update_market"),
         ("custom_dimension", "get_custom_dimension_info", "get_info"),
-        # The Service word is the object of the call: keep it.
-        ("device", "get_device", "get_device"),
-        # Dropping it would leave one word.
-        ("alerting", "alert_list", "alert_list"),
-        ("interface", "interface_get", "interface_get"),
-        # A route suffix is never shortened.
-        ("device", "get_device_by_device_name", "get_device_by_device_name"),
+        ("device", "get_device", "get"),
+        ("site", "list_sites", "list"),
+        ("custom_dimension", "list_custom_dimensions", "list"),
+        ("alerting", "alert_list", "list"),
+        ("interface", "interface_get", "get"),
+        ("device", "get_device_by_device_name", "get_by_device_name"),
+        # The Service word alone stays.
+        ("device", "device", "device"),
+        # Another object keeps its word.
+        ("site", "create_market", "create_market"),
     ],
 )
 def test_drop_service_word(service, name, expected):
     assert _drop_service_word(service, name) == expected
+
+
+def test_names_that_shorten_to_one_name_stay_long():
+    names = _names(
+        {
+            "DeviceService": [
+                _op("CreateDevice", "/device"),
+                _op("CreateDevices", "/device/batch_create"),
+                _op("GetDevice", "/device/{id}"),
+            ]
+        },
+        service="device",
+    )
+    assert names == {
+        "DeviceService.CreateDevice": "create_device",
+        "DeviceService.CreateDevices": "create_devices",
+        "DeviceService.GetDevice": "get",
+    }
 
 
 def test_routes_that_cannot_be_told_apart_fail_generation():
@@ -192,7 +213,7 @@ def test_generate_writes_wrapper_and_mounts_it_in_client_mixin(
 
     wrapper_content = (services_dir / "device.py").read_text(encoding="utf-8")
     assert "class DeviceServiceWrapper:" in wrapper_content
-    assert "def list_devices(self," in wrapper_content
+    assert "def list(self," in wrapper_content
     assert "RestDeviceModule1.ListDevices(" in wrapper_content
 
     mixin_content = (project_root / "src" / "kentik_api" / "client_mixin.py").read_text(
@@ -252,9 +273,7 @@ def test_wrapper_method_keeps_the_rest_function_docstring_exactly(
 
     tree = ast.parse((services_dir / "device.py").read_text(encoding="utf-8"))
     method = next(
-        n
-        for n in ast.walk(tree)
-        if isinstance(n, ast.FunctionDef) and n.name == "list_devices"
+        n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == "list"
     )
     assert (
         ast.get_docstring(method)
@@ -380,7 +399,7 @@ def _post_process_like_generate_sdk(sandbox) -> None:
 def test_regenerated_wrapper_matches_the_committed_one_byte_for_byte(sandbox, service):
     sandbox.wrapper_file(service).unlink()
 
-    wrapper_generation.generate(PublicNames())
+    wrapper_generation.generate(PublicNames.load())
     _post_process_like_generate_sdk(sandbox)
 
     committed = (REAL_GEN / service / "services" / f"{service}.py").read_text()

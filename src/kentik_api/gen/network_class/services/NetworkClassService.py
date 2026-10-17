@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import parse_response_model, request_json
 
-from ..error import NetworkClassGetError, NetworkClassUpdateError
+from ..error import GetError, UpdateError
 from ..models import (  # noqa: F401
     CloudSubnet,
     CloudType,
@@ -40,7 +40,7 @@ def NetworkClassGet(
         header_params=header_params,
         expected_status=200,
         operation_name="NetworkClassGet",
-        error_cls=NetworkClassGetError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -74,7 +74,7 @@ def NetworkClassUpdate(
         header_params=header_params,
         expected_status=200,
         operation_name="NetworkClassUpdate",
-        error_cls=NetworkClassUpdateError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(

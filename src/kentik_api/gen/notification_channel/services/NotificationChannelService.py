@@ -10,11 +10,7 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import (
-    GetNotificationChannelError,
-    ListNotificationChannelsError,
-    SearchNotificationChannelsError,
-)
+from ..error import GetError, ListError, SearchError
 from ..models import (  # noqa: F401
     ChannelType,
     GetNotificationChannelResponse,
@@ -48,7 +44,7 @@ def ListNotificationChannels(
         header_params=header_params,
         expected_status=200,
         operation_name="ListNotificationChannels",
-        error_cls=ListNotificationChannelsError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -84,7 +80,7 @@ def SearchNotificationChannels(
         header_params=header_params,
         expected_status=200,
         operation_name="SearchNotificationChannels",
-        error_cls=SearchNotificationChannelsError,
+        error_cls=SearchError,
     )
 
     return parse_response_model(
@@ -117,7 +113,7 @@ def GetNotificationChannel(
         header_params=header_params,
         expected_status=200,
         operation_name="GetNotificationChannel",
-        error_cls=GetNotificationChannelError,
+        error_cls=GetError,
     )
 
     return parse_response_model(

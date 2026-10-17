@@ -35,7 +35,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def create_saved_filter(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -60,7 +60,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.CreateSavedFilter,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSavedFilterModule1.CreateSavedFilterError,
+                error_cls=RestSavedFilterModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateSavedFilterResponse,
@@ -80,7 +80,7 @@ class SavedFilterServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_saved_filter(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetSavedFilterResponse:
         """
@@ -100,7 +100,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.GetSavedFilter,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSavedFilterModule1.GetSavedFilterError,
+                error_cls=RestSavedFilterModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetSavedFilterResponse,
@@ -120,7 +120,7 @@ class SavedFilterServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_saved_filter(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -146,7 +146,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.UpdateSavedFilter,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSavedFilterModule1.UpdateSavedFilterError,
+                error_cls=RestSavedFilterModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateSavedFilterResponse,
@@ -167,7 +167,7 @@ class SavedFilterServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_saved_filter(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteSavedFilterResponse:
         """
@@ -187,7 +187,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.DeleteSavedFilter,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSavedFilterModule1.DeleteSavedFilterError,
+                error_cls=RestSavedFilterModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteSavedFilterResponse,
@@ -207,7 +207,7 @@ class SavedFilterServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def list_saved_filters(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSavedFiltersResponse:
         """
@@ -227,7 +227,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.ListSavedFilters,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSavedFilterModule1.ListSavedFiltersError,
+                error_cls=RestSavedFilterModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListSavedFiltersResponse,
@@ -246,7 +246,7 @@ class SavedFilterServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def list_saved_filters_all(
+    def list_all(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSavedFiltersAllResponse:
         """
@@ -266,7 +266,7 @@ class SavedFilterServiceWrapper:
                 self._grpc_stub_1.ListSavedFiltersAll,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestSavedFilterModule1.ListSavedFiltersAllError,
+                error_cls=RestSavedFilterModule1.ListAllError,
             )
             return parse_grpc_response(
                 rest_models.ListSavedFiltersAllResponse,

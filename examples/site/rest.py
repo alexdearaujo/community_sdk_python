@@ -7,7 +7,7 @@ from kentik_api.client import KentikAPI
 def main() -> None:
     client = KentikAPI(protocol="rest")
 
-    sites_resp = client.site.list_sites()
+    sites_resp = client.site.list()
     sites = [site for site in (sites_resp.sites or []) if site is not None]
     print(f"Found {len(sites)} site(s).")
     for site in sites[:5]:

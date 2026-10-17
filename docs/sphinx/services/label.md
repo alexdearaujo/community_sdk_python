@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.label
     participant API as Kentik REST API
 
-    C->>W: list_labels()
+    C->>W: list()
     W->>API: GET /label/v202210/labels
     alt success
         API-->>W: ListLabelsResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_labels()
+    C->>W: list()
     W->>R: build_grpc_request(ListLabelsRequest, arguments)
     R->>API: LabelService/ListLabels (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.label.list_labels()
+response = client.label.list()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.label
     participant API as Kentik REST API
 
-    C->>W: create_label(data=CreateLabelRequest(...))
+    C->>W: create(data=CreateLabelRequest(...))
     W->>API: POST /label/v202210/labels
     alt success
         API-->>W: CreateLabelResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_label(data=CreateLabelRequest(...))
+    C->>W: create(data=CreateLabelRequest(...))
     W->>R: build_grpc_request(CreateLabelRequest, arguments)
     R->>API: LabelService/CreateLabel (gRPC/TLS)
     alt success
@@ -165,7 +165,7 @@ from kentik_api.gen.label.models import CreateLabelRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.label.create_label(
+response = client.label.create(
     data=CreateLabelRequest(...),
 )
 ```
@@ -186,7 +186,7 @@ sequenceDiagram
     participant W as client.label
     participant API as Kentik REST API
 
-    C->>W: update_label(id="id-example", data=LabelServiceUpdateLabelBody(...))
+    C->>W: update(id="id-example", data=LabelServiceUpdateLabelBody(...))
     W->>API: POST /label/v202210/labels/{id}
     alt success
         API-->>W: UpdateLabelResponse (JSON)
@@ -208,7 +208,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_label(id="id-example", data=LabelServiceUpdateLabelBody(...))
+    C->>W: update(id="id-example", data=LabelServiceUpdateLabelBody(...))
     W->>R: build_grpc_request(UpdateLabelRequest, arguments)
     R->>API: LabelService/UpdateLabel (gRPC/TLS)
     alt success
@@ -243,7 +243,7 @@ from kentik_api.gen.label.models import LabelServiceUpdateLabelBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.label.update_label(
+response = client.label.update(
     id="id-example",
     data=LabelServiceUpdateLabelBody(...),
 )
@@ -265,7 +265,7 @@ sequenceDiagram
     participant W as client.label
     participant API as Kentik REST API
 
-    C->>W: delete_label(id="id-example")
+    C->>W: delete(id="id-example")
     W->>API: DELETE /label/v202210/labels/{id}
     alt success
         API-->>W: DeleteLabelResponse (JSON)
@@ -287,7 +287,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_label(id="id-example")
+    C->>W: delete(id="id-example")
     W->>R: build_grpc_request(DeleteLabelRequest, arguments)
     R->>API: LabelService/DeleteLabel (gRPC/TLS)
     alt success
@@ -320,7 +320,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.label.delete_label(
+response = client.label.delete(
     id="id-example",
 )
 ```

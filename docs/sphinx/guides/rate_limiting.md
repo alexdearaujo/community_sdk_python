@@ -29,7 +29,7 @@ The SDK parses these headers into a `RateLimit` value with `limit`, `remaining`,
 ```python
 from kentik_api import rate_limit_of
 
-devices = client.device.list_devices()
+devices = client.device.list()
 quota = rate_limit_of(devices)
 if quota is not None and quota.remaining == 0:
     print(f"Next call to this endpoint waits {quota.reset_seconds}s")
@@ -49,7 +49,7 @@ call that failed:
 from kentik_api.errors import HTTPException
 
 try:
-    client.device.list_devices()
+    client.device.list()
 except HTTPException as exc:
     if exc.status_code == 429 and exc.rate_limit is not None:
         print(f"Quota exhausted; resets in {exc.rate_limit.reset_seconds}s")
@@ -63,7 +63,7 @@ except HTTPException as exc:
 The client keeps the latest quota for each endpoint it has called:
 
 ```python
-client.device.get_device(deviceid="42")
+client.device.get(deviceid="42")
 quota = client.api_config.rate_limits["GET /device/v202504beta2/device/{device.id}"]
 print(quota.remaining, quota.reset_seconds)
 ```

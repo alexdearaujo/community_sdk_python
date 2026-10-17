@@ -47,17 +47,17 @@ Each change below can stop an existing `except` clause or call from working.
 | `kmeta` `ServiceNowConfig.credentialVaultId` held a credential vault entry ID | Upstream renamed it `credentialVaultName`; it holds the entry's name and always resolves to the entry's latest version | Read and send `credentialVaultName` |
 | Client method names depended on module and route order, and many repeated the Service name (`client.audit.get_audit_event`) | Names no longer depend on order and drop the Service word when two or more words remain. See [Renamed client methods](#renamed-client-methods) | Use the new names in the table below |
 | 55 model names held a schema version (`labelv202210Label`), so a version bump renamed them | The version and its package prefix are gone (`Label`). See [Renamed models](#renamed-models) | Use the new names in the table below |
-| Error classes were named after the upstream operationId, and operations that share one (`alerting` has eight `List` operations) shared one class | Each operation has its own class, named after its client method: `client.label.list_labels` raises `ListLabelsError`. See [Renamed error classes](#renamed-error-classes) | Catch the new names in the table below |
-| Each error package exported `ERROR_BY_OPERATION`, keyed by operationId | It exports `ERROR_BY_METHOD`, keyed by client method name | Look up `ERROR_BY_METHOD["list_labels"]` |
+| Error classes were named after the upstream operationId, and operations that share one (`alerting` has eight `List` operations) shared one class | Each operation has its own class, named after its client method: `client.label.list` raises `ListError`. See [Renamed error classes](#renamed-error-classes) | Catch the new names in the table below |
+| Each error package exported `ERROR_BY_OPERATION`, keyed by operationId | It exports `ERROR_BY_METHOD`, keyed by client method name | Look up `ERROR_BY_METHOD["list"]` |
 
 #### Renamed client methods
 
 A name that several modules of one Service declare carries the module prefix
 in every module, so a client method name never moves to another operation. A
 second HTTP route of one operation is named by its extra path parameters, not
-by a number. The Service word stays when it is the object of the call
-(`client.device.get_device`) or when removing it would leave one word
-(`client.alerting.alert_list`). A protoc default operationId
+by a number. A name drops the Service word, because `client.<service>`
+already says it: `client.site.create`, not `client.site.create_site`. See
+[Shorter client methods](#shorter-client-methods). A protoc default operationId
 (`RouteService_List`) loses its module prefix, so no name holds a double
 underscore; if one word is left, the module noun stays
 (`client.ktbgp.route_list`).
@@ -173,8 +173,8 @@ front. Acronyms are no longer all capitals, because method names are lowercase
 
 In `alerting`, `CreateError`, `DeleteError`, `GetError`, `ListError`, and
 `ReplaceError` are split into one class per method. Each class name is the
-method name in PascalCase with `Error` added: `alert_list` raises
-`AlertListError`, `auto_ack_get` raises `AutoAckGetError`, and
+method name in PascalCase with `Error` added: `list` raises `ListError`,
+`auto_ack_get` raises `AutoAckGetError`, and
 `suppression_delete` raises `SuppressionDeleteError`.
 
 | Service | Before | After |
@@ -193,6 +193,55 @@ method name in PascalCase with `Error` added: `alert_list` raises
 | `nms` | `MetricsSchemaService_GetMetricsSchemaError` | `GetMetricsSchemaError` |
 | `pathfinder` | `CreatePathfinderReportError` | `CreateReportError` |
 | `site` | `ListSiteMarketsError`, `GetSiteMarketError`, `CreateSiteMarketError`, `UpdateSiteMarketError`, `DeleteSiteMarketError` | `ListMarketsError`, `GetMarketError`, `CreateMarketError`, `UpdateMarketError`, `DeleteMarketError` |
+
+#### Shorter client methods
+
+A client method drops the Service word even when one word is left:
+`client.site.create()`, `client.user.list()`. A method for another object
+keeps its noun (`client.site.create_market()`). The device bulk calls end in
+`_bulk`. When two names would become one, both keep the long name. The error
+classes follow: `client.site.create` raises `CreateError`, in
+`kentik_api.gen.site.error`.
+
+| Service | Before | After |
+| --- | --- | --- |
+| `alerting` | `alert_get`, `alert_list` | `get`, `list` |
+| `as_group` | `create_as_group`, `delete_as_group`, `get_as_group`, `list_as_groups`, `update_as_group` | `create`, `delete`, `get`, `list`, `update` |
+| `capacity_plan` | `get_capacity_plan`, `list_capacity_plans` | `get`, `list` |
+| `cloud_export` | `create_cloud_export`, `delete_cloud_export`, `get_cloud_export`, `list_cloud_exports`, `update_cloud_export` | `create`, `delete`, `get`, `list`, `update` |
+| `custom_application` | `create_custom_application`, `delete_custom_application`, `get_custom_application`, `list_custom_applications`, `update_custom_application` | `create`, `delete`, `get`, `list`, `update` |
+| `custom_dimension` | `create_custom_dimension`, `delete_custom_dimension`, `list_custom_dimensions`, `update_custom_dimension` | `create`, `delete`, `list`, `update` |
+| `device` | `create_device`, `create_devices`, `delete_device`, `delete_devices`, `get_device`, `get_device_by_name`, `list_devices`, `update_device`, `update_devices` | `create`, `create_bulk`, `delete`, `delete_bulk`, `get`, `get_by_name`, `list`, `update`, `update_bulk` |
+| `dictionary` | `get_dictionary` | `get` |
+| `flow_tag` | `create_flow_tag`, `delete_flow_tag`, `get_flow_tag`, `search_flow_tag`, `update_flow_tag` | `create`, `delete`, `get`, `search`, `update` |
+| `interface` | `interface_create`, `interface_delete`, `interface_get`, `interface_update`, `list_interface` | `create`, `delete`, `get`, `update`, `list` |
+| `label` | `create_label`, `delete_label`, `list_labels`, `update_label` | `create`, `delete`, `list`, `update` |
+| `network_class` | `network_class_get`, `network_class_update` | `get`, `update` |
+| `notification_channel` | `get_notification_channel`, `list_notification_channels`, `search_notification_channels` | `get`, `list`, `search` |
+| `plan` | `list_plans` | `list` |
+| `saved_filter` | `create_saved_filter`, `delete_saved_filter`, `get_saved_filter`, `list_saved_filters`, `list_saved_filters_all`, `update_saved_filter` | `create`, `delete`, `get`, `list`, `list_all`, `update` |
+| `site` | `create_site`, `delete_site`, `get_site`, `list_sites`, `update_site` | `create`, `delete`, `get`, `list`, `update` |
+| `user` | `create_user`, `delete_user`, `get_user`, `list_users`, `update_user` | `create`, `delete`, `get`, `list`, `update` |
+
+| Service | Error classes before | After |
+| --- | --- | --- |
+| `alerting` | `AlertGetError`, `AlertListError` | `GetError`, `ListError` |
+| `as_group` | `CreateAsGroupError`, `DeleteAsGroupError`, `GetAsGroupError`, `ListAsGroupsError`, `UpdateAsGroupError` | `CreateError`, `DeleteError`, `GetError`, `ListError`, `UpdateError` |
+| `capacity_plan` | `GetCapacityPlanError`, `ListCapacityPlansError` | `GetError`, `ListError` |
+| `cloud_export` | `CreateCloudExportError`, `DeleteCloudExportError`, `GetCloudExportError`, `ListCloudExportsError`, `UpdateCloudExportError` | `CreateError`, `DeleteError`, `GetError`, `ListError`, `UpdateError` |
+| `custom_application` | `CreateCustomApplicationError`, `DeleteCustomApplicationError`, `GetCustomApplicationError`, `ListCustomApplicationsError`, `UpdateCustomApplicationError` | `CreateError`, `DeleteError`, `GetError`, `ListError`, `UpdateError` |
+| `custom_dimension` | `CreateCustomDimensionError`, `DeleteCustomDimensionError`, `ListCustomDimensionsError`, `UpdateCustomDimensionError` | `CreateError`, `DeleteError`, `ListError`, `UpdateError` |
+| `device` | `CreateDeviceError`, `CreateDevicesError`, `DeleteDeviceError`, `DeleteDevicesError`, `GetDeviceError`, `GetDeviceByNameError`, `ListDevicesError`, `UpdateDeviceError`, `UpdateDevicesError` | `CreateError`, `CreateBulkError`, `DeleteError`, `DeleteBulkError`, `GetError`, `GetByNameError`, `ListError`, `UpdateError`, `UpdateBulkError` |
+| `dictionary` | `GetDictionaryError` | `GetError` |
+| `flow_tag` | `CreateFlowTagError`, `DeleteFlowTagError`, `GetFlowTagError`, `SearchFlowTagError`, `UpdateFlowTagError` | `CreateError`, `DeleteError`, `GetError`, `SearchError`, `UpdateError` |
+| `interface` | `InterfaceCreateError`, `InterfaceDeleteError`, `InterfaceGetError`, `InterfaceUpdateError`, `ListInterfaceError` | `CreateError`, `DeleteError`, `GetError`, `UpdateError`, `ListError` |
+| `label` | `CreateLabelError`, `DeleteLabelError`, `ListLabelsError`, `UpdateLabelError` | `CreateError`, `DeleteError`, `ListError`, `UpdateError` |
+| `network_class` | `NetworkClassGetError`, `NetworkClassUpdateError` | `GetError`, `UpdateError` |
+| `notification_channel` | `GetNotificationChannelError`, `ListNotificationChannelsError`, `SearchNotificationChannelsError` | `GetError`, `ListError`, `SearchError` |
+| `plan` | `ListPlansError` | `ListError` |
+| `saved_filter` | `CreateSavedFilterError`, `DeleteSavedFilterError`, `GetSavedFilterError`, `ListSavedFiltersError`, `ListSavedFiltersAllError`, `UpdateSavedFilterError` | `CreateError`, `DeleteError`, `GetError`, `ListError`, `ListAllError`, `UpdateError` |
+| `site` | `CreateSiteError`, `DeleteSiteError`, `GetSiteError`, `ListSitesError`, `UpdateSiteError` | `CreateError`, `DeleteError`, `GetError`, `ListError`, `UpdateError` |
+| `user` | `CreateUserError`, `DeleteUserError`, `GetUserError`, `ListUsersError`, `UpdateUserError` | `CreateError`, `DeleteError`, `GetError`, `ListError`, `UpdateError` |
 
 ### Added
 

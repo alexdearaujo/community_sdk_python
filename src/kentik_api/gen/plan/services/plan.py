@@ -35,7 +35,7 @@ class PlanServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_plans(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListPlansResponse:
         """
@@ -53,7 +53,7 @@ class PlanServiceWrapper:
                 self._grpc_stub_1.ListPlans,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestPlanModule1.ListPlansError,
+                error_cls=RestPlanModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListPlansResponse,

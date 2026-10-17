@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.custom_dimension
     participant API as Kentik REST API
 
-    C->>W: list_custom_dimensions()
+    C->>W: list()
     W->>API: GET /custom_dimensions/v202411alpha1
     alt success
         API-->>W: ListCustomDimensionsResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_custom_dimensions()
+    C->>W: list()
     W->>R: build_grpc_request(ListCustomDimensionsRequest, arguments)
     R->>API: CustomDimensionService/ListCustomDimensions (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_dimension.list_custom_dimensions()
+response = client.custom_dimension.list()
 ```
 
 ---
@@ -185,7 +185,7 @@ sequenceDiagram
     participant W as client.custom_dimension
     participant API as Kentik REST API
 
-    C->>W: update_custom_dimension(customDimensionId="customDimensionId-example", data=CustomDimension(...))
+    C->>W: update(customDimensionId="customDimensionId-example", data=CustomDimension(...))
     W->>API: PUT /custom_dimensions/v202411alpha1/{customDimensionId}
     alt success
         API-->>W: UpdateCustomDimensionResponse (JSON)
@@ -207,7 +207,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_custom_dimension(customDimensionId="customDimensionId-example", data=CustomDimension(...))
+    C->>W: update(customDimensionId="customDimensionId-example", data=CustomDimension(...))
     W->>R: build_grpc_request(UpdateCustomDimensionRequest, arguments)
     R->>API: CustomDimensionService/UpdateCustomDimension (gRPC/TLS)
     alt success
@@ -242,7 +242,7 @@ from kentik_api.gen.custom_dimension.models import CustomDimension
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_dimension.update_custom_dimension(
+response = client.custom_dimension.update(
     customDimensionId="customDimensionId-example",
     data=CustomDimension(...),
 )
@@ -264,7 +264,7 @@ sequenceDiagram
     participant W as client.custom_dimension
     participant API as Kentik REST API
 
-    C->>W: delete_custom_dimension(customDimensionId="customDimensionId-example")
+    C->>W: delete(customDimensionId="customDimensionId-example")
     W->>API: DELETE /custom_dimensions/v202411alpha1/{customDimensionId}
     alt success
         API-->>W: DeleteCustomDimensionResponse (JSON)
@@ -286,7 +286,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_custom_dimension(customDimensionId="customDimensionId-example")
+    C->>W: delete(customDimensionId="customDimensionId-example")
     W->>R: build_grpc_request(DeleteCustomDimensionRequest, arguments)
     R->>API: CustomDimensionService/DeleteCustomDimension (gRPC/TLS)
     alt success
@@ -319,7 +319,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_dimension.delete_custom_dimension(
+response = client.custom_dimension.delete(
     customDimensionId="customDimensionId-example",
 )
 ```
@@ -739,7 +739,7 @@ sequenceDiagram
     participant W as client.custom_dimension
     participant API as Kentik REST API
 
-    C->>W: create_custom_dimension(data=CustomDimension(...))
+    C->>W: create(data=CustomDimension(...))
     W->>API: POST /v1/customdimension
     alt success
         API-->>W: CreateCustomDimensionResponse (JSON)
@@ -761,7 +761,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_custom_dimension(data=CustomDimension(...))
+    C->>W: create(data=CustomDimension(...))
     W->>R: build_grpc_request(CreateCustomDimensionRequest, arguments)
     R->>API: CustomDimensionService/CreateCustomDimension (gRPC/TLS)
     alt success
@@ -795,7 +795,7 @@ from kentik_api.gen.custom_dimension.models import CustomDimension
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.custom_dimension.create_custom_dimension(
+response = client.custom_dimension.create(
     data=CustomDimension(...),
 )
 ```

@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import parse_response_model, request_json
 
-from ..error import GetDictionaryError
+from ..error import GetError
 from ..models import (  # noqa: F401
     BaseUnit,
     DimensionField,
@@ -47,7 +47,7 @@ def GetDictionary(
         header_params=header_params,
         expected_status=200,
         operation_name="GetDictionary",
-        error_cls=GetDictionaryError,
+        error_cls=GetError,
     )
 
     return parse_response_model(

@@ -112,7 +112,7 @@ def test_rpc_status_details_are_the_same_on_both_transports(monkeypatch, rpc_err
     from google.protobuf.json_format import ParseDict
     from google.rpc import status_pb2
 
-    from kentik_api.gen.device.error import ListDevicesError
+    from kentik_api.gen.device.error import ListError
 
     status = {
         "code": 3,
@@ -143,14 +143,14 @@ def test_rpc_status_details_are_the_same_on_both_transports(monkeypatch, rpc_err
                 auth_email="dev@example.com",
                 auth_token="t",
             ),
-            error_cls=ListDevicesError,
+            error_cls=ListError,
         )
 
     def _stub(_request):
         raise error
 
     with pytest.raises(HTTPException) as grpc_exc:
-        call_grpc(_stub, object(), error_cls=ListDevicesError)
+        call_grpc(_stub, object(), error_cls=ListError)
 
     assert rest_exc.value.details["rpc_status"] == status
     assert grpc_exc.value.details["rpc_status"] == status

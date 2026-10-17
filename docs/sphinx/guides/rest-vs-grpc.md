@@ -34,7 +34,7 @@ proxy. None of the three was measured, so no advice here depends on them.
 
 The client is the unit to reuse on both transports. The first call on a new
 client pays for the TCP connection and the TLS handshake. In a measured run of
-five `list_devices` calls, the first call took 1.5 s on REST and 1.2 s on gRPC.
+five `device.list` calls, the first call took 1.5 s on REST and 1.2 s on gRPC.
 Later calls took 0.86 s and 0.76 s on average. Five calls is too few to rank
 the transports, but it shows that a new client for each call adds hundreds of
 milliseconds.
@@ -64,12 +64,12 @@ to a server that accepts the connection and never answers raises
 transport:
 
 ```python
-result = client.device.list_devices(
+result = client.device.list(
     api_config_override=client.api_config.with_timeout(300),
 )
 ```
 
-Keep the 60-second default or raise it. An unthrottled `list_devices` call
+Keep the 60-second default or raise it. An unthrottled `device.list` call
 returns in about 0.6 s. Past Kentik's soft limit, the API delays each response
 by up to 1.5 s and does not return an error, so a short timeout turns
 throttling into a `TransportError`.
@@ -156,6 +156,6 @@ with (
     KentikAPI(protocol="grpc") as grpc_client,
     KentikAPI(protocol="rest") as rest_client,
 ):
-    groups = grpc_client.as_group.list_as_groups()
+    groups = grpc_client.as_group.list()
     packages = rest_client.mkp.package_list()
 ```

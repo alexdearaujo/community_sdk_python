@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.saved_filter
     participant API as Kentik REST API
 
-    C->>W: create_saved_filter(data=SavedFilter(...))
+    C->>W: create(data=SavedFilter(...))
     W->>API: POST /saved-filter/v202501alpha1
     alt success
         API-->>W: CreateSavedFilterResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_saved_filter(data=SavedFilter(...))
+    C->>W: create(data=SavedFilter(...))
     W->>R: build_grpc_request(CreateSavedFilterRequest, arguments)
     R->>API: SavedFilterService/CreateSavedFilter (gRPC/TLS)
     alt success
@@ -97,7 +97,7 @@ from kentik_api.gen.saved_filter.models import SavedFilter
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.saved_filter.create_saved_filter(
+response = client.saved_filter.create(
     data=SavedFilter(...),
 )
 ```
@@ -118,7 +118,7 @@ sequenceDiagram
     participant W as client.saved_filter
     participant API as Kentik REST API
 
-    C->>W: get_saved_filter(id="id-example")
+    C->>W: get(id="id-example")
     W->>API: GET /saved-filter/v202501alpha1/{id}
     alt success
         API-->>W: GetSavedFilterResponse (JSON)
@@ -140,7 +140,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_saved_filter(id="id-example")
+    C->>W: get(id="id-example")
     W->>R: build_grpc_request(GetSavedFilterRequest, arguments)
     R->>API: SavedFilterService/GetSavedFilter (gRPC/TLS)
     alt success
@@ -173,7 +173,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.saved_filter.get_saved_filter(
+response = client.saved_filter.get(
     id="id-example",
 )
 ```
@@ -194,7 +194,7 @@ sequenceDiagram
     participant W as client.saved_filter
     participant API as Kentik REST API
 
-    C->>W: update_saved_filter(id="id-example", data=SavedFilter(...))
+    C->>W: update(id="id-example", data=SavedFilter(...))
     W->>API: PUT /saved-filter/v202501alpha1/{id}
     alt success
         API-->>W: UpdateSavedFilterResponse (JSON)
@@ -216,7 +216,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_saved_filter(id="id-example", data=SavedFilter(...))
+    C->>W: update(id="id-example", data=SavedFilter(...))
     W->>R: build_grpc_request(UpdateSavedFilterRequest, arguments)
     R->>API: SavedFilterService/UpdateSavedFilter (gRPC/TLS)
     alt success
@@ -251,7 +251,7 @@ from kentik_api.gen.saved_filter.models import SavedFilter
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.saved_filter.update_saved_filter(
+response = client.saved_filter.update(
     id="id-example",
     data=SavedFilter(...),
 )
@@ -273,7 +273,7 @@ sequenceDiagram
     participant W as client.saved_filter
     participant API as Kentik REST API
 
-    C->>W: delete_saved_filter(id="id-example")
+    C->>W: delete(id="id-example")
     W->>API: DELETE /saved-filter/v202501alpha1/{id}
     alt success
         API-->>W: DeleteSavedFilterResponse (JSON)
@@ -295,7 +295,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_saved_filter(id="id-example")
+    C->>W: delete(id="id-example")
     W->>R: build_grpc_request(DeleteSavedFilterRequest, arguments)
     R->>API: SavedFilterService/DeleteSavedFilter (gRPC/TLS)
     alt success
@@ -328,7 +328,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.saved_filter.delete_saved_filter(
+response = client.saved_filter.delete(
     id="id-example",
 )
 ```
@@ -349,7 +349,7 @@ sequenceDiagram
     participant W as client.saved_filter
     participant API as Kentik REST API
 
-    C->>W: list_saved_filters()
+    C->>W: list()
     W->>API: GET /saved-filters/v202501alpha1
     alt success
         API-->>W: ListSavedFiltersResponse (JSON)
@@ -371,7 +371,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_saved_filters()
+    C->>W: list()
     W->>R: build_grpc_request(ListSavedFiltersRequest, arguments)
     R->>API: SavedFilterService/ListSavedFilters (gRPC/TLS)
     alt success
@@ -398,7 +398,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.saved_filter.list_saved_filters()
+response = client.saved_filter.list()
 ```
 
 ---
@@ -417,7 +417,7 @@ sequenceDiagram
     participant W as client.saved_filter
     participant API as Kentik REST API
 
-    C->>W: list_saved_filters_all()
+    C->>W: list_all()
     W->>API: GET /saved-filters/v202501alpha1/all
     alt success
         API-->>W: ListSavedFiltersAllResponse (JSON)
@@ -439,7 +439,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_saved_filters_all()
+    C->>W: list_all()
     W->>R: build_grpc_request(ListSavedFiltersAllRequest, arguments)
     R->>API: SavedFilterService/ListSavedFiltersAll (gRPC/TLS)
     alt success
@@ -466,7 +466,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.saved_filter.list_saved_filters_all()
+response = client.saved_filter.list_all()
 ```
 
 ## Data Models

@@ -96,8 +96,8 @@ uv run python scripts/sample_consume_sdk.py --real
 ```
 
 `run_mock_demo()` proves the generated call path end-to-end without
-credentials. `run_real_call()` tries `device.list_devices()` first,
-then falls back to `user.list_users()`, so the script still succeeds
+credentials. `run_real_call()` tries `device.list()` first,
+then falls back to `user.list()`, so the script still succeeds
 against an account that lacks one of those permissions.
 
 ## Generator patches (internal)

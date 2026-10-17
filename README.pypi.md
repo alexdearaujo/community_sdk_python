@@ -33,7 +33,7 @@ Then:
 from kentik_api import KentikAPI
 
 with KentikAPI() as client:
-    devices = client.device.list_devices()
+    devices = client.device.list()
     for device in devices.devices or []:
         print(device.id, device.deviceName)
 ```

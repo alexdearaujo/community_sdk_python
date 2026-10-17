@@ -183,7 +183,7 @@ def test_marker_blocks_describe_the_services_actually_present(sandbox):
     assert _marker((guides / "generation.md").read_text(), "service-count") == "3"
     assert _marker((sandbox.docs / "README.md").read_text(), "service-count") == "3"
     quickstart = (guides / "quickstart.md").read_text()
-    assert "client.device.list_devices()" in _marker(quickstart, "first-call-example")
+    assert "client.device.list()" in _marker(quickstart, "first-call-example")
     assert "as_group" not in quickstart
     grpc_md = (guides / "grpc.md").read_text()
     assert "ListDevices" in _marker(grpc_md, "grpc-callflow-diagram")
@@ -281,7 +281,5 @@ def test_resolve_import_from(current, level, module, expected):
 def test_grpc_stub_method_name_reads_the_wrapper():
     wrapper = _REPO / "src" / "kentik_api" / "gen" / "device" / "services" / "device.py"
 
-    assert (
-        docs_rendering._grpc_stub_method_name(wrapper, "list_devices") == "ListDevices"
-    )
+    assert docs_rendering._grpc_stub_method_name(wrapper, "list") == "ListDevices"
     assert docs_rendering._grpc_stub_method_name(wrapper, "no_such_method") is None

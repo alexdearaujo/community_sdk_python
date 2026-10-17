@@ -8,7 +8,7 @@ from kentik_api.errors import KentikError
 def main() -> None:
     client = KentikAPI(protocol="grpc")
     try:
-        sites_resp = client.site.list_sites()
+        sites_resp = client.site.list()
         sites = [site for site in (sites_resp.sites or []) if site is not None]
         print(f"Found {len(sites)} site(s).")
         for site in sites[:5]:

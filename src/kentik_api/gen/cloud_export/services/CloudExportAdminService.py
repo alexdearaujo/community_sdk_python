@@ -10,13 +10,7 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import (
-    CreateCloudExportError,
-    DeleteCloudExportError,
-    GetCloudExportError,
-    ListCloudExportsError,
-    UpdateCloudExportError,
-)
+from ..error import CreateError, DeleteError, GetError, ListError, UpdateError
 from ..models import (  # noqa: F401
     AwsProperties,
     AzureProperties,
@@ -61,7 +55,7 @@ def ListCloudExports(
         header_params=header_params,
         expected_status=200,
         operation_name="ListCloudExports",
-        error_cls=ListCloudExportsError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -95,7 +89,7 @@ def CreateCloudExport(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateCloudExport",
-        error_cls=CreateCloudExportError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -128,7 +122,7 @@ def GetCloudExport(
         header_params=header_params,
         expected_status=200,
         operation_name="GetCloudExport",
-        error_cls=GetCloudExportError,
+        error_cls=GetError,
     )
 
     return parse_response_model(
@@ -165,7 +159,7 @@ def UpdateCloudExport(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateCloudExport",
-        error_cls=UpdateCloudExportError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -198,7 +192,7 @@ def DeleteCloudExport(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteCloudExport",
-        error_cls=DeleteCloudExportError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(

@@ -35,7 +35,7 @@ class CapacityPlanServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_capacity_plans(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCapacityPlansResponse:
         """
@@ -55,7 +55,7 @@ class CapacityPlanServiceWrapper:
                 self._grpc_stub_1.ListCapacityPlans,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCapacityPlanModule1.ListCapacityPlansError,
+                error_cls=RestCapacityPlanModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListCapacityPlansResponse,
@@ -113,7 +113,7 @@ class CapacityPlanServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_capacity_plan(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetCapacityPlanResponse:
         """
@@ -133,7 +133,7 @@ class CapacityPlanServiceWrapper:
                 self._grpc_stub_1.GetCapacityPlan,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCapacityPlanModule1.GetCapacityPlanError,
+                error_cls=RestCapacityPlanModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetCapacityPlanResponse,

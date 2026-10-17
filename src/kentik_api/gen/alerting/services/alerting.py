@@ -354,7 +354,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_list(
+    def list(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -379,7 +379,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_1.List,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule2.AlertListError,
+                error_cls=RestAlertingModule2.ListError,
             )
             return parse_grpc_response(
                 rest_models.AlertServiceListResponse,
@@ -580,7 +580,7 @@ class AlertingServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def alert_get(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.AlertServiceGetResponse:
         """
@@ -600,7 +600,7 @@ class AlertingServiceWrapper:
                 self._grpc_stub_1.Get,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestAlertingModule2.AlertGetError,
+                error_cls=RestAlertingModule2.GetError,
             )
             return parse_grpc_response(
                 rest_models.AlertServiceGetResponse,

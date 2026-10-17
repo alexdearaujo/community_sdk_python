@@ -51,7 +51,7 @@ def _query_item(device_names: str) -> QueryItem:
 
 def main() -> None:
     client = KentikAPI()  # loads KENTIK_EMAIL / KENTIK_API_TOKEN from .env
-    devices = client.device.list_devices().devices or []
+    devices = client.device.list().devices or []
     names = ",".join(d.deviceName for d in devices if d is not None and d.deviceName)
     item = _query_item(names)
 

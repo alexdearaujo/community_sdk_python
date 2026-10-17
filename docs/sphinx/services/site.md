@@ -417,7 +417,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: list_sites()
+    C->>W: list()
     W->>API: GET /site/v202509/sites
     alt success
         API-->>W: ListSitesResponse (JSON)
@@ -439,7 +439,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_sites()
+    C->>W: list()
     W->>R: build_grpc_request(ListSitesRequest, arguments)
     R->>API: SiteService/ListSites (gRPC/TLS)
     alt success
@@ -466,7 +466,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.list_sites()
+response = client.site.list()
 ```
 
 ---
@@ -485,7 +485,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: create_site(data=CreateSiteRequest(...))
+    C->>W: create(data=CreateSiteRequest(...))
     W->>API: POST /site/v202509/sites
     alt success
         API-->>W: CreateSiteResponse (JSON)
@@ -507,7 +507,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_site(data=CreateSiteRequest(...))
+    C->>W: create(data=CreateSiteRequest(...))
     W->>R: build_grpc_request(CreateSiteRequest, arguments)
     R->>API: SiteService/CreateSite (gRPC/TLS)
     alt success
@@ -541,7 +541,7 @@ from kentik_api.gen.site.models import CreateSiteRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.create_site(
+response = client.site.create(
     data=CreateSiteRequest(...),
 )
 ```
@@ -562,7 +562,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: get_site(id="id-example")
+    C->>W: get(id="id-example")
     W->>API: GET /site/v202509/sites/{id}
     alt success
         API-->>W: GetSiteResponse (JSON)
@@ -584,7 +584,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_site(id="id-example")
+    C->>W: get(id="id-example")
     W->>R: build_grpc_request(GetSiteRequest, arguments)
     R->>API: SiteService/GetSite (gRPC/TLS)
     alt success
@@ -617,7 +617,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.get_site(
+response = client.site.get(
     id="id-example",
 )
 ```
@@ -638,7 +638,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: update_site(id="id-example", data=SiteServiceUpdateSiteBody(...))
+    C->>W: update(id="id-example", data=SiteServiceUpdateSiteBody(...))
     W->>API: PUT /site/v202509/sites/{id}
     alt success
         API-->>W: UpdateSiteResponse (JSON)
@@ -660,7 +660,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_site(id="id-example", data=SiteServiceUpdateSiteBody(...))
+    C->>W: update(id="id-example", data=SiteServiceUpdateSiteBody(...))
     W->>R: build_grpc_request(UpdateSiteRequest, arguments)
     R->>API: SiteService/UpdateSite (gRPC/TLS)
     alt success
@@ -695,7 +695,7 @@ from kentik_api.gen.site.models import SiteServiceUpdateSiteBody
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.update_site(
+response = client.site.update(
     id="id-example",
     data=SiteServiceUpdateSiteBody(...),
 )
@@ -717,7 +717,7 @@ sequenceDiagram
     participant W as client.site
     participant API as Kentik REST API
 
-    C->>W: delete_site(id="id-example")
+    C->>W: delete(id="id-example")
     W->>API: DELETE /site/v202509/sites/{id}
     alt success
         API-->>W: DeleteSiteResponse (JSON)
@@ -739,7 +739,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_site(id="id-example")
+    C->>W: delete(id="id-example")
     W->>R: build_grpc_request(DeleteSiteRequest, arguments)
     R->>API: SiteService/DeleteSite (gRPC/TLS)
     alt success
@@ -772,7 +772,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.site.delete_site(
+response = client.site.delete(
     id="id-example",
 )
 ```

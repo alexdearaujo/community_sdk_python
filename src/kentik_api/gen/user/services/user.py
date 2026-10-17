@@ -35,7 +35,7 @@ class UserServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_users(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListUsersResponse:
         """
@@ -53,7 +53,7 @@ class UserServiceWrapper:
                 self._grpc_stub_1.ListUsers,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestUserModule1.ListUsersError,
+                error_cls=RestUserModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListUsersResponse,
@@ -72,7 +72,7 @@ class UserServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_user(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -97,7 +97,7 @@ class UserServiceWrapper:
                 self._grpc_stub_1.CreateUser,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestUserModule1.CreateUserError,
+                error_cls=RestUserModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateUserResponse,
@@ -117,7 +117,7 @@ class UserServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_user(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.GetUserResponse:
         """
@@ -135,7 +135,7 @@ class UserServiceWrapper:
                 self._grpc_stub_1.GetUser,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestUserModule1.GetUserError,
+                error_cls=RestUserModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetUserResponse,
@@ -155,7 +155,7 @@ class UserServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_user(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -181,7 +181,7 @@ class UserServiceWrapper:
                 self._grpc_stub_1.UpdateUser,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestUserModule1.UpdateUserError,
+                error_cls=RestUserModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateUserResponse,
@@ -202,7 +202,7 @@ class UserServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_user(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, id: str
     ) -> rest_models.DeleteUserResponse:
         """
@@ -222,7 +222,7 @@ class UserServiceWrapper:
                 self._grpc_stub_1.DeleteUser,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestUserModule1.DeleteUserError,
+                error_cls=RestUserModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteUserResponse,

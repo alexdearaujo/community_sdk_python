@@ -132,7 +132,7 @@ subpackage of independently testable phase modules (see
   injection (`inject_service_error_handling()`; see the
   guarded-coupling note below). It runs after fixup, because each
   operation's error classes are named after its client method
-  (`list_labels` raises `ListLabelsError`), not its operationId.
+  (`label.list` raises `ListError`), not its operationId.
 - `fixup.py` — generated-code post-processing, called once per
   service directory after the schema availability window closes.
   Single public entrypoint: `fix_generated_service(service_dir)`.

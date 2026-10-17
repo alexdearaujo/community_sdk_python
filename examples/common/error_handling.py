@@ -14,7 +14,7 @@ def main(protocol: str = "rest") -> None:
     client = KentikAPI(protocol=protocol)
 
     try:
-        devices = client.device.list_devices()
+        devices = client.device.list()
         print(f"Retrieved {len(devices.devices or [])} device(s).")
     except AuthenticationError as exc:
         print(f"Authentication failed: {exc}")

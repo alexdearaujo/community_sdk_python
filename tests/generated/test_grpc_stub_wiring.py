@@ -127,7 +127,7 @@ def test_a_failed_proto_import_names_its_cause(monkeypatch):
     wrapper = _build("device", "DeviceServiceWrapper")
 
     with pytest.raises(NotImplementedError, match="failed to import") as exc_info:
-        wrapper.list_devices()
+        wrapper.list()
 
     assert isinstance(exc_info.value.__cause__, ImportError)
     assert "device_pb2" in str(exc_info.value)

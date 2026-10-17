@@ -295,7 +295,7 @@ def test_an_unknown_enum_value_over_rest_is_a_502():
             email="dev@example.com", api_token="token", env_file=None
         ) as api:
             with pytest.raises(KentikError) as exc_info:
-                api.user.list_users()
+                api.user.list()
 
     assert route.called
     _assert_unknown_enum_error(exc_info.value)
@@ -313,7 +313,7 @@ def test_an_unknown_enum_value_over_grpc_is_the_same_502(monkeypatch):
     transport.channel = MagicMock()
 
     with pytest.raises(KentikError) as exc_info:
-        user_wrapper.UserServiceWrapper(transport).list_users()
+        user_wrapper.UserServiceWrapper(transport).list()
 
     _assert_unknown_enum_error(exc_info.value)
 
@@ -333,7 +333,7 @@ def test_enum_values_use_wire_representation_for_path_and_query_parameters():
             email="dev@example.com", api_token="token", env_file=None
         ) as api:
             with pytest.raises(HTTPException):
-                api.device.list_devices(view=DeviceView.DEVICE_VIEW_BASIC)
+                api.device.list(view=DeviceView.DEVICE_VIEW_BASIC)
 
             with pytest.raises(HTTPException):
                 api.alerting.policy_get(

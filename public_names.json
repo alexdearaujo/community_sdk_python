@@ -24,8 +24,6 @@
         "ack": "POST /<version>/alerts/{}/ack",
         "act": "POST /<version>/mitigations/{}",
         "add_comment": "POST /<version>/alerts/{}/comments",
-        "alert_get": "GET /<version>/alerts/{}",
-        "alert_list": "POST /<version>/alerts",
         "auto_ack_create": "POST /<version>/alerts/ack/auto",
         "auto_ack_delete": "DELETE /<version>/alerts/ack/auto/{}",
         "auto_ack_get": "GET /<version>/alerts/ack/auto/{}",
@@ -36,6 +34,8 @@
         "clear": "POST /<version>/alerts/clear",
         "disable": "POST /<version>/policies/{}/{}/disable",
         "enable": "POST /<version>/policies/{}/{}/enable",
+        "get": "GET /<version>/alerts/{}",
+        "list": "POST /<version>/alerts",
         "list_comments": "GET /<version>/alerts/{}/comments",
         "mitigation_methods_get": "GET /<version>/mitigations/methods/{}",
         "mitigation_methods_list": "GET /<version>/mitigations/methods",
@@ -251,11 +251,11 @@
     },
     "as_group": {
       "methods": {
-        "create_as_group": "POST /as_group/<version>/as_group",
-        "delete_as_group": "DELETE /as_group/<version>/as_group/{}",
-        "get_as_group": "GET /as_group/<version>/as_group/{}",
-        "list_as_groups": "GET /as_group/<version>/as_group",
-        "update_as_group": "PUT /as_group/<version>/as_group/{}"
+        "create": "POST /as_group/<version>/as_group",
+        "delete": "DELETE /as_group/<version>/as_group/{}",
+        "get": "GET /as_group/<version>/as_group/{}",
+        "list": "GET /as_group/<version>/as_group",
+        "update": "PUT /as_group/<version>/as_group/{}"
       },
       "models": {
         "ASGroupConcise": "ASGroupConcise",
@@ -368,9 +368,9 @@
     },
     "capacity_plan": {
       "methods": {
-        "get_capacity_plan": "GET /capacity_plan/<version>/capacity_plan/{}",
+        "get": "GET /capacity_plan/<version>/capacity_plan/{}",
         "get_capacity_summary": "GET /capacity_plan/<version>/capacity_plan/{}/summary",
-        "list_capacity_plans": "GET /capacity_plan/<version>/capacity_plan",
+        "list": "GET /capacity_plan/<version>/capacity_plan",
         "list_capacity_summaries": "GET /capacity_plan/<version>/capacity_plan/summary"
       },
       "models": {
@@ -396,11 +396,11 @@
     },
     "cloud_export": {
       "methods": {
-        "create_cloud_export": "POST /cloud_export/<version>/exports",
-        "delete_cloud_export": "DELETE /cloud_export/<version>/exports/{}",
-        "get_cloud_export": "GET /cloud_export/<version>/exports/{}",
-        "list_cloud_exports": "GET /cloud_export/<version>/exports",
-        "update_cloud_export": "PUT /cloud_export/<version>/exports/{}"
+        "create": "POST /cloud_export/<version>/exports",
+        "delete": "DELETE /cloud_export/<version>/exports/{}",
+        "get": "GET /cloud_export/<version>/exports/{}",
+        "list": "GET /cloud_export/<version>/exports",
+        "update": "PUT /cloud_export/<version>/exports/{}"
       },
       "models": {
         "AwsProperties": "AwsProperties",
@@ -487,11 +487,11 @@
     },
     "custom_application": {
       "methods": {
-        "create_custom_application": "POST /custom_application/<version>",
-        "delete_custom_application": "DELETE /custom_application/<version>/{}",
-        "get_custom_application": "GET /custom_application/<version>/{}",
-        "list_custom_applications": "GET /custom_application/<version>",
-        "update_custom_application": "PUT /custom_application/<version>/{}"
+        "create": "POST /custom_application/<version>",
+        "delete": "DELETE /custom_application/<version>/{}",
+        "get": "GET /custom_application/<version>/{}",
+        "list": "GET /custom_application/<version>",
+        "update": "PUT /custom_application/<version>/{}"
       },
       "models": {
         "CreateCustomApplicationResponse": "CreateCustomApplicationResponse",
@@ -507,15 +507,15 @@
     },
     "custom_dimension": {
       "methods": {
-        "create_custom_dimension": "POST /<version>/customdimension",
+        "create": "POST /<version>/customdimension",
         "create_populator": "POST /custom_dimensions/<version>/{}/populator",
-        "delete_custom_dimension": "DELETE /custom_dimensions/<version>/{}",
+        "delete": "DELETE /custom_dimensions/<version>/{}",
         "delete_populator": "DELETE /custom_dimensions/<version>/{}/populator/{}",
         "get_info": "GET /custom_dimensions/<version>/{}",
         "get_populator": "GET /custom_dimensions/<version>/{}/populator/{}",
         "get_populator_field": "GET /custom_dimensions/<version>/{}/populator/{}/field/{}",
-        "list_custom_dimensions": "GET /custom_dimensions/<version>",
-        "update_custom_dimension": "PUT /custom_dimensions/<version>/{}",
+        "list": "GET /custom_dimensions/<version>",
+        "update": "PUT /custom_dimensions/<version>/{}",
         "update_populator": "PUT /custom_dimensions/<version>/{}/populator/{}"
       },
       "models": {
@@ -539,15 +539,15 @@
     },
     "device": {
       "methods": {
-        "create_device": "POST /device/<version>/device",
-        "create_devices": "POST /device/<version>/device/batch_create",
-        "delete_device": "DELETE /device/<version>/device/{}",
-        "delete_devices": "POST /device/<version>/device/batch_delete",
-        "get_device": "GET /device/<version>/device/{}",
-        "get_device_by_name": "GET /device/<version>/device/name/{}",
-        "list_devices": "GET /device/<version>/device",
-        "update_device": "PUT /device/<version>/device/{}",
-        "update_devices": "PUT /device/<version>/device/batch_update",
+        "create": "POST /device/<version>/device",
+        "create_bulk": "POST /device/<version>/device/batch_create",
+        "delete": "DELETE /device/<version>/device/{}",
+        "delete_bulk": "POST /device/<version>/device/batch_delete",
+        "get": "GET /device/<version>/device/{}",
+        "get_by_name": "GET /device/<version>/device/name/{}",
+        "list": "GET /device/<version>/device",
+        "update": "PUT /device/<version>/device/{}",
+        "update_bulk": "PUT /device/<version>/device/batch_update",
         "update_labels": "PUT /device/<version>/device/{}/labels"
       },
       "models": {
@@ -633,7 +633,7 @@
     },
     "dictionary": {
       "methods": {
-        "get_dictionary": "GET /dictionary/<version>"
+        "get": "GET /dictionary/<version>"
       },
       "models": {
         "BaseUnit": "BaseUnit",
@@ -668,11 +668,11 @@
     },
     "flow_tag": {
       "methods": {
-        "create_flow_tag": "POST /flow_tag/<version>/tag",
-        "delete_flow_tag": "DELETE /flow_tag/<version>/tag/{}",
-        "get_flow_tag": "GET /flow_tag/<version>/tag/{}",
-        "search_flow_tag": "GET /flow_tag/<version>/tag",
-        "update_flow_tag": "PUT /flow_tag/<version>/tag/{}"
+        "create": "POST /flow_tag/<version>/tag",
+        "delete": "DELETE /flow_tag/<version>/tag/{}",
+        "get": "GET /flow_tag/<version>/tag/{}",
+        "search": "GET /flow_tag/<version>/tag",
+        "update": "PUT /flow_tag/<version>/tag/{}"
       },
       "models": {
         "AddressInfo": "AddressInfo",
@@ -695,12 +695,12 @@
     },
     "interface": {
       "methods": {
-        "interface_create": "POST /interface/<version>/interfaces",
-        "interface_delete": "DELETE /interface/<version>/interfaces/{}",
-        "interface_get": "GET /interface/<version>/interfaces/{}",
-        "interface_update": "PUT /interface/<version>/interfaces/{}",
-        "list_interface": "GET /interface/<version>/interfaces",
-        "manual_classify": "POST /interface/<version>/manual_classify"
+        "create": "POST /interface/<version>/interfaces",
+        "delete": "DELETE /interface/<version>/interfaces/{}",
+        "get": "GET /interface/<version>/interfaces/{}",
+        "list": "GET /interface/<version>/interfaces",
+        "manual_classify": "POST /interface/<version>/manual_classify",
+        "update": "PUT /interface/<version>/interfaces/{}"
       },
       "models": {
         "ConnectivityType": "ConnectivityType",
@@ -948,10 +948,10 @@
     },
     "label": {
       "methods": {
-        "create_label": "POST /label/<version>/labels",
-        "delete_label": "DELETE /label/<version>/labels/{}",
-        "list_labels": "GET /label/<version>/labels",
-        "update_label": "POST /label/<version>/labels/{}"
+        "create": "POST /label/<version>/labels",
+        "delete": "DELETE /label/<version>/labels/{}",
+        "list": "GET /label/<version>/labels",
+        "update": "POST /label/<version>/labels/{}"
       },
       "models": {
         "CreateLabelRequest": "CreateLabelRequest",
@@ -1047,8 +1047,8 @@
     },
     "network_class": {
       "methods": {
-        "network_class_get": "GET /network_class/<version>/network_class",
-        "network_class_update": "POST /network_class/<version>/network_class"
+        "get": "GET /network_class/<version>/network_class",
+        "update": "POST /network_class/<version>/network_class"
       },
       "models": {
         "CloudSubnet": "CloudSubnet",
@@ -1081,9 +1081,9 @@
     },
     "notification_channel": {
       "methods": {
-        "get_notification_channel": "GET /notification_channel/<version>/notification_channels/{}",
-        "list_notification_channels": "GET /notification_channel/<version>/notification_channels",
-        "search_notification_channels": "POST /notification_channel/<version>/notification_channels/search"
+        "get": "GET /notification_channel/<version>/notification_channels/{}",
+        "list": "GET /notification_channel/<version>/notification_channels",
+        "search": "POST /notification_channel/<version>/notification_channels/search"
       },
       "models": {
         "ChannelType": "ChannelType",
@@ -1114,7 +1114,7 @@
     },
     "plan": {
       "methods": {
-        "list_plans": "GET /plans/<version>"
+        "list": "GET /plans/<version>"
       },
       "models": {
         "DeviceSubtype": "DeviceSubtype",
@@ -1158,12 +1158,12 @@
     },
     "saved_filter": {
       "methods": {
-        "create_saved_filter": "POST /saved-filter/<version>",
-        "delete_saved_filter": "DELETE /saved-filter/<version>/{}",
-        "get_saved_filter": "GET /saved-filter/<version>/{}",
-        "list_saved_filters": "GET /saved-filters/<version>",
-        "list_saved_filters_all": "GET /saved-filters/<version>/all",
-        "update_saved_filter": "PUT /saved-filter/<version>/{}"
+        "create": "POST /saved-filter/<version>",
+        "delete": "DELETE /saved-filter/<version>/{}",
+        "get": "GET /saved-filter/<version>/{}",
+        "list": "GET /saved-filters/<version>",
+        "list_all": "GET /saved-filters/<version>/all",
+        "update": "PUT /saved-filter/<version>/{}"
       },
       "models": {
         "CreateSavedFilterResponse": "CreateSavedFilterResponse",
@@ -1187,16 +1187,16 @@
     },
     "site": {
       "methods": {
+        "create": "POST /site/<version>/sites",
         "create_market": "POST /site/<version>/site_markets",
-        "create_site": "POST /site/<version>/sites",
+        "delete": "DELETE /site/<version>/sites/{}",
         "delete_market": "DELETE /site/<version>/site_markets/{}",
-        "delete_site": "DELETE /site/<version>/sites/{}",
+        "get": "GET /site/<version>/sites/{}",
         "get_market": "GET /site/<version>/site_markets/{}",
-        "get_site": "GET /site/<version>/sites/{}",
+        "list": "GET /site/<version>/sites",
         "list_markets": "GET /site/<version>/site_markets",
-        "list_sites": "GET /site/<version>/sites",
-        "update_market": "PUT /site/<version>/site_markets/{}",
-        "update_site": "PUT /site/<version>/sites/{}"
+        "update": "PUT /site/<version>/sites/{}",
+        "update_market": "PUT /site/<version>/site_markets/{}"
       },
       "models": {
         "CreateSiteMarketRequest": "CreateSiteMarketRequest",
@@ -1330,13 +1330,13 @@
     },
     "user": {
       "methods": {
-        "create_user": "POST /user/<version>/users",
-        "delete_user": "DELETE /user/<version>/users/{}",
-        "get_user": "GET /user/<version>/users/{}",
-        "list_users": "GET /user/<version>/users",
+        "create": "POST /user/<version>/users",
+        "delete": "DELETE /user/<version>/users/{}",
+        "get": "GET /user/<version>/users/{}",
+        "list": "GET /user/<version>/users",
         "reset_active_sessions": "PUT /user/<version>/users/{}/reset_active_sessions",
         "reset_api_token": "PUT /user/<version>/users/{}/reset_api_token",
-        "update_user": "PUT /user/<version>/users/{}"
+        "update": "PUT /user/<version>/users/{}"
       },
       "models": {
         "CreateUserRequest": "CreateUserRequest",

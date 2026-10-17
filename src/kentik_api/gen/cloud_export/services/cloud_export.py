@@ -35,7 +35,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_cloud_exports(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListCloudExportsResponse:
         """
@@ -55,7 +55,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1.ListCloudExports,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCloudExportModule1.ListCloudExportsError,
+                error_cls=RestCloudExportModule1.ListError,
             )
             return parse_grpc_response(
                 rest_models.ListCloudExportsResponse,
@@ -74,7 +74,7 @@ class CloudExportServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def create_cloud_export(
+    def create(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -99,7 +99,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1.CreateCloudExport,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCloudExportModule1.CreateCloudExportError,
+                error_cls=RestCloudExportModule1.CreateError,
             )
             return parse_grpc_response(
                 rest_models.CreateCloudExportResponse,
@@ -119,7 +119,7 @@ class CloudExportServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_cloud_export(
+    def get(
         self, *, api_config_override: Optional[APIConfig] = None, exportid: str
     ) -> rest_models.GetCloudExportResponse:
         """
@@ -139,7 +139,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1.GetCloudExport,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCloudExportModule1.GetCloudExportError,
+                error_cls=RestCloudExportModule1.GetError,
             )
             return parse_grpc_response(
                 rest_models.GetCloudExportResponse,
@@ -159,7 +159,7 @@ class CloudExportServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def update_cloud_export(
+    def update(
         self,
         *,
         api_config_override: Optional[APIConfig] = None,
@@ -185,7 +185,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1.UpdateCloudExport,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCloudExportModule1.UpdateCloudExportError,
+                error_cls=RestCloudExportModule1.UpdateError,
             )
             return parse_grpc_response(
                 rest_models.UpdateCloudExportResponse,
@@ -206,7 +206,7 @@ class CloudExportServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def delete_cloud_export(
+    def delete(
         self, *, api_config_override: Optional[APIConfig] = None, exportid: str
     ) -> rest_models.DeleteCloudExportResponse:
         """
@@ -226,7 +226,7 @@ class CloudExportServiceWrapper:
                 self._grpc_stub_1.DeleteCloudExport,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCloudExportModule1.DeleteCloudExportError,
+                error_cls=RestCloudExportModule1.DeleteError,
             )
             return parse_grpc_response(
                 rest_models.DeleteCloudExportResponse,

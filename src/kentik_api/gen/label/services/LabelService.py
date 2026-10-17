@@ -10,12 +10,7 @@ from kentik_api.core.rest_runtime import (
     request_json,
 )
 
-from ..error import (
-    CreateLabelError,
-    DeleteLabelError,
-    ListLabelsError,
-    UpdateLabelError,
-)
+from ..error import CreateError, DeleteError, ListError, UpdateError
 from ..models import (  # noqa: F401
     CreateLabelRequest,
     CreateLabelResponse,
@@ -48,7 +43,7 @@ def ListLabels(api_config_override: Optional[APIConfig] = None) -> ListLabelsRes
         header_params=header_params,
         expected_status=200,
         operation_name="ListLabels",
-        error_cls=ListLabelsError,
+        error_cls=ListError,
     )
 
     return parse_response_model(
@@ -82,7 +77,7 @@ def CreateLabel(
         header_params=header_params,
         expected_status=200,
         operation_name="CreateLabel",
-        error_cls=CreateLabelError,
+        error_cls=CreateError,
     )
 
     return parse_response_model(
@@ -119,7 +114,7 @@ def UpdateLabel(
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateLabel",
-        error_cls=UpdateLabelError,
+        error_cls=UpdateError,
     )
 
     return parse_response_model(
@@ -152,7 +147,7 @@ def DeleteLabel(
         header_params=header_params,
         expected_status=200,
         operation_name="DeleteLabel",
-        error_cls=DeleteLabelError,
+        error_cls=DeleteError,
     )
 
     return parse_response_model(

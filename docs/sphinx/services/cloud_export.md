@@ -41,7 +41,7 @@ sequenceDiagram
     participant W as client.cloud_export
     participant API as Kentik REST API
 
-    C->>W: list_cloud_exports()
+    C->>W: list()
     W->>API: GET /cloud_export/v202506/exports
     alt success
         API-->>W: ListCloudExportsResponse (JSON)
@@ -63,7 +63,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_cloud_exports()
+    C->>W: list()
     W->>R: build_grpc_request(ListCloudExportsRequest, arguments)
     R->>API: CloudExportAdminService/ListCloudExports (gRPC/TLS)
     alt success
@@ -90,7 +90,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.cloud_export.list_cloud_exports()
+response = client.cloud_export.list()
 ```
 
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
     participant W as client.cloud_export
     participant API as Kentik REST API
 
-    C->>W: create_cloud_export(data=CreateCloudExportRequest(...))
+    C->>W: create(data=CreateCloudExportRequest(...))
     W->>API: POST /cloud_export/v202506/exports
     alt success
         API-->>W: CreateCloudExportResponse (JSON)
@@ -131,7 +131,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_cloud_export(data=CreateCloudExportRequest(...))
+    C->>W: create(data=CreateCloudExportRequest(...))
     W->>R: build_grpc_request(CreateCloudExportRequest, arguments)
     R->>API: CloudExportAdminService/CreateCloudExport (gRPC/TLS)
     alt success
@@ -165,7 +165,7 @@ from kentik_api.gen.cloud_export.models import CreateCloudExportRequest
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.cloud_export.create_cloud_export(
+response = client.cloud_export.create(
     data=CreateCloudExportRequest(...),
 )
 ```
@@ -186,7 +186,7 @@ sequenceDiagram
     participant W as client.cloud_export
     participant API as Kentik REST API
 
-    C->>W: get_cloud_export(exportid="exportid-example")
+    C->>W: get(exportid="exportid-example")
     W->>API: GET /cloud_export/v202506/exports/{export.id}
     alt success
         API-->>W: GetCloudExportResponse (JSON)
@@ -208,7 +208,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_cloud_export(exportid="exportid-example")
+    C->>W: get(exportid="exportid-example")
     W->>R: build_grpc_request(GetCloudExportRequest, arguments)
     R->>API: CloudExportAdminService/GetCloudExport (gRPC/TLS)
     alt success
@@ -241,7 +241,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.cloud_export.get_cloud_export(
+response = client.cloud_export.get(
     exportid="exportid-example",
 )
 ```
@@ -262,7 +262,7 @@ sequenceDiagram
     participant W as client.cloud_export
     participant API as Kentik REST API
 
-    C->>W: update_cloud_export(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
+    C->>W: update(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
     W->>API: PUT /cloud_export/v202506/exports/{export.id}
     alt success
         API-->>W: UpdateCloudExportResponse (JSON)
@@ -284,7 +284,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_cloud_export(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
+    C->>W: update(exportid="exportid-example", data=CloudExportAdminServiceUpdateCloudExportBody(...))
     W->>R: build_grpc_request(UpdateCloudExportRequest, arguments)
     R->>API: CloudExportAdminService/UpdateCloudExport (gRPC/TLS)
     alt success
@@ -319,7 +319,7 @@ from kentik_api.gen.cloud_export.models import CloudExportAdminServiceUpdateClou
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.cloud_export.update_cloud_export(
+response = client.cloud_export.update(
     exportid="exportid-example",
     data=CloudExportAdminServiceUpdateCloudExportBody(...),
 )
@@ -341,7 +341,7 @@ sequenceDiagram
     participant W as client.cloud_export
     participant API as Kentik REST API
 
-    C->>W: delete_cloud_export(exportid="exportid-example")
+    C->>W: delete(exportid="exportid-example")
     W->>API: DELETE /cloud_export/v202506/exports/{export.id}
     alt success
         API-->>W: DeleteCloudExportResponse (JSON)
@@ -363,7 +363,7 @@ sequenceDiagram
     participant R as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_cloud_export(exportid="exportid-example")
+    C->>W: delete(exportid="exportid-example")
     W->>R: build_grpc_request(DeleteCloudExportRequest, arguments)
     R->>API: CloudExportAdminService/DeleteCloudExport (gRPC/TLS)
     alt success
@@ -396,7 +396,7 @@ from kentik_api.client import KentikAPI
 
 # Both transports work: protocol="rest" (default) or protocol="grpc".
 client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env
-response = client.cloud_export.delete_cloud_export(
+response = client.cloud_export.delete(
     exportid="exportid-example",
 )
 ```
