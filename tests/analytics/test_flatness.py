@@ -44,7 +44,7 @@ def test_flatness_matches_the_v1_result():
 
 def test_no_flat_traffic_gives_no_events():
     data = _input()
-    data = data[data["link"] == "router2:eth1"]
+    data = data.loc[data["link"] == "router2:eth1"]
     speeds = _OneGigabitLinks()
 
     results = flatness_analysis(

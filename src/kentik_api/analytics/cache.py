@@ -12,7 +12,7 @@ import logging
 from collections.abc import Iterator
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, TextIO
+from typing import Any, TextIO, cast
 
 import pandas as pd
 
@@ -170,8 +170,8 @@ class DFCache:
     ) -> None:
         """Writes `df`, named by `start` and `end`, or else by its index range."""
         out = self.data_dir / self.filename_format.format(
-            start=(start or df.index[0]).isoformat(),
-            end=(end or df.index[-1]).isoformat(),
+            start=(start or cast(pd.Timestamp, df.index[0])).isoformat(),
+            end=(end or cast(pd.Timestamp, df.index[-1])).isoformat(),
         )
         df.to_parquet(out, index=True)
 
