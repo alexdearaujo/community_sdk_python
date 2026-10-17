@@ -98,9 +98,124 @@ docs = [
     "sphinxcontrib-mermaid>=1.0.0",
 ]
 
+# Run tasks as `uv run poe <task>`; bare `uv run poe` lists them.
+# No task may set `envfile`: .env holds real credentials (tests/smoke/test_task_runner.py).
+[tool.poe.env]
+# The generator prints emoji, which a redirected Windows console cannot encode otherwise.
+PYTHONUTF8 = "1"
+
+[tool.poe.tasks.all]
+help = "Generate the SDK, then run the mocked test suite (docs are opt-in: poe docs)"
+sequence = ["generate", "test"]
+
+[tool.poe.tasks.generate]
+help = "Generate the SDK, its docs pages, and the API records"
+cmd = "python scripts/generate_sdk.py"
+
+[tool.poe.tasks.sync-schema]
+help = "Regenerate from upstream schema HEAD and move the pin in schema.lock"
+cmd = "python scripts/generate_sdk.py --schema-ref HEAD"
+
+[tool.poe.tasks.docs]
+help = "Regenerate the SDK, then build the HTML docs"
+sequence = ["generate", "docs-build"]
+
+[tool.poe.tasks.docs-build]
+help = "Build the HTML docs from the committed tree, failing on any warning"
+cmd = "sphinx-build -W --keep-going -b html docs/sphinx docs/build/html"
+
+[tool.poe.tasks.test]
+help = "Run the mocked test suite"
+cmd = "pytest -vv -s -rA tests/"
+
+[tool.poe.tasks.test-generated]
+help = "Run the generated wrapper contract tests only"
+cmd = "pytest -vv -s -rA tests/generated/"
+
+[tool.poe.tasks.test-runtime]
+help = "Run the shared runtime tests only"
+cmd = "pytest -vv -s -rA tests/runtime/"
+
+[tool.poe.tasks.test-smoke]
+help = "Run the smoke tests only"
+cmd = "pytest -vv -s -rA tests/smoke/"
+
+[tool.poe.tasks.test-generator]
+help = "Run the generator (scripts/generation/) unit tests only"
+cmd = "pytest -vv -s -rA tests/generator/"
+
+[tool.poe.tasks.test-analytics]
+help = "Run the analytics extra tests only"
+cmd = "pytest -vv -s -rA tests/analytics/"
+
+[tool.poe.tasks.test-e2e]
+help = "Run end-to-end tests against the REAL Kentik API (opt-in, needs .env)"
+cmd = "pytest -vv -s -rA -m e2e tests/e2e/"
+
+[tool.poe.tasks.test-e2e-grpc]
+help = "Run end-to-end gRPC-transport tests against the REAL Kentik API (opt-in, needs .env)"
+cmd = "pytest -vv -s -rA -m e2e_grpc tests/e2e/"
+
+[tool.poe.tasks.lint]
+help = "Fix and format Python with Ruff, and Markdown with rumdl"
+sequence = [
+    { cmd = "ruff check --fix ." },
+    { cmd = "ruff format ." },
+    { cmd = "rumdl check --fix ." },
+]
+
+[tool.poe.tasks.lint-check]
+help = "Check Python and Markdown without changing files (the CI form of lint)"
+sequence = [
+    { cmd = "ruff check --output-format github ." },
+    { cmd = "ruff format --check --output-format github ." },
+    { cmd = "rumdl check --output-format github ." },
+]
+ignore_fail = "return_non_zero"
+
+[tool.poe.tasks.typecheck]
+help = "Type-check the SDK (generated code included), scripts, and tests with ty"
+cmd = "ty check"
+
+[tool.poe.tasks.check-specs]
+help = "Validate FR/SC/task cross-references in specs/"
+cmd = "python scripts/check_spec_refs.py"
+
+[tool.poe.tasks.release-notes]
+help = "Render release notes from api_surface.json (default since: the previous release tag)"
+cmd = "python scripts/release_notes.py"
+
+[tool.poe.tasks.check-changelog]
+help = "Fail if CHANGELOG.md misses a breaking surface change (default since: the previous release tag)"
+cmd = "python scripts/release_notes.py --check-changelog"
+
+[tool.poe.tasks.impact-report]
+help = "Report what the last regeneration changed (default since: HEAD)"
+cmd = "python scripts/impact_report.py"
+
+[tool.poe.tasks.clean]
+help = "Remove the generated SDK, the docs build, and every __pycache__"
+script = "scripts.tasks:clean"
+
+[tool.poe.tasks.deep-clean]
+help = "Run clean, then remove .venv and the pytest and Ruff caches (uv.lock is kept)"
+script = "scripts.tasks:deep_clean"
+
+[tool.poe.tasks.check-drift]
+help = "Fail when the working tree differs from the commit, naming each path"
+script = "scripts.tasks:check_drift"
+
+[tool.poe.tasks.audit]
+help = "Audit locked dependencies for known vulnerabilities (uv preview feature)"
+cmd = "uv audit --preview-features audit-command"
+
 [tool.ruff]
 # Spec Kit owns these paths and rewrites them on every upgrade.
 extend-exclude = [".specify", ".claude/skills", ".github/skills"]
+
+[tool.ruff.format]
+# Windows writes CRLF by default; the drift check compares bytes.
+line-ending = "lf"
 
 [tool.ruff.lint]
 # The 0.17 default set keeps only E722 and E902 of these; the rest stay enforced.

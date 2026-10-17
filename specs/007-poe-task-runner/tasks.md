@@ -73,13 +73,13 @@ Make targets did, with no POSIX tool.
 
 ### Tests for User Story 1
 
-- [ ] T004 [US1] Create tests/smoke/test_task_runner.py with
+- [X] T004 [US1] Create tests/smoke/test_task_runner.py with
   `test_every_task_has_help` (every entry in `[tool.poe.tasks]` has a
   one-line `help`), `test_no_task_loads_an_env_file` (no `envfile` key at
   any level under `[tool.poe]`), and `test_no_task_uses_a_shell` (no task of
   type `shell`), reading pyproject.toml with `tomllib`; run them and see
   them fail (FR-004, FR-005, FR-006)
-- [ ] T005 [P] [US1] Create tests/smoke/test_tasks_module.py for
+- [X] T005 [P] [US1] Create tests/smoke/test_tasks_module.py for
   scripts/tasks.py: `clean()` removes `src/kentik_api/gen/`, `docs/build/`,
   `docs/sphinx/services/`, and every `__pycache__` in a `tmp_path` copy and
   keeps `scripts/openapi_templates/`, `src/kentik_api/core/`, and
@@ -90,33 +90,36 @@ Make targets did, with no POSIX tool.
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Create scripts/tasks.py with `clean()`, `deep_clean()`, and
+- [X] T006 [US1] Create scripts/tasks.py with `clean()`, `deep_clean()`, and
   `check_drift()` per contracts/tasks.md, using `shutil.rmtree`, `pathlib`,
   and `subprocess.run(["git", "status", "--porcelain"])` with an argument
   list; each takes a repository root that defaults to the project root, so
   T005 can pass `tmp_path`; T005 passes (FR-004, R10)
-- [ ] T007 [US1] Add `[tool.poe.env]` with `PYTHONUTF8 = "1"` and every task
+- [X] T007 [US1] Add `[tool.poe.env]` with `PYTHONUTF8 = "1"` and every task
   in the contracts/tasks.md map to `[tool.poe.tasks]` in pyproject.toml:
   `cmd` for one command, `sequence` for `all`, `docs`, `lint`, and
   `lint-check`, `script` for `clean`, `deep-clean`, and `check-drift`, each
   with a one-line `help`, and no `envfile`; T004 passes (FR-002, FR-004,
   FR-005, FR-006, SC-004, R4)
-- [ ] T008 [US1] Add `line-ending = "lf"` to `[tool.ruff.format]` in
+- [X] T008 [US1] Add `line-ending = "lf"` to `[tool.ruff.format]` in
   pyproject.toml, and create .gitattributes with `* text=auto eol=lf`;
   run `git add --renormalize .` and confirm with `git status --short` that
   no tracked file changes (FR-013, R5)
-- [ ] T009 [US1] Replace `test_make_help_lists_targets_with_digits` in
+- [X] T009 [US1] Replace `test_make_help_lists_targets_with_digits` in
   tests/smoke/test_docs_contract.py with a test that `uv run poe` exits 0
   and its output names every task in `[tool.poe.tasks]` (FR-005)
-- [ ] T010 [P] [US1] Stop copying `Makefile` into the sandbox in
+- [X] T010 [P] [US1] Stop copying `Makefile` into the sandbox in
   tests/generator/conftest.py, and copy pyproject.toml there if any test in
   tests/generator/ still needs the task table (FR-009)
-- [ ] T011 [US1] Delete Makefile, then run `uv run poe test`,
+- [X] T011 [US1] Delete Makefile, then run `uv run poe test`,
   `uv run poe typecheck`, `uv run poe lint-check`, and `uv run poe clean`
   followed by `uv run poe generate` and `uv run poe check-drift`; all pass
   (FR-009, SC-006)
 
 **Checkpoint**: Every task runs through poe on macOS and Linux. No Makefile.
+
+Note (T011): `lint-check` fails here only on rumdl MD057, because 37 Markdown files
+still link to the deleted `Makefile`. T029 to T035 rewrite those links, and T035 confirms the pass.
 
 ---
 

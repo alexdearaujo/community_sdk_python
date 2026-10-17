@@ -86,8 +86,7 @@ def sandbox(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Sandbox:
     _copy(real_docs / "guides", box.docs / "guides")
     _copy(real_docs / "README.md", box.docs / "README.md")
     _copy(real_docs / "index.md", box.docs / "index.md")
-    for name in ("pyproject.toml", "Makefile"):
-        _copy(REPO_ROOT / name, box.root / name)
+    _copy(REPO_ROOT / "pyproject.toml", box.root / "pyproject.toml")
 
     gen = box.gen
     for module in (_shared, docs_rendering, endpoint_docs, wrapper_generation):

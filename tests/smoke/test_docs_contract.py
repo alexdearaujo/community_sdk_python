@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
-import re
+import subprocess
+import sys
+import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -18,11 +20,20 @@ def test_changelog_command_does_not_name_a_tag_without_a_surface_record():
     assert "SINCE=v1.0.7" not in (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
 
 
-def test_make_help_lists_targets_with_digits():
-    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
-    pattern = re.search(r"grep -E '(\^\[[^']*?\]\+):", makefile)
-    assert pattern, "help target regex not found"
-    assert "0-9" in pattern.group(1)
+def test_poe_lists_every_task():
+    with (ROOT / "pyproject.toml").open("rb") as f:
+        tasks = tomllib.load(f)["tool"]["poe"]["tasks"]
+    # Bare `poe` prints the task list and exits 1, because no task ran.
+    result = subprocess.run(
+        [sys.executable, "-m", "poethepoet", "--no-ansi"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    output = result.stdout + result.stderr
+    listed = {line.split()[0] for line in output.splitlines() if line.startswith("  ")}
+    assert set(tasks) <= listed, output
 
 
 def test_agent_file_starts_with_front_matter():
