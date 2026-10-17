@@ -168,33 +168,36 @@ Windows and macOS jobs pass.
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] In .github/workflows/tests.yml, turn the `test` job into an
+- [X] T015 [US2] In .github/workflows/tests.yml, turn the `test` job into an
   `os` by `python` matrix with `fail-fast: false`: ubuntu on 3.12, 3.13, and
   3.14, windows and macos on 3.12, each running `uv run poe test`
   (FR-007, FR-008)
-- [ ] T016 [US2] In .github/workflows/tests.yml, give the `typecheck` job and
+- [X] T016 [US2] In .github/workflows/tests.yml, give the `typecheck` job and
   a new `lint` job an `os` matrix of ubuntu, windows, and macos with
   `fail-fast: false`, running `uv run poe typecheck` and
   `uv run poe lint-check`; remove any direct `ruff` or `rumdl` step that
   `lint-check` replaces (FR-007, FR-008)
-- [ ] T017 [US2] In .github/workflows/tests.yml, give
+- [X] T017 [US2] In .github/workflows/tests.yml, give
   `generated-output-matches-schema-pin` the same three-OS matrix, and replace
   `make generate` and the bash drift step with `uv run poe generate` and
   `uv run poe check-drift` (FR-007, FR-008, R9)
-- [ ] T018 [US2] In .github/workflows/tests.yml, change `spec-references` to
+- [X] T018 [US2] In .github/workflows/tests.yml, change `spec-references` to
   `uv run poe check-specs`, `changelog` to
   `uv run poe check-changelog --since "$(git merge-base HEAD origin/${{ github.base_ref }})"`
   with `shell: bash`, `audit` to `uv run poe audit`, and `docs` to
   `uv run poe docs-build`, and rewrite the header comment that names
   `make test-e2e` (FR-007)
-- [ ] T019 [P] [US2] In .github/workflows/schema-sync.yml, replace
+- [X] T019 [P] [US2] In .github/workflows/schema-sync.yml, replace
   `make sync-schema` with `uv run poe sync-schema` in the step and in the
   pull request text (FR-007)
-- [ ] T020 [US2] Validate both workflows: parse each with `yaml.safe_load`
+- [X] T020 [US2] Validate both workflows: parse each with `yaml.safe_load`
   and confirm `grep -n "make " .github/workflows/*.yml` finds nothing
   (FR-007, SC-002)
 
 **Checkpoint**: CI is written; the pull request run in T038 proves it.
+
+Note (T020): release.yml also ran `scripts/release_notes.py` directly. It now runs
+`uv run poe release-notes --out surface-notes.md`, so every CI step calls a poe task (FR-007).
 
 ---
 

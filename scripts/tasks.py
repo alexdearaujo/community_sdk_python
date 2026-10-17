@@ -61,5 +61,6 @@ def check_drift(root: Path = ROOT) -> None:
         return
     print("Generated output differs from the commit, or is untracked:")
     print(result.stdout, end="")
-    print("Run `uv run poe generate` and commit the result.")
+    print("A change altered generator output, or schema.lock names a commit the tree")
+    print("was not generated from. Run `uv run poe generate` and commit the result.")
     raise SystemExit(1)
