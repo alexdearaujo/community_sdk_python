@@ -35,9 +35,18 @@ jobs:
           from kentik_api import KentikAPI
 
           modules = [m.name for m in pkgutil.walk_packages(kentik_api.__path__, "kentik_api.")]
+          # kentik_api.analytics needs the analytics extra, which this wheel check does not install.
+          extra = [n for n in modules if n == "kentik_api.analytics" or n.startswith("kentik_api.analytics.")]
           for name in modules:
-              importlib.import_module(name)
-          print(f"imported {len(modules)} modules from {kentik_api.__file__}")
+              if name not in extra:
+                  importlib.import_module(name)
+          try:
+              importlib.import_module("kentik_api.analytics")
+          except ImportError as exc:
+              assert "kentik-api[analytics]" in str(exc), exc
+          else:
+              raise AssertionError("kentik_api.analytics imported without the analytics extra")
+          print(f"imported {len(modules) - len(extra)} modules from {kentik_api.__file__}")
 
           with KentikAPI("ci@example.com", "token", protocol="grpc", env_file=None) as client:
               wrappers = [w for w in vars(client).values() if type(w).__name__.endswith("ServiceWrapper")]

@@ -352,18 +352,20 @@ def test_operation_named_list_aliases_typing_list():
     assert "def List(x: TypingList[str])" in result
 
 
-@pytest.mark.parametrize("name", ["Optional", "Set", "Dict"])
-def test_imported_model_named_like_a_typing_name_is_aliased(name):
+@pytest.mark.parametrize(
+    ("name", "args"), [("Optional", "str"), ("Set", "str"), ("Dict", "str, int")]
+)
+def test_imported_model_named_like_a_typing_name_is_aliased(name, args):
     content = (
         f"from typing import Dict, Optional, Set\n"
         f"from ..models import Device, {name}  # noqa: F401\n\n"
-        f"def Get(x: {name}[str], m: {name}) -> Device:\n    pass\n"
+        f"def Get(x: {name}[{args}], m: {name}) -> Device:\n    pass\n"
     )
     result = _alias_shadowed_typing_names(content)
 
     namespace: dict = {name: type(name, (), {}), "Device": object}
     exec(compile(result.replace("from ..models", "# "), "m", "exec"), namespace)
-    assert f"def Get(x: Typing{name}[str], m: {name})" in result
+    assert f"def Get(x: Typing{name}[{args}], m: {name})" in result
 
 
 def test_model_named_any_fails_generation():
