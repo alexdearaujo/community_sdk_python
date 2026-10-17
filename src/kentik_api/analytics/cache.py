@@ -193,22 +193,18 @@ class DFCache:
     ) -> pd.DataFrame | None:
         """Fetches the range with `query_fn`, stores it, and returns it.
 
-        With `step`, the range is fetched in steps, and a step that one cached
-        file already holds is not fetched again.
+        The range is fetched in steps (one step without `step`), and a step
+        that one cached file already holds is not fetched again.
         """
-        if step is None:
-            df = query_fn(start=start, end=end, **kwargs)
-            if df is None or df.empty:
-                log.warning("fetch: got no data for %s -> %s", start, end)
-                return None
-            self.store(df, start, end)
-            return df
+        step = step or end - start
         for t in _time_steps(start, end, step):
             step_end = min(t + step, end)
             if self.covers(t, step_end):
                 continue
             df = query_fn(start=t, end=step_end, **kwargs)
-            if df is not None and not df.empty:
+            if df is None or df.empty:
+                log.warning("fetch: got no data for %s -> %s", t, step_end)
+            else:
                 self.store(df, t, step_end)
         return self.get(start, end, dedup_columns)
 

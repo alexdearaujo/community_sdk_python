@@ -83,9 +83,9 @@ and gets result rows, an image, and a URL.
 2. **Given** a top-X query with several buckets, **When** the user runs it,
    **Then** the SDK returns the results of each bucket, including the time
    series of each row when the query asks for it.
-3. **Given** a chart query, **When** the user runs it, **Then** the SDK
-   returns the image as bytes, with its image type, and the user does not
-   decode anything.
+3. **Given** a chart query, **When** the user runs it and passes the
+   response to one SDK helper, **Then** the helper returns the image as
+   bytes, with its image type, and the user writes no decoding code.
 4. **Given** a URL query, **When** the user runs it, **Then** the SDK
    returns the Data Explorer link as text.
 5. **Given** a client that the user created with `protocol="grpc"`, **When**
@@ -260,9 +260,10 @@ V5-backed calls are present and that no public name changed.
   reaches the API unchanged.
 - **FR-003**: The SDK MUST return query results as typed models. Result rows
   MUST keep columns that the request model did not predict.
-- **FR-004**: The chart operation MUST return the decoded image bytes and
-  the image type. Until a live call returns a chart, the documentation MUST
-  mark the chart operation as not verified.
+- **FR-004**: The chart operation MUST return the response as the API
+  sends it, and an SDK helper MUST decode that response to the image bytes
+  and the image type (see research R7). Until a live call returns a chart,
+  the documentation MUST mark the chart operation as not verified.
 - **FR-004a**: The documentation MUST give step-by-step instructions to test
   the chart operation by hand against the real API, including how to raise
   the timeout and how to report the result.
@@ -367,7 +368,8 @@ V5-backed calls are present and that no public name changed.
   dimensions, the metrics, the time range (fixed or a lookback), the
   filters, the device selection, and the chart options.
 - **Query result**: for each bucket, the result rows, and for top-X queries
-  the time series of each row. For a chart, the image bytes and type. For a
+  the time series of each row. For a chart, the data URI, which a helper
+  decodes to the image bytes and type. For a
   URL query, the link.
 - **Batch part**: a set of upserts and deletions, a replace-all flag, a
   complete flag, and the batch identifier that links the parts.

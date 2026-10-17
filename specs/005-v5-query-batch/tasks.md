@@ -296,3 +296,14 @@ T042 tests/smoke/test_analytics_extra.py
 
 Each step leaves `make test` green and can merge into `feat/v6-sdk` on its
 own with `git merge --no-ff`.
+
+---
+
+## Phase 9: Convergence
+
+**Purpose**: Close the gaps that a check of the code against the spec found
+after Phase 8.
+
+- [X] T056 [US3] Make `DFCache.fetch()` without `step` skip a range that one cached file holds, and apply `dedup_columns` on that path too, with tests in tests/analytics/test_cache.py (FR-019; partial: the no-`step` path always called the API)
+- [X] T057 [US4] Add a "Renamed fields" table to docs/sphinx/guides/migrating-from-1x.md with every 1.x field whose V6 name is not its camelCase form, and every 1.x field with no V6 field, for each V5 endpoint with a V6 equivalent (FR-023; partial: only sites and devices had field names)
+- [X] T058 Align FR-004, user story 1 scenario 3, and the query result entity in spec.md with the `decode_chart()` design of research R7 (FR-004; contradicts: the spec said the chart call itself returns bytes)

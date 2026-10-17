@@ -125,6 +125,33 @@ replacement. Method arguments are keyword only, and models are in
 | `kentik_api.utils.DeviceCache` | `kentik_api.devices.DeviceLookup` | Saves to JSON, not pickle |
 | `kentik_api.analytics` | `kentik_api.analytics`, with `pip install "kentik-api[analytics]"` | Top-X definitions only. A SQL definition or an `@fixup:` mapping raises `ValueError` |
 
+### Renamed fields
+
+A V6 field name is usually the 1.x name in camelCase: `device_name` is
+`deviceName`, and `created_date` is `createdDate`. The table lists each other
+rename, and each 1.x field that V6 does not have. Many V6 models also drop
+`company_id`.
+
+| 1.x class | 2.x model | Renamed fields | No V6 field |
+| --- | --- | --- | --- |
+| `User` | `user.User` | `email` is `userEmail`, `full_name` is `userFullName`, `filters` is `filter` (a JSON string), `created_date` is `cdate`, `updated_date` is `edate` | `username` (`userEmail` is the user name), `email_service`, `email_product`, `saved_filters` |
+| `DeviceLabel` | `label.Label` | `created_date` is `cdate`, `updated_date` is `edate` | `devices`, `user_id` |
+| `Tag` | `flow_tag.FlowTag` | `flow_tag` is `name`, `addr` is `ip` (an `AddressInfo` object), `created_date` is `cdate`, `updated_date` is `edate` | `user_id`, `addr_count`, `mac_count` |
+| `FilterGroups` | `saved_filter.SavedFilterFilterGroup` | `filterGroups` is `nestedFilterGroups`, `connector` is the boolean `any`, `saved_filters` is `savedFilterIds` (IDs, not objects) | `filterString`, `id`, `metric`, `name`, `named`, `autoAdded` |
+| `CustomDimension` | `custom_dimension.CustomDimension` | `display_name` is `description` | |
+| `Populator` | `custom_dimension.Populator` | | `dimension_id` |
+| `Plan` | `plan.Plan` | `device_types` is `deviceTypes` (a list of device subtypes) | |
+| `Tenant` | `mkp.Tenant` | | `created_date`, `updated_date` |
+| `TenantUser` | `mkp.TenantUser` | `email` is `userEmail`, `fullname` is `userFullName` | `name`, `last_login` |
+| `ManualMitigation` | `alerting.MitigationsServiceCreateRequest` | `platformID` is `platformId`, `methodID` is `methodId`, `minutesBeforeAutoStop` is `autoStopTtl` (a string, and the schema gives no unit) | |
+| `Device` | `device.DeviceDetailed` | `interfaces` is `allInterfaces` | `snmp_last_updated` |
+| `SNMPv3Conf` | `device.DeviceSnmpV3Conf` | `user_name` is `username` | |
+| `Interface` | `interface.Interface` | `created_date` is `cdate`, `updated_date` is `edate` | |
+| `VRFAttributes` | `interface.InterfaceVrf` | | `device_id` |
+| `Site` | `site.Site` | `site_name` is `title`, `latitude` is `lat`, `longitude` is `lon` | |
+| `CloudExport` | `cloud_export.CloudExport` | | `ibm`, `bgp` |
+| `AwsProperties` | `cloud_export.AwsProperties` | | `multiple_buckets` |
+
 ### V5 query field names
 
 `client.v5` models use the V5 wire names, as 1.x sent them. A 1.x

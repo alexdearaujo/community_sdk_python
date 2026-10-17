@@ -55,6 +55,38 @@ def test_a_second_fetch_fetches_only_the_missing_steps(tmp_path: Path):
     assert len(df) == 180
 
 
+def test_a_fetch_without_step_skips_a_cached_range(tmp_path: Path):
+    cache = DFCache(tmp_path)
+    cache.fetch(_Query(), START, START + timedelta(hours=2))
+    query = _Query()
+
+    df = cache.fetch(query, START, START + timedelta(hours=1))
+
+    assert query.calls == []
+    assert df is not None
+    assert len(df) == 61
+
+
+def test_fetch_removes_duplicate_rows(tmp_path: Path):
+    cache = DFCache(tmp_path)
+    cache.store(_frame(START, START + timedelta(minutes=30)))
+    query = _Query()
+
+    df = cache.fetch(
+        query,
+        START + timedelta(minutes=20),
+        START + timedelta(minutes=50),
+        dedup_columns=["ts", "link"],
+    )
+
+    assert query.calls == [
+        (START + timedelta(minutes=20), START + timedelta(minutes=50))
+    ]
+    assert df is not None
+    assert df.index.is_unique
+    assert len(df) == 30
+
+
 def test_get_removes_duplicate_rows(tmp_path: Path):
     cache = DFCache(tmp_path)
     cache.store(_frame(START, START + timedelta(minutes=30)))
