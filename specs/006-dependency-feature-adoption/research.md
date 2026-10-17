@@ -245,3 +245,26 @@ MyST-Parser 5.1.0, Sphinx 9.1.0, uv 0.13.0.
   action, so a person does it. The draft gives the evidence:
   `--formatter none`, Black, isort, and orjson in the lock, and no import
   of them in project code.
+- **Upstream state on 2026-10-17**: one owner. The last release (2.1.2,
+  2025-09-29) and the last merge (#121, 2025-09-28) are more than 12 months
+  old, the longest gap in the project's history. Six pull requests are
+  open, some since October 2025 with passing checks. Issues filed in 2026
+  have no maintainer reply.
+- **Decision on a pull request or a fork**: neither, for this finding. The
+  three packages are in the dev group only, so no SDK user installs them.
+  Making Black optional is a breaking change upstream, and an inactive
+  project is unlikely to merge it. Keep the exact pin.
+- **Fork when one of these is true** (the inventory row records them):
+  - A needed generator fix is not possible in `scripts/openapi_templates/`
+    or `fixup.py`, and upstream does not answer a pull request.
+  - A security advisory affects the generator or a mandatory dependency,
+    and upstream publishes no fix.
+  - Fixing problems at the source would retire a large part of `fixup.py`.
+
+  A fork can be tried without a code change through
+  `OPENAPI_GENERATOR_FROM` (`docs/sphinx/local_generation_workflow.md`). A
+  git URL in a dependency group is safe to publish, because dependency
+  groups are not in the package metadata.
+- **Alternatives considered**: An upstream pull request that moves Black and
+  isort to an extra: rejected for now, see above. A fork now: rejected, it
+  moves the generator's upkeep to this project for a dev-only saving.
