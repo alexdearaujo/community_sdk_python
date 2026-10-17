@@ -2,7 +2,8 @@
 
 # Quick Start
 
-Install the SDK and make your first API call in under five minutes.
+Install the SDK and make your first API call in under five minutes. See
+[this missing page](no-such-page.md).
 
 ## Prerequisites
 
