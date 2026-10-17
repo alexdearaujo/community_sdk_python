@@ -364,7 +364,7 @@ def test_imported_model_named_like_a_typing_name_is_aliased(name, args):
     result = _alias_shadowed_typing_names(content)
 
     namespace: dict = {name: type(name, (), {}), "Device": object}
-    exec(compile(result.replace("from ..models", "# "), "m", "exec"), namespace)
+    exec(compile(result.replace("from ..models", "# "), "m", "exec"), namespace)  # noqa: S102 - runs the patched source under test
     assert f"def Get(x: Typing{name}[{args}], m: {name})" in result
 
 

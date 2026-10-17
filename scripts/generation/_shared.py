@@ -161,7 +161,7 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
     """
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, SyntaxError, ValueError):
         return []
 
     ops: list[RestOperation] = []
@@ -303,7 +303,7 @@ def parse_wrapper_methods(path: Path) -> list[WrapperMethod]:
     """
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, SyntaxError, ValueError):
         return []
 
     wrapper_class: ast.ClassDef | None = None

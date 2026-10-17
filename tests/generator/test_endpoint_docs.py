@@ -281,7 +281,7 @@ def test_extract_propagates_failure_instead_of_swallowing_it(tmp_path: Path):
 
     collector = EndpointDocsCollector()
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError, match="Expecting"):
         collector.extract("broken_service", unparseable)
 
 
@@ -574,7 +574,7 @@ def test_every_model_a_committed_page_names_exists_in_the_sdk(page):
     ids=lambda p: p.stem,
 )
 def test_every_committed_example_imports_what_it_uses(page):
-    for snippet in re.findall(r"```python\n(.*?)```", page.read_text(), re.S):
+    for snippet in re.findall(r"```python\n(.*?)```", page.read_text(), re.DOTALL):
         tree = ast.parse(snippet)
         bound = {"response", "client"}
         for node in ast.walk(tree):

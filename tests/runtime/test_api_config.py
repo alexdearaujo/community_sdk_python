@@ -98,12 +98,12 @@ import ast  # noqa: E402
 import inspect  # noqa: E402
 from pathlib import Path  # noqa: E402
 
-_BASE: dict[str, Any] = dict(
-    base_path="https://grpc.api.kentik.com",
-    auth_email="dev@example.com",
-    auth_token="token",
-    timeout=60.0,
-)
+_BASE: dict[str, Any] = {
+    "base_path": "https://grpc.api.kentik.com",
+    "auth_email": "dev@example.com",
+    "auth_token": "token",
+    "timeout": 60.0,
+}
 
 
 def test_with_timeout_scalar_resets_both_transports():

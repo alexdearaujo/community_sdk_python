@@ -32,7 +32,9 @@ if TYPE_CHECKING:
 # The API's limit for one batch part.
 BATCH_PART_LIMIT = 4_000_000
 
-_DATA_URI = re.compile(r"data:(?P<mime>[^;,]+)(?:;[^;,]+)*;base64,(?P<data>.*)", re.S)
+_DATA_URI = re.compile(
+    r"data:(?P<mime>[^;,]+)(?:;[^;,]+)*;base64,(?P<data>.*)", re.DOTALL
+)
 
 
 @dataclass(frozen=True)

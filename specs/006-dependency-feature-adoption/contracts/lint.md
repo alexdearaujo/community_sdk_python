@@ -46,8 +46,10 @@ and does not block the merge (FR-014).
 
 - `[tool.ruff]` has no `include` key.
 - `[tool.ruff.lint]` has no `select` key, so the Ruff 0.17 default set
-  applies. `per-file-ignores` for the two generated paths lists every
-  default family except `E` and `F`, with a comment that gives the reason.
+  applies, and `extend-select = ["E4", "E7", "E9", "F"]` keeps today's
+  rules. `per-file-ignores` lists every added default family except `E`,
+  `F`, and `I` for `gen/**`, and except `E` and `F` for `client_mixin.py`,
+  with a comment that gives the reason.
 - Every entry in `[tool.ruff.lint] ignore` has a comment with its reason.
 - `.markdownlint-cli2.jsonc` disables MD036, with the reason: the bold
   `**Out of scope**` line is a marker that `scripts/check_spec_refs.py`

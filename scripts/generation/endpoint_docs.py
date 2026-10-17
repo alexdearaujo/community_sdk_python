@@ -261,7 +261,7 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
 
     try:
         tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, SyntaxError, ValueError):
         return {}
 
     services_folder = wrapper_file.parent
@@ -454,8 +454,10 @@ def _render_operation_sequence_diagram(
         grpc_diagram = [
             "**gRPC transport**",
             "",
-            "Not used: this endpoint exists only on REST, so a client created "
-            'with `protocol="grpc"` sends this call over REST too.',
+            (
+                "Not used: this endpoint exists only on REST, so a client created "
+                'with `protocol="grpc"` sends this call over REST too.'
+            ),
             "",
         ]
         return rest_diagram + grpc_diagram
@@ -464,9 +466,11 @@ def _render_operation_sequence_diagram(
         grpc_diagram = [
             "**gRPC transport**",
             "",
-            "Not available: no RPC declares this operation's HTTP rule, so on "
-            '`protocol="grpc"` this method raises `NotImplementedError`. Call it '
-            'through a `protocol="rest"` client.',
+            (
+                "Not available: no RPC declares this operation's HTTP rule, so on "
+                '`protocol="grpc"` this method raises `NotImplementedError`. Call it '
+                'through a `protocol="rest"` client.'
+            ),
             "",
         ]
         return rest_diagram + grpc_diagram
@@ -599,7 +603,7 @@ def _autodoc_directive_for_model(models_dir: Path, class_name: str) -> str:
     model_file = models_dir / f"{class_name}.py"
     try:
         tree = ast.parse(model_file.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, SyntaxError, ValueError):
         return "autopydantic_model"
 
     for node in tree.body:
@@ -629,7 +633,7 @@ def _model_reference_edges(
         refs: set[str] = set()
         try:
             tree = ast.parse((models_dir / f"{cls}.py").read_text(encoding="utf-8"))
-        except Exception:
+        except (OSError, SyntaxError, ValueError):
             edges[cls] = refs
             continue
         for node in ast.walk(tree):

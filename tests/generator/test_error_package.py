@@ -162,7 +162,7 @@ def _service(
 def _error_namespace(service_dir: Path) -> dict:
     namespace: dict = {"__name__": "generated_error"}
     source = (service_dir / "error" / "__init__.py").read_text(encoding="utf-8")
-    exec(compile(source, "generated_error", "exec"), namespace)
+    exec(compile(source, "generated_error", "exec"), namespace)  # noqa: S102 - runs the generated module under test
     return namespace
 
 

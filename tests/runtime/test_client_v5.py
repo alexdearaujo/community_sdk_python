@@ -68,7 +68,7 @@ def test_close_closes_both_transports():
 
     for config in (client.api_config, client.v5_api_config):
         with pytest.raises(ConfigurationError, match="closed"):
-            config.client
+            _ = config.client
 
 
 @respx.mock
@@ -103,7 +103,7 @@ def test_v5_calls_follow_the_proxy_variables(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(httpx, "Client", _spy)
     client = _client()
     try:
-        client.v5_api_config.client
+        _ = client.v5_api_config.client
     finally:
         client.close()
 

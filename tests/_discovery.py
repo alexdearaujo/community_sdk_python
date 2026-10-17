@@ -23,7 +23,7 @@ import pkgutil
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional, Union, get_args, get_origin
+from typing import Any, Union, get_args, get_origin
 
 from google.api import visibility_pb2
 from google.protobuf import message_factory
@@ -174,7 +174,7 @@ def sample_value_by_name(name: str) -> Any:
         return _SAMPLE_TIMESTAMP
     if lowered.endswith("name"):
         return "name"
-    if lowered.startswith("is") or lowered.startswith("has"):
+    if lowered.startswith(("is", "has")):
         return True
     if lowered in _NUMERIC_COUNT_NAMES:
         return 1
@@ -561,7 +561,7 @@ class RestCallMetadata:
 
 def parse_rest_call_metadata(
     rest_module: Any, function_name: str
-) -> Optional[RestCallMetadata]:
+) -> RestCallMetadata | None:
     """Reads the `request_json(...)` call inside a generated REST function."""
     from scripts.generation._shared import parse_generated_rest_module
 

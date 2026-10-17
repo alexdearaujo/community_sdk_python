@@ -16,7 +16,7 @@ from pathlib import Path
 import pytest
 from pydantic import BaseModel
 
-import kentik_api.gen as gen
+from kentik_api import gen
 
 
 def _models() -> list[type[BaseModel]]:

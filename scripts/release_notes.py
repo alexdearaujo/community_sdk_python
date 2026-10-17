@@ -28,8 +28,8 @@ from packaging.version import InvalidVersion, Version
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from generation import api_surface  # noqa: E402
-from generation._shared import PROJECT_ROOT  # noqa: E402
+from generation import api_surface
+from generation._shared import PROJECT_ROOT
 
 SURFACE_RELPATH = "api_surface.json"
 CHANGELOG = PROJECT_ROOT / "CHANGELOG.md"
@@ -105,7 +105,9 @@ def _require_commit(ref: str) -> None:
 
 def _unreleased_notes() -> str:
     text = CHANGELOG.read_text(encoding="utf-8")
-    match = re.search(r"^## Unreleased\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    match = re.search(
+        r"^## Unreleased\n(.*?)(?=^## |\Z)", text, re.MULTILINE | re.DOTALL
+    )
     return match.group(1) if match else ""
 
 

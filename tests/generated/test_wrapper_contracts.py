@@ -259,7 +259,7 @@ def test_wrapper_rejects_missing_required_argument(case: WrapperCase):
     if not kwargs:
         pytest.skip("No required arguments for this wrapper method.")
 
-    missing_key = sorted(kwargs.keys())[0]
+    missing_key = min(kwargs)
     bad_kwargs = {k: v for k, v in kwargs.items() if k != missing_key}
 
     try:

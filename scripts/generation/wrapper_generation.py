@@ -58,7 +58,7 @@ def _file_descriptor(pb2_file: Path) -> descriptor_pb2.FileDescriptorProto | Non
     """Reads the descriptor protoc serialized into a _pb2 module, without importing it."""
     try:
         tree = ast.parse(pb2_file.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, SyntaxError, ValueError):
         return None
     for node in ast.walk(tree):
         if (
@@ -484,7 +484,7 @@ def _generate_service_wrappers(names: PublicNames):
                 def _qualify_annotation(annotation: str) -> str:
                     return _TYPING_ALIAS.sub(
                         r"\1",
-                        qualify_wrapper_annotation_types(annotation, model_classes),
+                        qualify_wrapper_annotation_types(annotation, model_classes),  # noqa: B023 - called only in this iteration
                     )
 
                 pos_parts = [
@@ -584,8 +584,10 @@ def _generate_service_wrappers(names: PublicNames):
                         f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
                         f'                raise NotImplementedError(f"gRPC proto modules for {service} service failed to import: {{self._grpc_import_error_{stub_idx}!r}}") from self._grpc_import_error_{stub_idx}',
                         f"            _req = build_grpc_request({request_ref}, {body_arg}, {{{fields_arg}}}{mask_arg})",
-                        f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
-                        f"api_config=api_config_override, error_cls={module_alias}.{op.error_cls_name})",
+                        (
+                            f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
+                            f"api_config=api_config_override, error_cls={module_alias}.{op.error_cls_name})"
+                        ),
                     ]
                     if is_none_return:
                         grpc_lines.append("            return None")

@@ -959,9 +959,11 @@ def test_a_local_folder_outside_git_reports_no_commit(tmp_path):
 
 
 def test_a_ref_with_a_local_schema_is_rejected(tmp_path):
-    with pytest.raises(ValueError, match="remote repository only"):
-        with get_schema_root(str(tmp_path), "HEAD"):
-            pass
+    with (
+        pytest.raises(ValueError, match="remote repository only"),
+        get_schema_root(str(tmp_path), "HEAD"),
+    ):
+        pass
 
 
 # ---------------------------------------------------------------------------
@@ -989,10 +991,9 @@ def _half_build(gen: Path, mixin: Path, pin: Path) -> None:
 def test_a_failed_run_restores_every_output(tmp_path, error):
     gen, mixin, pin = _outputs(tmp_path)
 
-    with pytest.raises(error):
-        with restored_on_failure((gen, mixin, pin)):
-            _half_build(gen, mixin, pin)
-            raise error
+    with pytest.raises(error), restored_on_failure((gen, mixin, pin)):
+        _half_build(gen, mixin, pin)
+        raise error
 
     assert sorted(p.name for p in gen.iterdir()) == ["device"]
     assert (gen / "device" / "wrapper.py").read_text() == "old"

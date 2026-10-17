@@ -163,9 +163,11 @@ def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
             "",
             f"This module was automatically generated from {source}",
             "",
-            "For the full endpoint reference (parameters, responses, usage "
-            "examples) and data model documentation, see the Sphinx docs: "
-            f"[`docs/sphinx/services/{service_name}.md`](../../../../docs/sphinx/services/{service_name}.md).",
+            (
+                "For the full endpoint reference (parameters, responses, usage "
+                "examples) and data model documentation, see the Sphinx docs: "
+                f"[`docs/sphinx/services/{service_name}.md`](../../../../docs/sphinx/services/{service_name}.md)."
+            ),
         ]
 
         doc_content = "\n".join(lines) + "\n"
@@ -297,7 +299,7 @@ def _generate_runtime_architecture_docs(
             continue
         try:
             tree = ast.parse(py_file.read_text(encoding="utf-8"))
-        except Exception:
+        except (OSError, SyntaxError, ValueError):
             continue
 
         current_module = _module_name_from_path(py_file, package_root)
@@ -434,7 +436,7 @@ def _grpc_stub_method_name(wrapper_file: Path, method_name: str) -> str | None:
     """
     try:
         tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, SyntaxError, ValueError):
         return None
 
     for node in ast.walk(tree):
@@ -465,7 +467,7 @@ def _model_has_only_optional_fields(model_file: Path) -> bool:
     """
     try:
         tree = ast.parse(model_file.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, SyntaxError, ValueError):
         return False
 
     model_class = next(

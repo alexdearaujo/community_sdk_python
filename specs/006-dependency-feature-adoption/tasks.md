@@ -139,32 +139,32 @@ block fails `ruff format --check` with an annotation.
   src/kentik_api/README.md, specs/003-harden-runtime-and-ci/contracts/runtime-api.md,
   specs/003-harden-runtime-and-ci/research.md, and
   specs/005-v5-query-batch/contracts/helpers.md (FR-004, SC-002)
-- [ ] T014 [US2] In pyproject.toml `[tool.ruff.lint]`, delete `select` and
+- [X] T014 [US2] In pyproject.toml `[tool.ruff.lint]`, delete `select` and
   its comment; in `per-file-ignores`, add `src/kentik_api/gen/**` and
   `src/kentik_api/client_mixin.py` with every default family except `E`
   and `F` (list in research.md R5) and a one-line reason; confirm
   `uv run ruff check src/kentik_api/gen src/kentik_api/client_mixin.py`
   reports nothing (FR-006)
-- [ ] T015 [US2] Run `uv run ruff check --fix .` for the safe fixes only,
+- [X] T015 [US2] Run `uv run ruff check --fix .` for the safe fixes only,
   then confirm with `git diff src/kentik_api/core src/kentik_api/errors`
   that the runtime changes are annotation syntax and `__all__` order only
   (FR-016, research R5)
-- [ ] T016 [P] [US2] Fix the remaining findings in scripts/ and reports/;
+- [X] T016 [P] [US2] Fix the remaining findings in scripts/ and reports/;
   where the code does it on purpose, add `# noqa: <code>` with a reason
   after it (data-model.md "Line suppression"; FR-006)
-- [ ] T017 [P] [US2] Fix the remaining findings in tests/, with the same
+- [X] T017 [P] [US2] Fix the remaining findings in tests/, with the same
   suppression rule; never delete or narrow a test case (FR-006)
-- [ ] T018 [P] [US2] Fix the remaining findings in src/kentik_api/ and
+- [X] T018 [P] [US2] Fix the remaining findings in src/kentik_api/ and
   examples/ and docs/sphinx/conf.py; in `core/`, `errors/`, `transports/`,
   and `auth/`, use only annotation syntax or a `# noqa: BLE001` or
   `# noqa: S112` with a reason, never a narrower `except` (FR-006, FR-016)
-- [ ] T019 [US2] Confirm `uv run ruff check .` reports zero findings and
+- [X] T019 [US2] Confirm `uv run ruff check .` reports zero findings and
   `RUF100` finds no unused suppression; run `make test` and
   `make typecheck` (SC-003)
-- [ ] T020 [US2] Run `make generate`, then compare api_surface.json with
+- [X] T020 [US2] Run `make generate`, then compare api_surface.json with
   `$TMPDIR/api_surface.before.json` from T002: only `requirements` may
   differ; revert or suppress any fix that changes another key (FR-016)
-- [ ] T021 [US2] In the `lint` job of .github/workflows/tests.yml, add
+- [X] T021 [US2] In the `lint` job of .github/workflows/tests.yml, add
   `--output-format github` to `ruff check` and `ruff format --check`
   (contracts/lint.md; FR-007)
 

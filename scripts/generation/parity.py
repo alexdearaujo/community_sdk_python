@@ -80,8 +80,8 @@ def select_latest_swagger_files_by_service(
         service = metadata["service"]
         by_service.setdefault(service, []).append(metadata)
 
-    for service in by_service:
-        by_service[service].sort(
+    for files in by_service.values():
+        files.sort(
             key=lambda item: (
                 item["namespace"],
                 item["filename"],

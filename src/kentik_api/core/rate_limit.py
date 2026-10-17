@@ -80,7 +80,7 @@ class RateLimit:
             limit, window = _parse_limit(raw) if raw else (None, None)
             remaining = _int_or_none(lowered.get(_REMAINING))
             reset = _int_or_none(lowered.get(_RESET))
-        except Exception:
+        except Exception:  # noqa: BLE001 - malformed quota headers must not fail the call
             return None
         if limit is None and remaining is None and reset is None:
             return None
@@ -106,7 +106,7 @@ class RateLimit:
                 else value
                 for key, value in metadata
             }
-        except Exception:
+        except Exception:  # noqa: BLE001 - malformed metadata must not fail the call
             return None
         return cls.from_headers(headers)
 
@@ -120,7 +120,7 @@ def rate_limit_of_rpc(call_or_error: object) -> RateLimit | None:
     for getter in ("initial_metadata", "trailing_metadata"):
         try:
             metadata = getattr(call_or_error, getter)()
-        except Exception:
+        except Exception:  # noqa: BLE001, S112 - a call without metadata has no quota to report
             continue
         if (rate_limit := RateLimit.from_metadata(metadata)) is not None:
             return rate_limit

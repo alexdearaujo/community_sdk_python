@@ -60,10 +60,10 @@ jobs:
         run: uv sync --locked
 
       - name: Ruff lint
-        run: uv run ruff check .
+        run: uv run ruff check --output-format github .
 
       - name: Ruff format
-        run: uv run ruff format --check .
+        run: uv run ruff format --check --output-format github .
 
   spec-references:
     runs-on: ubuntu-latest

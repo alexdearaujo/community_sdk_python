@@ -529,8 +529,10 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
                 before, after = change["method_change"]
                 breaking.append(
                     (
-                        f"- `{name}`: `{change['operation']}` is now "
-                        f"`client.{name}.{after}`, not `{before}`",
+                        (
+                            f"- `{name}`: `{change['operation']}` is now "
+                            f"`client.{name}.{after}`, not `{before}`"
+                        ),
                         before,
                     )
                 )
@@ -560,9 +562,11 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
             for retyped in change.get("retyped_params", []):
                 breaking.append(
                     (
-                        f"- `{name}`: `{change['operation']}` parameter "
-                        f"`{retyped['name']}` changed from `{retyped['before']}` "
-                        f"to `{retyped['after']}`",
+                        (
+                            f"- `{name}`: `{change['operation']}` parameter "
+                            f"`{retyped['name']}` changed from `{retyped['before']}` "
+                            f"to `{retyped['after']}`"
+                        ),
                         retyped["name"],
                     )
                 )
@@ -570,8 +574,10 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
                 before, after = change["return_change"]
                 breaking.append(
                     (
-                        f"- `{name}`: `{change['operation']}` now returns `{after}`, "
-                        f"not `{before}`",
+                        (
+                            f"- `{name}`: `{change['operation']}` now returns `{after}`, "
+                            f"not `{before}`"
+                        ),
                         after,
                     )
                 )
@@ -579,8 +585,10 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
                 before, after = change["error_change"]
                 breaking.append(
                     (
-                        f"- `{name}`: `{change['operation']}` raises `{after}`, "
-                        f"not `{before}`",
+                        (
+                            f"- `{name}`: `{change['operation']}` raises `{after}`, "
+                            f"not `{before}`"
+                        ),
                         before,
                     )
                 )
@@ -601,8 +609,10 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
                 continue  # only became optional
             breaking.append(
                 (
-                    f"- `{name}`: `{change['name']}` changed from "
-                    f"{_describe(change['before'])} to {_describe(change['after'])}",
+                    (
+                        f"- `{name}`: `{change['name']}` changed from "
+                        f"{_describe(change['before'])} to {_describe(change['after'])}"
+                    ),
                     change["name"],
                 )
             )
@@ -618,8 +628,10 @@ def breaking_changes(delta: dict[str, Any]) -> list[tuple[str, str]]:
         ):
             breaking.append(
                 (
-                    f"- Dependency requirement narrowed, `{change['before']}` "
-                    f"to `{change['after']}`",
+                    (
+                        f"- Dependency requirement narrowed, `{change['before']}` "
+                        f"to `{change['after']}`"
+                    ),
                     package,
                 )
             )

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from io import StringIO
 from pathlib import Path
 
@@ -21,7 +21,7 @@ from kentik_api.analytics import (
 
 FIXTURES = Path(__file__).parent / "fixtures"
 RESPONSE = json.loads((FIXTURES / "topx_response.json").read_text())
-START = datetime(2025, 10, 16, tzinfo=timezone.utc)
+START = datetime(2025, 10, 16, tzinfo=UTC)
 
 
 def _golden(bucket_slug: str) -> pd.DataFrame:

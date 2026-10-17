@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -11,7 +11,7 @@ import pytest
 
 from kentik_api.analytics import DFCache, dedup_data_frame
 
-START = datetime(2025, 10, 16, tzinfo=timezone.utc)
+START = datetime(2025, 10, 16, tzinfo=UTC)
 
 
 def _frame(start: datetime, end: datetime) -> pd.DataFrame:

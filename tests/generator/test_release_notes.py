@@ -91,14 +91,14 @@ def test_surface_breaking_changes_include_operation_signature_breaks(tmp_path):
         r"\1Optional[str]",
         source,
         count=1,
-        flags=re.S,
+        flags=re.DOTALL,
     )
     source = re.sub(
         r"(def GetDevice\(.*?\) -> )GetDeviceResponse:",
         r"\1DeviceConcise:",
         source,
         count=1,
-        flags=re.S,
+        flags=re.DOTALL,
     )
     rest.write_text(source, encoding="utf-8")
 

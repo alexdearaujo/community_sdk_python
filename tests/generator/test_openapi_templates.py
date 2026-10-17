@@ -81,7 +81,7 @@ def _model_type(env: Environment, additional_properties) -> type:
         schema_name="Thing", schema=schema, properties=[_property("metric")]
     )
     namespace: dict = {}
-    exec(compile(source, "<template>", "exec"), namespace)
+    exec(compile(source, "<template>", "exec"), namespace)  # noqa: S102 - runs the rendered template under test
     return namespace["Thing"]
 
 

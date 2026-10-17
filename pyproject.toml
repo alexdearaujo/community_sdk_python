@@ -100,16 +100,30 @@ docs = [
 extend-exclude = [".specify", ".claude/skills", ".github/skills"]
 
 [tool.ruff.lint]
-# Ruff 0.14's default rules. Ruff 0.17 widened the default set; adopting it is a separate change.
-select = ["E4", "E7", "E9", "F"]
+# The 0.17 default set keeps only E722 and E902 of these; the rest stay enforced.
+extend-select = ["E4", "E7", "E9", "F"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
+# Generated code keeps the E and F rules only; fixes belong in the generator, not here.
+# "I" stays on for gen/: the generator sorts its imports with `ruff check --select F,I`.
+"src/kentik_api/gen/**" = [
+    "ASYNC", "B", "BLE", "C4", "D", "DTZ", "EXE", "FA", "FLY", "FURB", "G",
+    "INT", "ISC", "LOG", "N", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "PYI",
+    "RET", "RUF", "S", "SIM", "T10", "T20", "TC", "TRY", "UP", "W", "YTT",
+]
+"src/kentik_api/client_mixin.py" = [
+    "ASYNC", "B", "BLE", "C4", "D", "DTZ", "EXE", "FA", "FLY", "FURB", "G", "I",
+    "INT", "ISC", "LOG", "N", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "PYI",
+    "RET", "RUF", "S", "SIM", "T10", "T20", "TC", "TRY", "UP", "W", "YTT",
+]
 # protoc emits dependency imports that look unused but register those protos in
 # the descriptor pool. Deleting them breaks AddSerializedFile at import time.
 # They also sit below module-level statements, which is protoc's layout, not ours.
 "src/kentik_api/gen/*/pb/*.py" = ["F401", "E402"]
 "src/kentik_api/gen/pb_companions/**/*.py" = ["F401", "E402"]
+# Records whatever a live call raises as audit evidence, so it catches everything on purpose.
+"reports/pre-pr-audit-2026-10-10/run_manual_spot_check.py" = ["BLE001"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

@@ -1,6 +1,8 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from __future__ import annotations
 
+from typing import ClassVar
+
 import grpc
 import pytest
 
@@ -400,7 +402,7 @@ def test_call_grpc_raises_the_operation_error_class_like_rest(rpc_error):
         pass
 
     class GetThingError(ServiceError):
-        response_error_map: dict = {}
+        response_error_map: ClassVar[dict] = {}
 
     class GetThingNotFoundError(GetThingError):
         pass

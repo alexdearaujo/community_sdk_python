@@ -199,7 +199,7 @@ def _method_label(stub_method) -> str:
     # read it must never cost the caller the RpcError it was meant to describe.
     try:
         label = stub_method._method
-    except Exception:
+    except Exception:  # noqa: BLE001 - see the comment above
         return "unknown"
     if isinstance(label, bytes):
         return label.decode("utf-8", errors="replace")

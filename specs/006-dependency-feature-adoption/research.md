@@ -100,10 +100,21 @@ MyST-Parser 5.1.0, Sphinx 9.1.0, uv 0.13.0.
 ## R5. Ruff 0.17 default rule set on hand-written code
 
 - **Decision**: Delete `select` in `[tool.ruff.lint]`, so the default set
-  applies. In `per-file-ignores`, ignore every default family except `E` and
-  `F` for `src/kentik_api/gen/**` and `src/kentik_api/client_mixin.py`. Fix
-  the 117 findings; suppress a finding on its line, with a reason, only where
-  the code does it on purpose.
+  applies, and add `extend-select = ["E4", "E7", "E9", "F"]`. In
+  `per-file-ignores`, ignore every added default family except `E`, `F`, and
+  `I` for `src/kentik_api/gen/**`, and except `E` and `F` for
+  `src/kentik_api/client_mixin.py`. Fix the findings; suppress a finding on
+  its line, with a reason, only where the code does it on purpose.
+- **Found during implementation**:
+  - The 0.17 default set enables only `E722` and `E902` of the `E` rules.
+    Without `extend-select`, the `E4`, `E7`, and `E9` rules that every file
+    passes today would turn off.
+  - The generator sorts imports with `ruff check --select F,I --fix` on
+    `gen/`. A per-file ignore of `I` applies after `--select`, so it stopped
+    that sort and broke the wrapper byte-for-byte test. `gen/` keeps `I`.
+  - The broad `except` blocks in `scripts/` guarded `ast.parse()` of a file.
+    They now catch `OSError`, `SyntaxError`, and `ValueError` only, so an
+    unexpected fault is no longer hidden.
 - **Rationale**:
   - The default set has 413 rules in these families: ASYNC, B, BLE, C, D,
     DTZ, E, EXE, F, FA, FLY, FURB, G, I, INT, ISC, LOG, N, PERF, PGH, PIE,
