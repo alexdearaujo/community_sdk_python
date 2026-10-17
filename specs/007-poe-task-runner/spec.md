@@ -6,7 +6,9 @@
 
 **Status**: Draft
 
-**Input**: User description: "Move from Make to a Python task runner, so the whole project works on any OS without custom or manual installs. Use poethepoet instead of Invoke, and use the agent skill that it ships."
+**Input**: User description: "Move from Make to a Python task runner, so the
+whole project works on any OS without custom or manual installs. Use
+poethepoet instead of Invoke, and use the agent skill that it ships."
 
 ## Background
 
