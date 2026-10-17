@@ -10,6 +10,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 SDK_OUTPUT_DIR = PROJECT_ROOT / "src" / "kentik_api" / "gen"
 
+# The command that rebuilds generated output; every generated header names it.
+REGENERATE_COMMAND = "uv run poe generate"
+
 # Directories under gen/ that the generator creates for itself rather than
 # deriving from a schema Service. pb_companions is written by
 # _compile_proto_companions(); it holds shared proto descriptors, not an API.

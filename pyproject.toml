@@ -78,6 +78,7 @@ dev = [
     "packaging>=24",
     "rumdl==0.3.0",
     "markdown-it-py>=4.2.0",
+    "poethepoet==0.49.0",
 ]
 
 test = [

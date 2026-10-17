@@ -36,6 +36,7 @@ Groups:
 | packaging | dev | Version and requirement parsing in the release scripts and tests | Keep |
 | rumdl | dev | Markdown linter that reads `.markdownlint-cli2.jsonc` and needs no Node | Added, pinned |
 | markdown-it-py | dev | Renders the impact report to HTML in `scripts/impact_report.py` | Declared: it was imported but installed only through Sphinx |
+| poethepoet | dev | Task runner: every project task runs as `uv run poe <task>` on any OS | Added, pinned. Its agent skill in `.claude/skills/poethepoet/` must match this version |
 | pytest | test | Test runner, in strict mode | Keep |
 | respx | test | Mocks HTTP for the mocked test layers | Keep. Replacing it needs a transport seam in the protected runtime |
 | jinja2 | test | Renders the generator templates in `tests/generator/` | Declared: it was imported but installed only through other packages |

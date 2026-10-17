@@ -36,7 +36,7 @@ and checked on its own.
 **Purpose**: Add poethepoet once, so later stories never fight over
 `uv.lock`.
 
-- [ ] T001 Add `poethepoet==0.49.0` to the `dev` group in pyproject.toml, run
+- [X] T001 Add `poethepoet==0.49.0` to the `dev` group in pyproject.toml, run
   `uv lock` and `uv sync`, and confirm with `git diff uv.lock` that the lock
   adds only poethepoet and changes no locked version (FR-001, SC-003)
 
@@ -49,12 +49,12 @@ header and the script messages share.
 
 **Critical**: No user story work starts before this phase is complete.
 
-- [ ] T002 Run `make test`, `make typecheck`, `make lint` with
+- [X] T002 Run `make test`, `make typecheck`, `make lint` with
   `git status --short` clean, `make check-specs`, and
   `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`,
   confirm all pass, and copy api_surface.json to
   `$TMPDIR/api_surface.before.json` for the FR-015 comparison in T036 (SC-006)
-- [ ] T003 Add `REGENERATE_COMMAND = "uv run poe generate"` to
+- [X] T003 Add `REGENERATE_COMMAND = "uv run poe generate"` to
   scripts/generation/_shared.py, and list it in the `_shared.py` section of
   scripts/generation/README.md (FR-010)
 
