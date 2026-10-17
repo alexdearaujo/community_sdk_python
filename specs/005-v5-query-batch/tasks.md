@@ -49,22 +49,22 @@ both need this.
 
 ### Tests for the foundation
 
-- [ ] T005 [P] Add generator tests in tests/generator/test_parity.py: the upstream base and the local schema base with different services give the union and pass the parity check, the same service in both bases raises `RuntimeError`, and a broken local file fails `validate_schema_files_or_raise()` (FR-007)
-- [ ] T006 [P] Add generator tests in tests/generator/test_wrapper_generation.py: a local service gets no gRPC branch and the mixin mounts it as `V5ServiceWrapper(self._v5_transport)` (FR-005, FR-007)
-- [ ] T007 [P] Add generator tests in tests/generator/test_api_surface.py: `rest_only` is written for a local service, `SCHEMA_VERSION` is 8, and a version 7 record reads as `rest_only: false` (FR-008)
-- [ ] T008 [P] Add client tests in tests/runtime/test_client_v5.py: region `us` and `eu` give the V5 base URLs, `v5_base_url` overrides them, a non-`https` URL raises `ConfigurationError`, `v5_api_config` shares credentials and timeouts, `close()` closes both transports, httpx joins `https://api.kentik.com/api/v5` with `/query/topXdata` correctly, and with `HTTPS_PROXY` set the V5 client routes through the proxy while `NO_PROXY=api.kentik.com` skips it (FR-006, FR-006a)
-- [ ] T008a Amend the Architecture section of .specify/memory/constitution.md (PATCH 1.4.2): the generator reads the upstream schema and the local schema base `schema/openapi/`, which holds only hand-maintained descriptions of endpoints that upstream does not publish, and every service from it is REST-only; record it in the Sync Impact Report (plan.md Complexity Tracking; FR-007)
+- [X] T005 [P] Add generator tests in tests/generator/test_parity.py: the upstream base and the local schema base with different services give the union and pass the parity check, the same service in both bases raises `RuntimeError`, and a broken local file fails `validate_schema_files_or_raise()` (FR-007)
+- [X] T006 [P] Add generator tests in tests/generator/test_wrapper_generation.py: a local service gets no gRPC branch and the mixin mounts it as `V5ServiceWrapper(self._v5_transport)` (FR-005, FR-007)
+- [X] T007 [P] Add generator tests in tests/generator/test_api_surface.py: `rest_only` is written for a local service, `SCHEMA_VERSION` is 8, and a version 7 record reads as `rest_only: false` (FR-008)
+- [X] T008 [P] Add client tests in tests/runtime/test_client_v5.py: region `us` and `eu` give the V5 base URLs, `v5_base_url` overrides them, a non-`https` URL raises `ConfigurationError`, `v5_api_config` shares credentials and timeouts, `close()` closes both transports, httpx joins `https://api.kentik.com/api/v5` with `/query/topXdata` correctly, and with `HTTPS_PROXY` set the V5 client routes through the proxy while `NO_PROXY=api.kentik.com` skips it (FR-006, FR-006a)
+- [X] T008a Amend the Architecture section of .specify/memory/constitution.md (PATCH 1.4.2): the generator reads the upstream schema and the local schema base `schema/openapi/`, which holds only hand-maintained descriptions of endpoints that upstream does not publish, and every service from it is REST-only; record it in the Sync Impact Report (plan.md Complexity Tracking; FR-007)
 
 ### Implementation for the foundation
 
-- [ ] T009 Read the local schema base, `PROJECT_ROOT / "schema" / "openapi"`, in scripts/generate_sdk.py: validate it, select its files, take the union of services, raise on a duplicate service, skip proto lookup for it, and pass the local service set on (contracts/generator.md; FR-007)
-- [ ] T010 Accept a list of bases in scripts/generation/parity.py where selection and validation need it, with relative imports only (FR-007)
-- [ ] T011 Mount local services on `self._v5_transport` in the generated mixin in scripts/generation/wrapper_generation.py (FR-005)
-- [ ] T012 [P] Record `rest_only` and bump `SCHEMA_VERSION` to 8 in scripts/generation/api_surface.py, reading older records as `rest_only: false` (FR-008)
-- [ ] T013 [P] Write the REST-only example text for local services in scripts/generation/endpoint_docs.py, with a test in tests/generator/test_endpoint_docs.py (FR-005)
-- [ ] T013a [P] Mark local services as REST-only and name the local schema base as their source in scripts/generation/docs_rendering.py, with a test in tests/generator/test_docs_rendering.py (FR-005)
-- [ ] T014 Add `v5_base_url`, the V5 `APIConfig`, `self._v5_transport` (a `RestTransport` for every `protocol`), the `v5_api_config` property, and closing of both transports to src/kentik_api/client.py, with a regional V5 URL table next to `_REGION_ENDPOINTS` (contracts/client-config.md; FR-006, FR-006a)
-- [ ] T015 Exempt `rest_only` services in tests/generated/test_grpc_stub_wiring.py by reading the flag from api_surface.json, not by a hard-coded name (FR-027)
+- [X] T009 Read the local schema base, `PROJECT_ROOT / "schema" / "openapi"`, in scripts/generate_sdk.py: validate it, select its files, take the union of services, raise on a duplicate service, skip proto lookup for it, and pass the local service set on (contracts/generator.md; FR-007)
+- [X] T010 Add `merge_local_schema_base()` to scripts/generation/parity.py, which joins the local schema base to upstream and raises on a service in both, with relative imports only (FR-007)
+- [X] T011 Mount local services on `self._v5_transport` in the generated mixin in scripts/generation/wrapper_generation.py (FR-005)
+- [X] T012 [P] Record `rest_only` and bump `SCHEMA_VERSION` to 8 in scripts/generation/api_surface.py, reading older records as `rest_only: false` (FR-008)
+- [X] T013 [P] Write the REST-only example text for local services in scripts/generation/endpoint_docs.py, with a test in tests/generator/test_endpoint_docs.py (FR-005)
+- [X] T013a [P] Mark local services as REST-only and name the local schema base as their source in scripts/generation/docs_rendering.py, with a test in tests/generator/test_docs_rendering.py (FR-005)
+- [X] T014 Add `v5_base_url`, the V5 `APIConfig`, `self._v5_transport` (a `RestTransport` for every `protocol`), the `v5_api_config` property, and closing of both transports to src/kentik_api/client.py, with a regional V5 URL table next to `_REGION_ENDPOINTS` (contracts/client-config.md; FR-006, FR-006a)
+- [X] T015 Exempt `rest_only` services in tests/generated/test_grpc_stub_wiring.py by reading the flag from api_surface.json, not by a hard-coded name (FR-027)
 
 **Checkpoint**: The generator and client accept a REST-only V5 service. Run
 `make test-generator` and `make test-runtime`.

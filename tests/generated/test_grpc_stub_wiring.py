@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import ast
 import importlib
+import json
 import re
 import sys
 from pathlib import Path
@@ -24,20 +25,35 @@ from unittest.mock import MagicMock
 import pytest
 
 from kentik_api.transports.grpc_client import GrpcTransport
+from scripts.generation.api_surface import is_rest_only
 
 _MIXIN = Path(__file__).resolve().parents[2] / "src" / "kentik_api" / "client_mixin.py"
 _GEN = _MIXIN.parent / "gen"
+_SURFACE = _MIXIN.parents[2] / "api_surface.json"
+
+
+def _rest_only() -> set[str]:
+    """Services from the local schema base: no protos, mounted on a REST transport."""
+    if not _SURFACE.exists():
+        return set()
+    services = json.loads(_SURFACE.read_text(encoding="utf-8"))["services"]
+    return {name for name, record in services.items() if is_rest_only(record)}
 
 
 def _mounted_wrappers() -> list[tuple[str, str]]:
     """Reads the mixin's imports with ast, so a wrapped or aliased import still counts."""
     if not _MIXIN.exists():
         return []
+    rest_only = _rest_only()
     found = set()
     for node in ast.walk(ast.parse(_MIXIN.read_text(encoding="utf-8"))):
         if isinstance(node, ast.ImportFrom) and node.module:
             parts = node.module.split(".")
-            if parts[:2] == ["kentik_api", "gen"] and parts[3:4] == ["services"]:
+            if (
+                parts[:2] == ["kentik_api", "gen"]
+                and parts[3:4] == ["services"]
+                and parts[2] not in rest_only
+            ):
                 found.update((parts[2], alias.name) for alias in node.names)
     return sorted(found)
 

@@ -662,8 +662,12 @@ def _generate_service_wrappers(names: PublicNames):
         wrapper_file.write_text("\n".join(wrapper_code), encoding="utf-8")
 
 
-def _generate_client_mixin():
-    """Generates an IDE-friendly Mixin class that mounts all service wrappers."""
+def _generate_client_mixin(rest_only: frozenset[str] = frozenset()):
+    """Generates an IDE-friendly Mixin class that mounts all service wrappers.
+
+    A REST-only service (from the local schema base) mounts on `_v5_transport`,
+    a REST transport on the V5 host that every client has, whatever its protocol.
+    """
     print("Generating IDE-Friendly Client Mixin...")
 
     imports = []
@@ -694,7 +698,8 @@ def _generate_client_mixin():
         type_hints.append(f"        {service}: '{wrapper_class}'")
 
         # 3. Setup the runtime mounting logic
-        mounts.append(f"        self.{service} = {wrapper_class}(self._transport)")
+        transport = "_v5_transport" if service in rest_only else "_transport"
+        mounts.append(f"        self.{service} = {wrapper_class}(self.{transport})")
 
     mixin_code = [
         "from typing import TYPE_CHECKING",
@@ -712,6 +717,7 @@ def _generate_client_mixin():
         "",
         "    if TYPE_CHECKING:",
         "        _transport: 'GrpcTransport | RestTransport'",
+        "        _v5_transport: 'RestTransport'",
         *type_hints,
         "",
         "    def _mount_generated_services(self) -> None:",
@@ -724,7 +730,7 @@ def _generate_client_mixin():
     mixin_file.write_text("\n".join(mixin_code), encoding="utf-8")
 
 
-def generate(names: PublicNames) -> None:
+def generate(names: PublicNames, rest_only: frozenset[str] = frozenset()) -> None:
     """Generates service wrappers, then the client mixin that mounts them."""
     _generate_service_wrappers(names)
-    _generate_client_mixin()
+    _generate_client_mixin(rest_only)

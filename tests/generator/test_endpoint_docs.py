@@ -10,10 +10,13 @@ import pytest
 
 from scripts.generation._shared import parse_wrapper_methods
 from scripts.generation.endpoint_docs import (
+    EndpointDoc,
     EndpointDocsCollector,
     GrpcCall,
     _example_value_for_annotation,
     _provenance,
+    _render_example_snippet,
+    _render_operation_sequence_diagram,
     parse_wrapper_method_signatures,
     render_endpoint_docs,
 )
@@ -601,3 +604,29 @@ def test_example_value_names_only_constructible_models(annotation, value, models
 
     assert _example_value_for_annotation(annotation, "x", found) == value
     assert found == models
+
+
+def test_a_rest_only_service_documents_rest_for_both_protocols():
+    doc = EndpointDoc(
+        tag="QueryService",
+        method="POST",
+        path="/query/topXdata",
+        operation_id="QueryService_TopXData",
+        summary="",
+        description="",
+        parameters=[],
+        request_body=None,
+        responses=[],
+    )
+
+    snippet = _render_example_snippet("v5", "top_x_data", [], rest_only=True)
+    diagram = "\n".join(
+        _render_operation_sequence_diagram(
+            "v5", doc, "top_x_data", [], None, rest_only=True
+        )
+    )
+
+    assert "REST only" in snippet
+    assert "Both transports work" not in snippet
+    assert "sends this call over REST too" in diagram
+    assert "NotImplementedError" not in diagram

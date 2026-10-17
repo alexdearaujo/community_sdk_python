@@ -1,5 +1,5 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "requirements": {
     "googleapis-common-protos": "googleapis-common-protos>=1.73.1",
     "grpcio": "grpcio>=1.84.0",
@@ -16,6 +16,7 @@
   "services": {
     "ai_advisor": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /ai_advisor/v202511/chat/{id}": {
           "operation": "GetChatSession",
@@ -206,6 +207,7 @@
     },
     "alerting": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Delete",
@@ -3645,6 +3647,7 @@
     },
     "as_group": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /as_group/v202212/as_group/{asGroupid}": {
           "operation": "DeleteASGroup",
@@ -3871,6 +3874,7 @@
     },
     "asset_tags": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "DeleteTagKey",
@@ -4237,6 +4241,7 @@
     },
     "audit": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /audit/v202601/events": {
           "operation": "ListAuditEvents",
@@ -4447,6 +4452,7 @@
     },
     "bgp_monitoring": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "DeleteMonitor",
@@ -4958,6 +4964,7 @@
     },
     "capacity_plan": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /capacity_plan/v202212/capacity_plan": {
           "operation": "ListCapacityPlans",
@@ -5333,6 +5340,7 @@
     },
     "cloud_export": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /cloud_export/v202506/exports/{exportid}": {
           "operation": "DeleteCloudExport",
@@ -5772,6 +5780,7 @@
     },
     "connectivity_checker": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "POST /connectivity_checker/v202410beta1/create": {
           "operation": "CreateConnectivityReport",
@@ -5910,6 +5919,7 @@
     },
     "core": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "protobufAny",
@@ -5941,6 +5951,7 @@
     },
     "cost": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /cost/v202308/cost/providers": {
           "operation": "ListCostProviders",
@@ -6149,6 +6160,7 @@
     },
     "credential": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /credential/v202407alpha1/group": {
           "operation": "ListCredentialGroup",
@@ -6406,6 +6418,7 @@
     },
     "custom_application": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "DeleteCustomApplication",
@@ -6600,6 +6613,7 @@
     },
     "custom_dimension": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "DeleteCustomDimension",
@@ -7053,6 +7067,7 @@
     },
     "device": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /device/v202504beta2/device/{deviceid}": {
           "operation": "DeleteDevice",
@@ -8071,6 +8086,7 @@
     },
     "deviceconf": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "AclAction",
@@ -8399,6 +8415,7 @@
     },
     "diagnostic": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "ChatResponse",
@@ -8459,6 +8476,7 @@
     },
     "dictionary": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /dictionary/v20260604alpha1": {
           "operation": "GetDictionary",
@@ -8810,6 +8828,7 @@
     },
     "enrichments": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids": {
           "operation": "FetchValuesByIds",
@@ -8874,6 +8893,7 @@
     },
     "flow_tag": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "DeleteFlowTag",
@@ -9212,6 +9232,7 @@
     },
     "interface": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceDelete",
@@ -9658,6 +9679,7 @@
     },
     "journeys": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /journeys/v202406/GetJourneysNlq": {
           "operation": "GetJourneysNlq",
@@ -9740,6 +9762,7 @@
     },
     "kagent": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "DeleteAgentCapability",
@@ -11068,6 +11091,7 @@
     },
     "kmeta": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "DeleteServiceNowConfig",
@@ -11273,6 +11297,7 @@
     },
     "kmi": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /kmi/v202212/insights": {
           "operation": "GetGlobalInsights",
@@ -11608,6 +11633,7 @@
     },
     "kptr": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "GetNetworkRangeAssignmentsResponse",
@@ -11685,6 +11711,7 @@
     },
     "ktbgp": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "POST /routes/announce": {
           "operation": "RouteService_Announce",
@@ -12324,6 +12351,7 @@
     },
     "label": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /label/v202210/labels/{id}": {
           "operation": "DeleteLabel",
@@ -12495,6 +12523,7 @@
     },
     "mkp": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /mkp/v202407/packages/{id}": {
           "operation": "PackageDelete",
@@ -13446,6 +13475,7 @@
     },
     "monitoring": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "protobufAny",
@@ -13477,6 +13507,7 @@
     },
     "net": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "protobufAny",
@@ -13508,6 +13539,7 @@
     },
     "network_class": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassGet",
@@ -13637,6 +13669,7 @@
     },
     "nms": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /nms/v202505/metrics_schema": {
           "operation": "MetricsSchemaService_GetMetricsSchema",
@@ -13814,6 +13847,7 @@
     },
     "notification_channel": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /notification_channel/v202210/notification_channels": {
           "operation": "ListNotificationChannels",
@@ -13985,6 +14019,7 @@
     },
     "pathfinder": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "POST /pathfinder/v202505beta1/create": {
           "operation": "CreatePathfinderReport",
@@ -14142,6 +14177,7 @@
     },
     "plan": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /plans/v202501alpha1": {
           "operation": "ListPlans",
@@ -14334,6 +14370,7 @@
     },
     "rbux": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /rbux/v202607alpha1/scopes/{id}": {
           "operation": "DeleteScope",
@@ -14721,6 +14758,7 @@
     },
     "saved_filter": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /saved-filter/v202501alpha1/{id}": {
           "operation": "DeleteSavedFilter",
@@ -15073,6 +15111,7 @@
     },
     "site": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /site/v202509/site_markets/{id}": {
           "operation": "DeleteSiteMarket",
@@ -15543,6 +15582,7 @@
     },
     "synthetics": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /synthetics/v202309/agentAlerts/{id}": {
           "operation": "DeleteAgentAlert",
@@ -17295,6 +17335,7 @@
     },
     "user": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /user/v202211/users/{id}": {
           "operation": "DeleteUser",
@@ -17596,6 +17637,7 @@
     },
     "vault": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /vault/v202312alpha1/secrets": {
           "operation": "ListSecret",

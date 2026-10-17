@@ -202,6 +202,33 @@ def test_generate_writes_wrapper_and_mounts_it_in_client_mixin(
     assert "self.device = DeviceServiceWrapper(self._transport)" in mixin_content
 
 
+def test_a_rest_only_service_mounts_on_the_v5_transport_with_no_grpc_branch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setattr(wrapper_generation, "SDK_OUTPUT_DIR", tmp_path / "gen")
+    monkeypatch.setattr(wrapper_generation, "PROJECT_ROOT", tmp_path)
+    services_dir = tmp_path / "gen" / "v5" / "services"
+    services_dir.mkdir(parents=True)
+    (tmp_path / "src" / "kentik_api").mkdir(parents=True)
+    (services_dir / "QueryService.py").write_text(
+        "from kentik_api.core.rest_runtime import request_json\n\n"
+        "def QueryService_TopXData(api_config_override=None) -> str:\n"
+        "    return request_json(method='post', path='/query/topXdata',\n"
+        "        expected_status=200, operation_name='TopXData', error_cls=E)\n",
+        encoding="utf-8",
+    )
+
+    wrapper_generation.generate(PublicNames(), frozenset({"v5"}))
+
+    wrapper = (services_dir / "v5.py").read_text(encoding="utf-8")
+    assert "_grpc_stub" not in wrapper
+    mixin = (tmp_path / "src" / "kentik_api" / "client_mixin.py").read_text(
+        encoding="utf-8"
+    )
+    assert "self.v5 = V5ServiceWrapper(self._v5_transport)" in mixin
+    assert "_v5_transport: 'RestTransport'" in mixin
+
+
 def test_wrapper_method_keeps_the_rest_function_docstring_exactly(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):

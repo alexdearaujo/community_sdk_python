@@ -94,6 +94,24 @@ def select_latest_swagger_files_by_service(
     return by_service, selected_count, ignored_count
 
 
+def merge_local_schema_base(
+    upstream: dict[str, list[SwaggerFileMetadata]],
+    local: dict[str, list[SwaggerFileMetadata]],
+) -> dict[str, list[SwaggerFileMetadata]]:
+    """Adds the local schema base's services to upstream's.
+
+    The local base only describes endpoints upstream does not publish, so a
+    service in both means upstream now publishes it and the local copy must go.
+    """
+    shared = sorted(set(upstream) & set(local))
+    if shared:
+        raise RuntimeError(
+            f"Services in both the upstream schema and the local schema base: "
+            f"{', '.join(shared)}. Remove them from schema/openapi/."
+        )
+    return {**upstream, **local}
+
+
 _HTTP_METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
 
 

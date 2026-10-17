@@ -10,6 +10,7 @@ import pytest
 from scripts.generation._shared import INTERNAL_GEN_DIRS, iter_service_dirs
 from scripts.generation.parity import (
     drop_superseded_swagger_files,
+    merge_local_schema_base,
     select_latest_swagger_files_by_service,
     validate_generated_service_parity,
     validate_schema_files,
@@ -241,6 +242,43 @@ def test_a_service_whose_swagger_files_were_renamed_away_fails_before_the_wipe(
 
 def test_every_service_with_a_swagger_file_passes_the_pre_wipe_check():
     validate_selected_services_or_raise({"device"}, {"device"})
+
+
+def test_local_schema_base_services_join_upstream_and_pass_parity(tmp_path: Path):
+    upstream_base, local_base = tmp_path / "upstream", tmp_path / "local"
+    _write_swagger(upstream_base, "device", "v202308", "device.swagger.json")
+    _write_swagger(local_base, "v5", "v5", "v5.swagger.json")
+    upstream, _, _ = select_latest_swagger_files_by_service(upstream_base)
+    local, _, _ = select_latest_swagger_files_by_service(local_base)
+
+    merged = merge_local_schema_base(upstream, local)
+
+    assert set(merged) == {"device", "v5"}
+    assert merged["v5"][0]["version"] == "v5"
+    generated = tmp_path / "gen"
+    for service in merged:
+        (generated / service).mkdir(parents=True)
+    validate_generated_service_parity(set(merged), generated)
+
+
+def test_a_service_in_both_schema_bases_fails(tmp_path: Path):
+    upstream_base, local_base = tmp_path / "upstream", tmp_path / "local"
+    _write_swagger(upstream_base, "v5", "v202701", "v5.swagger.json")
+    _write_swagger(local_base, "v5", "v5", "v5.swagger.json")
+    upstream, _, _ = select_latest_swagger_files_by_service(upstream_base)
+    local, _, _ = select_latest_swagger_files_by_service(local_base)
+
+    with pytest.raises(RuntimeError, match="both the upstream schema.*: v5"):
+        merge_local_schema_base(upstream, local)
+
+
+def test_a_broken_local_schema_file_fails_validation(tmp_path: Path):
+    broken = tmp_path / "v5" / "v5" / "v5.swagger.json"
+    broken.parent.mkdir(parents=True)
+    broken.write_text('{"openapi": "3.0.0", "info": {}', encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="failed structural validation"):
+        validate_schema_files_or_raise([broken])
 
 
 def test_generate_modular_sdk_protoc_failure_handler_reraises():

@@ -63,6 +63,7 @@ class KentikClientMixin:
 
     if TYPE_CHECKING:
         _transport: "GrpcTransport | RestTransport"
+        _v5_transport: "RestTransport"
         ai_advisor: "AiAdvisorServiceWrapper"
         alerting: "AlertingServiceWrapper"
         as_group: "AsGroupServiceWrapper"

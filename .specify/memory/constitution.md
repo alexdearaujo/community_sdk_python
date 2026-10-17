@@ -1,5 +1,17 @@
 <!--
 Sync Impact Report
+Version change: 1.4.1 → 1.4.2
+Rationale: the Architecture section said the SDK comes only from
+`kentik/api-schema-public`. Feature 005 adds the local schema base,
+`schema/openapi/`: hand-maintained descriptions of endpoints that upstream
+does not publish (the V5 query and batch endpoints). The generator reads it
+next to the upstream schema, and every service from it is REST-only. No
+principle changed, so this is PATCH.
+Modified principles: none (Architecture section wording only)
+Added sections: none
+Removed sections: n/a
+Deferred TODOs: none
+Prior report (1.4.0 → 1.4.1, retained for history):
 Version change: 1.4.0 → 1.4.1
 Rationale: factual drift fixes. No principle changed, so this is PATCH.
 `make generate` fetches the schema at the commit in `schema.lock`, not at
@@ -137,6 +149,11 @@ tracked and reduced over time, not silently ignored.
   `schema.lock`. `make sync-schema` fetches HEAD and moves that pin.
   `make generate local` reads the sibling checkout `../api-schema-public/`
   and fails if it is absent. Neither falls back to the other.
+- The generator also reads the local schema base, `schema/openapi/` in this
+  repository. It MUST hold only hand-maintained descriptions of endpoints
+  that upstream does not publish, and a service MUST NOT appear in both
+  (the run fails). Every service from it is REST-only: the client mounts it
+  on a REST transport to its own host, whatever the protocol.
 - When multiple versioned swagger files exist for the same `(service,
   namespace, filename)` family, the generator MUST use only the newest
   version per family.
@@ -214,4 +231,4 @@ and `/speckit-analyze` MUST treat this constitution as authoritative context;
 complexity or deviation from it MUST be justified explicitly in the relevant
 plan, not silently introduced.
 
-**Version**: 1.4.1 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-16
+**Version**: 1.4.2 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-16
