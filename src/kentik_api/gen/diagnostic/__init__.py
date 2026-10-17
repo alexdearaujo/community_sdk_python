@@ -4,11 +4,5 @@
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.api_config import HTTPException as HTTPException
 
-from .models import (  # noqa: F401
-    ChatResponse,
-    EchoRequest,
-    EchoResponse,
-    protobufAny,
-    rpcStatus,
-)
+from .models import ChatResponse, EchoRequest, EchoResponse, protobufAny, rpcStatus  # noqa: F401
 from .services import *

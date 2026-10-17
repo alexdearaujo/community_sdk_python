@@ -194,8 +194,9 @@ def test_omitting_the_override_uses_the_client_config_unchanged(monkeypatch):
     monkeypatch.setattr(
         httpx.Client,
         "request",
-        lambda self, *a, **k: sent.append((str(self.base_url), k))
-        or httpx.Response(200, json={}),
+        lambda self, *a, **k: (
+            sent.append((str(self.base_url), k)) or httpx.Response(200, json={})
+        ),
     )
     config = APIConfig(**_BASE)
 
