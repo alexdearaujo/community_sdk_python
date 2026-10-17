@@ -60,6 +60,7 @@ against the real client, so an example that stops matching the SDK fails
 | --- | --- |
 | [`v5/query.py`](v5/query.py) | Top-X data, Data Explorer URL, and chart queries. Read-only |
 | [`v5/batch.py`](v5/batch.py) | Flow tag batch. A dry run unless you pass `--send`, which writes to your account |
+| [`v5/analytics_topx.py`](v5/analytics_topx.py) | Flat-traffic analysis with pandas. Needs `kentik-api[analytics]`. Read-only |
 
 [`tests/smoke/test_examples_v5.py`](../tests/smoke/test_examples_v5.py) runs
 each one against a mocked API.

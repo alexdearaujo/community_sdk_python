@@ -179,13 +179,13 @@ Module: `kentik_api.devices` (base install).
 
 | Type | Fields | Notes |
 | --- | --- | --- |
-| `DeviceLookup` | devices by ID and by name; interfaces by device and by SNMP ID or name | Built from V6 `device.list_devices` and `interface.list_interface`. `link_name(device, interface)` gives `device:interface`. `link_speed(...)` gives the speed in bits per second. `save(path)` and `load(path)` use JSON. |
+| `DeviceLookup` | devices by ID and by name; interfaces by device and by description | Built from V6 `device.list_devices` and `interface.list_interface`. Uses the 1.x `DeviceCache` method names: `make_link(device, interface)` gives `device:interface`, and `get_link_speeds(links)` gives bits per second. `save(path)` and `load(path)` use JSON. |
 
 Package: `kentik_api.analytics` (extra `analytics`).
 
 | Type | Fields | Notes |
 | --- | --- | --- |
-| `QueryDefinition` | `query: QueryRequest`, `mapping: dict[str, ColumnMapping]` | Built from a dict or a YAML file (`yaml.safe_load`). `{start}` and `{end}` placeholders are filled at run time. A SQL definition or an `@fixup:` mapping raises `ValueError`. |
-| `ColumnMapping` | `source: str`, `type: str`, `index: bool` | Column renames and types, as in the V5 mapping. |
-| `DataFrameCache` | `directory: Path`, `step: timedelta` | One Parquet file for each query and time step. Fetches only missing steps, removes duplicate rows, and ignores files it did not write. |
+| `DataQueryDefinition` | `query: dict`, `mappings: dict[str, ResultMapping]` | The 1.x name. Built from a dict or a YAML file (`yaml.safe_load`). `{start}` and `{end}` placeholders are filled at run time. A SQL definition or an `@fixup:` mapping raises `ValueError`. |
+| `ResultMapping`, `MappingEntry` | `source: str`, `data_type: str`, `is_index: bool` | The 1.x column mapping: a `str.format` source or an `@TS` time series field, a type, and the index flag. |
+| `DFCache` | `data_dir: Path` | The 1.x name. One Parquet file for each fetched range. A step that one cached file holds is not fetched again. Removes duplicate rows on request and ignores files it did not write. |
 | `flatness_analysis(...)` | same inputs and outputs as V5 | Uses `DeviceLookup` for link speeds. |

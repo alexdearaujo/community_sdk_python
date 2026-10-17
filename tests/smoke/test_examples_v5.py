@@ -82,3 +82,48 @@ def test_the_batch_example_sends_only_when_asked(capsys):
     assert tags.call_count == 1
     assert b'"replace_all":false' in tags.calls.last.request.content.replace(b" ", b"")
     assert "upserts applied: 1" in capsys.readouterr().out
+
+
+@respx.mock
+def test_the_analytics_example_runs(capsys):
+    from examples.v5 import analytics_topx
+
+    respx.get(url__regex=r"https://grpc\.api\.kentik\.com/device/.*").respond(
+        200, json={"devices": [{"id": "1", "deviceName": "router1"}]}
+    )
+    respx.get(url__regex=r"https://grpc\.api\.kentik\.com/interface/.*").respond(
+        200,
+        json={
+            "interfaces": [
+                {"deviceId": "1", "interfaceDescription": "eth0", "snmpSpeed": 1000}
+            ]
+        },
+    )
+    flow = [[1760572800000 + i * 300000, 5e8, 300] for i in range(36)]
+    data = respx.post(f"{_V5}/query/topXdata").respond(
+        200,
+        json={
+            "results": [
+                {
+                    "bucket": "flow",
+                    "data": [
+                        {
+                            "key": "k",
+                            "i_device_name": "router1",
+                            "output_port": "eth0 : Uplink",
+                            "avg_bits_per_sec": 5e8,
+                            "timeSeries": {"both_bits_per_sec": {"flow": flow}},
+                        }
+                    ],
+                }
+            ]
+        },
+    )
+
+    analytics_topx.main()
+
+    sent = data.calls.last.request.content.replace(b" ", b"")
+    assert b'"device_name":"router1"' in sent
+    out = capsys.readouterr().out
+    assert "Got 36 entries" in out
+    assert "router1:eth0" in out

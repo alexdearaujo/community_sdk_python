@@ -163,20 +163,20 @@ and runs the flat-traffic analysis.
 
 ### Tests for User Story 3
 
-- [ ] T038 [P] [US3] Add tests in tests/analytics/test_definitions.py: a V5 dict and YAML definition load and fill `{start}` and `{end}`, a top-X result becomes one DataFrame for each bucket with typed columns and a time index that match the golden output in tests/analytics/fixtures/ (made once, offline, with the V5 `DataQueryDefinition.get_data` from `origin/main` on a fixed `topXdata` response; a README there names the commit and command), an empty result gives an empty DataFrame with the expected columns, a SQL definition raises the retirement error, and an `@fixup:` mapping raises `ValueError` without running code (FR-016, FR-017, FR-018, SC-003, SC-005)
-- [ ] T039 [P] [US3] Add tests in tests/analytics/test_cache.py: only missing time steps are fetched, duplicate rows are removed, a file the cache did not write is ignored, and the files are Parquet (FR-019, SC-005)
-- [ ] T040 [P] [US3] Add tests in tests/analytics/test_flatness.py that compare the output with golden output in tests/analytics/fixtures/, made once with the V5 `flatness_analysis` from `origin/main` on the same input DataFrame (FR-020, SC-003)
-- [ ] T041 [P] [US3] Add tests in tests/runtime/test_device_lookup.py: lookup by ID and by name, link names, link speeds, and a JSON round trip with `save()` and `load()` (FR-021, SC-005)
-- [ ] T042 [P] [US3] Add a test in tests/smoke/test_analytics_extra.py that, with pandas hidden, `import kentik_api.analytics` raises `ImportError` naming `kentik-api[analytics]` and `import kentik_api` still works (FR-022)
+- [X] T038 [P] [US3] Add tests in tests/analytics/test_definitions.py: a V5 dict and YAML definition load and fill `{start}` and `{end}`, a top-X result becomes one DataFrame for each bucket with typed columns and a time index that match the golden output in tests/analytics/fixtures/ (made once, offline, with the V5 `DataQueryDefinition.get_data` from `origin/main` on a fixed `topXdata` response; a README there names the commit and command), an empty result gives an empty DataFrame with the expected columns, a SQL definition raises the retirement error, and an `@fixup:` mapping raises `ValueError` without running code (FR-016, FR-017, FR-018, SC-003, SC-005)
+- [X] T039 [P] [US3] Add tests in tests/analytics/test_cache.py: only missing time steps are fetched, duplicate rows are removed, a file the cache did not write is ignored, and the files are Parquet (FR-019, SC-005)
+- [X] T040 [P] [US3] Add tests in tests/analytics/test_flatness.py that compare the output with golden output in tests/analytics/fixtures/, made once with the V5 `flatness_analysis` from `origin/main` on the same input DataFrame (FR-020, SC-003)
+- [X] T041 [P] [US3] Add tests in tests/runtime/test_device_lookup.py: lookup by ID and by name, link names, link speeds, and a JSON round trip with `save()` and `load()` (FR-021, SC-005)
+- [X] T042 [P] [US3] Add a test in tests/smoke/test_analytics_extra.py that, with pandas hidden, `import kentik_api.analytics` raises `ImportError` naming `kentik-api[analytics]` and `import kentik_api` still works (FR-022)
 
 ### Implementation for User Story 3
 
-- [ ] T043 [P] [US3] Implement `DeviceLookup` in src/kentik_api/devices.py on the V6 `device` and `interface` services, with JSON `save()` and `load()` (contracts/helpers.md; FR-021)
-- [ ] T044 [US3] Create src/kentik_api/analytics/__init__.py with the import guard that names the extra (FR-022)
-- [ ] T045 [US3] Implement `QueryDefinition` and `ColumnMapping` in src/kentik_api/analytics/definitions.py with `yaml.safe_load`, the placeholder fill, the SQL and `@fixup:` errors, and `get_data()` on `client.v5.top_x_data` (FR-016, FR-017, FR-018)
-- [ ] T046 [US3] Implement `DataFrameCache` in src/kentik_api/analytics/cache.py with Parquet files through pyarrow (FR-019)
-- [ ] T047 [US3] Port `flatness_analysis` to src/kentik_api/analytics/flatness.py on `DeviceLookup` (FR-020)
-- [ ] T048 [US3] Port examples/analytics_example_topx.py from origin/main to examples/v5/analytics_topx.py, add it to tests/smoke/test_examples_v5.py, and document the extra and the helpers in docs/sphinx/guides/v5.md (FR-024, SC-002)
+- [X] T043 [P] [US3] Implement `DeviceLookup` in src/kentik_api/devices.py on the V6 `device` and `interface` services, with JSON `save()` and `load()` (contracts/helpers.md; FR-021)
+- [X] T044 [US3] Create src/kentik_api/analytics/__init__.py with the import guard that names the extra (FR-022)
+- [X] T045 [US3] Implement `DataQueryDefinition`, `ResultMapping`, `MappingEntry`, and `SQLQueryDefinition` (1.x names) in src/kentik_api/analytics/definitions.py with `yaml.safe_load`, the placeholder fill, the SQL and `@fixup:` errors, and `get_data()` on `client.v5.top_x_data` (FR-016, FR-017, FR-018)
+- [X] T046 [US3] Implement `DFCache` (1.x name) in src/kentik_api/analytics/cache.py with Parquet files through pyarrow (FR-019)
+- [X] T047 [US3] Port `flatness_analysis` to src/kentik_api/analytics/flatness.py on `DeviceLookup` (FR-020)
+- [X] T048 [US3] Port examples/analytics_example_topx.py from origin/main to examples/v5/analytics_topx.py, add it to tests/smoke/test_examples_v5.py, and document the extra and the helpers in docs/sphinx/guides/v5.md (FR-024, SC-002)
 
 **Checkpoint**: US3 works with the extra and fails cleanly without it.
 

@@ -213,6 +213,15 @@ method name in PascalCase with `Error` added: `alert_list` raises
   `kentik_api.v5_tools.split_batch()` packs a large set into parts of at most
   4 MB, `send_batch()` sends them with the batch guid and never resends a
   part, and `wait_for_batch()` polls the status with a time limit.
+- **`analytics` extra.** `pip install "kentik-api[analytics]"` brings back
+  the 1.x `kentik_api.analytics` package on top of `client.v5.top_x_data`:
+  `DataQueryDefinition`, `DFCache`, and `flatness_analysis`, with the same
+  names and output. SQL definitions and the `@fixup:` column type are gone:
+  the SQL endpoint is retired, and `@fixup:` ran Python code from the
+  definition file. Definition files load with `yaml.safe_load`.
+- **`kentik_api.devices.DeviceLookup`.** Replaces 1.x `DeviceCache`: devices
+  and interfaces by ID or name, link names, and link speeds, from the V6
+  `device` and `interface` services. It saves and loads JSON, not pickle.
 - **`v5_base_url` argument and `v5_api_config` property.** `KentikAPI` takes
   a custom V5 host (it must use https). `client.v5_api_config` is the base
   for a per-call override of a `client.v5` call.
