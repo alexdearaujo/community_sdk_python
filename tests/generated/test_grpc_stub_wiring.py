@@ -142,4 +142,4 @@ def test_every_service_with_a_wrapper_is_checked_here():
         if "ServiceWrapper" in p.read_text(encoding="utf-8")
     }
 
-    assert {svc for svc, _ in MOUNTED} == with_wrapper
+    assert {svc for svc, _ in MOUNTED} == with_wrapper - _rest_only()

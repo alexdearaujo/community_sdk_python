@@ -196,6 +196,19 @@ method name in PascalCase with `Error` added: `alert_list` raises
 
 ### Added
 
+- **`v5` service.** `client.v5` brings back the V5 query calls that have no
+  V6 equivalent: `top_x_data`, `top_x_chart`, and `query_url`. They are
+  generated from a hand-maintained description in `schema/openapi/` and
+  always go over REST to the V5 host (`https://api.kentik.com/api/v5`, or
+  `https://api.kentik.eu/api/v5` for `region="eu"`), also on a client created
+  with `protocol="grpc"`. A query model keeps every field it gets, so query
+  JSON from 1.x or from Data Explorer works unchanged. `top_x_chart` is not
+  verified: the endpoint gave no response in a live check.
+  `kentik_api.v5_tools.decode_chart()` turns its result into image bytes. The
+  V5 SQL endpoint is retired, so there is no SQL call.
+- **`v5_base_url` argument and `v5_api_config` property.** `KentikAPI` takes
+  a custom V5 host (it must use https). `client.v5_api_config` is the base
+  for a per-call override of a `client.v5` call.
 - **Stable public names.** `public_names.json` sets the name of every Service,
   client method, and model, and each method's error classes follow its name. A version bump or a new operationId upstream no
   longer renames anything. When upstream moves or renames something,

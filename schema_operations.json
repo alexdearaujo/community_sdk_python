@@ -2557,6 +2557,50 @@
       ]
     }
   },
+  "v5": {
+    "POST /query/topXchart": {
+      "operation": "QueryService_TopXChart",
+      "params": [],
+      "body": true,
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500"
+      ]
+    },
+    "POST /query/topXdata": {
+      "operation": "QueryService_TopXData",
+      "params": [],
+      "body": true,
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500"
+      ]
+    },
+    "POST /query/url": {
+      "operation": "QueryService_Url",
+      "params": [],
+      "body": true,
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500"
+      ]
+    }
+  },
   "vault": {
     "GET /vault/v202312alpha1/secrets": {
       "operation": "ListSecret",

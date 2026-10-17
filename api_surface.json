@@ -17635,6 +17635,365 @@
         ]
       }
     },
+    "v5": {
+      "mounted": true,
+      "rest_only": true,
+      "operations": {
+        "POST /query/topXchart": {
+          "operation": "QueryService_TopXChart",
+          "method": "top_x_chart",
+          "grpc": null,
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "ChartRequest"
+          },
+          "returns": "ChartResponse",
+          "error": "TopXChartError",
+          "error_responses": {
+            "400": "TopXChartBadRequestError",
+            "401": "TopXChartUnauthorizedError",
+            "403": "TopXChartForbiddenError",
+            "404": "TopXChartNotFoundError",
+            "429": "TopXChartTooManyRequestsError",
+            "500": "TopXChartInternalServerErrorError"
+          }
+        },
+        "POST /query/topXdata": {
+          "operation": "QueryService_TopXData",
+          "method": "top_x_data",
+          "grpc": null,
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "QueryRequest"
+          },
+          "returns": "TopXDataResponse",
+          "error": "TopXDataError",
+          "error_responses": {
+            "400": "TopXDataBadRequestError",
+            "401": "TopXDataUnauthorizedError",
+            "403": "TopXDataForbiddenError",
+            "404": "TopXDataNotFoundError",
+            "429": "TopXDataTooManyRequestsError",
+            "500": "TopXDataInternalServerErrorError"
+          }
+        },
+        "POST /query/url": {
+          "operation": "QueryService_Url",
+          "method": "query_url",
+          "grpc": null,
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "QueryRequest"
+          },
+          "returns": "str",
+          "error": "QueryUrlError",
+          "error_responses": {
+            "400": "QueryUrlBadRequestError",
+            "401": "QueryUrlUnauthorizedError",
+            "403": "QueryUrlForbiddenError",
+            "404": "QueryUrlNotFoundError",
+            "429": "QueryUrlTooManyRequestsError",
+            "500": "QueryUrlInternalServerErrorError"
+          }
+        }
+      },
+      "models": [
+        "Aggregate",
+        "ChartRequest",
+        "ChartResponse",
+        "Filter",
+        "FilterGroup",
+        "Query",
+        "QueryFilters",
+        "QueryItem",
+        "QueryRequest",
+        "ResultBucket",
+        "SavedFilterRef",
+        "TopXDataResponse",
+        "V5Error"
+      ],
+      "fields": {
+        "Aggregate": {
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "column": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fn": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "rank": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "sample_rate": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "raw": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "ChartRequest": {
+          "queries": {
+            "type": "List[QueryItem]",
+            "required": true
+          },
+          "imageType": {
+            "type": "str",
+            "required": true
+          }
+        },
+        "ChartResponse": {
+          "dataUri": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "Filter": {
+          "filterField": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "operator": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "filterValue": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "FilterGroup": {
+          "connector": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "filters": {
+            "type": "Optional[List[Optional[Filter]]]",
+            "required": false
+          }
+        },
+        "Query": {
+          "metric": {
+            "type": "Any",
+            "required": true
+          },
+          "dimension": {
+            "type": "List[str]",
+            "required": true
+          },
+          "device_name": {
+            "type": "Optional[Any]",
+            "required": false
+          },
+          "all_selected": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "device_labels": {
+            "type": "Optional[Any]",
+            "required": false
+          },
+          "lookback_seconds": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "starting_time": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "ending_time": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "time_format": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "topx": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "depth": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "outsort": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fastData": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "hostname_lookup": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "cidr": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "cidr6": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "pps_threshold": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "filters_obj": {
+            "type": "Optional[QueryFilters]",
+            "required": false
+          },
+          "saved_filters": {
+            "type": "Optional[List[Optional[SavedFilterRef]]]",
+            "required": false
+          },
+          "aggregates": {
+            "type": "Optional[List[Optional[Aggregate]]]",
+            "required": false
+          },
+          "matrixBy": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "minsPolling": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "forceMinsPolling": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "reAggInterval": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "reAggFn": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "viz_type": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "show_overlay": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "overlay_day": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "sync_axes": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "query_title": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "descriptor": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "QueryFilters": {
+          "connector": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "filterGroups": {
+            "type": "Optional[List[Optional[FilterGroup]]]",
+            "required": false
+          }
+        },
+        "QueryItem": {
+          "query": {
+            "type": "Query",
+            "required": true
+          },
+          "bucket": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "bucketIndex": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "isOverlay": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "QueryRequest": {
+          "queries": {
+            "type": "List[QueryItem]",
+            "required": true
+          }
+        },
+        "ResultBucket": {
+          "bucket": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "data": {
+            "type": "Optional[List[Dict[str, Any]]]",
+            "required": false
+          }
+        },
+        "SavedFilterRef": {
+          "filter_id": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "is_not": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "TopXDataResponse": {
+          "results": {
+            "type": "Optional[List[Optional[ResultBucket]]]",
+            "required": false
+          }
+        },
+        "V5Error": {
+          "error": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "errorxid": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        }
+      },
+      "enums": {}
+    },
     "vault": {
       "mounted": true,
       "rest_only": false,

@@ -297,3 +297,34 @@ def test_region_selects_the_rest_and_grpc_hosts(
     KentikAPI("a@b.com", "t", protocol="grpc", region=region, env_file=None)
     assert targets == [grpc_target]
     assert grpc_target.endswith(".eu:443") == (region == "eu")
+
+
+@pytest.mark.parametrize("protocol", ["rest", "grpc"])
+def test_v5_calls_go_over_rest_to_the_v5_host_on_either_protocol(
+    protocol, monkeypatch, no_env_credentials
+):
+    import grpc
+    import respx
+
+    from kentik_api.gen.v5.models import Query, QueryItem, QueryRequest
+    from kentik_api.transports.rest_client import RestTransport
+
+    monkeypatch.setattr(grpc, "secure_channel", lambda *a, **k: MagicMock())
+    monkeypatch.setattr(grpc, "intercept_channel", lambda channel, _: channel)
+    client = KentikAPI("a@b.com", "t", protocol=protocol, env_file=None)
+    query = Query(metric="bytes", dimension=["Proto"], device_name="router1")
+
+    with respx.mock:
+        route = respx.post("https://api.kentik.com/api/v5/query/topXdata").respond(
+            200, json={"results": [{"bucket": "a", "data": [{"key": "TCP"}]}]}
+        )
+        result = client.v5.top_x_data(
+            data=QueryRequest(queries=[QueryItem(query=query, bucket="a")])
+        )
+
+    assert isinstance(client.v5._transport, RestTransport)
+    assert route.called
+    assert result.results is not None
+    bucket = result.results[0]
+    assert bucket is not None
+    assert bucket.data == [{"key": "TCP"}]

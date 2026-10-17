@@ -1357,6 +1357,29 @@
       },
       "upstream": "user"
     },
+    "v5": {
+      "methods": {
+        "query_url": "POST /query/url",
+        "top_x_chart": "POST /query/topXchart",
+        "top_x_data": "POST /query/topXdata"
+      },
+      "models": {
+        "Aggregate": "Aggregate",
+        "ChartRequest": "ChartRequest",
+        "ChartResponse": "ChartResponse",
+        "Filter": "Filter",
+        "FilterGroup": "FilterGroup",
+        "Query": "Query",
+        "QueryFilters": "QueryFilters",
+        "QueryItem": "QueryItem",
+        "QueryRequest": "QueryRequest",
+        "ResultBucket": "ResultBucket",
+        "SavedFilterRef": "SavedFilterRef",
+        "TopXDataResponse": "TopXDataResponse",
+        "V5Error": "V5Error"
+      },
+      "upstream": "v5"
+    },
     "vault": {
       "methods": {
         "get_secret": "GET /vault/<version>/secrets/{}",

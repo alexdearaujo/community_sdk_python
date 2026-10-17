@@ -131,6 +131,8 @@ def test_architecture_page_matches_committed_apart_from_edge_counts(sandbox):
     service_dependent = [
         (re.compile(r'\|"x\d+"\|'), "|x|"),
         (re.compile(r"\d+ Services are in that state today: [^\n]*"), "N Services ..."),
+        # The sandbox has no local schema base, so it has no REST-only section.
+        (re.compile(r"\n## REST-Only Services\n.*\Z", re.DOTALL), ""),
     ]
 
     def normalized(text: str) -> str:

@@ -49,6 +49,7 @@ from kentik_api.gen.saved_filter.services.saved_filter import SavedFilterService
 from kentik_api.gen.site.services.site import SiteServiceWrapper
 from kentik_api.gen.synthetics.services.synthetics import SyntheticsServiceWrapper
 from kentik_api.gen.user.services.user import UserServiceWrapper
+from kentik_api.gen.v5.services.v5 import V5ServiceWrapper
 from kentik_api.gen.vault.services.vault import VaultServiceWrapper
 
 if TYPE_CHECKING:
@@ -99,6 +100,7 @@ class KentikClientMixin:
         site: "SiteServiceWrapper"
         synthetics: "SyntheticsServiceWrapper"
         user: "UserServiceWrapper"
+        v5: "V5ServiceWrapper"
         vault: "VaultServiceWrapper"
 
     def _mount_generated_services(self) -> None:
@@ -138,4 +140,5 @@ class KentikClientMixin:
         self.site = SiteServiceWrapper(self._transport)
         self.synthetics = SyntheticsServiceWrapper(self._transport)
         self.user = UserServiceWrapper(self._transport)
+        self.v5 = V5ServiceWrapper(self._v5_transport)
         self.vault = VaultServiceWrapper(self._transport)

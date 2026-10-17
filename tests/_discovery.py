@@ -221,8 +221,12 @@ def sample_model_instance(
 def _sample_value_for_type(
     annotation: Any, name: str, seen: frozenset, every_field: bool = False
 ) -> Any:
-    if annotation is inspect.Parameter.empty or annotation is Any:
+    if annotation is inspect.Parameter.empty:
         return sample_value_by_name(name)
+    if annotation is Any:
+        # A model field typed Any is sent as JSON, so it needs a JSON value.
+        value = sample_value_by_name(name)
+        return f"{name}_value" if type(value) is object else value
 
     origin = get_origin(annotation)
     if origin is Union:
@@ -496,6 +500,20 @@ def sample_value_for_annotation(
     if annotation is inspect.Parameter.empty:
         return sample_value_by_name(name)
     return _sample_value_for_type(annotation, name, frozenset(), every_field)
+
+
+def sample_rest_response(method: Any) -> Any:
+    """A success body built from the method's return type, every field set.
+
+    For an operation with no gRPC route, such as one from the local schema
+    base, where no proto message exists to sample from.
+    """
+    annotation = inspect.signature(method).return_annotation
+    if isinstance(annotation, type) and issubclass(annotation, BaseModel):
+        return sample_model_instance(annotation, every_field=True).model_dump(
+            mode="json", by_alias=True, exclude_none=True
+        )
+    return _sample_value_for_type(annotation, "response", frozenset(), True)
 
 
 def build_required_kwargs(method: Any) -> dict[str, Any]:

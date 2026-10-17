@@ -891,10 +891,11 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / "__init__.py").touch(exist_ok=True)
 
-            # Setup specific directories
+            # Setup specific directories. A local schema base service has no protos.
             pb_dir = out_dir / "pb"
-            pb_dir.mkdir(exist_ok=True)
-            (pb_dir / "__init__.py").touch(exist_ok=True)
+            if upstream_service not in local_services:
+                pb_dir.mkdir(exist_ok=True)
+                (pb_dir / "__init__.py").touch(exist_ok=True)
 
             service_swagger_paths[service] = []
             model_names: dict[str, tuple[str, str, str]] = {}

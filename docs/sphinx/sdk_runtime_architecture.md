@@ -54,21 +54,21 @@ flowchart TB
     Client_API --> Error_Types
     Client_API --> REST_Transport
     Client_API --> gRPC_Transport
-    Client_Mixin -->|"x36"| Generated_REST_Services
-    Client_Mixin -->|"x36"| Generated_Service_Wrappers
+    Client_Mixin -->|"x37"| Generated_REST_Services
+    Client_Mixin -->|"x37"| Generated_Service_Wrappers
     Client_Mixin --> REST_Transport
     Client_Mixin --> gRPC_Transport
-    Generated_REST_Services -->|"x52"| API_Config
-    Generated_REST_Services -->|"x52"| Generated_Error_Classes
-    Generated_REST_Services -->|"x52"| Generated_Models
-    Generated_REST_Services -->|"x52"| REST_Runtime
-    Generated_Service_Wrappers -->|"x36"| API_Config
-    Generated_Service_Wrappers -->|"x36"| Generated_Models
+    Generated_REST_Services -->|"x53"| API_Config
+    Generated_REST_Services -->|"x53"| Generated_Error_Classes
+    Generated_REST_Services -->|"x53"| Generated_Models
+    Generated_REST_Services -->|"x53"| REST_Runtime
+    Generated_Service_Wrappers -->|"x37"| API_Config
+    Generated_Service_Wrappers -->|"x37"| Generated_Models
     Generated_Service_Wrappers -->|"x104"| Generated_Proto_Stubs
-    Generated_Service_Wrappers -->|"x52"| Generated_REST_Services
-    Generated_Service_Wrappers -->|"x36"| REST_Transport
+    Generated_Service_Wrappers -->|"x53"| Generated_REST_Services
+    Generated_Service_Wrappers -->|"x37"| REST_Transport
     Generated_Service_Wrappers -->|"x36"| gRPC_Runtime
-    Generated_Service_Wrappers -->|"x36"| gRPC_Transport
+    Generated_Service_Wrappers -->|"x37"| gRPC_Transport
     REST_Runtime --> API_Config
     REST_Runtime --> Auth_Credentials
     REST_Runtime --> Error_Types
@@ -110,3 +110,10 @@ Some of these declare gRPC RPCs upstream but carry no `google.api.http`
 annotation, which is why no path reaches the schema. Those cases are an
 upstream schema gap, not an SDK limitation, and they resolve here
 automatically once the annotation is added.
+
+## REST-Only Services
+
+These Services come from the local schema base, `schema/openapi/`:
+hand-maintained descriptions of endpoints that upstream does not publish.
+Every client mounts them on a REST transport to their own host, so a
+client created with `protocol="grpc"` sends their calls over REST too: `v5`.
