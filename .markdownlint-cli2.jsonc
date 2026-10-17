@@ -24,6 +24,8 @@
   // any fix here would just get overwritten by the next `specify upgrade` /
   // `specify init --force`.
   "ignores": [
+    // Exactly `@AGENTS.md`, a Claude Code import, so it can have no heading.
+    "CLAUDE.md",
     ".venv/**",
     "dist/**",
     "docs/sphinx/services/**",
