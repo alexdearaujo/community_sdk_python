@@ -250,11 +250,11 @@ template header test pass, and a regeneration changes only header lines.
   lines changed under src/kentik_api/gen/, src/kentik_api/client_mixin.py,
   docs/sphinx/services/, and the other generated pages, and that
   api_surface.json does not change (FR-010, FR-015)
-- [ ] T027 [US4] Run `git mv` to swap the files: AGENTS.md becomes a regular
+- [X] T027 [US4] Run `git mv` to swap the files: AGENTS.md becomes a regular
   file with today's CLAUDE.md text, and CLAUDE.md becomes the one line
   `@AGENTS.md`; update the shared-rules note that says AGENTS.md is a
   symlink (FR-014, R6)
-- [ ] T028 [US4] Run `uv run poe _install_skill .claude/skills`, commit
+- [X] T028 [US4] Run `uv run poe _install_skill .claude/skills`, commit
   `.claude/skills/poethepoet/` as written, and add
   `.claude/skills/poethepoet/**` to `ignores` in .markdownlint-cli2.jsonc
   and to rumdl's exclude in pyproject.toml if it lints that path; T022

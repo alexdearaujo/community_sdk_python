@@ -29,6 +29,8 @@
     "docs/sphinx/services/**",
     ".github/skills/**",
     ".claude/skills/speckit-*/**",
+    // Written by `uv run poe _install_skill .claude/skills`; never hand-edited.
+    ".claude/skills/poethepoet/**",
     ".specify/templates/**",
     ".specify/extensions/**",
     "reports/**"
