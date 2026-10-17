@@ -1,7 +1,7 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Renders release notes by diffing `api_surface.json` against an earlier git revision.
 
-`make generate` refreshes `api_surface.json` on every run, and it is committed, so
+`uv run poe generate` refreshes `api_surface.json` on every run, and it is committed, so
 comparing two points in history costs one `git show`. That keeps this command
 idempotent: rerunning it never consumes or advances a baseline, unlike a snapshot
 file that gets overwritten as a side effect of generation.
@@ -162,7 +162,9 @@ def main() -> None:
 
     surface_path = PROJECT_ROOT / SURFACE_RELPATH
     if not surface_path.exists():
-        raise SystemExit(f"{SURFACE_RELPATH} is missing. Run `make generate` first.")
+        raise SystemExit(
+            f"{SURFACE_RELPATH} is missing. Run `uv run poe generate` first."
+        )
     after = api_surface.read(surface_path)
 
     if args.since:

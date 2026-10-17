@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """pandas helpers for V5 query results (the 1.x `kentik_api.analytics` package).
 
 Needs the `analytics` extra: `pip install "kentik-api[analytics]"`.

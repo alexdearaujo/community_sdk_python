@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rate_limit import RateLimit

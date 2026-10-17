@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Live checks of the V5 query calls, read-only POSTs the auto-discovered suite skips.
 
 The query API needs a device name even when all_selected is true. The chart

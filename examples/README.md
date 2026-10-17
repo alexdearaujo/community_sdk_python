@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../pyproject.toml). Edit directly. -->
 
 # Quick-start examples for the Kentik Community Python SDK
 
@@ -7,7 +7,7 @@ Each script is self-contained and safe to run read-only.
 
 > [!NOTE]
 > The [`examples/`](README.md) directory is **hand-written** and is not generated or
-> removed by [`make generate`](../Makefile) or [`make clean`](../Makefile). Edit these files directly
+> removed by [`uv run poe generate`](../pyproject.toml) or [`uv run poe clean`](../pyproject.toml). Edit these files directly
 > when adding new examples or updating existing ones.
 
 ## Setup
@@ -38,7 +38,7 @@ gRPC.
 [`tests/smoke/test_examples_import.py`](../tests/smoke/test_examples_import.py)
 imports every example and checks each `client.<service>.<method>(...)` call
 against the real client, so an example that stops matching the SDK fails
-`make test`.
+`uv run poe test`.
 
 | Directory | Service | REST | gRPC |
 | --- | --- | --- | --- |

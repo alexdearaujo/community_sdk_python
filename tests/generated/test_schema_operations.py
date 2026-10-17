@@ -1,8 +1,8 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The generated REST modules match the operations the swagger declares (T7).
 
 `schema_operations.json` is written from the patched swagger on every
-`make generate`, and CI's drift check keeps it in step with the schema, so
+`uv run poe generate`, and CI's drift check keeps it in step with the schema, so
 this runs without a schema checkout.
 """
 

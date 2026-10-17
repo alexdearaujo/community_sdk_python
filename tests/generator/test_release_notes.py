@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Tests for the CHANGELOG check in scripts/release_notes.py."""
 
 from __future__ import annotations

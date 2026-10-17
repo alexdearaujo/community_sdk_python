@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Every third-party import is declared, and the inventory page lists exactly the declared set."""
 
 from __future__ import annotations

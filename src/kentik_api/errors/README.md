@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../../pyproject.toml). Edit directly. -->
 
 # Errors (`kentik_api.errors`)
 
-Hand-written. Not touched by [`make generate`](../../../Makefile). This is the one shared
+Hand-written. Not touched by [`uv run poe generate`](../../../pyproject.toml). This is the one shared
 exception hierarchy every generated per-service error class builds on.
 
 ## Hierarchy
@@ -67,4 +67,4 @@ mapping.
 Add it here, alongside the existing four, and export it from
 `__all__`. Never add a new error type inside a generated
 `gen/<service>/error/` file; that file is fully regenerated on every
-[`make generate`](../../../Makefile) run.
+[`uv run poe generate`](../../../pyproject.toml) run.

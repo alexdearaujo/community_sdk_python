@@ -1,10 +1,10 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../pyproject.toml). Edit directly. -->
 
 # `kentik_api` Package
 
 The top-level package for the Kentik Community Python SDK. See the
 repository root [README.md](../../README.md) for installation and
-usage, and [CLAUDE.md](../../CLAUDE.md) for the full
+usage, and [AGENTS.md](../../AGENTS.md) for the full
 hand-written-vs-generated architecture.
 
 ## Layout

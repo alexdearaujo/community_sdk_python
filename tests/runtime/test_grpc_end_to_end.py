@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """A generated wrapper call over a real gRPC channel to an in-process server (T2)."""
 
 from __future__ import annotations

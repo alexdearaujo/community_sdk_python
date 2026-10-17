@@ -1,5 +1,5 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
-"""Writes a regeneration impact report: what a `make generate` run changed.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
+"""Writes a regeneration impact report: what a `uv run poe generate` run changed.
 
 Run it after regenerating, before committing. It compares the working tree
 against a git ref and records the facts: schema commit, changed files by kind,
@@ -293,7 +293,9 @@ def main() -> None:
 
     surface_path = PROJECT_ROOT / SURFACE_RELPATH
     if not surface_path.exists():
-        raise SystemExit(f"{SURFACE_RELPATH} is missing. Run `make generate` first.")
+        raise SystemExit(
+            f"{SURFACE_RELPATH} is missing. Run `uv run poe generate` first."
+        )
     after = api_surface.read(surface_path)
     before = api_surface.recorded_at(args.since)
     surface_delta = (

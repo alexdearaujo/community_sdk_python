@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Without the analytics extra, analytics fails clearly and the SDK still works (FR-022)."""
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../pyproject.toml). Edit directly. -->
 
 # Generator Tests
 
@@ -30,7 +30,7 @@ four.
 ## Run
 
 ```bash
-make test-generator
+uv run poe test-generator
 # or
 uv run pytest tests/generator/
 ```
@@ -55,4 +55,4 @@ listed operation) is compared with those parts normalized.
 
 Run this suite first while editing [`scripts/generate_sdk.py`](../../scripts/generate_sdk.py),
 [`scripts/generation/`](../../scripts/generation/README.md), or template behavior, before running
-[`make test-generated`](../../Makefile) to check the SDK the generator produces.
+[`uv run poe test-generated`](../../pyproject.toml) to check the SDK the generator produces.

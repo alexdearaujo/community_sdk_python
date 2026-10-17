@@ -1,5 +1,5 @@
 {
-  // Markdown rules for this repo. rumdl reads this file in `make lint` and CI;
+  // Markdown rules for this repo. rumdl reads this file in `uv run poe lint` and CI;
   // the markdownlint editor extension reads it too. When the two disagree,
   // the CI result decides.
   "config": {

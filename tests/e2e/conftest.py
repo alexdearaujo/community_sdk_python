@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 from __future__ import annotations
 
 from collections.abc import Iterator
@@ -43,7 +43,7 @@ def real_client(request: pytest.FixtureRequest) -> Iterator[KentikAPI]:
         pytest.skip(
             "No KENTIK_EMAIL/KENTIK_API_TOKEN available -- end-to-end tests "
             "require real credentials in a project-root .env and are opt-in "
-            "only (see CLAUDE.md's end-to-end testing requirement)."
+            "only (see AGENTS.md's end-to-end testing requirement)."
         )
     try:
         yield client
@@ -66,7 +66,7 @@ def grpc_real_client(request: pytest.FixtureRequest) -> Iterator[KentikAPI]:
         pytest.skip(
             "No KENTIK_EMAIL/KENTIK_API_TOKEN available -- end-to-end tests "
             "require real credentials in a project-root .env and are opt-in "
-            "only (see CLAUDE.md's end-to-end testing requirement)."
+            "only (see AGENTS.md's end-to-end testing requirement)."
         )
     try:
         yield client

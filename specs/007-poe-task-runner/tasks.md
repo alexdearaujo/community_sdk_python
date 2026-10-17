@@ -259,38 +259,45 @@ template header test pass, and a regeneration changes only header lines.
   `.claude/skills/poethepoet/**` to `ignores` in .markdownlint-cli2.jsonc
   and to rumdl's exclude in pyproject.toml if it lints that path; T022
   passes (FR-012, SC-005, R7)
-- [ ] T029 [US4] Rewrite `make` commands to poe tasks in AGENTS.md:
+- [X] T029 [US4] Rewrite `make` commands to poe tasks in AGENTS.md:
   key commands, testing strategy, generation pipeline, and the
   `HAND-WRITTEN` marker, which names `uv run poe generate` (FR-011)
-- [ ] T030 [P] [US4] Rewrite `make` commands to poe tasks in README.md,
+- [X] T030 [P] [US4] Rewrite `make` commands to poe tasks in README.md,
   README.pypi.md, CONTEXT.md, docs/README.md, scripts/README.md,
   tests/README.md, tests/generator/README.md, scripts/generation/README.md,
   examples/README.md, and learn/README.md; a Markdown link to `Makefile`
   points at `pyproject.toml` instead (FR-011)
-- [ ] T031 [P] [US4] Rewrite `make` commands to poe tasks in the
+- [X] T031 [P] [US4] Rewrite `make` commands to poe tasks in the
   hand-written prose of docs/sphinx/ (guides, authentication.md,
   dependencies.md, local_generation_workflow.md, index.md, README.md),
   outside the `kentik-gen` marker blocks that the generator writes
   (FR-011)
-- [ ] T032 [P] [US4] Rewrite `make` commands in messages that scripts print
+- [X] T032 [P] [US4] Rewrite `make` commands in messages that scripts print
   (scripts/release_notes.py, scripts/impact_report.py,
   scripts/check_spec_refs.py, scripts/sample_consume_sdk.py), in
   pyproject.toml marker help texts, in tests/e2e/ skip messages, and in
   .github/agents/kentik-sdk-autogen.agent.md (FR-011)
-- [ ] T033 [P] [US4] Amend .specify/memory/constitution.md to PATCH 1.4.4:
+- [X] T033 [P] [US4] Amend .specify/memory/constitution.md to PATCH 1.4.4:
   each `make <target>` becomes `uv run poe <task>`, and the governance line
   says AGENTS.md holds the instructions and CLAUDE.md imports it; add the
   Sync Impact Report entry (FR-011, FR-014)
-- [ ] T034 [US4] Add an Unreleased entry to CHANGELOG.md: contributors run
+- [X] T034 [US4] Add an Unreleased entry to CHANGELOG.md: contributors run
   `uv run poe <task>` instead of `make <target>`, the `Makefile`,
   `services`, and `tests` aliases are gone, and AGENTS.md is now the
   instruction file (FR-009, FR-011)
-- [ ] T035 [US4] Run `uv run poe test-smoke` and fix each file that
+- [X] T035 [US4] Run `uv run poe test-smoke` and fix each file that
   `test_no_make_commands_outside_past_specs` reports, until it passes
   (SC-002, FR-011)
 
 **Checkpoint**: No `make` command outside past specs; skill and instruction
 files in place.
+
+Note (T029 to T035): `CLAUDE.md` now holds only `@AGENTS.md`, and GitHub Copilot
+does not expand imports. References that sent a reader or an agent to `CLAUDE.md`
+for content (the Copilot agent file, three README links, and test docstrings and
+skip messages) now name `AGENTS.md`. `src/kentik_api/gen/__init__.py` kept the old
+header after an incremental run, because the generator only creates it when it is
+missing; a clean regeneration (`uv run poe clean`, then `generate`) rewrote it.
 
 ---
 

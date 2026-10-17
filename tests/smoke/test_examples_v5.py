@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The ported V5 examples run end to end against a mocked API (spec 005, FR-024)."""
 
 from __future__ import annotations

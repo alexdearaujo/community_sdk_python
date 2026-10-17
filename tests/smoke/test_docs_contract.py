@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Documentation and tooling facts the audit found wrong (findings D7 to D10)."""
 
 from __future__ import annotations

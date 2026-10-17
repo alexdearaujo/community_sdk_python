@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Exact auth wire format for both transports (FR-039).
 
 Kentik rejects a request whose auth key is misspelled with the same 401 as a

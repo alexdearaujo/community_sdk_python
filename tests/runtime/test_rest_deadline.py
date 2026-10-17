@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """A numeric REST timeout bounds the whole call, not each read (R5)."""
 
 from __future__ import annotations

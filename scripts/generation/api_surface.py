@@ -1,7 +1,7 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Records the SDK's public API surface and diffs two recordings into release notes.
 
-`make generate` writes `api_surface.json` at the repo root on every run. Because that
+`uv run poe generate` writes `api_surface.json` at the repo root on every run. Because that
 file is committed alongside the generated code, any two points in history can be
 compared with a single `git show <ref>:api_surface.json`, instead of reconstructing
 whole generated trees. `scripts/release_notes.py` does exactly that.

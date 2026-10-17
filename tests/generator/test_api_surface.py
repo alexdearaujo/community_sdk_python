@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Tests for scripts/generation/api_surface.py.
 
 Builds surface dicts directly rather than generating an SDK, so these stay offline

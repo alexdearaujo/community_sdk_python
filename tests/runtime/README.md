@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../pyproject.toml). Edit directly. -->
 
 # Runtime Tests
 
@@ -35,7 +35,7 @@ The other files in this layer:
 ## Run
 
 ```bash
-make test-runtime
+uv run poe test-runtime
 # or
 uv run pytest tests/runtime/
 ```
@@ -52,4 +52,4 @@ Add a test when shared runtime behavior changes, such as:
 
 Run this suite first while editing shared request, auth, or error
 behavior in [`src/kentik_api/core`](../../src/kentik_api/core/README.md), before running the broader
-[`make test-generated`](../../Makefile) suite.
+[`uv run poe test-generated`](../../pyproject.toml) suite.

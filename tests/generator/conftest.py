@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """A throwaway project tree that the generator's phase modules can run against.
 
 The phase modules read and write through module-level PROJECT_ROOT and

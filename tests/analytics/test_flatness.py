@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """flatness_analysis gives the 1.x result on the same input (FR-020, SC-003)."""
 
 from __future__ import annotations

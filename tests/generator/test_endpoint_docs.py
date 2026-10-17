@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Unit tests for parse_wrapper_method_signatures, parse_wrapper_methods, and render_endpoint_docs."""
 
 import ast

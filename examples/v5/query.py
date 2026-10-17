@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Run the V5 top-X data, URL, and chart queries (port of 1.x queries_example.py).
 
 `client.v5` always uses REST, also on a client created with protocol="grpc".

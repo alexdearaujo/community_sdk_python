@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """End-to-end gRPC coverage against the real Kentik API.
 
 Mirrors test_endpoints_e2e.py but drives every discovered read (GET)
@@ -7,16 +7,16 @@ the GET-vs-mutating split are shared with the REST suite via
 tests/_discovery.py (discover_endpoint_cases()), so both suites classify
 the same operations the same way.
 
-gRPC coverage is per-operation, not per-service (see CLAUDE.md's "gRPC
+gRPC coverage is per-operation, not per-service (see AGENTS.md's "gRPC
 transport is fully implemented" section): a wrapper method raises
 NotImplementedError when the service's proto companions failed to import,
 or when no RPC shares that REST operation's HTTP rule. Neither case is a
 bug -- both count as a passing outcome here, same as a correctly-typed
 response or a generated KentikError subclass.
 
-Opt-in only: excluded from `make test`/`make all`/`make test-e2e` by the
+Opt-in only: excluded from `uv run poe test`/`all`/`test-e2e` by the
 `e2e_grpc` pytest marker (see pyproject.toml's addopts) and only actually
-run via `make test-e2e-grpc` or `pytest -m e2e_grpc`. The
+run via `uv run poe test-e2e-grpc` or `pytest -m e2e_grpc`. The
 `grpc_real_client` fixture (tests/e2e/conftest.py) skips the whole module
 if no real credentials are configured.
 """
@@ -107,7 +107,7 @@ def _send_samples_the_proto_accepts(monkeypatch: pytest.MonkeyPatch, case) -> No
 @pytest.mark.skip(
     reason=(
         "Mutating (non-GET) operations are intentionally excluded from "
-        "automatic e2e coverage, gRPC included -- see CLAUDE.md's "
+        "automatic e2e coverage, gRPC included -- see AGENTS.md's "
         "end-to-end testing requirement. Add a dedicated test with real "
         "setup/teardown for this specific operation if you need live gRPC "
         "coverage here."

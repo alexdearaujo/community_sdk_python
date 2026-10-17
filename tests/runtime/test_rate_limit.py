@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Quota parsing and capture on both transports (FR-029, FR-030, FR-031)."""
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The impact report's classification: it decides what a reviewer looks at first."""
 
 from __future__ import annotations

@@ -52,7 +52,7 @@ repo.
   `tests/smoke/test_helpers_no_direct_http.py` checks that they import
   neither `httpx` nor `request_json`
 
-**Fully generated, wiped and rebuilt on every `make generate` run:**
+**Fully generated, wiped and rebuilt on every `uv run poe generate` run:**
 
 - `src/kentik_api/client_mixin.py` — mounts every generated service
   wrapper onto the client
@@ -162,13 +162,14 @@ subpackage of independently testable phase modules (see
   `render()`. The collector does not enforce this order.
   `generate_modular_sdk()` calls the methods in the correct order.
 - `api_surface.py` — records the public API surface into
-  `api_surface.json` on every run, and diffs two recordings. `make
-  release-notes`, `make check-changelog`, and the end-of-run
+  `api_surface.json` on every run, and diffs two recordings. `uv run poe
+  release-notes`, `uv run poe check-changelog`, and the end-of-run
   `API SURFACE CHANGED` alert all read it.
 - `public_names.py` — reads `public_names.json`, adds an entry for
   each new Service, operation, and model, and raises `NameDriftError`
   when an entry no longer matches the schema. See "Public names".
-- `_shared.py` — `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, and the helpers
+- `_shared.py` — `PROJECT_ROOT`, `SDK_OUTPUT_DIR`,
+  `REGENERATE_COMMAND` (the command every generated header names), and the helpers
   that more than one phase module genuinely uses:
   `iter_service_dirs()` and `INTERNAL_GEN_DIRS` (the single answer to
   "is this directory a Service"), `discover_service_model_classes`,
@@ -268,7 +269,7 @@ suggest per-endpoint connection, auth, or retry code. Don't
 wrappers. Instead, fix or extend `request_json` or `APIConfig` —
 every endpoint in every service shares them.
 
-### Why this survives `make generate` / `scripts/generate_sdk.py`
+### Why this survives `uv run poe generate` / `scripts/generate_sdk.py`
 
 You can confirm this by reading `generate_modular_sdk()`. Its
 cleanup step only iterates `SDK_OUTPUT_DIR` (`src/kentik_api/gen/`)
@@ -281,7 +282,7 @@ structurally, not just by convention or discipline.
 
 - **`src/kentik_api/client_mixin.py`** lives outside `gen/`, but
   `wrapper_generation.generate()` calls `mixin_file.write_text(...)`
-  — a full overwrite, on every run. The next `make generate` silently
+  — a full overwrite, on every run. The next `uv run poe generate` silently
   overwrites any manual edits here.
 - **`docs/sphinx/sdk_runtime_architecture.md`** and
   **`src/kentik_api/gen/README.md`** — `docs_rendering.generate()`
@@ -351,7 +352,7 @@ batch endpoints, which have no V6 equivalent. Rules:
 - Declare no `enum`, so an unknown value never fails a call. A schema
   with `additionalProperties: true` gives a model that keeps unknown
   fields (`"extra": "allow"`).
-- Change the description, then run `make generate local`. Never edit
+- Change the description, then run `uv run poe generate --local`. Never edit
   `gen/v5/`.
 
 ### Services without a wrapper: out of scope, on purpose
@@ -382,18 +383,18 @@ so no generator can currently act on it.
 
 ## Generation pipeline
 
-- `make generate` fetches
+- `uv run poe generate` fetches
   `https://github.com/kentik/api-schema-public.git` at the commit
-  pinned in `schema.lock`. `make sync-schema` fetches schema HEAD
-  instead. `make generate SCHEMA_REF=<ref>` fetches any other ref.
-  `make generate local` reads the sibling checkout
+  pinned in `schema.lock`. `uv run poe sync-schema` fetches schema HEAD
+  instead. `uv run poe generate --schema-ref <ref>` fetches any other ref.
+  `uv run poe generate --local` reads the sibling checkout
   `../api-schema-public/` instead, and fails if it is absent. There
   is no automatic fallback between the two.
 - Every completed run writes the schema commit it used to
   `schema.lock`, so commit that file with the regenerated tree. A
   local checkout with uncommitted changes to tracked files leaves the
   pin unchanged. The scheduled `schema-sync` workflow runs
-  `make sync-schema` weekly and opens a pull request when the output
+  `uv run poe sync-schema` weekly and opens a pull request when the output
   changes. It needs the repository setting that allows GitHub Actions to
   create pull requests, and each of its pull requests needs a close and
   reopen to start CI (see "Automated update pull requests" in
@@ -455,51 +456,69 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
 
 ## Key commands
 
-- `make` / `make all` — `services tests`. Docs are opt-in.
-- `make services` (alias for `make generate`) — regenerate SDK from
-  the pinned schema commit on GitHub
-- `make sync-schema` — regenerate from schema HEAD on GitHub and
+Every task lives in `[tool.poe.tasks]` in `pyproject.toml` and runs the same
+on Windows, macOS, and Linux after `uv sync`. Run `uv run poe` to list them,
+and `uv run poe -h <task>` to list a task's options. The poe agent skill is
+in `.claude/skills/poethepoet/`; after a poethepoet upgrade, run
+`uv run poe _install_skill .claude/skills --upgrade` (a smoke test fails
+until you do). No task may set `envfile`: `.env` holds real credentials.
+
+- `uv run poe all` — `generate`, then `test`. Docs are opt-in.
+- `uv run poe generate` — regenerate SDK from the pinned schema commit on
+  GitHub
+- `uv run poe sync-schema` — regenerate from schema HEAD on GitHub and
   move the pin in `schema.lock`
-- `make generate local` — regenerate from the local
+- `uv run poe generate --local` — regenerate from the local
   `../api-schema-public/` checkout
-- `make generate LOCAL_REPO=/path/to/api-schema-public` —
+- `uv run poe generate --local-repo /path/to/api-schema-public` —
   regenerate from an arbitrary local schema path
-- `make docs` — regenerate from GitHub (it depends on `generate`),
-  then build Sphinx docs (`docs/sphinx` → `docs/build/html`) with
-  warnings as errors. To build from the committed tree only, run
-  `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`.
-- `make release-notes` (`SINCE=<ref>`): lists the API surface changes since
-  a ref (default: the highest-versioned earlier release tag reachable from
-  HEAD that has a surface record), field and enum level
-  included. An unknown `SINCE` ref fails. `make check-changelog` fails when a breaking change in that list
-  has no mention in `CHANGELOG.md`'s Unreleased section; CI runs it on every
-  pull request against the merge base.
-- `make impact-report` (`SINCE=<ref>`, `CHECKS=0`): run by hand after a
-  regeneration. `scripts/impact_report.py` writes the facts of what changed
-  (schema commit, files by kind, surface delta, floors, checks) to
-  `reports/regeneration-impact-<date>.html`. It never overwrites an earlier
-  report, and it leaves the Findings section to a person.
-- `make test` / `make tests` — full pytest run (mocked layers only —
+- `uv run poe generate --schema-ref <ref>` — regenerate from another ref
+- `uv run poe docs` — regenerate from GitHub, then build Sphinx docs
+  (`docs/sphinx` → `docs/build/html`) with warnings as errors. To build
+  from the committed tree only, run `uv run poe docs-build`.
+- `uv run poe release-notes` (`--since <ref>`, `--out <file>`): lists the API
+  surface changes since a ref (default: the highest-versioned earlier release
+  tag reachable from HEAD that has a surface record), field and enum level
+  included. An unknown `--since` ref fails. `uv run poe check-changelog` fails
+  when a breaking change in that list has no mention in `CHANGELOG.md`'s
+  Unreleased section; CI runs it on every pull request against the merge base.
+- `uv run poe impact-report` (`--since <ref>`, `--no-checks`, `--out <file>`):
+  run by hand after a regeneration. `scripts/impact_report.py` writes the
+  facts of what changed (schema commit, files by kind, surface delta, floors,
+  checks) to `reports/regeneration-impact-<date>.html`. It never overwrites an
+  earlier report, and it leaves the Findings section to a person.
+- `uv run poe test` — full pytest run (mocked layers only —
   never wires in `tests/e2e/`)
-- `make test-generated` / `make test-runtime` / `make test-smoke` /
-  `make test-generator` — one mocked test layer at a time
-- `make test-e2e` / `make test-e2e-grpc` (required addition, see
+- `uv run poe test-generated` / `test-runtime` / `test-smoke` /
+  `test-generator` / `test-analytics` — one mocked test layer at a time
+- `uv run poe test-e2e` / `test-e2e-grpc` (required addition, see
   Testing strategy) — opt-in end-to-end suites against the real
   Kentik API, REST and gRPC transports respectively. Must never
-  appear in `make test` or `make all`.
-- `make lint`: `ruff check --fix`, `ruff format` (Python, and Python blocks
-  in Markdown), and `rumdl check --fix` (Markdown rules)
-- `make clean` — removes `src/kentik_api/gen/`, `docs/build/`,
-  generated `docs/sphinx/services/*.md` (preserves
-  `scripts/openapi_templates/`, `src/kentik_api/core/`,
+  appear in `test` or `all`.
+- `uv run poe lint`: `ruff check --fix`, `ruff format` (Python, and Python
+  blocks in Markdown), and `rumdl check --fix` (Markdown rules).
+  `uv run poe lint-check` runs the same checks without changing files, as CI
+  does.
+- `uv run poe typecheck` — ty on the whole repository
+- `uv run poe check-specs` — FR/SC/task cross-references in `specs/`
+- `uv run poe check-drift` — fails when the working tree differs from the
+  commit; CI runs it after `generate`
+- `uv run poe audit` — `uv audit` of the locked dependencies
+- `uv run poe clean` — removes `src/kentik_api/gen/`, `docs/build/`,
+  generated `docs/sphinx/services/*.md`, and every `__pycache__` outside
+  `.venv` (preserves `scripts/openapi_templates/`, `src/kentik_api/core/`,
   `docs/sphinx/local_generation_workflow.md`)
-- `make deep-clean` — `clean` plus `.venv`, `.pytest_cache/`,
-  `.ruff_cache/`. It keeps the tracked `uv.lock`.
+- `uv run poe deep-clean` — `clean` plus `.venv`, `.pytest_cache/`,
+  `.ruff_cache/`. It keeps the tracked `uv.lock`. On Windows it keeps the
+  running `.venv` and prints the command that removes it.
+
+`scripts/tasks.py` holds the `clean`, `deep-clean`, and `check-drift`
+tasks in Python, so no task needs a POSIX shell.
 
 ## Testing strategy (5 layers, see `tests/README.md`)
 
 Mocked/offline layers (no network, safe to run anywhere, part of
-`make test`):
+`uv run poe test`):
 
 - `tests/generated/test_wrapper_contracts.py` — **auto-discovers**
   every `*ServiceWrapper` method by AST-parsing
@@ -540,41 +559,42 @@ Mocked/offline layers (no network, safe to run anywhere, part of
   network calls for all five of the above.
 - If generation output changed, follow these steps before opening a
   PR:
-  1. Regenerate: `make generate local`.
+  1. Regenerate: `uv run poe generate --local`.
   2. Read the message at the end of the run. If it says `⚠️ API SURFACE
      CHANGED`, write a `CHANGELOG.md` Unreleased entry for each listed
      change, naming each breaking change exactly as the alert does. Then
-     run `make check-changelog SINCE=HEAD`. `make generate` never writes
+     run `uv run poe check-changelog --since HEAD`. `uv run poe generate` never writes
      release notes or `CHANGELOG.md` itself; skipping this step fails the
      `changelog` CI job. See "Update the release notes after every
      regeneration" in `docs/sphinx/guides/generation.md`.
   3. Run the relevant focused suite.
-  4. Run `make test`.
+  4. Run `uv run poe test`.
 
   CI also runs these gates on every pull request. Run them locally
   first:
 
-  - the full mocked test suite on Python 3.12, 3.13, and 3.14 (the
-    `test` job)
-  - `make typecheck`
-  - `uv run ruff check .` and `uv run ruff format --check .`
-  - `make check-specs`
-  - `make check-changelog` against the merge base (the `changelog`
+  - the full mocked test suite on Python 3.12, 3.13, and 3.14 on Linux,
+    and on 3.12 on Windows and macOS (the `test` job)
+  - `uv run poe typecheck` on all three operating systems
+  - `uv run poe lint-check` on all three operating systems
+  - `uv run poe check-specs`
+  - `uv run poe check-changelog` against the merge base (the `changelog`
     job)
-  - the Sphinx build with `-W` (see `make docs` above)
+  - the Sphinx build with `-W` (`uv run poe docs-build`)
   - the built wheel, installed into a clean virtual environment
     outside the checkout (`build.yml`)
-  - generated-output drift: CI runs `make generate` at the commit in
-    `schema.lock` and fails if the tree differs from what is
-    committed. Commit `schema.lock` with every regeneration, or this
-    gate regenerates from the wrong commit.
+  - generated-output drift: CI runs `uv run poe generate` at the commit in
+    `schema.lock`, then `uv run poe check-drift`, on all three operating
+    systems, and fails if the tree differs from what is committed. Commit
+    `schema.lock` with every regeneration, or this gate regenerates from
+    the wrong commit.
 
-Live layer (real network, opt-in only, **not** part of `make test`):
+Live layer (real network, opt-in only, **not** part of `uv run poe test`):
 
 - `tests/e2e/` — end-to-end tests against the real Kentik API. See
   the requirement below. This directory and target are a required
   addition, not optional polish.
-- `tests/e2e/test_endpoints_e2e_grpc.py` (`make test-e2e-grpc`, `-m
+- `tests/e2e/test_endpoints_e2e_grpc.py` (`uv run poe test-e2e-grpc`, `-m
   e2e_grpc`) — the gRPC-transport variant of the same read-only
   coverage. A `NotImplementedError` counts as a passing outcome here
   (see "gRPC transport is fully implemented" above). Today every
@@ -618,11 +638,11 @@ task.
   `.env` contents (see Auth/config below).
 - **Opt-in only — never part of the default pipeline.** `.env`
   holds real credentials against a real account. e2e tests must not
-  run automatically via `make test`, `make all`, or CI, without
-  explicit opt-in. Gate them behind a dedicated `make test-e2e` /
-  `make test-e2e-grpc` target, a pytest marker (for example `-m
-  e2e`/`-m e2e_grpc`) excluded by default, or both. `make test` and
-  `make all` must keep passing without ever touching this layer.
+  run automatically via `uv run poe test`, `uv run poe all`, or CI, without
+  explicit opt-in. Gate them behind a dedicated `test-e2e` /
+  `test-e2e-grpc` poe task, a pytest marker (for example `-m
+  e2e`/`-m e2e_grpc`) excluded by default, or both. `uv run poe test` and
+  `uv run poe all` must keep passing without ever touching this layer.
 - **Default to safe, non-mutating operations** (List- and Get-style
   reads). Create, Update, and Delete calls against a real account
   are hard to reverse, and they can corrupt real data. Only cover

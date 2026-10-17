@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Helpers for the V5-backed `client.v5` calls.
 
 They call the generated operations and never send HTTP themselves, so every

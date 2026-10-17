@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Packaging metadata the published artifacts depend on (audit findings K4 to K9, K11)."""
 
 from __future__ import annotations

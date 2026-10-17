@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The V5 REST transport that every KentikAPI client has (spec 005, FR-006a)."""
 
 from __future__ import annotations

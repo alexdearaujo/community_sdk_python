@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../../pyproject.toml). Edit directly. -->
 
 # Transports (`kentik_api.transports`)
 
-Hand-written. Not touched by [`make generate`](../../../Makefile). Thin transport-selection
+Hand-written. Not touched by [`uv run poe generate`](../../../pyproject.toml). Thin transport-selection
 and credential-wiring code, not per-endpoint logic.
 
 ## Classes

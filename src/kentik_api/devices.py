@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Find devices and interfaces by ID or name, and get link speeds.
 
 The 2.x replacement of 1.x `kentik_api.utils.DeviceCache`. It loads devices

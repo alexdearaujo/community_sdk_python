@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
+<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`uv run poe generate`](../../pyproject.toml) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
 
 # Documentation Source
 
-Sphinx source for the Kentik Community Python SDK. Build with [`make docs`](../../Makefile);
+Sphinx source for the Kentik Community Python SDK. Build with [`uv run poe docs`](../../pyproject.toml);
 output lands in `docs/build/html/`.
 
 ## Structure
@@ -36,7 +36,7 @@ graph TD
 ## Building
 
 ```bash
-make docs               # build Sphinx HTML → docs/build/html/
-make generate           # regenerate service .md pages from the OpenAPI schema
-make generate local     # use the local ../api-schema-public/ checkout
+uv run poe docs                # build Sphinx HTML → docs/build/html/
+uv run poe generate            # regenerate service .md pages from the OpenAPI schema
+uv run poe generate --local    # use the local ../api-schema-public/ checkout
 ```

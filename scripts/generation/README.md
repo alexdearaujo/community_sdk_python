@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../pyproject.toml). Edit directly. -->
 
 # Generator Phase Modules
 
@@ -81,7 +81,7 @@ inside this package breaks `generate_sdk.py`'s import path.
 ## Run the tests
 
 ```bash
-make test-generator
+uv run poe test-generator
 ```
 
 This command runs only the tests in [`tests/generator/`](../../tests/generator/README.md). Most tests

@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](pyproject.toml). Edit directly. -->
 
 # Changelog
 
@@ -9,14 +9,14 @@ between two releases, run
 [`scripts/release_notes.py`](scripts/release_notes.py):
 
 ```bash
-make release-notes
+uv run poe release-notes
 ```
 
 Each release appends that list to its GitHub release notes. A pull request
 whose surface change can break a caller (a removed or retyped field, for
-example) fails `make check-changelog` until this file names the change.
+example) fails `uv run poe check-changelog` until this file names the change.
 
-`make generate` does not edit this file. When a regeneration ends with
+`uv run poe generate` does not edit this file. When a regeneration ends with
 `⚠️ API SURFACE CHANGED`, add an entry here for each listed change before you
 commit. See "Update the release notes after every regeneration" in
 [the generation guide](docs/sphinx/guides/generation.md).
@@ -82,7 +82,7 @@ underscore; if one word is left, the module noun stays
 | `site` | `list_site_markets`, `get_site_market`, `create_site_market`, `update_site_market`, `delete_site_market` | `list_markets`, `get_market`, `create_market`, `update_market`, `delete_market` |
 
 `api_surface.json` now records the client method for each operation, so
-`make check-changelog` flags a renamed method as a breaking change. It also
+`uv run poe check-changelog` flags a renamed method as a breaking change. It also
 records the gRPC method each operation calls, so an operation that stops
 working over gRPC is a breaking change too.
 
@@ -283,7 +283,7 @@ classes follow: `client.site.create` raises `CreateError`, in
   stable" in [the generation guide](docs/sphinx/guides/generation.md).
 - **`kmeta` service.** `client.kmeta` manages ServiceNow configurations: list,
   get, create, update, and delete. It predates `api_surface.json`, so
-  `make release-notes` does not list it.
+  `uv run poe release-notes` does not list it.
 - **`nms` service.** `client.nms.get_metrics_schema()`
   returns the NMS metrics schema: each measurement and its fields, on REST
   and gRPC. The response's `schema` field is `schema_` in Python, because
@@ -489,3 +489,18 @@ the declared floors match them:
   of the published documentation.
 - A new [rate limiting guide](docs/sphinx/guides/rate_limiting.md) covers the
   quota headers and the three limits that no header shows.
+
+### Development
+
+This section is for contributors. It does not change the SDK.
+
+- Project tasks run as `uv run poe <task>` on Windows, macOS, and Linux, with
+  only uv and Git installed, and Make is no longer used. Each former Make
+  target has a poe task with the same name, and each Make variable is now an
+  option, for example `uv run poe generate --local` and `--since <ref>`. The
+  `services`, `tests`, `install`, `help`, and `local` targets have no task:
+  use `generate`, `test`, `uv sync`, bare `uv run poe`, and `--local`.
+- CI runs the tests, lint, type check, and the generated-output drift check
+  on Windows and macOS as well as Linux.
+- `AGENTS.md` holds the agent instructions. `CLAUDE.md` imports it, so it
+  also works on a Windows checkout.

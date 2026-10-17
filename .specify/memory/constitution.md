@@ -1,5 +1,17 @@
 <!--
 Sync Impact Report
+Version change: 1.4.3 → 1.4.4
+Rationale: feature 007 replaces the Makefile with Poe the Poet tasks, so
+every `make <target>` here becomes `uv run poe <task>`. `AGENTS.md` now holds
+the instructions, and `CLAUDE.md` imports it with `@AGENTS.md`, because a
+symlink checks out on Windows as a one-line text file. No principle changed,
+so this is PATCH.
+Modified principles: none (IV, V, Architecture, Development Workflow, and
+Governance wording only)
+Added sections: none
+Removed sections: n/a
+Deferred TODOs: none
+Prior report (1.4.2 → 1.4.3, retained for history):
 Version change: 1.4.2 → 1.4.3
 Rationale: feature 006 adds rumdl, a Markdown linter, to `make lint`. The
 Development Workflow section named only the two Ruff commands. No principle
@@ -65,7 +77,7 @@ explicit anti-narrowing rule.
 
 `src/kentik_api/gen/`, `client_mixin.py`, and the generated docs pages under
 `docs/sphinx/services/` and `docs/sphinx/sdk_runtime_architecture.md` are wiped
-and rebuilt by `make generate` on every run. MUST NOT hand-edit any generated
+and rebuilt by `uv run poe generate` on every run. MUST NOT hand-edit any generated
 file. If generated output is wrong, fix `scripts/generate_sdk.py`, the
 responsible phase module in `scripts/generation/`, or the Jinja2 templates in
 `scripts/openapi_templates/`, then regenerate. A parity check
@@ -125,8 +137,8 @@ and does not satisfy this principle.
 ### V. End-to-End Tests Are Opt-In and Safe-by-Default
 
 `tests/e2e/` runs against the real Kentik API and MUST NOT run as part of
-`make test`, `make all`, or default CI. It MUST stay gated behind an explicit
-opt-in (`make test-e2e`, a `-m e2e` marker, or both). Coverage MUST default to
+`uv run poe test`, `uv run poe all`, or default CI. It MUST stay gated behind an explicit
+opt-in (`uv run poe test-e2e`, a `-m e2e` marker, or both). Coverage MUST default to
 non-mutating List/Get operations; Create/Update/Delete coverage against a real
 account is only acceptable against a disposable, sandboxed resource with
 guaranteed cleanup (e.g. create-then-delete in a `finally`/fixture teardown),
@@ -154,9 +166,9 @@ tracked and reduced over time, not silently ignored.
 ## Architecture & Generation Pipeline
 
 - The SDK is generated end-to-end from Kentik's public OpenAPI v3 schema
-  (`kentik/api-schema-public`). `make generate` fetches it at the commit in
-  `schema.lock`. `make sync-schema` fetches HEAD and moves that pin.
-  `make generate local` reads the sibling checkout `../api-schema-public/`
+  (`kentik/api-schema-public`). `uv run poe generate` fetches it at the commit in
+  `schema.lock`. `uv run poe sync-schema` fetches HEAD and moves that pin.
+  `uv run poe generate --local` reads the sibling checkout `../api-schema-public/`
   and fails if it is absent. Neither falls back to the other.
 - The generator also reads the local schema base, `schema/openapi/` in this
   repository. It MUST hold only hand-maintained descriptions of endpoints
@@ -178,7 +190,7 @@ tracked and reduced over time, not silently ignored.
   that REST operation's HTTP rule (proto service, verb, and path). Matching
   by RPC name alone is wrong: `alerting` declares `Delete` on several proto
   services. Neither case is a bug by itself.
-  `tests/e2e/test_endpoints_e2e_grpc.py` (`make test-e2e-grpc`) treats
+  `tests/e2e/test_endpoints_e2e_grpc.py` (`uv run poe test-e2e-grpc`) treats
   `NotImplementedError` as an expected, passing outcome for exactly this
   reason. (This bullet previously flagged a drift against CLAUDE.md's
   stale "intentionally a stub" claim; resolved 2026-08-26, and both now
@@ -198,17 +210,20 @@ tracked and reduced over time, not silently ignored.
 
 ## Development Workflow & Quality Gates
 
-- Standard pipeline: `make` / `make all` runs `services tests` in
-  sequence. Docs are opt-in with `make docs`.
-- After any change to generation output: regenerate (`make generate local`),
-  run the relevant focused test layer, then run the full `make test` before
+- Every project task is a poe task in `pyproject.toml`, run as
+  `uv run poe <task>`, and MUST run the same on Windows, macOS, and Linux:
+  no task may need a POSIX shell or load `.env`.
+- Standard pipeline: `uv run poe all` runs `generate` then `test` in
+  sequence. Docs are opt-in with `uv run poe docs`.
+- After any change to generation output: regenerate (`uv run poe generate --local`),
+  run the relevant focused test layer, then run the full `uv run poe test` before
   opening a PR.
-- `make lint` (`ruff check --fix`, `ruff format`, and `rumdl check --fix`)
-  and `make typecheck` (`ty check` on the SDK, generated code included, and
+- `uv run poe lint` (`ruff check --fix`, `ruff format`, and `rumdl check --fix`)
+  and `uv run poe typecheck` (`ty check` on the SDK, generated code included, and
   on scripts and tests) MUST stay clean.
-- `make test` MUST stay mocked-only and fast enough to run anywhere; `make
-  test-e2e` MUST stay a separate, explicit, opt-in target (see Principle V).
-- `make generate local` and `make generate` both call
+- `uv run poe test` MUST stay mocked-only and fast enough to run anywhere; `uv run poe
+  test-e2e` MUST stay a separate, explicit, opt-in task (see Principle V).
+- `uv run poe generate --local` and `uv run poe generate` both call
   `parity.validate_schema_files_or_raise()` before touching any existing
   generated output: every discovered swagger file MUST parse as JSON and
   declare the expected top-level OpenAPI keys, or the run aborts with a
@@ -218,14 +233,15 @@ tracked and reduced over time, not silently ignored.
   silently missing from the schema tree (a discovery-time gap, not a
   content one). For that, still verify the local `../api-schema-public/`
   checkout is clean (`git -C ../api-schema-public status`) before trusting
-  `make generate local`, or regenerate from a clean canonical clone with
-  `make generate` (no `local`) instead.
+  `uv run poe generate --local`, or regenerate from a clean canonical clone with
+  `uv run poe generate` (no `--local`) instead.
 
 ## Governance
 
 This constitution governs planning, analysis, and review for all Spec Kit
 workflows in this repository; it takes precedence over ad hoc practice when
-the two conflict. `CLAUDE.md` (and its `AGENTS.md` symlink) remains the
+the two conflict. `AGENTS.md` (which `CLAUDE.md` imports with `@AGENTS.md`)
+remains the
 detailed, day-to-day reference this constitution distills principles from.
 If the two visibly diverge on a factual claim about the architecture, treat
 that as a documentation-drift bug to fix, not a reason to silently pick one
@@ -240,4 +256,4 @@ and `/speckit-analyze` MUST treat this constitution as authoritative context;
 complexity or deviation from it MUST be justified explicitly in the relevant
 plan, not silently introduced.
 
-**Version**: 1.4.3 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-17
+**Version**: 1.4.4 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-17

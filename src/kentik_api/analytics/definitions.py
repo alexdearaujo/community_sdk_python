@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Saved top-X query definitions that return pandas DataFrames.
 
 Ported from 1.x `kentik_api.analytics.mapped_query`. Two 1.x features are

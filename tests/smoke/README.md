@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../pyproject.toml). Edit directly. -->
 
 # Smoke Tests
 
@@ -27,7 +27,7 @@ The other files in this layer:
 ## Run
 
 ```bash
-make test-smoke
+uv run poe test-smoke
 # or
 uv run pytest tests/smoke/
 ```

@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """decode_chart() turns a V5 chart response into image bytes (spec 005, FR-004)."""
 
 from __future__ import annotations

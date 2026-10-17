@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Verifies each gRPC wrapper call reaches the right RPC with every argument set.
 
 Mocked forwarding tests cannot see either failure this file guards against:
