@@ -116,7 +116,7 @@ block fails `ruff format --check` with an annotation.
 
 ### Tests for User Story 2
 
-- [ ] T009 [US2] In tests/generator/test_generate_sdk.py, add a test that
+- [X] T009 [US2] In tests/generator/test_generate_sdk.py, add a test that
   the final formatting pass of `generate_modular_sdk()` formats
   `docs/sphinx/services`, `docs/sphinx/sdk_runtime_architecture.md`,
   `docs/sphinx/README.md`, and the four guides with marker blocks
@@ -124,18 +124,18 @@ block fails `ruff format --check` with an annotation.
 
 ### Implementation for User Story 2
 
-- [ ] T010 [US2] In scripts/generate_sdk.py, make the final formatting pass
+- [X] T010 [US2] In scripts/generate_sdk.py, make the final formatting pass
   run `uv run ruff format` on the paths from T009, after
   `endpoint_docs_collector.render()` and before `api_surface.generate()`;
   T009 must pass (research R4; FR-005)
-- [ ] T011 [US2] In pyproject.toml `[tool.ruff]`, delete the `include` key
+- [X] T011 [US2] In pyproject.toml `[tool.ruff]`, delete the `include` key
   and its comment, and add `.claude/skills` and `.github/skills` to
   `extend-exclude` with a one-line reason (research R3; FR-004)
-- [ ] T012 [US2] Run `make generate` twice and confirm that the first run
+- [X] T012 [US2] Run `make generate` twice and confirm that the first run
   changes only `docs/sphinx/services/bgp_monitoring.md`,
   `cloud_export.md`, and `kagent.md`, one import line per example, and
   the second run changes nothing (FR-005, SC-002)
-- [ ] T013 [US2] Run `uv run ruff format .` and confirm it changes only
+- [X] T013 [US2] Run `uv run ruff format .` and confirm it changes only
   src/kentik_api/README.md, specs/003-harden-runtime-and-ci/contracts/runtime-api.md,
   specs/003-harden-runtime-and-ci/research.md, and
   specs/005-v5-query-batch/contracts/helpers.md (FR-004, SC-002)

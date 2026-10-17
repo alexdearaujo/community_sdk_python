@@ -52,7 +52,8 @@ service wrapper implements its own HTTP, auth, or error-parsing logic.
 ```python
 from kentik_api.client import KentikAPI
 
-client = KentikAPI(protocol="rest")  # KENTIK_EMAIL/KENTIK_API_TOKEN from the environment or .env
+# KENTIK_EMAIL/KENTIK_API_TOKEN from the environment or .env
+client = KentikAPI(protocol="rest")
 devices = client.device.list()
 ```
 

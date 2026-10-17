@@ -15,9 +15,9 @@ fields refine it without letting the transports drift:
 
 ```python
 APIConfig(
-    timeout=60.0,          # shared default, both transports
-    rest_timeout=None,     # httpx.Timeout | float | None
-    grpc_deadline=None,    # float | None
+    timeout=60.0,  # shared default, both transports
+    rest_timeout=None,  # httpx.Timeout | float | None
+    grpc_deadline=None,  # float | None
 )
 ```
 
@@ -393,8 +393,8 @@ credentials. If it could also change `base_path`, it would be merge semantics
 wearing a different name, with the identical credential-leak path. So:
 
 ```python
-config.with_timeout(300)                    # allowed
-config.with_timeout(300, base_path="...")   # does not exist
+config.with_timeout(300)  # allowed
+config.with_timeout(300, base_path="...")  # does not exist
 ```
 
 The helper can only vary timeout-related fields (FR-022). Changing `base_path`,

@@ -96,10 +96,8 @@ docs = [
 ]
 
 [tool.ruff]
-# Spec Kit owns these scripts and rewrites them on every upgrade.
-extend-exclude = [".specify"]
-# Ruff 0.17 also formats Markdown; generated pages under docs/sphinx/services/ must stay as the generator writes them.
-include = ["*.py", "*.pyi", "*.ipynb", "**/pyproject.toml"]
+# Spec Kit owns these paths and rewrites them on every upgrade.
+extend-exclude = [".specify", ".claude/skills", ".github/skills"]
 
 [tool.ruff.lint]
 # Ruff 0.14's default rules. Ruff 0.17 widened the default set; adopting it is a separate change.

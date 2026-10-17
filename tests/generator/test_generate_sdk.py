@@ -26,6 +26,8 @@ if str(_scripts_dir) not in sys.path:
     sys.path.insert(0, str(_scripts_dir))
 
 from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
+    GENERATED_DOC_PAGES,
+    PROJECT_ROOT,
     _fix_module_level_classvar,
     _pb_stem,
     _proto_collisions,
@@ -788,6 +790,37 @@ def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir(check)
         "cleans SDK_OUTPUT_DIR, so a validation failure never leaves "
         "generated output partially wiped"
     )
+
+
+def test_generated_doc_pages_are_the_pages_the_generator_owns():
+    docs = PROJECT_ROOT / "docs" / "sphinx"
+    assert set(GENERATED_DOC_PAGES) == {
+        docs / "services",
+        docs / "sdk_runtime_architecture.md",
+    }
+
+
+def test_generated_doc_pages_are_formatted_after_render_and_before_the_surface():
+    """Ruff formats their Python blocks, so the CI Markdown check and drift check agree."""
+    source = (_scripts_dir / "generate_sdk.py").read_text(encoding="utf-8")
+    func_node = _function_by_name(source, "generate_modular_sdk")
+    assert func_node is not None, "generate_modular_sdk() not found"
+
+    calls = [n for n in ast.walk(func_node) if isinstance(n, ast.Call)]
+    format_lines = [
+        n.lineno
+        for n in calls
+        if ast.unparse(n.func) == "run_cmd"
+        and "'format'" in ast.unparse(n)
+        and "GENERATED_DOC_PAGES" in ast.unparse(n)
+    ]
+    render_lines = [n.lineno for n in calls if ast.unparse(n.func).endswith(".render")]
+    surface_lines = [
+        n.lineno for n in calls if ast.unparse(n.func) == "api_surface.generate"
+    ]
+
+    assert format_lines, "no ruff format call on GENERATED_DOC_PAGES"
+    assert max(render_lines) < min(format_lines) < min(surface_lines)
 
 
 def test_clean_schema_names_keeps_the_prefix_when_stripping_would_overwrite_a_schema():

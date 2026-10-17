@@ -18,16 +18,16 @@ class APIConfig:
         auth_email: str | None = None,
         auth_token: str | None = None,
         verify: bool = True,
-        timeout: float = 60.0,                            # NEW, shared default
+        timeout: float = 60.0,  # NEW, shared default
         rest_timeout: httpx.Timeout | float | None = None,  # NEW, per-phase
-        grpc_deadline: float | None = None,                 # NEW, end-to-end
+        grpc_deadline: float | None = None,  # NEW, end-to-end
     ) -> None: ...
 
     @property
-    def client(self) -> httpx.Client: ...   # NEW, lazy, reused
+    def client(self) -> httpx.Client: ...  # NEW, lazy, reused
 
     def with_timeout(self, seconds: float) -> "APIConfig": ...  # NEW
-    def close(self) -> None: ...                                # NEW
+    def close(self) -> None: ...  # NEW
 ```
 
 | Guarantee | |
@@ -60,9 +60,9 @@ class KentikAPI:
         protocol: str = "rest",
         region: str = "us",
         *,
-        timeout: float = 60.0,                              # NEW
+        timeout: float = 60.0,  # NEW
         rest_timeout: httpx.Timeout | float | None = None,  # NEW
-        grpc_deadline: float | None = None,                 # NEW
+        grpc_deadline: float | None = None,  # NEW
     ) -> None: ...
 ```
 
@@ -91,7 +91,7 @@ KentikError
 All four gain:
 
 ```python
-rate_limit: RateLimit | None    # NEW
+rate_limit: RateLimit | None  # NEW
 ```
 
 ### What raises what, by failure class
@@ -175,15 +175,15 @@ class RateLimit:
 from kentik_api import rate_limit_of
 
 result = client.device.list_devices()
-rl = rate_limit_of(result)                     # quota as of THIS call
+rl = rate_limit_of(result)  # quota as of THIS call
 print(rl.remaining, rl.reset_seconds)
 
-client._transport.rate_limits["/device/v202504beta2/device"]   # per endpoint
+client._transport.rate_limits["/device/v202504beta2/device"]  # per endpoint
 
 try:
     client.device.list_devices()
 except KentikError as exc:
-    print(exc.rate_limit.reset_seconds)        # quota as of the failure
+    print(exc.rate_limit.reset_seconds)  # quota as of the failure
 ```
 
 | Guarantee | |
@@ -232,12 +232,18 @@ it. Filed upstream as `reports/upstream-ratelimit-scope-undocumented.html`.
 
 ```python
 # before
-def list_devices(self, *, querynoCustomColumns=None, view=None) -> ListDevicesResponse: ...
+def list_devices(
+    self, *, querynoCustomColumns=None, view=None
+) -> ListDevicesResponse: ...
+
 
 # after
 def list_devices(
-    self, *, api_config_override: APIConfig | None = None,
-    querynoCustomColumns=None, view=None,
+    self,
+    *,
+    api_config_override: APIConfig | None = None,
+    querynoCustomColumns=None,
+    view=None,
 ) -> ListDevicesResponse: ...
 ```
 
@@ -262,8 +268,8 @@ The derivation helper is deliberately narrow, because a general one would be
 merge semantics under another name:
 
 ```python
-config.with_timeout(300)                     # allowed
-config.with_timeout(300, base_path="...")    # does not exist
+config.with_timeout(300)  # allowed
+config.with_timeout(300, base_path="...")  # does not exist
 ```
 
 `base_path`, `auth_email`, `auth_token`, and `verify` can only be set by

@@ -753,6 +753,13 @@ GENERATED_PATHS = (
     NAMES_FILE,
 )
 
+# Markdown pages the generator writes whole. Guides with marker blocks are left
+# out: their text outside the markers is hand-written.
+GENERATED_DOC_PAGES = (
+    PROJECT_ROOT / "docs" / "sphinx" / "services",
+    PROJECT_ROOT / "docs" / "sphinx" / "sdk_runtime_architecture.md",
+)
+
 
 @contextlib.contextmanager
 def restored_on_failure(paths: tuple[Path, ...]):
@@ -1112,6 +1119,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             str(PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py"),
         ]
     )
+    run_cmd(["uv", "run", "ruff", "format", *map(str, GENERATED_DOC_PAGES)])
 
     # Run after ruff so it cannot reorder the header comments.
     _inject_generated_headers(SDK_OUTPUT_DIR)
