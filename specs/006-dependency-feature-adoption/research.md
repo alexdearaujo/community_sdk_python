@@ -50,6 +50,12 @@ MyST-Parser 5.1.0, Sphinx 9.1.0, uv 0.13.0.
     the configuration comment.
   - Wrapping lines changes no words. Spec 007 keeps specs 001 to 006 "as
     written" for their `make` commands, which wrapping does not touch.
+- **Found during implementation**: two `rumdl check --fix` fixes were
+  wrong and were reverted. `MD040` turned the MyST fence ```` ```{toctree} ````
+  into ```` ```text {toctree} ````, which Sphinx no longer reads as a directive;
+  `docs/sphinx/index.md` now uses MyST's colon fence, `:::{toctree}`. `MD050`
+  turned a bare `__init__.py` into `**init**.py`; the path is now a code span.
+  Review the diff after each `rumdl check --fix`.
 - **Alternatives considered**:
   - Exclude `specs/` from the check: rejected, new specs would never be
     checked.

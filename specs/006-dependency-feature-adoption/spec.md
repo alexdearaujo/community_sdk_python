@@ -6,7 +6,11 @@
 
 **Status**: Draft
 
-**Input**: User description: "Review the recent Python dependency upgrades for new features. Audit where they can improve this codebase, and where a dependency can retire another one. For example, Ruff 0.17 also formats Markdown, and this project uses markdownlint. Spec out the adoption of the new features for every dependency, and find where the number of dependencies can go down."
+**Input**: User description: "Review the recent Python dependency upgrades for
+new features. Audit where they can improve this codebase, and where a dependency
+can retire another one. For example, Ruff 0.17 also formats Markdown, and this
+project uses markdownlint. Spec out the adoption of the new features for every
+dependency, and find where the number of dependencies can go down."
 
 ## Background
 

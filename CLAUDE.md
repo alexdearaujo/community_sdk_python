@@ -485,7 +485,8 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   Testing strategy) — opt-in end-to-end suites against the real
   Kentik API, REST and gRPC transports respectively. Must never
   appear in `make test` or `make all`.
-- `make lint` — `ruff check --fix` + `ruff format`
+- `make lint`: `ruff check --fix`, `ruff format` (Python, and Python blocks
+  in Markdown), and `rumdl check --fix` (Markdown rules)
 - `make clean` — removes `src/kentik_api/gen/`, `docs/build/`,
   generated `docs/sphinx/services/*.md` (preserves
   `scripts/openapi_templates/`, `src/kentik_api/core/`,

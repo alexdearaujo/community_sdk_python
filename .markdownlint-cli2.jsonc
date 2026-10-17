@@ -1,7 +1,7 @@
 {
-  // Rule settings (was .markdownlint.json, consolidated here so there's one
-  // config file, read only by markdownlint-cli2 -- this repo has no other
-  // markdownlint invocation to stay compatible with).
+  // Markdown rules for this repo. rumdl reads this file in `make lint` and CI;
+  // the markdownlint editor extension reads it too. When the two disagree,
+  // the CI result decides.
   "config": {
     "MD013": {
       "line_length": 200,
@@ -11,6 +11,9 @@
     "MD024": {
       "siblings_only": true
     },
+    // scripts/check_spec_refs.py reads a bold `**Out of scope**` line as a
+    // marker, so specs use emphasis where this rule wants a heading.
+    "MD036": false,
     "MD033": {
       "allowed_elements": ["details", "summary", "picture", "source", "img"]
     }

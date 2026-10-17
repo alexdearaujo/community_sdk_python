@@ -6,7 +6,11 @@
 
 **Status**: Draft
 
-**Input**: User description: "The V5 query and batch endpoints still answer, and a V6 query service is still planned. Spec out support for the V5 query API and similar functionality, with as little friction as possible, in the modern generated SDK. Give at least a similar experience to V5, plus more. Where the modern way breaks some V5 behavior, lean toward the modern way."
+**Input**: User description: "The V5 query and batch endpoints still answer, and
+a V6 query service is still planned. Spec out support for the V5 query API and
+similar functionality, with as little friction as possible, in the modern
+generated SDK. Give at least a similar experience to V5, plus more. Where the
+modern way breaks some V5 behavior, lean toward the modern way."
 
 ## Background
 

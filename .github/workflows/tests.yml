@@ -65,6 +65,9 @@ jobs:
       - name: Ruff format
         run: uv run ruff format --check --output-format github .
 
+      - name: Markdown rules (rumdl)
+        run: uv run rumdl check --output-format github .
+
   spec-references:
     runs-on: ubuntu-latest
     steps:

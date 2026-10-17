@@ -185,31 +185,31 @@ Run this phase after US2: both phases edit the same spec files.
 
 ### Implementation for User Story 3
 
-- [ ] T022 [US3] In .markdownlint-cli2.jsonc, disable `MD036` with the
+- [X] T022 [US3] In .markdownlint-cli2.jsonc, disable `MD036` with the
   reason that `scripts/check_spec_refs.py` reads the bold
   `**Out of scope**` line, and change the header comment to name rumdl as
   the reader (research R2; FR-008)
-- [ ] T023 [US3] Run `uv run rumdl check --fix .` and check each `MD040`
+- [X] T023 [US3] Run `uv run rumdl check --fix .` and check each `MD040`
   fence language it added in specs/003-harden-runtime-and-ci/ and
   docs/sphinx/index.md (FR-008)
-- [ ] T024 [US3] Wrap every line over 200 characters, with no word change,
+- [X] T024 [US3] Wrap every line over 200 characters, with no word change,
   in specs/003-harden-runtime-and-ci/tasks.md,
   specs/005-v5-query-batch/tasks.md, specs/005-v5-query-batch/spec.md,
   specs/004-pre-pr-audit-remediation/plan.md,
   specs/006-dependency-feature-adoption/spec.md, and
   .github/agents/kentik-sdk-autogen.agent.md; keep each `- [ ] T###` at
   the start of its line, then run `make check-specs` (FR-008)
-- [ ] T025 [P] [US3] Point the three relative links in
+- [X] T025 [P] [US3] Point the three relative links in
   specs/004-pre-pr-audit-remediation/spec.md at
   `../../reports/pre-pr-audit-2026-10-10/` (FR-008)
-- [ ] T026 [US3] Confirm `uv run rumdl check .` reports zero findings
+- [X] T026 [US3] Confirm `uv run rumdl check .` reports zero findings
   (FR-008)
-- [ ] T027 [US3] Add `uv run rumdl check --fix .` as the last command of
+- [X] T027 [US3] Add `uv run rumdl check --fix .` as the last command of
   the `lint` target in Makefile, and name Ruff and rumdl in its help text
   (contracts/lint.md; FR-008)
-- [ ] T028 [US3] Add a `uv run rumdl check --output-format github .` step
+- [X] T028 [US3] Add a `uv run rumdl check --output-format github .` step
   to the `lint` job in .github/workflows/tests.yml (FR-007, FR-008)
-- [ ] T029 [P] [US3] Amend the Development Workflow section of
+- [X] T029 [P] [US3] Amend the Development Workflow section of
   .specify/memory/constitution.md (PATCH 1.4.3): `make lint` runs
   `ruff check --fix`, `ruff format`, and `rumdl check --fix`; record it in
   the Sync Impact Report, and fix the `make lint` line in CLAUDE.md the

@@ -72,9 +72,10 @@ test-e2e: ## Run end-to-end tests against the REAL Kentik API (opt-in, needs .en
 test-e2e-grpc: ## Run end-to-end gRPC-transport tests against the REAL Kentik API (opt-in, needs .env)
 	$(PYTEST) -m e2e_grpc tests/e2e/
 
-lint: ## Run linter and formatter (Ruff)
+lint: ## Run linters and formatters (Ruff, rumdl)
 	$(RUFF) check --fix .
 	$(RUFF) format .
+	uv run rumdl check --fix .
 
 check-specs: ## Validate FR/SC/task cross-references in specs/
 	$(PYTHON) scripts/check_spec_refs.py

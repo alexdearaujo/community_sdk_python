@@ -6,7 +6,10 @@
 
 ## Summary
 
-Resolve validated findings from the pre-PR audit in risk order, with one-by-one remediation batches and explicit verification gates. Prioritize blocker closure, then generator/release correctness, then runtime/test/documentation hardening. Use the validation ledger as the execution source of truth.
+Resolve validated findings from the pre-PR audit in risk order, with one-by-one
+remediation batches and explicit verification gates. Prioritize blocker closure,
+then generator/release correctness, then runtime/test/documentation hardening.
+Use the validation ledger as the execution source of truth.
 
 ## Technical Context
 

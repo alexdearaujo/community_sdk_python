@@ -10,9 +10,9 @@
 
 ## Context
 
-The audit report at [reports/pre-pr-audit-2026-10-10/report.md](reports/pre-pr-audit-2026-10-10/report.md) lists blockers and lower-severity defects across runtime, generator, tests, release tooling, packaging, and docs.
+The audit report at [reports/pre-pr-audit-2026-10-10/report.md](../../reports/pre-pr-audit-2026-10-10/report.md) lists blockers and lower-severity defects across runtime, generator, tests, release tooling, packaging, and docs.
 
-Validation in this session executed the evidence corpus and produced a finding ledger at [reports/pre-pr-audit-2026-10-10/validation.md](reports/pre-pr-audit-2026-10-10/validation.md).
+Validation in this session executed the evidence corpus and produced a finding ledger at [reports/pre-pr-audit-2026-10-10/validation.md](../../reports/pre-pr-audit-2026-10-10/validation.md).
 
 This feature turns that validated ledger into an ordered remediation program, with explicit verification gates and one-by-one delivery.
 
@@ -102,7 +102,7 @@ As a maintainer, I need packaging and documentation findings resolved so publish
 
 ### Functional Requirements
 
-- **FR-001**: The remediation program MUST use [reports/pre-pr-audit-2026-10-10/validation.md](reports/pre-pr-audit-2026-10-10/validation.md) as the source of truth for validated findings.
+- **FR-001**: The remediation program MUST use [reports/pre-pr-audit-2026-10-10/validation.md](../../reports/pre-pr-audit-2026-10-10/validation.md) as the source of truth for validated findings.
 - **FR-002**: Every validated blocker (B1-B13) MUST be either fixed or explicitly deferred with risk, owner, and mitigation.
 - **FR-003**: Blocker fixes MUST be implemented one by one in a deterministic order that minimizes release risk.
 - **FR-004**: Each completed fix MUST include a reproducible verification step tied to at least one evidence script or direct test.
