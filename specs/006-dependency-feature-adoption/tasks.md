@@ -230,16 +230,16 @@ shows its warning as an admonition.
 
 ### Implementation for User Story 4
 
-- [ ] T030 [US4] In pyproject.toml, replace `[tool.pytest.ini_options]`
+- [X] T030 [US4] In pyproject.toml, replace `[tool.pytest.ini_options]`
   with `[tool.pytest]` as in contracts/dependency-records.md:
   `pythonpath = ["."]`, `strict = true`, the three markers unchanged, and
   `addopts` as a list (research R8; FR-009)
-- [ ] T031 [US4] Run `make test`; fix each strict-mode failure by a unique
+- [X] T031 [US4] Run `make test`; fix each strict-mode failure by a unique
   parametrize ID or a registered marker, never by removing a case, and
   record any fix in research.md R8 (FR-009)
-- [ ] T032 [US4] Add `@pytest.mark.typo` to a mocked test, confirm
+- [X] T032 [US4] Add `@pytest.mark.typo` to a mocked test, confirm
   `make test` stops with an unknown-marker error, and revert (FR-009)
-- [ ] T033 [P] [US4] Add `"alert"` to `myst_enable_extensions` in
+- [X] T033 [P] [US4] Add `"alert"` to `myst_enable_extensions` in
   docs/sphinx/conf.py, build the docs with `-W`, and confirm the two alerts
   in docs/sphinx/guides/generation.md and the one in
   docs/sphinx/guides/quickstart.md render as admonitions with no `[!` text

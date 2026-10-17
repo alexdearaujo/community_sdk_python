@@ -37,6 +37,7 @@ extensions = [
 
 # Tell MyST we want to use the {include} and {eval-rst} directives
 myst_enable_extensions = [
+    "alert",
     "colon_fence",
 ]
 

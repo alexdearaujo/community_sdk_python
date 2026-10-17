@@ -212,6 +212,12 @@ MyST-Parser 5.1.0, Sphinx 9.1.0, uv 0.13.0.
   auto-discovered suites build IDs from service and method names. The first
   run under strict mode shows any duplicate, and the fix is a unique ID,
   never a removed case (Principle IV).
+- **Found during implementation**: two suites had duplicate IDs, which
+  pytest had made unique without warning. `test_model_wire_names.py` named
+  each case by model and field, and several services declare the same model
+  (`protobufAny.type`); the ID now starts with the service. One case in
+  `test_api_config.py` covered both a scalar and a `connect` timeout under
+  one name; each now has its own. The suite still runs 3515 cases.
 
 ## R9. GitHub alerts in Sphinx
 

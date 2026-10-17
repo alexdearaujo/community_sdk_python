@@ -51,7 +51,8 @@ def test_renamed_fields_exist():
 @pytest.mark.parametrize(
     ("model", "name", "wire"),
     RENAMED,
-    ids=[f"{m.__name__}.{n}" for m, n, _ in RENAMED],
+    # Services share model names such as protobufAny, so the ID names the service.
+    ids=[f"{m.__module__.split('.')[2]}.{m.__name__}.{n}" for m, n, _ in RENAMED],
 )
 def test_a_renamed_field_dumps_its_wire_name(model, name, wire):
     assert model.model_fields[name].serialization_alias == wire
