@@ -9,8 +9,8 @@ credentials or record contents.
 
 import json
 import sys
-from typing import Any
 from pathlib import Path
+from typing import Any
 
 import httpx
 from dotenv import dotenv_values
