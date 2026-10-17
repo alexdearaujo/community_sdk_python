@@ -18,7 +18,7 @@ import json
 import subprocess
 import sys
 import types
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -36,7 +36,7 @@ def _v1_module(name: str, path: str, replacements: dict[str, str]) -> types.Modu
         source = source.replace(old, new)
     module = types.ModuleType(name)
     sys.modules[name] = module
-    exec(compile(source, path, "exec"), module.__dict__)
+    exec(compile(source, path, "exec"), module.__dict__)  # noqa: S102 - runs the patched V5 source to record golden output
     return module
 
 
@@ -67,7 +67,7 @@ def topx_golden() -> None:
     for bucket, frame in frames.items():
         slug = bucket.lower().replace(" ", "_").replace("+", "plus")
         (HERE / f"golden_topx_{slug}.json").write_text(_table_json(frame))
-    start = datetime(2025, 10, 16, tzinfo=timezone.utc)
+    start = datetime(2025, 10, 16, tzinfo=UTC)
     expanded = definition.expand_query(start=start, end=start + timedelta(hours=1))
     (HERE / "golden_topx_expanded_query.json").write_text(
         json.dumps(expanded, indent=2)

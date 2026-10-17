@@ -36,10 +36,10 @@ class HTTPException(KentikError):
         status_code: int,
         message: str,
         *,
-        method: Optional[str] = None,
-        path: Optional[str] = None,
-        details: Optional[dict[str, Any]] = None,
-        grpc_status_code: Optional[str] = None,
+        method: str | None = None,
+        path: str | None = None,
+        details: dict[str, Any] | None = None,
+        grpc_status_code: str | None = None,
     ):
         self.status_code = status_code
         # The verbatim gRPC code, since several codes share one HTTP status.
@@ -63,9 +63,9 @@ def _rebuild_http_exception(cls: type[HTTPException], state: dict[str, Any]):
 
 
 __all__ = [
-    "KentikError",
-    "ConfigurationError",
     "AuthenticationError",
-    "TransportError",
+    "ConfigurationError",
     "HTTPException",
+    "KentikError",
+    "TransportError",
 ]

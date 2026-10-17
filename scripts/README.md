@@ -65,7 +65,7 @@ the full regeneration workflow.
 | `make test-generated` / `test-runtime` / `test-smoke` / `test-generator` | One mocked test layer |
 | [`make test-e2e`](../Makefile) | Live API tests, REST transport (opt-in, needs `.env`) |
 | [`make test-e2e-grpc`](../Makefile) | Live API tests, gRPC transport (opt-in, needs `.env`) |
-| [`make lint`](../Makefile) | Ruff check + format |
+| [`make lint`](../Makefile) | Ruff check + format, rumdl Markdown check |
 | [`make typecheck`](../Makefile) | ty type-check on the whole repo: SDK, generated code, scripts, and tests |
 | `make release-notes` | List API surface changes since a ref |
 | `make check-changelog` | Fail when `CHANGELOG.md` misses a breaking change |

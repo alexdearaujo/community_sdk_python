@@ -209,7 +209,7 @@ See [`tests/README.md`](tests/README.md) for the full test-layer breakdown.
 ### Code quality
 
 ```bash
-make lint          # ruff check + format
+make lint          # ruff check + format, rumdl check (Markdown)
 ```
 
 ## Open-source libraries

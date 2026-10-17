@@ -5,9 +5,9 @@
     "grpcio": "grpcio>=1.84.0",
     "httpx": "httpx>=0.28.1,<1",
     "protobuf": "protobuf>=7.35.1,<8",
-    "pydantic": "pydantic>=2.12.5",
+    "pydantic": "pydantic>=2.14.0",
     "python": "python>=3.12",
-    "python-dotenv": "python-dotenv>=1.2.1"
+    "python-dotenv": "python-dotenv>=1.2.4"
   },
   "gencode": {
     "protobuf": "7.35.1",

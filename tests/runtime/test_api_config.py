@@ -64,6 +64,15 @@ def test_grpc_deadline_is_independent_of_rest_timeout():
         (lambda v: {"rest_timeout": httpx.Timeout(5.0, write=v)}, "rest_timeout.write"),
         (lambda v: {"rest_timeout": httpx.Timeout(5.0, pool=v)}, "rest_timeout.pool"),
     ],
+    ids=[
+        "timeout",
+        "grpc_deadline",
+        "rest_timeout-scalar",
+        "rest_timeout-connect",
+        "rest_timeout-read",
+        "rest_timeout-write",
+        "rest_timeout-pool",
+    ],
 )
 def test_non_positive_bounds_are_rejected_naming_field_and_value(
     kwargs_for, field, bad
@@ -98,12 +107,12 @@ import ast  # noqa: E402
 import inspect  # noqa: E402
 from pathlib import Path  # noqa: E402
 
-_BASE: dict[str, Any] = dict(
-    base_path="https://grpc.api.kentik.com",
-    auth_email="dev@example.com",
-    auth_token="token",
-    timeout=60.0,
-)
+_BASE: dict[str, Any] = {
+    "base_path": "https://grpc.api.kentik.com",
+    "auth_email": "dev@example.com",
+    "auth_token": "token",
+    "timeout": 60.0,
+}
 
 
 def test_with_timeout_scalar_resets_both_transports():

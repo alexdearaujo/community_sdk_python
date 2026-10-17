@@ -7,8 +7,8 @@ files for the service have been generated, outside the schema availability windo
 
 import re
 import textwrap
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 from pydantic import BaseModel
 

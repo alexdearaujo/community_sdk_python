@@ -5,9 +5,9 @@ Needs the `analytics` extra: `pip install "kentik-api[analytics]"`.
 """
 
 try:
-    import pandas  # noqa: F401
-    import pyarrow  # noqa: F401
-    import yaml  # noqa: F401
+    import pandas
+    import pyarrow
+    import yaml
 except ImportError as exc:
     raise ImportError(
         "kentik_api.analytics needs the analytics extra: "

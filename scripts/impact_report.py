@@ -27,8 +27,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from generation import api_surface  # noqa: E402
-from generation._shared import PROJECT_ROOT  # noqa: E402
+from generation import api_surface
+from generation._shared import PROJECT_ROOT
 
 SURFACE_RELPATH = "api_surface.json"
 REPORTS_DIR = PROJECT_ROOT / "reports"
@@ -200,14 +200,18 @@ def render_markdown(
     if groups["pb-toolchain"]:
         lines += [
             "",
-            f"{len(groups['pb-toolchain'])} proto stubs changed only the protoc version "
-            "stamp. That is toolchain churn, not a schema change.",
+            (
+                f"{len(groups['pb-toolchain'])} proto stubs changed only the protoc version "
+                "stamp. That is toolchain churn, not a schema change."
+            ),
         ]
     if groups["other"]:
         lines += [
             "",
-            "**Files outside the generated paths changed.** A regeneration should not "
-            "touch these, unless you edited them yourself:",
+            (
+                "**Files outside the generated paths changed.** A regeneration should not "
+                "touch these, unless you edited them yourself:"
+            ),
             "",
             *(f"- `{path}`" for path in groups["other"]),
         ]

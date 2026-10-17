@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import time
 from enum import Enum
-from typing import Any, Dict, Optional, TypeVar
+from typing import Any
 from urllib.parse import quote, urlencode
 
 import httpx
@@ -25,7 +25,6 @@ from kentik_api.errors import (
 # these raw matters: grpc-gateway does not decode reserved characters in a path
 # parameter, so an encoded ":" in a timestamp would reach the server as "%3A".
 _PATH_SEGMENT_SAFE = "!$&'()*+,;=:@"
-_MODEL_T = TypeVar("_MODEL_T", bound=BaseModel)
 
 
 def _wire_scalar(value: Any) -> Any:
@@ -73,7 +72,7 @@ def _normalize_credential(
 def _payload_preview(payload: Any, *, max_chars: int = 200) -> str:
     try:
         rendered = json.dumps(payload, default=str)
-    except Exception:
+    except Exception:  # noqa: BLE001 - a preview must never replace the real error
         rendered = repr(payload)
     if len(rendered) <= max_chars:
         return rendered
@@ -93,14 +92,14 @@ def _unusable_body(
     )
 
 
-def parse_response_model(
-    model_cls: type[_MODEL_T],
+def parse_response_model[ModelT: BaseModel](
+    model_cls: type[ModelT],
     body: Any,
     *,
     operation_name: str,
     method: str,
     path: str,
-) -> _MODEL_T:
+) -> ModelT:
     if body is None:
         # proto JSON encodes an empty message as {}, never null.
         raise _unusable_body(operation_name, method, path, "a null body", "null")
@@ -126,14 +125,14 @@ def parse_response_model(
     return attach_rate_limit(parsed, rate_limit_of(body))
 
 
-def parse_response_model_list(
-    item_cls: type[_MODEL_T],
+def parse_response_model_list[ModelT: BaseModel](
+    item_cls: type[ModelT],
     body: Any,
     *,
     operation_name: str,
     method: str,
     path: str,
-) -> list[_MODEL_T]:
+) -> list[ModelT]:
     if body is None:
         raise _unusable_body(operation_name, method, path, "a null body", "null")
 
@@ -149,7 +148,7 @@ def parse_response_model_list(
             details={"response_preview": _payload_preview(body)},
         )
 
-    parsed: list[_MODEL_T] = []
+    parsed: list[ModelT] = []
     for index, item in enumerate(body):
         try:
             parsed.append(item_cls.model_validate(item))
@@ -190,11 +189,11 @@ def request_json(
     method: str,
     path: str,
     *,
-    path_template: Optional[str] = None,
-    api_config_override: Optional[APIConfig] = None,
-    query_params: Optional[Dict[str, Any]] = None,
+    path_template: str | None = None,
+    api_config_override: APIConfig | None = None,
+    query_params: dict[str, Any] | None = None,
     json_body: Any = None,
-    header_params: Optional[Dict[str, Any]] = None,
+    header_params: dict[str, Any] | None = None,
     expected_status: int = 200,
     operation_name: str = "request",
     error_cls: type[HTTPException] = HTTPException,
@@ -222,7 +221,7 @@ def request_json(
         "auth_token", api_config.auth_token, operation_name=operation_name
     )
 
-    headers: Dict[str, Any] = {
+    headers: dict[str, Any] = {
         "Content-Type": "application/json",
         "Accept": "application/json",
         **auth_headers(auth_email, auth_token),

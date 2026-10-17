@@ -26,6 +26,8 @@ if str(_scripts_dir) not in sys.path:
     sys.path.insert(0, str(_scripts_dir))
 
 from generate_sdk import (  # noqa: E402  # type: ignore[import-not-found]
+    GENERATED_DOC_PAGES,
+    PROJECT_ROOT,
     _fix_module_level_classvar,
     _pb_stem,
     _proto_collisions,
@@ -790,6 +792,37 @@ def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir(check)
     )
 
 
+def test_generated_doc_pages_are_the_pages_the_generator_owns():
+    docs = PROJECT_ROOT / "docs" / "sphinx"
+    assert set(GENERATED_DOC_PAGES) == {
+        docs / "services",
+        docs / "sdk_runtime_architecture.md",
+    }
+
+
+def test_generated_doc_pages_are_formatted_after_render_and_before_the_surface():
+    """Ruff formats their Python blocks, so the CI Markdown check and drift check agree."""
+    source = (_scripts_dir / "generate_sdk.py").read_text(encoding="utf-8")
+    func_node = _function_by_name(source, "generate_modular_sdk")
+    assert func_node is not None, "generate_modular_sdk() not found"
+
+    calls = [n for n in ast.walk(func_node) if isinstance(n, ast.Call)]
+    format_lines = [
+        n.lineno
+        for n in calls
+        if ast.unparse(n.func) == "run_cmd"
+        and "'format'" in ast.unparse(n)
+        and "GENERATED_DOC_PAGES" in ast.unparse(n)
+    ]
+    render_lines = [n.lineno for n in calls if ast.unparse(n.func).endswith(".render")]
+    surface_lines = [
+        n.lineno for n in calls if ast.unparse(n.func) == "api_surface.generate"
+    ]
+
+    assert format_lines, "no ruff format call on GENERATED_DOC_PAGES"
+    assert max(render_lines) < min(format_lines) < min(surface_lines)
+
+
 def test_clean_schema_names_keeps_the_prefix_when_stripping_would_overwrite_a_schema():
     schema = {
         "definitions": {
@@ -926,9 +959,11 @@ def test_a_local_folder_outside_git_reports_no_commit(tmp_path):
 
 
 def test_a_ref_with_a_local_schema_is_rejected(tmp_path):
-    with pytest.raises(ValueError, match="remote repository only"):
-        with get_schema_root(str(tmp_path), "HEAD"):
-            pass
+    with (
+        pytest.raises(ValueError, match="remote repository only"),
+        get_schema_root(str(tmp_path), "HEAD"),
+    ):
+        pass
 
 
 # ---------------------------------------------------------------------------
@@ -956,10 +991,9 @@ def _half_build(gen: Path, mixin: Path, pin: Path) -> None:
 def test_a_failed_run_restores_every_output(tmp_path, error):
     gen, mixin, pin = _outputs(tmp_path)
 
-    with pytest.raises(error):
-        with restored_on_failure((gen, mixin, pin)):
-            _half_build(gen, mixin, pin)
-            raise error
+    with pytest.raises(error), restored_on_failure((gen, mixin, pin)):
+        _half_build(gen, mixin, pin)
+        raise error
 
     assert sorted(p.name for p in gen.iterdir()) == ["device"]
     assert (gen / "device" / "wrapper.py").read_text() == "old"

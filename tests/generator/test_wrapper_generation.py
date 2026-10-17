@@ -390,6 +390,7 @@ def _post_process_like_generate_sdk(sandbox) -> None:
             cwd=sandbox.root,
             capture_output=True,
             text=True,
+            check=False,
         )
         assert result.returncode == 0, result.stdout + result.stderr
     _inject_generated_headers(sandbox.gen)

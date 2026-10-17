@@ -387,7 +387,7 @@ though V5 was discontinued in January 2025):
 evidence the same regime governs V6. But the counter behaves **per endpoint**,
 not per customer:
 
-```
+```text
 Alternating transports, same endpoint  ->  59, 58, 57, 56, 55, 54   (one budget)
 Two endpoints in the same service      ->  sites: 58, 57, 56
                                            site_markets: 59         (separate)

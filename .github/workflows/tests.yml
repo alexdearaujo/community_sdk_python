@@ -60,10 +60,13 @@ jobs:
         run: uv sync --locked
 
       - name: Ruff lint
-        run: uv run ruff check .
+        run: uv run ruff check --output-format github .
 
       - name: Ruff format
-        run: uv run ruff format --check .
+        run: uv run ruff format --check --output-format github .
+
+      - name: Markdown rules (rumdl)
+        run: uv run rumdl check --output-format github .
 
   spec-references:
     runs-on: ubuntu-latest
@@ -77,6 +80,22 @@ jobs:
 
       - name: Check FR/SC/task cross-references
         run: make check-specs
+
+  # `uv audit` is experimental, so a finding or a format change shows here
+  # without blocking the merge.
+  audit:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Audit locked dependencies for known vulnerabilities
+        run: uv audit --preview-features audit-command
 
   # A pull request that can break callers must say so in CHANGELOG.md. The
   # baseline is the merge base, so only this pull request's changes count.

@@ -513,8 +513,10 @@ def test_renamed_client_method_is_flagged_breaking():
 
     assert api_surface.breaking_changes(delta) == [
         (
-            "- `alerting`: `GET /auto-acks` is now "
-            "`client.alerting.alert_auto_ack_list`, not `list`",
+            (
+                "- `alerting`: `GET /auto-acks` is now "
+                "`client.alerting.alert_auto_ack_list`, not `list`"
+            ),
             "list",
         )
     ]

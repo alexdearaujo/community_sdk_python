@@ -4,7 +4,7 @@
 Needs the analytics extra: pip install "kentik-api[analytics]". Read-only.
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from pandas import DataFrame
 
@@ -86,7 +86,7 @@ def main() -> None:
     print(f"Got {devices.count} devices")
 
     query = DataQueryDefinition.from_dict(QUERY_DEFINITION)
-    end = datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
+    end = datetime.now(UTC).replace(minute=0, second=0, microsecond=0)
     start = end - timedelta(hours=23, minutes=59)
     names = ",".join(d.deviceName or "" for d in devices.all)
     df = query.get_data(client, start=start, end=end, devices=names).get(

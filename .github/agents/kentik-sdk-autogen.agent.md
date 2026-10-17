@@ -17,7 +17,8 @@ user-invocable: true
 ---
 
 <!-- HAND-WRITTEN: not modified by `make generate`. Edit directly. -->
-<!-- markdownlint-disable MD041 -- frontmatter must start the file for the agent-file format; the notice above still leads the file's visible content. -->
+<!-- Frontmatter must start an agent file, so the first visible line is not a heading. -->
+<!-- markdownlint-disable MD041 -->
 
 # Kentik SDK Autogen
 
@@ -81,9 +82,16 @@ rather than ad-hoc commands.
    - default to local_path ../api-schema-public/ when present.
    - if local is missing or pull_latest=true, use the public repo.
    - if source is explicitly provided, obey the override.
-   - `pull_latest=true` runs `make sync-schema`. The public source without `pull_latest` runs `make generate`, at the commit in `schema.lock`. The local source runs `make generate local` and moves `schema.lock` to the local commit.
+   - `pull_latest=true` runs `make sync-schema`. The public source without
+     `pull_latest` runs `make generate`, at the commit in `schema.lock`. The
+     local source runs `make generate local` and moves `schema.lock` to the
+     local commit.
 2. Run generation pipeline (scripts/generate_sdk.py and related scripts/targets).
-   - When the run fails with `NameDriftError`, fix the entry in `public_names.json`. When the run prints `API SURFACE CHANGED`, update `CHANGELOG.md` and run `make check-changelog SINCE=HEAD`. Commit `schema.lock`, `public_names.json`, `api_surface.json`, and `schema_operations.json` with the generated tree.
+   - When the run fails with `NameDriftError`, fix the entry in
+     `public_names.json`. When the run prints `API SURFACE CHANGED`, update
+     `CHANGELOG.md` and run `make check-changelog SINCE=HEAD`. Commit
+     `schema.lock`, `public_names.json`, `api_surface.json`, and
+     `schema_operations.json` with the generated tree.
 3. Rebuild docs and inspect warnings/errors.
    - treat known generated warnings as non-blocking by default.
    - record warning counts and types, then attempt template/generator fixes to decrease them.

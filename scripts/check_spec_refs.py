@@ -27,11 +27,11 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPECS_DIR = PROJECT_ROOT / "specs"
 
-FR_DEF = re.compile(r"^- \*\*(FR-\d{3}[a-z]?)\*\*:", re.M)
-SC_DEF = re.compile(r"^- \*\*(SC-\d{3}[a-z]?)\*\*:", re.M)
-TASK_DEF = re.compile(r"^- \[[ xX]\] (T\d{3}[a-z]?)", re.M)
+FR_DEF = re.compile(r"^- \*\*(FR-\d{3}[a-z]?)\*\*:", re.MULTILINE)
+SC_DEF = re.compile(r"^- \*\*(SC-\d{3}[a-z]?)\*\*:", re.MULTILINE)
+TASK_DEF = re.compile(r"^- \[[ xX]\] (T\d{3}[a-z]?)", re.MULTILINE)
 ANY_REF = re.compile(r"\b(?:FR|SC)-\d{3}[a-z]?\b|\bT\d{3}[a-z]?\b")
-OUT_OF_SCOPE = re.compile(r"^\*\*Out of scope\*\*", re.M)
+OUT_OF_SCOPE = re.compile(r"^\*\*Out of scope\*\*", re.MULTILINE)
 DIGITS = re.compile(r"\d+")
 
 

@@ -51,7 +51,7 @@ def test_license_title_line_is_unmodified():
 
 def test_ci_syncs_with_the_lock_enforced():
     workflow = (ROOT / ".github" / "workflows" / "tests.yml").read_text("utf-8")
-    assert re.search(r"run: uv sync$", workflow, re.M) is None
+    assert re.search(r"run: uv sync$", workflow, re.MULTILINE) is None
 
 
 def test_release_notes_wait_for_publish_and_version_is_gated():

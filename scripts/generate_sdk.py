@@ -205,7 +205,9 @@ def _silence_grpc_experimental(content: str) -> str:
 
 # protoc types a module-level extension field number as ClassVar, which is
 # only legal in a class body.
-_MODULE_LEVEL_CLASSVAR = re.compile(r"^(\w+_FIELD_NUMBER): _ClassVar\[int\]$", re.M)
+_MODULE_LEVEL_CLASSVAR = re.compile(
+    r"^(\w+_FIELD_NUMBER): _ClassVar\[int\]$", re.MULTILINE
+)
 
 
 def _fix_module_level_classvar(stub: str) -> str:
@@ -338,9 +340,12 @@ def clean_schema_names(schema: dict, version: str) -> dict:
     def _clean_refs(node: object) -> None:
         if isinstance(node, dict):
             ref = node.get("$ref")
-            if isinstance(ref, str) and f"/{version}" in ref:
-                if ref.rsplit("/", 1)[-1] not in keep_prefixed:
-                    node["$ref"] = ref.replace(f"/{version}", "/")
+            if (
+                isinstance(ref, str)
+                and f"/{version}" in ref
+                and ref.rsplit("/", 1)[-1] not in keep_prefixed
+            ):
+                node["$ref"] = ref.replace(f"/{version}", "/")
             for child_value in node.values():
                 _clean_refs(child_value)
         elif isinstance(node, list):
@@ -753,6 +758,13 @@ GENERATED_PATHS = (
     NAMES_FILE,
 )
 
+# Markdown pages the generator writes whole. Guides with marker blocks are left
+# out: their text outside the markers is hand-written.
+GENERATED_DOC_PAGES = (
+    PROJECT_ROOT / "docs" / "sphinx" / "services",
+    PROJECT_ROOT / "docs" / "sphinx" / "sdk_runtime_architecture.md",
+)
+
 
 @contextlib.contextmanager
 def restored_on_failure(paths: tuple[Path, ...]):
@@ -1112,6 +1124,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             str(PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py"),
         ]
     )
+    run_cmd(["uv", "run", "ruff", "format", *map(str, GENERATED_DOC_PAGES)])
 
     # Run after ruff so it cannot reorder the header comments.
     _inject_generated_headers(SDK_OUTPUT_DIR)
@@ -1150,9 +1163,7 @@ def _inject_generated_headers(output_dir: Path) -> None:
         content = py_file.read_text(encoding="utf-8")
 
         # Skip files that already carry a file-level annotation.
-        if content.startswith("# AUTO-GENERATED") or content.startswith(
-            "# HAND-WRITTEN"
-        ):
+        if content.startswith(("# AUTO-GENERATED", "# HAND-WRITTEN")):
             continue
         # Skip wrapper files annotated via the class docstring.
         if '"""AUTO-GENERATED:' in content:

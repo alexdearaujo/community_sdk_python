@@ -1,2 +1,2 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
-from . import fixup  # noqa: F401
+from . import fixup

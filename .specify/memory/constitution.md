@@ -1,5 +1,14 @@
 <!--
 Sync Impact Report
+Version change: 1.4.2 → 1.4.3
+Rationale: feature 006 adds rumdl, a Markdown linter, to `make lint`. The
+Development Workflow section named only the two Ruff commands. No principle
+changed, so this is PATCH.
+Modified principles: none (Development Workflow wording only)
+Added sections: none
+Removed sections: n/a
+Deferred TODOs: none
+Prior report (1.4.1 → 1.4.2, retained for history):
 Version change: 1.4.1 → 1.4.2
 Rationale: the Architecture section said the SDK comes only from
 `kentik/api-schema-public`. Feature 005 adds the local schema base,
@@ -194,9 +203,9 @@ tracked and reduced over time, not silently ignored.
 - After any change to generation output: regenerate (`make generate local`),
   run the relevant focused test layer, then run the full `make test` before
   opening a PR.
-- `make lint` (`ruff check --fix` + `ruff format`) and `make typecheck` (`ty
-  check` on the SDK, generated code included, and on scripts and tests) MUST
-  stay clean.
+- `make lint` (`ruff check --fix`, `ruff format`, and `rumdl check --fix`)
+  and `make typecheck` (`ty check` on the SDK, generated code included, and
+  on scripts and tests) MUST stay clean.
 - `make test` MUST stay mocked-only and fast enough to run anywhere; `make
   test-e2e` MUST stay a separate, explicit, opt-in target (see Principle V).
 - `make generate local` and `make generate` both call
@@ -231,4 +240,4 @@ and `/speckit-analyze` MUST treat this constitution as authoritative context;
 complexity or deviation from it MUST be justified explicitly in the relevant
 plan, not silently introduced.
 
-**Version**: 1.4.2 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-16
+**Version**: 1.4.3 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-10-17

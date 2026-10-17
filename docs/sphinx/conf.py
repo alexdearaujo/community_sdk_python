@@ -37,6 +37,7 @@ extensions = [
 
 # Tell MyST we want to use the {include} and {eval-rst} directives
 myst_enable_extensions = [
+    "alert",
     "colon_fence",
 ]
 
@@ -69,12 +70,10 @@ class SuppressDocutilsFilter(logging.Filter):
 
     def filter(self, record):
         msg = record.getMessage()
-        if (
+        return not (
             "Block quote ends without a blank line" in msg
             or "unexpected unindent" in msg
-        ):
-            return False
-        return True
+        )
 
 
 _RST_INLINE_MARKUP = re.compile(r"([\\*`|_])")

@@ -24,7 +24,7 @@ from __future__ import annotations
 import importlib
 import inspect
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 from unittest.mock import MagicMock
 
 import httpx
@@ -59,9 +59,9 @@ class StatusCase:
     status_code: int
     status_key: str
     is_success: bool
-    error_class_name: Optional[str]
+    error_class_name: str | None
     # Set when the shared runtime, not the generated error class, owns the status.
-    runtime_error: Optional[type[KentikError]] = None
+    runtime_error: type[KentikError] | None = None
 
 
 # Handled by `request_json` for every operation (FR-007), so no generated
@@ -191,7 +191,7 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
 
     try:
         kwargs = build_all_kwargs(method)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - any builder failure is reported as a named skip
         pytest.skip(f"Could not build sample arguments for this operation: {exc}")
 
     try:
@@ -291,11 +291,11 @@ def test_an_unknown_enum_value_over_rest_is_a_502():
         route = mock_api.get("/user/v202211/users").mock(
             return_value=httpx.Response(200, json=unknown_enum_payload)
         )
-        with KentikAPI(
-            email="dev@example.com", api_token="token", env_file=None
-        ) as api:
-            with pytest.raises(KentikError) as exc_info:
-                api.user.list()
+        with (
+            KentikAPI(email="dev@example.com", api_token="token", env_file=None) as api,
+            pytest.raises(KentikError) as exc_info,
+        ):
+            api.user.list()
 
     assert route.called
     _assert_unknown_enum_error(exc_info.value)

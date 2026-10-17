@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Iterator
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, TextIO, cast
 
@@ -216,7 +216,7 @@ class DFCache:
         **kwargs: Any,
     ) -> pd.DataFrame | None:
         """Fetches from the newest cached time to now, or the last day when empty."""
-        now = datetime.now(timezone.utc).replace(second=0, microsecond=0)
+        now = datetime.now(UTC).replace(second=0, microsecond=0)
         start = self.newest or now - timedelta(hours=23, minutes=59)
         return self.fetch(
             query_fn,

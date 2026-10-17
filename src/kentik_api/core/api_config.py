@@ -5,7 +5,7 @@ import os
 import threading
 import time
 import urllib.request
-from typing import Optional, cast
+from typing import cast
 
 import httpx
 
@@ -140,8 +140,8 @@ class APIConfig:
     def __init__(
         self,
         base_path: str = "https://grpc.api.kentik.com",
-        auth_email: Optional[str] = None,
-        auth_token: Optional[str] = None,
+        auth_email: str | None = None,
+        auth_token: str | None = None,
         verify: bool = True,
         timeout: float = 60.0,
         rest_timeout: httpx.Timeout | float | None = None,

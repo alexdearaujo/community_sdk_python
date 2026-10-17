@@ -19,6 +19,7 @@ The other files in this layer:
 
 | File | Covers |
 | --- | --- |
+| `test_declared_dependencies.py` | Every third-party import in `src/`, `scripts/`, and `tests/` is declared in `pyproject.toml`, and [`docs/sphinx/dependencies.md`](../../docs/sphinx/dependencies.md) lists exactly the declared packages. |
 | `test_docs_contract.py` | Documentation and tooling facts the audit found wrong (findings D7 to D10). |
 | `test_examples_import.py` | Each example imports, and its `client.<service>.<method>(...)` calls resolve against a real client. Nothing is sent. |
 | `test_packaging_contract.py` | Packaging metadata the published artifacts depend on (audit findings K4 to K9, K11). |

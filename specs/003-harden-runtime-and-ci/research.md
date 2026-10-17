@@ -15,9 +15,9 @@ fields refine it without letting the transports drift:
 
 ```python
 APIConfig(
-    timeout=60.0,          # shared default, both transports
-    rest_timeout=None,     # httpx.Timeout | float | None
-    grpc_deadline=None,    # float | None
+    timeout=60.0,  # shared default, both transports
+    rest_timeout=None,  # httpx.Timeout | float | None
+    grpc_deadline=None,  # float | None
 )
 ```
 
@@ -82,7 +82,7 @@ inherits the deadline with no call-site change at all. The transport owns the
 **Verified**, against a local black-hole socket that accepts connections and
 never replies:
 
-```
+```text
 WITHOUT interceptor:  still blocked after 3s
 WITH interceptor:     DEADLINE_EXCEEDED after 2.0s
 ```
@@ -210,7 +210,7 @@ is not service-specific.
 **Measured problem**: no file under `src/kentik_api/gen/` references
 `AuthenticationError`. Confirmed live, a rejected credential produces:
 
-```
+```text
 rest  raised ListDevicesUnexpectedError status_code=401
 grpc  raised AuthenticationError
 ```
@@ -236,7 +236,7 @@ SDK errors.
 **Rationale, from measurements taken 2026-09-21 against the live API**: the
 data already arrives on every single response and the SDK discards it.
 
-```
+```text
 x-ratelimit-limit:     60, 60;w=60
 x-ratelimit-remaining: 59
 x-ratelimit-reset:     40
@@ -393,8 +393,8 @@ credentials. If it could also change `base_path`, it would be merge semantics
 wearing a different name, with the identical credential-leak path. So:
 
 ```python
-config.with_timeout(300)                    # allowed
-config.with_timeout(300, base_path="...")   # does not exist
+config.with_timeout(300)  # allowed
+config.with_timeout(300, base_path="...")  # does not exist
 ```
 
 The helper can only vary timeout-related fields (FR-022). Changing `base_path`,
