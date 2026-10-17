@@ -110,7 +110,16 @@ sequence = ["generate", "test"]
 
 [tool.poe.tasks.generate]
 help = "Generate the SDK, its docs pages, and the API records"
-cmd = "python scripts/generate_sdk.py"
+# Each option is quoted inside its expansion, so a path with a space stays one argument.
+cmd = """python scripts/generate_sdk.py
+  ${local:+--local-repo ../api-schema-public/}
+  ${local_repo:+--local-repo "${local_repo}"}
+  ${schema_ref:+--schema-ref "${schema_ref}"}"""
+args = [
+    { name = "local", type = "boolean", help = "Read the schema from the sibling ../api-schema-public/ checkout" },
+    { name = "local_repo", options = ["--local-repo"], help = "Read the schema from this local checkout" },
+    { name = "schema_ref", options = ["--schema-ref"], help = "Fetch the schema at this git ref instead of the schema.lock pin" },
+]
 
 [tool.poe.tasks.sync-schema]
 help = "Regenerate from upstream schema HEAD and move the pin in schema.lock"
@@ -183,15 +192,31 @@ cmd = "python scripts/check_spec_refs.py"
 
 [tool.poe.tasks.release-notes]
 help = "Render release notes from api_surface.json (default since: the previous release tag)"
-cmd = "python scripts/release_notes.py"
+cmd = """python scripts/release_notes.py
+  ${since:+--since "${since}"}
+  ${out:+-o "${out}"}"""
+args = [
+    { name = "since", help = "Compare against this git ref" },
+    { name = "out", help = "Write to this file instead of standard output" },
+]
 
 [tool.poe.tasks.check-changelog]
 help = "Fail if CHANGELOG.md misses a breaking surface change (default since: the previous release tag)"
-cmd = "python scripts/release_notes.py --check-changelog"
+cmd = """python scripts/release_notes.py --check-changelog
+  ${since:+--since "${since}"}"""
+args = [{ name = "since", help = "Compare against this git ref" }]
 
 [tool.poe.tasks.impact-report]
 help = "Report what the last regeneration changed (default since: HEAD)"
-cmd = "python scripts/impact_report.py"
+cmd = """python scripts/impact_report.py
+  ${since:+--since "${since}"}
+  ${no_checks:+--no-checks}
+  ${out:+-o "${out}"}"""
+args = [
+    { name = "since", help = "Compare against this git ref" },
+    { name = "no_checks", options = ["--no-checks"], type = "boolean", help = "Skip running the checks" },
+    { name = "out", help = "Write the report to this file" },
+]
 
 [tool.poe.tasks.clean]
 help = "Remove the generated SDK, the docs build, and every __pycache__"

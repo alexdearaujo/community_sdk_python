@@ -135,7 +135,7 @@ Phase 4 runs before US2 because US2's CI jobs call these options.
 
 ### Tests for User Story 3
 
-- [ ] T012 [US3] Add `test_task_options_reach_the_program` to
+- [X] T012 [US3] Add `test_task_options_reach_the_program` to
   tests/smoke/test_task_runner.py: run `uv run poe -d` for
   `generate --local`, `generate --local-repo "/tmp/a b"`,
   `generate --schema-ref REF`, `check-changelog --since REF`,
@@ -145,12 +145,12 @@ Phase 4 runs before US2 because US2's CI jobs call these options.
 
 ### Implementation for User Story 3
 
-- [ ] T013 [US3] Add `args` to `generate`, `release-notes`,
+- [X] T013 [US3] Add `args` to `generate`, `release-notes`,
   `check-changelog`, and `impact-report` in pyproject.toml, each value option
   written as `${name:+--flag "${name}"}` and `--local` as
   `${local:+--local-repo ../api-schema-public/}`, with help on each option;
   T012 passes (FR-003, R2)
-- [ ] T014 [US3] Run quickstart.md steps 2 and 3 and confirm
+- [X] T014 [US3] Run quickstart.md steps 2 and 3 and confirm
   `uv run poe -h generate` lists `--local`, `--local-repo`, and
   `--schema-ref` (FR-003, SC-004)
 
