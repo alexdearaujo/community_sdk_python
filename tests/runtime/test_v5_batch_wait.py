@@ -4,10 +4,12 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from typing import cast
 
 import pytest
 
 from kentik_api import v5_tools
+from kentik_api.client import KentikAPI
 from kentik_api.errors import HTTPException
 from kentik_api.gen.v5.models import BatchStatus
 from kentik_api.v5_tools import BatchWaitTimeout, wait_for_batch
@@ -42,7 +44,9 @@ def _client(statuses):
             raise answer
         return answer
 
-    return SimpleNamespace(v5=SimpleNamespace(batch_status=batch_status))
+    return cast(
+        KentikAPI, SimpleNamespace(v5=SimpleNamespace(batch_status=batch_status))
+    )
 
 
 def test_returns_the_status_once_the_batch_is_complete(clock):

@@ -14,7 +14,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Literal, Protocol, TextIO
+from typing import Any, Literal, Protocol, TextIO, cast
 
 import pandas as pd
 
@@ -182,10 +182,11 @@ def compute_stats(
         raise ValueError(f"No {pivot} column in DataFrame")
     if data not in df:
         raise ValueError(f"No {data} column in DataFrame")
-    return (
+    return cast(
+        pd.DataFrame,
         df.groupby(by=pivot)[data]
         .rolling(window=window, closed=closed, min_periods=min_samples)
-        .agg(["mean", "max", "min"])
+        .agg(["mean", "max", "min"]),
     )
 
 
