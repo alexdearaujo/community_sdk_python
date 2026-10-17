@@ -95,6 +95,25 @@ Hand-written code that [`make generate`](../../../Makefile) never touches:
 - [`src/kentik_api/transports/`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/transports/README.md)
 - [`scripts/openapi_templates/`](https://github.com/kentik/community_sdk_python/blob/main/scripts/openapi_templates/README.md)
 - [`scripts/generation/`](https://github.com/kentik/community_sdk_python/blob/main/scripts/generation/README.md)
+- `schema/openapi/`: the local schema base, an input like the upstream schema
+
+## The local schema base
+
+`schema/openapi/<service>/<version>/<file>.swagger.json` holds
+hand-maintained OpenAPI 3 descriptions of endpoints that upstream does not
+publish. Today it holds `v5`, the V5 query and batch endpoints (see the
+[V5 guide](v5.md)). Every run reads it next to the upstream schema.
+
+- A service from the local schema base is REST only. It has no protos and no
+  `pb/` package, `api_surface.json` records `"rest_only": true`, and every
+  client mounts it on a REST transport to its own host.
+- A service in both the upstream schema and the local schema base fails the
+  run. When upstream publishes such a service, remove it from
+  `schema/openapi/`.
+- To change a V5 call, edit the description, then run
+  `make generate local`. Never edit `src/kentik_api/gen/v5/`.
+- Declare no `enum`. A schema with `additionalProperties: true` gives a
+  model that keeps every field it gets.
 
 ## Keep public names stable
 

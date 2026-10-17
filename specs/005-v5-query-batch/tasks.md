@@ -190,7 +190,7 @@ change to a `v5` public name.
 **Independent Test**: A reviewer adds a fake V6 query service to a test
 schema, regenerates, and sees both services with no public name change.
 
-- [ ] T049 [US5] Add a generator test in tests/generator/test_public_names.py that adds a fake upstream `query` service next to the local `v5` service and asserts that both resolve, that no `v5` entry changes, and that no `NameDriftError` is raised (SC-006)
+- [X] T049 [US5] Add a generator test in tests/generator/test_public_names.py that adds a fake upstream `query` service next to the local `v5` service and asserts that both resolve, that no `v5` entry changes, and that no `NameDriftError` is raised (SC-006)
 - [X] T050 [US5] Add to docs/sphinx/guides/v5.md a "When the V6 query service ships" section that says the `v5` calls keep working until Kentik retires the endpoints and that this guide will name the V6 replacement of each call (FR-025)
 
 **Checkpoint**: All user stories work on their own.
@@ -201,11 +201,11 @@ schema, regenerates, and sees both services with no public name change.
 
 **Purpose**: Gates, project docs, and the audit trail.
 
-- [ ] T051 [P] Describe the local schema base, `rest_only` services, and `_v5_transport` in CLAUDE.md, docs/sphinx/guides/generation.md, and scripts/generation/README.md; add the term "Local schema base" to CONTEXT.md; and describe the new tests/analytics/ layer and `make test-analytics` in tests/README.md (FR-007)
-- [ ] T052 [P] Mark follow-up item 1 and the query and batch rows as done in reports/v5-feature-parity-audit.md
-- [ ] T053 Check that the mocked suites still catch a regression: break the V5 host in src/kentik_api/client.py, confirm that `make test` fails, restore it, and record the result for the pull request (Principle IV; FR-027)
-- [ ] T054 Run `make lint`, `make typecheck`, `make check-specs`, `make check-changelog SINCE=HEAD`, `make test`, and `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`, and fix every failure (SC-007, SC-008)
-- [ ] T055 Run quickstart.md steps 1 to 5 and record the results in specs/005-v5-query-batch/quickstart.md (SC-001)
+- [X] T051 [P] Describe the local schema base, `rest_only` services, and `_v5_transport` in CLAUDE.md, docs/sphinx/guides/generation.md, and scripts/generation/README.md; add the term "Local schema base" to CONTEXT.md; and describe the new tests/analytics/ layer and `make test-analytics` in tests/README.md (FR-007)
+- [X] T052 [P] Mark follow-up item 1 and the query and batch rows as done in reports/v5-feature-parity-audit.md
+- [X] T053 Check that the mocked suites still catch a regression: break the V5 host in src/kentik_api/client.py, confirm that `make test` fails, restore it, and record the result for the pull request (Principle IV; FR-027)
+- [X] T054 Run `make lint`, `make typecheck`, `make check-specs`, `make check-changelog SINCE=HEAD`, `make test`, and `uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html`, and fix every failure (SC-007, SC-008)
+- [X] T055 Run quickstart.md steps 1 to 5 and record the results in specs/005-v5-query-batch/quickstart.md (SC-001)
 
 ---
 

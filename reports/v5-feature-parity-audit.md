@@ -16,13 +16,13 @@ Status values:
 
 | Rank | Loss | Why it matters | Can the SDK restore it? |
 | --- | --- | --- | --- |
-| 1 | Query API (`query.sql`, `query.data`, `query.chart`, `query.url`) and the `analytics` package | It was the only way to pull flow and traffic data into scripts and pandas | Not from the V6 schema, which has no query service. `topXdata` and `url` still answer (see "Live check"). `sql` is retired |
-| 2 | Batch API for flow tags and populators | Bulk sync from a CMDB or IPAM becomes many single calls, which is slower and uses more quota | Not from the V6 schema. The V5 batch status endpoint still answers |
+| 1 | Query API (`query.sql`, `query.data`, `query.chart`, `query.url`) and the `analytics` package | It was the only way to pull flow and traffic data into scripts and pandas | Done in feature 005: `client.v5.top_x_data`, `top_x_chart` (not verified), `query_url`, and the `analytics` extra. `sql` is retired |
+| 2 | Batch API for flow tags and populators | Bulk sync from a CMDB or IPAM becomes many single calls, which is slower and uses more quota | Done in feature 005: `client.v5.batch_tags`, `batch_populators`, `batch_status`, and the batch helpers in `v5_tools` |
 | 3 | Automatic retry on 429, 502, 503, and 504 | Batch scripts recovered from rate limits without code. Now they fail | Yes, but retrying a write is unsafe. A caller-side retry on 429 is the safer design |
 | 4 | Tolerance of unknown enum values (V5 ADR 0003) | A new enum value from the API now fails the whole call with a 502 until the SDK is regenerated | Yes, in the model template |
 | 5 | Alert list and alert history semantics | Every alert-polling integration needs a rewrite | Yes. `alerting.alert_list` with `states` and `startedAt` returns cleared alerts (verified live) |
 | 6 | Credential profiles and `KTAPI_*` variables | Existing environments and `~/.kentik/<profile>` files stop working | Yes, with a small helper |
-| 7 | `DeviceCache` | Scripts that map device or interface names to objects or speeds must build their own lookup | Yes, with a small helper over `device` and `interface` |
+| 7 | `DeviceCache` | Scripts that map device or interface names to objects or speeds must build their own lookup | Done in feature 005: `kentik_api.devices.DeviceLookup`, saved as JSON |
 | 8 | User-Agent header and debug logging | Kentik loses SDK usage data, and users lose request traces | Yes, a few lines in the runtime |
 | 9 | `proxy=` argument, SOCKS proxies, and custom hosts | Private or staging Kentik hosts and SOCKS users have no client option | Yes, small changes to `KentikAPI` and `APIConfig` |
 | 10 | Mutating examples and examples for 7 services | No copy-paste recipes for create, update, or delete | Yes, examples only |
@@ -137,8 +137,9 @@ hand-written classes became generated Pydantic models.
 | `alerting.create_manual_mitigation` | `alerting.mitigations_create` | Kept, with a new model that uses platform and method IDs |
 | `alerting.get_active_alerts` | `alerting.alert_list` | Partial. Filters move into a request body with different semantics |
 | `alerting.get_alerts_history` | `alerting.alert_list` with `states` and `startedAt` filters | Kept. Verified live on 2026-10-16 |
-| `batch.batch_operation_on_flow_tags`, `batch_operation_on_populators`, `get_status` | None | Missing. Not in the V6 schema |
-| `query.sql`, `query.data`, `query.chart`, `query.url` | None | Missing. Not in the V6 schema |
+| `batch.batch_operation_on_flow_tags`, `batch_operation_on_populators`, `get_status` | `v5.batch_tags`, `batch_populators`, `batch_status` | Kept (feature 005), REST only |
+| `query.data`, `query.chart`, `query.url` | `v5.top_x_data`, `top_x_chart`, `query_url` | Kept (feature 005), REST only. `top_x_chart` not verified |
+| `query.sql` | None | Missing. Kentik retired the endpoint on 2025-05-01 |
 | `synthetics` agents, tests, results, traces | `synthetics.*` (v202309) | Kept. `private_only` filtering moves to the caller |
 | `cloud_export.get_all`, `get`, `create`, `update`, `delete` | `cloud_export.*` (v202506) | Kept |
 | `cloud_export.patch` (field mask) | None | Partial. Read, change, and write back the whole object |
@@ -152,7 +153,7 @@ V6 also adds 22 services that V5 never had, for example `audit`,
 | V5 helper | What it provided | V6 status |
 | --- | --- | --- |
 | `get_credentials`, `get_url`, `get_proxy` | Named JSON profiles in `$KTAPI_CFG_FILE`, `$KTAPI_HOME/.kentik/<profile>`, or `~/.kentik/<profile>`, then the `KTAPI_AUTH_EMAIL`, `KTAPI_AUTH_TOKEN`, `KTAPI_URL`, and `KTAPI_PROXY` variables | Partial. V6 reads arguments, then `KENTIK_EMAIL` and `KENTIK_API_TOKEN`, then a `.env` file. No profiles and no `KTAPI_*` names |
-| `DeviceCache` | Loads all devices once, looks them up by ID or name, builds `device:interface` link names, returns link speeds, and saves to a pickle file | Missing. The data is still available from `device.list_devices` and `interface.list_interface` |
+| `DeviceCache` | Loads all devices once, looks them up by ID or name, builds `device:interface` link names, returns link speeds, and saves to a pickle file | Kept as `kentik_api.devices.DeviceLookup` (feature 005). Saves JSON, not pickle |
 | `time_seq` | Yields datetimes in fixed steps for the analytics cache | Missing. Only useful with analytics |
 
 If `DeviceCache` is restored, save to JSON, not pickle. Loading a pickle file
@@ -191,7 +192,7 @@ V6 has no "safe to retry" base class like `IntermittentError`. Callers check
 | --- | --- | --- | --- |
 | Package name | `kentik-api` | `kentik-api` | Kept. Users who do not pin `<2` get the breaking upgrade |
 | Python | 3.8 and later | 3.12 and later | Changed. Users on 3.8 to 3.11 cannot install 2.x |
-| Extra `[analytics]` | pandas, PyYAML, fastparquet | None | Missing. pip warns that the extra does not exist |
+| Extra `[analytics]` | pandas, PyYAML, fastparquet | pandas, pyarrow, PyYAML | Kept (feature 005) |
 | `py.typed` | No | Yes | Added |
 | `from kentik_api import KentikAPI` | Works | Works, new keyword arguments | Kept |
 | `kentik_api.public.*`, `kentik_api.utils`, `kentik_api.analytics`, `kentik_api.api_calls` | Public modules | `ModuleNotFoundError` | Missing. Models are in `kentik_api.gen.<service>.models` |
@@ -212,7 +213,8 @@ resources, on REST and gRPC.
 | `error_handling_example.py` | Kept as `examples/common/error_handling.py` |
 | `applications_example.py`, `dimensions_example.py`, `tags_example.py`, `saved_filters_example.py`, `plans_example.py`, `my_kentik_portal_example.py`, `cloud_export_example.py` | Missing. The services exist, but no example |
 | `bulk_user_create.py` (users from a YAML file) | Missing |
-| `batch_example.py`, `queries_example.py`, `analytics_example_sql.py`, `analytics_example_topx.py`, `demos/queries_visualisation_demo.ipynb` | Missing. They depend on V5-only endpoints |
+| `batch_example.py`, `queries_example.py`, `analytics_example_topx.py` | Kept as `examples/v5/` (feature 005) |
+| `analytics_example_sql.py`, `demos/queries_visualisation_demo.ipynb` | Missing. The SQL endpoint is retired, and the notebook is out of scope |
 
 ## Recommended follow-up
 

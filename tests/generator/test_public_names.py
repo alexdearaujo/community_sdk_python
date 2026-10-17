@@ -1,6 +1,7 @@
 # HAND-WRITTEN: not modified by `make generate`. Edit directly.
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -157,3 +158,25 @@ def test_models_that_differ_only_by_version_fail():
 def test_unusable_names_are_rejected(services):
     with pytest.raises(ValueError):
         PublicNames(services)
+
+
+def test_a_v6_query_service_arrives_without_changing_a_v5_name():
+    # Spec 005, SC-006: the planned V6 query service gets its own name, and
+    # every client.v5 name stays as it is.
+    from scripts.generation.public_names import NAMES_FILE
+
+    names = PublicNames.load(NAMES_FILE)
+    before = json.loads(json.dumps(names._services["v5"]))
+    upstream = [entry["upstream"] for entry in names._services.values()]
+
+    services = names.services([*upstream, "query"])
+    v5_methods = names.methods(
+        "v5", {key: "other" for key in before["methods"].values()}
+    )
+    query_methods = names.methods("query", {"POST /query/<version>/data": "query_data"})
+
+    assert services["v5"] == "v5"
+    assert services["query"] == "query"
+    assert v5_methods == {key: name for name, key in before["methods"].items()}
+    assert query_methods == {"POST /query/<version>/data": "query_data"}
+    assert names._services["v5"] == before

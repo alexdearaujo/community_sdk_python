@@ -53,6 +53,17 @@ def test_query_url_returns_a_portal_link(real_client):
     assert url.startswith("https://portal.kentik")
 
 
+@pytest.mark.e2e_grpc
+def test_top_x_data_on_a_grpc_client_goes_over_rest(grpc_real_client):
+    response = grpc_real_client.v5.top_x_data(
+        data=QueryRequest(queries=[_query_item(grpc_real_client)])
+    )
+
+    assert response.results is not None
+
+
+# Last on purpose: a chart call that never answers keeps one of the Query API's
+# 4 concurrent slots busy on the server, and later queries can time out.
 @pytest.mark.e2e
 @pytest.mark.xfail(
     raises=TransportError,
@@ -66,12 +77,3 @@ def test_top_x_chart_returns_an_image(real_client):
     )
 
     assert decode_chart(response).data
-
-
-@pytest.mark.e2e_grpc
-def test_top_x_data_on_a_grpc_client_goes_over_rest(grpc_real_client):
-    response = grpc_real_client.v5.top_x_data(
-        data=QueryRequest(queries=[_query_item(grpc_real_client)])
-    )
-
-    assert response.results is not None

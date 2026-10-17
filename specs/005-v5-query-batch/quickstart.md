@@ -78,9 +78,22 @@ Follow the steps in the V5 bridge guide (`docs/sphinx/guides/v5.md`, section
 Only against a disposable custom dimension or tag name, with cleanup:
 
 ```sh
-uv run pytest -m e2e tests/e2e/test_v5_batch_e2e.py -v
+uv run pytest -m e2e_mutating --run-live-e2e tests/e2e/test_v5_batch_e2e.py -v
 ```
 
 Expected: one upsert is applied, then deleted in a second batch, and both
 statuses report `is_complete: true`. This suite is listed in the pull request
 as mutating coverage (Principle V).
+
+## Results (2026-10-16)
+
+| Step | Result |
+| --- | --- |
+| 1 | `gen/v5/` exists, with no `pb/`. `public_names.json` has the six `v5` methods. `api_surface.json` records `"rest_only": true`. A second `make generate local` gives no diff. |
+| 2 | `make test`: 3504 passed, 149 skipped. The `v5` coverage cases run (42 passed, 3 skipped for no path parameters). |
+| 3 | The output above, exactly. |
+| 4 | Lint, format, type check, `check-specs`, `check-changelog` (since `HEAD` and since `feat/v6-sdk`), and the strict Sphinx build pass. |
+| 5 | `top_x_data`, `query_url`, and `top_x_data` on a gRPC client pass. `top_x_chart` is `XFAIL` (no answer in 60 s). A run right after a hung chart call timed out on `query_url`: the hung call holds a Query API slot. The chart test now runs last, and the V5 guide warns about it. |
+| 6 | Done by the maintainer: `curl` timed out (exit 28) for both request bodies, while `topXdata` answered the same body in 1.4 s. |
+| 7 | Not run: it writes to the account. |
+| Regression proof (T053) | With the US V5 URL changed to `/api/v4` in `client.py`, `make test` failed 11 tests (client, smoke, examples, analytics). Restored, all pass. |
