@@ -167,6 +167,7 @@ warning each fail CI on a throwaway branch.
   - Job is named `generated-output-matches-schema-head`; the generator now logs `Schema commit: <sha>` when it clones, and the failure message names both causes.
 - [ ] T041 [US4] Verify each gate in `.github/workflows/tests.yml` fails as intended, by opening throwaway pull requests carrying a formatting violation, a generator output change, and a broken Sphinx reference (SC-005, SC-006)
   - Local stand-in, 2026-09-22 (no push per maintainer): a formatting violation fails `ruff format --check` (exit 1); a stale committed generated file makes regeneration dirty the tree; a broken link fails `sphinx-build -W` (exit 1). Still open: confirm the same on a real CI run.
+  - 2026-10-16: three local branches off `feat/v6-sdk` hold one throwaway commit each, checked locally against its gate: `test/ci-gate-ruff-format` (`ruff format --check` exit 1, `ruff check` passes), `test/ci-gate-generated-drift` (`make generate` at the pinned commit rewrites `gen/site/services/site.py`), `test/ci-gate-sphinx-link` (`sphinx-build -W` exit 1, `myst.xref_missing`). To close: push each to the fork, open a pull request into `feat/v6-sdk`, record the failing job, then close the pull request and delete the branch.
 - [x] T041a [US4] Add `make check-specs` to `.github/workflows/tests.yml`, so a stale or orphaned requirement reference fails CI rather than surviving to implementation, as twelve of them did in this file
 
 **Checkpoint**: CI protects determinism, formatting, and docs.
