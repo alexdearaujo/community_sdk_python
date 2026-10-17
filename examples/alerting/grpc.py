@@ -11,8 +11,11 @@ from datetime import UTC, datetime, timedelta
 
 from kentik_api.client import KentikAPI
 from kentik_api.errors import KentikError
-from kentik_api.gen.alerting.models import AlertFilters, AlertServiceListRequest
-from kentik_api.gen.alerting.models import TimeRange
+from kentik_api.gen.alerting.models import (
+    AlertFilters,
+    AlertServiceListRequest,
+    TimeRange,
+)
 
 
 def main() -> None:

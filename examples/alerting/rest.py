@@ -9,8 +9,11 @@ startedAt time range, although the schema marks every field optional.
 from datetime import UTC, datetime, timedelta
 
 from kentik_api.client import KentikAPI
-from kentik_api.gen.alerting.models import AlertFilters, AlertServiceListRequest
-from kentik_api.gen.alerting.models import TimeRange
+from kentik_api.gen.alerting.models import (
+    AlertFilters,
+    AlertServiceListRequest,
+    TimeRange,
+)
 
 
 def main() -> None:

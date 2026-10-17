@@ -17,8 +17,8 @@ from kentik_api.gen.alerting.models import (
     AlertAcknowledgement,
     AlertFilters,
     AlertServiceListRequest,
+    TimeRange,
 )
-from kentik_api.gen.alerting.models import TimeRange
 
 
 def _last_30_days_request() -> AlertServiceListRequest:
