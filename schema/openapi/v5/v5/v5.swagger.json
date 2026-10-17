@@ -12,6 +12,9 @@
   "tags": [
     {
       "name": "QueryService"
+    },
+    {
+      "name": "BatchService"
     }
   ],
   "security": [
@@ -298,6 +301,294 @@
         },
         "tags": [
           "QueryService"
+        ]
+      }
+    },
+    "/batch/tags": {
+      "post": {
+        "summary": "Batch flow tags",
+        "description": "Creates, updates, or deletes flow tags in bulk. Sends one part of a batch. The API applies upserts as parts arrive and deletes only after the part with complete=true. Each part is at most 4 MB. Every part after the first carries the guid from the first response. kentik_api.v5_tools.split_batch() and send_batch() do this. The SDK never resends a part.",
+        "operationId": "BatchService_Tags",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchPart"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "The part is queued. Its guid identifies the batch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid, for example a query without device_name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The credentials are missing or wrong.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The user may not call this endpoint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "The rate limit is exceeded. V5 sends no rate limit headers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The API failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "BatchService"
+        ]
+      }
+    },
+    "/batch/customdimensions/{dimensionName}/populators": {
+      "post": {
+        "summary": "Batch populators",
+        "description": "Creates, updates, or deletes the populators of one custom dimension in bulk. Sends one part of a batch. The API applies upserts as parts arrive and deletes only after the part with complete=true. Each part is at most 4 MB. Every part after the first carries the guid from the first response. kentik_api.v5_tools.split_batch() and send_batch() do this. The SDK never resends a part.",
+        "operationId": "BatchService_Populators",
+        "parameters": [
+          {
+            "name": "dimensionName",
+            "in": "path",
+            "required": true,
+            "description": "The custom dimension name, for example c_my_dimension.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchPart"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "The part is queued. Its guid identifies the batch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid, for example a query without device_name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The credentials are missing or wrong.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The user may not call this endpoint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "The rate limit is exceeded. V5 sends no rate limit headers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The API failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "BatchService"
+        ]
+      }
+    },
+    "/batch/{guid}/status": {
+      "get": {
+        "summary": "Batch status",
+        "description": "Returns the progress of a batch. kentik_api.v5_tools.wait_for_batch() polls it until is_complete is true.",
+        "operationId": "BatchService_Status",
+        "parameters": [
+          {
+            "name": "guid",
+            "in": "path",
+            "required": true,
+            "description": "The guid from the first part's response.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The batch progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid, for example a query without device_name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The credentials are missing or wrong.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The user may not call this endpoint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "The rate limit is exceeded. V5 sends no rate limit headers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The API failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V5Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "BatchService"
         ]
       }
     }
@@ -670,6 +961,246 @@
           "dataUri": {
             "type": "string",
             "description": "The image as data:<mime>;base64,<data>."
+          }
+        }
+      },
+      "BatchPart": {
+        "type": "object",
+        "description": "One part of a batch of flow tags or populators.",
+        "required": [
+          "replace_all",
+          "complete"
+        ],
+        "properties": {
+          "replace_all": {
+            "type": "boolean",
+            "description": "If true, the API deletes every tag or populator that the batch does not upsert. Send the same value in every part."
+          },
+          "complete": {
+            "type": "boolean",
+            "description": "True on the last part only."
+          },
+          "upserts": {
+            "type": "array",
+            "description": "The values to create or update.",
+            "items": {
+              "$ref": "#/components/schemas/BatchUpsert"
+            }
+          },
+          "deletes": {
+            "type": "array",
+            "description": "The values to delete.",
+            "items": {
+              "$ref": "#/components/schemas/BatchDelete"
+            }
+          },
+          "guid": {
+            "type": "string",
+            "description": "Empty on the first part. The guid from the first response on every later part."
+          }
+        }
+      },
+      "BatchUpsert": {
+        "type": "object",
+        "description": "A value and the criteria that set it.",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "The tag name, or the populator value."
+          },
+          "criteria": {
+            "type": "array",
+            "description": "Each criterion defines one tag or populator with this value.",
+            "items": {
+              "$ref": "#/components/schemas/BatchCriterion"
+            }
+          }
+        }
+      },
+      "BatchCriterion": {
+        "type": "object",
+        "description": "The flow fields to match. Keeps every field it gets. Known match fields, each a list of strings: port, protocol, tcp_flags, asn, lasthop_as_name, nexthop_asn, nexthop_as_name, nexthop, bgp_aspath, bgp_community, mac, country, vlans, device_name, device_type, site, interface_name.",
+        "additionalProperties": true,
+        "properties": {
+          "direction": {
+            "type": "string",
+            "description": "src, dst, or either (the default). Populators only; the API ignores it for tags."
+          },
+          "addr": {
+            "type": "array",
+            "description": "IP addresses or CIDRs to match.",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BatchDelete": {
+        "type": "object",
+        "description": "A value to delete.",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "The tag name, or the populator value."
+          }
+        }
+      },
+      "BatchResponse": {
+        "type": "object",
+        "description": "The answer to one batch part.",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "A status message."
+          },
+          "guid": {
+            "type": "string",
+            "description": "The batch ID. Send it in every later part, and use it for batch_status."
+          }
+        }
+      },
+      "BatchStatus": {
+        "type": "object",
+        "description": "The progress of a batch.",
+        "properties": {
+          "guid": {
+            "type": "string",
+            "description": "The batch ID."
+          },
+          "custom_dimension": {
+            "$ref": "#/components/schemas/BatchStatusCustomDimension"
+          },
+          "is_multipart": {
+            "type": "boolean",
+            "description": "The batch has more than one part."
+          },
+          "is_pending": {
+            "type": "boolean",
+            "description": "The batch waits to be processed."
+          },
+          "is_complete": {
+            "type": "boolean",
+            "description": "Every part arrived and was processed."
+          },
+          "number_of_parts": {
+            "type": "integer",
+            "description": "The parts received so far."
+          },
+          "user": {
+            "$ref": "#/components/schemas/BatchStatusUser"
+          },
+          "upserts": {
+            "$ref": "#/components/schemas/BatchUpsertCounts"
+          },
+          "deletes": {
+            "$ref": "#/components/schemas/BatchDeleteCounts"
+          },
+          "replace_all": {
+            "$ref": "#/components/schemas/BatchReplaceAll"
+          },
+          "batch_date": {
+            "type": "string",
+            "description": "When the first part arrived."
+          }
+        }
+      },
+      "BatchStatusCustomDimension": {
+        "type": "object",
+        "description": "The custom dimension of a populator batch. Absent for a tag batch.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The custom dimension ID."
+          },
+          "name": {
+            "type": "string",
+            "description": "The custom dimension name."
+          }
+        }
+      },
+      "BatchStatusUser": {
+        "type": "object",
+        "description": "The user who sent the batch.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The user ID."
+          },
+          "email": {
+            "type": "string",
+            "description": "The user email."
+          }
+        }
+      },
+      "BatchUpsertCounts": {
+        "type": "object",
+        "description": "Upsert counts so far.",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "The sum of the other counts."
+          },
+          "applied": {
+            "type": "integer",
+            "description": "Values applied."
+          },
+          "invalid": {
+            "type": "integer",
+            "description": "Values not valid."
+          },
+          "unchanged": {
+            "type": "integer",
+            "description": "Values that changed nothing."
+          },
+          "over_limit": {
+            "type": "integer",
+            "description": "Values ignored because they exceed the contract limit."
+          }
+        }
+      },
+      "BatchDeleteCounts": {
+        "type": "object",
+        "description": "Delete counts so far.",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "The sum of the other counts."
+          },
+          "applied": {
+            "type": "integer",
+            "description": "Values deleted."
+          },
+          "unchanged": {
+            "type": "integer",
+            "description": "Values that deleted nothing."
+          },
+          "invalid": {
+            "type": "integer",
+            "description": "Values not valid."
+          }
+        }
+      },
+      "BatchReplaceAll": {
+        "type": "object",
+        "description": "The result of replace_all.",
+        "properties": {
+          "requested": {
+            "type": "boolean",
+            "description": "replace_all was set."
+          },
+          "deletes_performed": {
+            "type": "integer",
+            "description": "Values deleted because the batch did not upsert them."
+          },
+          "successful": {
+            "type": "boolean",
+            "description": "False when something stopped those deletes."
           }
         }
       }

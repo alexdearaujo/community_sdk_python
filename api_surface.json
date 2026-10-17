@@ -17639,6 +17639,77 @@
       "mounted": true,
       "rest_only": true,
       "operations": {
+        "GET /batch/{guid}/status": {
+          "operation": "BatchService_Status",
+          "method": "batch_status",
+          "grpc": null,
+          "status": 200,
+          "required_params": [
+            "guid"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "guid": "str"
+          },
+          "returns": "BatchStatus",
+          "error": "BatchStatusError",
+          "error_responses": {
+            "400": "BatchStatusBadRequestError",
+            "401": "BatchStatusUnauthorizedError",
+            "403": "BatchStatusForbiddenError",
+            "404": "BatchStatusNotFoundError",
+            "429": "BatchStatusTooManyRequestsError",
+            "500": "BatchStatusInternalServerErrorError"
+          }
+        },
+        "POST /batch/customdimensions/{dimensionName}/populators": {
+          "operation": "BatchService_Populators",
+          "method": "batch_populators",
+          "grpc": null,
+          "status": 202,
+          "required_params": [
+            "data",
+            "dimensionName"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "dimensionName": "str",
+            "data": "BatchPart"
+          },
+          "returns": "BatchResponse",
+          "error": "BatchPopulatorsError",
+          "error_responses": {
+            "400": "BatchPopulatorsBadRequestError",
+            "401": "BatchPopulatorsUnauthorizedError",
+            "403": "BatchPopulatorsForbiddenError",
+            "404": "BatchPopulatorsNotFoundError",
+            "429": "BatchPopulatorsTooManyRequestsError",
+            "500": "BatchPopulatorsInternalServerErrorError"
+          }
+        },
+        "POST /batch/tags": {
+          "operation": "BatchService_Tags",
+          "method": "batch_tags",
+          "grpc": null,
+          "status": 202,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "BatchPart"
+          },
+          "returns": "BatchResponse",
+          "error": "BatchTagsError",
+          "error_responses": {
+            "400": "BatchTagsBadRequestError",
+            "401": "BatchTagsUnauthorizedError",
+            "403": "BatchTagsForbiddenError",
+            "404": "BatchTagsNotFoundError",
+            "429": "BatchTagsTooManyRequestsError",
+            "500": "BatchTagsInternalServerErrorError"
+          }
+        },
         "POST /query/topXchart": {
           "operation": "QueryService_TopXChart",
           "method": "top_x_chart",
@@ -17711,6 +17782,17 @@
       },
       "models": [
         "Aggregate",
+        "BatchCriterion",
+        "BatchDelete",
+        "BatchDeleteCounts",
+        "BatchPart",
+        "BatchReplaceAll",
+        "BatchResponse",
+        "BatchStatus",
+        "BatchStatusCustomDimension",
+        "BatchStatusUser",
+        "BatchUpsert",
+        "BatchUpsertCounts",
         "ChartRequest",
         "ChartResponse",
         "Filter",
@@ -17748,6 +17830,184 @@
           },
           "raw": {
             "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "BatchCriterion": {
+          "direction": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "addr": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "BatchDelete": {
+          "value": {
+            "type": "str",
+            "required": true
+          }
+        },
+        "BatchDeleteCounts": {
+          "total": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "applied": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "unchanged": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "invalid": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "BatchPart": {
+          "replace_all": {
+            "type": "bool",
+            "required": true
+          },
+          "complete": {
+            "type": "bool",
+            "required": true
+          },
+          "upserts": {
+            "type": "Optional[List[Optional[BatchUpsert]]]",
+            "required": false
+          },
+          "deletes": {
+            "type": "Optional[List[Optional[BatchDelete]]]",
+            "required": false
+          },
+          "guid": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchReplaceAll": {
+          "requested": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "deletes_performed": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "successful": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "BatchResponse": {
+          "message": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "guid": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchStatus": {
+          "guid": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "custom_dimension": {
+            "type": "Optional[BatchStatusCustomDimension]",
+            "required": false
+          },
+          "is_multipart": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "is_pending": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "is_complete": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "number_of_parts": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "user": {
+            "type": "Optional[BatchStatusUser]",
+            "required": false
+          },
+          "upserts": {
+            "type": "Optional[BatchUpsertCounts]",
+            "required": false
+          },
+          "deletes": {
+            "type": "Optional[BatchDeleteCounts]",
+            "required": false
+          },
+          "replace_all": {
+            "type": "Optional[BatchReplaceAll]",
+            "required": false
+          },
+          "batch_date": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchStatusCustomDimension": {
+          "id": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchStatusUser": {
+          "id": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "email": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchUpsert": {
+          "value": {
+            "type": "str",
+            "required": true
+          },
+          "criteria": {
+            "type": "Optional[List[Optional[BatchCriterion]]]",
+            "required": false
+          }
+        },
+        "BatchUpsertCounts": {
+          "total": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "applied": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "invalid": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "unchanged": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "over_limit": {
+            "type": "Optional[int]",
             "required": false
           }
         },

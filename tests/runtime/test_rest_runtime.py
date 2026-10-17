@@ -383,3 +383,18 @@ def test_a_response_without_quota_headers_records_no_quota(
     assert exc.value.status_code == 429
     assert exc.value.rate_limit is None
     assert cfg.rate_limits == {}
+
+
+def test_a_v5_error_body_gives_the_message_and_keeps_the_error_id(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    body = {"error": "The device_name is required", "errorxid": "mvbc0s95qc"}
+    monkeypatch.setattr(
+        httpx.Client, "request", lambda self, *a, **k: httpx.Response(400, json=body)
+    )
+
+    with pytest.raises(HTTPException) as exc:
+        request_json("POST", "/query/topXdata", api_config_override=_config())
+
+    assert exc.value.message.endswith(": The device_name is required")
+    assert exc.value.details["response_json"]["errorxid"] == "mvbc0s95qc"

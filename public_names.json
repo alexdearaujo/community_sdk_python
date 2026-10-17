@@ -1359,12 +1359,26 @@
     },
     "v5": {
       "methods": {
+        "batch_populators": "POST /batch/customdimensions/{}/populators",
+        "batch_status": "GET /batch/{}/status",
+        "batch_tags": "POST /batch/tags",
         "query_url": "POST /query/url",
         "top_x_chart": "POST /query/topXchart",
         "top_x_data": "POST /query/topXdata"
       },
       "models": {
         "Aggregate": "Aggregate",
+        "BatchCriterion": "BatchCriterion",
+        "BatchDelete": "BatchDelete",
+        "BatchDeleteCounts": "BatchDeleteCounts",
+        "BatchPart": "BatchPart",
+        "BatchReplaceAll": "BatchReplaceAll",
+        "BatchResponse": "BatchResponse",
+        "BatchStatus": "BatchStatus",
+        "BatchStatusCustomDimension": "BatchStatusCustomDimension",
+        "BatchStatusUser": "BatchStatusUser",
+        "BatchUpsert": "BatchUpsert",
+        "BatchUpsertCounts": "BatchUpsertCounts",
         "ChartRequest": "ChartRequest",
         "ChartResponse": "ChartResponse",
         "Filter": "Filter",

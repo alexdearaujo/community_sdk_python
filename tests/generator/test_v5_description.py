@@ -25,6 +25,9 @@ EXPECTED_OPERATIONS = {
     "POST /query/topXdata",
     "POST /query/topXchart",
     "POST /query/url",
+    "POST /batch/tags",
+    "POST /batch/customdimensions/{dimensionName}/populators",
+    "GET /batch/{guid}/status",
 }
 
 

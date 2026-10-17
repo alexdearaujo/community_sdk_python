@@ -6,6 +6,17 @@ from kentik_api.core.api_config import HTTPException as HTTPException
 
 from .models import (  # noqa: F401
     Aggregate,
+    BatchCriterion,
+    BatchDelete,
+    BatchDeleteCounts,
+    BatchPart,
+    BatchReplaceAll,
+    BatchResponse,
+    BatchStatus,
+    BatchStatusCustomDimension,
+    BatchStatusUser,
+    BatchUpsert,
+    BatchUpsertCounts,
     ChartRequest,
     ChartResponse,
     Filter,

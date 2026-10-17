@@ -58,14 +58,14 @@ flowchart TB
     Client_Mixin -->|"x37"| Generated_Service_Wrappers
     Client_Mixin --> REST_Transport
     Client_Mixin --> gRPC_Transport
-    Generated_REST_Services -->|"x53"| API_Config
-    Generated_REST_Services -->|"x53"| Generated_Error_Classes
-    Generated_REST_Services -->|"x53"| Generated_Models
-    Generated_REST_Services -->|"x53"| REST_Runtime
+    Generated_REST_Services -->|"x54"| API_Config
+    Generated_REST_Services -->|"x54"| Generated_Error_Classes
+    Generated_REST_Services -->|"x54"| Generated_Models
+    Generated_REST_Services -->|"x54"| REST_Runtime
     Generated_Service_Wrappers -->|"x37"| API_Config
     Generated_Service_Wrappers -->|"x37"| Generated_Models
     Generated_Service_Wrappers -->|"x104"| Generated_Proto_Stubs
-    Generated_Service_Wrappers -->|"x53"| Generated_REST_Services
+    Generated_Service_Wrappers -->|"x54"| Generated_REST_Services
     Generated_Service_Wrappers -->|"x37"| REST_Transport
     Generated_Service_Wrappers -->|"x36"| gRPC_Runtime
     Generated_Service_Wrappers -->|"x37"| gRPC_Transport

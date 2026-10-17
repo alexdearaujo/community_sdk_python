@@ -348,6 +348,12 @@ def _handle_response(
                 details["code"] = payload.get("code")
             if payload.get("message"):
                 message = str(payload.get("message"))
+            elif isinstance(payload.get("error"), str) and payload["error"]:
+                # The V5 API's error body: {"error": ..., "errorxid": ...}.
+                message = (
+                    f"{operation_name} failed with status code: "
+                    f"{response.status_code}: {payload['error']}"
+                )
             if payload.get("details") is not None:
                 details["details"] = payload.get("details")
         elif payload is not None:

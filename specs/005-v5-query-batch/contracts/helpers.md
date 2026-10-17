@@ -28,19 +28,20 @@ def split_batch(
 
 - Every part serializes to at most `max_bytes`. Only the last part has
   `complete=True`. Every part has the same `replace_all`.
-- Deletes go in the last part, because the API applies deletes only after
-  the last part.
-- Raises `ValueError` when one upsert alone is larger than `max_bytes`.
+- Deletes follow every upsert. The API applies deletes only after the last
+  part arrives, so their position does not change the result.
+- Raises `ValueError` when one upsert or delete alone is larger than
+  `max_bytes`.
 
 ```python
 def send_batch(
-    send: Callable[[BatchPart], BatchResponse],
+    send: Callable[..., BatchResponse],
     parts: Sequence[BatchPart],
 ) -> str: ...
 ```
 
-- Sends the parts in order. It copies the `guid` from the first response into
-  every later part, and returns the `guid`.
+- Calls `send(data=part)` for each part, in order. It copies the `guid`
+  from the first response into every later part, and returns the `guid`.
 - Raises `BatchSendError(guid, sent, cause)` on the first failure. It never
   resends.
 - Usage: `send_batch(client.v5.batch_tags, parts)` or

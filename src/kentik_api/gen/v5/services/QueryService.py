@@ -9,6 +9,17 @@ from kentik_api.core.rest_runtime import parse_response_model, request_json
 from ..error import QueryUrlError, TopXChartError, TopXDataError
 from ..models import (  # noqa: F401
     Aggregate,
+    BatchCriterion,
+    BatchDelete,
+    BatchDeleteCounts,
+    BatchPart,
+    BatchReplaceAll,
+    BatchResponse,
+    BatchStatus,
+    BatchStatusCustomDimension,
+    BatchStatusUser,
+    BatchUpsert,
+    BatchUpsertCounts,
     ChartRequest,
     ChartResponse,
     Filter,

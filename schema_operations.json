@@ -2558,6 +2558,52 @@
     }
   },
   "v5": {
+    "POST /batch/customdimensions/{dimensionName}/populators": {
+      "operation": "BatchService_Populators",
+      "params": [
+        "dimensionName"
+      ],
+      "body": true,
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500"
+      ]
+    },
+    "POST /batch/tags": {
+      "operation": "BatchService_Tags",
+      "params": [],
+      "body": true,
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500"
+      ]
+    },
+    "GET /batch/{guid}/status": {
+      "operation": "BatchService_Status",
+      "params": [
+        "guid"
+      ],
+      "body": false,
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500"
+      ]
+    },
     "POST /query/topXchart": {
       "operation": "QueryService_TopXChart",
       "params": [],

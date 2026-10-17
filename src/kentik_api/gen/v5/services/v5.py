@@ -1,6 +1,7 @@
 from typing import Optional, Union, cast
 
-import kentik_api.gen.v5.services.QueryService as RestV5Module1
+import kentik_api.gen.v5.services.BatchService as RestV5Module1
+import kentik_api.gen.v5.services.QueryService as RestV5Module2
 from kentik_api.core.api_config import APIConfig
 from kentik_api.gen.v5 import models as rest_models
 from kentik_api.transports.grpc_client import GrpcTransport
@@ -17,6 +18,83 @@ class V5ServiceWrapper:
         self._transport = transport
         if isinstance(self._transport, GrpcTransport):
             pass  # gRPC not yet implemented for this service
+
+    def batch_tags(
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.BatchPart,
+    ) -> rest_models.BatchResponse:
+        """
+        Batch flow tags
+
+        Creates, updates, or deletes flow tags in bulk. Sends one part of a batch. The API applies upserts as parts arrive and deletes only after the part with complete=true. Each part is at most 4 MB. Every part after the first carries the guid from the first response. kentik_api.v5_tools.split_batch() and send_batch() do this. The SDK never resends a part.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            raise NotImplementedError(
+                "gRPC translation for BatchService_Tags is not yet implemented."
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestV5Module1.BatchService_Tags(
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def batch_populators(
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        dimensionName: str,
+        data: rest_models.BatchPart,
+    ) -> rest_models.BatchResponse:
+        """
+        Batch populators
+
+        Creates, updates, or deletes the populators of one custom dimension in bulk. Sends one part of a batch. The API applies upserts as parts arrive and deletes only after the part with complete=true. Each part is at most 4 MB. Every part after the first carries the guid from the first response. kentik_api.v5_tools.split_batch() and send_batch() do this. The SDK never resends a part.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            raise NotImplementedError(
+                "gRPC translation for BatchService_Populators is not yet implemented."
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestV5Module1.BatchService_Populators(
+                api_config_override=api_config_override or rest_transport.api_config,
+                dimensionName=dimensionName,
+                data=data,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def batch_status(
+        self, *, api_config_override: Optional[APIConfig] = None, guid: str
+    ) -> rest_models.BatchStatus:
+        """
+        Batch status
+
+        Returns the progress of a batch. kentik_api.v5_tools.wait_for_batch() polls it until is_complete is true.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            raise NotImplementedError(
+                "gRPC translation for BatchService_Status is not yet implemented."
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestV5Module1.BatchService_Status(
+                api_config_override=api_config_override or rest_transport.api_config,
+                guid=guid,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
 
     def top_x_data(
         self,
@@ -35,7 +113,7 @@ class V5ServiceWrapper:
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
-            return RestV5Module1.QueryService_TopXData(
+            return RestV5Module2.QueryService_TopXData(
                 api_config_override=api_config_override or rest_transport.api_config,
                 data=data,
             )
@@ -61,7 +139,7 @@ class V5ServiceWrapper:
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
-            return RestV5Module1.QueryService_TopXChart(
+            return RestV5Module2.QueryService_TopXChart(
                 api_config_override=api_config_override or rest_transport.api_config,
                 data=data,
             )
@@ -87,7 +165,7 @@ class V5ServiceWrapper:
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
-            return RestV5Module1.QueryService_Url(
+            return RestV5Module2.QueryService_Url(
                 api_config_override=api_config_override or rest_transport.api_config,
                 data=data,
             )

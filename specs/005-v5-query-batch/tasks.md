@@ -110,18 +110,18 @@ parts, waits for completion, and reads the final status.
 
 ### Tests for User Story 2
 
-- [ ] T025 [P] [US2] Add tests for `split_batch()` in tests/runtime/test_v5_batch_split.py: every part is at most `max_bytes`, only the last part is `complete`, deletes go in the last part, and one upsert larger than `max_bytes` raises `ValueError`; include 10,000 upserts in no more than 100 parts (FR-013, SC-004)
-- [ ] T026 [P] [US2] Add tests for `send_batch()` in tests/runtime/test_v5_batch_send.py: the first `guid` is copied into later parts, a failure in part 2 raises `BatchSendError` with `sent == 1` and the `guid`, and no part is sent twice (FR-014)
-- [ ] T027 [P] [US2] Add tests for `wait_for_batch()` in tests/runtime/test_v5_batch_wait.py with a fake clock: it returns the status when `is_complete` becomes true, raises `BatchWaitTimeout` with the last status after `timeout`, and raises a status-call error at once (FR-012, FR-014)
-- [ ] T027a [P] [US2] Add a test in tests/smoke/test_helpers_no_direct_http.py that src/kentik_api/v5_tools.py, src/kentik_api/devices.py, and every module in src/kentik_api/analytics/ that exists import neither `httpx` nor `request_json`, so helpers reach the API only through generated operations (FR-007)
+- [X] T025 [P] [US2] Add tests for `split_batch()` in tests/runtime/test_v5_batch_split.py: every part is at most `max_bytes`, only the last part is `complete`, deletes follow every upsert, and one upsert larger than `max_bytes` raises `ValueError`; include 10,000 upserts in no more than 100 parts (FR-013, SC-004)
+- [X] T026 [P] [US2] Add tests for `send_batch()` in tests/runtime/test_v5_batch_send.py: the first `guid` is copied into later parts, a failure in part 2 raises `BatchSendError` with `sent == 1` and the `guid`, and no part is sent twice (FR-014)
+- [X] T027 [P] [US2] Add tests for `wait_for_batch()` in tests/runtime/test_v5_batch_wait.py with a fake clock: it returns the status when `is_complete` becomes true, raises `BatchWaitTimeout` with the last status after `timeout`, and raises a status-call error at once (FR-012, FR-014)
+- [X] T027a [P] [US2] Add a test in tests/smoke/test_helpers_no_direct_http.py that src/kentik_api/v5_tools.py, src/kentik_api/devices.py, and every module in src/kentik_api/analytics/ that exists import neither `httpx` nor `request_json`, so helpers reach the API only through generated operations (FR-007)
 
 ### Implementation for User Story 2
 
-- [ ] T028 [US2] Add the batch part of schema/openapi/v5/v5/v5.swagger.json: tag `BatchService`, operations for `POST /batch/tags` (202), `POST /batch/customdimensions/{dimensionName}/populators` (202), and `GET /batch/{guid}/status` (200), the models `BatchPart`, `BatchUpsert`, `BatchCriterion`, `BatchDelete`, `BatchResponse`, and `BatchStatus` with its nested counts from data-model.md, `additionalProperties: true` on `BatchCriterion` with only `direction` and `addr` typed, and the error statuses as in T019 (FR-011)
-- [ ] T029 [US2] Run `make generate local`, confirm the method names `batch_tags`, `batch_populators`, and `batch_status` in public_names.json, and rerun `make test-generated` for full coverage of the batch operations (FR-008, FR-027)
-- [ ] T030 [US2] Implement `split_batch()`, `send_batch()`, `wait_for_batch()`, `BatchSendError`, and `BatchWaitTimeout` in src/kentik_api/v5_tools.py (contracts/helpers.md; FR-012, FR-013, FR-014)
-- [ ] T031 [US2] Add tests/e2e/test_v5_batch_e2e.py (marker `e2e`, mutating): upsert one disposable flow tag value, wait, then delete it in a second batch inside `finally`, and assert both statuses; call it out as mutating coverage in the pull request description (FR-028)
-- [ ] T032 [US2] Add the batch service to the CHANGELOG.md Unreleased entry and commit the regenerated tree with public_names.json and api_surface.json (FR-008)
+- [X] T028 [US2] Add the batch part of schema/openapi/v5/v5/v5.swagger.json: tag `BatchService`, operations for `POST /batch/tags` (202), `POST /batch/customdimensions/{dimensionName}/populators` (202), and `GET /batch/{guid}/status` (200), the models `BatchPart`, `BatchUpsert`, `BatchCriterion`, `BatchDelete`, `BatchResponse`, and `BatchStatus` with its nested counts from data-model.md, `additionalProperties: true` on `BatchCriterion` with only `direction` and `addr` typed, and the error statuses as in T019 (FR-011)
+- [X] T029 [US2] Run `make generate local`, confirm the method names `batch_tags`, `batch_populators`, and `batch_status` in public_names.json, and rerun `make test-generated` for full coverage of the batch operations (FR-008, FR-027)
+- [X] T030 [US2] Implement `split_batch()`, `send_batch()`, `wait_for_batch()`, `BatchSendError`, and `BatchWaitTimeout` in src/kentik_api/v5_tools.py (contracts/helpers.md; FR-012, FR-013, FR-014)
+- [X] T031 [US2] Add tests/e2e/test_v5_batch_e2e.py (marker `e2e_mutating`, excluded from `make test-e2e`): upsert one disposable flow tag value, wait, then delete it in a second batch inside `finally`, and assert both statuses; call it out as mutating coverage in the pull request description (FR-028)
+- [X] T032 [US2] Add the batch service to the CHANGELOG.md Unreleased entry and commit the regenerated tree with public_names.json and api_surface.json (FR-008)
 
 **Checkpoint**: US1 and US2 work on their own.
 

@@ -63,6 +63,162 @@ class V5Error(HTTPException):
         )
 
 
+class BatchPopulatorsError(V5Error):
+    """Operation-local error for client.v5.batch_populators()."""
+
+    response_error_map: dict[str, type[V5Error]] = {}
+
+
+class BatchPopulatorsBadRequestError(BatchPopulatorsError):
+    """Operation-local response error for batch_populators (400: The request is not valid, for example a query without device_name. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchPopulatorsUnauthorizedError(BatchPopulatorsError):
+    """Operation-local response error for batch_populators (401: The credentials are missing or wrong. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchPopulatorsForbiddenError(BatchPopulatorsError):
+    """Operation-local response error for batch_populators (403: The user may not call this endpoint. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchPopulatorsNotFoundError(BatchPopulatorsError):
+    """Operation-local response error for batch_populators (404: The resource does not exist. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchPopulatorsTooManyRequestsError(BatchPopulatorsError):
+    """Operation-local response error for batch_populators (429: The rate limit is exceeded. V5 sends no rate limit headers. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchPopulatorsInternalServerErrorError(BatchPopulatorsError):
+    """Operation-local response error for batch_populators (500: The API failed. #/components/schemas/V5Error)."""
+
+    pass
+
+
+BatchPopulatorsError.response_error_map = {
+    "400": BatchPopulatorsBadRequestError,
+    "401": BatchPopulatorsUnauthorizedError,
+    "403": BatchPopulatorsForbiddenError,
+    "404": BatchPopulatorsNotFoundError,
+    "429": BatchPopulatorsTooManyRequestsError,
+    "500": BatchPopulatorsInternalServerErrorError,
+}
+
+
+class BatchStatusError(V5Error):
+    """Operation-local error for client.v5.batch_status()."""
+
+    response_error_map: dict[str, type[V5Error]] = {}
+
+
+class BatchStatusBadRequestError(BatchStatusError):
+    """Operation-local response error for batch_status (400: The request is not valid, for example a query without device_name. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchStatusUnauthorizedError(BatchStatusError):
+    """Operation-local response error for batch_status (401: The credentials are missing or wrong. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchStatusForbiddenError(BatchStatusError):
+    """Operation-local response error for batch_status (403: The user may not call this endpoint. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchStatusNotFoundError(BatchStatusError):
+    """Operation-local response error for batch_status (404: The resource does not exist. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchStatusTooManyRequestsError(BatchStatusError):
+    """Operation-local response error for batch_status (429: The rate limit is exceeded. V5 sends no rate limit headers. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchStatusInternalServerErrorError(BatchStatusError):
+    """Operation-local response error for batch_status (500: The API failed. #/components/schemas/V5Error)."""
+
+    pass
+
+
+BatchStatusError.response_error_map = {
+    "400": BatchStatusBadRequestError,
+    "401": BatchStatusUnauthorizedError,
+    "403": BatchStatusForbiddenError,
+    "404": BatchStatusNotFoundError,
+    "429": BatchStatusTooManyRequestsError,
+    "500": BatchStatusInternalServerErrorError,
+}
+
+
+class BatchTagsError(V5Error):
+    """Operation-local error for client.v5.batch_tags()."""
+
+    response_error_map: dict[str, type[V5Error]] = {}
+
+
+class BatchTagsBadRequestError(BatchTagsError):
+    """Operation-local response error for batch_tags (400: The request is not valid, for example a query without device_name. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchTagsUnauthorizedError(BatchTagsError):
+    """Operation-local response error for batch_tags (401: The credentials are missing or wrong. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchTagsForbiddenError(BatchTagsError):
+    """Operation-local response error for batch_tags (403: The user may not call this endpoint. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchTagsNotFoundError(BatchTagsError):
+    """Operation-local response error for batch_tags (404: The resource does not exist. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchTagsTooManyRequestsError(BatchTagsError):
+    """Operation-local response error for batch_tags (429: The rate limit is exceeded. V5 sends no rate limit headers. #/components/schemas/V5Error)."""
+
+    pass
+
+
+class BatchTagsInternalServerErrorError(BatchTagsError):
+    """Operation-local response error for batch_tags (500: The API failed. #/components/schemas/V5Error)."""
+
+    pass
+
+
+BatchTagsError.response_error_map = {
+    "400": BatchTagsBadRequestError,
+    "401": BatchTagsUnauthorizedError,
+    "403": BatchTagsForbiddenError,
+    "404": BatchTagsNotFoundError,
+    "429": BatchTagsTooManyRequestsError,
+    "500": BatchTagsInternalServerErrorError,
+}
+
+
 class QueryUrlError(V5Error):
     """Operation-local error for client.v5.query_url()."""
 
@@ -219,6 +375,9 @@ TopXDataError.response_error_map = {
 }
 
 ERROR_BY_METHOD: dict[str, type[V5Error]] = {
+    "batch_populators": BatchPopulatorsError,
+    "batch_status": BatchStatusError,
+    "batch_tags": BatchTagsError,
     "query_url": QueryUrlError,
     "top_x_chart": TopXChartError,
     "top_x_data": TopXDataError,
@@ -226,6 +385,24 @@ ERROR_BY_METHOD: dict[str, type[V5Error]] = {
 
 __all__ = [
     "V5Error",
+    "BatchPopulatorsBadRequestError",
+    "BatchPopulatorsUnauthorizedError",
+    "BatchPopulatorsForbiddenError",
+    "BatchPopulatorsNotFoundError",
+    "BatchPopulatorsTooManyRequestsError",
+    "BatchPopulatorsInternalServerErrorError",
+    "BatchStatusBadRequestError",
+    "BatchStatusUnauthorizedError",
+    "BatchStatusForbiddenError",
+    "BatchStatusNotFoundError",
+    "BatchStatusTooManyRequestsError",
+    "BatchStatusInternalServerErrorError",
+    "BatchTagsBadRequestError",
+    "BatchTagsUnauthorizedError",
+    "BatchTagsForbiddenError",
+    "BatchTagsNotFoundError",
+    "BatchTagsTooManyRequestsError",
+    "BatchTagsInternalServerErrorError",
     "QueryUrlBadRequestError",
     "QueryUrlUnauthorizedError",
     "QueryUrlForbiddenError",
@@ -244,6 +421,9 @@ __all__ = [
     "TopXDataNotFoundError",
     "TopXDataTooManyRequestsError",
     "TopXDataInternalServerErrorError",
+    "BatchPopulatorsError",
+    "BatchStatusError",
+    "BatchTagsError",
     "QueryUrlError",
     "TopXChartError",
     "TopXDataError",

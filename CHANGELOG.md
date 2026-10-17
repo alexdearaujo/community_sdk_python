@@ -205,7 +205,14 @@ method name in PascalCase with `Error` added: `alert_list` raises
   JSON from 1.x or from Data Explorer works unchanged. `top_x_chart` is not
   verified: the endpoint gave no response in a live check.
   `kentik_api.v5_tools.decode_chart()` turns its result into image bytes. The
-  V5 SQL endpoint is retired, so there is no SQL call.
+  V5 SQL endpoint is retired, so there is no SQL call. A V5 error's text
+  (for example `The device_name is required`) ends the exception message, and
+  V5 calls report no quota, because V5 sends no rate limit headers.
+- **V5 batch calls.** `client.v5.batch_tags`, `batch_populators`, and
+  `batch_status` bring back bulk flow tag and populator updates.
+  `kentik_api.v5_tools.split_batch()` packs a large set into parts of at most
+  4 MB, `send_batch()` sends them with the batch guid and never resends a
+  part, and `wait_for_batch()` polls the status with a time limit.
 - **`v5_base_url` argument and `v5_api_config` property.** `KentikAPI` takes
   a custom V5 host (it must use https). `client.v5_api_config` is the base
   for a per-call override of a `client.v5` call.
