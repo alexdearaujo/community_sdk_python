@@ -39,7 +39,7 @@ class SiteServiceWrapper:
         self, *, api_config_override: Optional[APIConfig] = None
     ) -> rest_models.ListSiteMarketsResponse:
         """
-        List all site markets.
+        List all site markets (hand edit, CI must reject it).
 
         Returns list of configured site markets.
         """
