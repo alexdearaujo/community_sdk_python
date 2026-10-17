@@ -11,7 +11,7 @@ from importlib.metadata import packages_distributions
 from pathlib import Path
 
 from packaging.requirements import Requirement
-from packaging.utils import canonicalize_name
+from packaging.utils import NormalizedName, canonicalize_name
 
 ROOT = Path(__file__).resolve().parents[2]
 SCANNED = ("src", "scripts", "tests")
@@ -19,7 +19,7 @@ INVENTORY = ROOT / "docs" / "sphinx" / "dependencies.md"
 PROJECT_NAME = "kentik-api"
 
 
-def _declared() -> set[str]:
+def _declared() -> set[NormalizedName]:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     specs = [
         *pyproject["project"]["dependencies"],

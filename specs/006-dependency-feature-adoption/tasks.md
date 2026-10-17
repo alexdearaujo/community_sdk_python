@@ -287,9 +287,9 @@ test.
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T038 Run every step in quickstart.md, including the mocked suite on
+- [X] T038 Run every step in quickstart.md, including the mocked suite on
   Python 3.12, 3.13, and 3.14 (SC-007, FR-016)
-- [ ] T039 Run `make check-specs`, `make check-changelog SINCE=HEAD`, and
+- [X] T039 Run `make check-specs`, `make check-changelog SINCE=HEAD`, and
   `uv run rumdl check .`, then mark each finished task `[X]` in this file
 
 ---
