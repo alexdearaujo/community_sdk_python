@@ -49,5 +49,6 @@ saved_filter
 site
 synthetics
 user
+v5
 vault
 ```

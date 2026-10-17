@@ -9,3 +9,5 @@ pre-pr-audit-2026-10-10/*
 !pre-pr-audit-2026-10-10/deferred-risks.md
 !pre-pr-audit-2026-10-10/manual-spot-checks.md
 !pre-pr-audit-2026-10-10/run_manual_spot_check.py
+!v5-feature-parity-audit.md
+!v5_live_probe.py

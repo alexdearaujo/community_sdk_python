@@ -375,7 +375,10 @@ def _example_value_for_annotation(
 
 
 def _render_example_snippet(
-    service: str, method_name: str, params: list[tuple[str, str, bool]]
+    service: str,
+    method_name: str,
+    params: list[tuple[str, str, bool]],
+    rest_only: bool = False,
 ) -> str:
     """Renders a runnable-looking usage example from a real wrapper method signature."""
     models: set[str] = set()
@@ -391,7 +394,9 @@ def _render_example_snippet(
         )
     lines += [
         "",
-        '# Both transports work: protocol="rest" (default) or protocol="grpc".',
+        '# REST only. A client created with protocol="grpc" also sends these calls over REST.'
+        if rest_only
+        else '# Both transports work: protocol="rest" (default) or protocol="grpc".',
         'client = KentikAPI(protocol="rest")  # loads KENTIK_EMAIL/KENTIK_API_TOKEN from .env',
     ]
     if arguments:
@@ -407,6 +412,7 @@ def _render_operation_sequence_diagram(
     method_name: str,
     params: list[tuple[str, str, bool]],
     grpc_call: GrpcCall | None,
+    rest_only: bool = False,
 ) -> list[str]:
     """Renders REST and gRPC sequence diagrams side by side for one operation."""
     req_params = [(p, t) for p, t, r in params if r]
@@ -443,6 +449,16 @@ def _render_operation_sequence_diagram(
         MD_FENCE,
         "",
     ]
+
+    if rest_only:
+        grpc_diagram = [
+            "**gRPC transport**",
+            "",
+            "Not used: this endpoint exists only on REST, so a client created "
+            'with `protocol="grpc"` sends this call over REST too.',
+            "",
+        ]
+        return rest_diagram + grpc_diagram
 
     if grpc_call is None:
         grpc_diagram = [
@@ -488,6 +504,7 @@ def _render_endpoint_section(
     doc: EndpointDoc,
     wrapper_signatures: WrapperSignatures,
     heading_level: int = 4,
+    rest_only: bool = False,
 ) -> list[str]:
     heading = "#" * heading_level
     sub_heading = "#" * (heading_level + 1)
@@ -510,7 +527,7 @@ def _render_endpoint_section(
     if method_name is not None:
         lines.extend(
             _render_operation_sequence_diagram(
-                service, doc, method_name, params, grpc_call
+                service, doc, method_name, params, grpc_call, rest_only
             )
         )
 
@@ -560,7 +577,7 @@ def _render_endpoint_section(
                 f"{sub_heading} Example",
                 "",
                 f"{MD_FENCE}python",
-                _render_example_snippet(service, method_name, params),
+                _render_example_snippet(service, method_name, params, rest_only),
                 MD_FENCE,
                 "",
             ]
@@ -731,7 +748,10 @@ def _render_service_overview(
     ]
 
 
-def render_endpoint_docs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
+def render_endpoint_docs(
+    service_endpoint_docs: dict[str, list[EndpointDoc]],
+    rest_only: frozenset[str] = frozenset(),
+):
     """Generates Sphinx MyST stubs with real per-endpoint text and model docs.
 
     Replaces an image-rendered "API table" (unreadable once summaries/
@@ -815,7 +835,11 @@ def render_endpoint_docs(service_endpoint_docs: dict[str, list[EndpointDoc]]):
                         lines.extend(["---", ""])
                     lines.extend(
                         _render_endpoint_section(
-                            service, doc, wrapper_signatures, endpoint_heading_level
+                            service,
+                            doc,
+                            wrapper_signatures,
+                            endpoint_heading_level,
+                            service in rest_only,
                         )
                     )
 
@@ -950,5 +974,5 @@ class EndpointDocsCollector:
         path.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         return path
 
-    def render(self) -> None:
-        render_endpoint_docs(self._docs)
+    def render(self, rest_only: frozenset[str] = frozenset()) -> None:
+        render_endpoint_docs(self._docs, rest_only)

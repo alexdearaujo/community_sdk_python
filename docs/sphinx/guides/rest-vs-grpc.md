@@ -113,18 +113,21 @@ that no header shows.
 
 ## What gRPC covers
 
-REST covers every operation the SDK has, and so does gRPC:
+REST covers every operation the SDK has. gRPC covers every V6 operation:
 
 | Measure | Count |
 | --- | --- |
-| Services with a wrapper on the client | 36 |
+| Services with a wrapper on the client | 37 |
 | Services with no wrapper | 6 |
-| Wrapper operations | 234 |
+| Wrapper operations | 240 |
 | Operations with a gRPC translation | 234 |
+| V5 operations (`client.v5`), REST only | 6 |
 
 The generator gives an operation a gRPC translation when an RPC declares the
 same HTTP rule as the REST operation: the same proto service, HTTP verb, and
-path. Every operation in the current schema has such an RPC.
+path. Every V6 operation in the current schema has such an RPC. The V5
+endpoints exist only on REST, so `client.v5` sends its calls over REST on a
+`protocol="grpc"` client too. See [V5 query and batch calls](v5.md).
 
 The six services with no wrapper are `core`, `deviceconf`, `diagnostic`,
 `kptr`, `monitoring`, and `net`. The SDK has models and proto stubs for them,

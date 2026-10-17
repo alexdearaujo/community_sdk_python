@@ -240,6 +240,33 @@ def test_capture_reads_a_generated_tree(tmp_path: Path):
     assert operations["GET /demo/v1/{cid}/things"]["grpc"] is None
 
 
+def test_capture_flags_services_mounted_on_the_v5_transport(
+    tmp_path: Path, monkeypatch
+):
+    for name in ("v5", "device"):
+        (tmp_path / "gen" / name / "services").mkdir(parents=True)
+    mixin = tmp_path / "src" / "kentik_api" / "client_mixin.py"
+    mixin.parent.mkdir(parents=True)
+    mixin.write_text(
+        "from kentik_api.gen.device.services.device import DeviceServiceWrapper\n"
+        "from kentik_api.gen.v5.services.v5 import V5ServiceWrapper\n"
+        "        self.device = DeviceServiceWrapper(self._transport)\n"
+        "        self.v5 = V5ServiceWrapper(self._v5_transport)\n"
+    )
+    (tmp_path / "pyproject.toml").write_text("[project]\ndependencies = []\n")
+    monkeypatch.setattr(api_surface, "PROJECT_ROOT", tmp_path)
+
+    surface = api_surface.capture(tmp_path / "gen")
+
+    assert surface["schema_version"] == 8
+    assert api_surface.is_rest_only(surface["services"]["v5"])
+    assert not api_surface.is_rest_only(surface["services"]["device"])
+
+
+def test_a_record_before_schema_version_8_has_no_rest_only_service():
+    assert not api_surface.is_rest_only(_service())
+
+
 def test_capture_records_the_rpc_each_wrapper_method_calls(tmp_path: Path):
     service = tmp_path / "demo"
     (service / "services").mkdir(parents=True)

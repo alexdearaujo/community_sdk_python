@@ -1,5 +1,5 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "requirements": {
     "googleapis-common-protos": "googleapis-common-protos>=1.73.1",
     "grpcio": "grpcio>=1.84.0",
@@ -16,6 +16,7 @@
   "services": {
     "ai_advisor": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /ai_advisor/v202511/chat/{id}": {
           "operation": "GetChatSession",
@@ -206,6 +207,7 @@
     },
     "alerting": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /v202505/alerts/ack/auto/{autoAckid}": {
           "operation": "Delete",
@@ -3645,6 +3647,7 @@
     },
     "as_group": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /as_group/v202212/as_group/{asGroupid}": {
           "operation": "DeleteASGroup",
@@ -3871,6 +3874,7 @@
     },
     "asset_tags": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /asset_tags/v20260515beta1/keys/{id}": {
           "operation": "DeleteTagKey",
@@ -4237,6 +4241,7 @@
     },
     "audit": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /audit/v202601/events": {
           "operation": "ListAuditEvents",
@@ -4447,6 +4452,7 @@
     },
     "bgp_monitoring": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /bgp_monitoring/v202210/monitors/{id}": {
           "operation": "DeleteMonitor",
@@ -4958,6 +4964,7 @@
     },
     "capacity_plan": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /capacity_plan/v202212/capacity_plan": {
           "operation": "ListCapacityPlans",
@@ -5333,6 +5340,7 @@
     },
     "cloud_export": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /cloud_export/v202506/exports/{exportid}": {
           "operation": "DeleteCloudExport",
@@ -5772,6 +5780,7 @@
     },
     "connectivity_checker": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "POST /connectivity_checker/v202410beta1/create": {
           "operation": "CreateConnectivityReport",
@@ -5910,6 +5919,7 @@
     },
     "core": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "protobufAny",
@@ -5941,6 +5951,7 @@
     },
     "cost": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /cost/v202308/cost/providers": {
           "operation": "ListCostProviders",
@@ -6149,6 +6160,7 @@
     },
     "credential": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /credential/v202407alpha1/group": {
           "operation": "ListCredentialGroup",
@@ -6406,6 +6418,7 @@
     },
     "custom_application": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /custom_application/v202501alpha1/{customApplicationId}": {
           "operation": "DeleteCustomApplication",
@@ -6600,6 +6613,7 @@
     },
     "custom_dimension": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /custom_dimensions/v202411alpha1/{customDimensionId}": {
           "operation": "DeleteCustomDimension",
@@ -7053,6 +7067,7 @@
     },
     "device": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /device/v202504beta2/device/{deviceid}": {
           "operation": "DeleteDevice",
@@ -8071,6 +8086,7 @@
     },
     "deviceconf": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "AclAction",
@@ -8399,6 +8415,7 @@
     },
     "diagnostic": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "ChatResponse",
@@ -8459,6 +8476,7 @@
     },
     "dictionary": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /dictionary/v20260604alpha1": {
           "operation": "GetDictionary",
@@ -8810,6 +8828,7 @@
     },
     "enrichments": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "POST /enrichments/enumerations/v202601alpha1/values:fetch_by_ids": {
           "operation": "FetchValuesByIds",
@@ -8874,6 +8893,7 @@
     },
     "flow_tag": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /flow_tag/v202404alpha1/tag/{flowTagid}": {
           "operation": "DeleteFlowTag",
@@ -9212,6 +9232,7 @@
     },
     "interface": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /interface/v202108alpha1/interfaces/{id}": {
           "operation": "InterfaceDelete",
@@ -9658,6 +9679,7 @@
     },
     "journeys": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /journeys/v202406/GetJourneysNlq": {
           "operation": "GetJourneysNlq",
@@ -9740,6 +9762,7 @@
     },
     "kagent": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /kagent/v202401/agents/{agentId}/capabilities/{capabilityname}": {
           "operation": "DeleteAgentCapability",
@@ -11068,6 +11091,7 @@
     },
     "kmeta": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /kmeta/v202607alpha1/{cid}/servicenow/config/{id}": {
           "operation": "DeleteServiceNowConfig",
@@ -11273,6 +11297,7 @@
     },
     "kmi": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /kmi/v202212/insights": {
           "operation": "GetGlobalInsights",
@@ -11608,6 +11633,7 @@
     },
     "kptr": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "GetNetworkRangeAssignmentsResponse",
@@ -11685,6 +11711,7 @@
     },
     "ktbgp": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "POST /routes/announce": {
           "operation": "RouteService_Announce",
@@ -12324,6 +12351,7 @@
     },
     "label": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /label/v202210/labels/{id}": {
           "operation": "DeleteLabel",
@@ -12495,6 +12523,7 @@
     },
     "mkp": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /mkp/v202407/packages/{id}": {
           "operation": "PackageDelete",
@@ -13446,6 +13475,7 @@
     },
     "monitoring": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "protobufAny",
@@ -13477,6 +13507,7 @@
     },
     "net": {
       "mounted": false,
+      "rest_only": false,
       "operations": {},
       "models": [
         "protobufAny",
@@ -13508,6 +13539,7 @@
     },
     "network_class": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /network_class/v202109alpha1/network_class": {
           "operation": "NetworkClassGet",
@@ -13637,6 +13669,7 @@
     },
     "nms": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /nms/v202505/metrics_schema": {
           "operation": "MetricsSchemaService_GetMetricsSchema",
@@ -13814,6 +13847,7 @@
     },
     "notification_channel": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /notification_channel/v202210/notification_channels": {
           "operation": "ListNotificationChannels",
@@ -13985,6 +14019,7 @@
     },
     "pathfinder": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "POST /pathfinder/v202505beta1/create": {
           "operation": "CreatePathfinderReport",
@@ -14142,6 +14177,7 @@
     },
     "plan": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /plans/v202501alpha1": {
           "operation": "ListPlans",
@@ -14334,6 +14370,7 @@
     },
     "rbux": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /rbux/v202607alpha1/scopes/{id}": {
           "operation": "DeleteScope",
@@ -14721,6 +14758,7 @@
     },
     "saved_filter": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /saved-filter/v202501alpha1/{id}": {
           "operation": "DeleteSavedFilter",
@@ -15073,6 +15111,7 @@
     },
     "site": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /site/v202509/site_markets/{id}": {
           "operation": "DeleteSiteMarket",
@@ -15543,6 +15582,7 @@
     },
     "synthetics": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /synthetics/v202309/agentAlerts/{id}": {
           "operation": "DeleteAgentAlert",
@@ -17295,6 +17335,7 @@
     },
     "user": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "DELETE /user/v202211/users/{id}": {
           "operation": "DeleteUser",
@@ -17594,8 +17635,628 @@
         ]
       }
     },
+    "v5": {
+      "mounted": true,
+      "rest_only": true,
+      "operations": {
+        "GET /batch/{guid}/status": {
+          "operation": "BatchService_Status",
+          "method": "batch_status",
+          "grpc": null,
+          "status": 200,
+          "required_params": [
+            "guid"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "guid": "str"
+          },
+          "returns": "BatchStatus",
+          "error": "BatchStatusError",
+          "error_responses": {
+            "400": "BatchStatusBadRequestError",
+            "401": "BatchStatusUnauthorizedError",
+            "403": "BatchStatusForbiddenError",
+            "404": "BatchStatusNotFoundError",
+            "429": "BatchStatusTooManyRequestsError",
+            "500": "BatchStatusInternalServerErrorError"
+          }
+        },
+        "POST /batch/customdimensions/{dimensionName}/populators": {
+          "operation": "BatchService_Populators",
+          "method": "batch_populators",
+          "grpc": null,
+          "status": 202,
+          "required_params": [
+            "data",
+            "dimensionName"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "dimensionName": "str",
+            "data": "BatchPart"
+          },
+          "returns": "BatchResponse",
+          "error": "BatchPopulatorsError",
+          "error_responses": {
+            "400": "BatchPopulatorsBadRequestError",
+            "401": "BatchPopulatorsUnauthorizedError",
+            "403": "BatchPopulatorsForbiddenError",
+            "404": "BatchPopulatorsNotFoundError",
+            "429": "BatchPopulatorsTooManyRequestsError",
+            "500": "BatchPopulatorsInternalServerErrorError"
+          }
+        },
+        "POST /batch/tags": {
+          "operation": "BatchService_Tags",
+          "method": "batch_tags",
+          "grpc": null,
+          "status": 202,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "BatchPart"
+          },
+          "returns": "BatchResponse",
+          "error": "BatchTagsError",
+          "error_responses": {
+            "400": "BatchTagsBadRequestError",
+            "401": "BatchTagsUnauthorizedError",
+            "403": "BatchTagsForbiddenError",
+            "404": "BatchTagsNotFoundError",
+            "429": "BatchTagsTooManyRequestsError",
+            "500": "BatchTagsInternalServerErrorError"
+          }
+        },
+        "POST /query/topXchart": {
+          "operation": "QueryService_TopXChart",
+          "method": "top_x_chart",
+          "grpc": null,
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "ChartRequest"
+          },
+          "returns": "ChartResponse",
+          "error": "TopXChartError",
+          "error_responses": {
+            "400": "TopXChartBadRequestError",
+            "401": "TopXChartUnauthorizedError",
+            "403": "TopXChartForbiddenError",
+            "404": "TopXChartNotFoundError",
+            "429": "TopXChartTooManyRequestsError",
+            "500": "TopXChartInternalServerErrorError"
+          }
+        },
+        "POST /query/topXdata": {
+          "operation": "QueryService_TopXData",
+          "method": "top_x_data",
+          "grpc": null,
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "QueryRequest"
+          },
+          "returns": "TopXDataResponse",
+          "error": "TopXDataError",
+          "error_responses": {
+            "400": "TopXDataBadRequestError",
+            "401": "TopXDataUnauthorizedError",
+            "403": "TopXDataForbiddenError",
+            "404": "TopXDataNotFoundError",
+            "429": "TopXDataTooManyRequestsError",
+            "500": "TopXDataInternalServerErrorError"
+          }
+        },
+        "POST /query/url": {
+          "operation": "QueryService_Url",
+          "method": "query_url",
+          "grpc": null,
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "QueryRequest"
+          },
+          "returns": "str",
+          "error": "QueryUrlError",
+          "error_responses": {
+            "400": "QueryUrlBadRequestError",
+            "401": "QueryUrlUnauthorizedError",
+            "403": "QueryUrlForbiddenError",
+            "404": "QueryUrlNotFoundError",
+            "429": "QueryUrlTooManyRequestsError",
+            "500": "QueryUrlInternalServerErrorError"
+          }
+        }
+      },
+      "models": [
+        "Aggregate",
+        "BatchCriterion",
+        "BatchDelete",
+        "BatchDeleteCounts",
+        "BatchPart",
+        "BatchReplaceAll",
+        "BatchResponse",
+        "BatchStatus",
+        "BatchStatusCustomDimension",
+        "BatchStatusUser",
+        "BatchUpsert",
+        "BatchUpsertCounts",
+        "ChartRequest",
+        "ChartResponse",
+        "Filter",
+        "FilterGroup",
+        "Query",
+        "QueryFilters",
+        "QueryItem",
+        "QueryRequest",
+        "ResultBucket",
+        "SavedFilterRef",
+        "TopXDataResponse",
+        "V5Error"
+      ],
+      "fields": {
+        "Aggregate": {
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "column": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fn": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "rank": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "sample_rate": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "raw": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "BatchCriterion": {
+          "direction": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "addr": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "BatchDelete": {
+          "value": {
+            "type": "str",
+            "required": true
+          }
+        },
+        "BatchDeleteCounts": {
+          "total": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "applied": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "unchanged": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "invalid": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "BatchPart": {
+          "replace_all": {
+            "type": "bool",
+            "required": true
+          },
+          "complete": {
+            "type": "bool",
+            "required": true
+          },
+          "upserts": {
+            "type": "Optional[List[Optional[BatchUpsert]]]",
+            "required": false
+          },
+          "deletes": {
+            "type": "Optional[List[Optional[BatchDelete]]]",
+            "required": false
+          },
+          "guid": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchReplaceAll": {
+          "requested": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "deletes_performed": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "successful": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "BatchResponse": {
+          "message": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "guid": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchStatus": {
+          "guid": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "custom_dimension": {
+            "type": "Optional[BatchStatusCustomDimension]",
+            "required": false
+          },
+          "is_multipart": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "is_pending": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "is_complete": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "number_of_parts": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "user": {
+            "type": "Optional[BatchStatusUser]",
+            "required": false
+          },
+          "upserts": {
+            "type": "Optional[BatchUpsertCounts]",
+            "required": false
+          },
+          "deletes": {
+            "type": "Optional[BatchDeleteCounts]",
+            "required": false
+          },
+          "replace_all": {
+            "type": "Optional[BatchReplaceAll]",
+            "required": false
+          },
+          "batch_date": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchStatusCustomDimension": {
+          "id": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchStatusUser": {
+          "id": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "email": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BatchUpsert": {
+          "value": {
+            "type": "str",
+            "required": true
+          },
+          "criteria": {
+            "type": "Optional[List[Optional[BatchCriterion]]]",
+            "required": false
+          }
+        },
+        "BatchUpsertCounts": {
+          "total": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "applied": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "invalid": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "unchanged": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "over_limit": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "ChartRequest": {
+          "queries": {
+            "type": "List[QueryItem]",
+            "required": true
+          },
+          "imageType": {
+            "type": "str",
+            "required": true
+          }
+        },
+        "ChartResponse": {
+          "dataUri": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "Filter": {
+          "filterField": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "operator": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "filterValue": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "FilterGroup": {
+          "connector": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "filters": {
+            "type": "Optional[List[Optional[Filter]]]",
+            "required": false
+          }
+        },
+        "Query": {
+          "metric": {
+            "type": "Any",
+            "required": true
+          },
+          "dimension": {
+            "type": "List[str]",
+            "required": true
+          },
+          "device_name": {
+            "type": "Optional[Any]",
+            "required": false
+          },
+          "all_selected": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "device_labels": {
+            "type": "Optional[Any]",
+            "required": false
+          },
+          "lookback_seconds": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "starting_time": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "ending_time": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "time_format": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "topx": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "depth": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "outsort": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fastData": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "hostname_lookup": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "cidr": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "cidr6": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "pps_threshold": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "filters_obj": {
+            "type": "Optional[QueryFilters]",
+            "required": false
+          },
+          "saved_filters": {
+            "type": "Optional[List[Optional[SavedFilterRef]]]",
+            "required": false
+          },
+          "aggregates": {
+            "type": "Optional[List[Optional[Aggregate]]]",
+            "required": false
+          },
+          "matrixBy": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "minsPolling": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "forceMinsPolling": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "reAggInterval": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "reAggFn": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "viz_type": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "show_overlay": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "overlay_day": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "sync_axes": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "query_title": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "descriptor": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "QueryFilters": {
+          "connector": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "filterGroups": {
+            "type": "Optional[List[Optional[FilterGroup]]]",
+            "required": false
+          }
+        },
+        "QueryItem": {
+          "query": {
+            "type": "Query",
+            "required": true
+          },
+          "bucket": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "bucketIndex": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "isOverlay": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "QueryRequest": {
+          "queries": {
+            "type": "List[QueryItem]",
+            "required": true
+          }
+        },
+        "ResultBucket": {
+          "bucket": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "data": {
+            "type": "Optional[List[Dict[str, Any]]]",
+            "required": false
+          }
+        },
+        "SavedFilterRef": {
+          "filter_id": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "is_not": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "TopXDataResponse": {
+          "results": {
+            "type": "Optional[List[Optional[ResultBucket]]]",
+            "required": false
+          }
+        },
+        "V5Error": {
+          "error": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "errorxid": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        }
+      },
+      "enums": {}
+    },
     "vault": {
       "mounted": true,
+      "rest_only": false,
       "operations": {
         "GET /vault/v202312alpha1/secrets": {
           "operation": "ListSecret",

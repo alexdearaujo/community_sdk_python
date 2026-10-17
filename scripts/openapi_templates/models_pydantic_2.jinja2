@@ -15,7 +15,9 @@ class {{ schema_name }}(BaseModel):
     {{ docstring([schema.title, schema.description] | select | join("\n\n") or schema_name ~ " model", "    ") }}
     model_config = {
         "populate_by_name": True,
-        "validate_assignment": True
+        "validate_assignment": True{% if schema.additionalProperties is sameas true %},
+        "extra": "allow"{% endif %}
+
     }
     {% for property in properties %}
     {% set field = (schema.properties or {}).get(property.name) %}

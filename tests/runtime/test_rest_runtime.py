@@ -362,3 +362,39 @@ def test_a_success_status_with_an_unusable_body_raises_502(
     assert exc.value.status_code == 502
     assert f"GetSite returned {problem}" in str(exc.value)
     assert "status code" not in str(exc.value)
+
+
+def test_a_response_without_quota_headers_records_no_quota(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    # The V5 API sends no X-RateLimit-* headers, so a V5 call has no quota.
+    responses = iter(
+        [httpx.Response(200, json={"ok": True}), httpx.Response(429, json={})]
+    )
+    monkeypatch.setattr(httpx.Client, "request", lambda self, *a, **k: next(responses))
+    from kentik_api.core.rate_limit import rate_limit_of
+
+    cfg = _config()
+    body = request_json("POST", "/query/topXdata", api_config_override=cfg)
+    with pytest.raises(HTTPException) as exc:
+        request_json("POST", "/query/topXdata", api_config_override=cfg)
+
+    assert rate_limit_of(body) is None
+    assert exc.value.status_code == 429
+    assert exc.value.rate_limit is None
+    assert cfg.rate_limits == {}
+
+
+def test_a_v5_error_body_gives_the_message_and_keeps_the_error_id(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    body = {"error": "The device_name is required", "errorxid": "mvbc0s95qc"}
+    monkeypatch.setattr(
+        httpx.Client, "request", lambda self, *a, **k: httpx.Response(400, json=body)
+    )
+
+    with pytest.raises(HTTPException) as exc:
+        request_json("POST", "/query/topXdata", api_config_override=_config())
+
+    assert exc.value.message.endswith(": The device_name is required")
+    assert exc.value.details["response_json"]["errorxid"] == "mvbc0s95qc"

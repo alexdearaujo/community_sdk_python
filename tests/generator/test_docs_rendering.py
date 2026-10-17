@@ -131,6 +131,8 @@ def test_architecture_page_matches_committed_apart_from_edge_counts(sandbox):
     service_dependent = [
         (re.compile(r'\|"x\d+"\|'), "|x|"),
         (re.compile(r"\d+ Services are in that state today: [^\n]*"), "N Services ..."),
+        # The sandbox has no local schema base, so it has no REST-only section.
+        (re.compile(r"\n## REST-Only Services\n.*\Z", re.DOTALL), ""),
     ]
 
     def normalized(text: str) -> str:
@@ -209,6 +211,27 @@ def test_no_section_when_every_service_has_a_wrapper(sandbox):
     shutil.rmtree(sandbox.gen / "core")
 
     assert docs_rendering._services_without_wrappers_section() == []
+
+
+def test_rest_only_services_are_marked_with_their_local_schema_source(sandbox):
+    docs_rendering.generate(frozenset({"device"}))
+
+    page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
+    section = page.split("## REST-Only Services", 1)[1]
+    assert "`schema/openapi/`" in section
+    assert "`device`" in section
+    assert "`alerting`" not in section
+    readme = (sandbox.gen / "device" / "README.md").read_text()
+    assert "local schema base, `schema/openapi/`. It is REST only." in readme
+    other = (sandbox.gen / "alerting" / "README.md").read_text()
+    assert "the Kentik OpenAPIv3 schema." in other
+
+
+def test_no_rest_only_section_without_local_services(sandbox):
+    docs_rendering.generate()
+
+    page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
+    assert "REST-Only Services" not in page
 
 
 def test_replace_marker_rewrites_only_the_named_block():

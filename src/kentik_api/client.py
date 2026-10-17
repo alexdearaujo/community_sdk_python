@@ -18,6 +18,11 @@ _REGION_ENDPOINTS: dict[str, tuple[str, str]] = {
     "us": ("grpc.api.kentik.com:443", "https://grpc.api.kentik.com"),
     "eu": ("grpc.api.kentik.eu:443", "https://grpc.api.kentik.eu"),
 }
+# The V5 API has its own hosts; never derived from the V6 URL.
+_V5_BASE_URLS: dict[str, str] = {
+    "us": "https://api.kentik.com/api/v5",
+    "eu": "https://api.kentik.eu/api/v5",
+}
 
 
 def _resolve_credentials(
@@ -65,6 +70,7 @@ class KentikAPI(KentikClientMixin):
         protocol: str = "rest",
         region: str = "us",
         *,
+        v5_base_url: str | None = None,
         timeout: float = 60.0,
         rest_timeout: httpx.Timeout | float | None = None,
         grpc_deadline: float | None = None,
@@ -81,6 +87,9 @@ class KentikAPI(KentikClientMixin):
         `timeout` bounds every call on either transport. `rest_timeout` (a
         scalar or per-phase `httpx.Timeout`) and `grpc_deadline` override it
         for one transport; see `APIConfig`.
+
+        `client.v5` calls the V5 API, which exists only on REST, at the
+        region's V5 host, or at `v5_base_url` (it must use https).
         """
         email, api_token = _resolve_credentials(email, api_token, env_file)
 
@@ -93,6 +102,13 @@ class KentikAPI(KentikClientMixin):
             raise ConfigurationError(
                 f"Invalid region '{region}'. Must be one of: {valid}."
             ) from None
+
+        v5_base_url = v5_base_url or _V5_BASE_URLS[region.lower()]
+        if not v5_base_url.startswith("https://"):
+            # Plain http would send the credentials in clear text.
+            raise ConfigurationError(
+                f"v5_base_url must start with https://, got '{v5_base_url}'."
+            )
 
         api_config = APIConfig(
             base_path=rest_base_url,
@@ -119,6 +135,20 @@ class KentikAPI(KentikClientMixin):
                 f"Invalid protocol '{protocol}'. Must be 'grpc' or 'rest'."
             )
 
+        # V5 endpoints exist only on REST, so they need a REST transport on
+        # every client, gRPC ones included.
+        self._v5_transport = RestTransport(
+            self.credentials,
+            base_url=v5_base_url,
+            api_config=APIConfig(
+                base_path=v5_base_url,
+                auth_email=email,
+                auth_token=api_token,
+                timeout=timeout,
+                rest_timeout=rest_timeout,
+            ),
+        )
+
         self._mount_generated_services()
 
     @property
@@ -130,8 +160,14 @@ class KentikAPI(KentikClientMixin):
         """
         return self._transport.api_config
 
+    @property
+    def v5_api_config(self) -> APIConfig:
+        """The configuration of `client.v5` calls, the base for their per-call override."""
+        return self._v5_transport.api_config
+
     def close(self):
         self._transport.close()
+        self._v5_transport.close()
 
     def __enter__(self):
         return self

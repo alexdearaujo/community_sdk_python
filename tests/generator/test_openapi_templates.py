@@ -70,6 +70,42 @@ def test_field_without_schema_text_gets_no_description(env):
     assert "description" not in {k.arg for k in field.value.keywords}
 
 
+def _model_type(env: Environment, additional_properties) -> type:
+    schema = SimpleNamespace(
+        title=None,
+        description=None,
+        properties={"metric": SimpleNamespace(title=None, description=None)},
+        additionalProperties=additional_properties,
+    )
+    source = env.get_template("models_pydantic_2.jinja2").render(
+        schema_name="Thing", schema=schema, properties=[_property("metric")]
+    )
+    namespace: dict = {}
+    exec(compile(source, "<template>", "exec"), namespace)
+    return namespace["Thing"]
+
+
+def test_additional_properties_true_keeps_and_sends_unknown_fields(env):
+    # V5 query JSON copied from Data Explorer carries fields the description
+    # does not type; they must reach the API unchanged.
+    thing = _model_type(env, True)(metric="bytes", cutFnRegex={"a": 1})
+
+    assert thing.model_dump(by_alias=True, exclude_unset=True) == {
+        "metric": "bytes",
+        "cutFnRegex": {"a": 1},
+    }
+
+
+@pytest.mark.parametrize(
+    "additional_properties", [None, False, SimpleNamespace(type="string")]
+)
+def test_other_schemas_keep_dropping_unknown_fields(env, additional_properties):
+    # A typed additionalProperties is a map, which upstream V6 schemas use.
+    thing = _model_type(env, additional_properties)(metric="bytes", extra=1)
+
+    assert thing.model_dump(by_alias=True, exclude_unset=True) == {"metric": "bytes"}
+
+
 def _rest_function(env: Environment, summary, description) -> ast.FunctionDef:
     source = env.get_template("httpx.jinja2").render(
         async_client=False,

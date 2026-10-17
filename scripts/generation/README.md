@@ -10,10 +10,10 @@ package owns one concern of SDK generation.
 
 | Module | Owns | Public interface |
 | --- | --- | --- |
-| [`parity.py`](parity.py) | Swagger file selection, dropping files that newer files fully replace, schema structural validation, and directory parity checks | `select_latest_swagger_files_by_service()`, `drop_superseded_swagger_files()`, `validate_schema_files_or_raise()`, `validate_selected_services_or_raise()`, `validate_generated_service_parity()` |
+| [`parity.py`](parity.py) | Swagger file selection, joining the local schema base (`schema/openapi/`) to upstream, dropping files that newer files fully replace, schema structural validation, and directory parity checks | `select_latest_swagger_files_by_service()`, `merge_local_schema_base()`, `drop_superseded_swagger_files()`, `validate_schema_files_or_raise()`, `validate_selected_services_or_raise()`, `validate_generated_service_parity()` |
 | [`error_package.py`](error_package.py) | Error class generation and error dispatch | `generate_service_error_package()`, `inject_service_error_handling()`, `collect_operation_error_responses()`, `merge_operation_error_responses()` |
 | [`fixup.py`](fixup.py) | Generated-code post-processing: import patching, model init rebuild, file cleanup | `fix_generated_service()` |
-| [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation | `generate()`, `public_method_names()` |
+| [`wrapper_generation.py`](wrapper_generation.py) | Service wrapper and client mixin generation. The mixin mounts a REST-only service (from the local schema base) on `_v5_transport` | `generate()`, `public_method_names()` |
 | [`public_names.py`](public_names.py) | The public name of every Service, client method, and model, read from and added to `public_names.json`. Fails when an entry no longer matches the schema | `PublicNames`, `operation_key()`, `model_key()`, `NameDriftError` |
 | [`docs_rendering.py`](docs_rendering.py) | The runtime architecture page (inline Mermaid), the `gen/` root README, service READMEs, and the `kentik-gen` blocks in `docs/sphinx/guides/*.md` and `docs/sphinx/README.md` | `generate()` |
 | [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation, and `schema_operations.json`, the swagger-derived operation record | `EndpointDocsCollector` |

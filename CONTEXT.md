@@ -35,6 +35,13 @@ swagger files exist. The generator generates only the newest version
 in each family and skips older versions. It also skips a file when
 newer files in its service write all of that file's REST modules.
 
+**Local schema base**:
+`schema/openapi/` in this repository: hand-maintained OpenAPI
+descriptions of endpoints that upstream does not publish, read next to
+the upstream schema. Today it holds `v5`, the V5 query and batch
+endpoints. Every service from it is REST only.
+_Avoid_: second schema root, local root
+
 **Phase module**:
 One of the independently testable units in [`scripts/generation/`](scripts/generation/README.md)
 (`parity`, `error_package`, `fixup`, `wrapper_generation`,

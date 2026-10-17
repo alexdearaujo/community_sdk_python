@@ -127,5 +127,35 @@ after a response are your decision.
 
 If you add your own retries, retry only idempotent operations: those that use
 GET, PUT, or DELETE. Do not retry POST or PATCH. A repeated POST or PATCH can
-create or change something twice. Of the SDK's 234 operations, 162 are
-idempotent and 72 are not.
+create or change something twice. Of the SDK's 240 operations, 163 are
+idempotent and 77 are not.
+
+## V5 calls report no quota
+
+`client.v5` calls the V5 API, which sends no `X-RateLimit-*` headers. So the
+quota of a V5 call is always empty: `rate_limit_of(result)` and
+`exc.rate_limit` are `None`, and no V5 endpoint appears in
+`client.v5_api_config.rate_limits`. The "Query API" column above still
+applies to the V5 queries.
+
+The V5 queries (`top_x_data`, `top_x_chart`, `query_url`) are POST calls, but
+they only read data, so a retry cannot change anything. Without quota headers,
+wait a fixed time before you retry a `429`. Never retry `batch_tags` or
+`batch_populators`: a repeated part can change data twice.
+
+```python
+import time
+
+from kentik_api.errors import HTTPException
+
+
+def top_x_data_with_retry(client, request, attempts=3, wait_seconds=60):
+    for attempt in range(attempts):
+        try:
+            return client.v5.top_x_data(data=request)
+        except HTTPException as exc:
+            if exc.status_code != 429 or attempt == attempts - 1:
+                raise
+            # The Query API allows 30 calls per minute before it slows down.
+            time.sleep(wait_seconds)
+```

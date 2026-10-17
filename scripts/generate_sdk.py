@@ -40,6 +40,8 @@ CUSTOM_OPENAPI_TEMPLATE_PATH = PROJECT_ROOT / "scripts" / "openapi_templates"
 # The schema commit the committed tree was generated from, so CI regenerates
 # at that commit instead of following upstream HEAD.
 SCHEMA_PIN = PROJECT_ROOT / "schema.lock"
+# Hand-maintained descriptions of endpoints that upstream does not publish.
+LOCAL_SCHEMA_BASE = PROJECT_ROOT / "schema" / "openapi"
 _COMMIT_SHA = re.compile(r"[0-9a-f]{40}")
 
 
@@ -796,6 +798,21 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             f"Discovered {selected_count} latest swagger files across "
             f"{len(selected_swagger_files)} services (ignored {ignored_count} older file versions)."
         )
+        local_swagger_files, _, _ = (
+            parity.select_latest_swagger_files_by_service(LOCAL_SCHEMA_BASE)
+            if LOCAL_SCHEMA_BASE.is_dir()
+            else ({}, 0, 0)
+        )
+        local_services = set(local_swagger_files)
+        selected_swagger_files = parity.merge_local_schema_base(
+            selected_swagger_files, local_swagger_files
+        )
+        source_services |= local_services
+        if local_services:
+            print(
+                f"Added {len(local_services)} REST-only services from the local "
+                f"schema base: {', '.join(sorted(local_services))}."
+            )
 
         # Fail loudly on a corrupted/truncated schema checkout instead of
         # silently generating an incomplete SDK from it (2026-08-26 incident).
@@ -826,6 +843,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         # Fails before the wipe below when a public name no longer matches.
         names = PublicNames.load()
         public_service = names.services(source_services)
+        rest_only = frozenset(public_service[s] for s in local_services)
         model_renames = {
             public_service[service]: names.models(
                 public_service[service],
@@ -854,7 +872,13 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         _compile_proto_companions(schema_root)
 
         proto_collisions = _proto_collisions(
-            selected_swagger_files, openapi_base, proto_base
+            {
+                service: files
+                for service, files in selected_swagger_files.items()
+                if service not in local_services
+            },
+            openapi_base,
+            proto_base,
         )
 
         service_swagger_paths: dict[str, list[Path]] = {}
@@ -867,10 +891,11 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / "__init__.py").touch(exist_ok=True)
 
-            # Setup specific directories
+            # Setup specific directories. A local schema base service has no protos.
             pb_dir = out_dir / "pb"
-            pb_dir.mkdir(exist_ok=True)
-            (pb_dir / "__init__.py").touch(exist_ok=True)
+            if upstream_service not in local_services:
+                pb_dir.mkdir(exist_ok=True)
+                (pb_dir / "__init__.py").touch(exist_ok=True)
 
             service_swagger_paths[service] = []
             model_names: dict[str, tuple[str, str, str]] = {}
@@ -891,11 +916,17 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                 # 1. GENERATE PROTOBUF (gRPC), first: REST models need its oneofs
                 # -----------------------------------------------------------------
                 oneof_members: dict[str, set[str]] = {}
-                swagger_rel_parent = swagger_path.relative_to(openapi_base).parent
-                proto_dir = proto_base / "kentik" / swagger_rel_parent
-                print(f"    Hunting for protos in: {proto_dir}")
+                if upstream_service in local_services:
+                    print("    Local schema base: REST only, no protos.")
+                    proto_dir = None
+                else:
+                    swagger_rel_parent = swagger_path.relative_to(openapi_base).parent
+                    proto_dir = proto_base / "kentik" / swagger_rel_parent
+                    print(f"    Hunting for protos in: {proto_dir}")
 
-                if proto_dir.exists():
+                if proto_dir is None:
+                    pass
+                elif proto_dir.exists():
                     proto_files = list(proto_dir.glob("*.proto"))
                     if proto_files:
                         print(
@@ -1060,10 +1091,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
     run_cmd(["uv", "run", "ruff", "format", str(SDK_OUTPUT_DIR)])
 
     print("\nGenerating Wrappers & Documentation...")
-    wrapper_generation.generate(names)
+    wrapper_generation.generate(names, rest_only)
     names.save()
-    docs_rendering.generate()
-    endpoint_docs_collector.render()
+    docs_rendering.generate(rest_only)
+    endpoint_docs_collector.render(rest_only)
     endpoint_docs_collector.write_record()
 
     print("\nFinal formatting pass for generated code...")

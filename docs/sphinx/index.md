@@ -19,6 +19,7 @@ guides/error_handling
 guides/rate_limiting
 guides/rest-vs-grpc
 guides/migrating-from-1x
+guides/v5
 guides/generation
 local_generation_workflow
 sdk_runtime_architecture

@@ -10,7 +10,8 @@ Guidance for Claude Code when working in this repository.
 type-safe client for the Kentik API v6, built on Pydantic v2 and
 HTTPX. This SDK is **not hand-written**. `scripts/generate_sdk.py`
 generates it end-to-end from Kentik's public OpenAPI v3 schema
-(`kentik/api-schema-public`). It orchestrates the phase modules in
+(`kentik/api-schema-public`), plus the local schema base
+`schema/openapi/` (see "The local schema base" below). It orchestrates the phase modules in
 `scripts/generation/` (see "The generator's phase modules" below).
 This project uses `uv` to manage the environment and dependencies
 (lockfile `uv.lock`); the build backend is `hatchling` with
@@ -39,6 +40,15 @@ repo.
 - `public_names.json` — the public name of every Service, client
   method, and model. Edited by hand; a run only adds entries (see
   "Public names" below)
+- `schema/openapi/` — the local schema base: hand-maintained OpenAPI
+  descriptions of endpoints that upstream does not publish. Today only
+  `v5/v5/v5.swagger.json`, the V5 query and batch endpoints. It is a
+  generator input, like the upstream schema
+- `src/kentik_api/v5_tools.py`, `src/kentik_api/devices.py`, and
+  `src/kentik_api/analytics/` (the `analytics` extra) — helpers on top
+  of generated operations. They never send HTTP themselves:
+  `tests/smoke/test_helpers_no_direct_http.py` checks that they import
+  neither `httpx` nor `request_json`
 
 **Fully generated, wiped and rebuilt on every `make generate` run:**
 
@@ -110,7 +120,9 @@ subpackage of independently testable phase modules (see
 `tests/generator/`):
 
 - `parity.py` — swagger file selection (latest version per service,
-  namespace, and filename), dropping a file whose REST modules newer
+  namespace, and filename), joining the local schema base to upstream
+  (`merge_local_schema_base()`, which fails on a service in both),
+  dropping a file whose REST modules newer
   files in its service all write (an upstream rename), and the
   directory parity check between
   generated output and the schema. Fully independent of the other
@@ -185,7 +197,7 @@ script's own direct-execution import path.
 
 The **shared REST runtime** is the single most significant piece of
 hand-written engineering in this repo. It routes every generated
-endpoint, across all 36 mounted services, through one connection path
+endpoint, across all 37 mounted services, through one connection path
 instead of generating or hand-writing bespoke per-endpoint HTTP
 code. This is not just a convention. It's structural. The source
 code confirms it directly:
@@ -234,6 +246,14 @@ code confirms it directly:
 - `src/kentik_api/transports/{base,rest_client,grpc_client}.py` —
   thin transport-selection and credential-wiring code, not
   per-endpoint logic.
+
+`KentikAPI` has a second `RestTransport`, `_v5_transport`, on its own
+`APIConfig` for the V5 host (from `region`, or `v5_base_url`, which must
+be https). It exists on every client, gRPC ones included. The generated
+mixin mounts every service from the local schema base on it, so those
+calls still go through `request_json()`, only with another base URL.
+`client.v5_api_config` is its config. V5 responses carry no quota
+headers, so V5 calls report no quota.
 
 This design took several dedicated changes to get right: error
 handling inside `request_json` (`TransportError`, `_raise_http_error`),
@@ -311,6 +331,26 @@ first name of a new thing.
   from the schema.
 - Commit `public_names.json` with every regeneration that adds
   entries, or CI's drift check fails.
+
+### The local schema base
+
+`schema/openapi/<service>/<version>/<file>.swagger.json` holds
+hand-maintained OpenAPI 3 descriptions of endpoints that upstream does
+not publish (constitution 1.4.2). Today that is `v5`: the V5 query and
+batch endpoints, which have no V6 equivalent. Rules:
+
+- Add an endpoint here only when no V6 endpoint does the same thing.
+  `tests/generator/test_v5_description.py` pins the six V5 operations.
+- A service in both upstream and the local base fails the run. When
+  upstream publishes the service, remove it here.
+- Every service from the local base is REST-only: no protos, no `pb/`,
+  `"rest_only": true` in `api_surface.json`, and mounted on
+  `_v5_transport`. The gRPC stub test skips it by that flag.
+- Declare no `enum`, so an unknown value never fails a call. A schema
+  with `additionalProperties: true` gives a model that keeps unknown
+  fields (`"extra": "allow"`).
+- Change the description, then run `make generate local`. Never edit
+  `gen/v5/`.
 
 ### Services without a wrapper: out of scope, on purpose
 

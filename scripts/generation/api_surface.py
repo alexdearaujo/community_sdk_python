@@ -36,7 +36,7 @@ from ._shared import (
 )
 
 SURFACE_FILE = PROJECT_ROOT / "api_surface.json"
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 # Before schema_version 6 a record held only these requirements.
 _LEGACY_REQUIREMENTS = ("grpcio", "protobuf", "httpx", "pydantic")
@@ -91,6 +91,23 @@ def _mounted_services() -> set[str]:
     return set(
         re.findall(r"from kentik_api\.gen\.(\w+)\.services\.", mixin.read_text("utf-8"))
     )
+
+
+def _rest_only_services() -> set[str]:
+    """Services the mixin mounts on the V5 REST transport, whatever the protocol."""
+    mixin = PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py"
+    if not mixin.exists():
+        return set()
+    return set(
+        re.findall(
+            r"self\.(\w+) = \w+\(self\._v5_transport\)", mixin.read_text("utf-8")
+        )
+    )
+
+
+def is_rest_only(service: dict[str, Any]) -> bool:
+    """A record before schema_version 8 has no flag, and had no REST-only service."""
+    return service.get("rest_only", False)
 
 
 def _is_required(value: ast.expr | None) -> bool:
@@ -210,6 +227,7 @@ def capture(output_dir: Path | None = None) -> dict[str, Any]:
     """Builds a snapshot of the generated SDK's public surface."""
     root = SDK_OUTPUT_DIR if output_dir is None else output_dir
     mounted = _mounted_services()
+    rest_only = _rest_only_services()
     services: dict[str, Any] = {}
 
     for service_dir in iter_service_dirs(root):
@@ -238,6 +256,7 @@ def capture(output_dir: Path | None = None) -> dict[str, Any]:
         fields, enums = _model_shapes(service_dir)
         services[service_dir.name] = {
             "mounted": service_dir.name in mounted,
+            "rest_only": service_dir.name in rest_only,
             "operations": dict(sorted(operations.items())),
             "models": sorted(discover_service_model_classes(service_dir)),
             "fields": fields,

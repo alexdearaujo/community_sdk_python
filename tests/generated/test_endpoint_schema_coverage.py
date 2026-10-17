@@ -37,7 +37,9 @@ from _discovery import (
     discover_cases,
     error_module_for,
     parse_rest_call_metadata,
+    recorded_grpc_route,
     sample_grpc_response,
+    sample_rest_response,
 )
 from google.protobuf.json_format import MessageToDict, ParseDict
 from pydantic import BaseModel, ValidationError
@@ -194,9 +196,15 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
 
     try:
         message: Any = None
+        body: Any = None
         with respx.mock:
             if case.status_code == 204:
                 respx.route().mock(return_value=httpx.Response(204))
+            elif case.is_success and recorded_grpc_route(wrapper_case) is None:
+                body = sample_rest_response(method)
+                respx.route().mock(
+                    return_value=httpx.Response(case.status_code, json=body)
+                )
             elif case.is_success:
                 message = sample_grpc_response(wrapper_case)
                 respx.route().mock(
@@ -214,6 +222,14 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
                 return_annotation = inspect.signature(method).return_annotation
                 if case.status_code == 204:
                     assert result is None
+                elif message is None:
+                    # No proto to compare with: the body must survive parsing.
+                    dumped = (
+                        result.model_dump(mode="json", by_alias=True, exclude_none=True)
+                        if isinstance(result, BaseModel)
+                        else result
+                    )
+                    assert dumped == body
                 elif isinstance(return_annotation, type) and issubclass(
                     return_annotation, BaseModel
                 ):

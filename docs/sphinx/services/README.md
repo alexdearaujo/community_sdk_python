@@ -69,4 +69,5 @@ flowchart LR
 | Site | [site.md](site.md) | List all site markets. |
 | Synthetics | [synthetics.md](synthetics.md) | List agent alert configurations |
 | User | [user.md](user.md) | List all users. |
+| V5 | [v5.md](v5.md) | Batch populators |
 | Vault | [vault.md](vault.md) | List secrets. |

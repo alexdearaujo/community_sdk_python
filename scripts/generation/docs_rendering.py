@@ -121,24 +121,47 @@ def _services_without_wrappers_section() -> list[str]:
     ]
 
 
+def _rest_only_services_section(rest_only: frozenset[str]) -> list[str]:
+    """Names the Services generated from the local schema base, which are REST only."""
+    if not rest_only:
+        return []
+    return [
+        "## REST-Only Services",
+        "",
+        "These Services come from the local schema base, `schema/openapi/`:",
+        "hand-maintained descriptions of endpoints that upstream does not publish.",
+        "Every client mounts them on a REST transport to their own host, so a",
+        'client created with `protocol="grpc"` sends their calls over REST too: '
+        + ", ".join(f"`{name}`" for name in sorted(rest_only))
+        + ".",
+        "",
+    ]
+
+
 def _generate_gen_root_readme() -> None:
     """Writes src/kentik_api/gen/README.md, kept in sync with the gen/ tree."""
     SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     (SDK_OUTPUT_DIR / "README.md").write_text(_GEN_ROOT_README, encoding="utf-8")
 
 
-def _generate_service_readmes():
+def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
     """Generates README.md files inside each service directory."""
     print("Generating module READMEs...")
     for service_dir in iter_service_dirs():
         service_name = service_dir.name
+        source = (
+            "a hand-maintained description in the local schema base, "
+            "`schema/openapi/`. It is REST only."
+            if service_name in rest_only
+            else "the Kentik OpenAPIv3 schema."
+        )
 
         lines = [
             "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_service_readmes() -->",
             "<!-- Rebuilt on every `make generate`. Do not edit by hand. -->",
             f"# {service_name.replace('_', ' ').title()} Service",
             "",
-            "This module was automatically generated from the Kentik OpenAPIv3 schema.",
+            f"This module was automatically generated from {source}",
             "",
             "For the full endpoint reference (parameters, responses, usage "
             "examples) and data model documentation, see the Sphinx docs: "
@@ -241,7 +264,9 @@ def _module_group(module_name: str, source_file: Path | None = None) -> str | No
     return None
 
 
-def _generate_runtime_architecture_docs() -> None:
+def _generate_runtime_architecture_docs(
+    rest_only: frozenset[str] = frozenset(),
+) -> None:
     """Generates a high-level runtime architecture page with an inline dependency graph."""
     package_root = PROJECT_ROOT / "src" / "kentik_api"
     docs_root = PROJECT_ROOT / "docs" / "sphinx"
@@ -375,6 +400,7 @@ def _generate_runtime_architecture_docs() -> None:
         "- `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.",
         "",
         *_services_without_wrappers_section(),
+        *_rest_only_services_section(rest_only),
     ]
     (docs_root / "sdk_runtime_architecture.md").write_text(
         "\n".join(architecture_md), encoding="utf-8"
@@ -723,9 +749,9 @@ sequenceDiagram
     )
 
 
-def generate() -> None:
+def generate(rest_only: frozenset[str] = frozenset()) -> None:
     """Generates the runtime architecture docs, the gen/ root README, and per-service READMEs."""
-    _generate_runtime_architecture_docs()
+    _generate_runtime_architecture_docs(rest_only)
     _generate_gen_root_readme()
-    _generate_service_readmes()
+    _generate_service_readmes(rest_only)
     _update_guide_snippets()

@@ -31,7 +31,7 @@ graph TD
 | [authentication.md](authentication.md) | Credential sources (arguments, environment, `.env`), and keeping them encrypted |
 | [sdk_runtime_architecture.md](sdk_runtime_architecture.md) | Module dependency graph and runtime flow |
 | [local_generation_workflow.md](local_generation_workflow.md) | How to regenerate the SDK from the OpenAPI schema |
-| [services/](services/README.md) | One page per Kentik API service (<!-- kentik-gen:service-count -->42<!-- /kentik-gen:service-count --> total) |
+| [services/](services/README.md) | One page per Kentik API service (<!-- kentik-gen:service-count -->43<!-- /kentik-gen:service-count --> total) |
 
 ## Building
 
