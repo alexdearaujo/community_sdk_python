@@ -117,10 +117,9 @@ tree on 2026-10-16.
   `timeSeries`).
 - **Rationale**: FR-003. The row shape is not fixed, so a fixed model would
   drop columns.
-- **Open check (first implementation task)**: confirm that
-  `openapi-python-generator` renders `additionalProperties: true` as a dict
-  field and that `parse_response_model()` accepts it. If it does not, fix it
-  in the template or in `fixup.py`, never in `gen/`.
+- **Checked 2026-10-16 (T001)**: `openapi-python-generator` 2.1.2 renders
+  an item schema with `additionalProperties: true` as `List[Dict[str, Any]]`,
+  and the template keeps it. No change was needed.
 
 ### R5a. Request models that keep unknown fields
 
@@ -139,6 +138,11 @@ tree on 2026-10-16.
   pins that.
 - **Alternatives considered**: Type all 40 fields by hand: rejected. It
   copies undocumented portal internals into a public model.
+- **Checked 2026-10-16 (T001, T003)**: without a change, the generated model
+  dropped unknown fields. The template now adds `"extra": "allow"` for
+  `additionalProperties: true` only. `tests/generator/test_openapi_templates.py`
+  pins both cases, and `make generate local` gave no diff in upstream
+  services.
 
 ## R6. A response body that is a JSON string (`query/url`)
 
@@ -146,9 +150,10 @@ tree on 2026-10-16.
   returns `str`.
 - **Rationale**: The live check returned a JSON string with a portal link. It
   is the API's real shape.
-- **Open check (first implementation task)**: confirm that the generated
-  function and `parse_response_model()` accept a non-object success body. If
-  they do not, add the general case to the template or runtime, with a test.
+- **Checked 2026-10-16 (T001)**: for a `string` success schema, the
+  generated function is typed `-> str` and returns the parsed body as is,
+  without `parse_response_model()`. The 202 status is passed through as
+  `expected_status=202`. No change was needed.
 
 ## R7. Chart decoding
 
@@ -248,8 +253,9 @@ tree on 2026-10-16.
   `RateLimit` on results and errors has empty fields. The rate limiting guide
   says so, and gives a 429 retry recipe with a fixed backoff that does not
   depend on quota headers.
-- **Open check**: confirm that `request_json()` builds an empty `RateLimit`
-  when the headers are absent, with a runtime test.
+- **Checked 2026-10-16 (T002)**: with no quota headers, `RateLimit.from_headers()`
+  returns `None`. The result, the error, and `api_config.rate_limits` hold no
+  quota. `tests/runtime/test_rest_runtime.py` pins it.
 
 ## R15. Generated documentation for a REST-only service
 
