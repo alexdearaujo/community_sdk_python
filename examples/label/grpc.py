@@ -1,5 +1,5 @@
 # HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
-"""List all device labels in the account — gRPC transport."""
+"""List all device labels in the account (gRPC transport)."""
 
 from kentik_api.client import KentikAPI
 from kentik_api.errors import KentikError

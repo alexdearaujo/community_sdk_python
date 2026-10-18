@@ -233,7 +233,7 @@ def test_call_grpc_labels_unknown_when_the_stub_has_no_label(rpc_error):
 
 @pytest.fixture
 def device_pb2():
-    import kentik_api.gen.pb_companions  # noqa: F401  -- registers proto dependencies
+    import kentik_api.gen.pb_companions  # noqa: F401  # registers proto dependencies
     from kentik_api.gen.device.pb import device_pb2
 
     return device_pb2
@@ -303,7 +303,7 @@ def test_build_grpc_request_rejects_an_unknown_enum_name(device_pb2):
 
 @pytest.fixture
 def capability_pb2():
-    import kentik_api.gen.pb_companions  # noqa: F401  -- registers proto dependencies
+    import kentik_api.gen.pb_companions  # noqa: F401  # registers proto dependencies
     from kentik_api.gen.kagent.pb import capability_pb2
 
     return capability_pb2

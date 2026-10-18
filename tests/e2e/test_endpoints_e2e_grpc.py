@@ -11,7 +11,7 @@ gRPC coverage is per-operation, not per-service (see AGENTS.md's "gRPC
 transport is fully implemented" section): a wrapper method raises
 NotImplementedError when the service's proto companions failed to import,
 or when no RPC shares that REST operation's HTTP rule. Neither case is a
-bug -- both count as a passing outcome here, same as a correctly-typed
+bug. Both count as a passing outcome here, same as a correctly-typed
 response or a generated KentikError subclass.
 
 Opt-in only: excluded from `uv run poe test`/`all`/`test-e2e` by the
@@ -65,14 +65,14 @@ def test_read_endpoint_against_real_api_grpc(
         method(**kwargs)
     except NotImplementedError as exc:
         print(
-            f'E2E-gRPC: "{label}" has no gRPC translation yet ({exc}) -- '
+            f'E2E-gRPC: "{label}" has no gRPC translation yet ({exc}). This is '
             "expected, not a bug. RESULT=PASS"
         )
         return
     except KentikError as exc:
         print(
             f'E2E-gRPC: "{label}" raised {type(exc).__name__} '
-            f"(status={getattr(exc, 'status_code', 'n/a')}) -- a real, "
+            f"(status={getattr(exc, 'status_code', 'n/a')}). A real, "
             "generated error response is a valid outcome. RESULT=PASS"
         )
         return
@@ -107,7 +107,7 @@ def _send_samples_the_proto_accepts(monkeypatch: pytest.MonkeyPatch, case) -> No
 @pytest.mark.skip(
     reason=(
         "Mutating (non-GET) operations are intentionally excluded from "
-        "automatic e2e coverage, gRPC included -- see AGENTS.md's "
+        "automatic e2e coverage, gRPC included. See AGENTS.md's "
         "end-to-end testing requirement. Add a dedicated test with real "
         "setup/teardown for this specific operation if you need live gRPC "
         "coverage here."
@@ -120,5 +120,5 @@ def _send_samples_the_proto_accepts(monkeypatch: pytest.MonkeyPatch, case) -> No
 )
 def test_mutating_endpoint_excluded_from_e2e_grpc(case: EndpointCase, grpc_real_client):
     raise NotImplementedError(
-        "Not auto-implemented by design -- see the skip reason above."
+        "Not auto-implemented by design. See the skip reason above."
     )

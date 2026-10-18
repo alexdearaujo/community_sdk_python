@@ -1,7 +1,7 @@
 # HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Unit tests for scripts/generation/fixup.py.
 
-All tests use tmp_path — no schema download or full generation run required.
+All tests use tmp_path. No schema download or full generation run is required.
 """
 
 import ast
@@ -95,7 +95,7 @@ def test_fix_wildcard_exports_skips_error_dirs(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# _patch_service_files — auth header patch
+# _patch_service_files: auth header patch
 # ---------------------------------------------------------------------------
 
 
@@ -106,7 +106,7 @@ def _make_service_dir(tmp_path: Path) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# _patch_service_files — import alias patch
+# _patch_service_files: import alias patch
 # ---------------------------------------------------------------------------
 
 
@@ -165,7 +165,7 @@ def test_normalize_docstrings_flattens_indentation():
 
     result = _normalize_triple_quoted_docstrings(content)
 
-    # Both lines should end up at the same indent — the extra-deep line is flattened
+    # Both lines should end up at the same indent: the extra-deep line is flattened
     lines = [
         ln
         for ln in result.splitlines()
@@ -184,7 +184,7 @@ def test_normalize_docstrings_leaves_single_line_untouched():
 
 
 # ---------------------------------------------------------------------------
-# _patch_service_files — wildcard typing import
+# _patch_service_files: wildcard typing import
 # ---------------------------------------------------------------------------
 
 
@@ -201,7 +201,7 @@ def test_patch_typing_wildcard_import(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# fix_generated_service — smoke test (all three helpers run without error)
+# fix_generated_service: smoke test (all three helpers run without error)
 # ---------------------------------------------------------------------------
 
 

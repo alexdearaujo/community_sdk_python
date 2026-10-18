@@ -41,7 +41,7 @@ def real_client(request: pytest.FixtureRequest) -> Iterator[KentikAPI]:
         client = KentikAPI(protocol="rest")
     except ConfigurationError:
         pytest.skip(
-            "No KENTIK_EMAIL/KENTIK_API_TOKEN available -- end-to-end tests "
+            "No KENTIK_EMAIL/KENTIK_API_TOKEN available. End-to-end tests "
             "require real credentials in a project-root .env and are opt-in "
             "only (see AGENTS.md's end-to-end testing requirement)."
         )
@@ -64,7 +64,7 @@ def grpc_real_client(request: pytest.FixtureRequest) -> Iterator[KentikAPI]:
         client = KentikAPI(protocol="grpc")
     except ConfigurationError:
         pytest.skip(
-            "No KENTIK_EMAIL/KENTIK_API_TOKEN available -- end-to-end tests "
+            "No KENTIK_EMAIL/KENTIK_API_TOKEN available. End-to-end tests "
             "require real credentials in a project-root .env and are opt-in "
             "only (see AGENTS.md's end-to-end testing requirement)."
         )

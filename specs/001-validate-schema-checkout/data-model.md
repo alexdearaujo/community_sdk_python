@@ -1,6 +1,6 @@
 # Phase 1 Data Model: Validate Schema Checkout Before Generating
 
-This feature's only "entity" is an in-memory validation result — nothing is
+This feature's only "entity" is an in-memory validation result. Nothing is
 persisted.
 
 ## SchemaValidationFailure
@@ -18,5 +18,5 @@ existing `SwaggerFileMetadata` `TypedDict` convention already used in
 
 `validate_schema_files(swagger_paths: list[Path]) -> list[SchemaValidationFailure]`
 takes the list of already-selected swagger paths (values of
-`selected_swagger_files`, flattened) and returns zero or more failures — no
+`selected_swagger_files`, flattened) and returns zero or more failures, with no
 state transitions, no persistence.

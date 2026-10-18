@@ -334,7 +334,7 @@ def _generate_runtime_architecture_docs(
 
     # Layer assignments derived from _GROUP_CONFIG and _LAYER_NAMES.
     # Any label returned by _module_group that is not in _GROUP_CONFIG will
-    # appear as an ungrouped node — the test_docs_rendering.py coverage check
+    # appear as an ungrouped node. The test_docs_rendering.py coverage check
     # catches this before it silently breaks the generated diagram.
     from collections import defaultdict
 

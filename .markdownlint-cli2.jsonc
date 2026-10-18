@@ -20,8 +20,8 @@
   },
   "globs": ["**/*.md"],
   // Spec Kit vendors these paths (specify init/upgrade rewrites them
-  // wholesale), so they aren't ours to hand-fix for markdownlint compliance --
-  // any fix here would just get overwritten by the next `specify upgrade` /
+  // wholesale), so they aren't ours to hand-fix for markdownlint compliance.
+  // Any fix here would just get overwritten by the next `specify upgrade` /
   // `specify init --force`.
   "ignores": [
     // Exactly `@AGENTS.md`, a Claude Code import, so it can have no heading.

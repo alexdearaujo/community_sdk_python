@@ -95,8 +95,8 @@ def extract_endpoint_docs(swagger_path: Path) -> list[EndpointDoc]:
 
     Unlike collect_operation_error_responses (which only looks at non-2xx
     responses, for error-class generation), this captures every declared
-    response so it can be rendered as real Sphinx text -- tables and a
-    generated usage example -- instead of a rendered diagram image.
+    response so it can be rendered as real Sphinx text (tables and a
+    generated usage example) instead of a rendered diagram image.
     """
     with open(swagger_path, "r", encoding="utf-8") as f:
         schema = json.load(f)
@@ -245,12 +245,12 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
     and SuppressionService both declare an operationId of exactly "List"),
     so operationId alone can't disambiguate which wrapper method an
     EndpointDoc (extracted straight from one swagger file) corresponds to.
-    Method+path is guaranteed unique -- OpenAPI forbids two operations
+    Method+path is guaranteed unique: OpenAPI forbids two operations
     sharing both within one merged service.
 
     Reads the actual generated ServiceWrapper class and its underlying REST
     module (via AST, no import/execution) so example snippets always match
-    the real, callable signature -- including flattened nested-object
+    the real, callable signature, including flattened nested-object
     parameter names like `pagination.limit` -> `paginationlimit` that only
     exist post-generation.
     """
@@ -598,7 +598,7 @@ def _autodoc_directive_for_model(models_dir: Path, class_name: str) -> str:
     Most generated classes are Pydantic BaseModel subclasses, which
     sphinxcontrib.autodoc_pydantic renders beautifully via
     `autopydantic_model`. But OpenAPI enum schemas generate plain
-    `class X(str, Enum)` classes -- feeding those into autopydantic_model
+    `class X(str, Enum)` classes. Feeding those into autopydantic_model
     crashes the Sphinx build (it assumes `__pydantic_decorators__` exists),
     so they need the standard `autoclass` directive instead.
     """
@@ -662,8 +662,8 @@ def _render_model_relationship_diagram(
 ) -> list[str]:
     """Renders a collapsible Mermaid classDiagram of the service's model graph.
 
-    Focuses on the public surface -- the request/response models the operations
-    use, plus the models they directly reference -- and falls back to the
+    Focuses on the public surface (the request/response models the operations
+    use, plus the models they directly reference) and falls back to the
     service's own models for schema-only services. Caps the node count so dense
     services stay readable.
     """
@@ -819,7 +819,7 @@ def render_endpoint_docs(
         if not endpoint_docs:
             lines.extend(
                 [
-                    "This service's schema defines shared types only -- no REST endpoints.",
+                    "This service's schema defines shared types only. It has no REST endpoints.",
                     "",
                 ]
             )
@@ -831,7 +831,7 @@ def render_endpoint_docs(
                     lines.extend([f"### {group_name}", ""])
                 # A thematic break between consecutive endpoints within a
                 # group makes long pages (e.g. alerting's 37 operations)
-                # scannable -- without it, sections with the same shape
+                # scannable. Without it, sections with the same shape
                 # (heading, prose, two tables, a code block) visually
                 # bleed into each other. Not needed before the first
                 # endpoint in a group: the group/service heading above it

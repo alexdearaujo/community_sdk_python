@@ -5,7 +5,7 @@
 
 ## Endpoints
 
-This service's schema defines shared types only -- no REST endpoints.
+This service's schema defines shared types only. It has no REST endpoints.
 
 ## Data Models
 

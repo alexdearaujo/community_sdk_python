@@ -374,7 +374,7 @@ def test_iter_service_dirs_regression_pb_companions_excluded_core_included(
 ):
     # Names the real defect: pb_companions (the proto descriptor registry,
     # created by _compile_proto_companions()) was documented as a Service,
-    # while core -- a real generated Service -- was suppressed by a hardcoded
+    # while core (a real generated Service) was suppressed by a hardcoded
     # "core" literal. Their counts cancelled, so every count check passed.
     _make_gen_tree(tmp_path, ["core", "device", "pb_companions"])
 

@@ -12,7 +12,7 @@ four.
 
 | File | Covers |
 | --- | --- |
-| `test_parity.py` | Swagger selection, schema structural validation, generated/schema directory parity, and `iter_service_dirs()` — the single rule for which directories under `gen/` are Services. |
+| `test_parity.py` | Swagger selection, schema structural validation, generated/schema directory parity, and `iter_service_dirs()`: the single rule for which directories under `gen/` are Services. |
 | `test_error_package.py` | Error class naming, error-response extraction and merging, and the runtime error-dispatch injection seam (including the `ValueError` guard when the anchor is absent). |
 | `test_fixup.py` | Post-generation fixups: `models/__init__.py` rebuild, wildcard-export replacement, file-level content patches, function deduplication, and docstring normalization. |
 | `test_wrapper_generation.py` | Annotation qualification and end-to-end wrapper and client-mixin generation against a temp directory. |

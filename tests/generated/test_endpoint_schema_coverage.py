@@ -2,8 +2,8 @@
 """Exhaustive endpoint x declared-response-status coverage.
 
 `test_wrapper_contracts.py` proves every wrapper method forwards its
-arguments correctly. This module proves the layer underneath -- the shared
-`request_json` runtime in `kentik_api.core.rest_runtime` -- correctly
+arguments correctly. This module proves the layer underneath (the shared
+`request_json` runtime in `kentik_api.core.rest_runtime`) correctly
 handles every response status code the OpenAPI schema actually declares for
 every operation, success and error alike. Per AGENTS.md's test coverage
 requirement, this is derived from the generated code (which is itself

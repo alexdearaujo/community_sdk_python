@@ -67,7 +67,7 @@ make test
 All three must be clean. `make test` must not regress from its current count
 other than by tests added or retargeted here.
 
-## 4. Regeneration check — the primary acceptance gate
+## 4. Regeneration check: the primary acceptance gate
 
 This is what proves FR-011 and SC-006. Unit tests alone cannot.
 

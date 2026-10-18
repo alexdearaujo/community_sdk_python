@@ -171,7 +171,7 @@ small and fast.
 
 Add tests here when `scripts/generation/*.py` logic changes. These
 are unit tests against the generator itself, not the SDK it
-produces. Most need no real or local schema checkout — build minimal
+produces. Most need no real or local schema checkout. Build minimal
 swagger fragments or fake generated-file fixtures with `tmp_path`
 instead. One exception:
 `test_the_real_alert_schema_keeps_acknowledgement_an_object` in
@@ -192,7 +192,7 @@ Primary files:
 
 Like the other generated-style suites, endpoint discovery comes from
 [`tests/_discovery.py`](_discovery.py) (`discover_endpoint_cases()`), not a hand-written
-list -- both the REST and gRPC suites share the same discovered
+list. Both the REST and gRPC suites share the same discovered
 cases and GET-vs-mutating split. Three things set this suite apart
 from the mocked ones:
 

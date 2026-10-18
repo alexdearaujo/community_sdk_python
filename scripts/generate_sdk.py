@@ -831,7 +831,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         # This MUST run before anything below touches SDK_OUTPUT_DIR: an
         # earlier version of this check ran after the "clean old modules"
         # step, so a validation failure still left src/kentik_api/gen/
-        # wiped out -- discovered by manually reproducing the incident
+        # wiped out. This was discovered by manually reproducing the incident
         # end-to-end rather than trusting fixture tests alone.
         parity.validate_schema_files_or_raise(
             [
