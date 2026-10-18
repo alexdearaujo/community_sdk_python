@@ -33,6 +33,7 @@ from ._shared import (
     grpc_stub_services,
     iter_service_dirs,
     parse_generated_rest_module,
+    write_text_lf,
 )
 
 SURFACE_FILE = PROJECT_ROOT / "api_surface.json"
@@ -273,7 +274,7 @@ def capture(output_dir: Path | None = None) -> dict[str, Any]:
 
 def write(surface: dict[str, Any], path: Path | None = None) -> Path:
     target = SURFACE_FILE if path is None else path
-    target.write_text(json.dumps(surface, indent=2) + "\n", encoding="utf-8")
+    write_text_lf(target, json.dumps(surface, indent=2) + "\n")
     return target
 
 

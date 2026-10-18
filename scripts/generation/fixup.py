@@ -12,7 +12,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from ._shared import discover_service_model_classes, normalize_symbol
+from ._shared import discover_service_model_classes, normalize_symbol, write_text_lf
 
 
 def fix_generated_service(service_dir: Path) -> None:
@@ -52,9 +52,9 @@ def _rebuild_models_init(service_dir: Path) -> None:
             continue
         exports = ", ".join(f"{c} as {c}" for c in classes)
         init_lines.append(f"from .{model_file.stem} import {exports}")
-    (models_dir / "__init__.py").write_text(
+    write_text_lf(
+        models_dir / "__init__.py",
         "\n".join(init_lines) + ("\n" if init_lines else ""),
-        encoding="utf-8",
     )
 
 
@@ -84,7 +84,7 @@ def _fix_wildcard_exports(service_dir: Path) -> None:
                         )
                         continue
             new_lines.append(line)
-        init_file.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+        write_text_lf(init_file, "\n".join(new_lines) + "\n")
 
 
 def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
@@ -111,7 +111,7 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         content = py_file.read_text(encoding="utf-8")
         for transform in transforms:
             content = transform(content)
-        py_file.write_text(content, encoding="utf-8")
+        write_text_lf(py_file, content)
 
 
 def _is_pb_or_error(py_file: Path, service_dir: Path) -> bool:

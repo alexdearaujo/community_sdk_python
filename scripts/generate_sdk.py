@@ -29,6 +29,7 @@ from generation._shared import (
     SDK_OUTPUT_DIR,
     iter_service_dirs,
     normalize_symbol,
+    write_text_lf,
 )
 from generation.endpoint_docs import SCHEMA_RECORD_FILE, EndpointDocsCollector
 from generation.public_names import NAMES_FILE, PublicNames
@@ -261,7 +262,7 @@ def _relink_pb2_dependency_imports(
             content = pb_file.read_text(encoding="utf-8")
             patched = pattern.sub(lambda m, f=pb_file: _replace(m, f), content)
             if patched != content:
-                pb_file.write_text(patched, encoding="utf-8")
+                write_text_lf(pb_file, patched)
                 rewritten += 1
 
     if unresolved:
@@ -713,11 +714,9 @@ def _compile_proto_companions(schema_root: Path) -> None:
 
     options_out = companions_dir / "protoc_gen_openapiv2" / "options"
     options_out.mkdir(parents=True, exist_ok=True)
-    (companions_dir / "__init__.py").write_text(_PB_COMPANIONS_INIT, encoding="utf-8")
-    (companions_dir / "protoc_gen_openapiv2" / "__init__.py").write_text(
-        "", encoding="utf-8"
-    )
-    (options_out / "__init__.py").write_text("", encoding="utf-8")
+    write_text_lf(companions_dir / "__init__.py", _PB_COMPANIONS_INIT)
+    write_text_lf(companions_dir / "protoc_gen_openapiv2" / "__init__.py", "")
+    write_text_lf(options_out / "__init__.py", "")
 
     proto_files = [
         "protoc-gen-openapiv2/options/annotations.proto",
@@ -741,7 +740,7 @@ def _compile_proto_companions(schema_root: Path) -> None:
                 "from protoc_gen_openapiv2.",
                 "from kentik_api.gen.pb_companions.protoc_gen_openapiv2.",
             )
-            pb_file.write_text(content, encoding="utf-8")
+            write_text_lf(pb_file, content)
         print("    ✅ Proto companions compiled successfully.")
     except subprocess.CalledProcessError as e:
         print(f"    ❌ Proto companion compilation failed: {e.stderr or e.stdout}")
@@ -1003,25 +1002,25 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                                     )
                                     pb_owners[(package, module)] = service
                                     target = pb_dir / (module + suffix)
-                                    target.write_text(
+                                    write_text_lf(
+                                        target,
                                         _qualify_colliding_imports(
                                             gen_py.read_text(encoding="utf-8"),
                                             proto_collisions,
                                         ),
-                                        encoding="utf-8",
                                     )
 
                                 for pb_file in pb_dir.rglob("*_grpc.py"):
                                     content = pb_file.read_text(encoding="utf-8")
                                     content = _rewrite_grpc_imports(content)
                                     content = _silence_grpc_experimental(content)
-                                    pb_file.write_text(content, encoding="utf-8")
+                                    write_text_lf(pb_file, content)
                                 for stub_file in pb_dir.rglob("*.pyi"):
-                                    stub_file.write_text(
+                                    write_text_lf(
+                                        stub_file,
                                         _fix_module_level_classvar(
                                             stub_file.read_text(encoding="utf-8")
                                         ),
-                                        encoding="utf-8",
                                     )
 
                                 oneof_members = oneof_members_by_definition(
@@ -1143,7 +1142,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
 
     # Only a completed run moves the pin.
     if schema_commit:
-        SCHEMA_PIN.write_text(schema_commit + "\n", encoding="utf-8")
+        write_text_lf(SCHEMA_PIN, schema_commit + "\n")
         print(f"Pinned schema commit {schema_commit} in {SCHEMA_PIN.name}")
 
     print("\n✅ SDK and Documentation Generation Complete!")
@@ -1193,7 +1192,7 @@ def _inject_generated_headers(output_dir: Path) -> None:
             f"# Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand.\n"
             "\n"
         )
-        py_file.write_text(header + content, encoding="utf-8")
+        write_text_lf(py_file, header + content)
         count += 1
 
     print(f"    ✅ AUTO-GENERATED headers injected into {count} gen/ files.")

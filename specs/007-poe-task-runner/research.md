@@ -76,14 +76,17 @@ them.
   - With `eol=lf`, Git checks out text files with LF on every OS, whatever
     `core.autocrlf` says, and Git still detects binary files (FR-013).
   - On Windows, `Path.write_text` writes CRLF (expected; Python text mode).
-    The generator writes 35 files that way. Ruff formats every generated
-    `.py` and the generated Markdown with `line-ending = "lf"`, so those come
-    out with LF. For the JSON records, Git normalizes CRLF to LF when it
-    compares, so `git status` stays clean.
+    `git status` reports a CRLF file as modified even under `eol=lf`, though
+    `git diff` shows nothing. The first Windows drift job failed this way.
+    So every generator write goes through `write_text_lf()` in `_shared.py`,
+    which writes the UTF-8 bytes as is, and a test rejects any other
+    `write_text` call in the generator.
   - `Path.write_text(newline=...)` exists only from Python 3.13, and the
     project supports 3.12.
-- **Alternatives considered**: A shared LF write helper for all 35 calls:
-  deferred. Add it only if the Windows drift job still shows a difference.
+- **Alternatives considered**: Rely on Ruff `line-ending = "lf"` and Git
+  normalization alone: rejected after the Windows drift job failed, because
+  the generator rewrites files after Ruff runs (the generated headers, the
+  JSON records, `schema.lock`).
 
 ## R6. `AGENTS.md` without a symbolic link
 

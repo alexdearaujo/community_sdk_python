@@ -13,7 +13,7 @@ import re
 from collections.abc import Iterable
 from pathlib import Path
 
-from ._shared import INTERNAL_GEN_DIRS, PROJECT_ROOT, normalize_symbol
+from ._shared import INTERNAL_GEN_DIRS, PROJECT_ROOT, normalize_symbol, write_text_lf
 
 NAMES_FILE = PROJECT_ROOT / "public_names.json"
 
@@ -121,7 +121,7 @@ class PublicNames:
 
     def save(self, path: Path = NAMES_FILE) -> None:
         text = json.dumps({"services": self._services}, indent=2, sort_keys=True)
-        path.write_text(text + "\n", encoding="utf-8")
+        write_text_lf(path, text + "\n")
 
     def services(self, upstream: Iterable[str]) -> dict[str, str]:
         """Maps each schema Service directory to its public name."""

@@ -19,6 +19,7 @@ from ._shared import (
     iter_service_dirs,
     parse_generated_rest_module,
     service_to_pascal_case,
+    write_text_lf,
 )
 from .public_names import PublicNames, operation_key
 
@@ -670,7 +671,7 @@ def _generate_service_wrappers(names: PublicNames):
 
         # Write to gen/<service>/services/<service>.py
         wrapper_file = services_folder / f"{service}.py"
-        wrapper_file.write_text("\n".join(wrapper_code), encoding="utf-8")
+        write_text_lf(wrapper_file, "\n".join(wrapper_code))
 
 
 def _generate_client_mixin(rest_only: frozenset[str] = frozenset()):
@@ -738,7 +739,7 @@ def _generate_client_mixin(rest_only: frozenset[str] = frozenset()):
     ]
 
     mixin_file = PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py"
-    mixin_file.write_text("\n".join(mixin_code), encoding="utf-8")
+    write_text_lf(mixin_file, "\n".join(mixin_code))
 
 
 def generate(names: PublicNames, rest_only: frozenset[str] = frozenset()) -> None:
