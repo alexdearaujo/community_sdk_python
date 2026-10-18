@@ -69,8 +69,9 @@ uv run poe test-e2e-grpc  # gRPC transport
 ```
 
 Neither suite runs by accident. `addopts` in `pyproject.toml`
-excludes both by default; only `uv run poe test-e2e`/`-m e2e` (REST) or
-`uv run poe test-e2e-grpc`/`-m e2e_grpc` (gRPC) runs them.
+excludes both by default. A bare `pytest -m e2e` (or `-m e2e_grpc`)
+still skips every test, because the `--run-live-e2e` flag is also
+needed. The two poe tasks pass that flag for you.
 
 ## Credentials
 

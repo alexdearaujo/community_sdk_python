@@ -16,7 +16,7 @@ response or a generated KentikError subclass.
 
 Opt-in only: excluded from `uv run poe test`/`all`/`test-e2e` by the
 `e2e_grpc` pytest marker (see pyproject.toml's addopts) and only actually
-run via `uv run poe test-e2e-grpc` or `pytest -m e2e_grpc`. The
+run via `uv run poe test-e2e-grpc` or `pytest -m e2e_grpc --run-live-e2e`. The
 `grpc_real_client` fixture (tests/e2e/conftest.py) skips the whole module
 if no real credentials are configured.
 """
