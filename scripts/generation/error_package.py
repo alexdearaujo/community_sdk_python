@@ -220,6 +220,9 @@ def generate_service_error_package(
         "            payload = None",
         "        if isinstance(payload, dict):",
         '            details["response_json"] = payload',
+        # The V5 API's error body: {"error": ..., "errorxid": ...}.
+        '            if isinstance(payload.get("error"), str) and payload["error"]:',
+        "                message = f\"{message}: {payload['error']}\"",
     ]
 
     if status_model in model_classes:

@@ -328,6 +328,11 @@ classes follow: `client.site.create` raises `CreateError`, in
 
 ### Fixed
 
+- **A V5 error keeps the server's error text.** A failed `client.v5` call
+  raised a message with only the status code, because the generated error
+  classes read only a `message` field. The V5 API sends `{"error": ...}`. The
+  message now ends with that text, as in "failed with status code: 400: The
+  device_name is required".
 - **A failed gRPC proto import names its cause.** When a service's proto
   modules failed to import, every gRPC call raised "gRPC proto dependencies
   not installed", even for a descriptor-pool conflict, which needs a different

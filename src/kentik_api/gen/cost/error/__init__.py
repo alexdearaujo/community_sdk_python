@@ -33,6 +33,8 @@ class CostError(HTTPException):
             payload = None
         if isinstance(payload, dict):
             details["response_json"] = payload
+            if isinstance(payload.get("error"), str) and payload["error"]:
+                message = f"{message}: {payload['error']}"
             message = payload.get("message") or message
         elif payload is not None:
             details["response_json"] = payload

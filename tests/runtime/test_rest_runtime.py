@@ -399,3 +399,23 @@ def test_a_v5_error_body_gives_the_message_and_keeps_the_error_id(
 
     assert exc.value.message.endswith(": The device_name is required")
     assert exc.value.details["response_json"]["errorxid"] == "mvbc0s95qc"
+
+
+def test_a_generated_v5_error_keeps_the_v5_error_text(monkeypatch: pytest.MonkeyPatch):
+    from kentik_api.gen.v5.error import TopXDataBadRequestError, TopXDataError
+
+    body = {"error": "The device_name is required", "errorxid": "mvbc0s95qc"}
+    monkeypatch.setattr(
+        httpx.Client, "request", lambda self, *a, **k: httpx.Response(400, json=body)
+    )
+
+    with pytest.raises(TopXDataBadRequestError) as exc:
+        request_json(
+            "POST",
+            "/query/topXdata",
+            api_config_override=_config(),
+            error_cls=TopXDataError,
+        )
+
+    assert exc.value.message.endswith(": The device_name is required")
+    assert exc.value.details["response_json"]["errorxid"] == "mvbc0s95qc"

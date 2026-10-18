@@ -35,6 +35,8 @@ class NotificationChannelError(HTTPException):
             payload = None
         if isinstance(payload, dict):
             details["response_json"] = payload
+            if isinstance(payload.get("error"), str) and payload["error"]:
+                message = f"{message}: {payload['error']}"
             try:
                 status = rpcStatus.model_validate(payload)
             except Exception:
