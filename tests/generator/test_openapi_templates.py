@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The custom openapi templates, rendered with the generator's own Jinja settings."""
 
 import ast
@@ -7,6 +7,8 @@ from types import SimpleNamespace
 
 import pytest
 from jinja2 import Environment, FileSystemLoader
+
+from scripts.generation._shared import REGENERATE_COMMAND
 
 _TEMPLATES = Path(__file__).resolve().parents[2] / "scripts" / "openapi_templates"
 # Quotes, an HTML character, a backslash, a triple quote, and a line break.
@@ -138,3 +140,9 @@ def test_rest_function_docstring_is_the_summary_and_description(
     function = _rest_function(env, summary, description)
 
     assert ast.get_docstring(function) == expected
+
+
+def test_service_template_header_names_the_regenerate_command():
+    # The template cannot import the constant, so this test keeps the two in step.
+    header = (_TEMPLATES / "service.jinja2").read_text(encoding="utf-8").splitlines()[1]
+    assert header == f"# Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand."

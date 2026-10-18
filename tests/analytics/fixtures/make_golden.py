@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Make the golden outputs of the 1.x analytics code (spec 005, SC-003).
 
 Runs the 1.x functions themselves, read from git, on the inputs in this folder,

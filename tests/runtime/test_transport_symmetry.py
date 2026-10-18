@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The same failure raises the same SDK exception on both transports (FR-040, SC-002).
 
 Each case drives one failure through both shared chokepoints, `request_json()`

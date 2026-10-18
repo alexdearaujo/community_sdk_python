@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """List synthetic tests and agents."""
 
 from kentik_api.client import KentikAPI

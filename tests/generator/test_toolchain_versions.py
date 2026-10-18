@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Guards the declared runtime floors against the versions protoc stamps into stubs.
 
 The generated stubs enforce their own minimums at import time: `*_pb2.py` calls
@@ -64,7 +64,9 @@ def _gencode_versions(glob: str, pattern: re.Pattern[str]) -> dict[Version, list
                 stub.relative_to(SDK_OUTPUT_DIR).as_posix()
             )
     if not found:
-        pytest.skip(f"no generated {glob} stubs present; run `make generate` first")
+        pytest.skip(
+            f"no generated {glob} stubs present; run `uv run poe generate` first"
+        )
     return found
 
 
@@ -90,7 +92,7 @@ def test_protobuf_gencode_version_is_uniform(protobuf_gencode):
     assert len(protobuf_gencode) == 1, (
         "generated *_pb2.py stubs disagree on protobuf gencode version: "
         f"{_describe(protobuf_gencode)}. "
-        "Re-run `make generate` so every stub is built by one protoc."
+        "Re-run `uv run poe generate` so every stub is built by one protoc."
     )
 
 
@@ -98,7 +100,7 @@ def test_grpc_gencode_version_is_uniform(grpc_gencode):
     assert len(grpc_gencode) == 1, (
         "generated *_pb2_grpc.py stubs disagree on grpcio gencode version: "
         f"{_describe(grpc_gencode)}. "
-        "Re-run `make generate` so every stub is built by one protoc."
+        "Re-run `uv run poe generate` so every stub is built by one protoc."
     )
 
 
@@ -136,7 +138,7 @@ def test_declared_grpcio_floor_covers_gencode(pyproject, grpc_gencode):
 
 
 def test_grpcio_tools_is_pinned_exactly(pyproject, grpc_gencode):
-    """An open floor makes `make generate` output depend on resolution date, not schema."""
+    """An open floor makes `uv run poe generate` output depend on resolution date, not schema."""
     requirement = _requirement(pyproject["dependency-groups"]["dev"], "grpcio-tools")
     assert "==" in requirement, (
         f"pyproject declares `{requirement}`; pin grpcio-tools exactly so protoc "
@@ -144,7 +146,7 @@ def test_grpcio_tools_is_pinned_exactly(pyproject, grpc_gencode):
     )
     assert _floor(requirement) == next(iter(grpc_gencode)), (
         f"pinned `{requirement}` does not match the gencode version stamped into the "
-        "committed stubs. Re-run `make generate` after changing the pin."
+        "committed stubs. Re-run `uv run poe generate` after changing the pin."
     )
 
 
@@ -155,7 +157,7 @@ def test_openapi_generator_is_pinned_exactly(pyproject):
     )
     assert "==" in requirement, (
         f"pyproject declares `{requirement}`; pin openapi-python-generator exactly "
-        "so `make generate` output depends on the schema, not the resolution date."
+        "so `uv run poe generate` output depends on the schema, not the resolution date."
     )
     installed = _parse_version(importlib.metadata.version("openapi-python-generator"))
     assert _floor(requirement) == installed, (

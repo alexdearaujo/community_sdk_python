@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Find time windows where outbound traffic on a link stayed flat (1.x flatness).
 
 On a perimeter link, flat traffic suggests a bandwidth limit in a peer network.

@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../../pyproject.toml). Edit directly. -->
 
 # Shared Runtime (`kentik_api.core`)
 
-Hand-written. Not touched by [`make generate`](../../../Makefile). This is the most
+Hand-written. Not touched by [`uv run poe generate`](../../../pyproject.toml). This is the most
 significant hand-written engineering in the SDK: every generated
 operation, across every service, routes through one function in this
 folder: [`request_json()`](rest_runtime.py) for REST, and
@@ -129,5 +129,5 @@ Fix or extend `request_json()` or `APIConfig` here. Never add
 per-endpoint HTTP, auth, or retry code to a generated service wrapper,
 and never inline request logic to "simplify" one call site. See "The
 shared connection handler" in the repository root
-[CLAUDE.md](../../../CLAUDE.md) for the full rationale and the commits
+[AGENTS.md](../../../AGENTS.md) for the full rationale and the commits
 that shaped this design.

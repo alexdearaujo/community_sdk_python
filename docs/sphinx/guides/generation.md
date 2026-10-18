@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`make generate`](../../../Makefile) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
+<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`uv run poe generate`](../../../pyproject.toml) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
 
 # SDK Generation Workflow
 
@@ -15,23 +15,23 @@ explains how to regenerate after a schema update.
 
 ```bash
 # Use the local schema checkout (fastest)
-make generate local
+uv run poe generate --local
 
 # Override the schema path
-make generate LOCAL_REPO=/path/to/api-schema-public
+uv run poe generate --local-repo /path/to/api-schema-public
 
 # Fetch the pinned schema commit from GitHub (no local checkout needed)
-make generate
+uv run poe generate
 
 # Fetch schema HEAD from GitHub and move the pin
-make sync-schema
+uv run poe sync-schema
 ```
 
 `schema.lock` holds the schema commit that the committed tree was
 generated from. Every completed run writes the commit it used to that
 file, so commit it with the regenerated output. CI regenerates at that
 commit, so a schema change upstream cannot fail a pull request. The
-scheduled `schema-sync` workflow runs `make sync-schema` every week and
+scheduled `schema-sync` workflow runs `uv run poe sync-schema` every week and
 opens a pull request when the output changes.
 
 ### Automated update pull requests
@@ -58,10 +58,10 @@ When a `schema-sync` pull request opens, do these steps:
 4. Merge when CI passes.
 
 If the workflow run fails, the new schema breaks generation. Reproduce
-the failure with `make sync-schema`, and fix the generator.
+the failure with `uv run poe sync-schema`, and fix the generator.
 
 > [!WARNING]
-> `make generate` does not write release notes. When a run changes the API
+> `uv run poe generate` does not write release notes. When a run changes the API
 > surface, the run is not done until you update
 > [`CHANGELOG.md`](https://github.com/kentik/community_sdk_python/blob/main/CHANGELOG.md). The run prints a
 > `⚠️ API SURFACE CHANGED` alert when this applies. See
@@ -73,7 +73,7 @@ for the phase module documentation.
 
 ## What gets regenerated
 
-Every [`make generate`](../../../Makefile) run wipes and rebuilds:
+Every [`uv run poe generate`](../../../pyproject.toml) run wipes and rebuilds:
 
 - [`src/kentik_api/gen/`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/gen/README.md) — all <!-- kentik-gen:service-count -->43<!-- /kentik-gen:service-count --> services
 - [`src/kentik_api/client_mixin.py`](../../../src/kentik_api/client_mixin.py)
@@ -86,7 +86,7 @@ These files are **never hand-edited**.
 
 ## What survives regeneration
 
-Hand-written code that [`make generate`](../../../Makefile) never touches:
+Hand-written code that [`uv run poe generate`](../../../pyproject.toml) never touches:
 
 - [`src/kentik_api/client.py`](../../../src/kentik_api/client.py)
 - [`src/kentik_api/auth/`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/auth/README.md)
@@ -111,7 +111,7 @@ publish. Today it holds `v5`, the V5 query and batch endpoints (see the
   run. When upstream publishes such a service, remove it from
   `schema/openapi/`.
 - To change a V5 call, edit the description, then run
-  `make generate local`. Never edit `src/kentik_api/gen/v5/`.
+  `uv run poe generate --local`. Never edit `src/kentik_api/gen/v5/`.
 - Declare no `enum`. A schema with `additionalProperties: true` gives a
   model that keeps every field it gets.
 
@@ -163,31 +163,31 @@ new value, or delete it if upstream removed it.
    the error. Users keep the same name.
 3. If upstream removed the thing, delete the entry. Record the removal as a
    breaking change in `CHANGELOG.md`.
-4. Run `make generate` again.
+4. Run `uv run poe generate` again.
 
 To give a new thing a name other than its default, add its entry before you
-run `make generate`. To rename an existing public name, change the key. That
+run `uv run poe generate`. To rename an existing public name, change the key. That
 is a breaking change for users, so record it in `CHANGELOG.md`.
 
 > [!NOTE]
 > Each operation's error classes follow its client method name
 > (`client.label.list` raises `ListError`), so this file names them too.
 > Parameter names, model fields, and enum values come from the schema.
-> `make check-changelog` reports their changes.
+> `uv run poe check-changelog` reports their changes.
 
 ## Test after regeneration
 
 ```bash
-make test          # full mocked suite (no network)
-make test-e2e      # opt-in: live API tests (needs .env)
+uv run poe test          # full mocked suite (no network)
+uv run poe test-e2e      # opt-in: live API tests (needs .env)
 ```
 
 ## Update the release notes after every regeneration
 
-This step is required. Do it every time you run `make generate`, with a local
+This step is required. Do it every time you run `uv run poe generate`, with a local
 schema or with the schema from GitHub.
 
-`make generate` records the public API surface in
+`uv run poe generate` records the public API surface in
 [`api_surface.json`](../../../api_surface.json). The record holds every
 service, operation, model field, and enum value. It also holds the gRPC
 method that each operation calls and the error classes that each operation
@@ -199,7 +199,7 @@ then prints one of three messages:
 | --- | --- | --- |
 | `API surface unchanged since HEAD.` | No caller can see a difference. | Nothing. |
 | `⚠️ API SURFACE CHANGED since HEAD` | Callers can see the changes listed under the alert. | Do all the steps below before you commit. |
-| `No api_surface.json is committed at HEAD` | There is no baseline to compare with. | Run `make release-notes SINCE=<ref>` with an earlier ref. |
+| `No api_surface.json is committed at HEAD` | There is no baseline to compare with. | Run `uv run poe release-notes --since <ref>` with an earlier ref. |
 
 This is the alert for the `kmeta` field rename in schema `e205184`:
 
@@ -228,9 +228,9 @@ When you see the alert, do these steps:
 3. In each breaking-change entry, use the exact name that the alert shows,
    for example `ServiceNowConfig.credentialVaultId`. The check in the next
    step looks for that name.
-4. Run `make check-changelog SINCE=HEAD`. It fails and names each breaking
+4. Run `uv run poe check-changelog --since HEAD`. It fails and names each breaking
    change that `CHANGELOG.md` does not mention.
-5. Run `make release-notes SINCE=HEAD` to see the list that the release
+5. Run `uv run poe release-notes --since HEAD` to see the list that the release
    will publish.
 6. Commit `api_surface.json`, the regenerated code, and `CHANGELOG.md`
    together.
@@ -258,13 +258,13 @@ name is the breaking change.
 
 | Step | Who does it | When |
 | --- | --- | --- |
-| Record the surface in `api_surface.json` | `make generate` | Every run |
-| Print the alert | `make generate` | Every run |
+| Record the surface in `api_surface.json` | `uv run poe generate` | Every run |
+| Print the alert | `uv run poe generate` | Every run |
 | Write the `CHANGELOG.md` entry | You | Before you commit the regeneration |
 | Fail when a breaking change has no entry | The `changelog` job in [`tests.yml`](../../../.github/workflows/tests.yml) | Every pull request |
 | Add the surface changes to the GitHub release notes | The `notes` job in [`release.yml`](../../../.github/workflows/release.yml) | When you publish a release |
 
-`make generate` does not write `CHANGELOG.md` or a release notes file. The
+`uv run poe generate` does not write `CHANGELOG.md` or a release notes file. The
 CHANGELOG tells a caller what to do about a change, so a person writes it.
 The release notes compare the surface with the previous release tag. That
 comparison belongs to the release, not to each regeneration.
@@ -275,5 +275,5 @@ Test a fork of `openapi-python-generator` without editing code:
 
 ```bash
 OPENAPI_GENERATOR_FROM="git+https://github.com/<org>/openapi-python-generator.git@<branch>" \
-make generate local
+uv run poe generate --local
 ```

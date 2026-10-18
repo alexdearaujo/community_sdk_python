@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 from typing import TYPE_CHECKING, Any
 
 from .core.rate_limit import RateLimit, rate_limit_of

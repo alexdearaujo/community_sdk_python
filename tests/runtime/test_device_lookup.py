@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """DeviceLookup finds devices, links, and link speeds, and saves JSON (FR-021)."""
 
 from __future__ import annotations

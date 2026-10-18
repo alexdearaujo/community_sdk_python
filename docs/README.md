@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../pyproject.toml). Edit directly. -->
 
 # Kentik Community Python SDK Documentation
 
@@ -49,7 +49,7 @@ examples/
 
 ## Sphinx HTML documentation
 
-Run [`make docs`](../Makefile) to build the full HTML reference from
+Run [`uv run poe docs`](../pyproject.toml) to build the full HTML reference from
 [docs/sphinx/](sphinx/README.md). The HTML output includes per-endpoint
 parameter tables, response tables, model schemas, and interactive Mermaid
 diagrams.

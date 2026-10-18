@@ -1,5 +1,5 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
-# Rebuilt on every `make generate`. Do not edit by hand.
+# Rebuilt on every `uv run poe generate`. Do not edit by hand.
 
 from .AdvertStatus import AdvertStatus as AdvertStatus
 from .BitwiseOp import BitwiseOp as BitwiseOp

@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Every V5 SDK query field reaches the API unchanged (spec 005, FR-002)."""
 
 from __future__ import annotations

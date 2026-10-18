@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Live check of alerting.list, a read-only POST the auto-discovered suite skips.
 
 The Kentik backend returns a 400 unless the filters carry a startedAt range,

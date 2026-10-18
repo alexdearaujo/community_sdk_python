@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The gRPC transport bounds every call with a deadline (FR-001, FR-002, SC-001)."""
 
 from __future__ import annotations

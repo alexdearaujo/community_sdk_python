@@ -1,10 +1,10 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Shared schema/wrapper discovery helpers for the tests/ tree.
 
 Every operation, parameter, and declared response status code exercised by
 the generated/e2e test suites is discovered from the generated code itself
 (AST-parsed or introspected at runtime) rather than hand-listed, so new
-services/endpoints picked up by `make generate` are covered automatically.
+services/endpoints picked up by `uv run poe generate` are covered automatically.
 
 Lives at the tests/ root (not inside tests/generated/) because both
 tests/generated/*.py and tests/e2e/*.py import it; tests/conftest.py puts

@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """A disk cache of query DataFrames by time range (1.x `DFCache`).
 
 Files are Parquet, read with pyarrow, which cannot run code. Each file is

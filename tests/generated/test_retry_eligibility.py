@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Which operations a future retry policy may replay (FR-032a, FR-033).
 
 No post-response retry exists yet. This records the rule a later feature must

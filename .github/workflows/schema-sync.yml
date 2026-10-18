@@ -35,7 +35,7 @@ jobs:
         run: uv sync --locked
 
       - name: Regenerate at schema HEAD
-        run: make sync-schema
+        run: uv run poe sync-schema
 
       - name: Open a pull request when the output changed
         env:
@@ -54,12 +54,12 @@ jobs:
           fi
 
           {
-            echo "Regenerated from api-schema-public \`$commit\` with \`make sync-schema\`."
+            echo "Regenerated from api-schema-public \`$commit\` with \`uv run poe sync-schema\`."
             echo
             echo "Before merging, add a CHANGELOG.md Unreleased entry that names each"
             echo "breaking change below, then close and reopen this pull request to run CI."
             echo
-            uv run python scripts/release_notes.py --since HEAD
+            uv run poe release-notes --since HEAD
           } > "$RUNNER_TEMP/body.md"
 
           git config user.name "github-actions[bot]"

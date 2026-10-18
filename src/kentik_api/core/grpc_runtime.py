@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Shared gRPC call helper — the gRPC analogue of rest_runtime.request_json.
 
 Every generated gRPC wrapper method routes through call_grpc so error

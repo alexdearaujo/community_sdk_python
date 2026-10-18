@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../pyproject.toml). Edit directly. -->
 
 # Test Suite Guide
 
@@ -16,8 +16,8 @@ that layer explicitly.
 | [`runtime`](runtime/README.md) | Focused tests for the shared runtime helpers that generated code calls. | Mocked |
 | [`smoke`](smoke/README.md) | Lightweight checks for client wiring and selected wrapper call paths. | Mocked |
 | [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules ([`scripts/generation/`](../scripts/generation/README.md)): error package generation, swagger selection and parity validation, wrapper generation, generated-code post-processing fixups, docs/endpoint-docs rendering, and [`scripts/generate_sdk.py`](../scripts/generate_sdk.py)'s own schema-patching helpers. | Mocked |
-| `analytics` | Tests of the `analytics` extra: query definitions, the DataFrame cache, and flat-traffic analysis, compared with golden output of the 1.x code (see `analytics/fixtures/README.md`). The test dependency group installs the extra, so `make test` runs this layer and never skips it. Run it alone with `make test-analytics`. | Mocked |
-| [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API, REST ([`test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)) and gRPC ([`test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py)) transports. Opt-in only, never part of [`make test`](../Makefile) or [`make all`](../Makefile). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
+| `analytics` | Tests of the `analytics` extra: query definitions, the DataFrame cache, and flat-traffic analysis, compared with golden output of the 1.x code (see `analytics/fixtures/README.md`). The test dependency group installs the extra, so `uv run poe test` runs this layer and never skips it. Run it alone with `uv run poe test-analytics`. | Mocked |
+| [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API, REST ([`test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)) and gRPC ([`test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py)) transports. Opt-in only, never part of [`uv run poe test`](../pyproject.toml) or [`uv run poe all`](../pyproject.toml). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
 
 ```mermaid
 flowchart TD
@@ -49,13 +49,13 @@ Run these commands from the repository root.
 
 | Goal | Command |
 | --- | --- |
-| Run every mocked layer | [`make test`](../Makefile) |
-| Run generated wrapper contract tests only | [`make test-generated`](../Makefile) |
-| Run runtime tests only | [`make test-runtime`](../Makefile) |
-| Run smoke tests only | [`make test-smoke`](../Makefile) |
-| Run generator unit tests only | [`make test-generator`](../Makefile) |
-| Run end-to-end tests against the real API (opt-in, needs a real `.env`) | [`make test-e2e`](../Makefile) |
-| Run end-to-end gRPC-transport tests against the real API (opt-in, needs a real `.env`) | [`make test-e2e-grpc`](../Makefile) |
+| Run every mocked layer | [`uv run poe test`](../pyproject.toml) |
+| Run generated wrapper contract tests only | [`uv run poe test-generated`](../pyproject.toml) |
+| Run runtime tests only | [`uv run poe test-runtime`](../pyproject.toml) |
+| Run smoke tests only | [`uv run poe test-smoke`](../pyproject.toml) |
+| Run generator unit tests only | [`uv run poe test-generator`](../pyproject.toml) |
+| Run end-to-end tests against the real API (opt-in, needs a real `.env`) | [`uv run poe test-e2e`](../pyproject.toml) |
+| Run end-to-end gRPC-transport tests against the real API (opt-in, needs a real `.env`) | [`uv run poe test-e2e-grpc`](../pyproject.toml) |
 
 You can also call `pytest` directly:
 
@@ -71,17 +71,17 @@ uv run pytest -m e2e_grpc tests/e2e/
 
 `pyproject.toml` registers the `e2e` and `e2e_grpc` markers with
 `addopts = "-m 'not e2e and not e2e_grpc'"`. Plain `pytest tests/`
-always deselects [`tests/e2e/`](e2e/README.md). [`make test`](../Makefile) runs plain `pytest tests/`, so it
+always deselects [`tests/e2e/`](e2e/README.md). [`uv run poe test`](../pyproject.toml) runs plain `pytest tests/`, so it
 deselects [`tests/e2e/`](e2e/README.md) too. Opt in explicitly with `-m e2e` or `-m e2e_grpc`.
 
 ## When to run which suite
 
 | Situation | Run this first |
 | --- | --- |
-| Editing [`scripts/generate_sdk.py`](../scripts/generate_sdk.py), [`scripts/generation/`](../scripts/generation/README.md), or template behavior | [`make test-generator`](../Makefile) for fast feedback on the generator itself, then [`make test-generated`](../Makefile) to check the SDK it produces |
-| Editing shared request, auth, or error behavior in [`src/kentik_api/core`](../src/kentik_api/core/README.md) | [`make test-runtime`](../Makefile) |
-| Opening a PR or merging | [`make test`](../Makefile) |
-| Trusting a schema sync, or a change to error or response handling, against production behavior | [`make test-e2e`](../Makefile) (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first); add [`make test-e2e-grpc`](../Makefile) too if the change touches gRPC translation |
+| Editing [`scripts/generate_sdk.py`](../scripts/generate_sdk.py), [`scripts/generation/`](../scripts/generation/README.md), or template behavior | [`uv run poe test-generator`](../pyproject.toml) for fast feedback on the generator itself, then [`uv run poe test-generated`](../pyproject.toml) to check the SDK it produces |
+| Editing shared request, auth, or error behavior in [`src/kentik_api/core`](../src/kentik_api/core/README.md) | [`uv run poe test-runtime`](../pyproject.toml) |
+| Opening a PR or merging | [`uv run poe test`](../pyproject.toml) |
+| Trusting a schema sync, or a change to error or response handling, against production behavior | [`uv run poe test-e2e`](../pyproject.toml) (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first); add [`uv run poe test-e2e-grpc`](../pyproject.toml) too if the change touches gRPC translation |
 
 ## How to add new tests
 
@@ -110,7 +110,7 @@ OpenAPI schema declares for it: each service's generated
 `error/__init__.py::{Operation}Error.response_error_map`, plus the
 success `expected_status`. `respx` mocks the HTTP layer, so the real
 `request_json` runtime and the real generated error classes run.
-This is what CLAUDE.md's test coverage requirement (every endpoint,
+This is what AGENTS.md's test coverage requirement (every endpoint,
 every option, every declared status code) maps to concretely.
 
 This suite drives the actual generated code end-to-end. It does not
@@ -120,7 +120,7 @@ a model import that silently resolves to the wrong object.
 
 Add logic here only when the status or error coverage strategy
 itself changes. A new service, operation, or status code needs no
-manual update: the next [`make generate`](../Makefile) picks it up automatically.
+manual update: the next [`uv run poe generate`](../pyproject.toml) picks it up automatically.
 
 ### 1c) Schema operation record
 
@@ -204,7 +204,7 @@ from the mocked ones:
   counts as a failure, since the test cannot control what data
   exists in the real account.
 - The gRPC variant additionally treats `NotImplementedError` as a
-  passing outcome (see CLAUDE.md's "gRPC transport is fully
+  passing outcome (see AGENTS.md's "gRPC transport is fully
   implemented" section). A wrapper raises `NotImplementedError` when
   the service's proto companions fail to import, or when no RPC
   shares the operation's HTTP rule. Today every operation has a gRPC
@@ -219,8 +219,8 @@ from the mocked ones:
   into the auto-discovered path.
 
 This suite never runs by accident. `addopts` in `pyproject.toml`
-excludes both by default; only `make test-e2e`/`-m e2e` (REST) or
-`make test-e2e-grpc`/`-m e2e_grpc` (gRPC) runs them. Never hardcode
+excludes both by default; only `uv run poe test-e2e`/`-m e2e` (REST) or
+`uv run poe test-e2e-grpc`/`-m e2e_grpc` (gRPC) runs them. Never hardcode
 credentials in test code. Never read or print `.env` contents.
 
 ## Regression gates added by the pre-PR audit
@@ -240,6 +240,6 @@ credentials in test code. Never read or print `.env` contents.
 - The e2e layer is the one intentional exception to "no network
   calls." Keep it opt-in, read-only by default, and separate from
   the rest of the pipeline.
-- If generation output changes, regenerate first: `make generate
-  local`. Then run the relevant focused suite. Finally, run
-  [`make test`](../Makefile).
+- If generation output changes, regenerate first:
+  `uv run poe generate --local`. Then run the relevant focused suite.
+  Finally, run [`uv run poe test`](../pyproject.toml).

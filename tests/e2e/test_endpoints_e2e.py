@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """End-to-end coverage against the real Kentik API.
 
 Every other suite under tests/generated/ proves the SDK is internally
@@ -7,7 +7,7 @@ that calls the real API, so it can catch the one thing mocks structurally
 cannot: the real API's behavior drifting from what the schema (and therefore
 the generated code) assumes.
 
-Scope, by design (see CLAUDE.md's end-to-end testing requirement):
+Scope, by design (see AGENTS.md's end-to-end testing requirement):
   - Only GET (read-only, non-mutating) operations are auto-covered and
     actually called here. Discovered the same way as every other generated
     suite -- via tests/_discovery.py -- so new read endpoints get e2e
@@ -24,8 +24,8 @@ Scope, by design (see CLAUDE.md's end-to-end testing requirement):
     error hierarchy) is a failure, since we don't control what data exists in
     the real account being tested against.
 
-Opt-in only: excluded from `make test`/`make all` by the `e2e` pytest marker
-(see pyproject.toml's addopts) and only actually run via `make test-e2e` or
+Opt-in only: excluded from `uv run poe test`/`uv run poe all` by the `e2e` pytest marker
+(see pyproject.toml's addopts) and only actually run via `uv run poe test-e2e` or
 `pytest -m e2e`. The `real_client` fixture (tests/e2e/conftest.py) skips the
 whole module if no real credentials are configured.
 """
@@ -98,7 +98,7 @@ def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
 @pytest.mark.skip(
     reason=(
         "Mutating (non-GET) operations are intentionally excluded from "
-        "automatic e2e coverage -- see CLAUDE.md's end-to-end testing "
+        "automatic e2e coverage -- see AGENTS.md's end-to-end testing "
         "requirement. Add a dedicated test with real setup/teardown for this "
         "specific operation if you need live coverage here."
     )

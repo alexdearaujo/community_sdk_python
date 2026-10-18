@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 # Examples for the Kentik Community Python SDK.
 # Each script demonstrates one service. Run any script directly:
 #   uv run python examples/device/rest.py

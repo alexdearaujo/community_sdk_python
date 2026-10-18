@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../pyproject.toml). Edit directly. -->
 
 # Dependencies
 
@@ -30,12 +30,13 @@ Groups:
 | pyyaml | analytics | Reads query definition files | Keep |
 | grpcio-tools | dev | Compiles the protos during generation | Keep, pinned to the `grpcio` version |
 | types-protobuf | dev | Type information for protobuf | Keep |
-| ty | dev | Type checker (`make typecheck`) | Keep. Floor 0.0.84: fixes advisory GHSA-vxvm-j4xq-q7m4 |
+| ty | dev | Type checker (`uv run poe typecheck`) | Keep. Floor 0.0.84: fixes advisory GHSA-vxvm-j4xq-q7m4 |
 | ruff | dev | Lints Python, formats Python and the Python blocks in Markdown | Keep, pinned. 0.17 default rules adopted for hand-written code |
 | openapi-python-generator | dev | Generates the REST modules and models | Keep, pinned. See the openapi-python-generator section below |
 | packaging | dev | Version and requirement parsing in the release scripts and tests | Keep |
 | rumdl | dev | Markdown linter that reads `.markdownlint-cli2.jsonc` and needs no Node | Added, pinned |
 | markdown-it-py | dev | Renders the impact report to HTML in `scripts/impact_report.py` | Declared: it was imported but installed only through Sphinx |
+| poethepoet | dev | Task runner: every project task runs as `uv run poe <task>` on any OS | Added, pinned. Its agent skill in `.claude/skills/poethepoet/` must match this version |
 | pytest | test | Test runner, in strict mode | Keep |
 | respx | test | Mocks HTTP for the mocked test layers | Keep. Replacing it needs a transport seam in the protected runtime |
 | jinja2 | test | Renders the generator templates in `tests/generator/` | Declared: it was imported but installed only through other packages |
@@ -70,7 +71,7 @@ To try a fork without a code change, set `OPENAPI_GENERATOR_FROM` (see
 
 ## Markdown rules
 
-rumdl checks Markdown in `make lint` and in CI. An editor with the
+rumdl checks Markdown in `uv run poe lint` and in CI. An editor with the
 markdownlint extension reads the same `.markdownlint-cli2.jsonc`, but can
 report a different result, for example on table style. The CI result
 decides.

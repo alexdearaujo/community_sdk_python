@@ -1,7 +1,7 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Live batch round trip. MUTATING: it writes to the real account.
 
-Opt-in like every e2e test, and also behind its own marker, so `make test-e2e`
+Opt-in like every e2e test, and also behind its own marker, so `uv run poe test-e2e`
 never runs it: `pytest -m e2e_mutating --run-live-e2e tests/e2e/test_v5_batch_e2e.py`.
 It upserts one flow tag with a unique, disposable name on a TEST-NET-1 address
 (RFC 5737, never routed), then deletes it in a second batch in `finally`.

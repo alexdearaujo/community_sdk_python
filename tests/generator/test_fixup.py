@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Unit tests for scripts/generation/fixup.py.
 
 All tests use tmp_path — no schema download or full generation run required.

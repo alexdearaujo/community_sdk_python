@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The V5 description in the local schema base (spec 005, FR-001, FR-010, FR-010a).
 
 The local schema base holds only V5 endpoints that have no V6 equivalent, and

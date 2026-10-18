@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Demonstrate SDK error handling, which works identically for REST and gRPC.
 
 `tests/runtime/test_transport_symmetry.py` checks that each failure raises the

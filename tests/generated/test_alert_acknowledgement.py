@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`.
+# HAND-WRITTEN: not modified by `uv run poe generate`.
 """An alert that carries an acknowledgement must parse (audit finding B2)."""
 
 from __future__ import annotations

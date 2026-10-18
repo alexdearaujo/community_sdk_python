@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Tests for scripts/generate_sdk.py top-level helpers.
 
 All tests use tmp_path so no schema download or full generation run is needed
@@ -133,7 +133,7 @@ def test_module_level_classvar_becomes_int_and_class_body_keeps_it():
 # patched_swagger: requestBody $ref inlining
 #
 # These drive patched_swagger rather than any in-place helper: it is the path
-# `make generate` runs, so a break there fails these tests.
+# `uv run poe generate` runs, so a break there fails these tests.
 # ---------------------------------------------------------------------------
 
 _MINIMAL_SCHEMA_WITH_REF_BODY = {
@@ -917,7 +917,7 @@ def test_a_malformed_pin_is_rejected(tmp_path, content):
 
 
 def test_a_missing_pin_names_the_command_that_writes_it(tmp_path):
-    with pytest.raises(ValueError, match="make sync-schema"):
+    with pytest.raises(ValueError, match="uv run poe sync-schema"):
         read_schema_pin(tmp_path / "schema.lock")
 
 

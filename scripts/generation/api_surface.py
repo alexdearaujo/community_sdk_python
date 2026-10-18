@@ -1,7 +1,7 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Records the SDK's public API surface and diffs two recordings into release notes.
 
-`make generate` writes `api_surface.json` at the repo root on every run. Because that
+`uv run poe generate` writes `api_surface.json` at the repo root on every run. Because that
 file is committed alongside the generated code, any two points in history can be
 compared with a single `git show <ref>:api_surface.json`, instead of reconstructing
 whole generated trees. `scripts/release_notes.py` does exactly that.
@@ -797,7 +797,7 @@ _RULE = "=" * 72
 def render_regeneration_alert(
     before: dict[str, Any] | None, after: dict[str, Any]
 ) -> str:
-    """Tells whoever ran `make generate` what changed and what they must do next.
+    """Tells whoever ran `uv run poe generate` what changed and what they must do next.
 
     Release notes are not written here: they are cut at release time from the
     committed record, so this only says the CHANGELOG needs the change.
@@ -806,7 +806,7 @@ def render_regeneration_alert(
         return (
             "\nNo api_surface.json is committed at HEAD, so this run cannot say "
             "what changed.\nCompare against an earlier ref with "
-            "`make release-notes SINCE=<ref>`.\n"
+            "`uv run poe release-notes --since <ref>`.\n"
         )
     delta = diff(before, after)
     if is_empty(delta):
@@ -829,8 +829,8 @@ def render_regeneration_alert(
             "Before you commit this regeneration, update the release notes:",
             "  1. Describe each change above in CHANGELOG.md, under ## Unreleased.",
             "     Name every breaking change exactly as listed above.",
-            "  2. make check-changelog SINCE=HEAD   # fails if one is not named",
-            "  3. make release-notes SINCE=HEAD     # preview what the release lists",
+            "  2. uv run poe check-changelog --since HEAD   # fails if one is not named",
+            "  3. uv run poe release-notes --since HEAD     # preview what the release lists",
             "  4. Commit api_surface.json, the regenerated code, and CHANGELOG.md.",
             'Steps: "Update the release notes after every regeneration" in',
             "docs/sphinx/guides/generation.md.",

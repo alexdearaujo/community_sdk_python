@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](pyproject.toml). Edit directly. -->
 
 # Kentik Community Python SDK
 
@@ -14,7 +14,7 @@ The pipeline fixes common OpenAPI generator bugs, removes schema-version
 prefixes from class names, and generates architecture diagrams.
 
 The diagram below shows the key split: hand-written code that survives
-every regeneration, and generated code that [`make generate`](Makefile) wipes and rebuilds.
+every regeneration, and generated code that [`uv run poe generate`](pyproject.toml) wipes and rebuilds.
 
 ```mermaid
 flowchart TB
@@ -26,7 +26,7 @@ flowchart TB
         Transports["transports/<br/>REST / gRPC transport base"]
     end
 
-    subgraph GEN["Generated (wiped and rebuilt by make generate)"]
+    subgraph GEN["Generated (wiped and rebuilt by uv run poe generate)"]
         Mixin["client_mixin.py<br/>mounts every service wrapper"]
         Wrappers["gen/{service}/services/<br/>ServiceWrapper classes"]
         Models["gen/{service}/models/"]
@@ -59,7 +59,7 @@ Kentik evolves its API continuously. Because this SDK is generated
 rather than hand-written, one command adopts a new schema:
 
 ```bash
-make sync-schema   # regenerate from the newest schema and move the pin in schema.lock
+uv run poe sync-schema   # regenerate from the newest schema and move the pin in schema.lock
 ```
 
 If upstream renames a public name, the run stops with `NameDriftError`.
@@ -150,7 +150,7 @@ All documentation is in [`docs/`](docs/README.md):
 | [`docs/sphinx/guides/migrating-from-1x.md`](docs/sphinx/guides/migrating-from-1x.md) | Moving from kentik-api 1.x |
 | [`docs/sphinx/guides/generation.md`](docs/sphinx/guides/generation.md) | SDK regeneration workflow |
 
-Run [`make docs`](Makefile) to build the full Sphinx HTML reference from
+Run [`uv run poe docs`](pyproject.toml) to build the full Sphinx HTML reference from
 [`docs/sphinx/`](docs/sphinx/README.md).
 
 ## Examples
@@ -169,39 +169,43 @@ uv run python -m examples.device.grpc   # gRPC
 
 - **Python** 3.12 or later
 - **[uv](https://github.com/astral-sh/uv)** package manager
+- **Git**
+
+These work the same on Windows, macOS, and Linux. Every project task runs
+as `uv run poe <task>`; run `uv run poe` to list them. Make is not needed.
 
 ### Development setup
 
 ```bash
 git clone https://github.com/kentik/community_sdk_python.git
 cd community_sdk_python
-make install
+uv sync
 ```
 
 ### Generating the SDK
 
 ```bash
-make generate local   # from local ../api-schema-public/ checkout
-make generate         # fetch the schema at the commit in schema.lock
-make sync-schema      # fetch the newest schema and update schema.lock
-make                  # generate + test (default)
+uv run poe generate --local   # from local ../api-schema-public/ checkout
+uv run poe generate           # fetch the schema at the commit in schema.lock
+uv run poe sync-schema        # fetch the newest schema and update schema.lock
+uv run poe all                # generate + test
 ```
 
 See [`scripts/README.md`](scripts/README.md) for generator internals and
 [`docs/sphinx/guides/generation.md`](docs/sphinx/guides/generation.md) for the full workflow.
 
 > [!WARNING]
-> `make generate` does not write release notes. If the run ends with
+> `uv run poe generate` does not write release notes. If the run ends with
 > `⚠️ API SURFACE CHANGED`, update [`CHANGELOG.md`](CHANGELOG.md) and run
-> `make check-changelog SINCE=HEAD` before you commit. The steps are in
+> `uv run poe check-changelog --since HEAD` before you commit. The steps are in
 > [Update the release notes after every regeneration](docs/sphinx/guides/generation.md#update-the-release-notes-after-every-regeneration).
 
 ### Testing
 
 ```bash
-make test           # full mocked suite
-make test-e2e       # opt-in live tests, REST transport (needs .env)
-make test-e2e-grpc  # opt-in live tests, gRPC transport (needs .env)
+uv run poe test           # full mocked suite
+uv run poe test-e2e       # opt-in live tests, REST transport (needs .env)
+uv run poe test-e2e-grpc  # opt-in live tests, gRPC transport (needs .env)
 ```
 
 See [`tests/README.md`](tests/README.md) for the full test-layer breakdown.
@@ -209,7 +213,8 @@ See [`tests/README.md`](tests/README.md) for the full test-layer breakdown.
 ### Code quality
 
 ```bash
-make lint          # ruff check + format, rumdl check (Markdown)
+uv run poe lint          # ruff check + format, rumdl check (Markdown)
+uv run poe typecheck     # ty
 ```
 
 ## Open-source libraries

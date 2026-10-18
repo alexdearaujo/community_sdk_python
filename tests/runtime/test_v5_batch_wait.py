@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """wait_for_batch() polls the status until the batch completes (spec 005, FR-012)."""
 
 from __future__ import annotations

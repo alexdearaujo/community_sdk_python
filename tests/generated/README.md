@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../pyproject.toml). Edit directly. -->
 
 # Generated Wrapper Tests
 
@@ -26,7 +26,7 @@ the e2e suite automatically.
 
 ```mermaid
 flowchart LR
-    GEN["make generate"] --> SVC["gen/*/services/*.py"]
+    GEN["uv run poe generate"] --> SVC["gen/*/services/*.py"]
     SVC --> DISC["tests/_discovery.py"]
     DISC --> WC["test_wrapper_contracts.py"]
     DISC --> SC["test_endpoint_schema_coverage.py"]
@@ -37,7 +37,7 @@ flowchart LR
 ## Run
 
 ```bash
-make test-generated
+uv run poe test-generated
 # or
 uv run pytest tests/generated/
 ```
@@ -53,9 +53,9 @@ uv run pytest tests/generated/
   the real generated error classes through `respx`-mocked HTTP. Add
   logic here only when the status or error coverage strategy itself
   changes. A new service, operation, or status code needs no manual
-  update: the next [`make generate`](../../Makefile) picks it up automatically.
+  update: the next [`uv run poe generate`](../../pyproject.toml) picks it up automatically.
 
 > [!NOTE]
-> `test_endpoint_schema_coverage.py` is what CLAUDE.md's test
+> `test_endpoint_schema_coverage.py` is what AGENTS.md's test
 > coverage requirement (every endpoint, every option, every declared
 > status code) maps to concretely.

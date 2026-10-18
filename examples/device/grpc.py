@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """List all devices in the account — gRPC transport."""
 
 from kentik_api.client import KentikAPI

@@ -15,7 +15,7 @@ tried and rejected: it flagged 7 correct citations and did not distinguish a
 seeded defect, so it added noise without signal. Cascades are the recurring
 failure and are covered; isolated typos still need a human reading the diff.
 
-Run via `make check-specs`. Exits non-zero and names every offending file.
+Run via `uv run poe check-specs`. Exits non-zero and names every offending file.
 """
 
 from __future__ import annotations

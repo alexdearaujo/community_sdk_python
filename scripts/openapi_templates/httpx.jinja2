@@ -1,4 +1,4 @@
-{# HAND-WRITTEN: not modified by `make generate`. Edit directly. #}
+{# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly. #}
 {% from "_macros.jinja2" import docstring %}
 {%  if async_client %}async {% endif %}def {{ operation_id }}(api_config_override : Optional[APIConfig] = None{% if params.strip() %}, *, {{ params.rstrip(', ') }}{% endif %}) -> {% if return_type.type is none or return_type.type.converted_type is none %}None{% else %}{{ return_type.type.converted_type}}{% endif %}:
 {% set summary = [operation.summary, operation.description if operation.description != operation.summary] | select | join("\n\n") %}

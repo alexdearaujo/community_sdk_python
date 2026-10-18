@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Hand-written helpers reach the API only through generated operations (FR-007).
 
 Every request must go through request_json(), so a helper module that imports

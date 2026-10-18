@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Query definitions give the same DataFrames as 1.x (spec 005, FR-016 to FR-018)."""
 
 from __future__ import annotations

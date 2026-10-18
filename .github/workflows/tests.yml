@@ -6,16 +6,23 @@ on:
   push:
     branches: [main]
 
+# Every step runs a poe task, the same command a contributor runs.
 # No job here runs tests/e2e/: those need real credentials and stay opt-in
-# (`make test-e2e`, `make test-e2e-grpc`). pytest's default `-m` excludes them.
+# (`uv run poe test-e2e`, `uv run poe test-e2e-grpc`). pytest's default `-m` excludes them.
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         python-version: ["3.12", "3.13", "3.14"]
+        include:
+          - os: windows-latest
+            python-version: "3.12"
+          - os: macos-latest
+            python-version: "3.12"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -28,10 +35,14 @@ jobs:
         run: uv sync --locked
 
       - name: Run tests
-        run: uv run pytest tests/ -q --tb=short
+        run: uv run poe test
 
   typecheck:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -44,9 +55,29 @@ jobs:
         run: uv sync --locked
 
       - name: Type-check
-        run: make typecheck
+        run: uv run poe typecheck
 
   lint:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Ruff lint and format, rumdl Markdown rules
+        run: uv run poe lint-check
+
+  spec-references:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -59,27 +90,8 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
 
-      - name: Ruff lint
-        run: uv run ruff check --output-format github .
-
-      - name: Ruff format
-        run: uv run ruff format --check --output-format github .
-
-      - name: Markdown rules (rumdl)
-        run: uv run rumdl check --output-format github .
-
-  spec-references:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Set up uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
-        with:
-          python-version: "3.12"
-
       - name: Check FR/SC/task cross-references
-        run: make check-specs
+        run: uv run poe check-specs
 
   # `uv audit` is experimental, so a finding or a format change shows here
   # without blocking the merge.
@@ -94,8 +106,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: uv sync --locked
+
       - name: Audit locked dependencies for known vulnerabilities
-        run: uv audit --preview-features audit-command
+        run: uv run poe audit
 
   # A pull request that can break callers must say so in CHANGELOG.md. The
   # baseline is the merge base, so only this pull request's changes count.
@@ -112,13 +127,22 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: uv sync --locked
+
       - name: Fail if CHANGELOG.md misses a breaking API surface change
-        run: make check-changelog SINCE="$(git merge-base HEAD origin/${{ github.base_ref }})"
+        shell: bash
+        run: uv run poe check-changelog --since "$(git merge-base HEAD origin/${{ github.base_ref }})"
 
   # Regenerates at the schema commit in schema.lock, so upstream drift cannot
-  # fail it. The scheduled schema-sync workflow moves that pin.
+  # fail it. The scheduled schema-sync workflow moves that pin. It runs on all
+  # three OSs: a path, line ending, or encoding difference shows up as drift.
   generated-output-matches-schema-pin:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -131,22 +155,11 @@ jobs:
         run: uv sync --locked
 
       - name: Regenerate the SDK at the pinned schema commit
-        run: make generate
+        run: uv run poe generate
 
+      # Uses git status --porcelain, so a newly generated untracked file counts too.
       - name: Fail if generated output differs from what is committed
-        run: |
-          # --porcelain, not `git diff`, so a newly generated untracked file counts too.
-          changed="$(git status --porcelain)"
-          if [ -n "$changed" ]; then
-            echo "::error::Regenerated output differs from the committed tree."
-            echo "Differing paths:"
-            echo "$changed"
-            echo
-            echo "This change altered generator output (scripts/, templates, or runtime"
-            echo "modules the docs describe), or schema.lock names a commit the tree was"
-            echo "not generated from. Run 'make generate' and commit the result."
-            exit 1
-          fi
+        run: uv run poe check-drift
 
   docs:
     runs-on: ubuntu-latest
@@ -165,4 +178,4 @@ jobs:
       # regeneration; the generated-output-matches-schema-pin job already covers
       # stale generated pages.
       - name: Build Sphinx docs, failing on any warning
-        run: uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html
+        run: uv run poe docs-build

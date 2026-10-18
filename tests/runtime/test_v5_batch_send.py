@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """send_batch() sends parts in order and never resends one (spec 005, FR-014)."""
 
 from __future__ import annotations

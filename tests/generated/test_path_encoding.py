@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Verifies every REST path parameter is encoded into its own segment.
 
 An unencoded id like "../../user/7" would send `device.delete` to another

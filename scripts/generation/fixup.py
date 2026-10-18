@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Generated-code post-processing: import patching, model init rebuild, file cleanup.
 
 Called once per service directory by generate_modular_sdk() after all swagger

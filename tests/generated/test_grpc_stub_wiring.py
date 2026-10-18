@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Verifies every mounted wrapper builds a live gRPC stub.
 
 Generated wrapper `__init__` catches `(ImportError, TypeError)` around its proto

@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Constants and helpers used by more than one generation phase module."""
 
 import ast
@@ -9,6 +9,9 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 SDK_OUTPUT_DIR = PROJECT_ROOT / "src" / "kentik_api" / "gen"
+
+# The command that rebuilds generated output; every generated header names it.
+REGENERATE_COMMAND = "uv run poe generate"
 
 # Directories under gen/ that the generator creates for itself rather than
 # deriving from a schema Service. pb_companions is written by

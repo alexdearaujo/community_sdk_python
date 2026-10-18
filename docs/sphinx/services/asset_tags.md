@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED: scripts/generation/endpoint_docs.py, render_endpoint_docs() -->
-<!-- Rebuilt on every `make generate`. Do not edit by hand. -->
+<!-- Rebuilt on every `uv run poe generate`. Do not edit by hand. -->
 
 # Asset Tags Service
 

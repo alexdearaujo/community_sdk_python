@@ -59,7 +59,7 @@ if TYPE_CHECKING:
 
 class KentikClientMixin:
     """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_client_mixin().
-    Rebuilt on every `make generate`. Do not edit by hand.
+    Rebuilt on every `uv run poe generate`. Do not edit by hand.
     """
 
     if TYPE_CHECKING:

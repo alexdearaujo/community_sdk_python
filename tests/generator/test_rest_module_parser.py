@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Unit tests for scripts/generation/_shared.parse_generated_rest_module."""
 
 from pathlib import Path

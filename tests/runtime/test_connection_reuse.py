@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """One HTTP client per KentikAPI, released by close() (FR-013, FR-014, SC-009)."""
 
 from __future__ import annotations

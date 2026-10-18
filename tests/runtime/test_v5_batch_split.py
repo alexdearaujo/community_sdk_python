@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """split_batch() packs a batch into parts the API accepts (spec 005, FR-013)."""
 
 from __future__ import annotations

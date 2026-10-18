@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 from __future__ import annotations
 
 import importlib
@@ -27,7 +27,7 @@ from kentik_api.transports.rest_client import RestTransport
 ALL_CASES = discover_cases()
 # Every discovered wrapper case is exercised for every test below, including
 # the negative-path ones: with only ~200 endpoints today this stays fast
-# (sub-second), and CLAUDE.md's test coverage requirement rules out sampling.
+# (sub-second), and AGENTS.md's test coverage requirement rules out sampling.
 NEGATIVE_CASES = ALL_CASES
 
 
@@ -91,7 +91,7 @@ def test_wrapper_forwards_all_declared_options(
     """Every declared parameter (required AND optional) must reach the REST call.
 
     `test_wrapper_forwards_to_rest_module` only populates required kwargs; this
-    exercises the full option surface for the operation, per CLAUDE.md's test
+    exercises the full option surface for the operation, per AGENTS.md's test
     coverage requirement.
     """
     print_case_start(case, mode="all-options-forward")

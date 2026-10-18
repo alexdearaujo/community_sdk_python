@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """DFCache stores Parquet by time range and fetches only what it lacks (FR-019)."""
 
 from __future__ import annotations

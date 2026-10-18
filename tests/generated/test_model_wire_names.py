@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Verifies every model field sends the name it was read under.
 
 A field whose Python name differs from its wire name (the keyword `not`

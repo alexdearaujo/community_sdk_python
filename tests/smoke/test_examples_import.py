@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Examples cannot silently rot (FR-044, SC-013).
 
 Importing a module only defines main(), so a renamed wrapper method would still

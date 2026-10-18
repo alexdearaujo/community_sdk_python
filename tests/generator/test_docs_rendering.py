@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Unit tests for docs_rendering._GROUP_CONFIG and _module_group consistency."""
 
 from pathlib import Path

@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Bulk-sync flow tags with the V5 batch API (port of 1.x batch_example.py).
 
 This writes to your account, so it only prints the parts unless you pass

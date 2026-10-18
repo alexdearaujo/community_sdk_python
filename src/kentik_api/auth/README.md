@@ -1,8 +1,8 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../../pyproject.toml). Edit directly. -->
 
 # Credentials (`kentik_api.auth`)
 
-Hand-written. Not touched by [`make generate`](../../../Makefile).
+Hand-written. Not touched by [`uv run poe generate`](../../../pyproject.toml).
 
 This module is the one definition of Kentik's auth scheme: the
 `X-CH-Auth-Email` and `X-CH-Auth-API-Token` keys. REST sends them as

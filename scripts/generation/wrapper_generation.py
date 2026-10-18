@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """Client mixin and dual-transport service wrapper generation."""
 
 import ast
@@ -12,6 +12,7 @@ from google.protobuf import descriptor_pb2
 
 from ._shared import (
     PROJECT_ROOT,
+    REGENERATE_COMMAND,
     SDK_OUTPUT_DIR,
     RestOperation,
     discover_service_model_classes,
@@ -385,7 +386,7 @@ def _generate_service_wrappers(names: PublicNames):
             "",
             f"class {title}ServiceWrapper:",
             '    """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_service_wrappers().',
-            "    Rebuilt on every `make generate`. Do not edit by hand.",
+            f"    Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand.",
             "    Unified Service routing to either gRPC or REST.",
             '    """',
             "    def __init__(self, transport: Union[GrpcTransport, RestTransport]):",
@@ -722,7 +723,7 @@ def _generate_client_mixin(rest_only: frozenset[str] = frozenset()):
         "",
         "class KentikClientMixin:",
         '    """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_client_mixin().',
-        "    Rebuilt on every `make generate`. Do not edit by hand.",
+        f"    Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand.",
         '    """',
         "",
         "    if TYPE_CHECKING:",

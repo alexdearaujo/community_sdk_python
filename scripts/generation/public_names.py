@@ -1,4 +1,4 @@
-# HAND-WRITTEN: not modified by `make generate`. Edit directly.
+# HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 """The public name of every Service, client method, and model.
 
 `public_names.json` maps each public name to what the schema calls that thing

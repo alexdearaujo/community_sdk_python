@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../pyproject.toml). Edit directly. -->
 
 # OpenAPI Generator Templates
 
@@ -31,7 +31,7 @@ service. `httpx.jinja2` instead calls
 [`request_json()`](../../src/kentik_api/core/rest_runtime.py), the
 single shared function that owns all of that. See the "shared
 connection handler" section of the repository root
-[CLAUDE.md](../../CLAUDE.md) for why this pattern must not regress.
+[AGENTS.md](../../AGENTS.md) for why this pattern must not regress.
 
 ```mermaid
 flowchart LR
@@ -49,7 +49,7 @@ flowchart LR
 2. Regenerate: `uv run python scripts/generate_sdk.py --local-repo
    ../api-schema-public`.
 3. Diff a generated service module to confirm the new output shape.
-4. Run [`make test-generated`](../../Makefile) to confirm generated calls still exercise
+4. Run [`uv run poe test-generated`](../../pyproject.toml) to confirm generated calls still exercise
    `request_json` and every declared response status.
 
 > [!WARNING]

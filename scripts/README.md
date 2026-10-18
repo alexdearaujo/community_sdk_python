@@ -1,15 +1,17 @@
-<!-- HAND-WRITTEN: not modified by [`make generate`](../Makefile). Edit directly. -->
+<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../pyproject.toml). Edit directly. -->
 
 # Generation Scripts
 
 This folder holds the SDK generator entrypoint, a sample consumer
-script, and three release and review tools: `release_notes.py`,
-`impact_report.py`, and `check_spec_refs.py`. All are hand-written and survive every [`make generate`](../Makefile) run.
+script, three release and review tools (`release_notes.py`,
+`impact_report.py`, and `check_spec_refs.py`), and `tasks.py`, which
+holds the poe tasks that would otherwise need a POSIX shell. All are
+hand-written and survive every [`uv run poe generate`](../pyproject.toml) run.
 
 > [!NOTE]
-> **[`make clean`](../Makefile) removes [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md)** (all generated service code)
+> **[`uv run poe clean`](../pyproject.toml) removes [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md)** (all generated service code)
 > and the Sphinx build output, but never touches [`scripts/`](README.md), [`examples/`](../examples/README.md),
-> or any other hand-written source. Re-run [`make generate`](../Makefile) (or just `make`)
+> or any other hand-written source. Re-run [`uv run poe generate`](../pyproject.toml) (or `uv run poe all`)
 > to rebuild the generated code after a clean.
 
 ## Layout
@@ -18,9 +20,10 @@ script, and three release and review tools: `release_notes.py`,
 | --- | --- |
 | `generate_sdk.py` | Entrypoint. Orchestrates schema download, per-file generation, and every phase module. |
 | `sample_consume_sdk.py` | Standalone demo of the generated SDK, in mock mode and real mode. |
-| `release_notes.py` | Renders release notes by diffing `api_surface.json` against an earlier git revision. Also runs `make check-changelog`. |
-| `impact_report.py` | Writes a regeneration impact report: what a `make generate` run changed. |
+| `release_notes.py` | Renders release notes by diffing `api_surface.json` against an earlier git revision. Also runs `uv run poe check-changelog`. |
+| `impact_report.py` | Writes a regeneration impact report: what a `uv run poe generate` run changed. |
 | `check_spec_refs.py` | Validates cross-artifact identifier references inside `specs/`. |
+| `tasks.py` | The `clean`, `deep-clean`, and `check-drift` poe tasks, in Python so they run the same on every OS. |
 | [`generation/`](generation/README.md) | The generator's phase modules. See [generation/README.md](generation/README.md). |
 | [`openapi_templates/`](openapi_templates/README.md) | Custom Jinja2 templates fed into the OpenAPI generator. See [openapi_templates/README.md](openapi_templates/README.md). |
 
@@ -46,33 +49,40 @@ uv run python scripts/generate_sdk.py --schema-ref HEAD
 uv run python scripts/generate_sdk.py --local-repo ../api-schema-public
 ```
 
-[`make generate`](../Makefile), `make sync-schema`, and `make generate local` wrap these invocations.
+[`uv run poe generate`](../pyproject.toml), `uv run poe sync-schema`, and `uv run poe generate --local` wrap these invocations.
 See [`docs/sphinx/guides/generation.md`](../docs/sphinx/guides/generation.md) for
 the full regeneration workflow.
 
-## Makefile commands
+## Project tasks
+
+Every task is defined in `[tool.poe.tasks]` in [`pyproject.toml`](../pyproject.toml)
+and runs the same on Windows, macOS, and Linux. Run `uv run poe` to list them.
 
 | Command | Effect |
 | --- | --- |
-| `make` | Generate services and run tests (default) |
-| [`make generate`](../Makefile) | Regenerate from the remote schema at the commit in `schema.lock` |
-| `make sync-schema` | Regenerate from remote schema HEAD and move the pin |
-| `make generate local` | Regenerate from `../api-schema-public/` |
-| `make generate LOCAL_REPO=/path` | Regenerate from an arbitrary path |
-| [`make services`](../Makefile) | Alias for [`make generate`](../Makefile) |
-| [`make docs`](../Makefile) | Regenerate the SDK, then build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
-| [`make test`](../Makefile) | Full mocked test suite |
-| `make test-generated` / `test-runtime` / `test-smoke` / `test-generator` | One mocked test layer |
-| [`make test-e2e`](../Makefile) | Live API tests, REST transport (opt-in, needs `.env`) |
-| [`make test-e2e-grpc`](../Makefile) | Live API tests, gRPC transport (opt-in, needs `.env`) |
-| [`make lint`](../Makefile) | Ruff check + format, rumdl Markdown check |
-| [`make typecheck`](../Makefile) | ty type-check on the whole repo: SDK, generated code, scripts, and tests |
-| `make release-notes` | List API surface changes since a ref |
-| `make check-changelog` | Fail when `CHANGELOG.md` misses a breaking change |
-| `make impact-report` | Write a regeneration impact report |
-| `make check-specs` | Validate cross-references in `specs/` |
-| [`make clean`](../Makefile) | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
-| `make deep-clean` | `make clean`, plus `.venv` and the pytest and ruff caches |
+| `uv run poe all` | Generate services and run tests |
+| `uv run poe generate` | Regenerate from the remote schema at the commit in `schema.lock` |
+| `uv run poe sync-schema` | Regenerate from remote schema HEAD and move the pin |
+| `uv run poe generate --local` | Regenerate from `../api-schema-public/` |
+| `uv run poe generate --local-repo /path` | Regenerate from an arbitrary path |
+| `uv run poe generate --schema-ref <ref>` | Regenerate from the remote schema at another ref |
+| `uv run poe docs` | Regenerate the SDK, then build Sphinx HTML from [`docs/sphinx/`](../docs/sphinx/README.md) |
+| `uv run poe docs-build` | Build Sphinx HTML from the committed tree, without regenerating |
+| `uv run poe test` | Full mocked test suite |
+| `uv run poe test-generated` / `test-runtime` / `test-smoke` / `test-generator` / `test-analytics` | One mocked test layer |
+| `uv run poe test-e2e` | Live API tests, REST transport (opt-in, needs `.env`) |
+| `uv run poe test-e2e-grpc` | Live API tests, gRPC transport (opt-in, needs `.env`) |
+| `uv run poe lint` | Ruff check + format, rumdl Markdown check, with fixes |
+| `uv run poe lint-check` | The same checks without changing files, as CI runs them |
+| `uv run poe typecheck` | ty type-check on the whole repo: SDK, generated code, scripts, and tests |
+| `uv run poe release-notes [--since <ref>] [--out <file>]` | List API surface changes since a ref |
+| `uv run poe check-changelog [--since <ref>]` | Fail when `CHANGELOG.md` misses a breaking change |
+| `uv run poe impact-report [--since <ref>] [--no-checks] [--out <file>]` | Write a regeneration impact report |
+| `uv run poe check-specs` | Validate cross-references in `specs/` |
+| `uv run poe check-drift` | Fail when the working tree differs from the commit, as after a stale regeneration |
+| `uv run poe audit` | Audit locked dependencies for known vulnerabilities |
+| `uv run poe clean` | Remove [`src/kentik_api/gen/`](../src/kentik_api/gen/README.md) and build artifacts |
+| `uv run poe deep-clean` | `clean`, plus `.venv` and the pytest and ruff caches |
 
 > [!NOTE]
 > Generation runs `openapi-python-generator` and `grpcio-tools` at the
