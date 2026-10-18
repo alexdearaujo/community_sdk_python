@@ -25,6 +25,7 @@ from ._shared import (
     grpc_stub_services,
     iter_service_dirs,
     parse_wrapper_methods,
+    write_text_lf,
 )
 
 MD_FENCE = "`" * 3
@@ -873,7 +874,7 @@ def render_endpoint_docs(
 
         stub_content = "\n".join(lines)
 
-        (DOCS_SERVICES_DIR / f"{service}.md").write_text(stub_content, encoding="utf-8")
+        write_text_lf(DOCS_SERVICES_DIR / f"{service}.md", stub_content)
         index_entries.append(service)
 
     index_content = (
@@ -887,7 +888,7 @@ def render_endpoint_docs(
     )
     index_content += "\n".join(sorted(index_entries)) + "\n"
     index_content += f"{MD_FENCE}\n"
-    (DOCS_SERVICES_DIR / "index.md").write_text(index_content, encoding="utf-8")
+    write_text_lf(DOCS_SERVICES_DIR / "index.md", index_content)
 
     # Build the services/README.md table from the same data so it never goes stale.
     readme_rows: list[str] = []
@@ -937,7 +938,7 @@ def render_endpoint_docs(
             "",
         ]
     )
-    (DOCS_SERVICES_DIR / "README.md").write_text(readme_content, encoding="utf-8")
+    write_text_lf(DOCS_SERVICES_DIR / "README.md", readme_content)
 
 
 class EndpointDocsCollector:
@@ -976,7 +977,7 @@ class EndpointDocsCollector:
             }
             for service, docs in sorted(self._docs.items())
         }
-        path.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        write_text_lf(path, json.dumps(record, indent=2) + "\n")
         return path
 
     def render(self, rest_only: frozenset[str] = frozenset()) -> None:

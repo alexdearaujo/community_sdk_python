@@ -11,6 +11,7 @@ from ._shared import (
     discover_service_model_classes,
     parse_generated_rest_module,
     service_to_pascal_case,
+    write_text_lf,
 )
 from .public_names import operation_key
 
@@ -363,7 +364,7 @@ def generate_service_error_package(
     if repeated:
         raise ValueError(f"{service}: error class names are not unique: {repeated}")
 
-    (error_dir / "__init__.py").write_text("\n".join(lines), encoding="utf-8")
+    write_text_lf(error_dir / "__init__.py", "\n".join(lines))
 
     for rest_file in functions:
         error_classes = {
@@ -372,9 +373,7 @@ def generate_service_error_package(
             if path == rest_file
         }
         content = rest_file.read_text(encoding="utf-8")
-        rest_file.write_text(
-            inject_service_error_handling(content, error_classes), encoding="utf-8"
-        )
+        write_text_lf(rest_file, inject_service_error_handling(content, error_classes))
 
 
 def inject_service_error_handling(content: str, error_classes: dict[str, str]) -> str:

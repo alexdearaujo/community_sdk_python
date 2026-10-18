@@ -17,6 +17,7 @@ from ._shared import (
     iter_service_dirs,
     parse_generated_rest_module,
     parse_wrapper_methods,
+    write_text_lf,
 )
 
 _GUIDES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "guides"
@@ -142,7 +143,7 @@ def _rest_only_services_section(rest_only: frozenset[str]) -> list[str]:
 def _generate_gen_root_readme() -> None:
     """Writes src/kentik_api/gen/README.md, kept in sync with the gen/ tree."""
     SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    (SDK_OUTPUT_DIR / "README.md").write_text(_GEN_ROOT_README, encoding="utf-8")
+    write_text_lf(SDK_OUTPUT_DIR / "README.md", _GEN_ROOT_README)
 
 
 def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
@@ -174,7 +175,7 @@ def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
         doc_content = "\n".join(lines) + "\n"
 
         # Keep generated README self-contained and deterministic.
-        (service_dir / "README.md").write_text(doc_content, encoding="utf-8")
+        write_text_lf(service_dir / "README.md", doc_content)
 
 
 def _module_name_from_path(py_path: Path, package_root: Path) -> str:
@@ -405,9 +406,7 @@ def _generate_runtime_architecture_docs(
         *_services_without_wrappers_section(),
         *_rest_only_services_section(rest_only),
     ]
-    (docs_root / "sdk_runtime_architecture.md").write_text(
-        "\n".join(architecture_md), encoding="utf-8"
-    )
+    write_text_lf(docs_root / "sdk_runtime_architecture.md", "\n".join(architecture_md))
 
     index_path = docs_root / "index.md"
     if index_path.exists():
@@ -420,7 +419,7 @@ def _generate_runtime_architecture_docs(
                 )
             else:
                 index_text += "\nsdk_runtime_architecture\n"
-            index_path.write_text(index_text, encoding="utf-8")
+            write_text_lf(index_path, index_text)
 
 
 # ---------------------------------------------------------------------------
@@ -598,14 +597,14 @@ def _update_guide_snippets() -> None:
     if gen_md.exists():
         text = gen_md.read_text(encoding="utf-8")
         text = _replace_marker(text, "service-count", str(service_count))
-        gen_md.write_text(text, encoding="utf-8")
+        write_text_lf(gen_md, text)
 
     # docs/sphinx/README.md: inline service count in the services/ row
     sphinx_readme = PROJECT_ROOT / "docs" / "sphinx" / "README.md"
     if sphinx_readme.exists():
         text = sphinx_readme.read_text(encoding="utf-8")
         text = _replace_marker(text, "service-count", str(service_count))
-        sphinx_readme.write_text(text, encoding="utf-8")
+        write_text_lf(sphinx_readme, text)
 
     # quickstart.md: first-call-example, grpc-call-example
     qs_md = _GUIDES_DIR / "quickstart.md"
@@ -634,7 +633,7 @@ response = client.{primary["service"]}.{primary["method"]}()  # same API, same r
 ```
 """,
         )
-        qs_md.write_text(text, encoding="utf-8")
+        write_text_lf(qs_md, text)
 
     # rest.md: list-methods-example, request-body-example
     rest_md = _GUIDES_DIR / "rest.md"
@@ -664,7 +663,7 @@ response = client.{body_op["service"]}.{body_op["method"]}(data={body_op["reques
 ```
 """,
             )
-        rest_md.write_text(text, encoding="utf-8")
+        write_text_lf(rest_md, text)
 
     # grpc.md: grpc-usage-example, rest-callflow-diagram, grpc-callflow-diagram
     grpc_md = _GUIDES_DIR / "grpc.md"
@@ -742,7 +741,7 @@ sequenceDiagram
 ```
 """,
         )
-        grpc_md.write_text(text, encoding="utf-8")
+        write_text_lf(grpc_md, text)
 
     body_label = f"{body_op['service']}.{body_op['method']}" if body_op else "none"
     print(

@@ -1010,3 +1010,27 @@ def test_a_completed_run_keeps_the_new_output(tmp_path):
     assert sorted(p.name for p in gen.iterdir()) == ["user"]
     assert mixin.read_text() == "new"
     assert pin.read_text() == "new"
+
+
+def test_write_text_lf_writes_lf_on_every_os(tmp_path):
+    from scripts.generation._shared import write_text_lf
+
+    target = tmp_path / "out.md"
+    write_text_lf(target, "a\nb é\n")
+
+    assert target.read_bytes() == "a\nb é\n".encode()
+
+
+def test_the_generator_writes_files_only_through_write_text_lf():
+    # Path.write_text writes CRLF on Windows, which fails the drift check there.
+    sources = [PROJECT_ROOT / "scripts" / "generate_sdk.py"]
+    sources += sorted((PROJECT_ROOT / "scripts" / "generation").glob("*.py"))
+
+    offenders = [
+        f"{path.name}:{node.lineno}"
+        for path in sources
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8")))
+        if isinstance(node, ast.Attribute) and node.attr == "write_text"
+    ]
+
+    assert offenders == []

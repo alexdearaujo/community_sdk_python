@@ -19,6 +19,15 @@ REGENERATE_COMMAND = "uv run poe generate"
 INTERNAL_GEN_DIRS = frozenset({"__pycache__", "pb_companions"})
 
 
+def write_text_lf(path: Path, text: str) -> None:
+    """Writes UTF-8 text with LF line endings on every OS.
+
+    Path.write_text writes CRLF on Windows, and `git status` reports such a
+    file as modified even under `eol=lf`, which fails the drift check.
+    """
+    path.write_bytes(text.encode("utf-8"))
+
+
 def iter_service_dirs(root: Path | None = None) -> list[Path]:
     """Returns every generated Service directory under root, sorted by name.
 

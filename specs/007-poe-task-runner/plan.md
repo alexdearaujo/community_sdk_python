@@ -150,7 +150,7 @@ facts, not generated code.
 | Risk | Effect | Response |
 | --- | --- | --- |
 | Generation has never run on Windows (`protoc` paths, Git clone, subprocess) | The Windows drift job fails | Fix the generator where it assumes POSIX; the job is the proof (R9). |
-| A Windows file writes CRLF that `.gitattributes` does not cover | The drift job fails | Add one LF write helper to `_shared.py` (R5, deferred). |
+| A Windows file writes CRLF that `.gitattributes` does not cover | The drift job fails | Done: every generator write uses `write_text_lf()` in `_shared.py` (R5). |
 | Python on Windows CI cannot print emoji | The generator crashes in CI | `PYTHONUTF8 = "1"` in `[tool.poe.env]` (R4). |
 | A test assumes POSIX paths or tools | The Windows `test` job fails | Fix the test so it holds on every OS. A skip needs a reason that the feature does not exist on that OS, never "to pass". |
 | Contributors type `make` from habit | Make prints "No targets" | `README.md` and `AGENTS.md` name the poe commands. |
