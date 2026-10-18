@@ -1,5 +1,5 @@
 # HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
-"""Shared gRPC call helper — the gRPC analogue of rest_runtime.request_json.
+"""Shared gRPC call helper: the gRPC analogue of rest_runtime.request_json.
 
 Every generated gRPC wrapper method routes through call_grpc so error
 handling, status-code mapping, and transport failures stay in one place.
@@ -91,7 +91,7 @@ def map_grpc_error(
 
     Pure function: no I/O, no side effects. Testable without a gRPC channel.
     """
-    code = exc.code()  # ty: ignore[unresolved-attribute]  -- grpcio ships no stubs
+    code = exc.code()  # ty: ignore[unresolved-attribute]  # grpcio ships no stubs
     details = exc.details() or ""  # ty: ignore[unresolved-attribute]
     code_name = getattr(code, "name", repr(code))
 

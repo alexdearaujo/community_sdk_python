@@ -26,54 +26,54 @@ repo.
 
 **Hand-written, preserved across every regeneration:**
 
-- `src/kentik_api/client.py` — `KentikAPI`, the main entrypoint
-- `src/kentik_api/auth/` — credentials
-- `src/kentik_api/core/` — `api_config.py`, `rest_runtime.py`,
+- `src/kentik_api/client.py`: `KentikAPI`, the main entrypoint
+- `src/kentik_api/auth/`: credentials
+- `src/kentik_api/core/`: `api_config.py`, `rest_runtime.py`,
   `grpc_runtime.py` (shared runtime logic)
-- `src/kentik_api/errors/` — base exception types
-- `src/kentik_api/transports/` — REST/gRPC transport base classes
-- `scripts/openapi_templates/` — custom Jinja2 templates fed into
+- `src/kentik_api/errors/`: base exception types
+- `src/kentik_api/transports/`: REST/gRPC transport base classes
+- `scripts/openapi_templates/`: custom Jinja2 templates fed into
   the generator
-- `scripts/generation/` — the generator's phase modules
+- `scripts/generation/`: the generator's phase modules
   (`parity.py`, `error_package.py`, `fixup.py`,
   `wrapper_generation.py`, `docs_rendering.py`, `endpoint_docs.py`,
   `api_surface.py`, `public_names.py`, `_shared.py`), orchestrated by
   `scripts/generate_sdk.py`
-- `public_names.json` — the public name of every Service, client
+- `public_names.json`: the public name of every Service, client
   method, and model. Edited by hand; a run only adds entries (see
   "Public names" below)
-- `schema/openapi/` — the local schema base: hand-maintained OpenAPI
+- `schema/openapi/`: the local schema base. Hand-maintained OpenAPI
   descriptions of endpoints that upstream does not publish. Today only
   `v5/v5/v5.swagger.json`, the V5 query and batch endpoints. It is a
   generator input, like the upstream schema
 - `src/kentik_api/v5_tools.py`, `src/kentik_api/devices.py`, and
-  `src/kentik_api/analytics/` (the `analytics` extra) — helpers on top
+  `src/kentik_api/analytics/` (the `analytics` extra): helpers on top
   of generated operations. They never send HTTP themselves:
   `tests/smoke/test_helpers_no_direct_http.py` checks that they import
   neither `httpx` nor `request_json`
 
 **Fully generated, wiped and rebuilt on every `uv run poe generate` run:**
 
-- `src/kentik_api/client_mixin.py` — mounts every generated service
+- `src/kentik_api/client_mixin.py`: mounts every generated service
   wrapper onto the client
-- `src/kentik_api/gen/<service>/` — one directory per API service,
+- `src/kentik_api/gen/<service>/`: one directory per API service,
   each with `models/`, `services/` (raw REST functions + a unified
   `<Service>ServiceWrapper`), `error/`, `pb/` (gRPC stubs), and a
   `README.md`
-- `src/kentik_api/gen/README.md` — the `gen/` root README
-- `docs/sphinx/sdk_runtime_architecture.md` — the runtime
+- `src/kentik_api/gen/README.md`: the `gen/` root README
+- `docs/sphinx/sdk_runtime_architecture.md`: the runtime
   architecture page, with an inline Mermaid dependency graph
 - `docs/sphinx/services/<service>.md`, `index.md`, and `README.md`:
   one reference page per service and the two index pages, written by
   `endpoint_docs.EndpointDocsCollector.render()`
-- `schema_operations.json` — each service's operations as the patched
+- `schema_operations.json`: each service's operations as the patched
   swagger declares them, written by
   `EndpointDocsCollector.write_record()`
 - `api_surface.json`: the public API surface, written by
   `api_surface.generate()` at the end of each run
 - the `<!-- kentik-gen:... -->` marker blocks inside
   `docs/sphinx/guides/{quickstart,rest,grpc,generation}.md` and
-  `docs/sphinx/README.md` — rewritten by
+  `docs/sphinx/README.md`, rewritten by
   `docs_rendering._update_guide_snippets()`. The surrounding prose in
   those files is hand-written; only the marker blocks are generated.
 
@@ -121,7 +121,7 @@ unless the call passes its own, so generated call sites never need one.
 subpackage of independently testable phase modules (see
 `tests/generator/`):
 
-- `parity.py` — swagger file selection (latest version per service,
+- `parity.py`: swagger file selection (latest version per service,
   namespace, and filename), joining the local schema base to upstream
   (`merge_local_schema_base()`, which fails on a service in both),
   dropping a file whose REST modules newer
@@ -129,13 +129,13 @@ subpackage of independently testable phase modules (see
   directory parity check between
   generated output and the schema. Fully independent of the other
   phase modules.
-- `error_package.py` — per-service error class generation
+- `error_package.py`: per-service error class generation
   (`generate_service_error_package()`) and the error-dispatch
   injection (`inject_service_error_handling()`; see the
   guarded-coupling note below). It runs after fixup, because each
   operation's error classes are named after its client method
   (`label.list` raises `ListError`), not its operationId.
-- `fixup.py` — generated-code post-processing, called once per
+- `fixup.py`: generated-code post-processing, called once per
   service directory after the schema availability window closes.
   Single public entrypoint: `fix_generated_service(service_dir)`.
   Internally: rebuilds `models/__init__.py` from a full directory
@@ -143,14 +143,14 @@ subpackage of independently testable phase modules (see
   applies all file-level content patches (import aliases, path
   parameter sanitization, docstring normalization, and
   duplicate function renaming).
-- `wrapper_generation.py` — generates service wrappers and the
+- `wrapper_generation.py`: generates service wrappers and the
   client mixin, collapsed into a single `generate()` entrypoint
   (wrappers first, then the mixin that imports them).
-- `docs_rendering.py` — generates the runtime architecture page with
+- `docs_rendering.py`: generates the runtime architecture page with
   an inline Mermaid dependency graph, writes the `gen/` root README,
   and writes per-service READMEs, collapsed into a single
   `generate()` entrypoint.
-- `endpoint_docs.py` — exposes `EndpointDocsCollector`, not a plain
+- `endpoint_docs.py`: exposes `EndpointDocsCollector`, not a plain
   function. `collector.extract(service, swagger_path)` must run once
   per swagger file, while the file is still available, during
   `generate_modular_sdk()`'s schema-availability window.
@@ -161,14 +161,14 @@ subpackage of independently testable phase modules (see
   `collector.write_record()` writes `schema_operations.json` after
   `render()`. The collector does not enforce this order.
   `generate_modular_sdk()` calls the methods in the correct order.
-- `api_surface.py` — records the public API surface into
+- `api_surface.py`: records the public API surface into
   `api_surface.json` on every run, and diffs two recordings. `uv run poe
   release-notes`, `uv run poe check-changelog`, and the end-of-run
   `API SURFACE CHANGED` alert all read it.
-- `public_names.py` — reads `public_names.json`, adds an entry for
+- `public_names.py`: reads `public_names.json`, adds an entry for
   each new Service, operation, and model, and raises `NameDriftError`
   when an entry no longer matches the schema. See "Public names".
-- `_shared.py` — `PROJECT_ROOT`, `SDK_OUTPUT_DIR`,
+- `_shared.py`: `PROJECT_ROOT`, `SDK_OUTPUT_DIR`,
   `REGENERATE_COMMAND` (the command every generated header names), and the helpers
   that more than one phase module genuinely uses:
   `iter_service_dirs()` and `INTERNAL_GEN_DIRS` (the single answer to
@@ -194,10 +194,10 @@ scripts.generation import ...`. `pythonpath = ["."]` in
 intra-subpackage import inside `scripts/generation/*.py` is relative
 (`from ._shared import ...`). A relative import resolves correctly
 under either top-level name. Never switch those relative imports to
-absolute `scripts.generation.*` imports — that would break the
+absolute `scripts.generation.*` imports. That would break the
 script's own direct-execution import path.
 
-## The shared connection handler — protect this, do not undo it
+## The shared connection handler: protect this, do not undo it
 
 The **shared REST runtime** is the single most significant piece of
 hand-written engineering in this repo. It routes every generated
@@ -206,7 +206,7 @@ instead of generating or hand-writing bespoke per-endpoint HTTP
 code. This is not just a convention. It's structural. The source
 code confirms it directly:
 
-- `src/kentik_api/core/rest_runtime.py` — `request_json()` is the
+- `src/kentik_api/core/rest_runtime.py`: `request_json()` is the
   *only* function that ever calls `httpx` for REST traffic. Every
   generated operation in every service calls this same function. It
   centralizes:
@@ -226,7 +226,7 @@ code confirms it directly:
   - JSON error-body parsing
   - dispatch into per-operation error classes via
     `error_cls.from_response`
-- `src/kentik_api/core/grpc_runtime.py` — `call_grpc()` is the gRPC
+- `src/kentik_api/core/grpc_runtime.py`: `call_grpc()` is the gRPC
   analogue of `request_json()`. It routes every generated gRPC wrapper
   call through one place, applies a per-call deadline override, and
   returns `(response, rate_limit)`. `map_grpc_error()` is extracted as
@@ -234,7 +234,7 @@ code confirms it directly:
   non-OK `grpc.RpcError` status as `AuthenticationError`,
   `HTTPException`, or `TransportError`. Testable without a gRPC
   channel.
-- `src/kentik_api/core/api_config.py` — `APIConfig` is the one
+- `src/kentik_api/core/api_config.py`: `APIConfig` is the one
   shared config object (base URL, auth email/token, TLS verify,
   timeouts, the shared HTTP client, per-endpoint quota) used in every
   call. A wrapper's `api_config_override` **replaces** it for one call,
@@ -243,11 +243,11 @@ code confirms it directly:
   and it can change timeouts only. Changing the host, credentials, or
   `verify` takes an explicit `APIConfig(...)`, which keeps any
   credential redirect visible at its call site.
-- `src/kentik_api/errors/__init__.py` — one shared exception
+- `src/kentik_api/errors/__init__.py`: one shared exception
   hierarchy (`KentikError` → `ConfigurationError`,
   `AuthenticationError`, `TransportError`, `HTTPException`) that
   every service's generated per-operation error classes build on.
-- `src/kentik_api/transports/{base,rest_client,grpc_client}.py` —
+- `src/kentik_api/transports/{base,rest_client,grpc_client}.py`:
   thin transport-selection and credential-wiring code, not
   per-endpoint logic.
 
@@ -267,7 +267,7 @@ the whole path end-to-end against both a mocked and a real API call.
 **Never regress this pattern.** Don't generate, hand-write, or
 suggest per-endpoint connection, auth, or retry code. Don't
 "simplify" by inlining request logic into individual service
-wrappers. Instead, fix or extend `request_json` or `APIConfig` —
+wrappers. Instead, fix or extend `request_json` or `APIConfig`:
 every endpoint in every service shares them.
 
 ### Why this survives `uv run poe generate` / `scripts/generate_sdk.py`
@@ -279,19 +279,19 @@ and removes subdirectories there. It never touches `core/`,
 loop never walks those paths. These files survive regeneration
 structurally, not just by convention or discipline.
 
-### Two files that look hand-written but are fully regenerated — never hand-edit
+### Two files that look hand-written but are fully regenerated: never hand-edit
 
 - **`src/kentik_api/client_mixin.py`** lives outside `gen/`, but
-  `wrapper_generation.generate()` calls `mixin_file.write_text(...)`
-  — a full overwrite, on every run. The next `uv run poe generate` silently
+  `wrapper_generation.generate()` calls `mixin_file.write_text(...)`,
+  a full overwrite, on every run. The next `uv run poe generate` silently
   overwrites any manual edits here.
 - **`docs/sphinx/sdk_runtime_architecture.md`** and
-  **`src/kentik_api/gen/README.md`** — `docs_rendering.generate()`
+  **`src/kentik_api/gen/README.md`**: `docs_rendering.generate()`
   fully rewrites these every run. The architecture page embeds its
   dependency graph as an inline Mermaid fence, so there are no
   separate diagram artifacts to track. By contrast,
   `docs/sphinx/index.md` is genuinely hand-written. The generator
-  only *inserts* a toctree line into it if missing — a
+  only *inserts* a toctree line into it if missing: a
   non-destructive append, not an overwrite.
 
 ### Guarded couplings worth knowing about
@@ -430,7 +430,7 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   schema files are only available inside the `with
   get_schema_root(...)` block. Swagger files with zero operations
   correctly contribute no endpoint section at all. This is common in
-  multi-file services — `alerting` merges 20 files, and 12 of them
+  multi-file services: `alerting` merges 20 files, and 12 of them
   have none.
 - **Data Models**: `sphinxcontrib.autodoc_pydantic`
   (`autopydantic_model`) renders every model as a real field table
@@ -452,7 +452,7 @@ example, an image of `alerting`'s model diagram runs to 4329×1686px.
   within a merged service. `parse_wrapper_method_signatures()` (in
   `scripts/generation/endpoint_docs.py`) resolves this by statically
   reading the wrapper's import aliases. The generator itself never
-  imports or executes generated code — that stays test-only by
+  imports or executes generated code. That stays test-only by
   design (see `tests/_discovery.py`).
 
 ## Key commands
@@ -464,17 +464,17 @@ in `.claude/skills/poethepoet/`; after a poethepoet upgrade, run
 `uv run poe _install_skill .claude/skills --upgrade` (a smoke test fails
 until you do). No task may set `envfile`: `.env` holds real credentials.
 
-- `uv run poe all` — `generate`, then `test`. Docs are opt-in.
-- `uv run poe generate` — regenerate SDK from the pinned schema commit on
+- `uv run poe all`: `generate`, then `test`. Docs are opt-in.
+- `uv run poe generate`: regenerate SDK from the pinned schema commit on
   GitHub
-- `uv run poe sync-schema` — regenerate from schema HEAD on GitHub and
+- `uv run poe sync-schema`: regenerate from schema HEAD on GitHub and
   move the pin in `schema.lock`
-- `uv run poe generate --local` — regenerate from the local
+- `uv run poe generate --local`: regenerate from the local
   `../api-schema-public/` checkout
-- `uv run poe generate --local-repo /path/to/api-schema-public` —
+- `uv run poe generate --local-repo /path/to/api-schema-public`:
   regenerate from an arbitrary local schema path
-- `uv run poe generate --schema-ref <ref>` — regenerate from another ref
-- `uv run poe docs` — regenerate from GitHub, then build Sphinx docs
+- `uv run poe generate --schema-ref <ref>`: regenerate from another ref
+- `uv run poe docs`: regenerate from GitHub, then build Sphinx docs
   (`docs/sphinx` → `docs/build/html`) with warnings as errors. To build
   from the committed tree only, run `uv run poe docs-build`.
 - `uv run poe release-notes` (`--since <ref>`, `--out <file>`): lists the API
@@ -488,12 +488,12 @@ until you do). No task may set `envfile`: `.env` holds real credentials.
   facts of what changed (schema commit, files by kind, surface delta, floors,
   checks) to `reports/regeneration-impact-<date>.html`. It never overwrites an
   earlier report, and it leaves the Findings section to a person.
-- `uv run poe test` — full pytest run (mocked layers only —
+- `uv run poe test`: full pytest run (mocked layers only,
   never wires in `tests/e2e/`)
 - `uv run poe test-generated` / `test-runtime` / `test-smoke` /
-  `test-generator` / `test-analytics` — one mocked test layer at a time
+  `test-generator` / `test-analytics`: one mocked test layer at a time
 - `uv run poe test-e2e` / `test-e2e-grpc` (required addition, see
-  Testing strategy) — opt-in end-to-end suites against the real
+  Testing strategy): opt-in end-to-end suites against the real
   Kentik API, REST and gRPC transports respectively. Must never
   appear in `test` or `all`. Both pass `--run-live-e2e`, without which
   `tests/e2e/conftest.py` skips every live test; plain pytest needs it
@@ -502,16 +502,16 @@ until you do). No task may set `envfile`: `.env` holds real credentials.
   blocks in Markdown), and `rumdl check --fix` (Markdown rules).
   `uv run poe lint-check` runs the same checks without changing files, as CI
   does.
-- `uv run poe typecheck` — ty on the whole repository
-- `uv run poe check-specs` — FR/SC/task cross-references in `specs/`
-- `uv run poe check-drift` — fails when the working tree differs from the
+- `uv run poe typecheck`: ty on the whole repository
+- `uv run poe check-specs`: FR/SC/task cross-references in `specs/`
+- `uv run poe check-drift`: fails when the working tree differs from the
   commit; CI runs it after `generate`
-- `uv run poe audit` — `uv audit` of the locked dependencies
-- `uv run poe clean` — removes `src/kentik_api/gen/`, `docs/build/`,
+- `uv run poe audit`: `uv audit` of the locked dependencies
+- `uv run poe clean`: removes `src/kentik_api/gen/`, `docs/build/`,
   generated `docs/sphinx/services/*.md`, and every `__pycache__` outside
   `.venv` (preserves `scripts/openapi_templates/`, `src/kentik_api/core/`,
   `docs/sphinx/local_generation_workflow.md`)
-- `uv run poe deep-clean` — `clean` plus `.venv`, `.pytest_cache/`,
+- `uv run poe deep-clean`: `clean` plus `.venv`, `.pytest_cache/`,
   `.ruff_cache/`. It keeps the tracked `uv.lock`. On Windows it keeps the
   running `.venv` and prints the command that removes it.
 
@@ -523,14 +523,14 @@ tasks in Python, so no task needs a POSIX shell.
 Mocked/offline layers (no network, safe to run anywhere, part of
 `uv run poe test`):
 
-- `tests/generated/test_wrapper_contracts.py` — **auto-discovers**
+- `tests/generated/test_wrapper_contracts.py`: **auto-discovers**
   every `*ServiceWrapper` method by AST-parsing
   `src/kentik_api/gen/*/services/*.py`. It then runs parametrized
   contract tests (forwarding behavior, gRPC-unimplemented check,
   kwarg validation, full-option forwarding). This auto-discovery
   picks up new services and endpoints automatically. Only add logic
   here when the wrapper contract itself changes globally.
-- `tests/generated/test_endpoint_schema_coverage.py` — for every
+- `tests/generated/test_endpoint_schema_coverage.py`: for every
   discovered endpoint, drives the real `request_json` runtime and
   generated error classes (via `respx`-mocked HTTP) against every
   declared response status code. This includes both the success
@@ -541,16 +541,16 @@ Mocked/offline layers (no network, safe to run anywhere, part of
   too). The wrapper contract, schema coverage, path encoding, gRPC
   request mapping, retry eligibility, and auto-discovered e2e suites
   import these helpers. This keeps their discovery identical.
-- `tests/generated/test_schema_operations.py` — holds the generated
+- `tests/generated/test_schema_operations.py`: holds the generated
   REST modules to `schema_operations.json`: the same operations, a
   `data` argument wherever the swagger has a body, an argument for
   each swagger parameter, and a declared success status. Runs
   without a schema checkout.
-- `tests/runtime/test_rest_runtime.py` — shared request/auth/error
+- `tests/runtime/test_rest_runtime.py`: shared request/auth/error
   behavior in `src/kentik_api/core`.
-- `tests/smoke/test_client_mounts_and_calls.py` — lightweight
+- `tests/smoke/test_client_mounts_and_calls.py`: lightweight
   client-wiring checks; keep this suite small and fast.
-- `tests/generator/` — unit tests for `scripts/generation/*.py`
+- `tests/generator/`: unit tests for `scripts/generation/*.py`
   (see "The generator's phase modules" above), for example
   `test_parity.py`, `test_error_package.py`,
   `test_wrapper_generation.py`, and `test_public_names.py`.
@@ -594,11 +594,11 @@ Mocked/offline layers (no network, safe to run anywhere, part of
 
 Live layer (real network, opt-in only, **not** part of `uv run poe test`):
 
-- `tests/e2e/` — end-to-end tests against the real Kentik API. See
+- `tests/e2e/`: end-to-end tests against the real Kentik API. See
   the requirement below. This directory and target are a required
   addition, not optional polish.
 - `tests/e2e/test_endpoints_e2e_grpc.py` (`uv run poe test-e2e-grpc`, `-m
-  e2e_grpc`) — the gRPC-transport variant of the same read-only
+  e2e_grpc`): the gRPC-transport variant of the same read-only
   coverage. A `NotImplementedError` counts as a passing outcome here
   (see "gRPC transport is fully implemented" above). Today every
   operation has a gRPC translation, so it means the service's proto
@@ -611,7 +611,7 @@ Generated and contract tests must exercise **every endpoint and
 every option** discoverable from the OpenAPI schemas for each
 service. This means every `operationId` (path × HTTP method), every
 declared request parameter and request-body field, and every
-declared response status code, including error responses — not a
+declared response status code, including error responses, not a
 representative subset. This is a standing rule, not a one-time task.
 It applies every time someone adds tests or regenerates `gen/`,
 including whenever a schema update adds new services, endpoints, or
@@ -619,7 +619,7 @@ parameters. Treat incomplete endpoint or option coverage as a bug in
 the test suite or the generator, not an acceptable gap.
 
 This mocked coverage only proves the SDK is internally
-self-consistent — it correctly handles every status the schema
+self-consistent: it correctly handles every status the schema
 declares. It cannot prove the SDK still matches the real API's
 current behavior. That requires the end-to-end layer below.
 
@@ -639,7 +639,7 @@ task.
   `KENTIK_API_TOKEN`). Tests load these the same way `KentikAPI()`
   does. Never hardcode credentials in test code. Never read or print
   `.env` contents (see Auth/config below).
-- **Opt-in only — never part of the default pipeline.** `.env`
+- **Opt-in only, never part of the default pipeline.** `.env`
   holds real credentials against a real account. e2e tests must not
   run automatically via `uv run poe test`, `uv run poe all`, or CI, without
   explicit opt-in. Gate them behind a dedicated `test-e2e` /
@@ -650,12 +650,12 @@ task.
   reads). Create, Update, and Delete calls against a real account
   are hard to reverse, and they can corrupt real data. Only cover
   mutating endpoints against a disposable, sandboxed resource with
-  guaranteed cleanup — for example, create-then-delete in a
+  guaranteed cleanup, for example create-then-delete in a
   `finally` block or fixture teardown. Call out adding such coverage
   explicitly. Don't add it silently as a side effect of other work.
 - If a real response no longer matches the generated models or
   error classes, that's a genuine bug to fix (schema sync or
-  generator) — never paper over it inside the e2e test itself.
+  generator). Never paper over it inside the e2e test itself.
 
 ## Auth/config
 
@@ -667,7 +667,7 @@ with `dotenv_values` into a dict, and only when a value is still
 missing. An explicit argument that is empty or only whitespace raises
 `ConfigurationError` instead of falling back. Never switch this back to `load_dotenv`: writing the file
 into `os.environ` leaks secrets into every subprocess, which breaks
-callers that keep credentials encrypted (sops, age). Never read or print `.env` contents — it holds real
+callers that keep credentials encrypted (sops, age). Never read or print `.env` contents: it holds real
 credentials.
 
 ## Constraints
@@ -676,7 +676,7 @@ credentials.
   them out explicitly.
 - Keep changes focused. Avoid unrelated refactors.
 - Known generator warnings are non-blocking. Track and reduce them
-  over time — don't ignore them silently.
+  over time. Don't ignore them silently.
 
 ## Branch naming and Jira
 

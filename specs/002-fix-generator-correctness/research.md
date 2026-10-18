@@ -2,7 +2,7 @@
 
 All findings verified against code or generated output on disk on 2026-08-28.
 
-## Decision 1 — The correct Service rule already exists; adopt it rather than invent one
+## Decision 1: The correct Service rule already exists; adopt it rather than invent one
 
 **Decision**: Define a Service as any directory under `src/kentik_api/gen/`
 except `__pycache__` and `pb_companions`. Put that rule in
@@ -51,7 +51,7 @@ check passes while the content is wrong.
   schema is only available inside the generation window, but several call sites
   (notably `tests/_discovery.py`) run with no schema checkout present.
 
-## Decision 2 — Derive provenance from the writing function, not a literal
+## Decision 2: Derive provenance from the writing function, not a literal
 
 **Decision**: Build the `AUTO-GENERATED` header from the writing function's own
 `__name__` and module, rather than a hand-typed string.
@@ -72,7 +72,7 @@ retype it.
   whose central rule is "never hand-edit generated files"; the header is how a
   reader knows which generator wrote a file.
 
-## Decision 3 — Let documentation extraction failures propagate
+## Decision 3: Let documentation extraction failures propagate
 
 **Decision**: Remove the blanket `except Exception` in
 `EndpointDocsCollector.extract()` (`endpoint_docs.py:867-873`) so a failure
@@ -95,7 +95,7 @@ failing loudly costs a re-run and never costs production availability.
   writing output derived from a known-bad extraction, so the wrong page could
   still be committed.
 
-## Decision 4 — Delete the dead in-place schema mutator and retarget its tests
+## Decision 4: Delete the dead in-place schema mutator and retarget its tests
 
 **Decision**: Delete `patch_schema_for_clean_names` (`generate_sdk.py:198`) and
 rewrite its three tests against `patched_swagger` (`generate_sdk.py:173`).
@@ -125,7 +125,7 @@ already unit-tested as pure functions, including no-mutation assertions, and
   remains a live hazard, and the deprecation note it already carries has not
   prevented the tests from depending on it.
 
-## Decision 5 — Verify by regenerating and diffing, not by unit tests alone
+## Decision 5: Verify by regenerating and diffing, not by unit tests alone
 
 **Decision**: Treat a clean regeneration plus `git diff` on
 `src/kentik_api/gen/` as the primary acceptance check for FR-011.

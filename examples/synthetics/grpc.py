@@ -1,5 +1,5 @@
 # HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
-"""List synthetic tests and agents — gRPC transport."""
+"""List synthetic tests and agents (gRPC transport)."""
 
 from kentik_api.client import KentikAPI
 from kentik_api.errors import KentikError

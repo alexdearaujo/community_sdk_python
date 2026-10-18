@@ -34,12 +34,12 @@ flowchart TD
     A["1. parity.select_latest_swagger_files_by_service()"] --> A2["2. parity.validate_schema_files_or_raise()<br/>parity.validate_selected_services_or_raise()<br/>parity.drop_superseded_swagger_files()<br/>PublicNames.services() and .models()"]
     A2 --> B["3. Generate REST code per swagger file<br/>(endpoint_docs_collector.extract() runs here)"]
     B --> D["4. parity.validate_generated_service_parity()"]
-    D --> E["5. fixup.fix_generated_service()<br/>(once per service — import patching, model init, file cleanup)"]
+    D --> E["5. fixup.fix_generated_service()<br/>(once per service: import patching, model init, file cleanup)"]
     E --> C["6. error_package.generate_service_error_package()<br/>(once per service, named after client methods)"]
     C --> F["7. wrapper_generation.generate()<br/>(PublicNames.methods(), then public_names.json is saved)"]
     F --> G["8. docs_rendering.generate()"]
     G --> H["9. endpoint_docs_collector.render(), then .write_record()"]
-    H --> I["10. api_surface.generate()<br/>(last — must see the final formatted output)"]
+    H --> I["10. api_surface.generate()<br/>(last, must see the final formatted output)"]
     I --> J["11. Write the schema commit to schema.lock<br/>(only a completed run)"]
 
 ```

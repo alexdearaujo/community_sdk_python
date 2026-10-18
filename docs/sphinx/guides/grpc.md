@@ -142,9 +142,9 @@ The SDK accepts gRPC responses up to 40 MiB. A larger response raises
 
 Each service in [examples/](https://github.com/kentik/community_sdk_python/blob/main/examples/README.md) has a `grpc.py` file:
 
-- [`examples/device/grpc.py`](../../../examples/device/grpc.py) — list devices
-- [`examples/user/grpc.py`](../../../examples/user/grpc.py) — list users
-- [`examples/label/grpc.py`](../../../examples/label/grpc.py) — list labels
-- [`examples/site/grpc.py`](../../../examples/site/grpc.py) — list sites
-- [`examples/alerting/grpc.py`](../../../examples/alerting/grpc.py) — list alerts
-- [`examples/synthetics/grpc.py`](../../../examples/synthetics/grpc.py) — list tests
+- [`examples/device/grpc.py`](../../../examples/device/grpc.py): list devices
+- [`examples/user/grpc.py`](../../../examples/user/grpc.py): list users
+- [`examples/label/grpc.py`](../../../examples/label/grpc.py): list labels
+- [`examples/site/grpc.py`](../../../examples/site/grpc.py): list sites
+- [`examples/alerting/grpc.py`](../../../examples/alerting/grpc.py): list alerts
+- [`examples/synthetics/grpc.py`](../../../examples/synthetics/grpc.py): list tests

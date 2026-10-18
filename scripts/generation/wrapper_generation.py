@@ -125,7 +125,7 @@ def _discover_grpc_methods(
                         f"{service.name}.{method.name} takes {method.input_type}, "
                         f"which {pb2_file.name} does not define"
                     )
-                rule = method.options.Extensions[annotations_pb2.http]  # pyright: ignore[reportArgumentType]  # ty: ignore[invalid-argument-type]  -- stubs type the handle loosely
+                rule = method.options.Extensions[annotations_pb2.http]  # pyright: ignore[reportArgumentType]  # ty: ignore[invalid-argument-type]  # stubs type the handle loosely
                 has_update_mask = not request_module and any(
                     field.name == "update_mask"
                     and field.type_name == ".google.protobuf.FieldMask"

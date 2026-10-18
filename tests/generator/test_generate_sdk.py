@@ -762,7 +762,7 @@ def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir(check)
 
     Regression test: an earlier version of this gate ran *after* the
     "Cleaning old modules" step, so a validation failure still left
-    src/kentik_api/gen/ wiped out -- discovered by manually reproducing the
+    src/kentik_api/gen/ wiped out. This was discovered by manually reproducing the
     2026-08-26 incident end-to-end rather than trusting fixture tests alone.
     Runs as a static/AST check (not a full generation) since
     generate_modular_sdk() shells out to git/protoc/uvx and isn't otherwise

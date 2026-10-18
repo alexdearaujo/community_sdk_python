@@ -25,7 +25,7 @@ failure reporting, and tests.
 **Primary Dependencies**: No new dependencies. Uses stdlib `ast`, `json`,
 `pathlib`, `contextlib`, already used by the generator.
 
-**Storage**: N/A — the generator reads swagger files and writes source and docs.
+**Storage**: N/A. The generator reads swagger files and writes source and docs.
 
 **Testing**: pytest. `tests/generator/` is the primary layer here; the mocked
 layers `tests/generated/`, `tests/runtime/`, `tests/smoke/` and the opt-in
@@ -63,15 +63,15 @@ Checked against `.specify/memory/constitution.md` v1.2.1:
 
 | Principle / Section | Assessment |
 | --- | --- |
-| I. Generated Code Is Never Hand-Edited | **PASS** — every fix lands in `scripts/generation/` or `scripts/generate_sdk.py`. Corrected documentation is produced by regenerating, never by editing a generated file. The provenance fix replaces a hand-typed string with a value derived from the writing code, which strengthens this principle. |
-| II. One Shared Runtime for Every Endpoint | **N/A** — no request or transport code is touched. |
-| III. Generator Phase Modules Stay Independently Testable | **PASS, and improved** — the shared Service rule goes in `_shared.py`, whose stated purpose is helpers that two or more phase modules genuinely use. Nine call sites use it, clearing the "resist single-consumer helpers" bar decisively. No phase module gains a dependency on another. |
-| IV. Test Coverage Must Be Exhaustive, Not Representative | **PASS, and improved** — three assertions currently exercise a path production never runs; they move onto the live path. New tests cover the shared rule and the provenance derivation. |
-| V. End-to-End Tests Are Opt-In and Safe-by-Default | **PASS** — no change to e2e gating. Both suites are run only as verification. |
-| VI. Credentials Never Enter Code, Logs, or Prompts | **N/A** — no credential handling touched. |
-| VII. Compatibility and Scope Discipline | **PASS** — no SDK surface change (FR-011). Scope is narrowed to four verified defects, with the structural refactors from the same review deferred and recorded in spec Assumptions. |
-| Architecture & Generation Pipeline | **PASS** — pipeline ordering constraints and the `request_json` injection anchor are untouched. Removing the in-place schema mutator strengthens the documented guardrail that generation must not modify the schema checkout. |
-| Development Workflow & Quality Gates | **PASS** — `make lint`, `make typecheck`, `make test` must stay clean. Regeneration is required to validate, and the local `../api-schema-public` checkout will be confirmed clean first, per the constitution's schema-checkout guardrail. |
+| I. Generated Code Is Never Hand-Edited | **PASS**: every fix lands in `scripts/generation/` or `scripts/generate_sdk.py`. Corrected documentation is produced by regenerating, never by editing a generated file. The provenance fix replaces a hand-typed string with a value derived from the writing code, which strengthens this principle. |
+| II. One Shared Runtime for Every Endpoint | **N/A**: no request or transport code is touched. |
+| III. Generator Phase Modules Stay Independently Testable | **PASS, and improved**: the shared Service rule goes in `_shared.py`, whose stated purpose is helpers that two or more phase modules genuinely use. Nine call sites use it, clearing the "resist single-consumer helpers" bar decisively. No phase module gains a dependency on another. |
+| IV. Test Coverage Must Be Exhaustive, Not Representative | **PASS, and improved**: three assertions currently exercise a path production never runs; they move onto the live path. New tests cover the shared rule and the provenance derivation. |
+| V. End-to-End Tests Are Opt-In and Safe-by-Default | **PASS**: no change to e2e gating. Both suites are run only as verification. |
+| VI. Credentials Never Enter Code, Logs, or Prompts | **N/A**: no credential handling touched. |
+| VII. Compatibility and Scope Discipline | **PASS**: no SDK surface change (FR-011). Scope is narrowed to four verified defects, with the structural refactors from the same review deferred and recorded in spec Assumptions. |
+| Architecture & Generation Pipeline | **PASS**: pipeline ordering constraints and the `request_json` injection anchor are untouched. Removing the in-place schema mutator strengthens the documented guardrail that generation must not modify the schema checkout. |
+| Development Workflow & Quality Gates | **PASS**: `make lint`, `make typecheck`, `make test` must stay clean. Regeneration is required to validate, and the local `../api-schema-public` checkout will be confirmed clean first, per the constitution's schema-checkout guardrail. |
 
 **Gate result: PASS.** No violations, so the Complexity Tracking table is
 omitted.
@@ -88,7 +88,7 @@ specs/002-fix-generator-correctness/
 ├── quickstart.md        # Phase 1 output
 ├── checklists/
 │   └── requirements.md  # Spec quality checklist (from /speckit-specify)
-└── tasks.md             # Phase 2 output (/speckit-tasks — not created here)
+└── tasks.md             # Phase 2 output (/speckit-tasks, not created here)
 ```
 
 No `contracts/` directory. This feature changes internal generator behaviour and
@@ -142,7 +142,7 @@ steady-state phrasing rather than change narration.
 | Document | Why it must change |
 | --- | --- |
 | `CONTEXT.md` | The `Service` entry says each Service "maps to one directory under `src/kentik_api/gen/`", which reads as though every directory is a Service. That ambiguity is what let an internal directory be documented as one. It must state the exception. |
-| `CLAUDE.md` | Describes `_shared.py` as holding "the two helpers" and names two. This is **already wrong** — the module exports eight — and it already contradicts `scripts/generation/README.md`, which lists all eight. Adding a ninth makes it worse. |
+| `CLAUDE.md` | Describes `_shared.py` as holding "the two helpers" and names two. This is **already wrong** (the module exports eight), and it already contradicts `scripts/generation/README.md`, which lists all eight. Adding a ninth makes it worse. |
 | `scripts/generation/README.md` | Its `_shared.py` row lists the module's public interface and needs the new rule added. |
 | `tests/generator/README.md` | Its Files table documents every test module; rows are needed for whatever this feature adds. |
 

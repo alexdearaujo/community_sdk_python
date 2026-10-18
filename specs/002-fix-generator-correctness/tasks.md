@@ -110,7 +110,7 @@ just a count.
 - [x] T012 [US2] In `scripts/generation/parity.py`, replace the inline exclusion
       in `validate_generated_service_parity()` (line 83) with
       `iter_service_dirs()`. This site's rule is already correct, so its
-      validation behaviour must not change — it is the reference the other eight
+      validation behaviour must not change. It is the reference the other eight
       sites are being brought into line with. Depends on T011.
 - [x] T013 [P] [US2] In `scripts/generation/docs_rendering.py`, replace the three
       divergent filters in `_generate_service_readmes()`, `_discover_example_ops()`,
@@ -210,7 +210,7 @@ the run exits non-zero rather than emitting an empty page.
       module docstring claims the ordering constraint "is visible in the
       interface" while the class docstring says it "remains the caller's
       responsibility". Make both state what the code actually guarantees
-      (FR-010). Do not add enforcement machinery — that is deferred to the
+      (FR-010). Do not add enforcement machinery: that is deferred to the
       follow-up feature. Depends on T024.
 
 **Checkpoint**: Silent documentation failures are impossible (FR-009, FR-010,

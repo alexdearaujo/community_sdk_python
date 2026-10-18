@@ -215,7 +215,7 @@ def validate_schema_files(swagger_paths: list[Path]) -> list[SchemaValidationFai
     Catches a corrupted/truncated local schema checkout (e.g. the 2026-08-26
     incident where a locally truncated swagger file silently produced an
     incomplete SDK) before any code is generated from it. Does not validate
-    full OpenAPI schema conformance -- only the structural minimum the rest
+    full OpenAPI schema conformance, only the structural minimum the rest
     of the generation pipeline already assumes.
     """
     failures: list[SchemaValidationFailure] = []

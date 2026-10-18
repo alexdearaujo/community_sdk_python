@@ -13,8 +13,8 @@ _PACKAGE_ROOT = Path(__file__).resolve().parents[2] / "src" / "kentik_api"
 
 # Hand-written modules the architecture diagram must never silently drop.
 # _generate_runtime_architecture_docs() skips any module _module_group() maps to
-# None, so an unmapped module vanishes from the diagram with no error at all --
-# that is how core.grpc_runtime went missing from it entirely.
+# None, so an unmapped module vanishes from the diagram with no error at all.
+# That is how core.grpc_runtime went missing from it entirely.
 _HAND_WRITTEN_DIRS = ("auth", "core", "errors", "transports")
 
 

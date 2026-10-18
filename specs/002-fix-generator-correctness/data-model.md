@@ -30,7 +30,7 @@ Nine call sites that each inline their own exclusion set today:
 
 | Site | Current exclusion set |
 | --- | --- |
-| `parity.validate_generated_service_parity` | `__pycache__`, `pb_companions` — correct |
+| `parity.validate_generated_service_parity` | `__pycache__`, `pb_companions`: correct |
 | `docs_rendering._generate_service_readmes` | `__pycache__` |
 | `docs_rendering._discover_example_ops` | `_`-prefixed |
 | `docs_rendering._update_guide_snippets` | `_`-prefixed, `pb_companions` |

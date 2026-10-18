@@ -27,7 +27,7 @@ look wrong, instead of silently producing an SDK that's missing services or
 has gutted models.
 
 **Why this priority**: This is the entire problem this feature exists to
-solve. Today, a corrupted local checkout produces no error at all — the
+solve. Today, a corrupted local checkout produces no error at all: the
 generator runs to completion, the parity check passes (it only compares
 generated output to that same corrupted input), and the maintainer only
 discovers it later when a service has silently vanished from the SDK. This
@@ -62,7 +62,7 @@ completing and silently omitting the affected service.
   consistency and to catch transient clone/network truncation too.
 - What happens when a swagger file is legitimately tiny (e.g. a service
   with only one operation)? Validation MUST NOT reject small-but-valid
-  files — the check is structural validity (parses as JSON, has the
+  files. The check is structural validity (parses as JSON, has the
   expected top-level keys), never a bare size threshold.
 - What happens when multiple files are corrupted at once? All of them MUST
   be reported in one run, not just the first, so the maintainer can fix
@@ -103,7 +103,7 @@ completing and silently omitting the affected service.
   non-zero exit code and a clear listing of every offending file, before
   any file under `src/kentik_api/gen/` is written or modified.
 - **SC-002**: Running `make generate local` (or `make generate`) against a
-  fully valid schema checkout behaves exactly as before this change — zero
+  fully valid schema checkout behaves exactly as before this change, with zero
   difference in output for the non-corrupted case.
 - **SC-003**: The specific 2026-08-26 incident (a swagger file truncated
   from 1625 lines to 1) is caught by this check, verified by a regression
@@ -112,18 +112,18 @@ completing and silently omitting the affected service.
 ## Assumptions
 
 - "Corrupted" is scoped to structural validity (parses as JSON, has the
-  expected top-level OpenAPI keys) — this feature does not attempt semantic
+  expected top-level OpenAPI keys). This feature does not attempt semantic
   schema validation (e.g. full OpenAPI schema conformance), which is a much
   larger effort and not what the 2026-08-26 incident needed.
 - This validates the schema *source* files before generation; it is not a
   substitute for the existing parity check, which validates generator
-  *output* against that same source. Both remain necessary — this one
+  *output* against that same source. Both remain necessary: this one
   catches corrupted/truncated input, not e.g. a service legitimately
   removed upstream.
 - This feature validates the *content* of each discovered swagger file. It
   does not detect a whole service directory silently disappearing from the
   schema tree (which is a *file-discovery* problem, not a *file-content*
-  problem) — on 2026-08-26 the `kagent`/`monitoring` services were missing
+  problem). On 2026-08-26 the `kagent`/`monitoring` services were missing
   from the corrupted checkout's directory listing entirely, a distinct
   mechanism from the confirmed `device.swagger.json` content truncation
   this feature targets. Catching a shrinking service count would need a

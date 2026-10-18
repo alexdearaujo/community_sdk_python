@@ -15,7 +15,7 @@ validation"). Structural validation of that same list is the same concern
 ("which files do we trust"), not a new one. `validate_generated_service_parity()`
 in the same file already establishes the pattern this follows: a pure-ish
 check function, called from `generate_sdk.py`, that prints every failure
-together and raises `RuntimeError` — reusing means no new error-handling
+together and raises `RuntimeError`. Reusing means no new error-handling
 convention to invent.
 
 **Alternatives considered**:
@@ -63,8 +63,8 @@ unnecessary for this incident.
 
 **Decision**: Immediately after
 `selected_swagger_files, selected_count, ignored_count =
-parity.select_latest_swagger_files_by_service(openapi_base)`, and — this
-matters — **before** `SDK_OUTPUT_DIR` is set up and its old contents are
+parity.select_latest_swagger_files_by_service(openapi_base)`, and (this
+matters) **before** `SDK_OUTPUT_DIR` is set up and its old contents are
 cleaned (`shutil.rmtree` per existing service directory), not just before
 the per-service generation loop.
 
@@ -75,7 +75,7 @@ prerequisite work). Manually reproducing the incident end-to-end
 it) proved that reasoning wrong: the cleanup step unconditionally
 `shutil.rmtree`s every existing service directory under
 `src/kentik_api/gen/` *before* any validation ran, so a validation failure
-still left the repo with (in the reproduction) 1273 tracked files deleted —
+still left the repo with (in the reproduction) 1273 tracked files deleted:
 recoverable via `git checkout`, but a direct violation of spec SC-001
 ("before any file under `src/kentik_api/gen/` is written or modified").
 Moving the check to run immediately after schema-file discovery, and
@@ -99,14 +99,14 @@ line numbers, so it can't silently regress again.
   reproduction. Rejected after the fact: the fixture tests in
   `test_parity.py` all passed against the original (buggy) ordering too,
   because they only exercise `validate_schema_files()` / `_or_raise()` in
-  isolation — they have no way to know *where* the caller invokes them.
+  isolation. They have no way to know *where* the caller invokes them.
   Only running the actual `generate_modular_sdk()` code path surfaced the
   ordering bug.
 
 ## Decision 4: Does this run for both `--local-repo` and the cloned fallback?
 
 **Decision**: Yes, unconditionally. `generate_modular_sdk()` doesn't
-branch on `repo_source` before this point — `get_schema_root()` already
+branch on `repo_source` before this point: `get_schema_root()` already
 normalizes local-vs-cloned into one `schema_root` path by the time
 `openapi_base` is computed, so the new call needs no source-specific
 logic at all.

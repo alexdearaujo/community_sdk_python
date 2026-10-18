@@ -10,7 +10,7 @@ the generated code) assumes.
 Scope, by design (see AGENTS.md's end-to-end testing requirement):
   - Only GET (read-only, non-mutating) operations are auto-covered and
     actually called here. Discovered the same way as every other generated
-    suite -- via tests/_discovery.py -- so new read endpoints get e2e
+    suite (via tests/_discovery.py), so new read endpoints get e2e
     coverage automatically as the schema grows.
   - Create/Update/Delete operations are intentionally NOT auto-covered
     (see test_mutating_endpoint_excluded_from_e2e below): they are hard to
@@ -18,7 +18,7 @@ Scope, by design (see AGENTS.md's end-to-end testing requirement):
     fixture per operation, added deliberately rather than as a side effect
     of this file existing.
   - A read call passes if it returns a correctly-typed response OR raises a
-    generated KentikError subclass -- both prove the real request/response/
+    generated KentikError subclass. Both prove the real request/response/
     error path still matches the schema. Only a truly unexpected exception
     (e.g. a raw pydantic.ValidationError, or anything outside the SDK's own
     error hierarchy) is a failure, since we don't control what data exists in
@@ -75,7 +75,7 @@ def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
     except HTTPException as exc:
         print(
             f'E2E: "{label}" raised {type(exc).__name__} '
-            f"(status={getattr(exc, 'status_code', 'n/a')}) -- a generated "
+            f"(status={getattr(exc, 'status_code', 'n/a')}). A generated "
             "HTTP error response is a valid outcome. RESULT=PASS"
         )
         return
@@ -98,7 +98,7 @@ def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
 @pytest.mark.skip(
     reason=(
         "Mutating (non-GET) operations are intentionally excluded from "
-        "automatic e2e coverage -- see AGENTS.md's end-to-end testing "
+        "automatic e2e coverage. See AGENTS.md's end-to-end testing "
         "requirement. Add a dedicated test with real setup/teardown for this "
         "specific operation if you need live coverage here."
     )
@@ -110,5 +110,5 @@ def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
 )
 def test_mutating_endpoint_excluded_from_e2e(case: EndpointCase, real_client):
     raise NotImplementedError(
-        "Not auto-implemented by design -- see the skip reason above."
+        "Not auto-implemented by design. See the skip reason above."
     )
