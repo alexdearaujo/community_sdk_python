@@ -315,7 +315,7 @@ quickstart.
   (SC-006, FR-015)
 - [X] T037 Run quickstart.md steps 1 to 6 on macOS and record any difference
   from the expected output in this file (SC-001, SC-004, SC-005)
-- [ ] T038 On the pull request run (after the user asks for the pull
+- [X] T038 On the pull request run (after the user asks for the pull
   request), confirm the `test`, `lint`, `typecheck`, and
   `generated-output-matches-schema-pin` jobs pass on windows-latest and
   macos-latest, and fix any POSIX assumption they show without a skip
@@ -326,7 +326,12 @@ Results (T036, T037, 2026-10-17, macOS): `uv run poe test` passes 3536 tests on 
 and `docs-build` pass. `clean`, then `generate`, then `check-drift` exits 0. api_surface.json
 equals the T002 baseline, and the runtime diff outside gen/ is marker and link lines only.
 Quickstart steps 1 to 6 match the expected output. One finding: rumdl's MD041 flagged the
-one-line CLAUDE.md, so .markdownlint-cli2.jsonc now ignores it. T038 waits for the pull request.
+one-line CLAUDE.md, so .markdownlint-cli2.jsonc now ignores it.
+
+Results (T038, 2026-10-17, fork CI run 39084416624): all 19 jobs pass on ubuntu, windows,
+and macos. The first Windows runs found three POSIX assumptions, each fixed without a skip:
+protoc needs `/` in proto file paths, `DFCache` file names held `:`, and `Path.write_text`
+wrote CRLF, which `git status` reports as a change (now `write_text_lf()`, R5).
 
 ---
 
