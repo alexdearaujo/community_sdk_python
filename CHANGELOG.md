@@ -269,7 +269,9 @@ classes follow: `client.site.create` raises `CreateError`, in
   `DataQueryDefinition`, `DFCache`, and `flatness_analysis`, with the same
   names and output. SQL definitions and the `@fixup:` column type are gone:
   the SQL endpoint is retired, and `@fixup:` ran Python code from the
-  definition file. Definition files load with `yaml.safe_load`.
+  definition file. Definition files load with `yaml.safe_load`. `DFCache`
+  writes file names with `_` in place of `:`, because Windows does not allow
+  `:` in a file name. It still reads the 1.x names.
 - **`kentik_api.devices.DeviceLookup`.** Replaces 1.x `DeviceCache`: devices
   and interfaces by ID or name, link names, and link speeds, from the V6
   `device` and `interface` services. It saves and loads JSON, not pickle.

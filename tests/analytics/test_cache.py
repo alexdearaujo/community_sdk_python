@@ -109,6 +109,36 @@ def test_files_the_cache_did_not_write_are_ignored(tmp_path: Path):
     assert cache.get() is None
 
 
+def test_file_names_have_no_colon(tmp_path: Path):
+    # Windows does not allow `:` in a file name.
+    cache = DFCache(tmp_path)
+    cache.store(_frame(START, START + timedelta(minutes=2)))
+
+    assert [p.name for p in cache.files] == [
+        "2025-10-16T00_00_00+00_00_2025-10-16T00_01_00+00_00.parquet"
+    ]
+
+
+@pytest.mark.parametrize(
+    ("name", "start", "end"),
+    [
+        # Written before file names avoided `:`, on macOS or Linux.
+        (
+            "2025-10-16T00:00:00+00:00_2025-10-16T01:00:00+00:00.parquet",
+            START,
+            START + timedelta(hours=1),
+        ),
+        (
+            "2025-10-16T00_00_00_2025-10-16T01_00_00.parquet",
+            START.replace(tzinfo=None),
+            START.replace(tzinfo=None) + timedelta(hours=1),
+        ),
+    ],
+)
+def test_file_names_parse_with_or_without_colons(name: str, start, end):
+    assert DFCache.parse_df_filename(Path(name)) == (start, end)
+
+
 def test_dedup_needs_the_named_columns():
     with pytest.raises(ValueError, match="not in the DataFrame"):
         dedup_data_frame(_frame(START, START + timedelta(minutes=2)), ["nope"])
