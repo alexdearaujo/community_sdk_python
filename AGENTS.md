@@ -495,7 +495,9 @@ until you do). No task may set `envfile`: `.env` holds real credentials.
 - `uv run poe test-e2e` / `test-e2e-grpc` (required addition, see
   Testing strategy) — opt-in end-to-end suites against the real
   Kentik API, REST and gRPC transports respectively. Must never
-  appear in `test` or `all`.
+  appear in `test` or `all`. Both pass `--run-live-e2e`, without which
+  `tests/e2e/conftest.py` skips every live test; plain pytest needs it
+  too (`pytest -m e2e --run-live-e2e`).
 - `uv run poe lint`: `ruff check --fix`, `ruff format` (Python, and Python
   blocks in Markdown), and `rumdl check --fix` (Markdown rules).
   `uv run poe lint-check` runs the same checks without changing files, as CI

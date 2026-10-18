@@ -26,7 +26,7 @@ Scope, by design (see AGENTS.md's end-to-end testing requirement):
 
 Opt-in only: excluded from `uv run poe test`/`uv run poe all` by the `e2e` pytest marker
 (see pyproject.toml's addopts) and only actually run via `uv run poe test-e2e` or
-`pytest -m e2e`. The `real_client` fixture (tests/e2e/conftest.py) skips the
+`pytest -m e2e --run-live-e2e`. The `real_client` fixture (tests/e2e/conftest.py) skips the
 whole module if no real credentials are configured.
 """
 

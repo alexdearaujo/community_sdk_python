@@ -159,11 +159,11 @@ cmd = "pytest -vv -s -rA tests/analytics/"
 
 [tool.poe.tasks.test-e2e]
 help = "Run end-to-end tests against the REAL Kentik API (opt-in, needs .env)"
-cmd = "pytest -vv -s -rA -m e2e tests/e2e/"
+cmd = "pytest -vv -s -rA -m e2e --run-live-e2e tests/e2e/"
 
 [tool.poe.tasks.test-e2e-grpc]
 help = "Run end-to-end gRPC-transport tests against the REAL Kentik API (opt-in, needs .env)"
-cmd = "pytest -vv -s -rA -m e2e_grpc tests/e2e/"
+cmd = "pytest -vv -s -rA -m e2e_grpc --run-live-e2e tests/e2e/"
 
 [tool.poe.tasks.lint]
 help = "Fix and format Python with Ruff, and Markdown with rumdl"
@@ -272,8 +272,8 @@ extend-select = ["E4", "E7", "E9", "F"]
 pythonpath = ["."]
 strict = true
 markers = [
-    "e2e: end-to-end tests against the real Kentik API (REST transport). Opt-in only -- excluded by default, run with `-m e2e` or `uv run poe test-e2e`. Requires real KENTIK_EMAIL/KENTIK_API_TOKEN in a project-root .env.",
-    "e2e_grpc: end-to-end tests against the real Kentik API (gRPC transport). Opt-in only -- excluded by default, run with `-m e2e_grpc` or `uv run poe test-e2e-grpc`. Requires real KENTIK_EMAIL/KENTIK_API_TOKEN in a project-root .env.",
+    "e2e: end-to-end tests against the real Kentik API (REST transport). Opt-in only -- excluded by default, run with `uv run poe test-e2e` or `-m e2e --run-live-e2e`. Requires real KENTIK_EMAIL/KENTIK_API_TOKEN in a project-root .env.",
+    "e2e_grpc: end-to-end tests against the real Kentik API (gRPC transport). Opt-in only -- excluded by default, run with `uv run poe test-e2e-grpc` or `-m e2e_grpc --run-live-e2e`. Requires real KENTIK_EMAIL/KENTIK_API_TOKEN in a project-root .env.",
     "e2e_mutating: end-to-end tests that WRITE to the real Kentik account, on disposable data with cleanup. Never part of `uv run poe test-e2e`: run with `-m e2e_mutating --run-live-e2e`.",
 ]
 addopts = ["-m", "not e2e and not e2e_grpc and not e2e_mutating"]

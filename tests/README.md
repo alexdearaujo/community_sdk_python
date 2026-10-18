@@ -219,8 +219,9 @@ from the mocked ones:
   into the auto-discovered path.
 
 This suite never runs by accident. `addopts` in `pyproject.toml`
-excludes both by default; only `uv run poe test-e2e`/`-m e2e` (REST) or
-`uv run poe test-e2e-grpc`/`-m e2e_grpc` (gRPC) runs them. Never hardcode
+excludes both by default. Only `uv run poe test-e2e` (REST) and
+`uv run poe test-e2e-grpc` (gRPC) run them; with plain pytest, add
+`--run-live-e2e` to `-m e2e` or `-m e2e_grpc`. Never hardcode
 credentials in test code. Never read or print `.env` contents.
 
 ## Regression gates added by the pre-PR audit
