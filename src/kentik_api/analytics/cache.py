@@ -3,12 +3,15 @@
 
 Files are Parquet, read with pyarrow, which cannot run code. Each file is
 named `<start>_<end>.parquet`: the range `fetch` asked for, or the first and
-last index time for `store(df)`. A file with any other name is ignored.
+last index time for `store(df)`. Each time is ISO 8601 with `_` in place of
+`:`, which Windows does not allow in a file name. Names with `:` still read.
+A file with any other name is ignored.
 """
 
 from __future__ import annotations
 
 import logging
+import re
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -19,6 +22,9 @@ import pandas as pd
 from kentik_api.analytics.definitions import MappedQueryFn
 
 log = logging.getLogger(__name__)
+
+# The separator is the `_` that starts the second date.
+_FILENAME = re.compile(r"(?P<start>.+?)_(?P<end>\d{4}-\d{2}-\d{2}.*)")
 
 
 def dedup_data_frame(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
@@ -54,21 +60,15 @@ class DFCache:
     def parse_df_filename(
         cls, filename: Path
     ) -> tuple[datetime | None, datetime | None]:
-        name = filename.stem
-        if name.count(cls.separator) == 1:
-            start_text, end_text = name.split(cls.separator)
-        # Some file sync tools replace the colons of an ISO time with
-        # underscores. Two ISO times with an offset are 25 characters each.
-        elif len(name) == 51 and name[25] == cls.separator:
-            start_text, end_text = (
-                name[:25].replace("_", ":"),
-                name[26:].replace("_", ":"),
-            )
-        else:
+        match = _FILENAME.fullmatch(filename.stem)
+        if match is None:
             log.debug("Ignoring a file the cache did not write: %s", filename)
             return None, None
         try:
-            return datetime.fromisoformat(start_text), datetime.fromisoformat(end_text)
+            return (
+                datetime.fromisoformat(match["start"].replace("_", ":")),
+                datetime.fromisoformat(match["end"].replace("_", ":")),
+            )
         except ValueError:
             log.debug("Ignoring a file the cache did not write: %s", filename)
             return None, None
@@ -170,8 +170,10 @@ class DFCache:
     ) -> None:
         """Writes `df`, named by `start` and `end`, or else by its index range."""
         out = self.data_dir / self.filename_format.format(
-            start=(start or cast(pd.Timestamp, df.index[0])).isoformat(),
-            end=(end or cast(pd.Timestamp, df.index[-1])).isoformat(),
+            start=(start or cast(pd.Timestamp, df.index[0]))
+            .isoformat()
+            .replace(":", "_"),
+            end=(end or cast(pd.Timestamp, df.index[-1])).isoformat().replace(":", "_"),
         )
         df.to_parquet(out, index=True)
 

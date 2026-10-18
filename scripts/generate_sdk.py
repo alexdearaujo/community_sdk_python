@@ -949,8 +949,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                         with TemporaryDirectory() as tmp_pb:
                             tmp_pb_path = Path(tmp_pb)
 
+                            # protoc maps a file to its -I path only with `/` separators.
                             rel_proto_files = [
-                                str(p.relative_to(proto_base)) for p in proto_files
+                                p.relative_to(proto_base).as_posix()
+                                for p in proto_files
                             ]
 
                             # Set up the paths to the vendored dependencies
