@@ -689,6 +689,17 @@ from `feat/v6-sdk`, and merge it back with `git merge --no-ff`. The
 maintainer opens the pull request from `feat/v6-sdk` into `main` by
 hand.
 
+## Remotes: the fork only
+
+The remote `origin` is Kentik's repository. The remote `fork` is the
+maintainer's personal fork.
+
+- Push, merge, delete branches, or commit on a remote only in `fork`.
+  Never do any of these in `origin`.
+- Never open, update, comment on, or close a pull request in any Kentik
+  repository (`kentik/*`). The maintainer does all of those by hand. When
+  you are asked to open a pull request, open it inside the fork.
+
 <!-- shared-rules:start -->
 <!-- Synced from ~/.claude/CLAUDE.md; regenerate by re-running the
      agents-md skill instead of hand-editing this block. CLAUDE.md
