@@ -810,8 +810,7 @@ def test_generated_doc_pages_are_formatted_after_render_and_before_the_surface()
     format_lines = [
         n.lineno
         for n in calls
-        if ast.unparse(n.func) == "run_cmd"
-        and "'format'" in ast.unparse(n)
+        if ast.unparse(n.func) == "_format_generated"
         and "GENERATED_DOC_PAGES" in ast.unparse(n)
     ]
     render_lines = [n.lineno for n in calls if ast.unparse(n.func).endswith(".render")]

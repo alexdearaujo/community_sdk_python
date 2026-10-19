@@ -792,6 +792,95 @@ def restored_on_failure(paths: tuple[Path, ...]):
             raise
 
 
+def _compile_service_protos(
+    service: str,
+    proto_files: list[Path],
+    schema_root: Path,
+    pb_dir: Path,
+    proto_collisions,
+    pb_owners: dict[tuple[str, str], str],
+) -> dict[str, set[str]]:
+    """Compiles one swagger file's protos into pb_dir; returns its oneof members.
+
+    Records each written module's owning service in pb_owners.
+    """
+    print(f"    Compiling {len(proto_files)} .proto file(s) into pb/...")
+    proto_base = schema_root / "proto"
+    vendor_base = schema_root / "protovendor" / "github.com"
+
+    with TemporaryDirectory() as tmp_pb:
+        tmp_pb_path = Path(tmp_pb)
+        cmd = [
+            sys.executable,
+            "-m",
+            "grpc_tools.protoc",
+            f"-I{proto_base}",
+            f"-I{vendor_base / 'googleapis' / 'googleapis'}",
+            f"-I{vendor_base / 'grpc-ecosystem' / 'grpc-gateway'}",
+            f"--python_out={tmp_pb_path}",
+            f"--grpc_python_out={tmp_pb_path}",
+            f"--pyi_out={tmp_pb_path}",
+            f"--descriptor_set_out={tmp_pb_path / 'descriptors.pb'}",
+            "--include_imports",
+            # protoc maps a file to its -I path only with `/` separators.
+            *(p.relative_to(proto_base).as_posix() for p in proto_files),
+        ]
+        try:
+            subprocess.run(cmd, check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as e:
+            print(f"    ❌ Protobuf generation failed for {service}!")
+            print("    --- PROTOC ERROR LOG ---")
+            if e.stderr:
+                print("    [stderr]")
+                print(e.stderr)
+            if e.stdout:
+                print("    [stdout]")
+                print(e.stdout)
+            print("    ------------------------")
+            raise
+
+        generated_files = [
+            path for suffix in ("*.py", "*.pyi") for path in tmp_pb_path.rglob(suffix)
+        ]
+        print(f"    ✅ Protoc successfully generated {len(generated_files)} files.")
+
+        for gen_py in generated_files:
+            package = ".".join(gen_py.relative_to(tmp_pb_path).parent.parts)
+            stem, _, suffix = gen_py.name.partition("_pb2")
+            module = _pb_stem(package, stem, proto_collisions) + "_pb2"
+            pb_owners[(package, module)] = service
+            write_text_lf(
+                pb_dir / (module + suffix),
+                _qualify_colliding_imports(
+                    gen_py.read_text(encoding="utf-8"), proto_collisions
+                ),
+            )
+
+        for pb_file in pb_dir.rglob("*_grpc.py"):
+            content = pb_file.read_text(encoding="utf-8")
+            content = _rewrite_grpc_imports(content)
+            content = _silence_grpc_experimental(content)
+            write_text_lf(pb_file, content)
+        for stub_file in pb_dir.rglob("*.pyi"):
+            write_text_lf(
+                stub_file,
+                _fix_module_level_classvar(stub_file.read_text(encoding="utf-8")),
+            )
+
+        return oneof_members_by_definition(
+            descriptor_pb2.FileDescriptorSet.FromString(
+                (tmp_pb_path / "descriptors.pb").read_bytes()
+            )
+        )
+
+
+def _format_generated(*extra: Path) -> None:
+    run_cmd(
+        ["uv", "run", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)]
+    )
+    run_cmd(["uv", "run", "ruff", "format", str(SDK_OUTPUT_DIR), *map(str, extra)])
+
+
 def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None):
     with get_schema_root(repo_source, schema_ref) as (schema_root, schema_commit):
         # Define base paths using the yielded root
@@ -941,107 +1030,14 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                 elif proto_dir.exists():
                     proto_files = list(proto_dir.glob("*.proto"))
                     if proto_files:
-                        print(
-                            f"    Compiling {len(proto_files)} .proto file(s) into pb/..."
+                        oneof_members = _compile_service_protos(
+                            service,
+                            proto_files,
+                            schema_root,
+                            pb_dir,
+                            proto_collisions,
+                            pb_owners,
                         )
-
-                        with TemporaryDirectory() as tmp_pb:
-                            tmp_pb_path = Path(tmp_pb)
-
-                            # protoc maps a file to its -I path only with `/` separators.
-                            rel_proto_files = [
-                                p.relative_to(proto_base).as_posix()
-                                for p in proto_files
-                            ]
-
-                            # Set up the paths to the vendored dependencies
-                            vendor_base = schema_root / "protovendor" / "github.com"
-                            googleapis_path = vendor_base / "googleapis" / "googleapis"
-                            grpc_gateway_path = (
-                                vendor_base / "grpc-ecosystem" / "grpc-gateway"
-                            )
-
-                            # Add the vendored paths to the protoc Include (-I) arguments
-                            cmd = [
-                                sys.executable,
-                                "-m",
-                                "grpc_tools.protoc",
-                                f"-I{proto_base}",
-                                f"-I{googleapis_path}",
-                                f"-I{grpc_gateway_path}",
-                                f"--python_out={tmp_pb_path}",
-                                f"--grpc_python_out={tmp_pb_path}",
-                                f"--pyi_out={tmp_pb_path}",
-                                f"--descriptor_set_out={tmp_pb_path / 'descriptors.pb'}",
-                                "--include_imports",
-                            ]
-                            cmd.extend(rel_proto_files)
-
-                            try:
-                                subprocess.run(
-                                    cmd, check=True, capture_output=True, text=True
-                                )
-
-                                generated_files = [
-                                    path
-                                    for suffix in ("*.py", "*.pyi")
-                                    for path in tmp_pb_path.rglob(suffix)
-                                ]
-                                print(
-                                    f"    ✅ Protoc successfully generated {len(generated_files)} files."
-                                )
-
-                                for gen_py in generated_files:
-                                    package = ".".join(
-                                        gen_py.relative_to(tmp_pb_path).parent.parts
-                                    )
-                                    stem, _, suffix = gen_py.name.partition("_pb2")
-                                    module = (
-                                        _pb_stem(package, stem, proto_collisions)
-                                        + "_pb2"
-                                    )
-                                    pb_owners[(package, module)] = service
-                                    target = pb_dir / (module + suffix)
-                                    write_text_lf(
-                                        target,
-                                        _qualify_colliding_imports(
-                                            gen_py.read_text(encoding="utf-8"),
-                                            proto_collisions,
-                                        ),
-                                    )
-
-                                for pb_file in pb_dir.rglob("*_grpc.py"):
-                                    content = pb_file.read_text(encoding="utf-8")
-                                    content = _rewrite_grpc_imports(content)
-                                    content = _silence_grpc_experimental(content)
-                                    write_text_lf(pb_file, content)
-                                for stub_file in pb_dir.rglob("*.pyi"):
-                                    write_text_lf(
-                                        stub_file,
-                                        _fix_module_level_classvar(
-                                            stub_file.read_text(encoding="utf-8")
-                                        ),
-                                    )
-
-                                oneof_members = oneof_members_by_definition(
-                                    descriptor_pb2.FileDescriptorSet.FromString(
-                                        (tmp_pb_path / "descriptors.pb").read_bytes()
-                                    )
-                                )
-
-                            except subprocess.CalledProcessError as e:
-                                print(
-                                    f"    ❌ Protobuf generation failed for {service}!"
-                                )
-                                print("    --- PROTOC ERROR LOG ---")
-                                if e.stderr:
-                                    print("    [stderr]")
-                                    print(e.stderr)
-                                if e.stdout:
-                                    print("    [stdout]")
-                                    print(e.stdout)
-                                print("    ------------------------")
-                                raise
                     else:
                         print(
                             "    ⚠️ Directory exists, but no .proto files found inside."
@@ -1099,10 +1095,7 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
     print(f"    ✅ Relinked descriptor dependency imports in {relinked} pb2 modules.")
 
     print("\nFormatting...")
-    run_cmd(
-        ["uv", "run", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)]
-    )
-    run_cmd(["uv", "run", "ruff", "format", str(SDK_OUTPUT_DIR)])
+    _format_generated()
 
     print("\nGenerating Wrappers & Documentation...")
     wrapper_generation.generate(names, rest_only)
@@ -1112,21 +1105,10 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
     endpoint_docs_collector.write_record()
 
     print("\nFinal formatting pass for generated code...")
-    run_cmd(
-        ["uv", "run", "ruff", "check", "--select", "F,I", "--fix", str(SDK_OUTPUT_DIR)]
-    )
-    run_cmd(["uv", "run", "ruff", "format", str(SDK_OUTPUT_DIR)])
     # client_mixin.py lives outside gen/ but is also fully generated.
-    run_cmd(
-        [
-            "uv",
-            "run",
-            "ruff",
-            "format",
-            str(PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py"),
-        ]
+    _format_generated(
+        PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py", *GENERATED_DOC_PAGES
     )
-    run_cmd(["uv", "run", "ruff", "format", *map(str, GENERATED_DOC_PAGES)])
 
     # Run after ruff so it cannot reorder the header comments.
     _inject_generated_headers(SDK_OUTPUT_DIR)

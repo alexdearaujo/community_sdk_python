@@ -149,6 +149,146 @@ def merge_operation_error_responses(
     return merged
 
 
+def _base_error_class_lines(
+    service: str, title: str, status_model: str | None
+) -> list[str]:
+    """The module header and the Service's base error class.
+
+    status_model is the rpcStatus model's name when the Service defines one.
+    """
+    imports = [
+        "from __future__ import annotations",
+        "",
+        "from typing import Any",
+        "",
+        "from kentik_api.errors import HTTPException",
+    ]
+    if status_model:
+        imports += ["", f"from ..models import {status_model}"]
+
+    if status_model:
+        message_lines = [
+            "            try:",
+            f"                status = {status_model}.model_validate(payload)",
+            "            except Exception:",
+            "                status = None",
+            "            if status is not None:",
+            # The JSON itself, as gRPC reports it: the model keeps only each detail's @type.
+            '                details["rpc_status"] = payload',
+            "                if status.code is not None:",
+            '                    details["rpc_status_code"] = status.code',
+            "                if status.message:",
+            "                    message = status.message",
+            "                else:",
+            '                    message = payload.get("message") or message',
+            "            else:",
+            '                message = payload.get("message") or message',
+        ]
+    else:
+        message_lines = ['            message = payload.get("message") or message']
+
+    return [
+        *imports,
+        "",
+        f"class {title}Error(HTTPException):",
+        f'    """Base service-local error for the {service} API."""',
+        "",
+        "    @classmethod",
+        f'    def _build_error(cls, response: Any, *, operation_name: str, method: str, path: str) -> "{title}Error":',
+        '        preview = getattr(response, "text", "")[:200].replace("\\n", " ")',
+        '        headers = getattr(response, "headers", {})',
+        '        content_type = headers.get("content-type", "unknown") if hasattr(headers, "get") else "unknown"',
+        "        details: dict[str, Any] = {",
+        '            "content_type": content_type,',
+        '            "preview": preview,',
+        "        }",
+        "        message = f\"{operation_name} failed with status code: {getattr(response, 'status_code', 'unknown')}\"",
+        "        try:",
+        "            payload = response.json()",
+        "        except Exception:",
+        "            payload = None",
+        "        if isinstance(payload, dict):",
+        '            details["response_json"] = payload',
+        # The V5 API's error body: {"error": ..., "errorxid": ...}.
+        '            if isinstance(payload.get("error"), str) and payload["error"]:',
+        "                message = f\"{message}: {payload['error']}\"",
+        *message_lines,
+        "        elif payload is not None:",
+        '            details["response_json"] = payload',
+        "        return cls(",
+        '            getattr(response, "status_code", 500),',
+        "            message,",
+        "            method=method,",
+        "            path=path,",
+        "            details=details,",
+        "        )",
+        "",
+        "    @classmethod",
+        f'    def from_response(cls, response: Any, *, operation_name: str, method: str, path: str) -> "{title}Error":',
+        '        status_key = str(getattr(response, "status_code", ""))',
+        '        response_error_map = getattr(cls, "response_error_map", {})',
+        '        target_cls = response_error_map.get(status_key) or response_error_map.get("default") or cls',
+        "        return target_cls._build_error(",
+        "            response,",
+        "            operation_name=operation_name,",
+        "            method=method,",
+        "            path=path,",
+        "        )",
+        "",
+    ]
+
+
+def _operation_error_class_lines(
+    service: str,
+    title: str,
+    method: str,
+    base: str,
+    metadata: OperationErrorMetadata,
+) -> tuple[str, list[str], list[str]]:
+    """One operation's error class, its per-status classes, and their source lines."""
+    operation_class = service_error_class_name(base)
+    leaf_classes: list[str] = []
+    mapping_entries: list[str] = []
+    # The operation class comes first so each response class can extend it,
+    # which makes `except <Operation>Error` catch every error the call raises.
+    lines = [
+        "",
+        f"class {operation_class}({title}Error):",
+        f'    """Operation-local error for client.{service}.{method}()."""',
+        f"    response_error_map: dict[str, type[{title}Error]] = {{}}",
+    ]
+    for status_code, response in sorted(
+        metadata["responses"].items(), key=lambda item: item[0]
+    ):
+        description = " ".join((response["description"] or "").split())
+        schema_ref = response["schema_ref"] or ""
+        leaf_class = service_error_response_class_name(base, status_code)
+        leaf_classes.append(leaf_class)
+        response_bits = f"{status_code}: {description} {schema_ref}".strip()
+        leaf_doc = (
+            f"Operation-local response error for {method} ({response_bits})."
+            if response_bits
+            else f"Operation-local response error for {method}."
+        )
+        # Schema text: escaped like the templates' docstring macro.
+        leaf_doc = leaf_doc.replace("\\", "\\\\").replace('"""', '\\"\\"\\"')
+        lines += [
+            "",
+            f"class {leaf_class}({operation_class}):",
+            f'    """{leaf_doc}"""',
+            "    pass",
+        ]
+        mapping_entries.append(f'    "{status_code}": {leaf_class},')
+
+    lines += [
+        "",
+        f"{operation_class}.response_error_map = {{",
+        *mapping_entries,
+        "}",
+    ]
+    return operation_class, leaf_classes, lines
+
+
 def generate_service_error_package(
     service_dir: Path,
     operation_errors: dict[str, OperationErrorMetadata],
@@ -185,151 +325,19 @@ def generate_service_error_package(
     error_dir = service_dir / "error"
     error_dir.mkdir(exist_ok=True)
 
-    base_imports = [
-        "from __future__ import annotations",
-        "",
-        "from typing import Any",
-        "",
-        "from kentik_api.errors import HTTPException",
-    ]
-
-    model_import_line = None
-    if status_model in model_classes:
-        model_import_line = f"from ..models import {status_model}"
-        base_imports.extend(["", model_import_line])
-
-    lines = [
-        *base_imports,
-        "",
-        f"class {title}Error(HTTPException):",
-        f'    """Base service-local error for the {service} API."""',
-        "",
-        "    @classmethod",
-        f'    def _build_error(cls, response: Any, *, operation_name: str, method: str, path: str) -> "{title}Error":',
-        '        preview = getattr(response, "text", "")[:200].replace("\\n", " ")',
-        '        headers = getattr(response, "headers", {})',
-        '        content_type = headers.get("content-type", "unknown") if hasattr(headers, "get") else "unknown"',
-        "        details: dict[str, Any] = {",
-        '            "content_type": content_type,',
-        '            "preview": preview,',
-        "        }",
-        "        message = f\"{operation_name} failed with status code: {getattr(response, 'status_code', 'unknown')}\"",
-        "        try:",
-        "            payload = response.json()",
-        "        except Exception:",
-        "            payload = None",
-        "        if isinstance(payload, dict):",
-        '            details["response_json"] = payload',
-        # The V5 API's error body: {"error": ..., "errorxid": ...}.
-        '            if isinstance(payload.get("error"), str) and payload["error"]:',
-        "                message = f\"{message}: {payload['error']}\"",
-    ]
-
-    if status_model in model_classes:
-        lines.extend(
-            [
-                "            try:",
-                f"                status = {status_model}.model_validate(payload)",
-                "            except Exception:",
-                "                status = None",
-                "            if status is not None:",
-                # The JSON itself, as gRPC reports it: the model keeps only each detail's @type.
-                '                details["rpc_status"] = payload',
-                "                if status.code is not None:",
-                '                    details["rpc_status_code"] = status.code',
-                "                if status.message:",
-                "                    message = status.message",
-                "                else:",
-                '                    message = payload.get("message") or message',
-                "            else:",
-                '                message = payload.get("message") or message',
-            ]
-        )
-    else:
-        lines.extend(
-            [
-                '            message = payload.get("message") or message',
-            ]
-        )
-
-    lines.extend(
-        [
-            "        elif payload is not None:",
-            '            details["response_json"] = payload',
-            "        return cls(",
-            '            getattr(response, "status_code", 500),',
-            "            message,",
-            "            method=method,",
-            "            path=path,",
-            "            details=details,",
-            "        )",
-            "",
-            "    @classmethod",
-            f'    def from_response(cls, response: Any, *, operation_name: str, method: str, path: str) -> "{title}Error":',
-            '        status_key = str(getattr(response, "status_code", ""))',
-            '        response_error_map = getattr(cls, "response_error_map", {})',
-            '        target_cls = response_error_map.get(status_key) or response_error_map.get("default") or cls',
-            "        return target_cls._build_error(",
-            "            response,",
-            "            operation_name=operation_name,",
-            "            method=method,",
-            "            path=path,",
-            "        )",
-            "",
-        ]
+    lines = _base_error_class_lines(
+        service, title, status_model if status_model in model_classes else None
     )
 
     leaf_class_names: list[str] = []
     operation_class_names: list[str] = []
     for key, method in sorted(method_by_key.items(), key=lambda item: item[1]):
-        metadata = operation_errors[key]
-        base = base_by_method[method]
-        operation_class = service_error_class_name(base)
+        operation_class, leaf_classes, class_lines = _operation_error_class_lines(
+            service, title, method, base_by_method[method], operation_errors[key]
+        )
         operation_class_names.append(operation_class)
-        response_mapping_entries: list[str] = []
-        # The operation class comes first so each response class can extend it,
-        # which makes `except <Operation>Error` catch every error the call raises.
-        lines.extend(
-            [
-                "",
-                f"class {operation_class}({title}Error):",
-                f'    """Operation-local error for client.{service}.{method}()."""',
-                f"    response_error_map: dict[str, type[{title}Error]] = {{}}",
-            ]
-        )
-        for status_code, response in sorted(
-            metadata["responses"].items(), key=lambda item: item[0]
-        ):
-            description = " ".join((response["description"] or "").split())
-            schema_ref = response["schema_ref"] or ""
-            leaf_class = service_error_response_class_name(base, status_code)
-            leaf_class_names.append(leaf_class)
-            response_bits = f"{status_code}: {description} {schema_ref}".strip()
-            leaf_doc = (
-                f"Operation-local response error for {method} ({response_bits})."
-                if response_bits
-                else f"Operation-local response error for {method}."
-            )
-            # Schema text: escaped like the templates' docstring macro.
-            leaf_doc = leaf_doc.replace("\\", "\\\\").replace('"""', '\\"\\"\\"')
-            lines.extend(
-                [
-                    "",
-                    f"class {leaf_class}({operation_class}):",
-                    f'    """{leaf_doc}"""',
-                    "    pass",
-                ]
-            )
-            response_mapping_entries.append(f'    "{status_code}": {leaf_class},')
-
-        lines.extend(
-            [
-                "",
-                f"{operation_class}.response_error_map = {{",
-                *response_mapping_entries,
-                "}",
-            ]
-        )
+        leaf_class_names.extend(leaf_classes)
+        lines.extend(class_lines)
 
     lines.extend(
         [

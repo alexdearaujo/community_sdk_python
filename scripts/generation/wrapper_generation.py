@@ -355,6 +355,109 @@ def public_method_names(
     return _public_method_names(service_dir.name, ops_by_file, names)
 
 
+def _init_grpc_lines(service: str, grpc_stubs_info) -> list[str]:
+    """The gRPC part of a wrapper's __init__: one guarded stub import per stub."""
+    if not grpc_stubs_info:
+        return ["            pass  # gRPC not yet implemented for this service"]
+    lines: list[str] = []
+    for pb2_stem, pb2_grpc_stem, stub_class, idx in grpc_stubs_info:
+        # try/except so missing proto deps degrade gracefully to NotImplementedError
+        # rather than crashing at import time.
+        lines += [
+            "            try:",
+            # __import__() instead of import statement: isort won't reorder it,
+            # so this always runs before the service pb2 imports that depend on it.
+            '                __import__("kentik_api.gen.pb_companions")',
+            f"                import kentik_api.gen.{service}.pb.{pb2_stem} as _pb2_{idx}_mod",
+            f"                import kentik_api.gen.{service}.pb.{pb2_grpc_stem} as _pb2_grpc_{idx}_mod",
+            f"                self._grpc_pb2_{idx} = _pb2_{idx}_mod",
+            f"                self._grpc_stub_{idx} = _pb2_grpc_{idx}_mod.{stub_class}(self._transport.channel)",
+            "            except (ImportError, TypeError) as exc:",
+            f"                self._grpc_pb2_{idx} = None",
+            f"                self._grpc_stub_{idx} = None",
+            # Kept for the call that fails: a descriptor-pool conflict is a
+            # TypeError too, and a generic message would hide which one it was.
+            f"                self._grpc_import_error_{idx} = exc",
+        ]
+    return lines
+
+
+def _grpc_branch_lines(
+    service: str,
+    op: RestOperation,
+    grpc_method: GrpcMethod | None,
+    module_alias: str,
+    return_type: str,
+    body_expr: str,
+) -> tuple[list[str], bool]:
+    """A wrapper method's gRPC branch, and whether it needs grpc_response_body.
+
+    A real call when an RPC shares the operation's HTTP rule, otherwise the
+    NotImplementedError placeholder.
+    """
+    if grpc_method is None:
+        return [
+            "        if isinstance(self._transport, GrpcTransport):",
+            f'            raise NotImplementedError("gRPC translation for {op.name} is not yet implemented.")',
+        ], False
+
+    stub_idx = grpc_method.stub_idx
+    arg_names = [param_name for param_name, _, _ in op.params]
+    if "data" not in arg_names:
+        body_arg = "None"
+    elif grpc_method.body in ("", "*"):
+        body_arg = body_expr
+    else:
+        body_arg = f'{{"{grpc_method.body}": {body_expr}}}'
+    fields_arg = ", ".join(
+        f'"{field}": {arg}' for field, arg in _grpc_request_fields(op, grpc_method)
+    )
+    mask_arg = (
+        f', update_mask_from="{grpc_method.update_mask_from}"'
+        if grpc_method.update_mask_from
+        else ""
+    )
+    if grpc_method.request_module:
+        request_ref = f"{grpc_method.request_module}.{grpc_method.request_class}"
+    else:
+        request_ref = f"self._grpc_pb2_{stub_idx}.{grpc_method.request_class}"
+    lines = [
+        "        if isinstance(self._transport, GrpcTransport):",
+        # Guard: if proto deps weren't available at init, fall back.
+        f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
+        f'                raise NotImplementedError(f"gRPC proto modules for {service} service failed to import: {{self._grpc_import_error_{stub_idx}!r}}") from self._grpc_import_error_{stub_idx}',
+        f"            _req = build_grpc_request({request_ref}, {body_arg}, {{{fields_arg}}}{mask_arg})",
+        (
+            f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
+            f"api_config=api_config_override, error_cls={module_alias}.{op.error_cls_name})"
+        ),
+    ]
+    if return_type.strip() == "None":
+        return [*lines, "            return None"], False
+    if re.match(r"(Dict|dict)\[|Any$", return_type.strip()):
+        # REST returns a free-form body, such as google.protobuf.Empty's, as is.
+        return [*lines, "            return grpc_response_body(_resp)"], True
+    return [
+        *lines,
+        (
+            f"            return parse_grpc_response({return_type}, _resp, _rate_limit, "
+            f'stub_method=self._grpc_stub_{stub_idx}.{grpc_method.name}, operation_name="{op.name}")'
+        ),
+    ], False
+
+
+def _docstring_lines(docstring: str) -> list[str]:
+    if not docstring:
+        return []
+    # Escape back to source: ast.get_docstring returned the runtime text.
+    source = docstring.replace("\\", "\\\\").replace('"""', '\\"\\"\\"')
+    return [
+        '        """',
+        *(f"        {line}".rstrip() for line in source.split("\n")),
+        '        """',
+    ]
+
+
 def _generate_service_wrappers(names: PublicNames):
     """Auto-generates the dual-transport wrapper classes for every service."""
     print("Generating unified service wrappers...")
@@ -394,46 +497,7 @@ def _generate_service_wrappers(names: PublicNames):
             "        self._transport = transport",
             "        if isinstance(self._transport, GrpcTransport):",
         ]
-        if grpc_stubs_info:
-            for pb2_stem, pb2_grpc_stem, stub_class, stub_index_str in grpc_stubs_info:
-                # try/except so missing proto deps degrade gracefully to NotImplementedError
-                # rather than crashing at import time.
-                wrapper_code.append("            try:")
-                # __import__() instead of import statement: isort won't reorder it,
-                # so this always runs before the service pb2 imports that depend on it.
-                wrapper_code.append(
-                    '                __import__("kentik_api.gen.pb_companions")'
-                )
-                wrapper_code.append(
-                    f"                import kentik_api.gen.{service}.pb.{pb2_stem} as _pb2_{stub_index_str}_mod"
-                )
-                wrapper_code.append(
-                    f"                import kentik_api.gen.{service}.pb.{pb2_grpc_stem} as _pb2_grpc_{stub_index_str}_mod"
-                )
-                wrapper_code.append(
-                    f"                self._grpc_pb2_{stub_index_str} = _pb2_{stub_index_str}_mod"
-                )
-                wrapper_code.append(
-                    f"                self._grpc_stub_{stub_index_str} = _pb2_grpc_{stub_index_str}_mod.{stub_class}(self._transport.channel)"
-                )
-                wrapper_code.append(
-                    "            except (ImportError, TypeError) as exc:"
-                )
-                wrapper_code.append(
-                    f"                self._grpc_pb2_{stub_index_str} = None"
-                )
-                wrapper_code.append(
-                    f"                self._grpc_stub_{stub_index_str} = None"
-                )
-                # Kept for the call that fails: a descriptor-pool conflict is a
-                # TypeError too, and a generic message would hide which one it was.
-                wrapper_code.append(
-                    f"                self._grpc_import_error_{stub_index_str} = exc"
-                )
-        else:
-            wrapper_code.append(
-                "            pass  # gRPC not yet implemented for this service"
-            )
+        wrapper_code += _init_grpc_lines(service, grpc_stubs_info)
         wrapper_code.append("")
 
         # Insert REST module imports at the top of wrapper_code (before GrpcTransport).
@@ -548,89 +612,21 @@ def _generate_service_wrappers(names: PublicNames):
                 if call_args_str:
                     call_args_str = ", " + call_args_str
 
-                # Build the gRPC branch: real call when an RPC shares this
-                # operation's HTTP rule, otherwise the NotImplementedError placeholder.
                 grpc_method = grpc_methods.get(
                     (rest_module_name, op.http_method, _normalize_path(op.path))
                 )
-                if grpc_method is not None:
-                    stub_idx = grpc_method.stub_idx
-                    is_none_return = return_type.strip() == "None"
-                    request_fields = _grpc_request_fields(op, grpc_method)
-                    if "data" not in arg_names:
-                        body_arg = "None"
-                    elif grpc_method.body in ("", "*"):
-                        body_arg = body_expr
-                    else:
-                        body_arg = f'{{"{grpc_method.body}": {body_expr}}}'
-                    fields_arg = ", ".join(
-                        f'"{field}": {arg}' for field, arg in request_fields
-                    )
-                    mask_arg = (
-                        f', update_mask_from="{grpc_method.update_mask_from}"'
-                        if grpc_method.update_mask_from
-                        else ""
-                    )
-                    if grpc_method.request_module:
-                        well_known_modules.add(grpc_method.request_module)
-                        request_ref = (
-                            f"{grpc_method.request_module}.{grpc_method.request_class}"
-                        )
-                    else:
-                        request_ref = (
-                            f"self._grpc_pb2_{stub_idx}.{grpc_method.request_class}"
-                        )
-                    grpc_lines = [
-                        "        if isinstance(self._transport, GrpcTransport):",
-                        # Guard: if proto deps weren't available at init, fall back.
-                        f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
-                        f'                raise NotImplementedError(f"gRPC proto modules for {service} service failed to import: {{self._grpc_import_error_{stub_idx}!r}}") from self._grpc_import_error_{stub_idx}',
-                        f"            _req = build_grpc_request({request_ref}, {body_arg}, {{{fields_arg}}}{mask_arg})",
-                        (
-                            f"            _resp, _rate_limit = call_grpc(self._grpc_stub_{stub_idx}.{grpc_method.name}, _req, "
-                            f"api_config=api_config_override, error_cls={module_alias}.{op.error_cls_name})"
-                        ),
-                    ]
-                    if is_none_return:
-                        grpc_lines.append("            return None")
-                    elif re.match(r"(Dict|dict)\[|Any$", return_type.strip()):
-                        # REST returns a free-form body, such as google.protobuf.Empty's, as is.
-                        grpc_runtime_symbols.add("grpc_response_body")
-                        grpc_lines.append(
-                            "            return grpc_response_body(_resp)"
-                        )
-                    else:
-                        grpc_lines.append(
-                            f"            return parse_grpc_response({return_type}, _resp, _rate_limit, "
-                            f'stub_method=self._grpc_stub_{stub_idx}.{grpc_method.name}, operation_name="{func_name_pascal}")'
-                        )
-                else:
-                    grpc_lines = [
-                        "        if isinstance(self._transport, GrpcTransport):",
-                        f'            raise NotImplementedError("gRPC translation for {func_name_pascal} is not yet implemented.")',
-                    ]
-
-                # Escape back to source: ast.get_docstring returned the runtime text.
-                doc_source = op.docstring.replace("\\", "\\\\").replace(
-                    '"""', '\\"\\"\\"'
+                if grpc_method is not None and grpc_method.request_module:
+                    well_known_modules.add(grpc_method.request_module)
+                grpc_lines, needs_body_helper = _grpc_branch_lines(
+                    service, op, grpc_method, module_alias, return_type, body_expr
                 )
-                doc_lines = (
-                    [
-                        '        """',
-                        *(
-                            f"        {line}".rstrip()
-                            for line in doc_source.split("\n")
-                        ),
-                        '        """',
-                    ]
-                    if op.docstring
-                    else []
-                )
+                if needs_body_helper:
+                    grpc_runtime_symbols.add("grpc_response_body")
 
                 wrapper_code.extend(
                     [
                         f"    def {unique_method_name}(self, {sig_args}) -> {return_type}:",
-                        *doc_lines,
+                        *_docstring_lines(op.docstring),
                         *grpc_lines,
                         "        elif isinstance(self._transport, RestTransport):",
                         "            rest_transport = cast(RestTransport, self._transport)",
