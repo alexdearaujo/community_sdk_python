@@ -130,13 +130,37 @@ def test_file_names_have_no_colon(tmp_path: Path):
         ),
         (
             "2025-10-16T00_00_00_2025-10-16T01_00_00.parquet",
-            START.replace(tzinfo=None),
-            START.replace(tzinfo=None) + timedelta(hours=1),
+            START,
+            START + timedelta(hours=1),
         ),
     ],
 )
 def test_file_names_parse_with_or_without_colons(name: str, start, end):
     assert DFCache.parse_df_filename(Path(name)) == (start, end)
+
+
+def test_a_file_name_without_an_offset_reads_as_utc(tmp_path: Path):
+    cache = DFCache(tmp_path)
+    cache.store(_frame(START, START + timedelta(minutes=2)))
+    (tmp_path / "2025-10-16T02_00_00_2025-10-16T03_00_00.parquet").write_bytes(b"")
+
+    assert cache.newest == START + timedelta(hours=3)
+
+
+def test_naive_datetimes_are_refused(tmp_path: Path):
+    cache = DFCache(tmp_path)
+    naive = START.replace(tzinfo=None)
+
+    with pytest.raises(ValueError, match="timezone-aware"):
+        cache.fetch(_Query(), naive, naive + timedelta(hours=1))
+    with pytest.raises(ValueError, match="timezone-aware"):
+        cache.get(naive, START + timedelta(hours=1))
+
+
+@pytest.mark.parametrize("step", [timedelta(0), timedelta(hours=-1)])
+def test_a_step_that_is_not_positive_is_refused(tmp_path: Path, step):
+    with pytest.raises(ValueError, match="step must be positive"):
+        DFCache(tmp_path).fetch(_Query(), START, START + timedelta(hours=1), step=step)
 
 
 def test_dedup_needs_the_named_columns():

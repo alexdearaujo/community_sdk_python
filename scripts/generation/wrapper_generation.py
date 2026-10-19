@@ -59,8 +59,8 @@ def _normalize_path(path: str) -> str:
 def _file_descriptor(pb2_file: Path) -> descriptor_pb2.FileDescriptorProto | None:
     """Reads the descriptor protoc serialized into a _pb2 module, without importing it."""
     try:
-        tree = ast.parse(pb2_file.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError, ValueError):
+        tree = ast.parse(pb2_file.read_text(encoding="utf-8"), filename=str(pb2_file))
+    except OSError:
         return None
     for node in ast.walk(tree):
         if (

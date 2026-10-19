@@ -512,11 +512,13 @@ def test_streaming_rpcs_and_response_body_rules_stay_rest_only(tmp_path):
     assert [m.name for m in methods.values()] == ["Get"]
 
 
-def test_discover_grpc_methods_skips_unparseable_files(tmp_path):
+def test_discover_grpc_methods_fails_on_an_unparseable_file(tmp_path):
     (tmp_path / "pb").mkdir()
     (tmp_path / "pb" / "broken_pb2.py").write_text("def (:\n")
 
-    assert wrapper_generation._discover_grpc_methods(tmp_path) == ([], {})
+    with pytest.raises(SyntaxError) as exc:
+        wrapper_generation._discover_grpc_methods(tmp_path)
+    assert exc.value.filename is not None and "broken_pb2.py" in exc.value.filename
 
 
 def _grpc_calls_by_rest_module(wrapper_file: Path) -> dict[str, list[str | None]]:

@@ -29,7 +29,7 @@ from packaging.version import InvalidVersion, Version
 sys.path.insert(0, str(Path(__file__).parent))
 
 from generation import api_surface
-from generation._shared import PROJECT_ROOT
+from generation._shared import PROJECT_ROOT, write_text_lf
 
 SURFACE_RELPATH = "api_surface.json"
 CHANGELOG = PROJECT_ROOT / "CHANGELOG.md"
@@ -212,7 +212,7 @@ def main() -> None:
         markdown = api_surface.render_summary(after)
 
     if args.output:
-        args.output.write_text(markdown, encoding="utf-8")
+        write_text_lf(args.output, markdown)
         print(f"Wrote release notes to {args.output}", file=sys.stderr)
     else:
         print(markdown, end="")

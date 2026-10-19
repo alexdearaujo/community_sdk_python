@@ -262,8 +262,10 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
         return {}
 
     try:
-        tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError, ValueError):
+        tree = ast.parse(
+            wrapper_file.read_text(encoding="utf-8"), filename=str(wrapper_file)
+        )
+    except OSError:
         return {}
 
     services_folder = wrapper_file.parent
@@ -604,8 +606,10 @@ def _autodoc_directive_for_model(models_dir: Path, class_name: str) -> str:
     """
     model_file = models_dir / f"{class_name}.py"
     try:
-        tree = ast.parse(model_file.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError, ValueError):
+        tree = ast.parse(
+            model_file.read_text(encoding="utf-8"), filename=str(model_file)
+        )
+    except OSError:
         return "autopydantic_model"
 
     for node in tree.body:
@@ -633,9 +637,12 @@ def _model_reference_edges(
     edges: dict[str, set[str]] = {}
     for cls in model_classes:
         refs: set[str] = set()
+        model_file = models_dir / f"{cls}.py"
         try:
-            tree = ast.parse((models_dir / f"{cls}.py").read_text(encoding="utf-8"))
-        except (OSError, SyntaxError, ValueError):
+            tree = ast.parse(
+                model_file.read_text(encoding="utf-8"), filename=str(model_file)
+            )
+        except OSError:
             edges[cls] = refs
             continue
         for node in ast.walk(tree):

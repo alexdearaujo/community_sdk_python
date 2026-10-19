@@ -61,6 +61,14 @@ def test_placeholders_are_filled_as_v1_filled_them():
     assert expanded == golden
 
 
+@pytest.mark.parametrize("placeholder", ["{start.__class__}", "{start[0]}", "{}"])
+def test_a_placeholder_must_be_a_plain_name(placeholder: str):
+    definition = DataQueryDefinition(query={"q": placeholder}, mappings={})
+
+    with pytest.raises(ValueError, match="must be a plain name"):
+        definition.expand_query(start=START)
+
+
 @respx.mock
 def test_get_data_sends_the_filled_query_and_maps_the_response():
     route = respx.post("https://api.kentik.com/api/v5/query/topXdata").respond(

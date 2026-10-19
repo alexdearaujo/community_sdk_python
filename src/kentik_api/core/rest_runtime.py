@@ -107,7 +107,7 @@ def parse_response_model[ModelT: BaseModel](
     try:
         parsed = model_cls.model_validate(body)
     except ValidationError as exc:
-        raise HTTPException(
+        error = HTTPException(
             status_code=502,
             message=(
                 f"{operation_name} returned data that does not match "
@@ -120,7 +120,9 @@ def parse_response_model[ModelT: BaseModel](
                 "validation_error": str(exc).splitlines()[0],
                 "response_preview": _payload_preview(body),
             },
-        ) from exc
+        )
+        error.rate_limit = rate_limit_of(body)
+        raise error from exc
 
     return attach_rate_limit(parsed, rate_limit_of(body))
 

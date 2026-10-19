@@ -6,7 +6,8 @@ on:
   push:
     branches: [main]
 
-# Every step runs a poe task, the same command a contributor runs.
+# Each check runs a poe task, the same command a contributor runs. The only
+# other steps are `uv sync` and checkout setup.
 # No job here runs tests/e2e/: those need real credentials and stay opt-in
 # (`uv run poe test-e2e`, `uv run poe test-e2e-grpc`). pytest's default `-m` excludes them.
 

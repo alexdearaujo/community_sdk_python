@@ -12,6 +12,7 @@ import json
 import logging
 import os
 import re
+import string
 from collections.abc import Callable, Iterator
 from typing import TYPE_CHECKING, Any
 
@@ -26,6 +27,19 @@ if TYPE_CHECKING:
 log = logging.getLogger(__name__)
 
 MappedQueryFn = Callable[..., DataFrame | None]
+
+
+class _PlainNameFormatter(string.Formatter):
+    # `{start.__class__}` or `{x[0]}` would read into the values passed in.
+    def get_field(self, field_name: str, args: Any, kwargs: Any) -> Any:
+        if not field_name.isidentifier():
+            raise ValueError(
+                f"Query template placeholder '{{{field_name}}}' must be a plain name"
+            )
+        return super().get_field(field_name, args, kwargs)
+
+
+_FORMATTER = _PlainNameFormatter()
 
 TIME_SERIES_PREFIX = "@TS"
 TIME_SERIES_FIELDS = ("timestamp", "value", "period")
@@ -216,7 +230,7 @@ class DataQueryDefinition:
                 return [_expand(v) for v in data]
             if isinstance(data, str):
                 try:
-                    return data.format(**kwargs)
+                    return _FORMATTER.vformat(data, (), kwargs)
                 except KeyError as exc:
                     raise ValueError(
                         f"No value for query template parameter(s) "

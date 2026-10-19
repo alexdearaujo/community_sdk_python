@@ -231,6 +231,11 @@ class APIConfig:
         return copy
 
     @property
+    def is_timeout_copy(self) -> bool:
+        """True for a with_timeout() copy, which keeps its origin's host and credentials."""
+        return self._shares_client_of is not None
+
+    @property
     def client(self) -> httpx.Client:
         """The one HTTP client every REST call on this config shares.
 
