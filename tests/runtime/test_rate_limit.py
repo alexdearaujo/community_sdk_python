@@ -9,11 +9,13 @@ from typing import Any
 import grpc
 import httpx
 import pytest
+from pydantic import BaseModel
 
+from kentik_api.core import grpc_runtime
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
 from kentik_api.core.rate_limit import RateLimit, rate_limit_of_rpc
-from kentik_api.core.rest_runtime import request_json
+from kentik_api.core.rest_runtime import parse_response_model, request_json
 from kentik_api.errors import AuthenticationError, HTTPException, TransportError
 from kentik_api.transports.grpc_client import _DefaultDeadlineInterceptor
 
@@ -182,6 +184,39 @@ def test_rest_response_without_quota_headers_leaves_the_error_slot_empty(monkeyp
         )
 
     assert exc_info.value.rate_limit is None
+
+
+class _Strict(BaseModel):
+    id: int
+
+
+def test_a_rest_body_that_fails_its_model_keeps_the_quota(monkeypatch):
+    body = _rest(
+        monkeypatch,
+        httpx.Response(200, json={"id": "x"}, headers=MEASURED),
+        _rest_config(),
+    )
+
+    with pytest.raises(HTTPException) as exc_info:
+        parse_response_model(
+            _Strict, body, operation_name="Op", method="GET", path="/a"
+        )
+
+    assert exc_info.value.status_code == 502
+    assert exc_info.value.rate_limit == RateLimit.from_headers(MEASURED)
+
+
+def test_a_grpc_response_that_fails_its_model_keeps_the_quota(monkeypatch):
+    monkeypatch.setattr(grpc_runtime, "grpc_response_body", lambda _r: {"id": "x"})
+    quota = RateLimit.from_headers(MEASURED)
+
+    with pytest.raises(HTTPException) as exc_info:
+        grpc_runtime.parse_grpc_response(
+            _Strict, object(), quota, stub_method=object(), operation_name="Op"
+        )
+
+    assert exc_info.value.status_code == 502
+    assert exc_info.value.rate_limit == quota
 
 
 def test_transport_failure_has_no_quota_because_no_response_arrived(monkeypatch):

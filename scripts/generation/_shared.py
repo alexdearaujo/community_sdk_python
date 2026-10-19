@@ -172,8 +172,8 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
     and wrapper_generation.py. Skips functions without a request_json() call.
     """
     try:
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError, ValueError):
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except OSError:
         return []
 
     ops: list[RestOperation] = []
@@ -314,8 +314,8 @@ def parse_wrapper_methods(path: Path) -> list[WrapperMethod]:
     parse_generated_rest_module for REST service files.
     """
     try:
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError, ValueError):
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except OSError:
         return []
 
     wrapper_class: ast.ClassDef | None = None

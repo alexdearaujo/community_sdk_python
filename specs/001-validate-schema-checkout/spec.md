@@ -72,8 +72,9 @@ completing and silently omitting the affected service.
 
 ### Functional Requirements
 
-- **FR-001**: The generator MUST validate every discovered swagger file
-  before generating any code from it.
+- **FR-001**: The generator MUST validate every swagger file it selects
+  to generate from (the newest file of each swagger family) before
+  generating any code from it.
 - **FR-002**: Validation MUST reject a file that is empty or fails to parse
   as JSON.
 - **FR-003**: Validation MUST reject a file that parses as JSON but is

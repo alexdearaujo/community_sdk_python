@@ -333,6 +333,22 @@ classes follow: `client.site.create` raises `CreateError`, in
   classes read only a `message` field. The V5 API sends `{"error": ...}`. The
   message now ends with that text, as in "failed with status code: 400: The
   device_name is required".
+- **`KentikAPI.close()` always closes the V5 connection.** When closing the
+  main transport raised, the V5 connection stayed open.
+- **A 502 for a response that fails its model keeps the call's quota.** On
+  REST and gRPC, `exc.rate_limit` was `None` for this error only.
+- **`DeviceLookup` fixes.** `count` now counts every device, as iteration
+  does; it skipped a second device with a duplicate name. A link without `:`
+  raises a `ValueError` that names the expected form, instead of a tuple
+  unpacking error. A missing device or interface logs a warning, not a
+  critical message.
+- **`DFCache` refuses input it cannot handle.** A `step` of zero or less,
+  which looped forever, raises `ValueError`. A naive `datetime`, which failed
+  later with a `TypeError` against the cached times, raises `ValueError`. A
+  cache file name without a UTC offset reads as UTC.
+- **A query definition placeholder must be a plain name.** `{start}` and
+  `{start:%Y}` work as before. `{start.__class__}` and `{start[0]}` read into
+  the values passed in, and now raise `ValueError`.
 - **A failed gRPC proto import names its cause.** When a service's proto
   modules failed to import, every gRPC call raised "gRPC proto dependencies
   not installed", even for a descriptor-pool conflict, which needs a different

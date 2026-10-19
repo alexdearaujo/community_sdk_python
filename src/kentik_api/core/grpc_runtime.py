@@ -210,7 +210,7 @@ def _validate_grpc_override(api_config: APIConfig) -> None:
     # gRPC auth metadata and target are bound to the channel at transport setup.
     # A direct APIConfig(...) passed per call cannot change them safely; a
     # with_timeout() copy cannot change them at all.
-    if getattr(api_config, "_shares_client_of", None) is None:
+    if not api_config.is_timeout_copy:
         raise ConfigurationError(
             "gRPC api_config_override must come from client.api_config.with_timeout(...). "
             "Per-call credential, host, or verify overrides are not supported on gRPC."
@@ -258,13 +258,17 @@ def parse_grpc_response[T: BaseModel](
     # Without always_print_fields_with_no_presence, a scalar at its zero value
     # is omitted and then fails a model that marks the field required.
     body = grpc_response_body(response)
-    parsed = parse_response_model(
-        model_cls,
-        body,
-        operation_name=operation_name,
-        method="gRPC",
-        path=_method_label(stub_method),
-    )
+    try:
+        parsed = parse_response_model(
+            model_cls,
+            body,
+            operation_name=operation_name,
+            method="gRPC",
+            path=_method_label(stub_method),
+        )
+    except HTTPException as exc:
+        exc.rate_limit = rate_limit
+        raise
     return attach_rate_limit(parsed, rate_limit)
 
 

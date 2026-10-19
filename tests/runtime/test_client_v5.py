@@ -71,6 +71,21 @@ def test_close_closes_both_transports():
             _ = config.client
 
 
+def test_close_closes_the_v5_transport_when_the_main_one_fails(monkeypatch):
+    client = _client()
+
+    def fail():
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(client._transport, "close", fail)
+    with pytest.raises(RuntimeError, match="boom"):
+        client.close()
+
+    with pytest.raises(ConfigurationError, match="closed"):
+        _ = client.v5_api_config.client
+    client.api_config.close()
+
+
 @respx.mock
 def test_a_relative_path_joins_the_v5_base_path():
     route = respx.post("https://api.kentik.com/api/v5/query/topXdata").respond(

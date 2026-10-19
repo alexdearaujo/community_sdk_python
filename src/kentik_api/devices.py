@@ -68,7 +68,7 @@ class DeviceLookup:
             if wanted and not wanted <= names:
                 continue
             if device.deviceName in self._by_name:
-                log.critical("Duplicate device name: %s", device.deviceName)
+                log.warning("Duplicate device name: %s", device.deviceName)
                 self.duplicate_names += 1
             elif device.deviceName:
                 self._by_name[device.deviceName] = device
@@ -94,7 +94,7 @@ class DeviceLookup:
 
     @property
     def count(self) -> int:
-        return len(self._by_name)
+        return len(self._by_id)
 
     @property
     def all(self) -> Iterator[DeviceDetailed]:
@@ -119,14 +119,18 @@ class DeviceLookup:
 
     def parse_link(self, link: str) -> tuple[DeviceDetailed | None, Interface | None]:
         # Interface descriptions may contain colons; device names cannot.
-        name, description = link.split(":", maxsplit=1)
+        name, sep, description = link.partition(":")
+        if not sep:
+            raise ValueError(
+                f"Link {link!r} is not '<device name>:<interface description>'"
+            )
         device = self._by_name.get(name)
         if device is None:
-            log.critical("Device %s not in the lookup", name)
+            log.warning("Device %s not in the lookup", name)
             return None, None
         interface = self._interfaces.get(device.id or "", {}).get(description)
         if interface is None:
-            log.critical("Device %s has no interface named %s", name, description)
+            log.warning("Device %s has no interface named %s", name, description)
         return device, interface
 
     def get_link_speeds(self, links: Iterable[str] | None = None) -> dict[str, float]:

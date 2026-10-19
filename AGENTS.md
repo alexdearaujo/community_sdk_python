@@ -601,9 +601,10 @@ Live layer (real network, opt-in only, **not** part of `uv run poe test`):
   e2e_grpc`): the gRPC-transport variant of the same read-only
   coverage. A `NotImplementedError` counts as a passing outcome here
   (see "gRPC transport is fully implemented" above). Today every
-  operation has a gRPC translation, so it means the service's proto
-  companions failed to import. A future operation also raises it when
-  no RPC shares its HTTP rule.
+  operation of a service with protos has a gRPC translation, so it means
+  the service's proto companions failed to import. A future operation
+  also raises it when no RPC shares its HTTP rule. Services from the
+  local schema base are REST-only and always use `_v5_transport`.
 
 ### Test coverage requirement
 

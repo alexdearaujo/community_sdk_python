@@ -28,7 +28,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from generation import api_surface
-from generation._shared import PROJECT_ROOT
+from generation._shared import PROJECT_ROOT, write_text_lf
 
 SURFACE_RELPATH = "api_surface.json"
 REPORTS_DIR = PROJECT_ROOT / "reports"
@@ -319,8 +319,8 @@ def main() -> None:
     output = args.output or default_output()
     if output.parent == REPORTS_DIR and not REPORTS_DIR.exists():
         REPORTS_DIR.mkdir()
-        (REPORTS_DIR / ".gitignore").write_text("*\n", encoding="utf-8")
-    output.write_text(to_html(markdown), encoding="utf-8")
+        write_text_lf(REPORTS_DIR / ".gitignore", "*\n")
+    write_text_lf(output, to_html(markdown))
     print(
         f"Wrote {output.relative_to(PROJECT_ROOT) if output.is_relative_to(PROJECT_ROOT) else output}"
     )

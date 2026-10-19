@@ -44,6 +44,16 @@ def dedup_data_frame(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     return out.sort_index()
 
 
+def _require_aware(*times: datetime | None) -> None:
+    # File times carry an offset, and naive and aware times cannot be compared.
+    if any(t is not None and t.tzinfo is None for t in times):
+        raise ValueError("DFCache needs timezone-aware datetimes, such as UTC")
+
+
+def _as_utc(t: datetime) -> datetime:
+    return t if t.tzinfo is not None else t.replace(tzinfo=UTC)
+
+
 def _time_steps(start: datetime, end: datetime, step: timedelta) -> Iterator[datetime]:
     t = start
     while t < end:
@@ -66,8 +76,8 @@ class DFCache:
             return None, None
         try:
             return (
-                datetime.fromisoformat(match["start"].replace("_", ":")),
-                datetime.fromisoformat(match["end"].replace("_", ":")),
+                _as_utc(datetime.fromisoformat(match["start"].replace("_", ":"))),
+                _as_utc(datetime.fromisoformat(match["end"].replace("_", ":"))),
             )
         except ValueError:
             log.debug("Ignoring a file the cache did not write: %s", filename)
@@ -128,6 +138,7 @@ class DFCache:
         contained: bool = False,
     ) -> Iterator[Path]:
         """Files with data in the range, or, when `contained`, only data in it."""
+        _require_aware(start, end)
         if start is not None and end is not None and not start < end:
             raise ValueError(f"Invalid arguments: start {start} >= end {end}")
         start = start or self.oldest
@@ -143,6 +154,7 @@ class DFCache:
 
     def covers(self, start: datetime, end: datetime) -> bool:
         """True when one cached file holds the whole range."""
+        _require_aware(start, end)
         return any(s <= start and e >= end for _, s, e in self._ranges())
 
     def get(
@@ -151,6 +163,7 @@ class DFCache:
         end: datetime | None = None,
         dedup_columns: list[str] | None = None,
     ) -> pd.DataFrame | None:
+        _require_aware(start, end)
         if self.is_empty:
             return None
         start = start or self.oldest
@@ -198,6 +211,9 @@ class DFCache:
         The range is fetched in steps (one step without `step`), and a step
         that one cached file already holds is not fetched again.
         """
+        _require_aware(start, end)
+        if step is not None and step <= timedelta(0):
+            raise ValueError(f"step must be positive, got {step}")
         step = step or end - start
         for t in _time_steps(start, end, step):
             step_end = min(t + step, end)

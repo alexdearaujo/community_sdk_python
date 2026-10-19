@@ -7,6 +7,7 @@ import json
 import math
 from pathlib import Path
 
+import pytest
 import respx
 
 from kentik_api import KentikAPI
@@ -68,6 +69,19 @@ def test_labels_select_devices():
     lookup = _lookup(labels=["edge"])
 
     assert [d.deviceName for d in lookup.all] == ["router1"]
+
+
+def test_a_link_without_a_colon_is_refused():
+    with pytest.raises(ValueError, match="not '<device name>:<interface"):
+        _lookup().parse_link("router1")
+
+
+def test_count_matches_iteration_with_a_duplicate_name():
+    twin = DeviceDetailed.model_validate({"id": "3", "deviceName": "router1"})
+    lookup = DeviceLookup([*DEVICES, twin])
+
+    assert lookup.count == len(list(lookup)) == 3
+    assert lookup.duplicate_names == 1
 
 
 def test_save_and_load_round_trip_as_json(tmp_path: Path):

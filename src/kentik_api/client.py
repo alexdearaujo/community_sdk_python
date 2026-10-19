@@ -166,8 +166,10 @@ class KentikAPI(KentikClientMixin):
         return self._v5_transport.api_config
 
     def close(self):
-        self._transport.close()
-        self._v5_transport.close()
+        try:
+            self._transport.close()
+        finally:
+            self._v5_transport.close()
 
     def __enter__(self):
         return self

@@ -300,8 +300,8 @@ def _generate_runtime_architecture_docs(
         if not py_file.exists() or py_file.name == "__init__.py":
             continue
         try:
-            tree = ast.parse(py_file.read_text(encoding="utf-8"))
-        except (OSError, SyntaxError, ValueError):
+            tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
+        except OSError:
             continue
 
         current_module = _module_name_from_path(py_file, package_root)
@@ -435,8 +435,10 @@ def _grpc_stub_method_name(wrapper_file: Path, method_name: str) -> str | None:
     acronym casing (`list_as_groups` -> `ListAsGroups`, not `ListASGroups`).
     """
     try:
-        tree = ast.parse(wrapper_file.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError, ValueError):
+        tree = ast.parse(
+            wrapper_file.read_text(encoding="utf-8"), filename=str(wrapper_file)
+        )
+    except OSError:
         return None
 
     for node in ast.walk(tree):
@@ -466,8 +468,10 @@ def _model_has_only_optional_fields(model_file: Path) -> bool:
     alone can construct, so the generated example snippet actually runs.
     """
     try:
-        tree = ast.parse(model_file.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError, ValueError):
+        tree = ast.parse(
+            model_file.read_text(encoding="utf-8"), filename=str(model_file)
+        )
+    except OSError:
         return False
 
     model_class = next(
