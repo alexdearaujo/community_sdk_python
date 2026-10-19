@@ -769,23 +769,24 @@ def test_generate_modular_sdk_validates_schema_before_cleaning_output_dir(check)
     unit-tested in isolation.
     """
     source = (_scripts_dir / "generate_sdk.py").read_text(encoding="utf-8")
+    select_node = _function_by_name(source, "_select_swagger_files")
     func_node = _function_by_name(source, "generate_modular_sdk")
+    assert select_node is not None, "_select_swagger_files() not found"
     assert func_node is not None, "generate_modular_sdk() not found"
 
-    validate_lines: list[int] = []
-    rmtree_lines: list[int] = []
-    for node in ast.walk(func_node):
-        if not isinstance(node, ast.Call):
-            continue
-        call_repr = ast.unparse(node.func)
-        if call_repr.endswith(check):
-            validate_lines.append(node.lineno)
-        elif call_repr.endswith("rmtree"):
-            rmtree_lines.append(node.lineno)
+    def call_lines(node: ast.FunctionDef, name: str) -> list[int]:
+        return [
+            n.lineno
+            for n in ast.walk(node)
+            if isinstance(n, ast.Call) and ast.unparse(n.func).endswith(name)
+        ]
 
-    assert validate_lines, f"{check}(...) call not found"
+    assert call_lines(select_node, check), f"{check}(...) call not found"
+    select_lines = call_lines(func_node, "_select_swagger_files")
+    rmtree_lines = call_lines(func_node, "rmtree")
+    assert select_lines, "_select_swagger_files(...) call not found"
     assert rmtree_lines, "shutil.rmtree(...) call not found"
-    assert max(validate_lines) < min(rmtree_lines), (
+    assert max(select_lines) < min(rmtree_lines), (
         f"{check}() must run before shutil.rmtree() "
         "cleans SDK_OUTPUT_DIR, so a validation failure never leaves "
         "generated output partially wiped"

@@ -881,65 +881,178 @@ def _format_generated(*extra: Path) -> None:
     run_cmd(["uv", "run", "ruff", "format", str(SDK_OUTPUT_DIR), *map(str, extra)])
 
 
+def _select_swagger_files(
+    openapi_base: Path,
+) -> tuple[dict[str, list[parity.SwaggerFileMetadata]], set[str], set[str]]:
+    """Selects the swagger files to generate from, and fails on a corrupted checkout.
+
+    Returns the files by service, every source service, and the services from
+    the local schema base.
+    """
+    source_services = {
+        p.name for p in openapi_base.iterdir() if p.is_dir() and p.name != "__pycache__"
+    }
+
+    selected_swagger_files, selected_count, ignored_count = (
+        parity.select_latest_swagger_files_by_service(openapi_base)
+    )
+    print(
+        f"Discovered {selected_count} latest swagger files across "
+        f"{len(selected_swagger_files)} services (ignored {ignored_count} older file versions)."
+    )
+    local_swagger_files, _, _ = (
+        parity.select_latest_swagger_files_by_service(LOCAL_SCHEMA_BASE)
+        if LOCAL_SCHEMA_BASE.is_dir()
+        else ({}, 0, 0)
+    )
+    local_services = set(local_swagger_files)
+    selected_swagger_files = parity.merge_local_schema_base(
+        selected_swagger_files, local_swagger_files
+    )
+    source_services |= local_services
+    if local_services:
+        print(
+            f"Added {len(local_services)} REST-only services from the local "
+            f"schema base: {', '.join(sorted(local_services))}."
+        )
+
+    # Fail loudly on a corrupted/truncated schema checkout instead of
+    # silently generating an incomplete SDK from it (2026-08-26 incident).
+    # The caller MUST run this before it touches SDK_OUTPUT_DIR: an
+    # earlier version of this check ran after the "clean old modules"
+    # step, so a validation failure still left src/kentik_api/gen/
+    # wiped out. This was discovered by manually reproducing the incident
+    # end-to-end rather than trusting fixture tests alone.
+    parity.validate_schema_files_or_raise(
+        [
+            Path(metadata["path"])
+            for service_files in selected_swagger_files.values()
+            for metadata in service_files
+        ]
+    )
+    parity.validate_selected_services_or_raise(
+        source_services, set(selected_swagger_files)
+    )
+    selected_swagger_files, superseded = parity.drop_superseded_swagger_files(
+        selected_swagger_files
+    )
+    for metadata in superseded:
+        print(
+            f"Skipping {metadata['path'].relative_to(openapi_base)}: "
+            "newer files in its service write all of its REST modules."
+        )
+    return selected_swagger_files, source_services, local_services
+
+
+def _generate_service(
+    service: str,
+    swagger_files: list[parity.SwaggerFileMetadata],
+    schema_root: Path,
+    *,
+    has_protos: bool,
+    model_renames: dict[str, str],
+    proto_collisions: dict[str, set[str]],
+    pb_owners: dict[tuple[str, str], str],
+    endpoint_docs_collector: EndpointDocsCollector,
+) -> dict[str, error_package.OperationErrorMetadata]:
+    """Generates one Service's pb/ and REST code; returns its operation errors.
+
+    Reads the swagger files, so it must run while the schema checkout exists.
+    """
+    openapi_base = schema_root / "gen" / "openapiv3" / "kentik"
+    out_dir = SDK_OUTPUT_DIR / service
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "__init__.py").touch(exist_ok=True)
+
+    pb_dir = out_dir / "pb"
+    if has_protos:
+        pb_dir.mkdir(exist_ok=True)
+        (pb_dir / "__init__.py").touch(exist_ok=True)
+
+    model_names: dict[str, tuple[str, str, str]] = {}
+    for metadata in swagger_files:
+        swagger_path = Path(metadata["path"])
+        version = str(metadata["version"])
+        namespace_label = "/".join(metadata["namespace"]) or "root"
+        print(
+            f"\nGenerating {service} [{namespace_label}] "
+            f"{metadata['filename']} ({version})..."
+        )
+
+        # Protos first: the REST models need their oneofs.
+        oneof_members: dict[str, set[str]] = {}
+        if not has_protos:
+            print("    Local schema base: REST only, no protos.")
+        else:
+            proto_dir = (
+                schema_root
+                / "proto"
+                / "kentik"
+                / swagger_path.relative_to(openapi_base).parent
+            )
+            print(f"    Hunting for protos in: {proto_dir}")
+            if not proto_dir.exists():
+                print("    ⚠️ No proto directory found, skipping gRPC.")
+            elif proto_files := list(proto_dir.glob("*.proto")):
+                oneof_members = _compile_service_protos(
+                    service,
+                    proto_files,
+                    schema_root,
+                    pb_dir,
+                    proto_collisions,
+                    pb_owners,
+                )
+            else:
+                print("    ⚠️ Directory exists, but no .proto files found inside.")
+
+        with patched_swagger(
+            swagger_path, version, oneof_members, model_names, model_renames
+        ) as tmp_swagger:
+            run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
+            # The patched swagger, so pages name the models the SDK defines.
+            endpoint_docs_collector.extract(service, tmp_swagger)
+
+    return error_package.merge_operation_error_responses(
+        [
+            error_package.collect_operation_error_responses(Path(metadata["path"]))
+            for metadata in swagger_files
+        ]
+    )
+
+
+def _patch_generated_code(
+    names: PublicNames,
+    model_renames: dict[str, dict[str, str]],
+    operation_errors: dict[str, dict[str, error_package.OperationErrorMetadata]],
+    pb_owners: dict[tuple[str, str], str],
+) -> None:
+    print("\nPatching generated code...")
+    # Deliberately broader than iter_service_dirs(), like the cleanup loop in
+    # generate_modular_sdk(): fixup normalises every generated file, pb_companions included.
+    for service_dir in SDK_OUTPUT_DIR.iterdir():
+        if service_dir.is_dir() and service_dir.name != "__pycache__":
+            fixup.fix_generated_service(service_dir)
+
+    # Error classes are named after client methods, so this needs fixed-up REST modules.
+    for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
+        error_package.generate_service_error_package(
+            service_dir,
+            operation_errors[service_dir.name],
+            wrapper_generation.public_method_names(service_dir, names),
+            status_model=model_renames[service_dir.name].get("rpcStatus"),
+        )
+
+    # Runs once every pb/ directory exists, so cross-service targets resolve.
+    relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR, pb_owners)
+    print(f"    ✅ Relinked descriptor dependency imports in {relinked} pb2 modules.")
+
+
 def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None):
     with get_schema_root(repo_source, schema_ref) as (schema_root, schema_commit):
-        # Define base paths using the yielded root
         openapi_base = schema_root / "gen" / "openapiv3" / "kentik"
-        proto_base = schema_root / "proto"
-        source_services = {
-            p.name
-            for p in openapi_base.iterdir()
-            if p.is_dir() and p.name != "__pycache__"
-        }
-
-        selected_swagger_files, selected_count, ignored_count = (
-            parity.select_latest_swagger_files_by_service(openapi_base)
+        selected_swagger_files, source_services, local_services = _select_swagger_files(
+            openapi_base
         )
-        print(
-            f"Discovered {selected_count} latest swagger files across "
-            f"{len(selected_swagger_files)} services (ignored {ignored_count} older file versions)."
-        )
-        local_swagger_files, _, _ = (
-            parity.select_latest_swagger_files_by_service(LOCAL_SCHEMA_BASE)
-            if LOCAL_SCHEMA_BASE.is_dir()
-            else ({}, 0, 0)
-        )
-        local_services = set(local_swagger_files)
-        selected_swagger_files = parity.merge_local_schema_base(
-            selected_swagger_files, local_swagger_files
-        )
-        source_services |= local_services
-        if local_services:
-            print(
-                f"Added {len(local_services)} REST-only services from the local "
-                f"schema base: {', '.join(sorted(local_services))}."
-            )
-
-        # Fail loudly on a corrupted/truncated schema checkout instead of
-        # silently generating an incomplete SDK from it (2026-08-26 incident).
-        # This MUST run before anything below touches SDK_OUTPUT_DIR: an
-        # earlier version of this check ran after the "clean old modules"
-        # step, so a validation failure still left src/kentik_api/gen/
-        # wiped out. This was discovered by manually reproducing the incident
-        # end-to-end rather than trusting fixture tests alone.
-        parity.validate_schema_files_or_raise(
-            [
-                Path(metadata["path"])
-                for service_files in selected_swagger_files.values()
-                for metadata in service_files
-            ]
-        )
-        parity.validate_selected_services_or_raise(
-            source_services, set(selected_swagger_files)
-        )
-        selected_swagger_files, superseded = parity.drop_superseded_swagger_files(
-            selected_swagger_files
-        )
-        for metadata in superseded:
-            print(
-                f"Skipping {metadata['path'].relative_to(openapi_base)}: "
-                "newer files in its service write all of its REST modules."
-            )
 
         # Fails before the wipe below when a public name no longer matches.
         names = PublicNames.load()
@@ -979,120 +1092,30 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
                 if service not in local_services
             },
             openapi_base,
-            proto_base,
+            schema_root / "proto",
         )
 
-        service_swagger_paths: dict[str, list[Path]] = {}
         pb_owners: dict[tuple[str, str], str] = {}
         endpoint_docs_collector = EndpointDocsCollector()
-
+        # Error packages need fixed-up code, so they are written after this block.
+        operation_errors = {}
         for upstream_service in sorted(selected_swagger_files):
             service = public_service[upstream_service]
-            out_dir = SDK_OUTPUT_DIR / service
-            out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / "__init__.py").touch(exist_ok=True)
-
-            # Setup specific directories. A local schema base service has no protos.
-            pb_dir = out_dir / "pb"
-            if upstream_service not in local_services:
-                pb_dir.mkdir(exist_ok=True)
-                (pb_dir / "__init__.py").touch(exist_ok=True)
-
-            service_swagger_paths[service] = []
-            model_names: dict[str, tuple[str, str, str]] = {}
-
-            for metadata in selected_swagger_files[upstream_service]:
-                swagger_path = Path(metadata["path"])
-                version = str(metadata["version"])
-                namespace = "/".join(metadata["namespace"])
-                namespace_label = namespace if namespace else "root"
-                service_swagger_paths[service].append(swagger_path)
-
-                print(
-                    f"\nGenerating {service} [{namespace_label}] "
-                    f"{metadata['filename']} ({version})..."
-                )
-
-                # -----------------------------------------------------------------
-                # 1. GENERATE PROTOBUF (gRPC), first: REST models need its oneofs
-                # -----------------------------------------------------------------
-                oneof_members: dict[str, set[str]] = {}
-                if upstream_service in local_services:
-                    print("    Local schema base: REST only, no protos.")
-                    proto_dir = None
-                else:
-                    swagger_rel_parent = swagger_path.relative_to(openapi_base).parent
-                    proto_dir = proto_base / "kentik" / swagger_rel_parent
-                    print(f"    Hunting for protos in: {proto_dir}")
-
-                if proto_dir is None:
-                    pass
-                elif proto_dir.exists():
-                    proto_files = list(proto_dir.glob("*.proto"))
-                    if proto_files:
-                        oneof_members = _compile_service_protos(
-                            service,
-                            proto_files,
-                            schema_root,
-                            pb_dir,
-                            proto_collisions,
-                            pb_owners,
-                        )
-                    else:
-                        print(
-                            "    ⚠️ Directory exists, but no .proto files found inside."
-                        )
-                else:
-                    print("    ⚠️ No proto directory found, skipping gRPC.")
-
-                # -----------------------------------------------------------------
-                # 2. GENERATE OPENAPI (REST)
-                # -----------------------------------------------------------------
-                with patched_swagger(
-                    swagger_path,
-                    version,
-                    oneof_members,
-                    model_names,
-                    model_renames[service],
-                ) as tmp_swagger:
-                    run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
-                    # The patched swagger, so pages name the models the SDK defines.
-                    endpoint_docs_collector.extract(service, tmp_swagger)
-
-        # Swagger files exist only inside this block; packages are written after fixup.
-        operation_errors = {
-            service: error_package.merge_operation_error_responses(
-                [error_package.collect_operation_error_responses(p) for p in paths]
+            operation_errors[service] = _generate_service(
+                service,
+                selected_swagger_files[upstream_service],
+                schema_root,
+                has_protos=upstream_service not in local_services,
+                model_renames=model_renames[service],
+                proto_collisions=proto_collisions,
+                pb_owners=pb_owners,
+                endpoint_docs_collector=endpoint_docs_collector,
             )
-            for service, paths in service_swagger_paths.items()
-        }
 
     parity.validate_generated_service_parity(
         {public_service[s] for s in source_services}, SDK_OUTPUT_DIR
     )
-
-    # -----------------------------------------------------------------
-    # 3. POST-PROCESSING (Rest & Models Cleanup)
-    # -----------------------------------------------------------------
-    print("\nPatching generated code...")
-    # Deliberately broader than iter_service_dirs(), like the cleanup loop
-    # above: fixup normalises every generated file, pb_companions included.
-    for service_dir in SDK_OUTPUT_DIR.iterdir():
-        if service_dir.is_dir() and service_dir.name != "__pycache__":
-            fixup.fix_generated_service(service_dir)
-
-    # Error classes are named after client methods, so this needs fixed-up REST modules.
-    for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
-        error_package.generate_service_error_package(
-            service_dir,
-            operation_errors[service_dir.name],
-            wrapper_generation.public_method_names(service_dir, names),
-            status_model=model_renames[service_dir.name].get("rpcStatus"),
-        )
-
-    # Runs once every pb/ directory exists, so cross-service targets resolve.
-    relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR, pb_owners)
-    print(f"    ✅ Relinked descriptor dependency imports in {relinked} pb2 modules.")
+    _patch_generated_code(names, model_renames, operation_errors, pb_owners)
 
     print("\nFormatting...")
     _format_generated()
