@@ -10,7 +10,6 @@ import httpcore
 import httpx
 import pytest
 
-from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import request_json
 from kentik_api.errors import ConfigurationError
@@ -39,7 +38,7 @@ def _call(config: APIConfig | None) -> None:
 
 
 def test_repeat_calls_on_one_transport_share_one_client(client_count):
-    transport = RestTransport(KentikCredentials("dev@example.com", "t"))
+    transport = RestTransport(APIConfig(auth_email="dev@example.com", auth_token="t"))
 
     for _ in range(5):
         _call(transport.api_config)
@@ -65,7 +64,7 @@ def test_no_client_is_created_until_a_rest_call_needs_one(client_count):
 
 
 def test_close_releases_the_client_and_is_idempotent():
-    transport = RestTransport(KentikCredentials("dev@example.com", "t"))
+    transport = RestTransport(APIConfig(auth_email="dev@example.com", auth_token="t"))
     client = transport.api_config.client
 
     transport.close()
@@ -75,7 +74,7 @@ def test_close_releases_the_client_and_is_idempotent():
 
 
 def test_closing_an_unused_transport_is_harmless():
-    RestTransport(KentikCredentials("dev@example.com", "t")).close()
+    RestTransport(APIConfig(auth_email="dev@example.com", auth_token="t")).close()
 
 
 def test_a_forked_child_gets_its_own_client(monkeypatch):
@@ -95,7 +94,7 @@ def test_a_forked_child_gets_its_own_client(monkeypatch):
 
 
 def test_use_after_close_raises_configuration_error_naming_close(client_count):
-    transport = RestTransport(KentikCredentials("dev@example.com", "t"))
+    transport = RestTransport(APIConfig(auth_email="dev@example.com", auth_token="t"))
     transport.close()
 
     with pytest.raises(ConfigurationError, match=r"close\(\)"):
@@ -112,7 +111,7 @@ def test_call_without_a_config_fails_before_opening_a_connection(client_count):
 
 
 def test_with_timeout_copy_shares_the_origin_connection(client_count):
-    transport = RestTransport(KentikCredentials("dev@example.com", "t"))
+    transport = RestTransport(APIConfig(auth_email="dev@example.com", auth_token="t"))
     slow = transport.api_config.with_timeout(300)
 
     _call(transport.api_config)
@@ -126,7 +125,7 @@ def test_with_timeout_copy_shares_the_origin_connection(client_count):
 def test_closing_a_copy_leaves_the_origin_open_and_closing_the_origin_ends_both(
     client_count,
 ):
-    transport = RestTransport(KentikCredentials("dev@example.com", "t"))
+    transport = RestTransport(APIConfig(auth_email="dev@example.com", auth_token="t"))
     slow = transport.api_config.with_timeout(300)
     _call(slow)
 
@@ -153,9 +152,9 @@ def test_shared_client_retries_failed_connection_attempts_only():
 def test_transports_expose_quota_per_endpoint_from_their_config():
     from kentik_api.transports.grpc_client import GrpcTransport
 
-    rest = RestTransport(KentikCredentials("dev@example.com", "t"))
+    rest = RestTransport(APIConfig(auth_email="dev@example.com", auth_token="t"))
     grpc_transport = GrpcTransport(
-        KentikCredentials("dev@example.com", "t"), target="127.0.0.1:1"
+        APIConfig(auth_email="dev@example.com", auth_token="t"), target="127.0.0.1:1"
     )
     try:
         assert rest.rate_limits is rest.api_config.rate_limits

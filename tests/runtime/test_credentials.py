@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import Any
 
 from kentik_api.auth.credentials import KentikCredentials, auth_headers
+from kentik_api.core.api_config import APIConfig
 
 CREDENTIALS = KentikCredentials(email="dev@example.com", api_token="secret-token")
 
@@ -54,7 +55,10 @@ def test_grpc_transport_attaches_the_credentials_plugin_to_the_channel(monkeypat
     monkeypatch.setattr(grpc, "secure_channel", lambda *a, **k: object())
     monkeypatch.setattr(grpc, "intercept_channel", lambda channel, _: channel)
 
-    GrpcTransport(CREDENTIALS, target="grpc.example.com:443")
+    GrpcTransport(
+        APIConfig(auth_email=CREDENTIALS.email, auth_token=CREDENTIALS.api_token),
+        target="grpc.example.com:443",
+    )
 
     received = []
     seen["plugin"](context=None, callback=lambda md, err: received.append(md))

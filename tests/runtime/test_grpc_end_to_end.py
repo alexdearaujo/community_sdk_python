@@ -8,14 +8,11 @@ from concurrent import futures
 import grpc
 import pytest
 
-from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
 from kentik_api.gen.device.error import GetUnexpectedError
 from kentik_api.gen.device.pb import device_pb2, device_pb2_grpc
 from kentik_api.gen.device.services.device import DeviceServiceWrapper
 from kentik_api.transports.grpc_client import GrpcTransport
-
-CREDENTIALS = KentikCredentials(email="dev@example.com", api_token="token")
 
 
 class _DeviceService(device_pb2_grpc.DeviceServiceServicer):
@@ -53,9 +50,8 @@ def served(monkeypatch):
     server.start()
     monkeypatch.setattr(grpc, "ssl_channel_credentials", grpc.local_channel_credentials)
     transport = GrpcTransport(
-        CREDENTIALS,
+        APIConfig(auth_email="dev@example.com", auth_token="token", grpc_deadline=7.5),
         target=f"localhost:{port}",
-        api_config=APIConfig(grpc_deadline=7.5),
     )
     try:
         yield servicer, DeviceServiceWrapper(transport)

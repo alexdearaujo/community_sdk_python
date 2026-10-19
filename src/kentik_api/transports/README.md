@@ -3,15 +3,17 @@
 # Transports (`kentik_api.transports`)
 
 Hand-written. Not touched by [`uv run poe generate`](../../../pyproject.toml). Thin transport-selection
-and credential-wiring code, not per-endpoint logic.
+code, not per-endpoint logic. Each transport takes one
+[`APIConfig`](../core/api_config.py), the single source of the host,
+credentials, timeouts, and quota record. [`KentikAPI`](../client.py) builds it.
 
 ## Classes
 
 | Class | File | Role |
 | --- | --- | --- |
 | `BaseTransport` | [`base.py`](base.py) | Abstract base. Declares `close()`. |
-| `RestTransport` | [`rest_client.py`](rest_client.py) | Holds the [`APIConfig`](../core/api_config.py) that [`KentikAPI`](../client.py) builds. It builds one from [`KentikCredentials`](../auth/credentials.py) only when none is given. Generated wrappers read `api_config` off this object. |
-| `GrpcTransport` | [`grpc_client.py`](grpc_client.py) | Opens a `grpc.secure_channel` with the credentials' gRPC auth plugin. Every call gets the `grpc_deadline` default, and the receive limit is 40 MiB. It records quota per gRPC method in `api_config.rate_limits`. |
+| `RestTransport` | [`rest_client.py`](rest_client.py) | `RestTransport(api_config)`. Generated wrappers read `api_config` off this object. |
+| `GrpcTransport` | [`grpc_client.py`](grpc_client.py) | `GrpcTransport(api_config, target, options)`. Opens a `grpc.secure_channel` with an auth plugin built from the config's credentials, and raises `ConfigurationError` when they are missing. Every call gets the `grpc_deadline` default, and the receive limit is 40 MiB. It records quota per gRPC method in `api_config.rate_limits`. |
 
 ```mermaid
 classDiagram

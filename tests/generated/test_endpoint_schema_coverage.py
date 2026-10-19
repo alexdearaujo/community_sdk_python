@@ -44,8 +44,8 @@ from _discovery import (
 from google.protobuf.json_format import MessageToDict, ParseDict
 from pydantic import BaseModel, ValidationError
 
-from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.client import KentikAPI
+from kentik_api.core.api_config import APIConfig
 from kentik_api.errors import AuthenticationError, HTTPException, KentikError
 from kentik_api.gen.alerting.models import PolicyType
 from kentik_api.gen.device.models import DeviceView
@@ -183,8 +183,11 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
     module = importlib.import_module(wrapper_case.module_path)
     wrapper_cls = getattr(module, wrapper_case.wrapper_class)
     transport = RestTransport(
-        KentikCredentials(email="dev@example.com", api_token="token"),
-        base_url="https://api.example.com",
+        APIConfig(
+            base_path="https://api.example.com",
+            auth_email="dev@example.com",
+            auth_token="token",
+        )
     )
     wrapper = wrapper_cls(transport)
     method = getattr(wrapper, wrapper_case.method_name)

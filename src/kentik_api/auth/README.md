@@ -28,11 +28,11 @@ One credential pair becomes the two transport-specific auth shapes:
 
 ```mermaid
 flowchart LR
-    In["email + api_token"] --> KC[KentikCredentials]
-    KC -->|.email / .api_token| RT[RestTransport]
-    RT -->|APIConfig| RJ["request_json() via auth_headers()"]
-    KC -->|get_grpc_plugin| P["grpc.AuthMetadataPlugin"]
-    P --> GT[GrpcTransport]
+    In["email + api_token"] --> AC[APIConfig]
+    AC --> RT[RestTransport]
+    RT --> RJ["request_json() via auth_headers()"]
+    AC --> GT[GrpcTransport]
+    GT -->|KentikCredentials.get_grpc_plugin| P["grpc.AuthMetadataPlugin"]
 
 ```
 

@@ -6,7 +6,6 @@ from typing import Any
 import httpx
 import pytest
 
-from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig, HTTPException
 from kentik_api.core.grpc_runtime import call_grpc
 from kentik_api.core.rest_runtime import path_segment, request_json
@@ -270,7 +269,7 @@ def test_transport_error_message_does_not_leak_header_values(
 
 def test_grpc_call_after_close_raises_configuration_error_not_process_crash():
     transport = GrpcTransport(
-        KentikCredentials(email="dev@example.com", api_token="token"),
+        APIConfig(auth_email="dev@example.com", auth_token="token"),
         target="127.0.0.1:1",
     )
     stub = transport.channel.unary_unary(

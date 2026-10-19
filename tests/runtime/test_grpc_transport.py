@@ -12,13 +12,14 @@ from typing import Any
 import grpc
 import pytest
 
-from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.grpc_runtime import call_grpc
-from kentik_api.errors import TransportError
+from kentik_api.errors import ConfigurationError, TransportError
 from kentik_api.transports.grpc_client import GrpcTransport, _DefaultDeadlineInterceptor
 
-CREDENTIALS = KentikCredentials(email="dev@example.com", api_token="token")
+
+def _config(**kwargs) -> APIConfig:
+    return APIConfig(auth_email="dev@example.com", auth_token="token", **kwargs)
 
 
 def _details(timeout: float | None) -> Any:
@@ -63,21 +64,26 @@ def test_call_that_already_carries_a_deadline_keeps_it():
 
 
 def test_transport_uses_the_config_it_is_given():
-    config = APIConfig(grpc_deadline=3.0)
-    transport = GrpcTransport(CREDENTIALS, target="127.0.0.1:1", api_config=config)
+    config = _config(grpc_deadline=3.0)
+    transport = GrpcTransport(config, target="127.0.0.1:1")
     try:
         assert transport.api_config is config
     finally:
         transport.close()
 
 
-def test_transport_defaults_to_a_config_carrying_its_credentials():
-    transport = GrpcTransport(CREDENTIALS, target="127.0.0.1:1")
+def test_transport_keeps_the_default_deadline_of_its_config():
+    transport = GrpcTransport(_config(), target="127.0.0.1:1")
     try:
         assert transport.api_config.auth_email == "dev@example.com"
         assert transport.api_config.grpc_deadline == 60.0
     finally:
         transport.close()
+
+
+def test_transport_without_credentials_raises_configuration_error():
+    with pytest.raises(ConfigurationError, match="auth_email and auth_token"):
+        GrpcTransport(APIConfig())
 
 
 @pytest.fixture
@@ -110,9 +116,7 @@ def black_hole_target():
 def test_unresponsive_server_fails_at_the_deadline_instead_of_hanging(
     black_hole_target,
 ):
-    transport = GrpcTransport(
-        CREDENTIALS, target=black_hole_target, api_config=APIConfig(grpc_deadline=0.5)
-    )
+    transport = GrpcTransport(_config(grpc_deadline=0.5), target=black_hole_target)
     stub = transport.channel.unary_unary(
         "/svc.Service/Op",
         request_serializer=lambda _: b"",
@@ -152,10 +156,8 @@ def test_init_wires_credentials_and_deadline_into_the_channel_and_close_releases
     monkeypatch.setattr(grpc, "secure_channel", fake_secure_channel)
     monkeypatch.setattr(grpc, "intercept_channel", fake_intercept_channel)
 
-    config = APIConfig(grpc_deadline=4.0)
-    transport = GrpcTransport(
-        CREDENTIALS, target="grpc.example.com:443", api_config=config
-    )
+    config = _config(grpc_deadline=4.0)
+    transport = GrpcTransport(config, target="grpc.example.com:443")
 
     assert calls["target"] == "grpc.example.com:443"
     assert calls["inner"] is raw
@@ -186,7 +188,7 @@ def test_transport_passes_the_channel_options_to_grpc(monkeypatch):
     monkeypatch.setattr(grpc, "secure_channel", fake_secure_channel)
     monkeypatch.setattr(grpc, "intercept_channel", lambda channel, _: channel)
 
-    GrpcTransport(CREDENTIALS, options=[("grpc.keepalive_time_ms", 5000)])
+    GrpcTransport(_config(), options=[("grpc.keepalive_time_ms", 5000)])
 
     assert seen["options"]["grpc.keepalive_time_ms"] == 5000
     assert seen["options"]["grpc.max_receive_message_length"] == 40 * 1024**2
