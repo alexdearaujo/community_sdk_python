@@ -175,118 +175,123 @@ def parse_generated_rest_module(path: Path) -> list[RestOperation]:
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     except OSError:
         return []
+    ops = (
+        _rest_operation(node)
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name[:1].isupper()
+    )
+    return [op for op in ops if op is not None]
 
-    ops: list[RestOperation] = []
-    for node in tree.body:
-        if not (isinstance(node, ast.FunctionDef) and node.name[:1].isupper()):
-            continue
 
-        return_type = ast.unparse(node.returns) if node.returns else ""
+def _rest_operation(func: ast.FunctionDef) -> RestOperation | None:
+    """The operation a REST function performs; None for a helper without request_json()."""
+    kwargs = _request_json_keywords(func)
+    method = kwargs.get("method")
+    path = _path_template(kwargs.get("path"))
+    if not isinstance(method, ast.Constant) or path is None:
+        return None
+    status = kwargs.get("expected_status")
+    error_cls = kwargs.get("error_cls")
+    operation = kwargs.get("operation_name")
 
-        defaults_start = len(node.args.args) - len(node.args.defaults)
-        positional: list[tuple[str, str, bool]] = [
-            (
-                arg.arg,
-                ast.unparse(arg.annotation) if arg.annotation else "Any",
-                i < defaults_start,
-            )
-            for i, arg in enumerate(node.args.args)
-        ]
-        kwonly: list[tuple[str, str, bool]] = [
-            (
-                arg.arg,
-                ast.unparse(arg.annotation) if arg.annotation else "Any",
-                default is None,
-            )
-            for arg, default in zip(node.args.kwonlyargs, node.args.kw_defaults)
-        ]
-
-        # The wire name keeps the dotted field path ("pagination.limit") that the
-        # argument name ("paginationlimit") loses.
-        query_params = next(
-            (
-                tuple(
-                    (str(key.value), value.id)
-                    for key, value in zip(stmt.value.keys, stmt.value.values)
-                    if isinstance(key, ast.Constant) and isinstance(value, ast.Name)
-                )
-                for stmt in node.body
-                if isinstance(stmt, ast.AnnAssign)
-                and isinstance(stmt.target, ast.Name)
-                and stmt.target.id == "query_params"
-                and isinstance(stmt.value, ast.Dict)
-            ),
-            (),
+    defaults_start = len(func.args.args) - len(func.args.defaults)
+    positional = [
+        (
+            arg.arg,
+            ast.unparse(arg.annotation) if arg.annotation else "Any",
+            i < defaults_start,
         )
+        for i, arg in enumerate(func.args.args)
+    ]
+    kwonly = [
+        (
+            arg.arg,
+            ast.unparse(arg.annotation) if arg.annotation else "Any",
+            default is None,
+        )
+        for arg, default in zip(func.args.kwonlyargs, func.args.kw_defaults)
+    ]
 
-        # Extract request_json() keyword arguments.
-        http_method: str | None = None
-        path_val: str | None = None
-        expected_status = 0
-        error_cls_name = ""
-        operation_name = ""
+    return RestOperation(
+        name=func.name,
+        http_method=str(method.value),
+        path=path,
+        expected_status=(
+            status.value
+            if isinstance(status, ast.Constant) and isinstance(status.value, int)
+            else 0
+        ),
+        error_cls_name=error_cls.id if isinstance(error_cls, ast.Name) else "",
+        operation_name=(
+            str(operation.value) if isinstance(operation, ast.Constant) else ""
+        )
+        or func.name,
+        params=tuple(positional + kwonly),
+        kwonly_start=len(positional),
+        return_type=ast.unparse(func.returns) if func.returns else "",
+        query_params=_query_params(func),
+        docstring=ast.get_docstring(func) or "",
+    )
 
-        for sub in ast.walk(node):
-            if not (
-                isinstance(sub, ast.Call)
-                and isinstance(sub.func, ast.Name)
-                and sub.func.id == "request_json"
+
+def _request_json_keywords(func: ast.FunctionDef) -> dict[str, ast.expr]:
+    """The keyword arguments of a function's request_json() call; {} without one."""
+    call = next(
+        (
+            sub
+            for sub in ast.walk(func)
+            if isinstance(sub, ast.Call)
+            and isinstance(sub.func, ast.Name)
+            and sub.func.id == "request_json"
+        ),
+        None,
+    )
+    return {kw.arg: kw.value for kw in call.keywords if kw.arg} if call else {}
+
+
+def _path_template(value: ast.expr | None) -> str | None:
+    """A request_json() path as a template: {path_segment(deviceid)} reads {deviceid}."""
+    if isinstance(value, ast.Constant):
+        return str(value.value)
+    if not isinstance(value, ast.JoinedStr):
+        return None
+    parts: list[str] = []
+    for part in value.values:
+        if isinstance(part, ast.Constant):
+            parts.append(str(part.value))
+        elif isinstance(part, ast.FormattedValue):
+            arg = part.value
+            if (
+                isinstance(arg, ast.Call)
+                and isinstance(arg.func, ast.Name)
+                and arg.func.id == "path_segment"
             ):
-                continue
-            for kw in sub.keywords:
-                if kw.arg == "method" and isinstance(kw.value, ast.Constant):
-                    http_method = str(kw.value.value)
-                elif kw.arg == "path":
-                    if isinstance(kw.value, ast.Constant):
-                        path_val = str(kw.value.value)
-                    elif isinstance(kw.value, ast.JoinedStr):
-                        parts: list[str] = []
-                        for part in kw.value.values:
-                            if isinstance(part, ast.Constant):
-                                parts.append(str(part.value))
-                            elif isinstance(part, ast.FormattedValue):
-                                arg = part.value
-                                # {path_segment(deviceid)} -> {deviceid}
-                                if (
-                                    isinstance(arg, ast.Call)
-                                    and isinstance(arg.func, ast.Name)
-                                    and arg.func.id == "path_segment"
-                                ):
-                                    arg = arg.args[0]
-                                parts.append(f"{{{ast.unparse(arg)}}}")
-                        path_val = "".join(parts)
-                elif (
-                    kw.arg == "expected_status"
-                    and isinstance(kw.value, ast.Constant)
-                    and isinstance(kw.value.value, int)
-                ):
-                    expected_status = kw.value.value
-                elif kw.arg == "error_cls" and isinstance(kw.value, ast.Name):
-                    error_cls_name = kw.value.id
-                elif kw.arg == "operation_name" and isinstance(kw.value, ast.Constant):
-                    operation_name = str(kw.value.value)
-            break  # one request_json call per operation
+                arg = arg.args[0]
+            parts.append(f"{{{ast.unparse(arg)}}}")
+    return "".join(parts)
 
-        if http_method is None or path_val is None:
-            continue  # helper function without a request_json call
 
-        ops.append(
-            RestOperation(
-                name=node.name,
-                http_method=http_method,
-                path=path_val,
-                expected_status=expected_status,
-                error_cls_name=error_cls_name,
-                operation_name=operation_name or node.name,
-                params=tuple(positional + kwonly),
-                kwonly_start=len(positional),
-                return_type=return_type,
-                query_params=query_params,
-                docstring=ast.get_docstring(node) or "",
+def _query_params(func: ast.FunctionDef) -> tuple[tuple[str, str], ...]:
+    """(wire name, argument name) per query parameter of a REST function.
+
+    The wire name keeps the dotted field path ("pagination.limit") that the
+    argument name ("paginationlimit") loses.
+    """
+    return next(
+        (
+            tuple(
+                (str(key.value), value.id)
+                for key, value in zip(stmt.value.keys, stmt.value.values)
+                if isinstance(key, ast.Constant) and isinstance(value, ast.Name)
             )
-        )
-
-    return ops
+            for stmt in func.body
+            if isinstance(stmt, ast.AnnAssign)
+            and isinstance(stmt.target, ast.Name)
+            and stmt.target.id == "query_params"
+            and isinstance(stmt.value, ast.Dict)
+        ),
+        (),
+    )
 
 
 @dataclass(frozen=True)
