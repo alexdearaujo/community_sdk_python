@@ -90,6 +90,9 @@ def _schema_type_label(schema: object) -> str:
     return "object"
 
 
+_METHOD_ORDER = ("get", "post", "put", "patch", "delete", "options", "head", "trace")
+
+
 def extract_endpoint_docs(swagger_path: Path) -> list[EndpointDoc]:
     """Extracts per-operation documentation (params, every response) from a swagger file.
 
@@ -102,107 +105,91 @@ def extract_endpoint_docs(swagger_path: Path) -> list[EndpointDoc]:
         schema = json.load(f)
 
     tags_raw = schema.get("tags") if isinstance(schema.get("tags"), list) else []
-    default_tag = None
-    for tag in tags_raw:
-        if isinstance(tag, dict) and tag.get("name"):
-            default_tag = str(tag["name"]).strip()
-            break
-
+    default_tag = next(
+        (
+            str(tag["name"]).strip()
+            for tag in tags_raw
+            if isinstance(tag, dict) and tag.get("name")
+        ),
+        None,
+    )
     paths_obj = schema.get("paths") if isinstance(schema.get("paths"), dict) else {}
-    method_order = ["get", "post", "put", "patch", "delete", "options", "head", "trace"]
 
     docs: list[EndpointDoc] = []
     for endpoint, methods in sorted(paths_obj.items(), key=lambda item: item[0]):
         if not isinstance(methods, dict):
             continue
-        for method in method_order:
+        for method in _METHOD_ORDER:
             op = methods.get(method)
-            if not isinstance(op, dict):
-                continue
-
-            op_tags_raw = op.get("tags")
-            op_tags = op_tags_raw if isinstance(op_tags_raw, list) else []
-            tag = next(
-                (
-                    str(item).strip()
-                    for item in op_tags
-                    if isinstance(item, str) and str(item).strip()
-                ),
-                default_tag or "default",
-            )
-
-            parameters: list[EndpointParam] = []
-            for param in op.get("parameters") or []:
-                if not isinstance(param, dict):
-                    continue
-                parameters.append(
-                    EndpointParam(
-                        name=str(param.get("name") or "-"),
-                        location=str(param.get("in") or "-"),
-                        type_label=_schema_type_label(param.get("schema")),
-                        required=bool(param.get("required", False)),
-                    )
-                )
-
-            request_body: EndpointParam | None = None
-            body = op.get("requestBody")
-            if isinstance(body, dict):
-                content = body.get("content", {})
-                json_content = (
-                    content.get("application/json", {})
-                    if isinstance(content, dict)
-                    else {}
-                )
-                request_body = EndpointParam(
-                    name="data",
-                    location="body",
-                    type_label=_schema_type_label(
-                        json_content.get("schema")
-                        if isinstance(json_content, dict)
-                        else None
-                    ),
-                    required=bool(body.get("required", False)),
-                )
-
-            responses: list[EndpointResponse] = []
-            responses_obj = op.get("responses")
-            if isinstance(responses_obj, dict):
-                for status, resp in sorted(responses_obj.items()):
-                    if not isinstance(resp, dict):
-                        continue
-                    content = resp.get("content", {})
-                    json_content = (
-                        content.get("application/json", {})
-                        if isinstance(content, dict)
-                        else {}
-                    )
-                    responses.append(
-                        EndpointResponse(
-                            status=str(status),
-                            description=str(resp.get("description") or "-"),
-                            type_label=_schema_type_label(
-                                json_content.get("schema")
-                                if isinstance(json_content, dict)
-                                else None
-                            ),
-                        )
-                    )
-
-            docs.append(
-                EndpointDoc(
-                    tag=tag,
-                    method=method.upper(),
-                    path=str(endpoint),
-                    operation_id=str(op.get("operationId") or "-"),
-                    summary=str(op.get("summary") or ""),
-                    description=str(op.get("description") or ""),
-                    parameters=parameters,
-                    request_body=request_body,
-                    responses=responses,
-                )
-            )
-
+            if isinstance(op, dict):
+                docs.append(_endpoint_doc(str(endpoint), method, op, default_tag))
     return docs
+
+
+def _endpoint_doc(
+    endpoint: str, method: str, op: dict, default_tag: str | None
+) -> EndpointDoc:
+    """One operation's documentation: its tag, parameters, body, and every response."""
+    op_tags = op.get("tags")
+    body = op.get("requestBody")
+    responses = op.get("responses")
+    return EndpointDoc(
+        tag=next(
+            (
+                str(item).strip()
+                for item in (op_tags if isinstance(op_tags, list) else [])
+                if isinstance(item, str) and str(item).strip()
+            ),
+            default_tag or "default",
+        ),
+        method=method.upper(),
+        path=endpoint,
+        operation_id=str(op.get("operationId") or "-"),
+        summary=str(op.get("summary") or ""),
+        description=str(op.get("description") or ""),
+        parameters=[
+            EndpointParam(
+                name=str(param.get("name") or "-"),
+                location=str(param.get("in") or "-"),
+                type_label=_schema_type_label(param.get("schema")),
+                required=bool(param.get("required", False)),
+            )
+            for param in op.get("parameters") or []
+            if isinstance(param, dict)
+        ],
+        request_body=(
+            EndpointParam(
+                name="data",
+                location="body",
+                type_label=_json_type_label(body),
+                required=bool(body.get("required", False)),
+            )
+            if isinstance(body, dict)
+            else None
+        ),
+        responses=[
+            EndpointResponse(
+                status=str(status),
+                description=str(resp.get("description") or "-"),
+                type_label=_json_type_label(resp),
+            )
+            for status, resp in (
+                sorted(responses.items()) if isinstance(responses, dict) else []
+            )
+            if isinstance(resp, dict)
+        ],
+    )
+
+
+def _json_type_label(body_or_response: dict) -> str:
+    """The type label of a request body's or a response's application/json schema."""
+    content = body_or_response.get("content", {})
+    json_content = (
+        content.get("application/json", {}) if isinstance(content, dict) else {}
+    )
+    return _schema_type_label(
+        json_content.get("schema") if isinstance(json_content, dict) else None
+    )
 
 
 def _md_cell(value: str) -> str:
@@ -268,23 +255,15 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
     except OSError:
         return {}
 
-    services_folder = wrapper_file.parent
-
-    module_alias_to_file: dict[str, Path] = {}
-    for node in tree.body:
-        if isinstance(node, ast.Import):
-            for alias in node.names:
-                if not alias.asname or "." not in alias.name:
-                    continue
-                candidate = services_folder / f"{alias.name.rsplit('.', 1)[-1]}.py"
-                if candidate.exists():
-                    module_alias_to_file[alias.asname] = candidate
-
-    wrapper_class = None
-    for node in tree.body:
-        if isinstance(node, ast.ClassDef) and node.name.endswith("ServiceWrapper"):
-            wrapper_class = node
-            break
+    module_alias_to_file = _rest_module_files(tree, wrapper_file.parent)
+    wrapper_class = next(
+        (
+            node
+            for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name.endswith("ServiceWrapper")
+        ),
+        None,
+    )
     if wrapper_class is None:
         return {}
 
@@ -307,21 +286,10 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
         if params is None:
             continue
 
-        rest_alias: str | None = None
-        operation_id: str | None = None
-        for sub in ast.walk(node):
-            if (
-                isinstance(sub, ast.Return)
-                and isinstance(sub.value, ast.Call)
-                and isinstance(sub.value.func, ast.Attribute)
-                and isinstance(sub.value.func.value, ast.Name)
-                and sub.value.func.value.id.startswith("Rest")
-            ):
-                rest_alias = sub.value.func.value.id
-                operation_id = sub.value.func.attr
-                break
-        if rest_alias is None or operation_id is None:
+        rest_call = _rest_call(node)
+        if rest_call is None:
             continue
+        rest_alias, operation_id = rest_call
 
         rest_file = module_alias_to_file.get(rest_alias)
         if rest_file is None:
@@ -338,6 +306,35 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
         )
 
     return mapping
+
+
+def _rest_module_files(tree: ast.Module, services_folder: Path) -> dict[str, Path]:
+    """Maps each REST module alias a wrapper imports to that module's file."""
+    files: dict[str, Path] = {}
+    for node in tree.body:
+        if not isinstance(node, ast.Import):
+            continue
+        for alias in node.names:
+            if not alias.asname or "." not in alias.name:
+                continue
+            candidate = services_folder / f"{alias.name.rsplit('.', 1)[-1]}.py"
+            if candidate.exists():
+                files[alias.asname] = candidate
+    return files
+
+
+def _rest_call(method: ast.FunctionDef) -> tuple[str, str] | None:
+    """(REST module alias, function name) of the REST call a wrapper method returns."""
+    for sub in ast.walk(method):
+        if (
+            isinstance(sub, ast.Return)
+            and isinstance(sub.value, ast.Call)
+            and isinstance(sub.value.func, ast.Attribute)
+            and isinstance(sub.value.func.value, ast.Name)
+            and sub.value.func.value.id.startswith("Rest")
+        ):
+            return sub.value.func.value.id, sub.value.func.attr
+    return None
 
 
 def _example_value_for_annotation(
