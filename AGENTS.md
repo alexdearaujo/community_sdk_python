@@ -248,7 +248,7 @@ code confirms it directly:
   `AuthenticationError`, `TransportError`, `HTTPException`) that
   every service's generated per-operation error classes build on.
 - `src/kentik_api/transports/{base,rest_client,grpc_client}.py`:
-  thin transport-selection and credential-wiring code, not
+  thin transport-selection code, not
   per-endpoint logic.
 
 `KentikAPI` has a second `RestTransport`, `_v5_transport`, on its own

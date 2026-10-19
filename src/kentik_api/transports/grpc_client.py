@@ -93,16 +93,17 @@ class GrpcTransport(BaseTransport):
 
     def __init__(
         self,
-        credentials: KentikCredentials,
+        api_config: APIConfig,
         target: str = "grpc.api.kentik.com:443",
-        api_config: APIConfig | None = None,
         options: Sequence[tuple[str, Any]] | None = None,
     ):
-        self.api_config = api_config or APIConfig(
-            auth_email=credentials.email,
-            auth_token=credentials.api_token,
-        )
+        if not api_config.auth_email or not api_config.auth_token:
+            raise ConfigurationError(
+                "GrpcTransport needs an APIConfig with auth_email and auth_token."
+            )
+        self.api_config = api_config
 
+        credentials = KentikCredentials(api_config.auth_email, api_config.auth_token)
         auth_plugin = credentials.get_grpc_plugin()
         call_creds = grpc.metadata_call_credentials(auth_plugin)
         channel_creds = grpc.ssl_channel_credentials()

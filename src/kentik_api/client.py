@@ -121,15 +121,10 @@ class KentikAPI(KentikClientMixin):
 
         if protocol.lower() == "grpc":
             self._transport = GrpcTransport(
-                self.credentials,
-                target=grpc_target,
-                api_config=api_config,
-                options=grpc_options,
+                api_config, target=grpc_target, options=grpc_options
             )
         elif protocol.lower() == "rest":
-            self._transport = RestTransport(
-                self.credentials, base_url=rest_base_url, api_config=api_config
-            )
+            self._transport = RestTransport(api_config)
         else:
             raise ConfigurationError(
                 f"Invalid protocol '{protocol}'. Must be 'grpc' or 'rest'."
@@ -138,15 +133,13 @@ class KentikAPI(KentikClientMixin):
         # V5 endpoints exist only on REST, so they need a REST transport on
         # every client, gRPC ones included.
         self._v5_transport = RestTransport(
-            self.credentials,
-            base_url=v5_base_url,
-            api_config=APIConfig(
+            APIConfig(
                 base_path=v5_base_url,
                 auth_email=email,
                 auth_token=api_token,
                 timeout=timeout,
                 rest_timeout=rest_timeout,
-            ),
+            )
         )
 
         self._mount_generated_services()

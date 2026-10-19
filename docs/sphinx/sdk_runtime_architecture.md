@@ -74,7 +74,6 @@ flowchart TB
     REST_Runtime --> Error_Types
     REST_Runtime --> Rate_Limit
     REST_Transport --> API_Config
-    REST_Transport --> Auth_Credentials
     REST_Transport --> Rate_Limit
     REST_Transport --> Transport_Base
     gRPC_Runtime --> API_Config

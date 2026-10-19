@@ -19,7 +19,6 @@ from _discovery import (
 )
 from google.protobuf.json_format import ParseDict
 
-from kentik_api.auth.credentials import KentikCredentials
 from kentik_api.core.api_config import APIConfig
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
@@ -44,8 +43,11 @@ def test_wrapper_forwards_to_rest_module(
     wrapper_cls = getattr(module, case.wrapper_class)
 
     transport = RestTransport(
-        KentikCredentials(email="dev@example.com", api_token="token"),
-        base_url="https://api.example.com",
+        APIConfig(
+            base_path="https://api.example.com",
+            auth_email="dev@example.com",
+            auth_token="token",
+        )
     )
     wrapper = wrapper_cls(transport)
     method = getattr(wrapper, case.method_name)
@@ -99,8 +101,11 @@ def test_wrapper_forwards_all_declared_options(
     wrapper_cls = getattr(module, case.wrapper_class)
 
     transport = RestTransport(
-        KentikCredentials(email="dev@example.com", api_token="token"),
-        base_url="https://api.example.com",
+        APIConfig(
+            base_path="https://api.example.com",
+            auth_email="dev@example.com",
+            auth_token="token",
+        )
     )
     wrapper = wrapper_cls(transport)
     method = getattr(wrapper, case.method_name)
@@ -218,8 +223,11 @@ def test_wrapper_rejects_unexpected_kwarg(case: WrapperCase):
     wrapper_cls = getattr(module, case.wrapper_class)
 
     transport = RestTransport(
-        KentikCredentials(email="dev@example.com", api_token="token"),
-        base_url="https://api.example.com",
+        APIConfig(
+            base_path="https://api.example.com",
+            auth_email="dev@example.com",
+            auth_token="token",
+        )
     )
     wrapper = wrapper_cls(transport)
     method = getattr(wrapper, case.method_name)
@@ -249,8 +257,11 @@ def test_wrapper_rejects_missing_required_argument(case: WrapperCase):
     wrapper_cls = getattr(module, case.wrapper_class)
 
     transport = RestTransport(
-        KentikCredentials(email="dev@example.com", api_token="token"),
-        base_url="https://api.example.com",
+        APIConfig(
+            base_path="https://api.example.com",
+            auth_email="dev@example.com",
+            auth_token="token",
+        )
     )
     wrapper = wrapper_cls(transport)
     method = getattr(wrapper, case.method_name)
