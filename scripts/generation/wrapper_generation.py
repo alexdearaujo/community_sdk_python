@@ -458,216 +458,203 @@ def _docstring_lines(docstring: str) -> list[str]:
     ]
 
 
+def _qualify(annotation: str, model_classes: set[str]) -> str:
+    """An annotation as a wrapper writes it: models qualified, typing aliases undone."""
+    return _TYPING_ALIAS.sub(
+        r"\1", qualify_wrapper_annotation_types(annotation, model_classes)
+    )
+
+
+def _wrapper_signature(op: RestOperation, model_classes: set[str]) -> str:
+    """A wrapper method's arguments: the REST params, with model types qualified.
+
+    The REST function's own api_config_override comes back keyword-only, so it
+    sits with the other options.
+    """
+
+    def param(name: str, annotation: str, is_required: bool) -> str:
+        text = f"{name}: {_qualify(annotation, model_classes)}"
+        return text if is_required else f"{text} = None"
+
+    positional = [
+        param(*p) for p in op.params[: op.kwonly_start] if p[0] != "api_config_override"
+    ]
+    keyword = [param(*p) for p in op.params[op.kwonly_start :]]
+    # A per-call override replaces the client's config for this call
+    # only (FR-018 to FR-021); omitted, the client's config is used.
+    return ", ".join(
+        [*positional, "*", "api_config_override: Optional[APIConfig] = None", *keyword]
+    )
+
+
+# In the order the wrapper's `from typing import` line lists them.
+_TYPING_SYMBOLS = (
+    "Union",
+    "cast",
+    "Any",
+    "Optional",
+    "Dict",
+    "List",
+    "Tuple",
+    "Set",
+    "Literal",
+    "Callable",
+)
+
+
+@dataclass
+class _WrapperImports:
+    """Names a wrapper module imports, collected while its methods are built."""
+
+    typing: set[str]
+    grpc_runtime: set[str]
+    well_known: set[str]
+
+
+def _wrapper_method_lines(
+    service: str,
+    op: RestOperation,
+    method_name: str,
+    rest_module_name: str,
+    module_alias: str,
+    model_classes: set[str],
+    grpc_methods: dict[GrpcRuleKey, GrpcMethod],
+    imports: _WrapperImports,
+) -> list[str]:
+    """One wrapper method, routing the call to gRPC or to its REST function."""
+    return_type = _qualify(op.return_type, model_classes)
+    sig_args = _wrapper_signature(op, model_classes)
+    imports.typing.update(
+        symbol
+        for symbol in _TYPING_SYMBOLS
+        if re.search(rf"\b{symbol}\b", sig_args)
+        or re.search(rf"\b{symbol}\b", return_type)
+    )
+
+    # A free-form request body is annotated Dict[str, Any], which has
+    # no model_dump. Only Pydantic-model bodies get dumped.
+    data_annotation = next((ann for name, ann, _ in op.params if name == "data"), "")
+    body_expr = (
+        "dict(data)"
+        if data_annotation.lstrip().lower().startswith("dict[")
+        else "data.model_dump(by_alias=True, exclude_unset=True)"
+    )
+    call_args = "".join(
+        f", {arg}={arg}" for arg, _, _ in op.params if arg != "api_config_override"
+    )
+
+    grpc_method = grpc_methods.get(
+        (rest_module_name, op.http_method, _normalize_path(op.path))
+    )
+    if grpc_method is not None and grpc_method.request_module:
+        imports.well_known.add(grpc_method.request_module)
+    grpc_lines, needs_body_helper = _grpc_branch_lines(
+        service, op, grpc_method, module_alias, return_type, body_expr
+    )
+    if needs_body_helper:
+        imports.grpc_runtime.add("grpc_response_body")
+
+    return [
+        f"    def {method_name}(self, {sig_args}) -> {return_type}:",
+        *_docstring_lines(op.docstring),
+        *grpc_lines,
+        "        elif isinstance(self._transport, RestTransport):",
+        "            rest_transport = cast(RestTransport, self._transport)",
+        f"            return {module_alias}.{op.name}(",
+        f"                api_config_override=api_config_override or rest_transport.api_config{call_args}",
+        "            )",
+        "        else:",
+        '            raise TypeError(f"Unsupported transport type: {self._transport.__class__.__name__}")',
+        "",
+    ]
+
+
+def _wrapper_module(
+    service_dir: Path,
+    rest_files: list[Path],
+    method_names: dict[tuple[Path, str], str],
+) -> str:
+    """The source of a Service's `<Service>ServiceWrapper` module."""
+    service = service_dir.name
+    title = service_to_pascal_case(service)
+    model_classes = discover_service_model_classes(service_dir)
+    grpc_stubs_info, grpc_methods = _discover_grpc_methods(service_dir)
+    imports = _WrapperImports(
+        typing={"Union", "cast"},
+        grpc_runtime={"build_grpc_request", "call_grpc", "parse_grpc_response"},
+        well_known=set(),
+    )
+
+    # Methods first: they decide which names the header imports.
+    methods: list[str] = []
+    for idx, service_py in enumerate(rest_files, start=1):
+        for op in parse_generated_rest_module(service_py):
+            methods += _wrapper_method_lines(
+                service,
+                op,
+                method_names[(service_py, op.name)],
+                service_py.stem,
+                f"Rest{title}Module{idx}",
+                model_classes,
+                grpc_methods,
+                imports,
+            )
+
+    typing_names = ", ".join(s for s in _TYPING_SYMBOLS if s in imports.typing)
+    # pb2 modules are loaded lazily inside __init__ to avoid proto descriptor
+    # errors at import time when googleapis-common-protos is not installed.
+    grpc_imports = (
+        [
+            "from kentik_api.core.grpc_runtime import "
+            + ", ".join(sorted(imports.grpc_runtime)),
+            *(f"from google.protobuf import {m}" for m in sorted(imports.well_known)),
+        ]
+        if grpc_stubs_info
+        else []
+    )
+    header = [
+        f"from typing import {typing_names}",
+        f"from kentik_api.gen.{service} import models as rest_models",
+        *(
+            f"import kentik_api.gen.{service}.{f.parent.name}.{f.stem} as Rest{title}Module{idx}"
+            for idx, f in enumerate(rest_files, start=1)
+        ),
+        "from kentik_api.core.api_config import APIConfig",
+        "from kentik_api.transports.grpc_client import GrpcTransport",
+        "from kentik_api.transports.rest_client import RestTransport",
+        *grpc_imports,
+        "",
+        f"class {title}ServiceWrapper:",
+        '    """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_service_wrappers().',
+        f"    Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand.",
+        "    Unified Service routing to either gRPC or REST.",
+        '    """',
+        "    def __init__(self, transport: Union[GrpcTransport, RestTransport]):",
+        "        self._transport = transport",
+        "        if isinstance(self._transport, GrpcTransport):",
+        *_init_grpc_lines(service, grpc_stubs_info),
+        "",
+    ]
+    return "\n".join([*header, *methods])
+
+
 def _generate_service_wrappers(names: PublicNames):
     """Auto-generates the dual-transport wrapper classes for every service."""
     print("Generating unified service wrappers...")
 
     for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
-        service = service_dir.name
-        title = service_to_pascal_case(service)
-        model_classes = discover_service_model_classes(service_dir)
         rest_files = _rest_modules(service_dir)
+        # Before the skip: it fails when public_names.json names a lost method.
         method_names = public_method_names(service_dir, names)
-
         if not rest_files:
             print(
-                f"    ⚠️ Could not find REST functions for {service}, skipping wrapper."
+                f"    ⚠️ Could not find REST functions for {service_dir.name}, skipping wrapper."
             )
             continue
-        services_folder = rest_files[0].parent
-
-        required_typing_symbols = {"Union", "cast"}
-
-        # Discover gRPC stubs before building wrapper code.
-        grpc_stubs_info, grpc_methods = _discover_grpc_methods(service_dir)
-
-        wrapper_code = [
-            "from typing import Union, cast",
-            f"from kentik_api.gen.{service} import models as rest_models",
-            "from kentik_api.core.api_config import APIConfig",
-            "from kentik_api.transports.grpc_client import GrpcTransport",
-            "from kentik_api.transports.rest_client import RestTransport",
-            "",
-            f"class {title}ServiceWrapper:",
-            '    """AUTO-GENERATED: scripts/generation/wrapper_generation.py, _generate_service_wrappers().',
-            f"    Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand.",
-            "    Unified Service routing to either gRPC or REST.",
-            '    """',
-            "    def __init__(self, transport: Union[GrpcTransport, RestTransport]):",
-            "        self._transport = transport",
-            "        if isinstance(self._transport, GrpcTransport):",
-        ]
-        wrapper_code += _init_grpc_lines(service, grpc_stubs_info)
-        wrapper_code.append("")
-
-        # Insert REST module imports at the top of wrapper_code (before GrpcTransport).
-        for idx, service_py in enumerate(rest_files, start=1):
-            rest_module_name = service_py.stem  # e.g., 'DeviceService'
-            module_alias = f"Rest{title}Module{idx}"
-            wrapper_code.insert(
-                2 + (idx - 1),
-                f"import kentik_api.gen.{service}.{services_folder.name}.{rest_module_name} as {module_alias}",
-            )
-
-        # After REST imports are inserted, inject gRPC imports if stubs were found.
-        grpc_runtime_symbols = {
-            "build_grpc_request",
-            "call_grpc",
-            "parse_grpc_response",
-        }
-        well_known_modules: set[str] = set()
-        grpc_import_idx = 0
-        if grpc_stubs_info:
-            rest_transport_line_idx = next(
-                i
-                for i, line in enumerate(wrapper_code)
-                if "from kentik_api.transports.rest_client import RestTransport" in line
-            )
-            # pb2 modules are loaded lazily inside __init__ to avoid proto
-            # descriptor errors at import time when googleapis-common-protos is
-            # not installed. The import line is filled in once the methods are known.
-            grpc_import_idx = rest_transport_line_idx + 1
-            wrapper_code.insert(grpc_import_idx, "")
-
-        ops_by_file = {f: parse_generated_rest_module(f) for f in rest_files}
-
-        for idx, service_py in enumerate(rest_files, start=1):
-            rest_module_name = service_py.stem
-            module_alias = f"Rest{title}Module{idx}"
-
-            for op in ops_by_file[service_py]:
-                func_name_pascal = op.name
-                return_type = qualify_wrapper_annotation_types(
-                    op.return_type, model_classes
-                )
-                return_type = _TYPING_ALIAS.sub(r"\1", return_type)
-
-                unique_method_name = method_names[(service_py, op.name)]
-
-                # Build the wrapper signature: the REST params (their own
-                # api_config_override is re-added below as keyword-only, so it
-                # sits with the other options), with model types qualified.
-                def _qualify_annotation(annotation: str) -> str:
-                    return _TYPING_ALIAS.sub(
-                        r"\1",
-                        qualify_wrapper_annotation_types(annotation, model_classes),  # noqa: B023 - called only in this iteration
-                    )
-
-                pos_parts = [
-                    f"{param_name}: {_qualify_annotation(annotation)}"
-                    if is_required
-                    else f"{param_name}: {_qualify_annotation(annotation)} = None"
-                    for param_name, annotation, is_required in op.params[
-                        : op.kwonly_start
-                    ]
-                    if param_name != "api_config_override"
-                ]
-                kw_parts = [
-                    f"{param_name}: {_qualify_annotation(annotation)}"
-                    if is_required
-                    else f"{param_name}: {_qualify_annotation(annotation)} = None"
-                    for param_name, annotation, is_required in op.params[
-                        op.kwonly_start :
-                    ]
-                ]
-                # A per-call override replaces the client's config for this call
-                # only (FR-018 to FR-021); omitted, the client's config is used.
-                kw_parts = [
-                    "api_config_override: Optional[APIConfig] = None",
-                    *kw_parts,
-                ]
-                sig_args = ", ".join(pos_parts + ["*"] + kw_parts)
-
-                for typing_symbol in (
-                    "Any",
-                    "Optional",
-                    "Dict",
-                    "List",
-                    "Tuple",
-                    "Set",
-                    "Literal",
-                    "Callable",
-                ):
-                    if re.search(rf"\b{typing_symbol}\b", sig_args) or re.search(
-                        rf"\b{typing_symbol}\b", return_type
-                    ):
-                        required_typing_symbols.add(typing_symbol)
-
-                # Build the call_args from all param names (api_config_override excluded)
-                arg_names = [param_name for param_name, _, _ in op.params]
-                # A free-form request body is annotated Dict[str, Any], which has
-                # no model_dump. Only Pydantic-model bodies get dumped.
-                data_annotation = next(
-                    (ann for name, ann, _ in op.params if name == "data"), ""
-                )
-                body_expr = (
-                    "dict(data)"
-                    if data_annotation.lstrip().lower().startswith("dict[")
-                    else "data.model_dump(by_alias=True, exclude_unset=True)"
-                )
-                call_args = [
-                    f"{arg}={arg}" for arg in arg_names if arg != "api_config_override"
-                ]
-                call_args_str = ", ".join(call_args)
-                if call_args_str:
-                    call_args_str = ", " + call_args_str
-
-                grpc_method = grpc_methods.get(
-                    (rest_module_name, op.http_method, _normalize_path(op.path))
-                )
-                if grpc_method is not None and grpc_method.request_module:
-                    well_known_modules.add(grpc_method.request_module)
-                grpc_lines, needs_body_helper = _grpc_branch_lines(
-                    service, op, grpc_method, module_alias, return_type, body_expr
-                )
-                if needs_body_helper:
-                    grpc_runtime_symbols.add("grpc_response_body")
-
-                wrapper_code.extend(
-                    [
-                        f"    def {unique_method_name}(self, {sig_args}) -> {return_type}:",
-                        *_docstring_lines(op.docstring),
-                        *grpc_lines,
-                        "        elif isinstance(self._transport, RestTransport):",
-                        "            rest_transport = cast(RestTransport, self._transport)",
-                        f"            return {module_alias}.{func_name_pascal}(",
-                        f"                api_config_override=api_config_override or rest_transport.api_config{call_args_str}",
-                        "            )",
-                        "        else:",
-                        '            raise TypeError(f"Unsupported transport type: {self._transport.__class__.__name__}")',
-                        "",
-                    ]
-                )
-
-        preferred_order = [
-            "Union",
-            "cast",
-            "Any",
-            "Optional",
-            "Dict",
-            "List",
-            "Tuple",
-            "Set",
-            "Literal",
-            "Callable",
-        ]
-        ordered_symbols = [
-            symbol for symbol in preferred_order if symbol in required_typing_symbols
-        ]
-        wrapper_code[0] = f"from typing import {', '.join(ordered_symbols)}"
-        if grpc_stubs_info:
-            wrapper_code[grpc_import_idx : grpc_import_idx + 1] = [
-                "from kentik_api.core.grpc_runtime import "
-                + ", ".join(sorted(grpc_runtime_symbols)),
-                *(
-                    f"from google.protobuf import {m}"
-                    for m in sorted(well_known_modules)
-                ),
-            ]
-
-        # Write to gen/<service>/services/<service>.py
-        wrapper_file = services_folder / f"{service}.py"
-        write_text_lf(wrapper_file, "\n".join(wrapper_code))
+        write_text_lf(
+            rest_files[0].parent / f"{service_dir.name}.py",
+            _wrapper_module(service_dir, rest_files, method_names),
+        )
 
 
 def _generate_client_mixin(rest_only: frozenset[str] = frozenset()):
