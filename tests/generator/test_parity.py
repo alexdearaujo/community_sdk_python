@@ -281,11 +281,11 @@ def test_a_broken_local_schema_file_fails_validation(tmp_path: Path):
         validate_schema_files_or_raise([broken])
 
 
-def test_generate_modular_sdk_protoc_failure_handler_reraises():
+def test_the_protoc_failure_handler_reraises():
     source = (
         Path(__file__).resolve().parents[2] / "scripts" / "generate_sdk.py"
     ).read_text(encoding="utf-8")
-    func = _function_by_name(source, "generate_modular_sdk")
+    func = _function_by_name(source, "_compile_service_protos")
     assert func is not None
 
     handlers = [

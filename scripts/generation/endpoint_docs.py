@@ -785,106 +785,123 @@ def render_endpoint_docs(
     for stale in DOCS_SERVICES_DIR.glob("*.md"):
         stale.unlink()
 
-    index_entries: list[str] = []
-
+    services = [service_dir.name for service_dir in iter_service_dirs()]
     for service_dir in iter_service_dirs():
         service = service_dir.name
-        title = service.replace("_", " ").title()
-
-        services_folder = service_dir / "services"
-        if not services_folder.exists():
-            services_folder = service_dir / "service"
-        wrapper_file = (
-            services_folder / f"{service}.py" if services_folder.exists() else None
+        write_text_lf(
+            DOCS_SERVICES_DIR / f"{service}.md",
+            _service_page(
+                service_dir,
+                service_endpoint_docs.get(service, []),
+                service in rest_only,
+            ),
         )
-        wrapper_signatures = (
-            parse_wrapper_method_signatures(wrapper_file)
-            if wrapper_file and wrapper_file.exists()
-            else {}
+    write_text_lf(DOCS_SERVICES_DIR / "index.md", _services_index_page(services))
+    write_text_lf(
+        DOCS_SERVICES_DIR / "README.md",
+        _services_readme_page(services, service_endpoint_docs),
+    )
+
+
+def _group_by_tag(
+    endpoint_docs: list[EndpointDoc],
+) -> tuple[list[str], dict[str, list[EndpointDoc]]]:
+    """Tags in first-seen order, and the endpoints under each."""
+    grouped: dict[str, list[EndpointDoc]] = {}
+    for doc in endpoint_docs:
+        grouped.setdefault(doc.tag, []).append(doc)
+    return list(grouped), grouped
+
+
+def _service_page(
+    service_dir: Path, endpoint_docs: list[EndpointDoc], rest_only: bool
+) -> str:
+    service = service_dir.name
+    title = service.replace("_", " ").title()
+
+    services_folder = service_dir / "services"
+    if not services_folder.exists():
+        services_folder = service_dir / "service"
+    wrapper_file = (
+        services_folder / f"{service}.py" if services_folder.exists() else None
+    )
+    wrapper_signatures = (
+        parse_wrapper_method_signatures(wrapper_file)
+        if wrapper_file and wrapper_file.exists()
+        else {}
+    )
+
+    lines = [
+        _provenance(render_endpoint_docs),
+        f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
+        "",
+        f"# {title} Service",
+        "",
+    ]
+
+    group_order, grouped = _group_by_tag(endpoint_docs)
+    lines.extend(_render_service_overview(service, group_order, grouped))
+    lines.extend(["## Endpoints", ""])
+
+    if not endpoint_docs:
+        lines.extend(
+            [
+                "This service's schema defines shared types only. It has no REST endpoints.",
+                "",
+            ]
         )
+    else:
+        show_group_headers = len(group_order) > 1
+        endpoint_heading_level = 4 if show_group_headers else 3
+        for group_name in group_order:
+            if show_group_headers:
+                lines.extend([f"### {group_name}", ""])
+            # A thematic break between consecutive endpoints within a
+            # group makes long pages (e.g. alerting's 37 operations)
+            # scannable. Without it, sections with the same shape
+            # (heading, prose, two tables, a code block) visually
+            # bleed into each other. Not needed before the first
+            # endpoint in a group: the group/service heading above it
+            # is already a strong enough break.
+            for idx, doc in enumerate(grouped[group_name]):
+                if idx > 0:
+                    lines.extend(["---", ""])
+                lines.extend(
+                    _render_endpoint_section(
+                        service,
+                        doc,
+                        wrapper_signatures,
+                        endpoint_heading_level,
+                        rest_only,
+                    )
+                )
 
-        lines = [
-            _provenance(render_endpoint_docs),
-            f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
-            "",
-            f"# {title} Service",
-            "",
-        ]
-
-        endpoint_docs = service_endpoint_docs.get(service, [])
-        grouped: dict[str, list[EndpointDoc]] = {}
-        group_order: list[str] = []
-        for doc in endpoint_docs:
-            if doc.tag not in grouped:
-                grouped[doc.tag] = []
-                group_order.append(doc.tag)
-            grouped[doc.tag].append(doc)
-
-        lines.extend(_render_service_overview(service, group_order, grouped))
-        lines.extend(["## Endpoints", ""])
-
-        if not endpoint_docs:
+    lines.extend(["## Data Models", ""])
+    models_dir = service_dir / "models"
+    model_classes = sorted(discover_service_model_classes(service_dir))
+    if not model_classes:
+        lines.extend(["No data models for this service.", ""])
+    else:
+        lines.extend(
+            _render_model_relationship_diagram(endpoint_docs, models_dir, model_classes)
+        )
+        for class_name in model_classes:
+            directive = _autodoc_directive_for_model(models_dir, class_name)
             lines.extend(
                 [
-                    "This service's schema defines shared types only. It has no REST endpoints.",
+                    f"{MD_FENCE}{{eval-rst}}",
+                    f".. {directive}:: kentik_api.gen.{service}.models.{class_name}",
+                    *(["   :members:"] if directive == "autoclass" else []),
+                    f"{MD_FENCE}",
                     "",
                 ]
             )
-        else:
-            show_group_headers = len(group_order) > 1
-            endpoint_heading_level = 4 if show_group_headers else 3
-            for group_name in group_order:
-                if show_group_headers:
-                    lines.extend([f"### {group_name}", ""])
-                # A thematic break between consecutive endpoints within a
-                # group makes long pages (e.g. alerting's 37 operations)
-                # scannable. Without it, sections with the same shape
-                # (heading, prose, two tables, a code block) visually
-                # bleed into each other. Not needed before the first
-                # endpoint in a group: the group/service heading above it
-                # is already a strong enough break.
-                for idx, doc in enumerate(grouped[group_name]):
-                    if idx > 0:
-                        lines.extend(["---", ""])
-                    lines.extend(
-                        _render_endpoint_section(
-                            service,
-                            doc,
-                            wrapper_signatures,
-                            endpoint_heading_level,
-                            service in rest_only,
-                        )
-                    )
 
-        lines.extend(["## Data Models", ""])
-        models_dir = service_dir / "models"
-        model_classes = sorted(discover_service_model_classes(service_dir))
-        if not model_classes:
-            lines.extend(["No data models for this service.", ""])
-        else:
-            lines.extend(
-                _render_model_relationship_diagram(
-                    endpoint_docs, models_dir, model_classes
-                )
-            )
-            for class_name in model_classes:
-                directive = _autodoc_directive_for_model(models_dir, class_name)
-                lines.extend(
-                    [
-                        f"{MD_FENCE}{{eval-rst}}",
-                        f".. {directive}:: kentik_api.gen.{service}.models.{class_name}",
-                        *(["   :members:"] if directive == "autoclass" else []),
-                        f"{MD_FENCE}",
-                        "",
-                    ]
-                )
+    return "\n".join(lines)
 
-        stub_content = "\n".join(lines)
 
-        write_text_lf(DOCS_SERVICES_DIR / f"{service}.md", stub_content)
-        index_entries.append(service)
-
-    index_content = (
+def _services_index_page(services: list[str]) -> str:
+    return (
         _provenance(render_endpoint_docs) + "\n"
         f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->\n\n"
         "# API Services\n\n"
@@ -892,14 +909,18 @@ def render_endpoint_docs(
         "and generated services connect, see "
         "[SDK Runtime Architecture](../sdk_runtime_architecture.md).\n\n"
         f"{MD_FENCE}{{toctree}}\n:maxdepth: 1\n\n"
+        + "\n".join(sorted(services))
+        + "\n"
+        + f"{MD_FENCE}\n"
     )
-    index_content += "\n".join(sorted(index_entries)) + "\n"
-    index_content += f"{MD_FENCE}\n"
-    write_text_lf(DOCS_SERVICES_DIR / "index.md", index_content)
 
-    # Build the services/README.md table from the same data so it never goes stale.
+
+def _services_readme_page(
+    services: list[str], service_endpoint_docs: dict[str, list[EndpointDoc]]
+) -> str:
+    """services/README.md, built from the same data so it never goes stale."""
     readme_rows: list[str] = []
-    for service in sorted(index_entries):
+    for service in sorted(services):
         title = service.replace("_", " ").title()
         docs = service_endpoint_docs.get(service, [])
         # Use the first endpoint summary as a short service description.
@@ -909,7 +930,7 @@ def render_endpoint_docs(
         desc_cell = f" {blurb} " if blurb else " "
         readme_rows.append(f"| {title} | [{service}.md]({service}.md) |{desc_cell}|")
 
-    readme_content = "\n".join(
+    return "\n".join(
         [
             _provenance(render_endpoint_docs),
             f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
@@ -945,7 +966,6 @@ def render_endpoint_docs(
             "",
         ]
     )
-    write_text_lf(DOCS_SERVICES_DIR / "README.md", readme_content)
 
 
 class EndpointDocsCollector:
