@@ -25,3 +25,27 @@ class FakeRpcError(grpc.RpcError):
 @pytest.fixture
 def rpc_error() -> Callable[..., FakeRpcError]:
     return FakeRpcError
+
+
+class BatchClock:
+    def __init__(self) -> None:
+        self.now = 0.0
+        self.sleeps: list[float] = []
+
+    def monotonic(self) -> float:
+        return self.now
+
+    def sleep(self, seconds: float) -> None:
+        self.sleeps.append(seconds)
+        self.now += seconds
+
+
+@pytest.fixture
+def batch_clock(monkeypatch: pytest.MonkeyPatch) -> BatchClock:
+    from kentik_api import v5_tools
+    from kentik_api.core import api_config, rest_runtime
+
+    clock = BatchClock()
+    for module in (v5_tools, api_config, rest_runtime):
+        monkeypatch.setattr(module, "time", clock)
+    return clock

@@ -233,9 +233,11 @@ class DFCache:
         dedup_columns: list[str] | None = None,
         **kwargs: Any,
     ) -> pd.DataFrame | None:
-        """Fetches from the newest cached time to now, or the last day when empty."""
+        """Fetches new data, or returns None when the cache is already current."""
         now = datetime.now(UTC).replace(second=0, microsecond=0)
         start = self.newest or now - timedelta(hours=23, minutes=59)
+        if start >= now:
+            return None
         return self.fetch(
             query_fn,
             start=start,

@@ -137,7 +137,8 @@ def test_request_json_applies_the_configured_rest_timeout_per_request(
 
     # Per request rather than only at client creation, so a with_timeout() copy
     # sharing this client's connection still applies its own bounds.
-    assert captured["timeout"] is phases
+    assert captured["timeout"] == phases
+    assert captured["timeout"] is not phases
 
 
 def test_config_without_credentials_is_rejected_before_sending(
@@ -153,6 +154,39 @@ def test_config_without_credentials_is_rejected_before_sending(
             request_json(
                 "GET", "/v1/test", api_config_override=config, operation_name="Op"
             )
+
+
+@pytest.mark.parametrize("phase", ["connect", "read", "write", "pool"])
+@pytest.mark.parametrize("exposure", ["input", "getter"])
+@pytest.mark.parametrize("warm", [False, True])
+def test_timeout_mutation_never_reaches_a_request(monkeypatch, phase, exposure, warm):
+    captured = []
+
+    def capture(self, *args, timeout, extensions, **kwargs):
+        captured.append((timeout.as_dict(), extensions))
+        return httpx.Response(200, json={})
+
+    monkeypatch.setattr(httpx.Client, "request", capture)
+    supplied = httpx.Timeout(connect=2.0, read=3.0, write=5.0, pool=7.0)
+    config = _config(rest_timeout=supplied)
+    try:
+        if warm:
+            request_json("GET", "/fixture", api_config_override=config)
+        exposed = supplied if exposure == "input" else config.rest_timeout
+        setattr(exposed, phase, None)
+
+        request_json("GET", "/fixture", api_config_override=config)
+        request_json(
+            "GET", "/fixture", api_config_override=config.with_timeout(grpc_deadline=9)
+        )
+
+        assert all(
+            limits == {"connect": 2.0, "read": 3.0, "write": 5.0, "pool": 7.0}
+            for limits, _ in captured
+        )
+        assert all(extensions == {} for _, extensions in captured)
+    finally:
+        config.close()
 
 
 # Kentik slows responses by 1.5s past the per-minute soft limit rather than

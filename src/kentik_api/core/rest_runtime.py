@@ -248,18 +248,19 @@ def request_json(
         httpx.QueryParams(clean_query_params).multi_items(), quote_via=quote
     )
 
-    extensions = {}
-    if api_config.rest_deadline is not None:
-        extensions[DEADLINE_EXTENSION] = time.monotonic() + api_config.rest_deadline
-
+    started_at = time.monotonic()
     try:
-        response = api_config.client.request(
+        url = httpx.URL(path, query=query.encode()) if query else httpx.URL(path)
+        client = api_config.client
+        rest_timeout, deadline = api_config._rest_request_limits(started_at)
+        extensions = {} if deadline is None else {DEADLINE_EXTENSION: deadline}
+        response = client.request(
             method.lower(),
-            httpx.URL(path, query=query.encode()) if query else httpx.URL(path),
+            url,
             headers=headers,
             json=json_body,
             # Per request, so a with_timeout() copy sharing this client applies its own.
-            timeout=api_config.rest_timeout,
+            timeout=rest_timeout,
             extensions=extensions,
         )
     except httpx.RequestError as exc:

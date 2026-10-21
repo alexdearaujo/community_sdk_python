@@ -28,6 +28,22 @@ kentik-api 1.x completely. If you come from 1.x, read
 [Migrating from 1.x](docs/sphinx/guides/migrating-from-1x.md) instead of the
 tables below, which compare against earlier development builds of this SDK.
 
+### Runtime fixes
+
+- `APIConfig` owns its timeout values. Changing a supplied or returned
+  `httpx.Timeout` no longer changes active settings. The public type and
+  signatures stay unchanged. Use `with_timeout()` for timeout changes.
+- `wait_for_batch()` applies one cooperative deadline to status requests
+  and sleeps, preserves tighter client limits, and rejects late completion.
+  It raises `ValueError` for non-positive or non-finite timeout and interval
+  values. A request timeout observed at or after expiry becomes
+  `BatchWaitTimeout` with the original error cause. Earlier observed
+  timeouts and all non-timeout errors propagate unchanged. This is not a
+  hard wall-clock cancellation guarantee.
+- `DFCache.fetch_latest()` returns `None` without querying or changing
+  files when the newest cached time equals or exceeds the current minute.
+  Repeated same-minute refreshes no longer raise an invalid-range error.
+
 ### Breaking changes
 
 Each change below can stop an existing `except` clause or call from working.

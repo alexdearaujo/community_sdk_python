@@ -5,11 +5,13 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from types import SimpleNamespace
 
 import pandas as pd
 import pytest
 
 from kentik_api.analytics import DFCache, dedup_data_frame
+from kentik_api.analytics import cache as cache_module
 
 START = datetime(2025, 10, 16, tzinfo=UTC)
 
@@ -166,3 +168,108 @@ def test_a_step_that_is_not_positive_is_refused(tmp_path: Path, step):
 def test_dedup_needs_the_named_columns():
     with pytest.raises(ValueError, match="not in the DataFrame"):
         dedup_data_frame(_frame(START, START + timedelta(minutes=2)), ["nope"])
+
+
+@pytest.fixture
+def cache_clock(monkeypatch):
+    state = SimpleNamespace(now=START + timedelta(days=1, seconds=20))
+
+    class FrozenDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            assert tz is UTC
+            return state.now
+
+    monkeypatch.setattr(cache_module, "datetime", FrozenDateTime)
+    return state
+
+
+def test_fetch_latest_is_a_noop_until_the_next_minute(tmp_path, cache_clock):
+    cache = DFCache(tmp_path)
+    query = _Query()
+    cutoff = START + timedelta(days=1)
+    first = cache.fetch_latest(query)
+    assert first is not None
+    assert query.calls == [(START + timedelta(minutes=1), cutoff)]
+    files = {path.name: path.read_bytes() for path in cache.files}
+    cache_clock.now += timedelta(seconds=20)
+
+    assert cache.fetch_latest(query) is None
+    assert len(query.calls) == 1
+    assert {path.name: path.read_bytes() for path in cache.files} == files
+    pd.testing.assert_frame_equal(cache.get(), first)
+
+    cache_clock.now += timedelta(minutes=1)
+    latest = cache.fetch_latest(query)
+    assert latest is not None and len(latest) == 1
+    assert query.calls[-1] == (cutoff, cutoff + timedelta(minutes=1))
+    assert len(query.calls) == 2
+
+
+@pytest.mark.parametrize("ahead", [0, 1, 60])
+def test_fetch_latest_never_queries_a_current_or_future_range(
+    tmp_path, cache_clock, ahead
+):
+    cache = DFCache(tmp_path)
+    end = START + timedelta(days=1, minutes=ahead)
+    frame = _frame(START, START + timedelta(minutes=2))
+    cache.store(frame, START, end)
+    files = {path.name: path.read_bytes() for path in cache.files}
+    query = _Query()
+
+    assert cache.fetch_latest(query) is None
+
+    assert query.calls == []
+    assert {path.name: path.read_bytes() for path in cache.files} == files
+    assert cache.get() is not None
+
+
+def test_latest_refresh_does_not_relax_explicit_range_validation(tmp_path, cache_clock):
+    cache = DFCache(tmp_path)
+    end = START + timedelta(days=1)
+    cache.store(_frame(START, START + timedelta(minutes=2)), START, end)
+    for start, stop in ((end, end), (end, START)):
+        with pytest.raises(ValueError, match="Invalid arguments"):
+            cache.fetch(_Query(), start, stop)
+        with pytest.raises(ValueError, match="Invalid arguments"):
+            cache.get(start, stop)
+
+
+def test_fetch_latest_keeps_stepping_deduplication_and_query_keywords(
+    tmp_path, cache_clock
+):
+    cache = DFCache(tmp_path)
+    cutoff = START + timedelta(days=1)
+    cache.store(
+        _frame(cutoff - timedelta(minutes=2), cutoff - timedelta(minutes=1)),
+        cutoff - timedelta(minutes=2),
+        cutoff - timedelta(minutes=1),
+    )
+    calls = []
+
+    def query(*, start, end, threshold):
+        calls.append((start, end, threshold))
+        frame = _frame(start, end)
+        return pd.concat([frame, frame])
+
+    result = cache.fetch_latest(
+        query, step=timedelta(seconds=30), dedup_columns=["ts", "link"], threshold=7
+    )
+
+    assert result is not None and result.index.is_unique and len(result) == 2
+    assert calls == [
+        (cutoff - timedelta(minutes=1), cutoff - timedelta(seconds=30), 7),
+        (cutoff - timedelta(seconds=30), cutoff, 7),
+    ]
+
+
+def test_fetch_latest_keeps_empty_query_handling(tmp_path, cache_clock):
+    cache = DFCache(tmp_path)
+    calls = []
+
+    def query(**kwargs):
+        calls.append(kwargs)
+
+    assert cache.fetch_latest(query) is None
+    assert len(calls) == 1
+    assert cache.is_empty

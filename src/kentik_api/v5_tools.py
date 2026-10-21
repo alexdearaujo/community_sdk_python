@@ -10,13 +10,15 @@ from __future__ import annotations
 import base64
 import binascii
 import json
+import math
 import re
 import time
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from kentik_api.errors import HTTPException, KentikError
+from kentik_api.core.api_config import _is_timeout_failure
+from kentik_api.errors import HTTPException, KentikError, TransportError
 from kentik_api.gen.v5.models import (
     BatchDelete,
     BatchPart,
@@ -176,12 +178,27 @@ def wait_for_batch(
 ) -> BatchStatus:
     """Polls `client.v5.batch_status` until the batch is complete.
 
-    Raises `BatchWaitTimeout` with the last status when `timeout` expires, and
-    any error of a status call at once. It never resends the batch.
+    Deadlines are cooperative. A request timeout observed at or after expiry
+    raises `BatchWaitTimeout` with its original cause and latest status.
+    Other errors propagate unchanged. The batch is never resent.
     """
+    for field, value in (("timeout", timeout), ("interval", interval)):
+        if not math.isfinite(value) or value <= 0:
+            raise ValueError(f"{field} must be finite and positive, got {value!r}")
     deadline = time.monotonic() + timeout
+    api_config = client.v5_api_config._with_rest_deadline(deadline)
+    status: BatchStatus | None = None
     while True:
-        status = client.v5.batch_status(guid=guid)
+        if time.monotonic() >= deadline:
+            raise BatchWaitTimeout(guid, status)
+        try:
+            status = client.v5.batch_status(guid=guid, api_config_override=api_config)
+        except TransportError as exc:
+            if _is_timeout_failure(exc) and time.monotonic() >= deadline:
+                raise BatchWaitTimeout(guid, status) from exc
+            raise
+        if time.monotonic() >= deadline:
+            raise BatchWaitTimeout(guid, status)
         if status.is_complete:
             return status
         remaining = deadline - time.monotonic()
