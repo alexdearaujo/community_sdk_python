@@ -15,7 +15,11 @@ import pytest
 from kentik_api.client import KentikAPI
 from kentik_api.core.api_config import APIConfig
 from kentik_api.core.rest_runtime import request_json
-from kentik_api.errors import TransportError
+from kentik_api.errors import AuthenticationError, HTTPException, TransportError
+from kentik_api.gen.v5.error import (
+    BatchStatusInternalServerErrorError,
+    BatchStatusNotFoundError,
+)
 from kentik_api.v5_tools import BatchWaitTimeout, wait_for_batch
 
 _DRIP_SECONDS = 0.2
@@ -175,6 +179,102 @@ def test_lazy_client_setup_does_not_restart_the_batch_budget(
             assert exc.value.last_status is None
             assert isinstance(exc.value.__cause__, TransportError)
             assert isinstance(exc.value.__cause__.__cause__, httpx.TimeoutException)
+
+
+@pytest.mark.parametrize("duration", [0.5, 1.0, 1.2])
+@pytest.mark.parametrize(
+    ("status_code", "content", "error_type"),
+    [
+        (401, b'{"error":"fixture"}', AuthenticationError),
+        (404, b'{"error":"fixture"}', BatchStatusNotFoundError),
+        (500, b'{"error":"fixture"}', BatchStatusInternalServerErrorError),
+        (200, b"not-json", HTTPException),
+    ],
+)
+def test_received_batch_errors_keep_their_type_after_the_deadline(
+    monkeypatch, batch_clock, duration, status_code, content, error_type
+):
+    calls = []
+
+    def respond(self, request):
+        calls.append(request)
+        batch_clock.now += duration
+        return httpx.Response(status_code, content=content)
+
+    monkeypatch.setattr(httpx.HTTPTransport, "handle_request", respond)
+    monkeypatch.setattr(APIConfig, "_proxy_mounts", lambda self: {})
+    with KentikAPI(email="dev@example.com", api_token="t", env_file=None) as client:
+        with pytest.raises(error_type) as exc:
+            wait_for_batch(client, "g", timeout=1.0)
+        assert type(exc.value) is error_type
+    assert len(calls) == 1
+    assert batch_clock.sleeps == []
+
+
+@pytest.mark.parametrize("duration", [0.5, 1.0, 1.2])
+def test_received_batch_success_still_respects_the_deadline(
+    monkeypatch, batch_clock, duration
+):
+    def respond(self, request):
+        batch_clock.now += duration
+        return httpx.Response(200, json={"guid": "g", "is_complete": True})
+
+    monkeypatch.setattr(httpx.HTTPTransport, "handle_request", respond)
+    monkeypatch.setattr(APIConfig, "_proxy_mounts", lambda self: {})
+    with KentikAPI(email="dev@example.com", api_token="t", env_file=None) as client:
+        if duration < 1.0:
+            assert wait_for_batch(client, "g", timeout=1.0).is_complete
+        else:
+            with pytest.raises(BatchWaitTimeout):
+                wait_for_batch(client, "g", timeout=1.0)
+    assert batch_clock.sleeps == []
+
+
+@pytest.mark.parametrize("rest_timeout", [1.0, httpx.Timeout(1.0)])
+def test_buffered_success_preserves_scalar_and_per_phase_timeout_meanings(
+    monkeypatch, batch_clock, rest_timeout
+):
+    def respond(self, request):
+        batch_clock.now += 1.2
+        return httpx.Response(200, json={"guid": "g", "is_complete": True})
+
+    monkeypatch.setattr(httpx.HTTPTransport, "handle_request", respond)
+    monkeypatch.setattr(APIConfig, "_proxy_mounts", lambda self: {})
+    with KentikAPI(
+        email="dev@example.com", api_token="t", rest_timeout=rest_timeout, env_file=None
+    ) as client:
+        if isinstance(rest_timeout, httpx.Timeout):
+            assert client.v5.batch_status(guid="g").is_complete
+        else:
+            with pytest.raises(TransportError) as exc:
+                client.v5.batch_status(guid="g")
+            assert isinstance(exc.value.__cause__, httpx.ReadTimeout)
+
+
+@pytest.mark.parametrize("duration", [0.5, 1.0, 1.2])
+def test_native_batch_timeouts_keep_their_cause_through_the_runtime(
+    monkeypatch, batch_clock, duration
+):
+    original = httpx.ReadTimeout("fixture timeout")
+
+    def respond(self, request):
+        batch_clock.now += duration
+        raise original
+
+    monkeypatch.setattr(httpx.HTTPTransport, "handle_request", respond)
+    monkeypatch.setattr(APIConfig, "_proxy_mounts", lambda self: {})
+    expected = TransportError if duration < 1.0 else BatchWaitTimeout
+    with (
+        KentikAPI(email="dev@example.com", api_token="t", env_file=None) as client,
+        pytest.raises(expected) as exc,
+    ):
+        wait_for_batch(client, "g", timeout=1.0)
+    cause = exc.value.__cause__
+    if isinstance(exc.value, BatchWaitTimeout):
+        assert isinstance(cause, TransportError)
+        cause = cause.__cause__
+    assert cause is original
+    assert batch_clock.sleeps == []
 
 
 def test_batch_deadline_stops_a_controlled_response_stream(monkeypatch, batch_clock):

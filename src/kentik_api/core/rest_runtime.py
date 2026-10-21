@@ -11,7 +11,7 @@ import httpx
 from pydantic import BaseModel, ValidationError
 
 from kentik_api.auth.credentials import auth_headers
-from kentik_api.core.api_config import DEADLINE_EXTENSION, APIConfig
+from kentik_api.core.api_config import DEADLINE_EXTENSION, APIConfig, _check_deadline
 from kentik_api.core.rate_limit import RateLimit, attach_rate_limit, rate_limit_of
 from kentik_api.errors import (
     AuthenticationError,
@@ -284,6 +284,13 @@ def request_json(
     except KentikError as exc:
         exc.rate_limit = rate_limit
         raise
+    if deadline is not None:
+        try:
+            _check_deadline(deadline)
+        except httpx.ReadTimeout as exc:
+            raise TransportError(
+                f"{operation_name} transport failed ({type(exc).__name__}).",
+            ) from exc
     # A plain dict cannot hold an attribute; a subclass can, and the generated
     # function hands the quota on to the model it builds from this body.
     if isinstance(body, dict):

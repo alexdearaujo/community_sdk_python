@@ -356,3 +356,24 @@ markers remain unchanged. Only the documentation work below remains.
   captured output or a clearly labeled isolated reproduction, not invented
   historical results. Preserve the implementation and existing evidence.
   Run `uv run poe lint-check` and `uv run poe check-specs` afterward.
+
+## Phase 8: Review Remediation
+
+The 2026-10-21 review found that transport deadline checks hid complete
+late error responses before the shared runtime classified them.
+Local commit `c8408075` preserves the reviewed implementation before this fix.
+
+- [X] T030 Add generated-path regressions in
+  [tests/runtime/test_rest_deadline.py](../../tests/runtime/test_rest_deadline.py).
+  Record failing late HTTP and JSON errors before fixing the transport.
+  Update [api_config.py](../../src/kentik_api/core/api_config.py) and
+  [rest_runtime.py](../../src/kentik_api/core/rest_runtime.py) to classify
+  fully buffered errors before deadline checks. Preserve late-success
+  rejection, scalar and per-phase meanings, bounded unfinished streams,
+  and native timeout causes (FR-004, FR-010, FR-016, FR-017, SC-002, SC-004).
+- [X] T031 Document the completed-response boundary in
+  [docs/sphinx/guides/v5.md](../../docs/sphinx/guides/v5.md) and
+  [CHANGELOG.md](../../CHANGELOG.md). Record regression evidence and final
+  mocked-suite, type, lint, spec-reference, and docs-build results in
+  [specs/008-runtime-boundaries/quickstart.md](quickstart.md). Keep generated
+  output, dependencies, and public signatures unchanged (FR-018, SC-005).

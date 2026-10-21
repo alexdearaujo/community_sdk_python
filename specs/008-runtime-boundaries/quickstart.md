@@ -398,3 +398,67 @@ PASSED tests/analytics/test_cache.py::test_fetch_latest_never_queries_a_current_
 
 The selected runs passed 15 cases in total. These are focused evidence
 runs, not a replacement for the full-suite results already recorded.
+
+### Review Remediation: Complete Late Error Responses
+
+Recorded on 2026-10-21. Local commit `c8408075` preserves the reviewed
+implementation. The review reproduced complete late responses becoming
+`BatchWaitTimeout` before HTTP or JSON error classification.
+The new regression calls `wait_for_batch()` through the generated operation
+and the real REST runtime. Only the base transport and clock are controlled.
+It uses dummy credentials, no network, and no real sleeps.
+
+Before the fix, run:
+
+```console
+uv run poe test-runtime -qqq -r f --tb=short --capture=fd -k received_batch_errors_keep_their_type_after_the_deadline
+```
+
+Observed result: four failed and eight passed. Each response received at
+1.2 seconds against a one-second budget raised this cause chain:
+
+```text
+BatchWaitTimeout -> TransportError -> ReadTimeout
+```
+
+Exact failed nodes from the captured pytest summary, with terminal wrapping
+normalized:
+
+```text
+tests/runtime/test_rest_deadline.py::test_received_batch_errors_keep_their_type_after_the_deadline[401-{"error":"fixture"}-AuthenticationError-1.2]
+tests/runtime/test_rest_deadline.py::test_received_batch_errors_keep_their_type_after_the_deadline[404-{"error":"fixture"}-BatchStatusNotFoundError-1.2]
+tests/runtime/test_rest_deadline.py::test_received_batch_errors_keep_their_type_after_the_deadline[500-{"error":"fixture"}-BatchStatusInternalServerErrorError-1.2]
+tests/runtime/test_rest_deadline.py::test_received_batch_errors_keep_their_type_after_the_deadline[200-not-json-HTTPException-1.2]
+```
+
+The eight responses delivered at 0.5 or 1.0 seconds retained their expected
+error types. After the fix, all twelve cases pass. Fully buffered responses
+reach normal error classification first. Successful responses still face a
+deadline check, and unfinished streams retain transport deadline checks.
+
+The focused guard command is:
+
+```console
+uv run poe test-runtime -qqq -r f --tb=short --capture=fd -k 'received_batch or buffered_success or native_batch_timeouts or batch_deadline_stops_a_controlled_response_stream'
+```
+
+Observed result: `21 passed, 467 deselected`. These cases cover error types,
+late-success rejection, scalar versus per-phase meaning, native timeout
+cause chains, and interruption of an unfinished response stream.
+
+Final checks for this remediation:
+
+| Command | Observed Result |
+| --- | --- |
+| `uv run poe test -qqq -r f --tb=short --capture=fd` | 3,826 passed, 149 skipped, 487 deselected |
+| `uv run poe typecheck` | Passed |
+| `uv run poe lint-check` | Passed |
+| `uv run poe check-specs` | Passed, existing warnings in specs 001 and 002 only |
+| `uv run poe docs-build` | Passed with warnings treated as errors |
+| `git diff --check` | Passed |
+
+The fix adds 20 passing regression cases without changing skip or
+deselection counts. Public signatures, generated output, dependencies,
+credential handling, and request routing remain unchanged. No additional
+platform or live API coverage was run. The earlier platform limits still
+apply. The checkpoint commit is local, and the remediation is uncommitted.

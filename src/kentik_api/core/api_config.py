@@ -39,7 +39,7 @@ class _DeadlineStream(httpx.SyncByteStream):
         self._stream.close()
 
 
-def _check_deadline(deadline: float, request: httpx.Request) -> None:
+def _check_deadline(deadline: float, request: httpx.Request | None = None) -> None:
     if time.monotonic() > deadline:
         raise httpx.ReadTimeout("the call's total deadline passed", request=request)
 
@@ -54,7 +54,7 @@ class _DeadlineTransport(httpx.HTTPTransport):
     def handle_request(self, request: httpx.Request) -> httpx.Response:
         response = super().handle_request(request)
         deadline = request.extensions.get(DEADLINE_EXTENSION)
-        if deadline is None:
+        if deadline is None or response.is_stream_consumed:
             return response
         try:
             _check_deadline(deadline, request)

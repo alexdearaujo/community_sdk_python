@@ -40,6 +40,9 @@ tables below, which compare against earlier development builds of this SDK.
   `BatchWaitTimeout` with the original error cause. Earlier observed
   timeouts and all non-timeout errors propagate unchanged. This is not a
   hard wall-clock cancellation guarantee.
+- Fully buffered REST error responses retain their normal HTTP or JSON
+  error instead of becoming deadline timeouts. Successful responses still
+  respect the deadline, and unfinished response streams remain bounded.
 - `DFCache.fetch_latest()` returns `None` without querying or changing
   files when the newest cached time equals or exceeds the current minute.
   Repeated same-minute refreshes no longer raise an invalid-range error.
