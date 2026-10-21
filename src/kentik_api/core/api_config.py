@@ -10,7 +10,7 @@ from typing import cast
 import httpx
 
 from kentik_api.core.rate_limit import RateLimit
-from kentik_api.errors import ConfigurationError, HTTPException
+from kentik_api.errors import ConfigurationError, HTTPException, TransportError
 
 __all__ = ["APIConfig", "HTTPException"]
 
@@ -39,7 +39,7 @@ class _DeadlineStream(httpx.SyncByteStream):
         self._stream.close()
 
 
-def _check_deadline(deadline: float, request: httpx.Request) -> None:
+def _check_deadline(deadline: float, request: httpx.Request | None = None) -> None:
     if time.monotonic() > deadline:
         raise httpx.ReadTimeout("the call's total deadline passed", request=request)
 
@@ -54,7 +54,7 @@ class _DeadlineTransport(httpx.HTTPTransport):
     def handle_request(self, request: httpx.Request) -> httpx.Response:
         response = super().handle_request(request)
         deadline = request.extensions.get(DEADLINE_EXTENSION)
-        if deadline is None:
+        if deadline is None or response.is_stream_consumed:
             return response
         try:
             _check_deadline(deadline, request)
@@ -100,6 +100,10 @@ def _require_positive(field: str, value: float) -> None:
         )
 
 
+def _is_timeout_failure(error: TransportError) -> bool:
+    return isinstance(error.__cause__, httpx.TimeoutException)
+
+
 # Read at different times (client creation, each call, gRPC channel setup), so a
 # later change would apply to some calls and not others.
 _READ_ONLY = frozenset(
@@ -130,7 +134,8 @@ class APIConfig:
     """
 
     def __setattr__(self, name: str, value: object) -> None:
-        if name in _READ_ONLY and name in self.__dict__:
+        stored_name = "_rest_timeout" if name == "rest_timeout" else name
+        if name in _READ_ONLY and stored_name in self.__dict__:
             raise AttributeError(
                 f"APIConfig.{name} is read-only. Use with_timeout(), or build "
                 "a new APIConfig or KentikAPI."
@@ -160,8 +165,7 @@ class APIConfig:
         self.rest_deadline: float | None = (
             None if isinstance(rest_timeout, httpx.Timeout) else rest_timeout
         )
-        if not isinstance(rest_timeout, httpx.Timeout):
-            rest_timeout = httpx.Timeout(rest_timeout)
+        rest_timeout = httpx.Timeout(rest_timeout)
         for phase in ("connect", "read", "write", "pool"):
             bound = getattr(rest_timeout, phase)
             # httpx reads None as "wait forever", which is the hang this bound exists to prevent.
@@ -170,7 +174,7 @@ class APIConfig:
                     f"rest_timeout.{phase} must be set; None would wait forever"
                 )
             _require_positive(f"rest_timeout.{phase}", bound)
-        self.rest_timeout: httpx.Timeout = rest_timeout
+        self._rest_timeout: httpx.Timeout = rest_timeout
 
         if grpc_deadline is None:
             grpc_deadline = timeout
@@ -188,6 +192,12 @@ class APIConfig:
         self._pid = os.getpid()
         # Set on a with_timeout() copy, which borrows its origin's connection.
         self._shares_client_of: APIConfig | None = None
+        self._rest_wait_deadline: float | None = None
+
+    @property
+    def rest_timeout(self) -> httpx.Timeout:
+        """A detached snapshot, so external mutation cannot change accepted limits."""
+        return httpx.Timeout(self._rest_timeout)
 
     def with_timeout(
         self,
@@ -228,7 +238,43 @@ class APIConfig:
         )
         copy.rate_limits = self.rate_limits
         copy._shares_client_of = self._shares_client_of or self
+        copy._rest_wait_deadline = self._rest_wait_deadline
         return copy
+
+    def _with_rest_deadline(self, deadline: float) -> "APIConfig":
+        if not math.isfinite(deadline):
+            raise ConfigurationError("The REST wait deadline must be finite")
+        copy = self.with_timeout(grpc_deadline=self.grpc_deadline)
+        copy._rest_wait_deadline = (
+            deadline
+            if self._rest_wait_deadline is None
+            else min(deadline, self._rest_wait_deadline)
+        )
+        return copy
+
+    def _rest_request_limits(
+        self, started_at: float
+    ) -> tuple[httpx.Timeout, float | None]:
+        deadline = (
+            None if self.rest_deadline is None else started_at + self.rest_deadline
+        )
+        phases = self.rest_timeout
+        if self._rest_wait_deadline is None:
+            return phases, deadline
+        deadline = (
+            self._rest_wait_deadline
+            if deadline is None
+            else min(deadline, self._rest_wait_deadline)
+        )
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise httpx.ReadTimeout("the call's total deadline passed")
+        return httpx.Timeout(
+            **{
+                phase: min(getattr(phases, phase), remaining)
+                for phase in ("connect", "read", "write", "pool")
+            }
+        ), deadline
 
     @property
     def is_timeout_copy(self) -> bool:

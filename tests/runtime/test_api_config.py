@@ -37,7 +37,8 @@ def test_phase_bounds_are_honoured_independently():
 
     config = APIConfig(rest_timeout=phases)
 
-    assert config.rest_timeout is phases
+    assert config.rest_timeout == phases
+    assert config.rest_timeout is not phases
     # A long read tolerance must not stretch the gRPC deadline or the shared default.
     assert config.grpc_deadline == 60.0
 
@@ -47,6 +48,39 @@ def test_grpc_deadline_is_independent_of_rest_timeout():
 
     assert config.rest_timeout == httpx.Timeout(2.0)
     assert config.grpc_deadline == 120.0
+
+
+@pytest.mark.parametrize("phase", ["connect", "read", "write", "pool"])
+@pytest.mark.parametrize(
+    "value", [11.0, None, 0.0, -1.0, math.nan, math.inf, -math.inf]
+)
+@pytest.mark.parametrize(
+    "target", ["input", "base", "sibling", "child", "grandchild", "refined"]
+)
+def test_external_timeout_mutation_cannot_change_accepted_settings(
+    phase, value, target
+):
+    supplied = httpx.Timeout(connect=2.0, read=3.0, write=5.0, pool=7.0)
+    base = APIConfig(rest_timeout=supplied)
+    child = base.with_timeout(grpc_deadline=8.0)
+    configs = {
+        "base": base,
+        "sibling": APIConfig(rest_timeout=supplied),
+        "child": child,
+        "grandchild": child.with_timeout(grpc_deadline=9.0),
+        "refined": base.with_timeout(rest_timeout=supplied),
+    }
+    exposed = supplied if target == "input" else configs[target].rest_timeout
+
+    setattr(exposed, phase, value)
+
+    for config in configs.values():
+        assert config.rest_timeout == httpx.Timeout(
+            connect=2.0, read=3.0, write=5.0, pool=7.0
+        )
+        assert config.rest_deadline is None
+    assert base.grpc_deadline == 60.0
+    assert child.grpc_deadline == 8.0
 
 
 @pytest.mark.parametrize("bad", [0, -1.0, math.nan])
@@ -128,7 +162,8 @@ def test_with_timeout_refines_one_transport_and_keeps_the_rest():
 
     slow = base.with_timeout(rest_timeout=phases)
 
-    assert slow.rest_timeout is phases
+    assert slow.rest_timeout == phases
+    assert slow.rest_timeout is not phases
     assert slow.grpc_deadline == 90.0
     assert base.with_timeout(grpc_deadline=5).rest_timeout == base.rest_timeout
 

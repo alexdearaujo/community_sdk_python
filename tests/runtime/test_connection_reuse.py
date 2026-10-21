@@ -149,6 +149,44 @@ def test_shared_client_retries_failed_connection_attempts_only():
         config.close()
 
 
+def test_isolated_timeout_values_preserve_pool_and_security_ownership(client_count):
+    supplied = httpx.Timeout(connect=2.0, read=3.0, write=5.0, pool=7.0)
+    base = APIConfig(
+        base_path="https://api.example.com",
+        auth_email="dev@example.com",
+        auth_token="t",
+        rest_timeout=supplied,
+    )
+    child = base.with_timeout(grpc_deadline=9)
+    grandchild = child.with_timeout(rest_timeout=11)
+    try:
+        supplied.read = None
+        child.rest_timeout.connect = None
+        for config in (base, child, grandchild):
+            _call(config)
+            assert config.client is base.client
+            assert config.rate_limits is base.rate_limits
+            assert (
+                config.base_path,
+                config.auth_email,
+                config.auth_token,
+                config.verify,
+            ) == ("https://api.example.com", "dev@example.com", "t", True)
+        assert len(client_count) == 1
+        assert base.rest_timeout == httpx.Timeout(
+            connect=2.0, read=3.0, write=5.0, pool=7.0
+        )
+        assert child.grpc_deadline == grandchild.grpc_deadline == 9
+        assert grandchild.rest_deadline == 11
+        child.close()
+        grandchild.close()
+        assert not base.client.is_closed
+    finally:
+        base.close()
+    with pytest.raises(ConfigurationError, match="close"):
+        _call(child)
+
+
 def test_transports_expose_quota_per_endpoint_from_their_config():
     from kentik_api.transports.grpc_client import GrpcTransport
 
@@ -162,6 +200,66 @@ def test_transports_expose_quota_per_endpoint_from_their_config():
     finally:
         rest.close()
         grpc_transport.close()
+
+
+def test_batch_deadline_copies_keep_the_v5_pool_and_absolute_bound(
+    monkeypatch, client_count, batch_clock
+):
+    from kentik_api.client import KentikAPI
+    from kentik_api.v5_tools import wait_for_batch
+
+    captured = []
+    overrides = []
+
+    def request(self, method, url, *, timeout, extensions, **kwargs):
+        captured.append(
+            (self, tuple(timeout.as_dict().values()), extensions["kentik_deadline"])
+        )
+        return httpx.Response(
+            200,
+            json={"guid": "g", "is_complete": len(captured) == 2},
+            headers={"x-ratelimit-limit": "60", "x-ratelimit-remaining": "17"},
+        )
+
+    monkeypatch.setattr(httpx.Client, "request", request)
+    phases = httpx.Timeout(connect=0.25, read=0.5, write=0.75, pool=2.0)
+    with KentikAPI(
+        email="dev@example.com", api_token="t", rest_timeout=phases, env_file=None
+    ) as client:
+        original = client.v5.batch_status
+
+        def status(*, guid, api_config_override=None):
+            assert api_config_override is not None
+            overrides.append(api_config_override)
+            derived = (
+                api_config_override.with_timeout(grpc_deadline=11)
+                if len(overrides) == 1
+                else api_config_override.with_timeout(60)
+            )
+            assert derived.rate_limits is client.v5_api_config.rate_limits
+            assert (
+                derived.base_path,
+                derived.auth_email,
+                derived.auth_token,
+                derived.verify,
+            ) == (client.v5_api_config.base_path, "dev@example.com", "t", True)
+            return original(guid=guid, api_config_override=derived)
+
+        monkeypatch.setattr(client.v5, "batch_status", status)
+        assert wait_for_batch(client, "g", timeout=1.0, interval=0.4).is_complete
+        assert len(client_count) == 1
+        assert all(
+            connection is client.v5_api_config.client for connection, _, _ in captured
+        )
+        assert captured[0][1] == pytest.approx((0.25, 0.5, 0.75, 1.0))
+        assert captured[1][1] == pytest.approx((0.6, 0.6, 0.6, 0.6))
+        assert [deadline for _, _, deadline in captured] == [1.0, 1.0]
+        assert client.v5_api_config.rest_timeout == phases
+        assert client.api_config.rest_timeout == phases
+        assert client.v5_api_config.rate_limits
+        for override in overrides:
+            override.close()
+        assert not client.v5_api_config.client.is_closed
 
 
 @pytest.fixture

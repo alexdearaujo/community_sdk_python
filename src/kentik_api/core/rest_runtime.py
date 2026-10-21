@@ -11,7 +11,7 @@ import httpx
 from pydantic import BaseModel, ValidationError
 
 from kentik_api.auth.credentials import auth_headers
-from kentik_api.core.api_config import DEADLINE_EXTENSION, APIConfig
+from kentik_api.core.api_config import DEADLINE_EXTENSION, APIConfig, _check_deadline
 from kentik_api.core.rate_limit import RateLimit, attach_rate_limit, rate_limit_of
 from kentik_api.errors import (
     AuthenticationError,
@@ -248,18 +248,19 @@ def request_json(
         httpx.QueryParams(clean_query_params).multi_items(), quote_via=quote
     )
 
-    extensions = {}
-    if api_config.rest_deadline is not None:
-        extensions[DEADLINE_EXTENSION] = time.monotonic() + api_config.rest_deadline
-
+    started_at = time.monotonic()
     try:
-        response = api_config.client.request(
+        url = httpx.URL(path, query=query.encode()) if query else httpx.URL(path)
+        client = api_config.client
+        rest_timeout, deadline = api_config._rest_request_limits(started_at)
+        extensions = {} if deadline is None else {DEADLINE_EXTENSION: deadline}
+        response = client.request(
             method.lower(),
-            httpx.URL(path, query=query.encode()) if query else httpx.URL(path),
+            url,
             headers=headers,
             json=json_body,
             # Per request, so a with_timeout() copy sharing this client applies its own.
-            timeout=api_config.rest_timeout,
+            timeout=rest_timeout,
             extensions=extensions,
         )
     except httpx.RequestError as exc:
@@ -283,6 +284,13 @@ def request_json(
     except KentikError as exc:
         exc.rate_limit = rate_limit
         raise
+    if deadline is not None:
+        try:
+            _check_deadline(deadline)
+        except httpx.ReadTimeout as exc:
+            raise TransportError(
+                f"{operation_name} transport failed ({type(exc).__name__}).",
+            ) from exc
     # A plain dict cannot hold an attribute; a subclass can, and the generated
     # function hands the quota on to the model it builds from this body.
     if isinstance(body, dict):

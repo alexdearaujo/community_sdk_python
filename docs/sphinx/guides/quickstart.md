@@ -72,8 +72,8 @@ See [grpc.md](grpc.md) for the full gRPC guide.
 
 ## Set a timeout
 
-Every call is bounded: 60 seconds by default, on both transports. Set it for the
-whole client:
+Every call uses a timeout: 60 seconds by default, on both transports.
+Set it for the whole client:
 
 ```python
 client = KentikAPI(timeout=10)
@@ -91,9 +91,16 @@ timeouts. It shares the client's connection and credentials. A config passed as
 `api_config_override` replaces the client's for that one call, so an override
 built any other way must carry its own credentials.
 
+Timeout settings are read-only. The SDK copies any supplied
+`httpx.Timeout`, and `client.api_config.rest_timeout` returns a detached
+snapshot. Changing either object does not change active settings.
+Use `with_timeout()` rather than changing the returned timeout object.
+
 A number is a total deadline for the call. To bound each REST phase separately
 instead, as httpx does, pass `rest_timeout=httpx.Timeout(...)`: a slow body then
 keeps the call open for as long as each read arrives in time.
+REST total deadlines are cooperative. A blocking operation can finish
+after the deadline rather than stopping at an exact wall-clock instant.
 
 ## Next steps
 

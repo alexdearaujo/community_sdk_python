@@ -234,13 +234,37 @@ def test_client_accepts_per_transport_refinements():
     with KentikAPI(
         email="a@b.com", api_token="t", rest_timeout=phases, grpc_deadline=120.0
     ) as client:
-        assert client._transport.api_config.rest_timeout is phases
+        assert client._transport.api_config.rest_timeout == phases
+        assert client._transport.api_config.rest_timeout is not phases
         assert client._transport.api_config.grpc_deadline == 120.0
 
 
 def test_client_rejects_a_non_positive_timeout():
     with pytest.raises(ConfigurationError, match="timeout"):
         KentikAPI(email="a@b.com", api_token="t", timeout=0)
+
+
+@pytest.mark.parametrize("phase", ["connect", "read", "write", "pool"])
+@pytest.mark.parametrize("protocol", ["rest", "grpc"])
+def test_client_timeout_values_are_isolated_between_v5_and_v6(phase, protocol):
+    supplied = httpx.Timeout(connect=2.0, read=3.0, write=5.0, pool=7.0)
+    with KentikAPI(
+        email="a@b.com",
+        api_token="t",
+        protocol=protocol,
+        rest_timeout=supplied,
+        env_file=None,
+    ) as client:
+        setattr(supplied, phase, None)
+        setattr(client.api_config.rest_timeout, phase, 11.0)
+        setattr(client.v5_api_config.rest_timeout, phase, 13.0)
+
+        for config in (client.api_config, client.v5_api_config):
+            assert config.rest_timeout == httpx.Timeout(
+                connect=2.0, read=3.0, write=5.0, pool=7.0
+            )
+            assert config.rest_deadline is None
+            assert config.grpc_deadline == 60.0
 
 
 # --- per-call override and quota, through the real client (US10, US8) ---------

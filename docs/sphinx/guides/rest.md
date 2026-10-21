@@ -57,8 +57,19 @@ client = KentikAPI(protocol="rest", region="eu")
 ## Timeouts and proxies
 
 A numeric `timeout` or `rest_timeout` is a total deadline for the whole call.
-An `httpx.Timeout` bounds each phase and each read separately. The REST
-transport honors `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and `NO_PROXY`.
+An `httpx.Timeout` bounds each phase and each read separately.
+Total deadlines are cooperative: the SDK checks them after response
+headers and chunks arrive. A blocking operation can finish after the
+deadline. The SDK does not force interruption at an exact instant.
+
+Timeout settings are read-only. The SDK copies a supplied `httpx.Timeout`
+and returns a detached copy from `client.api_config.rest_timeout`.
+Changing either object does not change active settings.
+Use `client.api_config.with_timeout(...)` for a per-call change.
+The copy shares the original connection, credentials, and quota tracking.
+
+The REST transport honors `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and
+`NO_PROXY`.
 
 A success status with a body that is not JSON, or that does not match the
 model, raises `HTTPException` with status 502.
