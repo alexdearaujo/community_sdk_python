@@ -12,7 +12,8 @@ transport is fully implemented" section): a wrapper method raises
 NotImplementedError when the service's proto companions failed to import,
 or when no RPC shares that REST operation's HTTP rule. Neither case is a
 bug. Both count as a passing outcome here, same as a correctly-typed
-response or a generated KentikError subclass.
+response or a 4xx HTTPException. A 5xx or any other exception fails, as in
+the REST suite.
 
 Opt-in only: excluded from `uv run poe test`/`all`/`test-e2e` by the
 `e2e_grpc` pytest marker (see pyproject.toml's addopts) and only actually
@@ -24,19 +25,22 @@ if no real credentials are configured.
 from __future__ import annotations
 
 import importlib
+import inspect
 
 import pytest
 from _discovery import (
     EndpointCase,
-    build_all_kwargs,
+    build_required_kwargs,
     case_label,
     discover_endpoint_cases,
     proto_field,
     proto_sample_value,
     service_attr,
 )
+from pydantic import BaseModel
+from upstream_bugs import server_error
 
-from kentik_api.errors import KentikError
+from kentik_api.errors import HTTPException, KentikError
 
 pytestmark = pytest.mark.e2e_grpc
 
@@ -51,34 +55,54 @@ MUTATING_CASES = [c for c in _ALL_ENDPOINT_CASES if c.method != "get"]
     ids=[f"{c.wrapper.wrapper_class}.{c.wrapper.method_name}" for c in READ_CASES],
 )
 def test_read_endpoint_against_real_api_grpc(
-    case: EndpointCase, grpc_real_client, monkeypatch: pytest.MonkeyPatch
+    case: EndpointCase,
+    grpc_real_client,
+    monkeypatch: pytest.MonkeyPatch,
+    request: pytest.FixtureRequest,
 ):
+    if reason := server_error(request.node.callspec.id, "grpc"):
+        request.applymarker(
+            pytest.mark.xfail(raises=HTTPException, strict=True, reason=reason)
+        )
     service_client = getattr(grpc_real_client, service_attr(case))
     method = getattr(service_client, case.wrapper.method_name)
-    # Read-only calls against a real account: required body fields only.
-    kwargs = build_all_kwargs(method, every_field=False)
+    # Only required arguments, as in the REST suite.
+    kwargs = build_required_kwargs(method)
     _send_samples_the_proto_accepts(monkeypatch, case)
 
     label = f"{case_label(case.wrapper)} ({case.operation_name})"
     print(f'E2E-gRPC: calling "{label}" against the real API. START')
     try:
-        method(**kwargs)
+        result = method(**kwargs)
     except NotImplementedError as exc:
         print(
             f'E2E-gRPC: "{label}" has no gRPC translation yet ({exc}). This is '
             "expected, not a bug. RESULT=PASS"
         )
         return
-    except KentikError as exc:
+    except HTTPException as exc:
+        if exc.status_code >= 500:
+            print(f'E2E-gRPC: "{label}" failed on the server. RESULT=FAIL')
+            raise
         print(
             f'E2E-gRPC: "{label}" raised {type(exc).__name__} '
-            f"(status={getattr(exc, 'status_code', 'n/a')}). A real, "
-            "generated error response is a valid outcome. RESULT=PASS"
+            f"(status={exc.status_code}). A generated HTTP error response is "
+            "a valid outcome. RESULT=PASS"
         )
         return
+    except KentikError as exc:
+        pytest.fail(
+            "Expected a typed response or HTTPException from live gRPC e2e call, "
+            f"got unexpected KentikError subtype {type(exc).__name__}: {exc}"
+        )
     except Exception:
         print(f'E2E-gRPC: "{label}" raised an UNEXPECTED exception. RESULT=FAIL')
         raise
+
+    return_annotation = inspect.signature(method).return_annotation
+    if isinstance(return_annotation, type) and issubclass(return_annotation, BaseModel):
+        assert isinstance(result, return_annotation)
+
     print(f'E2E-gRPC: "{label}" returned a typed response. RESULT=PASS')
 
 
@@ -96,7 +120,9 @@ def _send_samples_the_proto_accepts(monkeypatch: pytest.MonkeyPatch, case) -> No
             message_cls,
             body,
             {
-                path: proto_sample_value(proto_field(descriptor, path), value)
+                path: None
+                if value is None
+                else proto_sample_value(proto_field(descriptor, path), value)
                 for path, value in fields.items()
             },
         )

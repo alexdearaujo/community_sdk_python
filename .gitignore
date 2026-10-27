@@ -10,6 +10,9 @@ wheels/
 .env
 .vscode
 
+# Objects the mutating e2e tests created in the real account (tests/e2e/ledger.py)
+tests/e2e/.created_objects.jsonl
+
 # Local files
 .DS_Store
 
