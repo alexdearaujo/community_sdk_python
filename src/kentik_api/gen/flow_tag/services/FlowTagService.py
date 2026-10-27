@@ -163,7 +163,11 @@ def UpdateFlowTag(
         path_template="/flow_tag/v202404alpha1/tag/{flowTag.id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True, exclude_unset=True),
+        # Upstream REST drops this camelCase key: AGENTS.md, Upstream workarounds.
+        json_body={
+            {"flowTag": "flow_tag"}.get(key, key): value
+            for key, value in data.model_dump(by_alias=True, exclude_unset=True).items()
+        },
         header_params=header_params,
         expected_status=200,
         operation_name="UpdateFlowTag",

@@ -481,6 +481,48 @@ def test_discover_grpc_methods_without_pb_dir_is_empty(tmp_path):
     assert wrapper_generation._discover_grpc_methods(tmp_path) == ([], {})
 
 
+@pytest.mark.parametrize(
+    ("path_fields", "body", "expected"),
+    [
+        (("as_group.id",), "*", {"asGroup": "as_group"}),
+        (("label.id",), "*", {}),  # one word: both spellings match
+        (("alert_id",), "*", {}),  # the URL sets a scalar, not a field inside a key
+        (("as_group.id",), "as_group", {}),  # the body is the object, with no key
+        (("user.tenant_id", "user.id"), "*", {}),  # only a nested name differs
+    ],
+)
+def test_proto_body_keys_only_for_a_renamed_key_the_url_reaches_into(
+    path_fields, body, expected
+):
+    method = wrapper_generation.GrpcMethod("1", "M", "Req", path_fields, body)
+
+    assert wrapper_generation._proto_body_keys(method) == expected
+
+
+def test_send_proto_body_keys_rewrites_only_the_named_operation():
+    dump = "        json_body=data.model_dump(by_alias=True, exclude_unset=True),\n"
+    source = (
+        "def Create(*, data):\n    body = request_json(\n" + dump + "    )\n"
+        "\n\ndef Update(*, id, data):\n    body = request_json(\n" + dump + "    )\n"
+    )
+
+    result = wrapper_generation._send_proto_body_keys(
+        source, "Update", {"asGroup": "as_group"}
+    )
+
+    create, update = result.split("\n\n\ndef Update")
+    assert dump in create
+    assert "{'asGroup': 'as_group'}.get(key, key): value" in update
+    ast.parse(result)
+
+
+def test_send_proto_body_keys_fails_without_a_body_dump():
+    with pytest.raises(ValueError, match="no model body dump"):
+        wrapper_generation._send_proto_body_keys(
+            "def Update(*, id):\n    pass\n", "Update", {"asGroup": "as_group"}
+        )
+
+
 def test_streaming_rpcs_and_response_body_rules_stay_rest_only(tmp_path):
     from google.api import annotations_pb2
     from google.protobuf import descriptor_pb2

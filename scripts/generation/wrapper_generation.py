@@ -188,6 +188,69 @@ def _grpc_request_fields(
     return fields
 
 
+# Upstream workaround (AGENTS.md, "Upstream workarounds"): remove with its call in
+# generate_sdk.py once tests/e2e/test_upstream_workarounds_e2e.py passes unexpectedly.
+_BODY_DUMP = re.compile(
+    r"^(?P<indent>\s*)json_body=data\.model_dump\(by_alias=True, exclude_unset=True\),$",
+    re.MULTILINE,
+)
+
+
+def _proto_body_keys(method: GrpcMethod) -> dict[str, str]:
+    """Maps each camelCase body key to its proto name when a URL placeholder sets a field inside it."""
+    if method.body != "*":
+        return {}
+    keys = {}
+    for field in method.path_fields:
+        top, _, inner = field.partition(".")
+        camel = re.sub(r"_([a-z0-9])", lambda m: m.group(1).upper(), top)
+        if inner and camel != top:
+            keys[camel] = top
+    return keys
+
+
+def _send_proto_body_keys(source: str, op_name: str, keys: dict[str, str]) -> str:
+    found = re.search(rf"^def {re.escape(op_name)}\(", source, re.MULTILINE)
+    if found is None:
+        raise ValueError(f"{op_name}: no such function")
+    start = found.start()
+    end = source.find("\ndef ", start + 1)
+    end = len(source) if end == -1 else end
+    function = source[start:end]
+    match = _BODY_DUMP.search(function)
+    if match is None:
+        raise ValueError(f"{op_name}: no model body dump to rename keys in")
+    indent = match["indent"]
+    replacement = (
+        f"{indent}# Upstream REST drops this camelCase key: AGENTS.md, Upstream workarounds.\n"
+        f"{indent}json_body={{\n"
+        f"{indent}    {keys!r}.get(key, key): value\n"
+        f"{indent}    for key, value in data.model_dump(by_alias=True, exclude_unset=True).items()\n"
+        f"{indent}}},"
+    )
+    function = function[: match.start()] + replacement + function[match.end() :]
+    return source[:start] + function + source[end:]
+
+
+def send_proto_body_keys(service_dir: Path) -> list[str]:
+    """Sends the proto name of each body key the REST layer would drop; returns the operations."""
+    _, grpc_methods = _discover_grpc_methods(service_dir)
+    patched = []
+    for service_py in _rest_modules(service_dir):
+        source = original = service_py.read_text(encoding="utf-8")
+        for op in parse_generated_rest_module(service_py):
+            method = grpc_methods.get(
+                (service_py.stem, op.http_method, _normalize_path(op.path))
+            )
+            keys = _proto_body_keys(method) if method else {}
+            if keys:
+                source = _send_proto_body_keys(source, op.name, keys)
+                patched.append(f"{service_dir.name}.{op.name}")
+        if source != original:
+            write_text_lf(service_py, source)
+    return patched
+
+
 def qualify_wrapper_annotation_types(text: str, model_classes: set[str]) -> str:
     """Qualifies model type names with rest_models in wrapper annotations."""
     if not model_classes:

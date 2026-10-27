@@ -16,6 +16,7 @@ four.
 | `test_grpc_request_mapping.py` | Each gRPC wrapper call reaches the right RPC with every argument set. |
 | `test_grpc_stub_wiring.py` | Every mounted wrapper builds a live gRPC stub. |
 | `test_model_wire_names.py` | Every model field sends the name it was read under. |
+| `test_proto_body_keys.py` | The REST updates under the upstream body-key workaround send the proto name. Other bodies keep the camelCase name. |
 | `test_path_encoding.py` | Every REST path parameter is encoded into its own segment. |
 | `test_retry_eligibility.py` | Which operations a future retry policy can replay, derived from each operation's HTTP verb. |
 | `test_alert_acknowledgement.py` | An alert that carries an acknowledgement parses (audit finding B2). |

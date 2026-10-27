@@ -1,5 +1,6 @@
 # HAND-WRITTEN: not modified by `uv run poe generate`. Edit directly.
 import collections
+import threading
 from collections.abc import Callable, Sequence
 from typing import Any
 
@@ -14,6 +15,35 @@ from kentik_api.transports.base import BaseTransport
 # grpcio keeps a 4 MiB receive limit, which a large account's list call exceeds.
 # 1.0.7 allowed 40 MiB, and REST has no such limit.
 _MAX_RECEIVE_BYTES = 40 * 1024 * 1024
+
+# Upstream bug: these services fail every call that carries a deadline with a
+# server RangeError. Their calls are sent without one and ended by the client
+# at the deadline instead. See AGENTS.md, "Upstream workarounds".
+_NO_SERVER_DEADLINE = frozenset(
+    {
+        "alerting",
+        "audit",
+        "custom_application",
+        "custom_dimension",
+        "plan",
+        "saved_filter",
+    }
+)
+
+
+def _service_of(method: str | bytes) -> str:
+    """`audit` for `/kentik.audit.public.v202601.AuditService/ListAuditEvents`."""
+    if isinstance(method, bytes):
+        method = method.decode("utf-8", errors="replace")
+    package, _, rest = method.lstrip("/").partition(".")
+    return rest.partition(".")[0] if package == "kentik" else ""
+
+
+def _cancel_after(call, seconds: float) -> None:
+    timer = threading.Timer(seconds, call.cancel)
+    timer.daemon = True
+    timer.start()
+    call.add_done_callback(lambda _: timer.cancel())
 
 
 def channel_options(
@@ -60,23 +90,34 @@ class _DefaultDeadlineInterceptor(grpc.UnaryUnaryClientInterceptor):
                 "This client was closed with close(); create a new KentikAPI to make more calls."
             )
 
-        if client_call_details.timeout is None:
+        deadline = client_call_details.timeout
+        if deadline is None:
+            # Read per call, so the deadline follows the client's current config.
+            deadline = self._api_config.grpc_deadline
+        client_side = _service_of(client_call_details.method) in _NO_SERVER_DEADLINE
+        sent = None if client_side else deadline
+        if sent != client_call_details.timeout:
             client_call_details = _CallDetails(
                 method=client_call_details.method,
-                # Read per call, so the deadline follows the client's current config.
-                timeout=self._api_config.grpc_deadline,
+                timeout=sent,
                 metadata=client_call_details.metadata,
                 credentials=client_call_details.credentials,
                 wait_for_ready=client_call_details.wait_for_ready,
                 compression=client_call_details.compression,
             )
         outcome = continuation(client_call_details, request)
+        if client_side:
+            # Bounds only a future(); call_grpc uses one for this reason.
+            _cancel_after(outcome, deadline)
         self._record_rate_limit(client_call_details.method, outcome)
         return outcome
 
     def _record_rate_limit(self, method, outcome) -> None:
         # A failed outcome reports no metadata itself; the RpcError it holds does.
-        failure = outcome.exception() if hasattr(outcome, "exception") else None
+        try:
+            failure = outcome.exception() if hasattr(outcome, "exception") else None
+        except grpc.FutureCancelledError:
+            return
         rate_limit = rate_limit_of_rpc(failure if failure is not None else outcome)
         if rate_limit is not None:
             key = (

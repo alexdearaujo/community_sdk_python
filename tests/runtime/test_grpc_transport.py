@@ -252,3 +252,97 @@ def test_a_response_over_the_limit_is_a_transport_error_not_a_quota_error():
         assert not isinstance(exc_info.value, HTTPException)
     finally:
         server.stop(0)
+
+
+# --- upstream workaround: services that fail on a deadline (AGENTS.md) ---------
+
+AUDIT = "/kentik.audit.public.v202601.AuditService/ListAuditEvents"
+LABEL = "/kentik.label.v202210.LabelService/ListLabels"
+
+
+def _serve_recording_deadlines(seen: dict[str, float | None]):
+    """Answers AUDIT and LABEL, and records the deadline each one received."""
+    from concurrent import futures
+
+    def handler(method: str):
+        def respond(request, context):
+            seen[method] = context.time_remaining()
+            return b"ok"
+
+        return grpc.unary_unary_rpc_method_handler(
+            respond,
+            request_deserializer=lambda raw: raw,
+            response_serializer=lambda raw: raw,
+        )
+
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
+    for method in (AUDIT, LABEL):
+        service, _, name = method.lstrip("/").rpartition("/")
+        server.add_generic_rpc_handlers(
+            (grpc.method_handlers_generic_handler(service, {name: handler(method)}),)
+        )
+    port = server.add_insecure_port("127.0.0.1:0")
+    server.start()
+    return server, port
+
+
+def _intercepted_stub(target: str, method: str, config: APIConfig):
+    channel = grpc.intercept_channel(
+        grpc.insecure_channel(target),
+        _DefaultDeadlineInterceptor(config, lambda: False),
+    )
+    stub = channel.unary_unary(
+        method,
+        request_serializer=lambda raw: raw,  # pyright: ignore[reportArgumentType]
+        response_deserializer=lambda raw: raw,
+    )
+    return channel, stub
+
+
+def test_affected_services_are_sent_no_deadline_and_others_still_are():
+    seen: dict[str, float | None] = {}
+    server, port = _serve_recording_deadlines(seen)
+    try:
+        for method in (AUDIT, LABEL):
+            channel, stub = _intercepted_stub(
+                f"127.0.0.1:{port}", method, APIConfig(grpc_deadline=30.0)
+            )
+            try:
+                assert call_grpc(stub, b"")[0] == b"ok"
+            finally:
+                channel.close()
+    finally:
+        server.stop(0)
+
+    # grpcio reports "no deadline" as an effectively infinite time remaining.
+    no_deadline = seen[AUDIT]
+    assert no_deadline is not None and no_deadline > 1e9
+    remaining = seen[LABEL]
+    assert remaining is not None and 0 < remaining <= 30.0
+
+
+def test_affected_service_still_fails_at_the_deadline_instead_of_hanging(
+    black_hole_target,
+):
+    channel, stub = _intercepted_stub(
+        black_hole_target, AUDIT, APIConfig(grpc_deadline=0.5)
+    )
+    try:
+        started = time.monotonic()
+        with pytest.raises(TransportError, match="DEADLINE_EXCEEDED"):
+            call_grpc(stub, b"")
+        assert time.monotonic() - started < 5.0
+    finally:
+        channel.close()
+
+
+def test_affected_service_honors_a_per_call_deadline(black_hole_target):
+    config = APIConfig(grpc_deadline=60.0)
+    channel, stub = _intercepted_stub(black_hole_target, AUDIT, config)
+    try:
+        started = time.monotonic()
+        with pytest.raises(TransportError, match="DEADLINE_EXCEEDED"):
+            call_grpc(stub, b"", api_config=config.with_timeout(grpc_deadline=0.5))
+        assert time.monotonic() - started < 5.0
+    finally:
+        channel.close()

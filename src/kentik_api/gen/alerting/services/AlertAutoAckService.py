@@ -366,7 +366,11 @@ def Replace(
         path_template="/v202505/alerts/ack/auto/{autoAck.id}",
         api_config_override=api_config_override,
         query_params=query_params,
-        json_body=data.model_dump(by_alias=True, exclude_unset=True),
+        # Upstream REST drops this camelCase key: AGENTS.md, Upstream workarounds.
+        json_body={
+            {"autoAck": "auto_ack"}.get(key, key): value
+            for key, value in data.model_dump(by_alias=True, exclude_unset=True).items()
+        },
         header_params=header_params,
         expected_status=200,
         operation_name="Replace",
