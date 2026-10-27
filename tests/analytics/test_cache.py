@@ -275,3 +275,14 @@ def test_fetch_latest_keeps_empty_query_handling(tmp_path, cache_clock):
     assert cache.fetch_latest(query) is None
     assert len(calls) == 1
     assert cache.is_empty
+
+
+def test_get_returns_a_cache_that_holds_one_timestamp(tmp_path):
+    cache = DFCache(tmp_path)
+    frame = _frame(START, START + timedelta(minutes=1))
+    cache.store(frame)
+
+    got = cache.get()
+
+    assert got is not None
+    pd.testing.assert_frame_equal(got, frame)

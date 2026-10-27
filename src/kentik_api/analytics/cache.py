@@ -166,9 +166,12 @@ class DFCache:
         _require_aware(start, end)
         if self.is_empty:
             return None
+        # files_in_range validates only what the caller gave, so one cached
+        # timestamp (oldest == newest) is a valid default range.
+        paths = list(self.files_in_range(start, end))
         start = start or self.oldest
         end = end or self.newest
-        frames = [pd.read_parquet(f) for f in self.files_in_range(start, end)]
+        frames = [pd.read_parquet(f) for f in paths]
         if not frames:
             return None
         df = pd.concat(frames)
