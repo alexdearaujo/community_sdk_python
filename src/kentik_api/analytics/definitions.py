@@ -101,8 +101,8 @@ class MappingEntry:
 
 def set_data_types_and_index(
     df: DataFrame, mapping: Iterator[tuple[str, MappingEntry]]
-) -> None:
-    """Applies the mapping's data types and index to `df`, in place."""
+) -> DataFrame:
+    """Returns `df` with the mapping's data types and index applied."""
     index_columns = []
     for column, entry in mapping:
         if column not in df:
@@ -123,8 +123,8 @@ def set_data_types_and_index(
         if entry.is_index:
             index_columns.append(column)
     if index_columns:
-        df.set_index(index_columns, inplace=True)
-        df.sort_index(inplace=True)
+        df = df.set_index(index_columns).sort_index()
+    return df
 
 
 class ResultMapping:
@@ -292,7 +292,7 @@ def data_result_to_df(
                 except KeyError as exc:
                     _log_missing(i, label, column, entry, exc, rows)
         out[label] = DataFrame.from_dict(out_data)
-        set_data_types_and_index(out[label], mapping.items)
+        out[label] = set_data_types_and_index(out[label], mapping.items)
     return out
 
 

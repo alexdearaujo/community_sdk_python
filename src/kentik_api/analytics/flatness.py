@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import logging
+import warnings
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -124,11 +125,15 @@ def has_uniform_datetime_index(df: pd.DataFrame) -> bool:
 
 def _inferred_freq(df: pd.DataFrame) -> str | None:
     index = df.index.unique()
-    return (
-        pd.DatetimeIndex(index).inferred_freq
-        if index.inferred_type == "datetime64"
-        else None
-    )
+    if index.inferred_type != "datetime64":
+        return None
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore", message="A future version of pandas will return"
+        )
+        freq = pd.DatetimeIndex(index).inferred_freq
+    # A future pandas returns an offset object here.
+    return freq if freq is None or isinstance(freq, str) else freq.freqstr
 
 
 def compute_link_bandwidth(
