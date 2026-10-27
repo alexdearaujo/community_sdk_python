@@ -25,7 +25,7 @@ keywords = ["kentik", "api", "sdk", "networking", "observability"]
 dependencies = [
     "python-dotenv>=1.2.4",
     "googleapis-common-protos>=1.73.1",
-    "grpcio>=1.84.0",
+    "grpcio>=1.85.0",
     "protobuf>=7.35.1,<8",
     "httpx>=0.28.1,<1",
     "pydantic>=2.14.0",
@@ -70,10 +70,10 @@ packages = ["src/kentik_api"]
 dev = [
     {include-group = "test"},
     {include-group = "docs"},
-    "grpcio-tools==1.84.0",
+    "grpcio-tools==1.85.0",
     "types-protobuf>=6.30.0",
     "ty>=0.0.84",
-    "ruff==0.17.1",
+    "ruff==0.17.2",
     "openapi-python-generator==2.1.2",
     "packaging>=24",
     "rumdl==0.3.0",

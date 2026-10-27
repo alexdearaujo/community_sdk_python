@@ -30,6 +30,9 @@ tables below, which compare against earlier development builds of this SDK.
 
 ### Runtime fixes
 
+- The SDK now requires `grpcio>=1.85.0`, because the generated gRPC code comes
+  from `grpcio-tools` 1.85.0. The locked `certifi` and `setuptools` versions
+  also change to fix known advisories.
 - Over REST, `client.as_group.update()` and `client.site.update_market()`
   now work. Kentik's REST API ignores the documented camelCase body key
   (`asGroup`, `siteMarket`) on these calls, so the SDK sends the proto name

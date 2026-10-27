@@ -197,7 +197,9 @@ def test_fetch_latest_is_a_noop_until_the_next_minute(tmp_path, cache_clock):
     assert cache.fetch_latest(query) is None
     assert len(query.calls) == 1
     assert {path.name: path.read_bytes() for path in cache.files} == files
-    pd.testing.assert_frame_equal(cache.get(), first)
+    got = cache.get()
+    assert got is not None
+    pd.testing.assert_frame_equal(got, first)
 
     cache_clock.now += timedelta(minutes=1)
     latest = cache.fetch_latest(query)
