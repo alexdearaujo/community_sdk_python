@@ -1034,3 +1034,19 @@ def test_the_generator_writes_files_only_through_write_text_lf():
     ]
 
     assert offenders == []
+
+
+def test_a_failed_companion_compile_aborts_generation(tmp_path, monkeypatch):
+    import generate_sdk
+
+    vendor = tmp_path / "protovendor/github.com/grpc-ecosystem/grpc-gateway"
+    vendor.mkdir(parents=True)
+    monkeypatch.setattr(generate_sdk, "SDK_OUTPUT_DIR", tmp_path / "gen")
+
+    def fail(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, args[0], stderr="protoc failed")
+
+    monkeypatch.setattr(generate_sdk.subprocess, "run", fail)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        generate_sdk._compile_proto_companions(tmp_path)
