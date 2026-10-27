@@ -128,11 +128,9 @@ def _inferred_freq(df: pd.DataFrame) -> str | None:
     if index.inferred_type != "datetime64":
         return None
     with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "ignore", message="A future version of pandas will return"
-        )
-        freq = pd.DatetimeIndex(index).inferred_freq
-    # A future pandas returns an offset object here.
+        warnings.filterwarnings("ignore", message="A future version of pandas")
+        freq = pd.infer_freq(pd.DatetimeIndex(index))
+    # A future pandas returns an offset instead of a string.
     return freq if freq is None or isinstance(freq, str) else freq.freqstr
 
 
@@ -214,17 +212,23 @@ def analyze_flatness(
         & (df[mean_column] < max_valid)
         & ((df[max_column] - df[min_column]) < flatness_limit)
     )
-    if not suspects.any():
+    if not cast(bool, suspects.any()):
         return results
     for link in links:
         last = results.last(link)
         d = df.xs(link)
-        link_suspects = suspects.xs(link)
-        for ts in link_suspects[link_suspects].index:
-            s = d.loc[(ts - window) :].index[0]
+        link_suspects = cast(pd.Series, suspects.xs(link))
+        for ts in cast(pd.DatetimeIndex, link_suspects.index[link_suspects.to_numpy()]):
+            s = cast(pd.Timestamp, d.index[d.index.searchsorted(ts - window)])
             if last is not None and last.end >= s:
-                agg_min = min(d.loc[last.end][min_column], d.loc[ts][min_column])
-                agg_max = max(d.loc[last.end][max_column], d.loc[ts][max_column])
+                agg_min = min(
+                    cast(float, d.at[last.end, min_column]),
+                    cast(float, d.at[ts, min_column]),
+                )
+                agg_max = max(
+                    cast(float, d.at[last.end, max_column]),
+                    cast(float, d.at[ts, max_column]),
+                )
                 if agg_max - agg_min < flatness_limit:
                     last.end = ts
                     continue

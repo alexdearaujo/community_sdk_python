@@ -1,5 +1,5 @@
 {
-  "extraPaths": ["src", "scripts", "tests"],
+  "extraPaths": ["src", "scripts", "tests", "tests/e2e"],
   "exclude": [
     "**/node_modules",
     "**/__pycache__",
