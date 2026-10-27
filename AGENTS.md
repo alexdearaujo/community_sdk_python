@@ -112,6 +112,8 @@ for every operation gRPC covers, and raise the same exception type
 for the same failure. Every gRPC call carries a deadline:
 `GrpcTransport`'s channel interceptor applies `APIConfig.grpc_deadline`
 unless the call passes its own, so generated call sites never need one.
+The services in `_NO_SERVER_DEADLINE` are the one exception (see "Upstream
+workarounds").
 
 ### The generator's phase modules
 
@@ -312,6 +314,35 @@ import line to add the `path_segment` import next to it, and raises
 `ValueError` when the line is missing. Rename or move `request_json`
 only together with both functions and the template.
 
+### Upstream workarounds
+
+Each workaround below fixes an upstream API bug in the SDK. Each has
+a live canary in `tests/e2e/test_upstream_workarounds_e2e.py`: a strict
+xfail that sends the documented request. When upstream fixes the bug, the
+canary fails with `XPASS(strict)` in `uv run poe test-e2e-mutating`. Then
+remove the workaround, regenerate, delete the canary, and update this list
+and `CHANGELOG.md`.
+
+- REST body key for a URL that sets a nested field. The REST API drops a
+  camelCase body key (`asGroup`) when the URL template sets a field inside it
+  (`{as_group.id}`) and the rule has `body: "*"`. Confirmed on
+  `UpdateASGroup` and `UpdateSiteMarket`. `send_proto_body_keys()` in
+  `scripts/generation/wrapper_generation.py`, called from
+  `_patch_generated_code()` in `generate_sdk.py`, makes those REST functions
+  send the proto name (`as_group`). It applies to every rule with that shape,
+  and the run prints the list. `tests/generated/test_proto_body_keys.py`
+  pins the keys sent.
+- gRPC deadline on six services. The gRPC server fails every call that
+  carries a deadline (`internal error (name:RangeError ...)`) on `alerting`,
+  `audit`, `custom_application`, `custom_dimension`, `plan`, and
+  `saved_filter`. `_NO_SERVER_DEADLINE` in `transports/grpc_client.py`
+  lists them, by the service segment of the method path. For those, the
+  interceptor sends no deadline and cancels the call at the deadline, and
+  `call_grpc()` reports the cancel as `TransportError` `DEADLINE_EXCEEDED`.
+  The cancel works only on a `future()` call, which is why `call_grpc()`
+  uses `future()`. One canary per service. `tests/runtime/test_grpc_transport.py`
+  pins the behavior against a local server.
+
 ## Public names
 
 `public_names.json` is the one place that sets the public name of
@@ -498,6 +529,11 @@ until you do). No task may set `envfile`: `.env` holds real credentials.
   appear in `test` or `all`. Both pass `--run-live-e2e`, without which
   `tests/e2e/conftest.py` skips every live test; plain pytest needs it
   too (`pytest -m e2e --run-live-e2e`).
+- `uv run poe test-e2e-mutating`: create, update, and delete disposable
+  `sdk-e2e-test-*` objects in the real account (`-m e2e_mutating`).
+  `tests/e2e/ledger.py` records each one; `uv run poe e2e-cleanup` lists
+  leftovers and `--delete` removes them. Never let a test touch an object
+  the ledger does not hold.
 - `uv run poe lint`: `ruff check --fix`, `ruff format` (Python, and Python
   blocks in Markdown), and `rumdl check --fix` (Markdown rules).
   `uv run poe lint-check` runs the same checks without changing files, as CI

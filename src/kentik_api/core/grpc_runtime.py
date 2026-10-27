@@ -298,11 +298,17 @@ def call_grpc(
         {} if api_config is None else {"timeout": api_config.grpc_deadline}
     )
     try:
-        # with_call exposes the call's initial metadata, where the quota is.
+        # A future, unlike with_call, lets the channel end a call that it sends
+        # without a deadline (grpc_client._NO_SERVER_DEADLINE). It also exposes
+        # the call's initial metadata, where the quota is.
         if isinstance(stub_method, grpc.UnaryUnaryMultiCallable):
-            response, call = stub_method.with_call(proto_request, **kwargs)
-            return response, rate_limit_of_rpc(call)
+            call = stub_method.future(proto_request, **kwargs)
+            return call.result(), rate_limit_of_rpc(call)
         return stub_method(proto_request, **kwargs), None
+    except grpc.FutureCancelledError as exc:
+        raise TransportError(
+            f"gRPC {path} failed with DEADLINE_EXCEEDED: no response within the deadline"
+        ) from exc
     except grpc.RpcError as exc:
         error = map_grpc_error(exc, method="gRPC", path=path)
         if error_cls is not None and isinstance(error, HTTPException):

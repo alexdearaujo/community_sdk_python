@@ -1033,6 +1033,16 @@ def _patch_generated_code(
         if service_dir.is_dir() and service_dir.name != "__pycache__":
             fixup.fix_generated_service(service_dir)
 
+    # Upstream workaround: AGENTS.md, "Upstream workarounds".
+    renamed = [
+        op
+        for service_dir in iter_service_dirs(SDK_OUTPUT_DIR)
+        for op in wrapper_generation.send_proto_body_keys(service_dir)
+    ]
+    print(
+        f"    ⚠️ Sending proto body keys (upstream workaround) in: {', '.join(renamed)}"
+    )
+
     # Error classes are named after client methods, so this needs fixed-up REST modules.
     for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
         error_package.generate_service_error_package(

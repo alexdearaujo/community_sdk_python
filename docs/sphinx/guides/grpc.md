@@ -133,6 +133,10 @@ invokes the stub and delegates the classification to it. See
 Every call has a deadline: 60 seconds unless `KentikAPI` gets `timeout` or
 `grpc_deadline`. `GrpcTransport` applies it with a channel interceptor, so an
 unresponsive server raises `TransportError` instead of blocking forever.
+For `alerting`, `audit`, `custom_application`, `custom_dimension`, `plan`,
+and `saved_filter`, the server fails every call that carries a deadline. For
+these services the SDK sends no deadline and cancels the call itself when the
+deadline passes.
 
 The SDK accepts gRPC responses up to 40 MiB. A larger response raises
 `TransportError`, not a 429. To raise the limit, pass

@@ -30,6 +30,21 @@ tables below, which compare against earlier development builds of this SDK.
 
 ### Runtime fixes
 
+- Over REST, `client.as_group.update()` and `client.site.update_market()`
+  now work. Kentik's REST API ignores the documented camelCase body key
+  (`asGroup`, `siteMarket`) on these calls, so the SDK sends the proto name
+  (`as_group`, `site_market`) instead. `client.flow_tag.update()` and
+  `client.alerting.auto_ack_replace()` have the same request layout and send
+  the proto name too. The auto-ack call accepts both names. Flow tag writes
+  currently fail upstream for another reason. The public signatures do not
+  change. The SDK removes this workaround when Kentik fixes the API.
+- Over gRPC, `alerting`, `audit`, `custom_application`, `custom_dimension`,
+  `plan`, and `saved_filter` now work. Kentik's gRPC server fails every call
+  to these services that carries a deadline, and the SDK always sets one. For
+  these services only, the SDK sends no deadline and ends the call itself
+  when the deadline passes, with the same `TransportError`. The public
+  signatures do not change. The SDK removes this workaround when Kentik fixes
+  the API.
 - `APIConfig` owns its timeout values. Changing a supplied or returned
   `httpx.Timeout` no longer changes active settings. The public type and
   signatures stay unchanged. Use `with_timeout()` for timeout changes.
