@@ -219,7 +219,8 @@ def analyze_flatness(
         d = df.xs(link)
         link_suspects = cast(pd.Series, suspects.xs(link))
         for ts in cast(pd.DatetimeIndex, link_suspects.index[link_suspects.to_numpy()]):
-            s = cast(pd.Timestamp, d.index[d.index.searchsorted(ts - window)])
+            start_pos = int(d.index.searchsorted(ts - window))
+            s = cast(pd.Timestamp, d.index[start_pos])
             if last is not None and last.end >= s:
                 agg_min = min(
                     cast(float, d.at[last.end, min_column]),
