@@ -22,7 +22,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from kentik_api.client import KentikAPI
-from kentik_api.errors import HTTPException
+from kentik_api.errors import HTTPException, KentikError
 
 # Every object a test creates carries this name prefix, so a person can find it in the portal.
 NAME_PREFIX = "sdk-e2e-test"
@@ -171,8 +171,8 @@ def sweep(client: KentikAPI, ledger: Ledger, entries: list[Entry]) -> list[str]:
         kind = KINDS[entry.kind]
         try:
             name = kind.current_name(client, entry.id)
-        except HTTPException as exc:
-            if exc.status_code == 404:
+        except KentikError as exc:
+            if isinstance(exc, HTTPException) and exc.status_code == 404:
                 ledger.mark_gone(entry.kind, entry.id)
                 continue
             failures.append(f"{entry.kind} {entry.id}: lookup failed: {exc}")
@@ -184,7 +184,7 @@ def sweep(client: KentikAPI, ledger: Ledger, entries: list[Entry]) -> list[str]:
             continue
         try:
             ledger.delete(client, entry.kind, entry.id)
-        except HTTPException as exc:
+        except KentikError as exc:
             failures.append(f"{entry.kind} {entry.id}: delete failed: {exc}")
     return failures
 
