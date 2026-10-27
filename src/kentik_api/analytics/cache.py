@@ -149,7 +149,8 @@ class DFCache:
             if contained:
                 if file_start >= start and file_end <= end:
                     yield path
-            elif file_start <= end and file_end > start:
+            elif file_start <= end and (file_end > start or start == end == file_end):
+                # A zero-width range, the default for one cached timestamp, still matches.
                 yield path
 
     def covers(self, start: datetime, end: datetime) -> bool:
