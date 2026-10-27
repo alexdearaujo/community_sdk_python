@@ -35,14 +35,10 @@ from generation.endpoint_docs import SCHEMA_RECORD_FILE, EndpointDocsCollector
 from generation.public_names import NAMES_FILE, PublicNames
 from google.protobuf import descriptor_pb2
 
-# Configuration
 DEFAULT_REPO = "https://github.com/kentik/api-schema-public.git"
 DEFAULT_OPENAPI_GENERATOR = "openapi-python-generator"
 CUSTOM_OPENAPI_TEMPLATE_PATH = PROJECT_ROOT / "scripts" / "openapi_templates"
-# The schema commit the committed tree was generated from, so CI regenerates
-# at that commit instead of following upstream HEAD.
 SCHEMA_PIN = PROJECT_ROOT / "schema.lock"
-# Hand-maintained descriptions of endpoints that upstream does not publish.
 LOCAL_SCHEMA_BASE = PROJECT_ROOT / "schema" / "openapi"
 _COMMIT_SHA = re.compile(r"[0-9a-f]{40}")
 
@@ -109,7 +105,6 @@ def read_schema_pin(path: Path = SCHEMA_PIN) -> str:
 def fetch_schema(repo_url: str, ref: str, dest: Path) -> str:
     """Checks out `ref` of `repo_url` into `dest` and returns its commit."""
     if ref.startswith("-"):
-        # git would parse it as an option.
         raise ValueError(f"Schema ref {ref!r} must not start with '-'.")
     run_cmd(["git", "init", "-q", str(dest)])
     run_cmd(["git", "-C", str(dest), "fetch", "-q", "--depth", "1", repo_url, ref])
@@ -123,7 +118,6 @@ def _git_stdout(repo: Path, *args: str) -> str:
     ).stdout.strip()
 
 
-# The paths of a schema checkout that generation reads.
 _SCHEMA_INPUTS = ("gen", "proto", "protovendor")
 
 
@@ -131,7 +125,6 @@ def local_schema_commit(repo: Path) -> str | None:
     """The checkout's commit, or None when no commit reproduces it."""
     try:
         commit = _git_stdout(repo, "rev-parse", "HEAD")
-        # Untracked files count only where generation reads them.
         dirty = _git_stdout(repo, "status", "--porcelain", "--untracked-files=no")
         dirty += _git_stdout(
             repo, "ls-files", "--others", "--exclude-standard", "--", *_SCHEMA_INPUTS
@@ -180,11 +173,9 @@ def _rewrite_grpc_imports(content: str) -> str:
     and input layout. All three must become `from . import` so the compiled
     files are importable from within the flattened pb/ directory.
     """
-    # bare: `import foo_pb2`
     content = re.sub(
         r"^import (\w+_pb2)", r"from . import \1", content, flags=re.MULTILINE
     )
-    # parenthesised from-import: `from pkg import (foo_pb2 as alias,)`
     # google.* stays absolute: googleapis-common-protos and protobuf provide it.
     content = re.sub(
         r"^from (?!google\.)[\w\.]+ import \(\s*(\w+_pb2) as ([\w_]+),\s*\)$",
@@ -192,7 +183,6 @@ def _rewrite_grpc_imports(content: str) -> str:
         content,
         flags=re.MULTILINE,
     )
-    # unparenthesised from-import: `from pkg import foo_pb2 as alias`
     content = re.sub(
         r"^from (?!google\.)[\w\.]+ import (\w+_pb2) as ([\w_]+)$",
         r"from . import \1 as \2",
@@ -740,8 +730,6 @@ def _compile_proto_companions(schema_root: Path) -> None:
     ]
     try:
         subprocess.run(cmd, check=True, capture_output=True, text=True)
-        # Patch bare 'protoc_gen_openapiv2' imports to the full package path so
-        # the compiled pb2 files are importable from within this package.
         for pb_file in options_out.glob("*_pb2.py"):
             content = pb_file.read_text(encoding="utf-8")
             content = content.replace(
@@ -752,12 +740,9 @@ def _compile_proto_companions(schema_root: Path) -> None:
         print("    ✅ Proto companions compiled successfully.")
     except subprocess.CalledProcessError as e:
         print(f"    ❌ Proto companion compilation failed: {e.stderr or e.stdout}")
-        # Without companions every service's gRPC stubs fail to import.
         raise
 
 
-# Everything a run rewrites. A failed run puts all of it back, so a half-built
-# gen/ never sits next to a client_mixin.py that imports the old one.
 GENERATED_PATHS = (
     SDK_OUTPUT_DIR,
     PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py",
@@ -926,13 +911,7 @@ def _select_swagger_files(
             f"schema base: {', '.join(sorted(local_services))}."
         )
 
-    # Fail loudly on a corrupted/truncated schema checkout instead of
-    # silently generating an incomplete SDK from it (2026-08-26 incident).
-    # The caller MUST run this before it touches SDK_OUTPUT_DIR: an
-    # earlier version of this check ran after the "clean old modules"
-    # step, so a validation failure still left src/kentik_api/gen/
-    # wiped out. This was discovered by manually reproducing the incident
-    # end-to-end rather than trusting fixture tests alone.
+    # Validate before the wipe below: a failure after it leaves gen/ empty.
     parity.validate_schema_files_or_raise(
         [
             Path(metadata["path"])
@@ -989,7 +968,6 @@ def _generate_service(
             f"{metadata['filename']} ({version})..."
         )
 
-        # Protos first: the REST models need their oneofs.
         oneof_members: dict[str, set[str]] = {}
         if not has_protos:
             print("    Local schema base: REST only, no protos.")
@@ -1019,7 +997,6 @@ def _generate_service(
             swagger_path, version, oneof_members, model_names, model_renames
         ) as tmp_swagger:
             run_cmd(openapi_generator_cmd(tmp_swagger, out_dir))
-            # The patched swagger, so pages name the models the SDK defines.
             endpoint_docs_collector.extract(service, tmp_swagger)
 
     return error_package.merge_operation_error_responses(
@@ -1037,13 +1014,10 @@ def _patch_generated_code(
     pb_owners: dict[tuple[str, str], str],
 ) -> None:
     print("\nPatching generated code...")
-    # Deliberately broader than iter_service_dirs(), like the cleanup loop in
-    # generate_modular_sdk(): fixup normalises every generated file, pb_companions included.
     for service_dir in SDK_OUTPUT_DIR.iterdir():
         if service_dir.is_dir() and service_dir.name != "__pycache__":
             fixup.fix_generated_service(service_dir)
 
-    # Upstream workaround: AGENTS.md, "Upstream workarounds".
     renamed = [
         op
         for service_dir in iter_service_dirs(SDK_OUTPUT_DIR)
@@ -1053,7 +1027,6 @@ def _patch_generated_code(
         f"    ⚠️ Sending proto body keys (upstream workaround) in: {', '.join(renamed)}"
     )
 
-    # Error classes are named after client methods, so this needs fixed-up REST modules.
     for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
         error_package.generate_service_error_package(
             service_dir,
@@ -1062,7 +1035,6 @@ def _patch_generated_code(
             status_model=model_renames[service_dir.name].get("rpcStatus"),
         )
 
-    # Runs once every pb/ directory exists, so cross-service targets resolve.
     relinked = _relink_pb2_dependency_imports(SDK_OUTPUT_DIR, pb_owners)
     print(f"    ✅ Relinked descriptor dependency imports in {relinked} pb2 modules.")
 
@@ -1074,7 +1046,6 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             openapi_base
         )
 
-        # Fails before the wipe below when a public name no longer matches.
         names = PublicNames.load()
         public_service = names.services(source_services)
         rest_only = frozenset(public_service[s] for s in local_services)
@@ -1092,7 +1063,6 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
             for service, files in selected_swagger_files.items()
         }
 
-        # Setup directories (only now, once the schema checkout is known-good)
         SDK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         (SDK_OUTPUT_DIR / "__init__.py").touch(exist_ok=True)
 
@@ -1117,7 +1087,6 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
 
         pb_owners: dict[tuple[str, str], str] = {}
         endpoint_docs_collector = EndpointDocsCollector()
-        # Error packages need fixed-up code, so they are written after this block.
         operation_errors = {}
         for upstream_service in sorted(selected_swagger_files):
             service = public_service[upstream_service]
@@ -1148,7 +1117,6 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
     endpoint_docs_collector.write_record()
 
     print("\nFinal formatting pass for generated code...")
-    # client_mixin.py lives outside gen/ but is also fully generated.
     _format_generated(
         PROJECT_ROOT / "src" / "kentik_api" / "client_mixin.py", *GENERATED_DOC_PAGES
     )
@@ -1156,7 +1124,6 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
     # Run after ruff so it cannot reorder the header comments.
     _inject_generated_headers(SDK_OUTPUT_DIR)
 
-    # Last: the surface record must reflect the final formatted output.
     surface_path = api_surface.generate()
     print(f"\nRecorded API surface in {surface_path.name}")
     print(
@@ -1165,7 +1132,6 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
         )
     )
 
-    # Only a completed run moves the pin.
     if schema_commit:
         write_text_lf(SCHEMA_PIN, schema_commit + "\n")
         print(f"Pinned schema commit {schema_commit} in {SCHEMA_PIN.name}")
@@ -1175,7 +1141,6 @@ def generate_modular_sdk(repo_source=DEFAULT_REPO, schema_ref: str | None = None
 
 def _inject_generated_headers(output_dir: Path) -> None:
     """Prepends AUTO-GENERATED file headers to every .py file in gen/."""
-    # Map a path segment to (source_file, function_name) for the annotation.
     _SRC: dict[str, tuple[str, str]] = {
         "models": ("openapi-python-generator", "model generation"),
         "error": (
@@ -1189,16 +1154,13 @@ def _inject_generated_headers(output_dir: Path) -> None:
     for py_file in sorted(output_dir.rglob("*.py")):
         content = py_file.read_text(encoding="utf-8")
 
-        # Skip files that already carry a file-level annotation.
         if content.startswith(("# AUTO-GENERATED", "# HAND-WRITTEN")):
             continue
-        # Skip wrapper files annotated via the class docstring.
         if '"""AUTO-GENERATED:' in content:
             continue
 
         rel_parts = py_file.relative_to(output_dir).parts
 
-        # pb_companions: compiled by _compile_proto_companions() with isort:skip_file.
         if rel_parts[0] == "pb_companions":
             source, generator_func_name = (
                 "scripts/generate_sdk.py",

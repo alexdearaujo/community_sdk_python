@@ -314,8 +314,6 @@ def test_the_protoc_failure_handler_reraises():
 def test_validate_schema_files_catches_truncated_file_like_2026_08_26_incident(
     tmp_path: Path,
 ):
-    # Reproduces the real incident: device.swagger.json was locally truncated
-    # from 1625 lines down to a single, non-JSON line.
     truncated = tmp_path / "device.swagger.json"
     truncated.write_text('  "swagger": "2.0",', encoding="utf-8")
 
@@ -323,11 +321,6 @@ def test_validate_schema_files_catches_truncated_file_like_2026_08_26_incident(
 
     assert len(failures) == 1
     assert "invalid JSON" in failures[0]["reason"]
-
-
-# ---------------------------------------------------------------------------
-# iter_service_dirs / INTERNAL_GEN_DIRS: the single Service-classification rule
-# ---------------------------------------------------------------------------
 
 
 def _make_gen_tree(root: Path, names: list[str]) -> None:
@@ -347,9 +340,6 @@ def test_iter_service_dirs_excludes_every_internal_dir(tmp_path: Path):
 
 
 def test_iter_service_dirs_includes_operationless_service(tmp_path: Path):
-    # A Service with models/ but no wrapper is still a Service: six exist today
-    # (core, deviceconf, diagnostic, kptr, monitoring, net) and five are already
-    # documented. Absence of a wrapper must not reclassify it as internal.
     _make_gen_tree(tmp_path, ["device"])
     (tmp_path / "operationless" / "models").mkdir(parents=True)
     (tmp_path / "operationless" / "services").mkdir()
@@ -372,10 +362,6 @@ def test_iter_service_dirs_skips_files_and_returns_sorted(tmp_path: Path):
 def test_iter_service_dirs_regression_pb_companions_excluded_core_included(
     tmp_path: Path,
 ):
-    # Names the real defect: pb_companions (the proto descriptor registry,
-    # created by _compile_proto_companions()) was documented as a Service,
-    # while core (a real generated Service) was suppressed by a hardcoded
-    # "core" literal. Their counts cancelled, so every count check passed.
     _make_gen_tree(tmp_path, ["core", "device", "pb_companions"])
 
     names = [d.name for d in iter_service_dirs(tmp_path)]

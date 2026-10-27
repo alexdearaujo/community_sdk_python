@@ -241,7 +241,6 @@ def parse_wrapper_method_signatures(wrapper_file: Path) -> WrapperSignatures:
     parameter names like `pagination.limit` -> `paginationlimit` that only
     exist post-generation.
     """
-    # params come from the shared parser; only the REST-alias resolution is specific here.
     method_params = {
         m.name: list(m.params) for m in parse_wrapper_methods(wrapper_file)
     }
@@ -368,7 +367,6 @@ def _example_value_for_annotation(
     if text.startswith(("Dict[", "dict[")):
         return "{}"
 
-    # Anything else is a model reference (e.g. rest_models.CreateASGroupRequest).
     class_name = text.rsplit(".", 1)[-1]
     if models is not None:
         models.add(class_name)
@@ -514,8 +512,6 @@ def _render_endpoint_section(
     heading = "#" * heading_level
     sub_heading = "#" * (heading_level + 1)
 
-    # Resolve the wrapper signature early so we can use it for the sequence
-    # diagram, which appears before the parameter/response detail tables.
     signature = wrapper_signatures.get(
         (doc.method, _normalize_path_for_matching(doc.path))
     )
@@ -527,8 +523,6 @@ def _render_endpoint_section(
     if doc.description and doc.description != doc.summary:
         lines.extend([doc.description, ""])
 
-    # Sequence diagram gives the reader a visual of the full call path
-    # before they read the parameter/response detail tables.
     if method_name is not None:
         lines.extend(
             _render_operation_sequence_diagram(
@@ -776,9 +770,6 @@ def render_endpoint_docs(
     DOCS_SERVICES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "services"
     DOCS_SERVICES_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Every .md here is generated, so clear them first. Writing without clearing
-    # leaves a page behind for any service that stops existing, which is how a
-    # page for a non-Service directory survived earlier regenerations.
     for stale in DOCS_SERVICES_DIR.glob("*.md"):
         stale.unlink()
 
@@ -853,13 +844,6 @@ def _service_page(
         for group_name in group_order:
             if show_group_headers:
                 lines.extend([f"### {group_name}", ""])
-            # A thematic break between consecutive endpoints within a
-            # group makes long pages (e.g. alerting's 37 operations)
-            # scannable. Without it, sections with the same shape
-            # (heading, prose, two tables, a code block) visually
-            # bleed into each other. Not needed before the first
-            # endpoint in a group: the group/service heading above it
-            # is already a strong enough break.
             for idx, doc in enumerate(grouped[group_name]):
                 if idx > 0:
                     lines.extend(["---", ""])
@@ -920,7 +904,6 @@ def _services_readme_page(
     for service in sorted(services):
         title = service.replace("_", " ").title()
         docs = service_endpoint_docs.get(service, [])
-        # Use the first endpoint summary as a short service description.
         blurb = next((d.summary for d in docs if d.summary), "")
         # Use space-content-space for filled cells; single space for empty ones so
         # markdownlint doesn't flag the double-space |  | pattern.

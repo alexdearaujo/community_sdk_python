@@ -39,7 +39,6 @@ def test_phase_bounds_are_honoured_independently():
 
     assert config.rest_timeout == phases
     assert config.rest_timeout is not phases
-    # A long read tolerance must not stretch the gRPC deadline or the shared default.
     assert config.grpc_deadline == 60.0
 
 
@@ -135,8 +134,6 @@ def test_http_exception_keeps_the_verbatim_grpc_code():
     assert HTTPException(404, "not found").grpc_status_code is None
 
 
-# --- per-call overrides (FR-020 to FR-024) ------------------------------------
-
 import ast  # noqa: E402
 import inspect  # noqa: E402
 from pathlib import Path  # noqa: E402
@@ -190,7 +187,6 @@ def test_with_timeout_copies_the_security_fields_and_cannot_change_them():
 
     for field in ("base_path", "auth_email", "auth_token", "verify"):
         assert getattr(slow, field) == getattr(base, field)
-    # The helper's signature is the guarantee: none of the four is a parameter.
     params = set(inspect.signature(APIConfig.with_timeout).parameters) - {"self"}
     assert params == {"timeout", "rest_timeout", "grpc_deadline"}
     with pytest.raises(TypeError):
@@ -198,7 +194,6 @@ def test_with_timeout_copies_the_security_fields_and_cannot_change_them():
 
 
 def test_no_test_fixture_disables_tls_verification():
-    # FR-024: every test need is met without it (research D6).
     tests_root = Path(__file__).resolve().parents[1]
     offenders = []
     for path in tests_root.rglob("*.py"):
@@ -274,7 +269,6 @@ def test_proxy_routing_uses_no_private_httpx_import():
     ],
 )
 def test_settings_are_read_only(field):
-    # Each is read at a different time, so a change would reach only some calls.
     config = APIConfig(**_BASE)
 
     with pytest.raises(AttributeError, match="read-only"):

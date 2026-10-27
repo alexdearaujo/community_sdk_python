@@ -135,8 +135,6 @@ def test_request_json_applies_the_configured_rest_timeout_per_request(
 
     request_json("GET", "/v1/test", api_config_override=_config(rest_timeout=phases))
 
-    # Per request rather than only at client creation, so a with_timeout() copy
-    # sharing this client's connection still applies its own bounds.
     assert captured["timeout"] == phases
     assert captured["timeout"] is not phases
 
@@ -189,8 +187,6 @@ def test_timeout_mutation_never_reaches_a_request(monkeypatch, phase, exposure, 
         config.close()
 
 
-# Kentik slows responses by 1.5s past the per-minute soft limit rather than
-# failing them (FR-037). Measured healthy latency is about 0.6s.
 SOFT_LIMIT_DELAY_SECONDS = 1.5
 
 
@@ -221,7 +217,6 @@ def test_default_timeout_absorbs_the_soft_limit_delay():
         auth_token="token",
     )
     try:
-        # A throttled call is slow, not failed; it must not surface as TransportError.
         assert request_json("GET", "/v1/test", api_config_override=config) == {
             "ok": True
         }
@@ -380,8 +375,6 @@ def test_http_exception_survives_pickling():
 def test_a_success_status_with_an_unusable_body_raises_502(
     monkeypatch: pytest.MonkeyPatch, response: httpx.Response, problem: str
 ):
-    # R2: a non-JSON 200 blamed "status code: 200", and a null body returned an
-    # empty model that nothing validated.
     from kentik_api import KentikAPI
 
     monkeypatch.setattr(httpx.Client, "request", lambda self, *a, **k: response)
@@ -401,7 +394,6 @@ def test_a_success_status_with_an_unusable_body_raises_502(
 def test_a_response_without_quota_headers_records_no_quota(
     monkeypatch: pytest.MonkeyPatch,
 ):
-    # The V5 API sends no X-RateLimit-* headers, so a V5 call has no quota.
     responses = iter(
         [httpx.Response(200, json={"ok": True}), httpx.Response(429, json={})]
     )

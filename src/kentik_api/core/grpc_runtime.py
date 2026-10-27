@@ -27,9 +27,6 @@ from kentik_api.errors import (
     TransportError,
 )
 
-# Every non-OK code is classified explicitly, so none reaches a silent default.
-# The HTTP value is the canonical grpc-gateway equivalent, the same status
-# Kentik's Envoy transcoder returns to REST callers for that code.
 _GRPC_STATUS_TO_HTTP: dict[grpc.StatusCode, int] = {
     grpc.StatusCode.INVALID_ARGUMENT: 400,
     grpc.StatusCode.FAILED_PRECONDITION: 400,
@@ -45,8 +42,6 @@ _GRPC_STATUS_TO_HTTP: dict[grpc.StatusCode, int] = {
     grpc.StatusCode.UNIMPLEMENTED: 501,
 }
 
-# No response arrived for these, which REST reports as TransportError via
-# httpx.RequestError. Claiming an HTTP status here would invent one.
 _NO_RESPONSE_CODES: frozenset[grpc.StatusCode] = frozenset(
     {
         grpc.StatusCode.CANCELLED,
@@ -76,7 +71,6 @@ def _rpc_status(exc: grpc.RpcError) -> dict[str, Any] | None:
         try:
             details.append(MessageToDict(detail))
         except (KeyError, TypeError):
-            # A detail type this process has no descriptor for.
             details.append({"@type": detail.type_url})
     return {"code": status.code, "message": status.message, "details": details}
 
@@ -179,7 +173,6 @@ def build_grpc_request(
         node[leaf] = value
     try:
         request = ParseDict(body or {}, message_cls())
-        # ParseDict merges into `request`, so path fields land inside the body.
         request = ParseDict(nested, request)
     except ParseError as exc:
         raise ConfigurationError(
@@ -207,9 +200,6 @@ def _method_label(stub_method) -> str:
 
 
 def _validate_grpc_override(api_config: APIConfig) -> None:
-    # gRPC auth metadata and target are bound to the channel at transport setup.
-    # A direct APIConfig(...) passed per call cannot change them safely; a
-    # with_timeout() copy cannot change them at all.
     if not api_config.is_timeout_copy:
         raise ConfigurationError(
             "gRPC api_config_override must come from client.api_config.with_timeout(...). "

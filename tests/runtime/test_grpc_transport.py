@@ -254,8 +254,6 @@ def test_a_response_over_the_limit_is_a_transport_error_not_a_quota_error():
         server.stop(0)
 
 
-# --- upstream workaround: services that fail on a deadline (AGENTS.md) ---------
-
 AUDIT = "/kentik.audit.public.v202601.AuditService/ListAuditEvents"
 LABEL = "/kentik.label.v202210.LabelService/ListLabels"
 

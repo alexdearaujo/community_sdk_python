@@ -16,7 +16,6 @@ NOT_IMPLEMENTED = (
 
 _BOTH = ("rest", "grpc")
 
-# "<WrapperClass>.<method>": (reason, transports that hit it)
 SERVER_ERRORS: dict[str, tuple[str, tuple[str, ...]]] = {
     "AlertingServiceWrapper.auto_ack_get": (UNKNOWN_ID, _BOTH),
     "AlertingServiceWrapper.list_comments": (UNKNOWN_ID, _BOTH),

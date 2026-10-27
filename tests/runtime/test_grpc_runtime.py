@@ -20,8 +20,6 @@ from kentik_api.errors import (
     TransportError,
 )
 
-# The table in contracts/runtime-api.md section 3, restated so a change to the
-# runtime's mapping has to be made deliberately in two places.
 HTTP_MAPPED = {
     grpc.StatusCode.INVALID_ARGUMENT: 400,
     grpc.StatusCode.FAILED_PRECONDITION: 400,
@@ -58,7 +56,6 @@ def test_unauthenticated_raises_auth_error(rpc_error):
 
 
 def test_google_rpc_status_details_reach_the_error(rpc_error):
-    # REST returns these details in the JSON error body; gRPC sends them in a trailer.
     from google.protobuf.any_pb2 import Any as AnyMessage
     from google.rpc import error_details_pb2, status_pb2
 
@@ -200,7 +197,6 @@ def test_call_grpc_returns_the_stub_response_unchanged():
     )
 
     assert response == ("reply", request)
-    # A plain callable exposes no call metadata, so there is no quota to report.
     assert rate_limit is None
 
 
@@ -226,9 +222,6 @@ def test_call_grpc_labels_unknown_when_the_stub_has_no_label(rpc_error):
         call_grpc(_stub, object())
 
     assert exc_info.value.path == "unknown"
-
-
-# --- build_grpc_request -------------------------------------------------------
 
 
 @pytest.fixture
@@ -270,7 +263,6 @@ def test_build_grpc_request_skips_unset_fields(device_pb2):
 
 
 def test_build_grpc_request_rejects_a_field_the_request_does_not_declare(device_pb2):
-    # A silently dropped argument is how gRPC calls once went out with an empty id.
     with pytest.raises(ConfigurationError):
         build_grpc_request(device_pb2.GetDeviceRequest, None, {"deviceid": "42"})
 
@@ -283,8 +275,6 @@ def test_build_grpc_request_rejects_a_field_the_request_does_not_declare(device_
     ],
 )
 def test_build_grpc_request_rejects_an_unknown_body_key(capability_pb2, body, bad):
-    # R11: a dropped key left the update mask empty, so the PATCH would replace
-    # every field of the capability instead of failing.
     with pytest.raises(ConfigurationError, match=bad):
         build_grpc_request(
             capability_pb2.UpdateCapabilityRequest,
@@ -310,8 +300,6 @@ def capability_pb2():
 
 
 def test_patch_derives_update_mask_from_the_sent_keys(capability_pb2):
-    # R12: grpc-gateway fills the mask from the REST body; an empty mask on gRPC
-    # would replace every field of the capability, not just the ones sent.
     request = build_grpc_request(
         capability_pb2.UpdateCapabilityRequest,
         {"capability": {"displayName": "Edge", "description": ""}},
@@ -429,7 +417,6 @@ def test_call_grpc_raises_the_operation_error_class_like_rest(rpc_error):
     with pytest.raises(GetThingUnexpectedError):
         call_grpc(failing(grpc.StatusCode.INTERNAL), object(), error_cls=GetThingError)
 
-    # Auth and transport failures keep their own types, as on REST.
     with pytest.raises(AuthenticationError):
         call_grpc(
             failing(grpc.StatusCode.UNAUTHENTICATED), object(), error_cls=GetThingError

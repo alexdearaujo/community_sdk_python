@@ -206,7 +206,6 @@ class DataQueryDefinition:
     def from_dict(cls, qd: dict) -> DataQueryDefinition:
         if "query" not in qd:
             raise ValueError(f"No query template in query definition: {qd}")
-        # A 1.x SQL definition holds its query as SQL text, not JSON.
         if isinstance(qd["query"], str) and not qd["query"].lstrip().startswith("{"):
             raise ValueError(_SQL_RETIRED)
         if "mappings" not in qd:

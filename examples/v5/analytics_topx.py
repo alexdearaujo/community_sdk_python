@@ -95,7 +95,6 @@ def main() -> None:
     if df.empty:
         print("Got no flow data")
         return
-    # 1.x did this with an '@fixup:' lambda in the definition; plain pandas is safer.
     df["link"] = df["link"].str.split(" : ").str[0]
     # topXdata can return duplicate time series entries.
     df = dedup_data_frame(df, ["ts", "link"])

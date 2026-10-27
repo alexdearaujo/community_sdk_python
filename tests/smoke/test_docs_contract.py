@@ -23,7 +23,6 @@ def test_changelog_command_does_not_name_a_tag_without_a_surface_record():
 def test_poe_lists_every_task():
     with (ROOT / "pyproject.toml").open("rb") as f:
         tasks = tomllib.load(f)["tool"]["poe"]["tasks"]
-    # Bare `poe` prints the task list and exits 1, because no task ran.
     result = subprocess.run(
         [sys.executable, "-m", "poethepoet", "--no-ansi"],
         cwd=ROOT,

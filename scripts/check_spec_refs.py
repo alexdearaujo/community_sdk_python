@@ -85,8 +85,6 @@ def check_feature(feature_dir: Path) -> tuple[list[str], bool]:
     problems += _contiguous(scs, "SC")
     problems += _contiguous(task_ids, "T")
 
-    # Out-of-scope requirements are declarative, so they are exempt from needing
-    # a task. Everything defined after the marker is treated as such.
     cutoff = OUT_OF_SCOPE.search(spec_text)
     exempt = set()
     if cutoff:
@@ -120,8 +118,6 @@ def main() -> int:
         problems, shipped = check_feature(feature_dir)
         if not problems:
             continue
-        # A shipped feature's artifacts are history. Report them, but do not
-        # block work on the feature currently in flight.
         label = "warnings, feature already complete" if shipped else "errors"
         failed = failed or not shipped
         print(f"\n{feature_dir.relative_to(PROJECT_ROOT)} ({label}):")

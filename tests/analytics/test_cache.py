@@ -124,7 +124,6 @@ def test_file_names_have_no_colon(tmp_path: Path):
 @pytest.mark.parametrize(
     ("name", "start", "end"),
     [
-        # Written before file names avoided `:`, on macOS or Linux.
         (
             "2025-10-16T00:00:00+00:00_2025-10-16T01:00:00+00:00.parquet",
             START,

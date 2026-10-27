@@ -60,12 +60,9 @@ class StatusCase:
     status_key: str
     is_success: bool
     error_class_name: str | None
-    # Set when the shared runtime, not the generated error class, owns the status.
     runtime_error: type[KentikError] | None = None
 
 
-# Handled by `request_json` for every operation (FR-007), so no generated
-# `response_error_map` can take them over.
 RUNTIME_HANDLED: dict[int, type[KentikError]] = {401: AuthenticationError}
 
 
@@ -226,7 +223,6 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
                 if case.status_code == 204:
                     assert result is None
                 elif message is None:
-                    # No proto to compare with: the body must survive parsing.
                     dumped = (
                         result.model_dump(mode="json", by_alias=True, exclude_none=True)
                         if isinstance(result, BaseModel)
@@ -246,7 +242,6 @@ def test_endpoint_handles_declared_status_code(case: StatusCase):
                 error_module = error_module_for(
                     getattr(module, wrapper_case.rest_module_alias)
                 )
-                # error_class_name is only None for success cases, excluded by this branch.
                 assert case.error_class_name is not None
                 expected_cls = getattr(error_module, case.error_class_name)
                 with pytest.raises(HTTPException) as exc_info:
@@ -309,7 +304,6 @@ def test_an_unknown_enum_value_over_grpc_is_the_same_502(monkeypatch):
     from kentik_api.gen.user.services import user as user_wrapper
 
     response = user_pb2.ListUsersResponse()
-    # gRPC carries an enum number this SDK's descriptor does not name.
     response.users.add(id="1", default_landing_page_type=99)
     monkeypatch.setattr(user_wrapper, "call_grpc", lambda *a, **kw: (response, None))
     transport = MagicMock(spec=GrpcTransport)

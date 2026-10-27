@@ -21,10 +21,6 @@ from scripts.generation.endpoint_docs import (
     render_endpoint_docs,
 )
 
-# ---------------------------------------------------------------------------
-# Fixture helpers
-# ---------------------------------------------------------------------------
-
 _REST_MODULE = """\
 from typing import Optional
 from kentik_api.core.api_config import APIConfig
@@ -81,11 +77,6 @@ def _make_wrapper(services_dir: Path, service: str, rest_stem: str) -> Path:
         encoding="utf-8",
     )
     return wrapper
-
-
-# ---------------------------------------------------------------------------
-# Tests
-# ---------------------------------------------------------------------------
 
 
 def test_parse_wrapper_method_signatures_maps_list_operation(tmp_path: Path) -> None:
@@ -169,14 +160,9 @@ def test_parse_wrapper_method_signatures_skips_init(tmp_path: Path) -> None:
 
     result = parse_wrapper_method_signatures(wrapper)
 
-    # __init__ should never appear as a key
     for method_name, _, _ in result.values():
         assert method_name != "__init__"
 
-
-# ---------------------------------------------------------------------------
-# parse_wrapper_methods (shared parser)
-# ---------------------------------------------------------------------------
 
 _WRAPPER_FIXTURE = """\
 import kentik_api.gen.thing.services.ThingService as RestThingModule1
@@ -228,11 +214,6 @@ def test_parse_wrapper_methods_empty_without_class(tmp_path: Path) -> None:
     assert parse_wrapper_methods(f) == []
 
 
-# ---------------------------------------------------------------------------
-# _provenance: the AUTO-GENERATED header must name code that actually exists
-# ---------------------------------------------------------------------------
-
-
 def test_provenance_names_a_function_that_resolves():
     """Guards the defect where 42 pages named a function that did not exist.
 
@@ -265,11 +246,6 @@ def test_provenance_tracks_a_rename():
     assert "some_other_writer()" in _provenance(some_other_writer)
 
 
-# ---------------------------------------------------------------------------
-# EndpointDocsCollector.extract: failures must surface, not be swallowed
-# ---------------------------------------------------------------------------
-
-
 def test_extract_propagates_failure_instead_of_swallowing_it(tmp_path: Path):
     """A swallowed failure yields a silently empty page while the run succeeds.
 
@@ -284,8 +260,6 @@ def test_extract_propagates_failure_instead_of_swallowing_it(tmp_path: Path):
     with pytest.raises(ValueError, match="Expecting"):
         collector.extract("broken_service", unparseable)
 
-
-# --- end to end, against a sandbox copy of the committed tree -----------------
 
 import json  # noqa: E402
 
@@ -309,8 +283,6 @@ def _ok(schema: str) -> dict:
     }
 
 
-# Three device operations rebuilt from what the committed page shows of the
-# patched schema, so the rendered sections can be compared with it exactly.
 _DEVICE_SWAGGER = {
     "openapi": "3.0.1",
     "tags": [{"name": "DeviceService"}],
@@ -434,7 +406,6 @@ def _section(page: str, heading: str) -> str:
 
 
 def _without_provenance(page: str) -> str:
-    # The header names the writer relative to PROJECT_ROOT, which the sandbox moves.
     return page.split("\n", 1)[1]
 
 
@@ -446,7 +417,6 @@ def _model_directives(page: str) -> set[str]:
 def rendered(sandbox, tmp_path) -> Path:
     collector = EndpointDocsCollector()
     collector.extract("device", _write(tmp_path, "device.json", _DEVICE_SWAGGER))
-    # Two files reusing the operationId `List`, as alerting's real schema does.
     collector.extract(
         "alerting",
         _write(
@@ -463,7 +433,6 @@ def rendered(sandbox, tmp_path) -> Path:
             _alerting_swagger("/v202505/alerts", "AlertService"),
         ),
     )
-    # A swagger file with no operations contributes no section at all.
     collector.extract(
         "alerting", _write(tmp_path, "empty.json", {"openapi": "3.0.1", "paths": {}})
     )
@@ -491,8 +460,6 @@ def test_endpoint_sections_match_the_committed_page_exactly(rendered, heading):
 
 
 def test_every_model_gets_the_same_directive_as_the_committed_page(rendered):
-    # The relationship diagram in this section depends on which operations the
-    # swagger declares, so compare the per-model directives, which do not.
     produced = (rendered / "device.md").read_text()
     committed = (_COMMITTED_PAGES / "device.md").read_text()
 
@@ -555,8 +522,6 @@ _PRIMITIVE_LABELS = {"-", "string", "boolean", "integer", "number", "object"}
     ids=lambda p: p.stem,
 )
 def test_every_model_a_committed_page_names_exists_in_the_sdk(page):
-    # Raw swagger names (v202504beta2ListDevicesResponse) mean extract() read
-    # the unpatched schema.
     defined = {
         p.stem
         for p in (_REPO / "src/kentik_api/gen" / page.stem / "models").glob("*.py")

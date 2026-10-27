@@ -31,7 +31,6 @@ def _declared() -> set[NormalizedName]:
         *(s for group in pyproject["dependency-groups"].values() for s in group),
         *pyproject["build-system"]["requires"],
     ]
-    # `{include-group = ...}` tables and the project's own extra are not packages to declare.
     names = {
         canonicalize_name(Requirement(s).name) for s in specs if isinstance(s, str)
     }

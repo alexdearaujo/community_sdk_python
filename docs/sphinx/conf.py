@@ -4,7 +4,6 @@ import os
 import re
 import sys
 
-# Point Sphinx directly at the generated SDK so autodoc can read the code
 sys.path.insert(0, os.path.abspath("../../src"))
 
 project = "Kentik API - Python SDK"
@@ -12,13 +11,10 @@ copyright = "2026, Kentik"
 author = "Alex DeAraujo"
 
 
-# Explicitly tell Sphinx to accept both .md and .rst files
 source_suffix = [".rst", ".md"]
 
-# Explicitly tell Sphinx the homepage is named "index" (so it stops looking for index.rst)
 root_doc = "index"
 
-# Exclude GitHub-browsable README files (not Sphinx pages) and build artifacts.
 # "**/README.md" does not match a README at the source root, so list it too.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "README.md", "**/README.md"]
 
@@ -35,14 +31,11 @@ extensions = [
     "sphinxcontrib.mermaid",  # Renders Mermaid diagrams (replaces PlantUML)
 ]
 
-# Tell MyST we want to use the {include} and {eval-rst} directives
 myst_enable_extensions = [
     "alert",
     "colon_fence",
 ]
 
-# Route plain ```mermaid fenced blocks through the mermaid directive, so the
-# same fence renders natively on GitHub and via sphinxcontrib.mermaid here.
 myst_fence_as_directive = ["mermaid"]
 
 html_theme = "sphinx_book_theme"
@@ -59,7 +52,6 @@ html_theme_options = {
     "use_download_button": False,
 }
 
-# Clean up Pydantic model rendering
 autodoc_pydantic_model_show_json = True
 autodoc_pydantic_settings_show_json = False
 autodoc_pydantic_model_show_config_summary = False
@@ -94,5 +86,4 @@ def setup(app):
 
     app.add_autodocumenter(SchemaTextFieldDocumenter, override=True)
     logger = getLogger("sphinx")
-    # Dig into the underlying standard python logger to add the filter
     logger.logger.addFilter(SuppressDocutilsFilter())

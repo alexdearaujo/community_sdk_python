@@ -29,10 +29,6 @@ from scripts.generation.fixup import (
     fix_generated_service,
 )
 
-# ---------------------------------------------------------------------------
-# _rebuild_models_init
-# ---------------------------------------------------------------------------
-
 
 def test_rebuild_models_init_exports_all_classes(tmp_path):
     models = tmp_path / "models"
@@ -60,13 +56,7 @@ def test_rebuild_models_init_skips_nonclass_files(tmp_path):
 
 
 def test_rebuild_models_init_noop_without_models_dir(tmp_path):
-    # Must not raise when models/ is absent
     _rebuild_models_init(tmp_path)
-
-
-# ---------------------------------------------------------------------------
-# _fix_wildcard_exports
-# ---------------------------------------------------------------------------
 
 
 def test_fix_wildcard_exports_replaces_star_import(tmp_path):
@@ -90,24 +80,13 @@ def test_fix_wildcard_exports_skips_error_dirs(tmp_path):
 
     _fix_wildcard_exports(tmp_path)
 
-    # error/__init__.py must not be touched
     assert init.read_text() == original
-
-
-# ---------------------------------------------------------------------------
-# _patch_service_files: auth header patch
-# ---------------------------------------------------------------------------
 
 
 def _make_service_dir(tmp_path: Path) -> Path:
     services = tmp_path / "services"
     services.mkdir(parents=True)
     return services
-
-
-# ---------------------------------------------------------------------------
-# _patch_service_files: import alias patch
-# ---------------------------------------------------------------------------
 
 
 def test_patch_import_alias(tmp_path):
@@ -120,11 +99,6 @@ def test_patch_import_alias(tmp_path):
     content = f.read_text()
     assert "from kentik_api.core.api_config import APIConfig" in content
     assert "from kentik_api.errors import HTTPException" in content
-
-
-# ---------------------------------------------------------------------------
-# _dedupe_top_level_function_names
-# ---------------------------------------------------------------------------
 
 
 def test_dedupe_function_names_renames_second_duplicate():
@@ -148,11 +122,6 @@ def test_dedupe_function_names_leaves_unique_names_unchanged():
     assert _dedupe_top_level_function_names(content) == content
 
 
-# ---------------------------------------------------------------------------
-# _normalize_triple_quoted_docstrings
-# ---------------------------------------------------------------------------
-
-
 def test_normalize_docstrings_flattens_indentation():
     content = textwrap.dedent('''\
         class Foo:
@@ -165,7 +134,6 @@ def test_normalize_docstrings_flattens_indentation():
 
     result = _normalize_triple_quoted_docstrings(content)
 
-    # Both lines should end up at the same indent: the extra-deep line is flattened
     lines = [
         ln
         for ln in result.splitlines()
@@ -183,11 +151,6 @@ def test_normalize_docstrings_leaves_single_line_untouched():
     assert _normalize_triple_quoted_docstrings(content) == content
 
 
-# ---------------------------------------------------------------------------
-# _patch_service_files: wildcard typing import
-# ---------------------------------------------------------------------------
-
-
 def test_patch_typing_wildcard_import(tmp_path):
     svc = _make_service_dir(tmp_path)
     f = svc / "DeviceService.py"
@@ -198,11 +161,6 @@ def test_patch_typing_wildcard_import(tmp_path):
     content = f.read_text()
     assert "from typing import *" not in content
     assert "from typing import" in content
-
-
-# ---------------------------------------------------------------------------
-# fix_generated_service: smoke test (all three helpers run without error)
-# ---------------------------------------------------------------------------
 
 
 def test_fix_generated_service_smoke(tmp_path):
@@ -242,11 +200,6 @@ def test_fix_generated_service_ignores_an_ancestor_named_pb_or_error(tmp_path, p
         "from kentik_api.core.api_config import APIConfig"
         in (services / "DeviceService.py").read_text()
     )
-
-
-# ---------------------------------------------------------------------------
-# Individual transform functions
-# ---------------------------------------------------------------------------
 
 
 def test_fix_import_aliases_combined():

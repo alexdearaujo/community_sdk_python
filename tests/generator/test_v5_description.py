@@ -20,7 +20,6 @@ _DESCRIPTION = (
 )
 _SCHEMA = json.loads(_DESCRIPTION.read_text(encoding="utf-8"))
 
-# contracts/v5-service.md. Every other V5 endpoint has a V6 equivalent.
 EXPECTED_OPERATIONS = {
     "POST /query/topXdata",
     "POST /query/topXchart",

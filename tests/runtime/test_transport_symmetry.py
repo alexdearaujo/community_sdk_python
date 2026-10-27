@@ -23,7 +23,6 @@ from kentik_api.errors import (
 
 _REQUEST = httpx.Request("GET", "https://api.example.com/device/v202504beta2/device")
 
-# (REST outcome, equivalent gRPC status, exception both must raise)
 CASES = {
     "auth rejected": (
         httpx.Response(
@@ -84,8 +83,6 @@ def test_same_failure_raises_same_type_on_both_transports(
     with pytest.raises(KentikError) as grpc_exc:
         _grpc_call(rpc_error, grpc_code)
 
-    # Exact type, not isinstance: an HTTPException subclass here would still
-    # break an `except TransportError:` written against the other transport.
     assert type(rest_exc.value) is expected
     assert type(grpc_exc.value) is expected
 
@@ -93,9 +90,6 @@ def test_same_failure_raises_same_type_on_both_transports(
 def test_api_fault_reaches_the_same_except_branch_on_both_transports(
     monkeypatch, rpc_error
 ):
-    # REST raises the operation's generated HTTPException subclass and gRPC the
-    # base class, so parity here is the `except HTTPException:` branch, with the
-    # same status either way.
     fault = httpx.Response(
         404, json={"code": 5, "message": "no such device"}, request=_REQUEST
     )

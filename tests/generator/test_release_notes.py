@@ -151,16 +151,10 @@ def _fake_git(head_tags: list[str], merged: list[str]):
 @pytest.mark.parametrize(
     ("head_tags", "merged", "expected"),
     [
-        # Version order, not tag date or name order.
         ([], ["v1.0.9", "v1.0.10", "v1.0.2"], ["v1.0.10", "v1.0.9", "v1.0.2"]),
-        # A release skips its own tag. Unmerged newer tags never appear because
-        # `git tag --merged HEAD` already leaves them out.
         (["v1.0.8"], ["v1.0.7", "v1.0.8"], ["v1.0.7"]),
-        # A final release skips its own pre-releases.
         (["v1.1.0"], ["v1.0.7", "v1.1.0rc1", "v1.1.0"], ["v1.0.7"]),
-        # A pre-release may compare against an earlier pre-release.
         (["v1.1.0rc2"], ["v1.0.7", "v1.1.0rc1", "v1.1.0rc2"], ["v1.1.0rc1", "v1.0.7"]),
-        # Tags that are not versions are ignored.
         ([], ["nightly", "v1.0.7"], ["v1.0.7"]),
     ],
 )

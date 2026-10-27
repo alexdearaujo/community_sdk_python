@@ -35,7 +35,6 @@ def _parse_version(raw: str) -> Version:
 
 
 def _requirement(specifiers: list, package: str) -> str:
-    # Dependency groups interleave `{include-group: ...}` tables among the strings.
     for spec in (s for s in specifiers if isinstance(s, str)):
         if re.match(rf"^{re.escape(package)}\s*[<>=!~\[]", spec):
             return spec

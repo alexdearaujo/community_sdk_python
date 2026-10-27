@@ -14,11 +14,8 @@ from kentik_api.errors import ConfigurationError, HTTPException, TransportError
 
 __all__ = ["APIConfig", "HTTPException"]
 
-# Retries only a failed connection attempt, which never reached the server, so
-# no request can be replayed (FR-032). A response of any status is never retried.
 _CONNECT_RETRIES = 2
 
-# A request extension holding the call's time.monotonic() deadline.
 DEADLINE_EXTENSION = "kentik_deadline"
 
 
@@ -104,8 +101,6 @@ def _is_timeout_failure(error: TransportError) -> bool:
     return isinstance(error.__cause__, httpx.TimeoutException)
 
 
-# Read at different times (client creation, each call, gRPC channel setup), so a
-# later change would apply to some calls and not others.
 _READ_ONLY = frozenset(
     {
         "base_path",
@@ -168,7 +163,6 @@ class APIConfig:
         rest_timeout = httpx.Timeout(rest_timeout)
         for phase in ("connect", "read", "write", "pool"):
             bound = getattr(rest_timeout, phase)
-            # httpx reads None as "wait forever", which is the hang this bound exists to prevent.
             if bound is None:
                 raise ConfigurationError(
                     f"rest_timeout.{phase} must be set; None would wait forever"
@@ -181,16 +175,12 @@ class APIConfig:
         _require_positive("grpc_deadline", grpc_deadline)
         self.grpc_deadline: float = grpc_deadline
 
-        # Keyed by endpoint: the REST method and path template, or the gRPC
-        # method. Kentik enforces quota per endpoint, so one client-wide value
-        # would mix budgets.
         self.rate_limits: dict[str, RateLimit] = {}
 
         self._client: httpx.Client | None = None
         self._closed = False
         self._client_lock = threading.Lock()
         self._pid = os.getpid()
-        # Set on a with_timeout() copy, which borrows its origin's connection.
         self._shares_client_of: APIConfig | None = None
         self._rest_wait_deadline: float | None = None
 

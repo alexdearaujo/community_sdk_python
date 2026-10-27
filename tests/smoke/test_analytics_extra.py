@@ -32,7 +32,6 @@ else:
 
 
 def test_analytics_without_the_extra_names_the_extra_to_install():
-    # A fresh interpreter, so modules this test session already imported do not count.
     result = subprocess.run(
         [sys.executable, "-c", _SCRIPT], capture_output=True, text=True, check=True
     )

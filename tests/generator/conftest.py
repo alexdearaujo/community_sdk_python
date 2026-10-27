@@ -27,9 +27,6 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 REAL_PACKAGE = REPO_ROOT / "src" / "kentik_api"
 REAL_GEN = REAL_PACKAGE / "gen"
 
-# device: one swagger file, gRPC stubs for every operation.
-# alerting: many swagger files that reuse generic operationIds such as `List`.
-# core: a Service with models and protos but no REST paths, so no wrapper.
 SANDBOX_SERVICES = ("device", "alerting", "core")
 
 _HAND_WRITTEN = (

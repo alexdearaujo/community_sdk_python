@@ -31,7 +31,6 @@ from kentik_api.gen.v5.models import (
 if TYPE_CHECKING:
     from kentik_api.client import KentikAPI
 
-# The API's limit for one batch part.
 BATCH_PART_LIMIT = 4_000_000
 
 _DATA_URI = re.compile(
@@ -61,7 +60,6 @@ def decode_chart(response: ChartResponse) -> ChartImage:
 
 
 def _unusable(problem: str) -> HTTPException:
-    # Same status as any other unusable success body (see rest_runtime).
     return HTTPException(
         502,
         f"TopXChart returned an unusable chart: {problem}.",
@@ -139,7 +137,6 @@ def split_batch(
 
 def _part(items: dict[str, list[Any]], replace_all: bool, complete: bool) -> BatchPart:
     part = BatchPart(replace_all=replace_all, complete=complete)
-    # Assigned only when present, so an empty list is not sent as a key.
     if items["upserts"]:
         part.upserts = items["upserts"]
     if items["deletes"]:

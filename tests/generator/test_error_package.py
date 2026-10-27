@@ -42,7 +42,6 @@ def test_service_error_response_class_name_unknown_status_falls_back_to_http_pre
         ("list_devices", "ListDevices"),
         ("auto_ack_list", "AutoAckList"),
         ("get_event_by_ctime", "GetEventByCtime"),
-        # `ImportError` is a builtin, so the Service title goes in front.
         ("import_", "DeviceImport"),
     ],
 )
@@ -198,7 +197,6 @@ def test_a_renamed_operation_id_keeps_the_error_class(tmp_path: Path):
 
 
 def test_a_shared_operation_id_gets_one_error_class_per_method(tmp_path: Path):
-    # alerting: AlertService and AlertAutoAckService both declare `List`.
     service_dir, method_names, errors = _service(
         tmp_path,
         {

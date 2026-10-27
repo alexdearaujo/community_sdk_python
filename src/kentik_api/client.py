@@ -13,7 +13,6 @@ from kentik_api.errors import ConfigurationError
 from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 
-# (grpc_target, rest_base_url) per region name.
 _REGION_ENDPOINTS: dict[str, tuple[str, str]] = {
     "us": ("grpc.api.kentik.com:443", "https://grpc.api.kentik.com"),
     "eu": ("grpc.api.kentik.eu:443", "https://grpc.api.kentik.eu"),
@@ -105,7 +104,6 @@ class KentikAPI(KentikClientMixin):
 
         v5_base_url = v5_base_url or _V5_BASE_URLS[region.lower()]
         if not v5_base_url.startswith("https://"):
-            # Plain http would send the credentials in clear text.
             raise ConfigurationError(
                 f"v5_base_url must start with https://, got '{v5_base_url}'."
             )
@@ -130,8 +128,6 @@ class KentikAPI(KentikClientMixin):
                 f"Invalid protocol '{protocol}'. Must be 'grpc' or 'rest'."
             )
 
-        # V5 endpoints exist only on REST, so they need a REST transport on
-        # every client, gRPC ones included.
         self._v5_transport = RestTransport(
             APIConfig(
                 base_path=v5_base_url,

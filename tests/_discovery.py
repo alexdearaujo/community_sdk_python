@@ -224,7 +224,6 @@ def _sample_value_for_type(
     if annotation is inspect.Parameter.empty:
         return sample_value_by_name(name)
     if annotation is Any:
-        # A model field typed Any is sent as JSON, so it needs a JSON value.
         value = sample_value_by_name(name)
         return f"{name}_value" if type(value) is object else value
 
@@ -245,8 +244,6 @@ def _sample_value_for_type(
         return {}
 
     if annotation is APIConfig:
-        # A per-call override replaces the client's config, so a usable sample
-        # needs its own credentials; `verify` stays at its safe default.
         return APIConfig(
             base_path="https://api.example.com",
             auth_email="override@example.com",
@@ -260,10 +257,6 @@ def _sample_value_for_type(
         return next(iter(annotation))
 
     if annotation is str:
-        # id/offset/limit/...-like and *time-suffixed names get values a real
-        # ParseDict() call accepts: numeric strings for int64 proto fields,
-        # RFC3339 for Timestamp fields. REST accepts either as a plain string
-        # (discovered via tests/e2e/test_endpoints_e2e_grpc.py).
         lowered = name.lower()
         if lowered in _NUMERIC_ID_NAMES or lowered in _NUMERIC_COUNT_NAMES:
             return "1"
@@ -338,7 +331,6 @@ def proto_sample_value(field: Any, value: Any) -> Any:
     return value
 
 
-# JSON samples the well-known types accept, which a model's `str` sample is not.
 _WELL_KNOWN_SAMPLES = {
     "google.protobuf.Timestamp": _SAMPLE_TIMESTAMP,
     "google.protobuf.Duration": "1s",
@@ -398,7 +390,6 @@ def _proto_sample_item(field: Any, value: Any) -> Any:
     if message_type.full_name in _WELL_KNOWN_SAMPLES:
         return proto_sample_value(field, value)
     if message_type.full_name.startswith("google.protobuf."):
-        # A wrapper type (Int64Value, StringValue, ...) is its `value` field in JSON.
         return proto_sample_value(message_type.fields_by_name["value"], value)
     return proto_sample_body(message_type, value)
 
@@ -619,6 +610,4 @@ def discover_endpoint_cases() -> list[EndpointCase]:
 
 
 def service_attr(case: EndpointCase) -> str:
-    # module_path is "kentik_api.gen.<service>.<services|service>.<service>";
-    # KentikClientMixin mounts wrappers as self.<service> using that same name.
     return case.wrapper.module_path.split(".")[2]

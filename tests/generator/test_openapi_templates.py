@@ -11,13 +11,11 @@ from jinja2 import Environment, FileSystemLoader
 from scripts.generation._shared import REGENERATE_COMMAND
 
 _TEMPLATES = Path(__file__).resolve().parents[2] / "scripts" / "openapi_templates"
-# Quotes, an HTML character, a backslash, a triple quote, and a line break.
 _TEXT = 'Use "equals" & <b>\\d+</b>.\n\nNot """ this.'
 
 
 @pytest.fixture
 def env() -> Environment:
-    # openapi-python-generator's jinja_config: autoescape on, trim_blocks on.
     environment = Environment(
         loader=FileSystemLoader(_TEMPLATES), autoescape=True, trim_blocks=True
     )
@@ -88,8 +86,6 @@ def _model_type(env: Environment, additional_properties) -> type:
 
 
 def test_additional_properties_true_keeps_and_sends_unknown_fields(env):
-    # V5 query JSON copied from Data Explorer carries fields the description
-    # does not type; they must reach the API unchanged.
     thing = _model_type(env, True)(metric="bytes", cutFnRegex={"a": 1})
 
     assert thing.model_dump(by_alias=True, exclude_unset=True) == {
@@ -102,7 +98,6 @@ def test_additional_properties_true_keeps_and_sends_unknown_fields(env):
     "additional_properties", [None, False, SimpleNamespace(type="string")]
 )
 def test_other_schemas_keep_dropping_unknown_fields(env, additional_properties):
-    # A typed additionalProperties is a map, which upstream V6 schemas use.
     thing = _model_type(env, additional_properties)(metric="bytes", extra=1)
 
     assert thing.model_dump(by_alias=True, exclude_unset=True) == {"metric": "bytes"}
@@ -143,6 +138,5 @@ def test_rest_function_docstring_is_the_summary_and_description(
 
 
 def test_service_template_header_names_the_regenerate_command():
-    # The template cannot import the constant, so this test keeps the two in step.
     header = (_TEMPLATES / "service.jinja2").read_text(encoding="utf-8").splitlines()[1]
     assert header == f"# Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand."

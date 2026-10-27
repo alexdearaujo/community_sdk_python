@@ -11,10 +11,6 @@ from scripts.generation.docs_rendering import (
 
 _PACKAGE_ROOT = Path(__file__).resolve().parents[2] / "src" / "kentik_api"
 
-# Hand-written modules the architecture diagram must never silently drop.
-# _generate_runtime_architecture_docs() skips any module _module_group() maps to
-# None, so an unmapped module vanishes from the diagram with no error at all.
-# That is how core.grpc_runtime went missing from it entirely.
 _HAND_WRITTEN_DIRS = ("auth", "core", "errors", "transports")
 
 
@@ -49,8 +45,6 @@ def test_every_layer_in_group_config_has_a_layer_name():
 
 def test_group_config_covers_all_module_group_return_values():
     """_module_group() should only return labels that appear in _GROUP_CONFIG."""
-    # Exercise a representative sample of module paths through _module_group
-    # to verify their return values are in _GROUP_CONFIG.
     sample_modules = [
         ("kentik_api.client", None),
         ("kentik_api.client_mixin", None),
@@ -81,8 +75,6 @@ def test_group_config_has_no_duplicate_layer_assignments():
         "Duplicate keys in _GROUP_CONFIG"
     )
 
-
-# --- end to end, against a sandbox copy of the committed tree -----------------
 
 import re  # noqa: E402
 
@@ -131,7 +123,6 @@ def test_architecture_page_matches_committed_apart_from_edge_counts(sandbox):
     service_dependent = [
         (re.compile(r'\|"x\d+"\|'), "|x|"),
         (re.compile(r"\d+ Services are in that state today: [^\n]*"), "N Services ..."),
-        # The sandbox has no local schema base, so it has no REST-only section.
         (re.compile(r"\n## REST-Only Services\n.*\Z", re.DOTALL), ""),
     ]
 
@@ -142,7 +133,6 @@ def test_architecture_page_matches_committed_apart_from_edge_counts(sandbox):
 
     produced = (sandbox.root / rel).read_text()
     assert normalized(produced) == normalized((_REPO / rel).read_text())
-    # The normalized parts are real, not copied: they reflect the sandbox.
     assert '|"x51"|' not in produced
     assert "1 Services are in that state today: `core`." in produced
 
@@ -179,7 +169,6 @@ def test_marker_blocks_describe_the_services_actually_present(sandbox):
     docs_rendering.generate()
 
     guides = sandbox.docs / "guides"
-    # device and alerting have wrappers; core does not but is still a Service.
     assert _marker((guides / "generation.md").read_text(), "service-count") == "3"
     assert _marker((sandbox.docs / "README.md").read_text(), "service-count") == "3"
     quickstart = (guides / "quickstart.md").read_text()

@@ -35,7 +35,6 @@ def _generated(service: str) -> dict[str, RestOperation]:
 
 
 def _code_path(swagger_key: str) -> str:
-    # The generated path names `{device.id}` as the argument `{deviceid}`.
     return re.sub(
         r"\{([^}]+)\}", lambda m: "{" + m[1].replace(".", "") + "}", swagger_key
     )

@@ -26,9 +26,6 @@ MEASURED = {
 }
 
 
-# --- parsing -------------------------------------------------------------
-
-
 def test_parses_the_measured_kentik_form():
     assert RateLimit.from_headers(MEASURED) == RateLimit(
         limit=60, remaining=59, reset_seconds=40, window_seconds=60, raw="60, 60;w=60"
@@ -80,7 +77,6 @@ def test_parser_never_raises_on_hostile_input():
             raise RuntimeError("boom")
 
     assert RateLimit.from_headers(Exploding(a="b")) is None
-    # A one-element tuple is the malformed input under test.
     assert RateLimit.from_metadata([("x-ratelimit-limit",)]) is None  # ty: ignore[invalid-argument-type]  # pyright: ignore[reportArgumentType]
 
 
@@ -96,9 +92,6 @@ def test_grpc_metadata_parses_like_headers_including_bytes_values():
 
 def test_rate_limit_of_rpc_tolerates_objects_without_metadata():
     assert rate_limit_of_rpc(object()) is None
-
-
-# --- REST capture ----------------------------------------------------------
 
 
 def _rest_config() -> APIConfig:
@@ -231,9 +224,6 @@ def test_transport_failure_has_no_quota_because_no_response_arrived(monkeypatch)
     assert exc_info.value.rate_limit is None
 
 
-# --- gRPC capture ----------------------------------------------------------
-
-
 def test_grpc_error_carries_quota_from_initial_metadata(rpc_error):
     error = rpc_error(grpc.StatusCode.RESOURCE_EXHAUSTED, "slow down")
     error.initial_metadata = lambda: [
@@ -295,7 +285,6 @@ def test_interceptor_records_quota_from_a_failed_calls_error(rpc_error):
     config = APIConfig()
     error = rpc_error(grpc.StatusCode.RESOURCE_EXHAUSTED)
     error.initial_metadata = lambda: [("x-ratelimit-remaining", "0")]
-    # grpcio's failure outcome reports no metadata of its own.
     outcome: Any = SimpleNamespace(
         exception=lambda: error, initial_metadata=lambda: None
     )
@@ -319,8 +308,6 @@ def test_interceptor_ignores_calls_without_quota():
 
     assert config.rate_limits == {}
 
-
-# --- attaching quota to results (FR-029, research D5a) -------------------------
 
 from kentik_api.core.rate_limit import attach_rate_limit, rate_limit_of  # noqa: E402
 from kentik_api.gen.device.models import ListDevicesResponse  # noqa: E402

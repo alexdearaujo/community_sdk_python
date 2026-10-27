@@ -117,7 +117,6 @@ def collect_operation_error_responses(
                         "schema_ref": schema_ref,
                     }
 
-            # Every operation: its REST module imports its error class regardless.
             operation_errors[operation_key(str(method), path)] = {
                 "path": path,
                 "method": str(method).upper(),
@@ -209,7 +208,6 @@ def _base_error_class_lines(
         "            payload = None",
         "        if isinstance(payload, dict):",
         '            details["response_json"] = payload',
-        # The V5 API's error body: {"error": ..., "errorxid": ...}.
         '            if isinstance(payload.get("error"), str) and payload["error"]:',
         "                message = f\"{message}: {payload['error']}\"",
         *message_lines,
@@ -406,7 +404,6 @@ def inject_service_error_handling(content: str, error_classes: dict[str, str]) -
     content = "".join(parts)
 
     if not error_classes:
-        # Nothing to import; clean up the placeholder if present.
         return content.replace("\n" + _PLACEHOLDER, "")
 
     import_line = "from ..error import " + ", ".join(
@@ -416,7 +413,6 @@ def inject_service_error_handling(content: str, error_classes: dict[str, str]) -
     if _PLACEHOLDER in content:
         return content.replace(_PLACEHOLDER, import_line)
 
-    # Fallback: the anchor for files generated before service.jinja2 had the sentinel.
     runtime_import = "from kentik_api.core.rest_runtime import request_json\n"
     if runtime_import in content:
         return content.replace(
