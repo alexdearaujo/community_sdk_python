@@ -123,11 +123,19 @@ def _git_stdout(repo: Path, *args: str) -> str:
     ).stdout.strip()
 
 
+# The paths of a schema checkout that generation reads.
+_SCHEMA_INPUTS = ("gen", "proto", "protovendor")
+
+
 def local_schema_commit(repo: Path) -> str | None:
     """The checkout's commit, or None when no commit reproduces it."""
     try:
         commit = _git_stdout(repo, "rev-parse", "HEAD")
+        # Untracked files count only where generation reads them.
         dirty = _git_stdout(repo, "status", "--porcelain", "--untracked-files=no")
+        dirty += _git_stdout(
+            repo, "ls-files", "--others", "--exclude-standard", "--", *_SCHEMA_INPUTS
+        )
     except subprocess.CalledProcessError:
         print(f"⚠️ {repo} is not a git checkout; {SCHEMA_PIN.name} stays unchanged.")
         return None

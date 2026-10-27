@@ -1050,3 +1050,13 @@ def test_a_failed_companion_compile_aborts_generation(tmp_path, monkeypatch):
 
     with pytest.raises(subprocess.CalledProcessError):
         generate_sdk._compile_proto_companions(tmp_path)
+
+
+def test_an_untracked_schema_input_reports_no_commit(tmp_path):
+    repo = tmp_path / "schema"
+    _schema_repo(repo)
+    swagger = repo / "gen/openapiv3/kentik/new/v1/new.swagger.json"
+    swagger.parent.mkdir(parents=True)
+    swagger.write_text("{}", encoding="utf-8")
+
+    assert local_schema_commit(repo) is None
