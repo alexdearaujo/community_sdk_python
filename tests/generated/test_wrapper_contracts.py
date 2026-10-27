@@ -24,9 +24,6 @@ from kentik_api.transports.grpc_client import GrpcTransport
 from kentik_api.transports.rest_client import RestTransport
 
 ALL_CASES = discover_cases()
-# Every discovered wrapper case is exercised for every test below, including
-# the negative-path ones: with only ~200 endpoints today this stays fast
-# (sub-second), and AGENTS.md's test coverage requirement rules out sampling.
 NEGATIVE_CASES = ALL_CASES
 
 
@@ -71,7 +68,6 @@ def test_wrapper_forwards_to_rest_module(
         result = method(**kwargs)
 
         assert result is sentinel
-        # Override omitted: the client's own config, unchanged (FR-020).
         assert captured["api_config_override"] is transport.api_config
         for key, value in kwargs.items():
             assert key in captured
@@ -125,7 +121,6 @@ def test_wrapper_forwards_all_declared_options(
         result = method(**kwargs)
 
         assert result is sentinel
-        # Override supplied: it replaces the client's config wholesale (FR-021).
         assert isinstance(kwargs["api_config_override"], APIConfig)
         assert captured["api_config_override"] is kwargs["api_config_override"]
         for key, value in kwargs.items():
@@ -153,8 +148,6 @@ def test_wrapper_raises_for_grpc_unimplemented(
     module = importlib.import_module(case.module_path)
     wrapper_cls = getattr(module, case.wrapper_class)
 
-    # MagicMock satisfies isinstance(x, GrpcTransport) checks and provides a
-    # mock .channel attribute so stub initialization in __init__ succeeds.
     grpc_transport = MagicMock(spec=GrpcTransport)
     grpc_transport.channel = MagicMock()
     wrapper = wrapper_cls(grpc_transport)
@@ -175,21 +168,14 @@ def test_wrapper_raises_for_grpc_unimplemented(
         received_configs.append(api_config)
         return response, None  # every field set, no quota
 
-    # Patch call_grpc so the gRPC branch runs without a real server.
     if hasattr(module, "call_grpc"):
         monkeypatch.setattr(module, "call_grpc", _mock_call_grpc)
-    # Patch request building so sample kwargs (e.g. "view_value" for an enum)
-    # never hit real proto parsing; test_grpc_request_mapping.py covers that.
     if hasattr(module, "build_grpc_request"):
         monkeypatch.setattr(module, "build_grpc_request", lambda *a, **kw: MagicMock())
 
     try:
         result = method(**kwargs)
     except NotImplementedError as exc:
-        # Two different conditions raise this. "not yet implemented" means the
-        # generator found no gRPC method for this operation, which is fine.
-        # "failed to import" means __init__ swallowed an ImportError or
-        # TypeError and the service has no gRPC at all.
         assert "failed to import" not in str(exc), (
             f"{case.wrapper_class}.{case.method_name} reported gRPC as unavailable "
             f"because its stub is None, not because the operation lacks a gRPC "
@@ -202,11 +188,9 @@ def test_wrapper_raises_for_grpc_unimplemented(
         return
 
     assert _grpc_was_called, "Expected gRPC call to route through call_grpc"
-    # The override must reach call_grpc, where it sets this call's deadline (FR-019).
     assert received_configs == [override]
     if result is not None:
         assert response is not None
-        # Every value the server sent survives parsing; a dropped field fails here.
         dumped = result.model_dump(mode="json", by_alias=True, exclude_none=True)
         assert ParseDict(dumped, type(response)()) == response
     print_case_result(case, mode="grpc-not-implemented", result="PASS")

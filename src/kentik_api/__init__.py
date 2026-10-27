@@ -10,7 +10,6 @@ __all__ = ["KentikAPI", "RateLimit", "rate_limit_of"]
 
 
 def __getattr__(name: str) -> Any:
-    # Lazy, so importing the package does not load every generated service.
     if name == "KentikAPI":
         from .client import KentikAPI
 

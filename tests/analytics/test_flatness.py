@@ -23,7 +23,6 @@ class _OneGigabitLinks:
 def _input() -> pd.DataFrame:
     text = (FIXTURES / "flatness_input.json").read_text()
     data = pd.read_json(StringIO(text), orient="table")
-    # A non-unique index comes back from orient="table" as the ts column.
     return data.set_index("ts") if "ts" in data else data
 
 

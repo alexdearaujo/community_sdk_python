@@ -176,7 +176,6 @@ def main() -> None:
 
     if args.check_changelog:
         if baseline is None:
-            # Nothing to compare yet, which is not a missing CHANGELOG entry.
             print(
                 f"No surface record at `{args.since or 'any release tag'}`, so "
                 f"there is nothing to check.\n{NO_RECORD_REASON}",
@@ -201,7 +200,6 @@ def main() -> None:
             "tag that has a record."
         )
     else:
-        # First release since tracking landed: summarise rather than fail.
         print(
             "No tagged release carries a surface record yet, so there is no "
             "baseline to diff against. Showing the current surface instead.\n"

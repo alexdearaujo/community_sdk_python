@@ -17,7 +17,6 @@ CREDENTIALS = KentikCredentials(email="dev@example.com", api_token="secret-token
 
 def test_grpc_plugin_emits_exact_auth_metadata():
     received = []
-    # grpcio passes a real context and callback; the plugin reads neither type.
     plugin: Any = CREDENTIALS.get_grpc_plugin()
 
     plugin(context=None, callback=lambda md, err: received.append((md, err)))

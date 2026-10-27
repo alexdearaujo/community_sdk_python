@@ -51,7 +51,6 @@ def test_renamed_fields_exist():
 @pytest.mark.parametrize(
     ("model", "name", "wire"),
     RENAMED,
-    # Services share model names such as protobufAny, so the ID names the service.
     ids=[f"{m.__module__.split('.')[2]}.{m.__name__}.{n}" for m, n, _ in RENAMED],
 )
 def test_a_renamed_field_dumps_its_wire_name(model, name, wire):
@@ -59,7 +58,6 @@ def test_a_renamed_field_dumps_its_wire_name(model, name, wire):
 
 
 def test_every_rest_model_body_is_dumped_by_alias():
-    # A `data: Dict[str, Any]` body (PATCH masks) is sent as given.
     dumps = [
         line.strip()
         for path in sorted(Path(gen.__path__[0]).glob("*/services/*.py"))

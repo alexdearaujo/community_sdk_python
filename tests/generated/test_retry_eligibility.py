@@ -49,7 +49,6 @@ def test_eligibility_split_matches_the_recorded_surface():
         for verb in _verbs_by_operation().values()
     )
 
-    # api_surface.json is regenerated with the schema, so no count is hand-edited.
     surface = json.loads((_ROOT / "api_surface.json").read_text(encoding="utf-8"))
     recorded = Counter(
         "eligible" if key.split()[0] in RETRY_ELIGIBLE_VERBS else "never"

@@ -121,8 +121,6 @@ def test_mounted_wrapper_proto_module_imports_cleanly(service: str, wrapper_clas
 
 
 def test_a_failed_proto_import_names_its_cause(monkeypatch):
-    # A descriptor-pool conflict and a missing module need different fixes, so
-    # the call must say which one happened.
     monkeypatch.setitem(sys.modules, "kentik_api.gen.device.pb.device_pb2", None)
     wrapper = _build("device", "DeviceServiceWrapper")
 

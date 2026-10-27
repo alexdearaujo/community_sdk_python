@@ -11,7 +11,6 @@ __all__ = [
     "rate_limit_of_rpc",
 ]
 
-# Private on purpose: callers read it through rate_limit_of(), not by name.
 _ATTR = "_kentik_rate_limit"
 
 _LIMIT = "x-ratelimit-limit"

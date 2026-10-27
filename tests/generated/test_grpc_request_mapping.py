@@ -37,8 +37,6 @@ class _Stop(Exception):
 def _grpc_wrapper(module: Any, wrapper_class: str) -> Any:
     transport = MagicMock(spec=GrpcTransport)
     transport.channel = MagicMock()
-    # Each stub attribute becomes its RPC's full method path, so a test can see
-    # which RPC a call reached.
     transport.channel.unary_unary.side_effect = lambda path, *a, **kw: path
     return getattr(module, wrapper_class)(transport)
 
@@ -65,7 +63,6 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
 ):
     module = importlib.import_module(case.module_path)
     if not hasattr(module, "build_grpc_request"):
-        # A wrapper with no gRPC code is right only when nothing could route.
         assert not (case.file_path.parents[1] / "pb").exists()
         assert recorded_grpc_route(case) is None
         return
@@ -86,7 +83,6 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
             fields=fields,
             update_mask_from=update_mask_from,
         )
-        # The real builder, so a body nested under the wrong field fails here.
         built["request"] = real_build(
             message_cls,
             body,
@@ -117,7 +113,6 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
     assert captured["rpc_path"].endswith(f".{recorded_grpc_route(case)}")
 
     request_descriptor = built["message_cls"].DESCRIPTOR
-    # "/kentik.alerting.v202303.AlertAutoAckService/Delete"
     service_name, rpc_name = captured["rpc_path"].rsplit(".", 1)[1].split("/")
     rpc = request_descriptor.file.services_by_name[service_name].methods_by_name[
         rpc_name
@@ -151,7 +146,6 @@ def test_every_argument_reaches_a_field_of_its_own_rpc(
             else dict(data)
         )
         raw = built["raw_body"]
-        # At the root for a `*` body rule, else under the one field the rule names.
         assert raw == sent or list(raw.values()) == [sent], "the body is not the data"
     assert not _unset_paths(built["request"], built["body"] or {}), (
         "body fields sent but not set in the request"

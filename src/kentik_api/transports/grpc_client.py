@@ -18,7 +18,6 @@ _MAX_RECEIVE_BYTES = 40 * 1024 * 1024
 
 # Upstream bug: these services fail every call that carries a deadline with a
 # server RangeError. Their calls are sent without one and ended by the client
-# at the deadline instead. See AGENTS.md, "Upstream workarounds".
 _NO_SERVER_DEADLINE = frozenset(
     {
         "alerting",
@@ -92,7 +91,6 @@ class _DefaultDeadlineInterceptor(grpc.UnaryUnaryClientInterceptor):
 
         deadline = client_call_details.timeout
         if deadline is None:
-            # Read per call, so the deadline follows the client's current config.
             deadline = self._api_config.grpc_deadline
         client_side = _service_of(client_call_details.method) in _NO_SERVER_DEADLINE
         sent = None if client_side else deadline

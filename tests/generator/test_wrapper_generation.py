@@ -47,8 +47,6 @@ def _names(
 
 
 def test_shared_operation_names_are_prefixed_in_every_module():
-    # B11: the first module in file order used to keep the bare `list`, so a new
-    # module that sorts earlier would silently take it over.
     names = _names(
         {
             "AlertAutoAckService": [_op("List", "/auto-acks")],
@@ -104,9 +102,7 @@ def test_second_http_route_is_named_by_its_extra_path_parameters():
         ("alerting", "alert_list", "list"),
         ("interface", "interface_get", "get"),
         ("device", "get_device_by_device_name", "get_by_device_name"),
-        # The Service word alone stays.
         ("device", "device", "device"),
-        # Another object keeps its word.
         ("site", "create_market", "create_market"),
     ],
 )
@@ -258,7 +254,6 @@ def test_wrapper_method_keeps_the_rest_function_docstring_exactly(
     services_dir = tmp_path / "gen" / "device" / "services"
     services_dir.mkdir(parents=True)
     (tmp_path / "src" / "kentik_api").mkdir(parents=True)
-    # Escaped and indented as the REST template writes it.
     doc = '    List "all" devices.\n\n' + r"    Matches \\d+ and \"\"\" quotes."
     (services_dir / "DeviceService.py").write_text(
         "from kentik_api.core.rest_runtime import request_json\n\n"
@@ -360,8 +355,6 @@ def test_version_selection_uses_release_order_not_plain_string_order(
     assert selected_count == 1
     assert by_service["svc"][0]["version"] == expected
 
-
-# --- end to end, against a sandbox copy of the committed tree -----------------
 
 import ast  # noqa: E402
 import subprocess  # noqa: E402
@@ -612,8 +605,6 @@ def _grpc_calls_by_rest_module(wrapper_file: Path) -> dict[str, list[str | None]
 
 
 def test_each_grpc_call_uses_the_stub_of_its_own_rest_service(sandbox):
-    # alerting's services all declare generic RPC names such as Delete. Keyed by
-    # name alone, every Delete went to whichever stub was discovered last.
     sandbox.wrapper_file("alerting").unlink()
 
     wrapper_generation.generate(PublicNames())
@@ -630,6 +621,5 @@ def test_grpc_request_maps_arguments_to_the_rpc_request_fields(sandbox):
     wrapper_generation.generate(PublicNames())
 
     wrapper = sandbox.wrapper_file("device").read_text()
-    # The REST path says {device.id}, but GetDeviceRequest's field is `id`.
     assert '{"id": deviceid, "query.noCustomColumns": querynoCustomColumns}' in wrapper
     assert '{"device.id": deviceid}' in wrapper

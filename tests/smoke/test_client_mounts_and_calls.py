@@ -155,7 +155,6 @@ def test_environment_beats_env_file_and_args_beat_both(no_env_credentials, monke
 @pytest.mark.parametrize("field", ["email", "api_token"])
 @pytest.mark.parametrize("value", ["", "  "])
 def test_an_explicit_empty_credential_is_refused(no_env_credentials, field, value):
-    # Falling back would send another identity's credentials, e.g. from .env.
     (no_env_credentials / ".env").write_text(
         "KENTIK_EMAIL=file@example.com\nKENTIK_API_TOKEN=file-token\n"
     )
@@ -267,9 +266,6 @@ def test_client_timeout_values_are_isolated_between_v5_and_v6(phase, protocol):
             assert config.grpc_deadline == 60.0
 
 
-# --- per-call override and quota, through the real client (US10, US8) ---------
-
-
 def test_client_exposes_its_config_read_only():
     with KentikAPI(email="a@b.com", api_token="t", timeout=30.0) as client:
         assert client.api_config is client._transport.api_config
@@ -294,7 +290,6 @@ def test_one_call_can_override_the_timeout_without_affecting_the_next(monkeypatc
     (slow_client, slow_timeout), (normal_client, normal_timeout) = sent
     assert slow_timeout == httpx.Timeout(300)
     assert normal_timeout == httpx.Timeout(60.0)
-    # Both went over the one connection the client owns.
     assert slow_client is normal_client
 
 

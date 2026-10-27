@@ -11,8 +11,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# Keeps scripts/openapi_templates/, src/kentik_api/core/, and
-# docs/sphinx/local_generation_workflow.md: none of them are under these paths.
 _GENERATED = ("src/kentik_api/gen", "docs/build", "docs/sphinx/services")
 _CACHES = (".pytest_cache", ".ruff_cache")
 # Too slow to walk, and never holds project bytecode.

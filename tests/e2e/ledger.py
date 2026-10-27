@@ -24,7 +24,6 @@ from pathlib import Path
 from kentik_api.client import KentikAPI
 from kentik_api.errors import HTTPException, KentikError
 
-# Every object a test creates carries this name prefix, so a person can find it in the portal.
 NAME_PREFIX = "sdk-e2e-test"
 LEDGER_PATH = Path(__file__).with_name(".created_objects.jsonl")
 
@@ -36,7 +35,6 @@ def _is_test_name(name: str | None) -> bool:
 
 @dataclass(frozen=True)
 class Kind:
-    # Returns the object, or raises HTTPException when it is gone.
     get: Callable[[KentikAPI, str], object]
     name_field: str
     delete: Callable[[KentikAPI, str], object]

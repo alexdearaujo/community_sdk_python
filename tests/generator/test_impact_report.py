@@ -37,7 +37,6 @@ def test_any_other_changed_line_is_content():
 
 
 def test_empty_diff_is_not_toolchain_churn():
-    # A new stub has no -U0 diff against the ref; it must not hide as churn.
     assert not is_toolchain_only("")
 
 

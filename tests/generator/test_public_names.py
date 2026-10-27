@@ -161,8 +161,6 @@ def test_unusable_names_are_rejected(services):
 
 
 def test_a_v6_query_service_arrives_without_changing_a_v5_name():
-    # Spec 005, SC-006: the planned V6 query service gets its own name, and
-    # every client.v5 name stays as it is.
     from scripts.generation.public_names import NAMES_FILE
 
     names = PublicNames.load(NAMES_FILE)

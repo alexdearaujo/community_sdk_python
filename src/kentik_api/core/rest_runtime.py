@@ -101,7 +101,6 @@ def parse_response_model[ModelT: BaseModel](
     path: str,
 ) -> ModelT:
     if body is None:
-        # proto JSON encodes an empty message as {}, never null.
         raise _unusable_body(operation_name, method, path, "a null body", "null")
 
     try:
@@ -206,9 +205,6 @@ def request_json(
     It keys the quota, so one endpoint keeps one entry whatever IDs it is called with.
     """
     api_config = api_config_override if api_config_override else APIConfig()
-    # An override replaces the client's config wholesale, credentials included,
-    # so one that omits them must fail here rather than send an unauthenticated
-    # request (or, before this check, crash inside httpx on a None header).
     if not api_config.auth_email or not api_config.auth_token:
         raise ConfigurationError(
             f"{operation_name}: the APIConfig for this call has no credentials. An "
@@ -259,7 +255,6 @@ def request_json(
             url,
             headers=headers,
             json=json_body,
-            # Per request, so a with_timeout() copy sharing this client applies its own.
             timeout=rest_timeout,
             extensions=extensions,
         )
@@ -348,7 +343,6 @@ def _handle_response(
         try:
             payload = response.json()
         except ValueError:
-            # JSONDecodeError, or UnicodeDecodeError for a non-UTF-8 body.
             payload = None
 
         if isinstance(payload, dict):
@@ -358,7 +352,6 @@ def _handle_response(
             if payload.get("message"):
                 message = str(payload.get("message"))
             elif isinstance(payload.get("error"), str) and payload["error"]:
-                # The V5 API's error body: {"error": ..., "errorxid": ...}.
                 message = (
                     f"{operation_name} failed with status code: "
                     f"{response.status_code}: {payload['error']}"
@@ -383,7 +376,6 @@ def _handle_response(
     except ValueError:
         preview = response.text[:200].replace("\n", " ")
         content_type = response.headers.get("content-type", "unknown")
-        # Not error_cls: its message blames the status code, which was a success.
         raise _unusable_body(
             operation_name,
             method,

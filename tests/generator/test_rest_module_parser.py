@@ -7,10 +7,6 @@ import pytest
 
 from scripts.generation._shared import parse_generated_rest_module
 
-# ---------------------------------------------------------------------------
-# Fixture helpers
-# ---------------------------------------------------------------------------
-
 _MINIMAL_OPERATION = """\
 from typing import Optional
 from kentik_api.core.api_config import APIConfig
@@ -85,11 +81,6 @@ def _helper():
 _MULTI_OP = _MINIMAL_OPERATION + "\n" + _WRITE_OPERATION
 
 
-# ---------------------------------------------------------------------------
-# Tests
-# ---------------------------------------------------------------------------
-
-
 def test_parses_minimal_get_operation(tmp_path: Path) -> None:
     f = tmp_path / "ThingService.py"
     f.write_text(_MINIMAL_OPERATION, encoding="utf-8")
@@ -115,7 +106,6 @@ def test_positional_params_before_kwonly(tmp_path: Path) -> None:
     assert len(ops) == 1
     op = ops[0]
 
-    # api_config_override is positional; thing_id and verbose are kwonly
     assert op.kwonly_start == 1
     positional = op.params[: op.kwonly_start]
     kwonly = op.params[op.kwonly_start :]

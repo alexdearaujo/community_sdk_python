@@ -68,7 +68,6 @@ def test_one_upsert_larger_than_a_part_is_refused():
 
 
 def test_ten_thousand_flow_tags_fit_in_at_most_one_hundred_parts():
-    # SC-004: no more than 1% of the calls that one call per tag needs.
     parts = split_batch([_upsert(n) for n in range(10_000)])
 
     assert len(parts) <= 100

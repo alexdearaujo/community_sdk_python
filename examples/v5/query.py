@@ -20,7 +20,6 @@ def _query_item(device_names: str) -> QueryItem:
     query = Query(
         metric="bytes",
         dimension=["Traffic"],
-        # The API needs device names even when all_selected is true.
         device_name=device_names,
         cidr=32,
         cidr6=128,

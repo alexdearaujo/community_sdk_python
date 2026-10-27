@@ -22,9 +22,6 @@ from ._shared import (
 
 _GUIDES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "guides"
 
-# Top-level README for src/kentik_api/gen/. This lives inside the fully-wiped
-# gen/ tree, so it is generated here rather than hand-written: `uv run poe clean`
-# (which removes gen/) would otherwise delete it with no way to regenerate it.
 _GEN_ROOT_README = f"""\
 <!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_gen_root_readme() -->
 <!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->
@@ -174,7 +171,6 @@ def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
 
         doc_content = "\n".join(lines) + "\n"
 
-        # Keep generated README self-contained and deterministic.
         write_text_lf(service_dir / "README.md", doc_content)
 
 
@@ -189,16 +185,12 @@ def _resolve_import_from(current_module: str, level: int, module: str | None) ->
 
     parts = current_module.split(".")[:-1]
     if level > 0:
-        # Relative import semantics: one dot is current package.
         ups = max(level - 1, 0)
         parts = parts[: len(parts) - ups] if ups <= len(parts) else []
     suffix = module.split(".") if module else []
     return ".".join(parts + suffix)
 
 
-# Single source of truth for group labels and their layer assignments.
-# _module_group() returns keys from this dict; _generate_runtime_architecture_docs()
-# derives _LAYERS from it. Adding a new group = one entry here.
 _GROUP_CONFIG: dict[str, str] = {
     "Client API": "client",
     "Client Mixin": "client",
@@ -317,7 +309,6 @@ def _generate_runtime_architecture_docs(
             elif isinstance(node, ast.ImportFrom):
                 base = _resolve_import_from(current_module, node.level, node.module)
                 target_modules.append(base)
-                # `from kentik_api.gen.label import models` imports a module by name.
                 target_modules.extend(f"{base}.{alias.name}" for alias in node.names)
 
             dst_groups = {
@@ -332,10 +323,6 @@ def _generate_runtime_architecture_docs(
                 key = (src_group, dst_group)
                 edge_counts[key] = edge_counts.get(key, 0) + 1
 
-    # Layer assignments derived from _GROUP_CONFIG and _LAYER_NAMES.
-    # Any label returned by _module_group that is not in _GROUP_CONFIG will
-    # appear as an ungrouped node. The test_docs_rendering.py coverage check
-    # catches this before it silently breaks the generated diagram.
     from collections import defaultdict
 
     layer_members: dict[str, set[str]] = defaultdict(set)
@@ -420,11 +407,6 @@ def _generate_runtime_architecture_docs(
             else:
                 index_text += "\nsdk_runtime_architecture\n"
             write_text_lf(index_path, index_text)
-
-
-# ---------------------------------------------------------------------------
-# Guide snippet injection
-# ---------------------------------------------------------------------------
 
 
 def _grpc_stub_method_name(wrapper_file: Path, method_name: str) -> str | None:
@@ -596,21 +578,18 @@ def _update_guide_snippets() -> None:
     )
     request_proto = primary["response_class"].replace("Response", "Request")
 
-    # generation.md: inline service count (same marker used twice in the file)
     gen_md = _GUIDES_DIR / "generation.md"
     if gen_md.exists():
         text = gen_md.read_text(encoding="utf-8")
         text = _replace_marker(text, "service-count", str(service_count))
         write_text_lf(gen_md, text)
 
-    # docs/sphinx/README.md: inline service count in the services/ row
     sphinx_readme = PROJECT_ROOT / "docs" / "sphinx" / "README.md"
     if sphinx_readme.exists():
         text = sphinx_readme.read_text(encoding="utf-8")
         text = _replace_marker(text, "service-count", str(service_count))
         write_text_lf(sphinx_readme, text)
 
-    # quickstart.md: first-call-example, grpc-call-example
     qs_md = _GUIDES_DIR / "quickstart.md"
     if qs_md.exists():
         text = qs_md.read_text(encoding="utf-8")
@@ -639,7 +618,6 @@ response = client.{primary["service"]}.{primary["method"]}()  # same API, same r
         )
         write_text_lf(qs_md, text)
 
-    # rest.md: list-methods-example, request-body-example
     rest_md = _GUIDES_DIR / "rest.md"
     if rest_md.exists():
         text = rest_md.read_text(encoding="utf-8")
@@ -669,7 +647,6 @@ response = client.{body_op["service"]}.{body_op["method"]}(data={body_op["reques
             )
         write_text_lf(rest_md, text)
 
-    # grpc.md: grpc-usage-example, rest-callflow-diagram, grpc-callflow-diagram
     grpc_md = _GUIDES_DIR / "grpc.md"
     if grpc_md.exists():
         text = grpc_md.read_text(encoding="utf-8")

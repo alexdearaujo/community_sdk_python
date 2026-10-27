@@ -23,11 +23,6 @@ def fix_generated_service(service_dir: Path) -> None:
     _patch_service_files(service_dir, model_classes)
 
 
-# ---------------------------------------------------------------------------
-# Private helpers
-# ---------------------------------------------------------------------------
-
-
 def _rebuild_models_init(service_dir: Path) -> None:
     """Rebuilds models/__init__.py from a full directory scan.
 
@@ -99,7 +94,6 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
         _fix_typing_wildcard,
         _fix_model_field_names,
         _make_models_import_transform(model_classes),
-        # After the models import is explicit, so a model's name is visible.
         _alias_shadowed_typing_names,
         _dedupe_top_level_function_names,
         _normalize_triple_quoted_docstrings,
@@ -115,8 +109,6 @@ def _patch_service_files(service_dir: Path, model_classes: set[str]) -> None:
 
 
 def _is_pb_or_error(py_file: Path, service_dir: Path) -> bool:
-    # Relative parts: a checkout under a directory named "pb" or "error" would
-    # otherwise skip every file.
     return not {"pb", "error"}.isdisjoint(py_file.relative_to(service_dir).parts)
 
 
@@ -215,7 +207,6 @@ def _inject_data_body(content: str) -> str:
             fixed_funcs.append(func)
             continue
         sig_part = func.split("->")[0] if "->" in func else func.split(":\n")[0]
-        # A whole word: `includeMetadata: bool` is not a body.
         has_data_param = re.search(r"\bdata\s*:", sig_part) is not None
         has_json_kwarg = "json=" in func
         has_json_body_kwarg = "json_body=" in func
@@ -248,7 +239,6 @@ def _inject_data_body(content: str) -> str:
 _BASEMODEL_ATTRS = frozenset(
     name for name in dir(BaseModel) if not name.startswith("_")
 )
-# Raw generator output, before ruff, may space the colon: "schema : Optional[...]".
 _MODEL_FIELD = re.compile(
     r'^( +)(\w+)( *:[^\n=]+= *Field\(validation_alias="([^"]*)")', re.MULTILINE
 )
@@ -313,7 +303,6 @@ def _alias_shadowed_typing_names(content: str) -> str:
     if not shadowed:
         return content
     if "Any" in shadowed:
-        # Used bare (Dict[str, Any]), so no rewrite can tell the two apart.
         raise ValueError("A model or operation named `Any` shadows typing.Any")
     aliased = ", ".join(
         f"{name} as Typing{name}" if name in shadowed else name for name in imported

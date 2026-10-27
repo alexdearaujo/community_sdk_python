@@ -23,7 +23,6 @@ from kentik_api.analytics.definitions import MappedQueryFn
 
 log = logging.getLogger(__name__)
 
-# The separator is the `_` that starts the second date.
 _FILENAME = re.compile(r"(?P<start>.+?)_(?P<end>\d{4}-\d{2}-\d{2}.*)")
 
 
@@ -45,7 +44,6 @@ def dedup_data_frame(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
 
 
 def _require_aware(*times: datetime | None) -> None:
-    # File times carry an offset, and naive and aware times cannot be compared.
     if any(t is not None and t.tzinfo is None for t in times):
         raise ValueError("DFCache needs timezone-aware datetimes, such as UTC")
 
@@ -150,7 +148,6 @@ class DFCache:
                 if file_start >= start and file_end <= end:
                     yield path
             elif file_start <= end and (file_end > start or start == end == file_end):
-                # A zero-width range, the default for one cached timestamp, still matches.
                 yield path
 
     def covers(self, start: datetime, end: datetime) -> bool:
@@ -167,8 +164,6 @@ class DFCache:
         _require_aware(start, end)
         if self.is_empty:
             return None
-        # files_in_range validates only what the caller gave, so one cached
-        # timestamp (oldest == newest) is a valid default range.
         paths = list(self.files_in_range(start, end))
         start = start or self.oldest
         end = end or self.newest

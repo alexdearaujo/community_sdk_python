@@ -234,7 +234,6 @@ def analyze_flatness(
                     continue
             results.events[link].append(Interval(start=s, end=ts))
             last = results.last(link)
-    # An interval shorter than the window can occur at the start of the data.
     for intervals in results.events.values():
         intervals[:] = [i for i in intervals if i.end - i.start >= window]
     return results

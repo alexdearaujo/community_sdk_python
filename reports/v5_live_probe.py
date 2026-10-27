@@ -99,7 +99,6 @@ def main() -> None:
     with httpx.Client(base_url=HOSTS[region], headers=headers, timeout=120) as client:
         for path in GETS:
             report("GET", path, client.get(path))
-        # The API requires device_name even when all_selected is true.
         devices = client.get("/api/v5/devices").json()["devices"]
         QUERY["query"]["device_name"] = devices[0]["device_name"]
         for path, payload in POSTS:

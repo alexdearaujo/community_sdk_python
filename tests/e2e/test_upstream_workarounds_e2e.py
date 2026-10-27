@@ -96,8 +96,6 @@ def test_update_site_market_reads_the_documented_camel_case_body(
     _put_documented_body(real_client, f"/site/v202509/site_markets/{id}", body)
 
 
-# One read per service in _NO_SERVER_DEADLINE. A new proto version gives
-# UNIMPLEMENTED, which fails the test so the path here gets updated.
 @grpc_deadline_bug
 @pytest.mark.parametrize(
     "method",

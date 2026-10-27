@@ -66,7 +66,6 @@ def test_read_endpoint_against_real_api_grpc(
         )
     service_client = getattr(grpc_real_client, service_attr(case))
     method = getattr(service_client, case.wrapper.method_name)
-    # Only required arguments, as in the REST suite.
     kwargs = build_required_kwargs(method)
     _send_samples_the_proto_accepts(monkeypatch, case)
 
@@ -107,8 +106,6 @@ def test_read_endpoint_against_real_api_grpc(
 
 
 def _send_samples_the_proto_accepts(monkeypatch: pytest.MonkeyPatch, case) -> None:
-    # Every option still reaches the server, with a value of its proto type, so
-    # the call tests the API rather than the sample builder.
     module = importlib.import_module(case.wrapper.module_path)
     real_build = getattr(module, "build_grpc_request", None)
     if real_build is None:

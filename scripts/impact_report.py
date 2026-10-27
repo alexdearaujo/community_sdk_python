@@ -34,7 +34,6 @@ SURFACE_RELPATH = "api_surface.json"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 DEFAULT_SCHEMA_REPO = PROJECT_ROOT.parent / "api-schema-public"
 
-# Paths a regeneration may touch. Anything else changing is worth a look.
 GENERATED_PREFIXES = (
     "src/kentik_api/gen/",
     "src/kentik_api/client_mixin.py",
@@ -252,7 +251,6 @@ em { color: var(--muted); }
 
 
 def to_html(markdown: str) -> str:
-    # myst-parser brings markdown-it-py with the docs group.
     from markdown_it import MarkdownIt
 
     body = MarkdownIt("commonmark").enable("table").render(markdown)

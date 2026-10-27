@@ -102,8 +102,6 @@ def test_use_after_close_raises_configuration_error_naming_close(client_count):
 
 
 def test_call_without_a_config_fails_before_opening_a_connection(client_count):
-    # With no config there are no credentials, so nothing is sent and no
-    # client is created that would then need closing.
     with pytest.raises(ConfigurationError):
         _call(None)
 
@@ -143,7 +141,6 @@ def test_shared_client_retries_failed_connection_attempts_only():
         transport = config.client._transport
         assert isinstance(transport, httpx.HTTPTransport)
         assert isinstance(transport._pool, httpcore.ConnectionPool)
-        # httpcore retries connection establishment only; a sent request is never replayed.
         assert transport._pool._retries == 2
     finally:
         config.close()

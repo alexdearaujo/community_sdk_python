@@ -81,7 +81,6 @@ def test_example_calls_resolve_to_real_wrapper_methods(module_name, client):
     "module_name", [m for m in MODULES if m.endswith((".rest", ".grpc"))]
 )
 def test_every_transport_example_calls_the_api(module_name):
-    # Guards the check above against passing vacuously if call discovery breaks.
     path = EXAMPLES.parent / Path(*module_name.split(".")).with_suffix(".py")
 
     assert _client_calls(path.read_text()), (

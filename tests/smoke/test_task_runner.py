@@ -17,7 +17,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 SKILL_DIR = ROOT / ".claude" / "skills" / "poethepoet"
 
-# Records of past decisions, vendored content, and this file's own patterns.
 _MAKE_SCAN_SKIPS = (
     *(f"specs/00{n}-" for n in range(1, 8)),
     "reports/",
@@ -26,7 +25,6 @@ _MAKE_SCAN_SKIPS = (
     ".claude/skills/",
     "tests/smoke/test_task_runner.py",
 )
-# Every former Make target, and every poe task name.
 _FORMER_TARGETS = {"help", "install", "services", "local", "tests"}
 
 
@@ -54,7 +52,6 @@ def test_every_task_has_help():
 
 
 def test_no_task_loads_an_env_file():
-    # .env holds real credentials; KentikAPI reads it into a dict on purpose.
     assert "envfile" not in _keys(_poe())
 
 
@@ -101,7 +98,6 @@ def _dry_run(*argv: str) -> list[str]:
     ],
 )
 def test_task_options_reach_the_program(argv: list[str], expected: list[str]):
-    # Each Make variable became an option; a value with a space stays one argument.
     assert _dry_run(*argv) == expected
 
 

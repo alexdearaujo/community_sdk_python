@@ -42,9 +42,7 @@ class GrpcMethod:
 GrpcRuleKey = tuple[str, str, str]  # (proto service, HTTP verb, normalized path)
 
 _PLACEHOLDER = re.compile(r"\{([^}]*)\}")
-# Well-known request types an RPC may take instead of its own message.
 _WELL_KNOWN_REQUESTS = {".google.protobuf.Empty": ("empty_pb2", "Empty")}
-# fixup aliases a shadowed typing name (TypingList); wrappers qualify models instead.
 _TYPING_ALIAS = re.compile(
     r"\bTyping(Callable|Dict|List|Optional|Set|Tuple|Type|Union)\b"
 )
@@ -109,7 +107,6 @@ def _discover_grpc_methods(
                 (pb2_file.stem, pb2_grpc_stem, f"{service.name}Stub", idx)
             )
             for method in service.method:
-                # call_grpc makes one unary call; a stream needs an iterator protocol.
                 if method.client_streaming or method.server_streaming:
                     continue
                 if method.input_type in _WELL_KNOWN_REQUESTS:
@@ -120,7 +117,6 @@ def _discover_grpc_methods(
                     request_module = ""
                     request_class = method.input_type.rsplit(".", 1)[1]
                 else:
-                    # The wrapper reaches request classes through this one module.
                     raise ValueError(
                         f"{service.name}.{method.name} takes {method.input_type}, "
                         f"which {pb2_file.name} does not define"
@@ -136,7 +132,6 @@ def _discover_grpc_methods(
                     if verb is None or verb == "custom":
                         continue
                     if binding.response_body:
-                        # REST returns that one field, gRPC the whole message.
                         continue
                     template = getattr(binding, verb)
                     methods[(service.name, verb, _normalize_path(template))] = (
@@ -149,7 +144,6 @@ def _discover_grpc_methods(
                                 for p in _PLACEHOLDER.findall(template)
                             ),
                             body=binding.body,
-                            # grpc-gateway's PATCH rule for a one-field body.
                             update_mask_from=binding.body
                             if verb == "patch"
                             and has_update_mask
@@ -188,8 +182,6 @@ def _grpc_request_fields(
     return fields
 
 
-# Upstream workaround (AGENTS.md, "Upstream workarounds"): remove with its call in
-# generate_sdk.py once tests/e2e/test_upstream_workarounds_e2e.py passes unexpectedly.
 _BODY_DUMP = re.compile(
     r"^(?P<indent>\s*)json_body=data\.model_dump\(by_alias=True, exclude_unset=True\),$",
     re.MULTILINE,
@@ -313,7 +305,6 @@ def _wrapper_method_names(
     for rest_file, ops in ops_by_file.items():
         routes: dict[str, list[RestOperation]] = {}
         for op in ops:
-            # fixup suffixes a repeated operationId: GetAuditEvent, GetAuditEvent_2.
             base = re.sub(r"_\d+$", "", op.name)
             # protoc's default operationId is `<Module>_<Method>`; the Module is noise,
             # unless only one word is left (`RouteService_List` -> `route_list`).
@@ -358,12 +349,10 @@ def _wrapper_method_names(
         long_names[(rest_file, op_name)] = name
 
     short = {op: _drop_service_word(service, n) for op, n in long_names.items()}
-    # `create_device` and `create_devices` both shorten to `create`: keep both long.
     clashes = {n for n in short.values() if list(short.values()).count(n) > 1}
     names: dict[tuple[Path, str], str] = {}
     for op, name in short.items():
         name = long_names[op] if name in clashes else name
-        # PEP 8: `Import` becomes `import_`, never the statement `def import(`.
         names[op] = name + "_" if keyword.iskeyword(name) else name
 
     duplicates = {n for n in names.values() if list(names.values()).count(n) > 1}
@@ -424,8 +413,6 @@ def _init_grpc_lines(service: str, grpc_stubs_info) -> list[str]:
         return ["            pass  # gRPC not yet implemented for this service"]
     lines: list[str] = []
     for pb2_stem, pb2_grpc_stem, stub_class, idx in grpc_stubs_info:
-        # try/except so missing proto deps degrade gracefully to NotImplementedError
-        # rather than crashing at import time.
         lines += [
             "            try:",
             # __import__() instead of import statement: isort won't reorder it,
@@ -486,7 +473,6 @@ def _grpc_branch_lines(
         request_ref = f"self._grpc_pb2_{stub_idx}.{grpc_method.request_class}"
     lines = [
         "        if isinstance(self._transport, GrpcTransport):",
-        # Guard: if proto deps weren't available at init, fall back.
         f"            if self._grpc_pb2_{stub_idx} is None or self._grpc_stub_{stub_idx} is None:",
         f'                raise NotImplementedError(f"gRPC proto modules for {service} service failed to import: {{self._grpc_import_error_{stub_idx}!r}}") from self._grpc_import_error_{stub_idx}',
         f"            _req = build_grpc_request({request_ref}, {body_arg}, {{{fields_arg}}}{mask_arg})",
@@ -498,7 +484,6 @@ def _grpc_branch_lines(
     if return_type.strip() == "None":
         return [*lines, "            return None"], False
     if re.match(r"(Dict|dict)\[|Any$", return_type.strip()):
-        # REST returns a free-form body, such as google.protobuf.Empty's, as is.
         return [*lines, "            return grpc_response_body(_resp)"], True
     return [
         *lines,
@@ -512,7 +497,6 @@ def _grpc_branch_lines(
 def _docstring_lines(docstring: str) -> list[str]:
     if not docstring:
         return []
-    # Escape back to source: ast.get_docstring returned the runtime text.
     source = docstring.replace("\\", "\\\\").replace('"""', '\\"\\"\\"')
     return [
         '        """',
@@ -543,14 +527,11 @@ def _wrapper_signature(op: RestOperation, model_classes: set[str]) -> str:
         param(*p) for p in op.params[: op.kwonly_start] if p[0] != "api_config_override"
     ]
     keyword = [param(*p) for p in op.params[op.kwonly_start :]]
-    # A per-call override replaces the client's config for this call
-    # only (FR-018 to FR-021); omitted, the client's config is used.
     return ", ".join(
         [*positional, "*", "api_config_override: Optional[APIConfig] = None", *keyword]
     )
 
 
-# In the order the wrapper's `from typing import` line lists them.
 _TYPING_SYMBOLS = (
     "Union",
     "cast",
@@ -648,7 +629,6 @@ def _wrapper_module(
         well_known=set(),
     )
 
-    # Methods first: they decide which names the header imports.
     methods: list[str] = []
     for idx, service_py in enumerate(rest_files, start=1):
         for op in parse_generated_rest_module(service_py):
@@ -664,8 +644,6 @@ def _wrapper_module(
             )
 
     typing_names = ", ".join(s for s in _TYPING_SYMBOLS if s in imports.typing)
-    # pb2 modules are loaded lazily inside __init__ to avoid proto descriptor
-    # errors at import time when googleapis-common-protos is not installed.
     grpc_imports = (
         [
             "from kentik_api.core.grpc_runtime import "
@@ -707,7 +685,6 @@ def _generate_service_wrappers(names: PublicNames):
 
     for service_dir in iter_service_dirs(SDK_OUTPUT_DIR):
         rest_files = _rest_modules(service_dir)
-        # Before the skip: it fails when public_names.json names a lost method.
         method_names = public_method_names(service_dir, names)
         if not rest_files:
             print(
@@ -747,15 +724,12 @@ def _generate_client_mixin(rest_only: frozenset[str] = frozenset()):
         title = service_to_pascal_case(service)
         wrapper_class = f"{title}ServiceWrapper"
 
-        # 1. Setup the import from the encapsulated gen directory
         imports.append(
             f"from kentik_api.gen.{service}.{services_folder.name}.{service} import {wrapper_class}"
         )
 
-        # 2. Setup the IDE type hint
         type_hints.append(f"        {service}: '{wrapper_class}'")
 
-        # 3. Setup the runtime mounting logic
         transport = "_v5_transport" if service in rest_only else "_transport"
         mounts.append(f"        self.{service} = {wrapper_class}(self.{transport})")
 

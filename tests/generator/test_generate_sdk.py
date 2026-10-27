@@ -79,11 +79,6 @@ def test_a_fork_source_runs_through_uvx(monkeypatch):
     ]
 
 
-# ---------------------------------------------------------------------------
-# _rewrite_grpc_imports: three protoc output styles
-# ---------------------------------------------------------------------------
-
-
 def test_rewrite_bare_import():
     result = _rewrite_grpc_imports("import device_pb2\n")
     assert result == "from . import device_pb2\n"
@@ -128,13 +123,6 @@ def test_module_level_classvar_becomes_int_and_class_body_keeps_it():
         "    ID_FIELD_NUMBER: _ClassVar[int]\n"
     )
 
-
-# ---------------------------------------------------------------------------
-# patched_swagger: requestBody $ref inlining
-#
-# These drive patched_swagger rather than any in-place helper: it is the path
-# `uv run poe generate` runs, so a break there fails these tests.
-# ---------------------------------------------------------------------------
 
 _MINIMAL_SCHEMA_WITH_REF_BODY = {
     "paths": {
@@ -258,11 +246,6 @@ def test_patch_schema_leaves_operations_without_request_body_unchanged(tmp_path:
     assert swagger_path.read_text() == original
 
 
-# ---------------------------------------------------------------------------
-# clean_schema_names and inline_request_body_refs: pure in-memory transforms
-# ---------------------------------------------------------------------------
-
-
 def test_clean_schema_names_strips_version_prefix_from_definitions():
     schema = {
         "definitions": {
@@ -359,7 +342,6 @@ def _inline_body_schema() -> dict:
 
 
 def test_inline_request_body_is_hoisted_to_a_named_schema():
-    # R16: an inline object body became Dict[str, Any] in the generated wrapper.
     schema = hoist_inline_request_bodies(_inline_body_schema())
 
     name = "CapabilityAdminServiceUpdateCapabilityBody"
@@ -367,7 +349,6 @@ def test_inline_request_body_is_hoisted_to_a_named_schema():
     assert media["content"]["application/json"]["schema"] == {
         "$ref": f"#/components/schemas/{name}"
     }
-    # `capability` wraps the body on the wire and is not one of its properties.
     assert schema["components"]["schemas"][name] == {
         "type": "object",
         "properties": {"displayName": {"type": "string"}},
@@ -392,13 +373,10 @@ def test_patched_swagger_does_not_modify_original(tmp_path: Path):
     original_text = swagger_path.read_text()
 
     with patched_swagger(swagger_path, "v202404beta1") as tmp_path_arg:
-        # The temp file should contain the patched schema
         patched = json.loads(Path(tmp_path_arg).read_text())
         assert "Thing" in patched["components"]["schemas"]
 
-    # The original file must be unchanged
     assert swagger_path.read_text() == original_text
-    # The temp file must be cleaned up
     assert not tmp_path_arg.exists()
 
 
@@ -448,12 +426,6 @@ def test_rename_models_can_swap_two_names():
         "A": {},
     }
     assert schema["components"]["schemas"]["A"] == {"$ref": "#/components/schemas/B"}
-
-
-# ---------------------------------------------------------------------------
-# oneof members: protoc-gen-openapiv2 marks every REQUIRED oneof member as
-# required, so the generated model rejects every valid message (B3).
-# ---------------------------------------------------------------------------
 
 
 def _descriptor_set() -> descriptor_pb2.FileDescriptorSet:
@@ -509,12 +481,6 @@ def test_relax_oneof_required_does_not_mutate_input():
     result = relax_oneof_required(schema, {"v1Thing": {"a"}})
     assert result["definitions"]["v1Thing"]["required"] == ["b"]
     assert schema["definitions"]["v1Thing"]["required"] == ["a", "b"]
-
-
-# ---------------------------------------------------------------------------
-# Response models: proto REQUIRED binds requests only, and an unset message
-# field is absent from a response, so FlowPolicySettings.baseline failed (R15).
-# ---------------------------------------------------------------------------
 
 
 def _policy_schema() -> dict:
@@ -576,13 +542,11 @@ def _policy_schema() -> dict:
 def test_response_models_drop_message_fields_from_required():
     schemas = relax_response_message_required(_policy_schema())["components"]["schemas"]
     assert "required" not in schemas["GetPolicyResponse"]
-    # Enums, scalars and repeated fields always reach the response, so they stay.
     assert schemas["Settings"]["required"] == ["mode", "name", "rules"]
 
 
 def test_request_only_models_keep_required_message_fields():
     original = _policy_schema()
-    # A requestBodies entry's `required` is a bool, not a field list.
     original["components"]["requestBodies"] = {"Body": {"required": True}}
     schemas = relax_response_message_required(original)["components"]["schemas"]
     assert schemas["CreatePolicyRequest"]["required"] == ["settings"]
@@ -592,12 +556,6 @@ def test_request_only_models_keep_required_message_fields():
         "name",
         "rules",
     ]
-
-
-# ---------------------------------------------------------------------------
-# Proto file-name collisions: every folder of a Service compiles into one flat
-# pb/ directory, so two `mitigation.proto` files overwrote each other (B4).
-# ---------------------------------------------------------------------------
 
 
 def test_proto_collisions_finds_stems_shared_across_compiled_folders(tmp_path):
@@ -738,11 +696,6 @@ def test_relink_fails_on_a_proto_version_nobody_compiled(tmp_path: Path):
         _relink_pb2_dependency_imports(tmp_path, owners)
 
 
-# ---------------------------------------------------------------------------
-# generate_modular_sdk: schema validation must run before any output is wiped
-# ---------------------------------------------------------------------------
-
-
 def _function_by_name(source: str, name: str) -> ast.FunctionDef | None:
     return next(
         (
@@ -877,11 +830,6 @@ def test_the_real_alert_schema_keeps_acknowledgement_an_object():
     assert "v202505AlertAcknowledgement" in definitions
 
 
-# ---------------------------------------------------------------------------
-# Schema pin: schema.lock names the commit the committed tree came from
-# ---------------------------------------------------------------------------
-
-
 def _git(repo: Path, *args: str) -> str:
     return subprocess.run(
         ["git", "-C", str(repo), *args], capture_output=True, text=True, check=True
@@ -964,11 +912,6 @@ def test_a_ref_with_a_local_schema_is_rejected(tmp_path):
         get_schema_root(str(tmp_path), "HEAD"),
     ):
         pass
-
-
-# ---------------------------------------------------------------------------
-# restored_on_failure: a failed run leaves the previous output in place
-# ---------------------------------------------------------------------------
 
 
 def _outputs(tmp_path: Path) -> tuple[Path, Path, Path]:

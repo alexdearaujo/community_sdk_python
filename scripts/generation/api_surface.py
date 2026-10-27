@@ -39,7 +39,6 @@ from ._shared import (
 SURFACE_FILE = PROJECT_ROOT / "api_surface.json"
 SCHEMA_VERSION = 8
 
-# Before schema_version 6 a record held only these requirements.
 _LEGACY_REQUIREMENTS = ("grpcio", "protobuf", "httpx", "pydantic")
 _PROTOBUF_GENCODE_RE = re.compile(
     r"ValidateProtobufRuntimeVersion\(\s*_runtime_version\.Domain\.\w+,\s*(\d+),\s*(\d+),\s*(\d+),"
@@ -426,7 +425,6 @@ def _changed_operations(
             if old["error"] != new["error"]:
                 error_change = [old["error"], new["error"]]
             old_errors, new_errors = old["error_responses"], new["error_responses"]
-            # A status class renamed with its operation class is in error_change.
             removed_errors = sorted(
                 old_errors[status] for status in set(old_errors) - set(new_errors)
             )

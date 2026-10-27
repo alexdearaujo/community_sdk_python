@@ -85,7 +85,6 @@ def test_a_trickling_body_cannot_outlast_the_timeout(drip_server):
     with pytest.raises(TransportError, match="ReadTimeout"):
         _timed_call(config)
 
-    # Each read waits at most 1 s, so the call ends within one read of the deadline.
     assert time.monotonic() - started < 1.0 + _DRIP_SECONDS + 0.5
 
 
@@ -95,7 +94,6 @@ def test_a_numeric_rest_timeout_is_the_deadline(drip_server):
 
 
 def test_a_per_phase_rest_timeout_bounds_each_read_only(drip_server):
-    # An httpx.Timeout keeps httpx's meaning: a slow but live body completes.
     elapsed = _timed_call(_config(drip_server, rest_timeout=httpx.Timeout(1.0)))
 
     assert elapsed > 1.0
