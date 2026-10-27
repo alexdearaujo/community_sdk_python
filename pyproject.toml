@@ -165,6 +165,15 @@ cmd = "pytest -vv -s -rA -m e2e --run-live-e2e tests/e2e/"
 help = "Run end-to-end gRPC-transport tests against the REAL Kentik API (opt-in, needs .env)"
 cmd = "pytest -vv -s -rA -m e2e_grpc --run-live-e2e tests/e2e/"
 
+[tool.poe.tasks.test-e2e-mutating]
+help = "Create, update, and delete disposable TEST objects in the REAL Kentik account (opt-in, needs .env)"
+cmd = "pytest -vv -s -rA -m e2e_mutating --run-live-e2e tests/e2e/"
+
+[tool.poe.tasks.e2e-cleanup]
+help = "List the e2e TEST objects still in the real account; --delete removes them"
+cmd = "python tests/e2e/ledger.py ${delete:+--delete}"
+args = [{ name = "delete", type = "boolean", help = "Delete the listed objects" }]
+
 [tool.poe.tasks.lint]
 help = "Fix and format Python with Ruff, and Markdown with rumdl"
 sequence = [

@@ -4,6 +4,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 
 import pytest
+from ledger import Ledger, sweep
 
 from kentik_api.client import KentikAPI
 from kentik_api.errors import ConfigurationError
@@ -72,3 +73,24 @@ def grpc_real_client(request: pytest.FixtureRequest) -> Iterator[KentikAPI]:
         yield client
     finally:
         client.close()
+
+
+@pytest.fixture
+def ledger(real_client: KentikAPI) -> Iterator[Ledger]:
+    """Records every object a mutating test creates; deletes that test's leftovers after it."""
+    ledger = Ledger()
+    yield ledger
+    leftovers = [e for e in ledger.outstanding() if e.run == ledger.run]
+    failures = sweep(real_client, ledger, leftovers)
+    if failures:
+        pytest.fail(
+            "Some e2e test objects were not cleaned up. They stay in "
+            f"{ledger.path}; run `uv run poe e2e-cleanup`.\n" + "\n".join(failures)
+        )
+
+
+@pytest.fixture(params=["rest", "grpc"])
+def any_client(request: pytest.FixtureRequest) -> KentikAPI:
+    """The REST and the gRPC client in turn, so a lifecycle test covers both transports."""
+    name = "real_client" if request.param == "rest" else "grpc_real_client"
+    return request.getfixturevalue(name)

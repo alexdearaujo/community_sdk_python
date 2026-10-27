@@ -21,6 +21,10 @@ four mocked ones.
 | `test_alert_list_e2e.py` | A live check of `alerting.list`, a read-only POST that the auto-discovered suite skips. |
 | `test_v5_query_e2e.py` | Live checks of the read-only V5 query POSTs (`client.v5.top_x_data`, `query_url`, and `top_x_chart`, which is an expected failure while the endpoint does not answer). Also runs `top_x_data` on a gRPC client. |
 | `test_v5_batch_e2e.py` | **Writes to the account.** Upserts one disposable flow tag, then deletes it in `finally`. Marker `e2e_mutating`, so neither `uv run poe test-e2e` nor `uv run poe test-e2e-grpc` runs it. Run it by hand: `uv run pytest -m e2e_mutating --run-live-e2e tests/e2e/test_v5_batch_e2e.py`. |
+| `test_crud_e2e.py` | **Writes to the account.** Create, read, update, and delete round trips on disposable objects (label, site, site market, AS group, flow tag, saved filter, custom application), on both transports. Marker `e2e_mutating`. Run it with `uv run poe test-e2e-mutating`. |
+| `ledger.py` | Records each object that a mutating test creates in `.created_objects.jsonl` (not committed). Run it with `uv run poe e2e-cleanup` to list leftovers. |
+| `test_upstream_workarounds_e2e.py` | **Writes to the account.** One strict-xfail canary per upstream bug that the SDK works around. Each sends the documented request. A canary that passes means upstream fixed the bug; see "Upstream workarounds" in AGENTS.md. Marker `e2e_mutating`. |
+| `upstream_bugs.py` | The reads that fail because of an upstream bug (5xx), with the bug each one hits. Both endpoint suites mark them as strict xfails. |
 
 Endpoint discovery comes from
 [`tests/_discovery.py`](../_discovery.py) (`discover_endpoint_cases()`), which builds on
@@ -37,20 +41,26 @@ flowchart TD
     T -->|"gRPC<br/>test_endpoints_e2e_grpc.py"| C
     C --> D{Result}
     D -->|Correctly-typed response| E[Pass]
-    D -->|Generated KentikError subclass| E
+    D -->|4xx HTTPException| E
     D -->|"NotImplementedError<br/>(gRPC suite only)"| E
-    D -->|Any other exception| F[Fail]
+    D -->|"5xx listed in upstream_bugs.py"| X[Expected failure]
+    D -->|Any other 5xx or exception| F[Fail]
     B -->|POST / PUT / PATCH / DELETE| G["Skip automatically<br/>(@pytest.mark.skip,<br/>both transports)"]
     G --> H["Add a dedicated test with its own<br/>setup/teardown against a disposable<br/>resource, if you need live coverage"]
 
 ```
 
-Only GET (read-only) operations run automatically. A read call
-passes when it returns a correctly-typed response, or when it raises
-a generated `KentikError` subclass. Either outcome proves the real
-request, response, and error path still matches what the schema
-declares. Only a genuinely unexpected exception counts as a failure,
-since the test cannot control what data exists in the real account.
+Only GET (read-only) operations run automatically, with only their required
+arguments. Placeholder values for optional filters are not valid input, and
+the mocked suites already cover every option. A read call passes when it
+returns a correctly-typed response, or when it raises a 4xx `HTTPException`,
+for example 404 for a sample ID. The test cannot control what data exists in
+the real account, so a 4xx is a valid answer.
+
+A 5xx fails the test, because it is a server failure. When the failure is an
+upstream bug, add the operation to `upstream_bugs.py` with the bug it hits.
+The test then becomes a strict xfail. When upstream fixes the bug, it fails
+as `XPASS(strict)`, and you remove the entry.
 
 Create, Update, and Delete operations are deliberately not
 auto-called. `test_mutating_endpoint_excluded_from_e2e` and its gRPC
@@ -72,6 +82,29 @@ Neither suite runs by accident. `addopts` in `pyproject.toml`
 excludes both by default. A bare `pytest -m e2e` (or `-m e2e_grpc`)
 still skips every test, because the `--run-live-e2e` flag is also
 needed. The two poe tasks pass that flag for you.
+
+## Mutating tests and the ledger
+
+The mutating tests change only objects that they create. Each object gets a
+name that starts with `sdk-e2e-test-`. The test records the object in the
+ledger before it does anything else with it. An update or a delete goes
+through `ledger.owned()`, which refuses an ID that the ledger does not hold.
+
+After each test, the `ledger` fixture deletes what the test left. If a delete
+fails, the object stays in the ledger and the fixture fails the test.
+
+```bash
+uv run poe test-e2e-mutating     # run the mutating tests
+uv run poe e2e-cleanup           # list the objects in the ledger
+uv run poe e2e-cleanup --delete  # delete them
+```
+
+Before `--delete` removes an object, it reads the object again. It deletes the
+object only when its name still starts with the test prefix.
+
+A strict `xfail` marks each call that failed live for every payload tried.
+The reason on the marker names the cause. When the cause is fixed, the test
+fails as `XPASS(strict)`, and you can remove the marker.
 
 ## Credentials
 

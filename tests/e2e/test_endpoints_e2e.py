@@ -18,11 +18,10 @@ Scope, by design (see AGENTS.md's end-to-end testing requirement):
     fixture per operation, added deliberately rather than as a side effect
     of this file existing.
   - A read call passes if it returns a correctly-typed response OR raises a
-    generated KentikError subclass. Both prove the real request/response/
-    error path still matches the schema. Only a truly unexpected exception
-    (e.g. a raw pydantic.ValidationError, or anything outside the SDK's own
-    error hierarchy) is a failure, since we don't control what data exists in
-    the real account being tested against.
+    generated 4xx HTTPException. Both prove the real request/response/
+    error path still matches the schema. A 5xx is a server failure, and
+    any other exception is an SDK failure. We don't control what data
+    exists in the real account, so a 4xx for a sample ID is expected.
 
 Opt-in only: excluded from `uv run poe test`/`uv run poe all` by the `e2e` pytest marker
 (see pyproject.toml's addopts) and only actually run via `uv run poe test-e2e` or
@@ -37,12 +36,13 @@ import inspect
 import pytest
 from _discovery import (
     EndpointCase,
-    build_all_kwargs,
+    build_required_kwargs,
     case_label,
     discover_endpoint_cases,
     service_attr,
 )
 from pydantic import BaseModel
+from upstream_bugs import server_error
 
 from kentik_api.errors import HTTPException, KentikError
 
@@ -58,12 +58,19 @@ MUTATING_CASES = [c for c in _ALL_ENDPOINT_CASES if c.method != "get"]
     READ_CASES,
     ids=[f"{c.wrapper.wrapper_class}.{c.wrapper.method_name}" for c in READ_CASES],
 )
-def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
+def test_read_endpoint_against_real_api(
+    case: EndpointCase, real_client, request: pytest.FixtureRequest
+):
+    if reason := server_error(request.node.callspec.id, "rest"):
+        request.applymarker(
+            pytest.mark.xfail(raises=HTTPException, strict=True, reason=reason)
+        )
     service_client = getattr(real_client, service_attr(case))
     method = getattr(service_client, case.wrapper.method_name)
-    # Read-only calls against a real account: required body fields only.
-    kwargs = build_all_kwargs(method, every_field=False)
-    kwargs.pop("api_config_override", None)
+    # Placeholder filters are not valid input, and the API answers some with a
+    # 500, so live reads send only what the call requires. Mocked suites cover
+    # every option.
+    kwargs = build_required_kwargs(method)
 
     assert real_client.api_config.base_path != "https://api.example.com"
     assert "api_config_override" not in kwargs
@@ -73,6 +80,9 @@ def test_read_endpoint_against_real_api(case: EndpointCase, real_client):
     try:
         result = method(**kwargs)
     except HTTPException as exc:
+        if exc.status_code >= 500:
+            print(f'E2E: "{label}" failed on the server. RESULT=FAIL')
+            raise
         print(
             f'E2E: "{label}" raised {type(exc).__name__} '
             f"(status={getattr(exc, 'status_code', 'n/a')}). A generated "

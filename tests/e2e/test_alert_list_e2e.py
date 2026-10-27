@@ -12,7 +12,6 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from kentik_api.errors import HTTPException
 from kentik_api.gen.alerting.models import (
     AlertAcknowledgement,
     AlertFilters,
@@ -44,12 +43,5 @@ def test_alert_list_with_started_at_over_rest(real_client):
 
 @pytest.mark.e2e_grpc
 def test_alert_list_with_started_at_over_grpc(grpc_real_client):
-    try:
-        response = grpc_real_client.alerting.list(data=_last_30_days_request())
-    except HTTPException as exc:
-        # Observed 2026-10-13: every alerting gRPC RPC fails server-side, even
-        # for Get with one id, while the REST routes work.
-        if exc.status_code == 500 and "RangeError" in str(exc):
-            pytest.xfail(f"backend gRPC alerting List fails: {exc}")
-        raise
+    response = grpc_real_client.alerting.list(data=_last_30_days_request())
     _assert_alerts_parse(response)
