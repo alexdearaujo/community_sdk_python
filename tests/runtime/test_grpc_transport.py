@@ -272,7 +272,7 @@ def _serve_recording_deadlines(seen: dict[str, float | None]):
         return grpc.unary_unary_rpc_method_handler(
             respond,
             request_deserializer=lambda raw: raw,
-            response_serializer=lambda raw: raw,
+            response_serializer=bytes,
         )
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))

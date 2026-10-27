@@ -190,7 +190,7 @@ def sweep(client: KentikAPI, ledger: Ledger, entries: list[Entry]) -> list[str]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(description=(__doc__ or "").splitlines()[0])
     parser.add_argument(
         "--delete", action="store_true", help="Delete the outstanding objects"
     )
