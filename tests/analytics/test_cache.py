@@ -285,4 +285,5 @@ def test_get_returns_a_cache_that_holds_one_timestamp(tmp_path):
     got = cache.get()
 
     assert got is not None
-    pd.testing.assert_frame_equal(got, frame)
+    # Parquet does not keep the index frequency.
+    pd.testing.assert_frame_equal(got, frame, check_freq=False)
