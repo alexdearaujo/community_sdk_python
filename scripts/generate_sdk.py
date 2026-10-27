@@ -744,6 +744,8 @@ def _compile_proto_companions(schema_root: Path) -> None:
         print("    ✅ Proto companions compiled successfully.")
     except subprocess.CalledProcessError as e:
         print(f"    ❌ Proto companion compilation failed: {e.stderr or e.stdout}")
+        # Without companions every service's gRPC stubs fail to import.
+        raise
 
 
 # Everything a run rewrites. A failed run puts all of it back, so a half-built
