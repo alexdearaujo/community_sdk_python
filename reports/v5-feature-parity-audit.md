@@ -74,7 +74,7 @@ a separate Query API limit from the Kentik Knowledge Base.
 
 ## Live check of the V5 API (2026-10-16)
 
-[`v5_live_probe.py`](v5_live_probe.py) sent read-only calls to
+[`scripts/v5/live_probe.py`](scripts/v5/live_probe.py) sent read-only calls to
 `https://api.kentik.com` with the project credentials. It prints status codes,
 response shapes, and quota headers only. The
 [Admin APIs](https://kb.kentik.com/docs/admin-apis) and

@@ -267,7 +267,7 @@ vault                 v202312alpha1         2          2      2  PRIVATE</code><
 <h3>5. Reproducing this</h3>
 
 <pre><code><span class="cmt"># From the community_sdk_python repo root, with ../api-schema-public checked out</span>
-uv run python reports/schema_annotation_audit.py</code></pre>
+uv run python reports/scripts/schema/annotation_audit.py</code></pre>
 
 <p class="note">The audit script counts annotations per RPC block rather than per file, so an RPC
 using <code>additional_bindings</code> is counted once.</p>
@@ -382,7 +382,7 @@ ASK
 
 <footer>
   <p>Evidence gathered from <code>kentik/api-schema-public</code> at <code>master</code> on
-  2026-09-18, and revalidated at <code>89684ba</code> on 2026-09-24 with no change to the audit. Reproduce with <code>reports/schema_annotation_audit.py</code> in the
+  2026-09-18, and revalidated at <code>89684ba</code> on 2026-09-24 with no change to the audit. Reproduce with <code>reports/scripts/schema/annotation_audit.py</code> in the
   <code>community_sdk_python</code> repo.</p>
 </footer>
 

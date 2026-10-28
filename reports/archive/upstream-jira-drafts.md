@@ -160,7 +160,7 @@ services, so the value of the deadline does not matter.
 
 ### Live results
 
-Run on 2026-10-21 at 23:59 UTC with `reports/grpc_deadline_checks.sh`. Each
+Run on 2026-10-21 at 23:59 UTC with `reports/scripts/grpc-deadlines/deadline_checks.sh`. Each
 row is the List call of the service with `-d '{}'`.
 
 | Service | No deadline | 1 s | 30 s | 300 s |
@@ -174,7 +174,7 @@ row is the List call of the service with `-d '{}'`.
 | label (`ListLabels`), control | OK | OK | OK | OK |
 
 The API team can repeat this with the commands above, or with
-`reports/grpc_deadline_checks.sh`.
+`reports/scripts/grpc-deadlines/deadline_checks.sh`.
 
 ### Expected
 
@@ -228,7 +228,7 @@ in the production logs.
 6. `createWrapper` catches the error, and the response becomes
    `internal error (name:RangeError type:object)`.
 
-Local reproduction (`reports/grpc_camelify_deadline_repro.js`): a minimal
+Local reproduction (`reports/scripts/grpc-deadlines/camelify_repro.js`): a minimal
 grpc-js 1.14.6 server, with lodash 4, runs the same `camelify(call)`. A call
 with no deadline succeeds. Calls with 1 s, 30 s, and 300 s deadlines all
 fail with `RangeError: Maximum call stack size exceeded`.

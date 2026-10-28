@@ -253,7 +253,7 @@ RPC, which shows that per-method granularity exists and that a per-service rule 
 <h3>5. Reproducing this</h3>
 
 <pre><code><span class="cmt"># From the community_sdk_python repo root, with ../api-schema-public checked out</span>
-uv run python reports/schema_annotation_audit.py
+uv run python reports/scripts/schema/annotation_audit.py
 
 <span class="cmt"># Tail of output:</span>
 Services annotated non-public:
@@ -386,7 +386,7 @@ its public surface, so we would want to coordinate timing and a deprecation note
 
 <footer>
   <p>Evidence gathered from <code>kentik/api-schema-public</code> at <code>master</code> on
-  2026-09-18, and revalidated at <code>89684ba</code> on 2026-09-24 with no change. Reproduce with <code>reports/schema_annotation_audit.py</code> in the
+  2026-09-18, and revalidated at <code>89684ba</code> on 2026-09-24 with no change. Reproduce with <code>reports/scripts/schema/annotation_audit.py</code> in the
   <code>community_sdk_python</code> repo. Companion report:
   <a href="upstream-kptr-missing-http-annotations.html">missing HTTP annotations on kptr and
   deviceconf</a>.</p>

@@ -66,6 +66,7 @@ filing them as current defects.
 | 13 | `kptr` and `deviceconf` lack HTTP bindings | Confirmed in schema commit `8ec5847688b6ac76b76ceea1cba46f862725d758` | Ask whether the 13 public RPCs will receive HTTP bindings. | [Schema audit](upstream-kptr-missing-http-annotations.html) |
 | 14 | Visibility metadata conflicts with published REST paths | Confirmed in schema; authorization not tested | Ask what the visibility values mean and whether downstream tools must receive them. | [Visibility report](upstream-service-visibility-exposure.html) |
 | 15 | Rate-limit documentation conflicts with observed headers | Header scope reconfirmed; documented limits remain unverified | Correct the documented scope. Verify concurrency, delay, and hourly limits. | [Rate-limit report](upstream-ratelimit-scope-undocumented.html) |
+| 16 | `openapi-python-generator` requires formatter packages with `--formatter none` | Draft request; confirmed against version 2.1.2 | File the request with the generator maintainers. Add the issue link to the SDK dependency guide. | [Draft request](upstream-openapi-python-generator-optional-formatters.md) |
 
 ## Source Notes
 
@@ -76,6 +77,10 @@ status.
 The [body-merge Markdown report](upstream-rest-update-body-merge.md) contains
 the request transcripts and follow-up evidence. The archived HTML snapshots and
 draft issue list remain in [archive/](archive/).
+
+Reusable investigation scripts live under [scripts/](scripts/) and their
+purpose and side effects are listed in [README.md](README.md). Local account
+captures and one-off experiments stay in the ignored `local-evidence/` folder.
 
 ## Confirmed Request IDs
 

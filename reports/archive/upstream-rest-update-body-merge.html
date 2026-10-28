@@ -36,8 +36,9 @@
   <h1>REST update ignores the documented <code>asGroup</code> / <code>siteMarket</code> body when the URL sets a nested field</h1>
   <p class="sub">Observed 2026-10-21 against the live V6 API on a lab account, with plain <code>curl</code> and <code>grpcurl</code>,
     and again with the Kentik community Python SDK. Schema checked: <code>api-schema-public</code> commit <code>9de9a68</code>.
-    Evidence scripts: <code>reports/rest_body_merge_curl.sh</code> (live, no SDK), <code>reports/rest_body_merge_probe.py</code>
-    (live, SDK), and <code>reports/rest_body_merge_audit.py</code> (offline).</p>
+    Evidence scripts: <code>reports/scripts/rest-body-merge/curl_repro.sh</code> (live, no SDK),
+    <code>reports/scripts/rest-body-merge/live_probe.py</code> (live, SDK), and
+    <code>reports/scripts/rest-body-merge/audit.py</code> (offline).</p>
 </header>
 
 <div class="callout">
@@ -165,7 +166,7 @@ rpc UpdateASGroup(UpdateASGroupRequest) returns (UpdateASGroupResponse) {
   The fix is to normalize the body to one spelling (or to decode it with a ProtoJSON parser) before the path value is set.</p>
 
 <h2>Scope across the schema</h2>
-<p><code>reports/rest_body_merge_audit.py</code> reads the <code>google.api.http</code> rules from the compiled descriptors
+<p><code>reports/scripts/rest-body-merge/audit.py</code> reads the <code>google.api.http</code> rules from the compiled descriptors
   of commit <code>9de9a68</code>. 101 rules carry a body. 4 have the shape that fails here: <code>body: "*"</code> and a path
   variable nested in a top-level field whose proto name differs from its JSON name.</p>
 <table>
@@ -207,7 +208,7 @@ rpc UpdateASGroup(UpdateASGroupRequest) returns (UpdateASGroupResponse) {
 <h2 id="reproduce">Reproduce without the SDK</h2>
 <p>These steps use only <code>curl</code> (8.3 or later), <code>jq</code>, and <code>grpcurl</code>. The responses below are the
   real responses from the run on 2026-10-21 at 22:02 UTC. Your IDs and timestamps will differ.
-  <code>reports/rest_body_merge_curl.sh</code> runs the same steps and deletes the objects on exit.</p>
+  <code>reports/scripts/rest-body-merge/curl_repro.sh</code> runs the same steps and deletes the objects on exit.</p>
 
 <h3>Step 0: set up the session</h3>
 <p>Set the credentials of a test account in the environment. The two helpers below read them from the environment,
@@ -334,8 +335,8 @@ curl -X DELETE "$BASE/label/v202210/labels/42057" "${AUTH[@]}"              # HT
 
 <h3>With the SDK, and the schema audit</h3>
 <p>From the community SDK repository, with test-account credentials in <code>.env</code>:</p>
-<pre><code>uv run python reports/rest_body_merge_probe.py   # live: the same checks through the SDK, with cleanup
-uv run python reports/rest_body_merge_audit.py   # offline: lists the 101 rules and their shape</code></pre>
+<pre><code>uv run python reports/scripts/rest-body-merge/live_probe.py   # live: the same checks through the SDK, with cleanup
+uv run python reports/scripts/rest-body-merge/audit.py   # offline: lists the 101 rules and their shape</code></pre>
 <p>The SDK run gives the same status and message at every step as the curl run, so the SDK adds nothing to the failure.</p>
 
 <footer>Request ids (2026-10-21), curl run: UpdateASGroup 400 <code>dbckd2czked00d9jjnq0</code>; UpdateSiteMarket 500
