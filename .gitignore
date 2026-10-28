@@ -18,6 +18,7 @@ tests/e2e/.created_objects.jsonl
 
 # Generated content
 bin/
+.specify/integrations/.cache/
 
 # Sphinx build output: regenerate locally with `uv run poe docs`, do not commit.
 docs/build/
