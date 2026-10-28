@@ -24,16 +24,6 @@ from kentik_api.gen.site.models import CreateSiteMarketRequest, SiteMarket
 
 pytestmark = pytest.mark.e2e_mutating
 
-rest_body_keys_bug = pytest.mark.xfail(
-    raises=HTTPException,
-    strict=True,
-    reason=(
-        "Upstream REST drops a camelCase body key when the URL sets a field "
-        "inside it. If this passes, remove send_proto_body_keys() and its call "
-        "in generate_sdk.py, regenerate, and update AGENTS.md."
-    ),
-)
-
 
 class DeadlineCrashesServer(Exception):
     pass
@@ -50,9 +40,11 @@ grpc_deadline_bug = pytest.mark.xfail(
 )
 
 
-def _put_documented_body(client: KentikAPI, path: str, body: dict) -> dict:
+def _send_documented_body(
+    client: KentikAPI, path: str, body: dict, *, method: str
+) -> dict:
     return request_json(
-        method="put",
+        method=method,
         path=path,
         path_template=path,
         api_config_override=client.api_config,
@@ -64,22 +56,51 @@ def _put_documented_body(client: KentikAPI, path: str, body: dict) -> dict:
     )
 
 
-@rest_body_keys_bug
 def test_update_as_group_reads_the_documented_camel_case_body(
     real_client: KentikAPI, ledger: Ledger
 ):
+    used_asns = {
+        asn.asn
+        for group in real_client.as_group.list().asGroups or []
+        if group is not None
+        for asn in group.asn or []
+        if asn is not None and asn.asn is not None
+    }
+    asn = next(
+        (
+            str(candidate)
+            for candidate in (36459, 46489, 13335, 15169, 16509, 8075, 32934, 14061)
+            if candidate not in used_asns
+        ),
+        None,
+    )
+    if asn is None:
+        pytest.skip("All candidate ASNs are already assigned to an AS group")
+
     name = ledger.new_name()
     created = real_client.as_group.create(
-        data=CreateASGroupRequest(asGroup=ASGroupConcise(name=name, asn=["36459"]))
+        data=CreateASGroupRequest(asGroup=ASGroupConcise(name=name, asn=[asn]))
     )
     assert created.asGroup is not None
-    id = ledger.owned("as_group", ledger.created("as_group", created.asGroup.id, name))
+    as_group_id = ledger.owned(
+        "as_group", ledger.created("as_group", created.asGroup.id, name)
+    )
 
-    body = {"asGroup": {"name": name, "asn": ["36459", "46489"]}}
-    _put_documented_body(real_client, f"/as_group/v202212/as_group/{id}", body)
+    body = {"asGroup": {"name": name, "asn": [asn]}}
+    try:
+        _send_documented_body(
+            real_client,
+            f"/as_group/v202212/as_group/{as_group_id}",
+            body,
+            method="put",
+        )
+    except HTTPException as exc:
+        if exc.status_code == 400 and "request.as_group.name" in exc.message:
+            pytest.xfail(f"Upstream REST drops the documented body key: {exc.message}")
+        raise
+    pytest.fail("The documented AS group body was accepted; review the workaround")
 
 
-@rest_body_keys_bug
 def test_update_site_market_reads_the_documented_camel_case_body(
     real_client: KentikAPI, ledger: Ledger
 ):
@@ -88,12 +109,25 @@ def test_update_site_market_reads_the_documented_camel_case_body(
         data=CreateSiteMarketRequest(siteMarket=SiteMarket(name=name))
     )
     assert created.siteMarket is not None
-    id = ledger.owned(
+    site_market_id = ledger.owned(
         "site_market", ledger.created("site_market", created.siteMarket.id, name)
     )
 
     body = {"siteMarket": {"name": name, "description": "camel"}}
-    _put_documented_body(real_client, f"/site/v202509/site_markets/{id}", body)
+    try:
+        _send_documented_body(
+            real_client,
+            f"/site/v202509/site_markets/{site_market_id}",
+            body,
+            method="put",
+        )
+    except HTTPException as exc:
+        if exc.status_code == 500 and "TypeError" in exc.message:
+            pytest.xfail(
+                f"Upstream REST rejects the documented body key: {exc.message}"
+            )
+        raise
+    pytest.fail("The documented site market body was accepted; review the workaround")
 
 
 @grpc_deadline_bug
