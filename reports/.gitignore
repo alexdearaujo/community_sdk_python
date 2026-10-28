@@ -11,3 +11,13 @@ pre-pr-audit-2026-10-10/*
 !pre-pr-audit-2026-10-10/run_manual_spot_check.py
 !v5-feature-parity-audit.md
 !v5_live_probe.py
+!upstream-rest-update-body-merge.md
+!kentik-api-team-findings.md
+!upstream-kptr-missing-http-annotations.html
+!upstream-ratelimit-scope-undocumented.html
+!upstream-service-visibility-exposure.html
+!archive/
+archive/*
+!archive/upstream-jira-drafts.md
+!archive/upstream-rest-update-body-merge.html
+!archive/upstream-alert-list-requirements.html

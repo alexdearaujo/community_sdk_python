@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upstream: missing google.api.http annotations on kptr and deviceconf</title>
+<style>
+  :root {
+    --bg:#0d1117; --bg-elev:#161b22; --bg-elev-2:#1c2129; --border:#30363d;
+    --fg:#e6edf3; --fg-muted:#9198a1; --accent:#58a6ff; --green:#3fb950;
+    --amber:#d29922; --red:#f85149;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#fff; --bg-elev:#f6f8fa; --bg-elev-2:#eef1f5; --border:#d0d7de;
+            --fg:#1f2328; --fg-muted:#59636e; --accent:#0969da; --green:#1a7f37;
+            --amber:#9a6700; --red:#cf222e; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:0 1.25rem 5rem;background:var(--bg);color:var(--fg);
+       font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto}
+  header.masthead{padding:2.5rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+  h1{font-size:1.85rem;line-height:1.25;margin:0 0 .5rem;letter-spacing:-.02em}
+  h2{font-size:1.28rem;margin:2.75rem 0 .85rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+  h3{font-size:1rem;margin:1.6rem 0 .5rem}
+  p{margin:.7rem 0}
+  .sub{color:var(--fg-muted);font-size:.9rem;margin:0}
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem;margin-top:1.25rem}
+  .meta-grid div{background:var(--bg-elev);border:1px solid var(--border);border-radius:7px;
+                 padding:.55rem .75rem;font-size:.82rem}
+  .meta-grid span{display:block;color:var(--fg-muted);font-size:.72rem;text-transform:uppercase;
+                  letter-spacing:.05em;margin-bottom:.15rem}
+  .callout{background:var(--bg-elev);border:1px solid var(--border);border-left:4px solid var(--accent);
+           border-radius:8px;padding:1.05rem 1.3rem;margin:1.4rem 0}
+  .callout.ask{border-left-color:var(--green)}
+  .callout.warn{border-left-color:var(--amber)}
+  .callout h3{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.87rem}
+  th,td{text-align:left;padding:.55rem .7rem;border:1px solid var(--border);vertical-align:top}
+  th{background:var(--bg-elev);font-weight:600;font-size:.79rem;text-transform:uppercase;
+     letter-spacing:.04em;color:var(--fg-muted)}
+  tbody tr:nth-child(even){background:color-mix(in srgb,var(--bg-elev) 45%,transparent)}
+  code{font-family:var(--mono);font-size:.855em;background:var(--bg-elev-2);
+       border:1px solid var(--border);border-radius:5px;padding:.1em .35em}
+  pre{background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;
+      padding:.9rem 1rem;overflow-x:auto;font-family:var(--mono);font-size:.81rem;
+      line-height:1.55;margin:.8rem 0;white-space:pre}
+  pre code{background:none;border:none;padding:0;font-size:inherit}
+  pre .add{color:var(--green)} pre .del{color:var(--red)} pre .cmt{color:var(--fg-muted)}
+  .badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;
+         text-transform:uppercase;padding:.17em .55em;border-radius:999px;border:1px solid currentColor}
+  .b-red{color:var(--red)} .b-amber{color:var(--amber)} .b-green{color:var(--green)}
+  .b-blue{color:var(--accent)} .b-muted{color:var(--fg-muted)}
+  ul,ol{margin:.6rem 0;padding-left:1.4rem} li{margin:.3rem 0}
+  .note{font-size:.86rem;color:var(--fg-muted)}
+  .ticket{background:var(--bg-elev-2);border:1px dashed var(--border);border-radius:8px;
+          padding:1rem 1.15rem;margin:1rem 0}
+  .ticket pre{background:transparent;border:none;padding:0;white-space:pre-wrap;font-size:.82rem}
+  footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--border);
+         color:var(--fg-muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="sub">Report for the Kentik API / schema team</p>
+  <h1>kptr and deviceconf declare public gRPC services with no HTTP bindings,
+      so they have no REST surface at all</h1>
+  <p class="sub">13 RPCs across two <code>SERVICE_VISIBILITY_PUBLIC</code> services are
+    unreachable over REST because their <code>google.api.http</code> annotations are absent.</p>
+  <div class="meta-grid">
+    <div><span>Filed by</span>Kentik Community Python SDK</div>
+    <div><span>Date</span>2026-09-18</div>
+    <div><span>Repo</span><code>kentik/api-schema-public</code></div>
+    <div><span>Revision</span><code>89684ba</code>, 2026-09-24 (revalidated)</div>
+    <div><span>Affected RPCs</span>13 (plus 3 excluded: 1 method-private, 2 likely intentional)</div>
+    <div><span>Severity</span>Functional gap, not a defect</div>
+  </div>
+</header>
+
+<h2>The ask</h2>
+
+<div class="callout ask">
+  <h3>Add <code>google.api.http</code> bindings to the 13 RPCs listed below, or tell us they are
+      deliberately gRPC-only.</h3>
+  <p>Either answer is actionable. What is hard to work with today is the ambiguity: these services
+  are annotated <code>SERVICE_VISIBILITY_PUBLIC</code> and ship definitions into the public schema
+  repo, which reads as "this is public API", yet they produce zero REST paths, which reads as
+  "this is not exposed". One of those two signals is wrong.</p>
+</div>
+
+<h2>Summary</h2>
+
+<p>Every generated REST artifact in <code>api-schema-public</code> derives from
+<code>google.api.http</code> annotations on RPC definitions. Where the annotation is present,
+<code>protoc-gen-openapiv2</code> emits a swagger <code>path</code> and the gRPC gateway exposes an
+HTTP route. Where it is absent, neither exists.</p>
+
+<p>Auditing all 35 services that declare RPCs in the current schema shows the convention is close to
+universal:</p>
+
+<table>
+  <thead><tr><th style="width:38%">Group</th><th style="width:14%">Services</th><th style="width:14%">RPCs</th><th>Annotation coverage</th></tr></thead>
+  <tbody>
+    <tr><td>Fully annotated</td><td>32</td><td>192</td>
+        <td><span class="badge b-green">100%</span> every RPC carries a binding</td></tr>
+    <tr><td><b>No annotations at all</b></td><td><b>3</b></td><td><b>16</b></td>
+        <td><span class="badge b-red">0%</span> no swagger paths, no gateway routes</td></tr>
+    <tr><td>Partially annotated</td><td>0</td><td>0</td>
+        <td>No service mixes the two, which is why the three outliers look like an oversight</td></tr>
+  </tbody>
+</table>
+
+<p>There is no middle ground anywhere in the schema. A service either annotates every RPC or none of
+them. That pattern is what makes us think these three were missed rather than excluded on purpose.</p>
+
+<h2>Affected services</h2>
+
+<table>
+  <thead><tr><th style="width:16%">Service</th><th style="width:16%">Version</th><th style="width:8%">RPCs</th><th style="width:22%">Declared visibility</th><th>Our read</th></tr></thead>
+  <tbody>
+    <tr><td><code>kptr</code></td><td><code>v202602</code></td><td>4</td>
+        <td><code>SERVICE_VISIBILITY_PUBLIC</code></td>
+        <td><span class="badge b-red">Likely a gap</span> two of its four RPCs need only ordinary
+          customer credentials</td></tr>
+    <tr><td><code>deviceconf</code></td><td><code>v202511</code></td><td>10</td>
+        <td><code>SERVICE_VISIBILITY_PUBLIC</code></td>
+        <td><span class="badge b-red">Likely a gap</span> largest affected surface. <code>ExecuteCommand</code> is annotated <code>METHOD_VISIBILITY_PRIVATE</code>, so we do not ask for a binding on it.</td></tr>
+    <tr><td><code>diagnostic</code></td><td><code>v202501</code></td><td>2</td>
+        <td><code>SERVICE_VISIBILITY_PUBLIC_KENTIK</code></td>
+        <td><span class="badge b-muted">Probably intentional</span> <code>Echo</code> and
+          <code>Chat</code>, and the visibility differs from the other two. Listed for completeness
+          only; we are not asking for changes here.</td></tr>
+  </tbody>
+</table>
+
+<h2>Why kptr matters to SDK consumers</h2>
+
+<p><code>kptr</code> is the reverse-DNS (PTR) enrichment service. Its four RPCs split into two
+planes, and the split is what makes the missing bindings consequential:</p>
+
+<table>
+  <thead><tr><th style="width:28%">RPC</th><th style="width:14%">Plane</th><th style="width:26%">Required metadata</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>GetNetworkRangeAssignments</code></td><td>Agent</td>
+        <td><code>x-kt-agentid</code>, <code>x-kt-sid</code></td>
+        <td>Agent asks which IP prefixes it must resolve</td></tr>
+    <tr><td><code>UpdateAddressNames</code></td><td>Agent</td>
+        <td><code>x-kt-agentid</code>, <code>x-kt-sid</code></td>
+        <td>Agent submits resolved IP-to-hostname mappings</td></tr>
+    <tr><td><code>ResolveAddresses</code></td><td><b>Customer</b></td>
+        <td>Email plus API token only</td>
+        <td>Resolve a list of IP addresses to hostnames</td></tr>
+    <tr><td><code>ListResolvedAddresses</code></td><td><b>Customer</b></td>
+        <td>Email plus API token only</td>
+        <td>Pull the company's entire resolved-address table for local caching, instead of
+          synchronous per-flow lookups</td></tr>
+  </tbody>
+</table>
+
+<p>The bottom two require nothing beyond a standard API key, per the service's own comments. "Give
+me hostnames for these IPs" and "give me the whole PTR table" are ordinary customer-facing
+capabilities, and today there is no way to invoke either over REST.</p>
+
+<h2>Evidence</h2>
+
+<h3>1. The annotation is absent on every affected RPC</h3>
+
+<pre><code><span class="cmt">// proto/kentik/kptr/v202602/kptr_service.proto:76</span>
+rpc ListResolvedAddresses(ListResolvedAddressesRequest) returns (ListResolvedAddressesResponse) {
+  option (kentik.core.v202303.method_scope) = "kptr:read";
+<span class="cmt">  // no option (google.api.http) = { ... }</span>
+}</code></pre>
+
+<p>Compare an RPC from <code>kmeta</code>, added to the schema in the same era, which is annotated
+in the conventional way:</p>
+
+<pre><code><span class="cmt">// proto/kentik/kmeta/v202607alpha1/kmeta.proto:110</span>
+rpc ListServiceNowConfigs(ListServiceNowConfigsRequest) returns (ListServiceNowConfigsResponse) {
+<span class="add">  option (google.api.http) = {
+    get: "/kmeta/v202607alpha1/{cid}/servicenow/config"
+  };</span>
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    operation_id: "ListServiceNowConfigs"
+    summary: "List ServiceNow Configs"
+  };
+}</code></pre>
+
+<h3>2. Complete list of unannotated RPCs</h3>
+
+<pre><code><span class="cmt">kptr (SERVICE_VISIBILITY_PUBLIC), 4 RPCs</span>
+  proto/kentik/kptr/v202602/kptr_service.proto:29   rpc GetNetworkRangeAssignments
+  proto/kentik/kptr/v202602/kptr_service.proto:47   rpc UpdateAddressNames
+  proto/kentik/kptr/v202602/kptr_service.proto:60   rpc ResolveAddresses
+  proto/kentik/kptr/v202602/kptr_service.proto:76   rpc ListResolvedAddresses
+
+<span class="cmt">deviceconf (SERVICE_VISIBILITY_PUBLIC), 10 RPCs</span>
+  .../deviceconf/v202511/device_configuration_service.proto:32    rpc GetDeviceAssignments
+  .../deviceconf/v202511/device_configuration_service.proto:50    rpc UpdateDeviceConfiguration
+  .../deviceconf/v202511/device_configuration_service.proto:64    rpc GetDeviceConfiguration
+  .../deviceconf/v202511/device_configuration_service.proto:78    rpc GetLatestDeviceConfigurations
+  .../deviceconf/v202511/device_configuration_service.proto:92    rpc ListDeviceConfigurationRevisions
+  .../deviceconf/v202511/device_configuration_service.proto:107   rpc RequestDeviceConfigurationFetch
+  .../deviceconf/v202511/device_configuration_service.proto:120   rpc ExecuteCommand   (METHOD_VISIBILITY_PRIVATE: not requested)
+  .../deviceconf/v202511/device_configuration_service.proto:135   rpc GetCommandAcls
+  .../deviceconf/v202511/device_configuration_service.proto:150   rpc UpdateCommandAcls
+  .../deviceconf/v202511/device_configuration_service.proto:164   rpc DeleteDeviceConfiguration
+
+<span class="cmt">diagnostic (SERVICE_VISIBILITY_PUBLIC_KENTIK), 2 RPCs -- listed for completeness only</span>
+  proto/kentik/diagnostic/v202501/diagnostic.proto:37   rpc Echo
+  proto/kentik/diagnostic/v202501/diagnostic.proto:41   rpc Chat</code></pre>
+
+<h3>3. The generated swagger confirms the downstream effect</h3>
+
+<pre><code><span class="cmt">$ python -c "import json;d=json.load(open('gen/openapiv2/kentik/kptr/v202602/kptr_service.swagger.json'));\
+print('paths:',list(d.get('paths',{})));print('definitions:',len(d.get('definitions',{})))"</span>
+
+paths:       []          <span class="cmt"># no REST routes generated</span>
+definitions: 7           <span class="cmt"># message shapes generated normally</span></code></pre>
+
+<p>The message definitions generate correctly, so every downstream code generator produces the
+request and response types and then has nothing to call them with. In our SDK that surfaces as a
+package of models with no client methods attached.</p>
+
+<h3>4. Full audit output</h3>
+
+<pre><code>SERVICE               VERSION            RPCS  ANNOTATED  PATHS  VISIBILITY
+--------------------------------------------------------------------------------
+ai_advisor            v202511               3          3      2  PUBLIC
+as_group              v202212               5          5      2  PUBLIC
+asset_tags            v20260515beta1        9          9      6  PUBLIC
+bgp_monitoring        v202210               8          8      5  PUBLIC
+capacity_plan         v202212               4          4      4  PUBLIC
+cloud_export          v202506               5          5      2  PUBLIC
+connectivity_checker  v202410beta1          1          1      1  PUBLIC
+cost                  v202308               3          3      3  PUBLIC
+credential            v202407alpha1         2          2      2  PUBLIC
+custom_application    v202501alpha1         5          5      2  PUBLIC
+custom_dimension      v202411alpha1        10         10      6  PUBLIC
+device                v202504beta2         10         10      7  PUBLIC
+<span class="del">deviceconf            v202511              10          0      0  PUBLIC   &lt;== NO REST SURFACE</span>
+<span class="del">diagnostic            v202501               2          0      0  PUBLIC_KENTIK &lt;== NO REST SURFACE</span>
+dictionary            v20260604alpha1       1          1      1  PUBLIC
+flow_tag              v202404alpha1         5          5      2  PUBLIC
+interface             v202108alpha1         6          6      3  PUBLIC
+journeys              v202406               1          1      1  PUBLIC
+kagent                v202401              28         28     17  PRIVATE,PROTECTED,PUBLIC
+kmeta                 v202607alpha1         5          5      2  PUBLIC
+kmi                   v202212               5          5      5  PUBLIC
+<span class="del">kptr                  v202602               4          0      0  PUBLIC   &lt;== NO REST SURFACE</span>
+ktbgp                 v202501               3          3      3  PRIVATE
+label                 v202210               4          4      2  PUBLIC
+mkp                   v202407              14         14      6  PUBLIC
+network_class         v202109alpha1         2          2      1  PUBLIC
+notification_channel  v202210               3          3      3  PUBLIC
+pathfinder            v202505beta1          1          1      1  PUBLIC
+plan                  v202501alpha1         1          1      1  PUBLIC
+rbux                  v202607alpha1         5          5      2  PUBLIC
+saved_filter          v202501alpha1         6          6      4  PUBLIC
+site                  v202509              10         10      4  PUBLIC
+synthetics            v202309              18         18     10  PUBLIC
+user                  v202211               7          7      4  PUBLIC
+vault                 v202312alpha1         2          2      2  PRIVATE</code></pre>
+
+<h3>5. Reproducing this</h3>
+
+<pre><code><span class="cmt"># From the community_sdk_python repo root, with ../api-schema-public checked out</span>
+uv run python reports/schema_annotation_audit.py</code></pre>
+
+<p class="note">The audit script counts annotations per RPC block rather than per file, so an RPC
+using <code>additional_bindings</code> is counted once.</p>
+
+<h2>Suggested fix</h2>
+
+<p>For each affected RPC, add the binding the rest of the schema already uses. For the two
+customer-plane kptr RPCs, something along these lines would be enough for the gateway and every
+downstream generator to pick them up:</p>
+
+<pre><code> rpc ResolveAddresses(ResolveAddressesRequest) returns (ResolveAddressesResponse) {
+   option (kentik.core.v202303.method_scope) = "kptr:read";
+<span class="add">+  option (google.api.http) = {
++    post: "/kptr/v202602/addresses/resolve"
++    body: "*"
++  };</span>
+ }
+
+ rpc ListResolvedAddresses(ListResolvedAddressesRequest) returns (ListResolvedAddressesResponse) {
+   option (kentik.core.v202303.method_scope) = "kptr:read";
+<span class="add">+  option (google.api.http) = {
++    get: "/kptr/v202602/addresses"
++  };</span>
+ }</code></pre>
+
+<p>Path shapes are yours to choose. We have no requirement beyond the bindings existing. If the
+agent-plane RPCs should stay gRPC-only because they depend on
+<code>x-kt-agentid</code> and <code>x-kt-sid</code> metadata, annotating only the two customer-plane
+RPCs would resolve the practical problem.</p>
+
+<h2>Questions for the API team</h2>
+<ol>
+  <li>Are <code>kptr</code> and <code>deviceconf</code> intended to be reachable over REST? If yes,
+    the bindings are simply missing. If no, we will document them as gRPC-only.</li>
+  <li>If they are deliberately gRPC-only, should <code>SERVICE_VISIBILITY_PUBLIC</code> still apply?
+    Today that annotation is the only public signal, and it currently points the opposite way from
+    the absent bindings.</li>
+  <li>Is there a convention we should follow for distinguishing agent-plane RPCs (those requiring
+    <code>x-kt-agentid</code> and <code>x-kt-sid</code>) from customer-plane RPCs? A machine-readable
+    marker would let SDK generators omit agent-plane operations automatically.</li>
+</ol>
+
+<h2>Copy-paste ticket body</h2>
+
+<div class="ticket">
+<pre>Title: Add google.api.http bindings to kptr and deviceconf RPCs (or confirm gRPC-only)
+
+Repo: kentik/api-schema-public (89684ba, 2026-09-24)
+Reported by: Kentik Community Python SDK
+
+SUMMARY
+Three services declare RPCs with no google.api.http annotation, so they produce
+zero swagger paths and no gRPC gateway routes. Two of them are annotated
+SERVICE_VISIBILITY_PUBLIC:
+
+  kptr        v202602   4 RPCs    SERVICE_VISIBILITY_PUBLIC
+  deviceconf  v202511  10 RPCs    SERVICE_VISIBILITY_PUBLIC
+  diagnostic  v202501   2 RPCs    SERVICE_VISIBILITY_PUBLIC_KENTIK  (likely intentional)
+
+Across the other 32 services that declare RPCs, all 192 RPCs carry the
+annotation. No service anywhere in the schema partially annotates, which is why
+these three look like an oversight rather than a deliberate exclusion.
+
+IMPACT
+Message definitions still generate, so downstream code generators emit request
+and response types with no operation to call. The Python SDK currently ships a
+kptr package containing 7 models and zero callable methods. There is also no
+REST route at the gateway, so REST-only consumers cannot reach these services at
+all.
+
+kptr specifically is the reverse-DNS (PTR) enrichment service. Two of its four
+RPCs require only ordinary customer credentials (email + API token) per the
+service's own comments:
+
+  ResolveAddresses       resolve a list of IPs to hostnames
+  ListResolvedAddresses  pull the company's full resolved-address table
+
+The other two are agent-plane and additionally require x-kt-agentid and x-kt-sid.
+
+AFFECTED RPCs
+kptr (4):
+  proto/kentik/kptr/v202602/kptr_service.proto:29   GetNetworkRangeAssignments
+  proto/kentik/kptr/v202602/kptr_service.proto:47   UpdateAddressNames
+  proto/kentik/kptr/v202602/kptr_service.proto:60   ResolveAddresses
+  proto/kentik/kptr/v202602/kptr_service.proto:76   ListResolvedAddresses
+
+deviceconf (10), all in
+proto/kentik/deviceconf/v202511/device_configuration_service.proto:
+  :32 GetDeviceAssignments            :107 RequestDeviceConfigurationFetch
+  :50 UpdateDeviceConfiguration       :120 ExecuteCommand
+  :64 GetDeviceConfiguration          :135 GetCommandAcls
+  :78 GetLatestDeviceConfigurations   :150 UpdateCommandAcls
+  :92 ListDeviceConfigurationRevisions :164 DeleteDeviceConfiguration
+ExecuteCommand (:120) is annotated METHOD_VISIBILITY_PRIVATE, so this ticket
+does not ask for a binding on it. That leaves 13 RPCs: 4 in kptr, 9 in
+deviceconf.
+
+EVIDENCE
+gen/openapiv2/kentik/kptr/v202602/kptr_service.swagger.json
+  paths:       []   (no REST routes)
+  definitions: 7    (message shapes generate normally)
+
+ASK
+1. Confirm whether kptr and deviceconf should be reachable over REST.
+2. If yes, add google.api.http bindings. Annotating just the two customer-plane
+   kptr RPCs would resolve the practical problem for SDK consumers.
+3. If no, confirm whether SERVICE_VISIBILITY_PUBLIC still applies, since that
+   annotation currently points the opposite way from the absent bindings.
+4. Separately: is there a convention for marking agent-plane RPCs so SDK
+   generators can omit them automatically?</pre>
+</div>
+
+<footer>
+  <p>Evidence gathered from <code>kentik/api-schema-public</code> at <code>master</code> on
+  2026-09-18, and revalidated at <code>89684ba</code> on 2026-09-24 with no change to the audit. Reproduce with <code>reports/schema_annotation_audit.py</code> in the
+  <code>community_sdk_python</code> repo.</p>
+</footer>
+
+</div>
+</body>
+</html>
