@@ -1,0 +1,102 @@
+<a href="../kentik-api-team-findings.md">the current findings tracker</a>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alerting: undocumented startedAt requirement and gRPC 500 on every RPC</title>
+<style>
+  :root { --bg:#0d1117; --bg-elev:#161b22; --border:#30363d; --fg:#e6edf3; --fg-muted:#9198a1; --accent:#58a6ff; --green:#3fb950; --amber:#d29922; --red:#f85149; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: light) { :root { --bg:#fff; --bg-elev:#f6f8fa; --border:#d0d7de; --fg:#1f2328; --fg-muted:#59636e; --accent:#0969da; --green:#1a7f37; --amber:#9a6700; --red:#cf222e; } }
+  body{margin:0;padding:0 1.25rem 4rem;background:var(--bg);color:var(--fg);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto}
+  header{padding:2.5rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+  h1{font-size:1.85rem;line-height:1.25;margin:0 0 .5rem}
+  h2{font-size:1.28rem;margin:2.5rem 0 .85rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+  .sub{color:var(--fg-muted);font-size:.9rem;margin:0}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.87rem}
+  th,td{text-align:left;padding:.55rem .7rem;border:1px solid var(--border);vertical-align:top}
+  th{background:var(--bg-elev);font-size:.79rem;text-transform:uppercase;color:var(--fg-muted)}
+  code{font-family:var(--mono);font-size:.855em;background:var(--bg-elev);border:1px solid var(--border);border-radius:5px;padding:.1em .35em}
+  pre{background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem;overflow-x:auto;font-family:var(--mono);font-size:.81rem}
+  pre code{background:none;border:none;padding:0}
+  .callout{background:var(--bg-elev);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:8px;padding:1rem 1.3rem;margin:1.4rem 0}
+  footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--border);color:var(--fg-muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="sub">Report for the Kentik API team</p>
+  <h1>Alerting: the backend needs <code>startedAt</code>, and every gRPC RPC returns 500</h1>
+  <p class="sub">Observed 2026-10-13 against the live V6 API with the Kentik community Python SDK.
+    Schema checked: <code>api-schema-public</code> commit <code>9de9a68</code>.</p>
+</header>
+
+<div class="callout">
+  <strong>Current status, 2026-10-27:</strong> the alert-list requirement no
+  longer reproduces. Seven read-only request bodies returned HTTP 200, including
+  an empty body. The broad gRPC claim below was narrowed by later tests. Calls
+  without deadlines worked. A deadline caused `RangeError` on six services. See
+  <a href="../kentik-api-team-findings.md">the current findings tracker</a> for the
+  current ticket list.
+</div>
+
+<h2>Issue 1: REST <code>POST /v202505/alerts</code> rejects a request with no <code>startedAt</code></h2>
+<p>The proto marks every field of <code>AlertServiceListRequest</code> and <code>AlertFilters</code>
+  as <code>OPTIONAL</code>. <code>started_at</code> has the default <code>{}</code>. The operation
+  description does not mention a required time range. The live API returns
+  <code>400 backend request error</code> for every request that has no <code>filters.startedAt</code>.</p>
+<table>
+  <thead><tr><th>Request body</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td><code>{}</code></td><td>400</td></tr>
+    <tr><td><code>{"pagination":{"limit":5}}</code></td><td>400</td></tr>
+    <tr><td><code>{"sorting":{"field":"startedAt"}}</code></td><td>400</td></tr>
+    <tr><td><code>{"filters":{"states":["ALERT_STATE_ACTIVE"]}}</code></td><td>400</td></tr>
+    <tr><td><code>{"filters":{"activeAt":{"start":"...","end":"..."}}}</code></td><td>400</td></tr>
+    <tr><td><code>{"filters":{"startedAt":{"start":"now-30d","end":"now"}}}</code></td><td>200, 122 alerts</td></tr>
+  </tbody>
+</table>
+<p>Other <code>v202505</code> list routes (silence, auto-ack) accept an empty body.</p>
+<div class="callout">
+  <strong>Ask:</strong> either accept a request without <code>startedAt</code> (the documented default),
+  or mark the field <code>REQUIRED</code> in the proto and describe the rule in the operation text.
+  Please also return a message that names the missing field instead of <code>backend request error</code>.
+</div>
+
+<h2>Issue 2: every alerting gRPC RPC returns 500 <code>RangeError</code></h2>
+<p>All alerting RPCs we tried fail over gRPC with the same error. The same calls work over REST, and
+  other gRPC services work on the same account (for example device list, and the <code>mkp</code> lists).</p>
+<table>
+  <thead><tr><th>Operation</th><th>REST</th><th>gRPC</th></tr></thead>
+  <tbody>
+    <tr><td>Alert <code>Get</code> with id <code>does-not-exist</code></td><td>404</td><td>500 RangeError</td></tr>
+    <tr><td>Alert <code>List</code> (empty request, and with <code>startedAt</code>)</td><td>200 with <code>startedAt</code></td><td>500 RangeError</td></tr>
+    <tr><td>Silence, mitigation method, mitigation platform, policy, suppression <code>List</code></td><td>200 (silence checked)</td><td>500 RangeError</td></tr>
+    <tr><td>Mitigation <code>List</code>, <code>AvailableActions</code></td><td>200</td><td>500 RangeError</td></tr>
+    <tr><td>Mitigation <code>Get</code>, <code>AvailableActionsForMitigation</code> with id <code>999999999</code></td><td>404</td><td>500 RangeError</td></tr>
+    <tr><td>Mitigation <code>Create</code>, then <code>Get</code>, <code>Act</code> STOP and DELETE on it</td><td>200, all succeed</td><td>500 RangeError</td></tr>
+  </tbody>
+</table>
+<p>The failure does not depend on the request content: a Get with one string id fails the same way as a List
+  with a hand-built proto message. The 500 carries no status details. The response comes from the gateway
+  with <code>x-envoy-upstream-service-time: 29</code> (ms), so an upstream service received the call and failed.
+  Write RPCs fail the same way: a gRPC mitigation <code>Create</code> and <code>Act</code> both returned the error
+  on a lab account, while the same calls over REST succeeded.</p>
+<pre><code>code    : StatusCode.INTERNAL
+details : internal error (name:RangeError type:object) (errxid db77tw34km2g0gtxpkgg)
+server  : envoy   x-envoy-upstream-service-time: 29</code></pre>
+<div class="callout">
+  <strong>Ask:</strong> check the alerting service behind the gRPC route. A <code>RangeError</code> is a
+  JavaScript error, so it looks like an unhandled exception in that service for every gRPC request.
+</div>
+
+<h2>Related: <code>ktbgp</code> <code>RouteService.List</code> returns 501</h2>
+<p><code>/kentik.ktbgp.v202501.RouteService/List</code> is declared in the proto, but the server answers
+  <code>501: The server does not implement the method</code>.</p>
+
+<footer>Request ids: REST 400 <code>db77aqa4km2g0tk1g020</code>; gRPC 500 <code>db77tw34km2g0gtxpkgg</code>.</footer>
+</div>
+</body>
+</html>

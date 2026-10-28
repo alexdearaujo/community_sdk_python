@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upstream: SERVICE_VISIBILITY_PRIVATE services are published with public REST paths</title>
+<style>
+  :root {
+    --bg:#0d1117; --bg-elev:#161b22; --bg-elev-2:#1c2129; --border:#30363d;
+    --fg:#e6edf3; --fg-muted:#9198a1; --accent:#58a6ff; --green:#3fb950;
+    --amber:#d29922; --red:#f85149;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#fff; --bg-elev:#f6f8fa; --bg-elev-2:#eef1f5; --border:#d0d7de;
+            --fg:#1f2328; --fg-muted:#59636e; --accent:#0969da; --green:#1a7f37;
+            --amber:#9a6700; --red:#cf222e; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:0 1.25rem 5rem;background:var(--bg);color:var(--fg);
+       font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto}
+  header.masthead{padding:2.5rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+  h1{font-size:1.85rem;line-height:1.25;margin:0 0 .5rem;letter-spacing:-.02em}
+  h2{font-size:1.28rem;margin:2.75rem 0 .85rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+  h3{font-size:1rem;margin:1.6rem 0 .5rem}
+  p{margin:.7rem 0}
+  .sub{color:var(--fg-muted);font-size:.9rem;margin:0}
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem;margin-top:1.25rem}
+  .meta-grid div{background:var(--bg-elev);border:1px solid var(--border);border-radius:7px;
+                 padding:.55rem .75rem;font-size:.82rem}
+  .meta-grid span{display:block;color:var(--fg-muted);font-size:.72rem;text-transform:uppercase;
+                  letter-spacing:.05em;margin-bottom:.15rem}
+  .callout{background:var(--bg-elev);border:1px solid var(--border);border-left:4px solid var(--accent);
+           border-radius:8px;padding:1.05rem 1.3rem;margin:1.4rem 0}
+  .callout.ask{border-left-color:var(--green)}
+  .callout.warn{border-left-color:var(--amber)}
+  .callout.alert{border-left-color:var(--red)}
+  .callout h3{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.87rem}
+  th,td{text-align:left;padding:.55rem .7rem;border:1px solid var(--border);vertical-align:top}
+  th{background:var(--bg-elev);font-weight:600;font-size:.79rem;text-transform:uppercase;
+     letter-spacing:.04em;color:var(--fg-muted)}
+  tbody tr:nth-child(even){background:color-mix(in srgb,var(--bg-elev) 45%,transparent)}
+  code{font-family:var(--mono);font-size:.855em;background:var(--bg-elev-2);
+       border:1px solid var(--border);border-radius:5px;padding:.1em .35em}
+  pre{background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;
+      padding:.9rem 1rem;overflow-x:auto;font-family:var(--mono);font-size:.81rem;
+      line-height:1.55;margin:.8rem 0;white-space:pre}
+  pre code{background:none;border:none;padding:0;font-size:inherit}
+  pre .add{color:var(--green)} pre .del{color:var(--red)} pre .cmt{color:var(--fg-muted)}
+  .badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;
+         text-transform:uppercase;padding:.17em .55em;border-radius:999px;border:1px solid currentColor}
+  .b-red{color:var(--red)} .b-amber{color:var(--amber)} .b-green{color:var(--green)}
+  .b-blue{color:var(--accent)} .b-muted{color:var(--fg-muted)}
+  ul,ol{margin:.6rem 0;padding-left:1.4rem} li{margin:.3rem 0}
+  .note{font-size:.86rem;color:var(--fg-muted)}
+  .ticket{background:var(--bg-elev-2);border:1px dashed var(--border);border-radius:8px;
+          padding:1rem 1.15rem;margin:1rem 0}
+  .ticket pre{background:transparent;border:none;padding:0;white-space:pre-wrap;font-size:.82rem}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin:1.4rem 0}
+  .card{background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+  .card .num{font-size:1.8rem;font-weight:650;line-height:1.1;font-family:var(--mono)}
+  .card .lbl{color:var(--fg-muted);font-size:.78rem;margin-top:.3rem}
+  .card.bad .num{color:var(--red)} .card.warn .num{color:var(--amber)}
+  .card.info .num{color:var(--accent)}
+  footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--border);
+         color:var(--fg-muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="sub">Report for the Kentik API / schema team</p>
+  <h1>Services annotated <code>SERVICE_VISIBILITY_PRIVATE</code> publish public REST paths
+      and reach end users through the SDK</h1>
+  <p class="sub">Three services marked private or protected emit 10 REST operations into the public
+    schema repo. All of them are callable from the community Python SDK today, including
+    <code>vault</code> secret reads.</p>
+  <div class="meta-grid">
+    <div><span>Filed by</span>Kentik Community Python SDK</div>
+    <div><span>Date</span>2026-09-18</div>
+    <div><span>Repo</span><code>kentik/api-schema-public</code></div>
+    <div><span>Revision</span><code>89684ba</code>, 2026-09-24 (revalidated)</div>
+    <div><span>Services affected</span>3 (<code>ktbgp</code>, <code>vault</code>, <code>kagent</code>)</div>
+    <div><span>Operations exposed</span>10</div>
+  </div>
+</header>
+
+<h2>The ask</h2>
+
+<div class="callout ask">
+  <h3>Tell us what <code>SERVICE_VISIBILITY_PRIVATE</code> is meant to mean, and whether these
+      services should be reachable from a community SDK.</h3>
+  <p>We are not asserting a security vulnerability. These endpoints enforce their own
+  authentication and authorization, and we have not tested whether an ordinary customer token is
+  accepted by them. What we are flagging is that <strong>the only machine-readable visibility signal
+  in the schema is currently being ignored by every downstream generator, including ours</strong>,
+  and we would rather honor it than guess.</p>
+</div>
+
+<div class="cards">
+  <div class="card bad"><div class="num">3</div><div class="lbl">non-public services</div></div>
+  <div class="card bad"><div class="num">10</div><div class="lbl">REST ops published</div></div>
+  <div class="card warn"><div class="num">10</div><div class="lbl">callable from the SDK</div></div>
+  <div class="card info"><div class="num">0</div><div class="lbl">generators reading visibility</div></div>
+</div>
+
+<h2>Summary</h2>
+
+<p>The schema annotates service visibility with
+<code>option (kentik.core.v202303.visibility)</code>. Across the current schema there are 67 such
+service annotations, and five of them are non-public. Four of those five belong to three services,
+and every one of those services also carries <code>google.api.http</code> bindings, so
+<code>protoc-gen-openapiv2</code> publishes REST paths for them into
+<code>gen/openapiv2/</code> in the public repo. The fifth,
+<code>diagnostic</code> (<code>SERVICE_VISIBILITY_PUBLIC_KENTIK</code>), has no HTTP bindings and
+publishes no paths.</p>
+
+<p>Because the visibility annotation is a custom option that lives only in the proto layer, it does
+not survive into the generated swagger. Downstream generators consume swagger, so the signal is lost
+entirely. The Kentik Community Python SDK generates its client surface from those swagger files and
+therefore mounts all three services without ever seeing the annotation.</p>
+
+<div class="callout warn">
+  <h3>The inverse case is also true, and it is what led us here</h3>
+  <p><code>kptr</code> is annotated <code>SERVICE_VISIBILITY_PUBLIC</code> and has
+  <strong>no</strong> REST surface, because its RPCs lack HTTP bindings. So the SDK currently ships
+  the exact opposite of what the annotations describe: it exposes three services marked non-public,
+  and omits one marked public. That inversion is covered in a companion report,
+  <em>"kptr and deviceconf declare public gRPC services with no HTTP bindings"</em>.</p>
+</div>
+
+<h2>Evidence</h2>
+
+<h3>1. Non-public visibility annotations, with exact locations</h3>
+
+<table>
+  <thead>
+    <tr><th style="width:15%">Service</th><th style="width:26%">Proto service</th>
+        <th style="width:34%">Annotation</th><th>Location</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>ktbgp</code></td><td><code>RouteService</code></td>
+        <td><code>SERVICE_VISIBILITY_PRIVATE</code></td>
+        <td><code>proto/kentik/ktbgp/v202501/route_service.proto:14</code></td></tr>
+    <tr><td><code>vault</code></td><td><code>VaultService</code></td>
+        <td><code>SERVICE_VISIBILITY_PRIVATE</code></td>
+        <td><code>proto/kentik/vault/v202312alpha1/vault.proto:159</code></td></tr>
+    <tr><td><code>kagent</code></td><td><code>CapabilityAdminService</code></td>
+        <td><code>SERVICE_VISIBILITY_PRIVATE</code></td>
+        <td><code>proto/kentik/kagent/v202401/capability.proto:280</code></td></tr>
+    <tr><td><code>kagent</code></td><td><code>CapabilityReleaseService</code></td>
+        <td><code>SERVICE_VISIBILITY_PROTECTED</code></td>
+        <td><code>proto/kentik/kagent/v202401/capability.proto:230</code></td></tr>
+  </tbody>
+</table>
+
+<pre><code><span class="cmt">// proto/kentik/ktbgp/v202501/route_service.proto:13-14</span>
+service RouteService {
+  option (kentik.core.v202303.visibility) = SERVICE_VISIBILITY_PRIVATE;</code></pre>
+
+<h3>2. Those services publish REST paths into the public schema repo</h3>
+
+<table>
+  <thead><tr><th style="width:13%">Service</th><th style="width:10%">Method</th>
+      <th style="width:42%">Path</th><th>Operation ID</th></tr></thead>
+  <tbody>
+    <tr><td><code>ktbgp</code></td><td>POST</td><td><code>/routes/announce</code></td>
+        <td><code>RouteService_Announce</code></td></tr>
+    <tr><td><code>ktbgp</code></td><td>POST</td><td><code>/routes/list</code></td>
+        <td><code>RouteService_List</code></td></tr>
+    <tr><td><code>ktbgp</code></td><td>POST</td><td><code>/routes/withdraw</code></td>
+        <td><code>RouteService_Withdraw</code></td></tr>
+    <tr><td><code>vault</code></td><td>GET</td><td><code>/vault/v202312alpha1/secrets</code></td>
+        <td><code>ListSecret</code></td></tr>
+    <tr><td><code>vault</code></td><td>GET</td><td><code>/vault/v202312alpha1/secrets/{name}</code></td>
+        <td><code>GetSecret</code></td></tr>
+    <tr><td><code>kagent</code></td><td>GET</td><td><code>/kagent/v202401/capabilities</code></td>
+        <td><code>CapabilityAdminService_ListCapabilities</code></td></tr>
+    <tr><td><code>kagent</code></td><td>POST</td><td><code>/kagent/v202401/capabilities</code></td>
+        <td><code>CapabilityAdminService_CreateCapability</code></td></tr>
+    <tr><td><code>kagent</code></td><td>PATCH</td><td><code>/kagent/v202401/capabilities/{capability.name}</code></td>
+        <td><code>CapabilityAdminService_UpdateCapability</code></td></tr>
+    <tr><td><code>kagent</code></td><td>GET</td><td><code>/kagent/v202401/capabilities/{capability.name}</code></td>
+        <td><code>CapabilityAdminService_GetCapability</code></td></tr>
+    <tr><td><code>kagent</code></td><td>DELETE</td><td><code>/kagent/v202401/capabilities/{capability.name}</code></td>
+        <td><code>CapabilityAdminService_DeleteCapability</code></td></tr>
+  </tbody>
+</table>
+
+<p class="note">The three <code>CapabilityReleaseService</code> read paths
+(<code>/kagent/v202401/releases</code> and two siblings) are also published. They are
+<code>PROTECTED</code> rather than <code>PRIVATE</code>, so we have listed them separately in the
+ticket body rather than counting them among the ten.</p>
+
+<p>Worth a second look independently: <code>ktbgp</code>'s paths are
+<code>/routes/announce</code>, <code>/routes/list</code>, and <code>/routes/withdraw</code>. They
+carry no service prefix and no version segment, unlike every other service in the schema. If these
+are ever meant to be public, the path shape looks unintentional.</p>
+
+<h3>3. The SDK generates callable methods for all of them</h3>
+
+<p>These are real methods on the public client object, generated automatically and shipped:</p>
+
+<pre><code><span class="cmt"># ktbgp, SERVICE_VISIBILITY_PRIVATE</span>
+client.ktbgp.route_announce()
+client.ktbgp.route_list()
+client.ktbgp.route_withdraw()
+
+<span class="cmt"># vault, SERVICE_VISIBILITY_PRIVATE</span>
+client.vault.list_secret()
+client.vault.get_secret()
+
+<span class="cmt"># kagent CapabilityAdminService, SERVICE_VISIBILITY_PRIVATE</span>
+client.kagent.list_capabilities()
+client.kagent.create_capability()
+client.kagent.get_capability()
+client.kagent.delete_capability()
+client.kagent.update_capability()
+
+<span class="cmt"># kagent CapabilityReleaseService, SERVICE_VISIBILITY_PROTECTED</span>
+client.kagent.get_capability_release()
+client.kagent.get_capability_latest_releases()
+client.kagent.get_capability_supported_distros()</code></pre>
+
+<div class="callout alert">
+  <h3>The one we would most like a direct answer on</h3>
+  <p><code>client.vault.get_secret()</code> and <code>client.vault.list_secret()</code> are secret
+  retrieval operations, on a service the schema marks <code>PRIVATE</code>, published as
+  unauthenticated-looking <code>GET</code> routes in a public schema repo, and generated into a
+  community SDK. Whatever the server-side authorization actually does, this combination is worth a
+  deliberate confirmation rather than an assumption.</p>
+</div>
+
+<h3>4. Visibility distribution across the whole schema</h3>
+
+<pre><code><span class="cmt">$ grep -rhoE 'visibility\) = [A-Z_]+' proto/ | sort | uniq -c | sort -rn</span>
+
+  62 visibility) = SERVICE_VISIBILITY_PUBLIC
+   3 visibility) = SERVICE_VISIBILITY_PRIVATE
+   1 visibility) = SERVICE_VISIBILITY_PUBLIC_KENTIK
+   1 visibility) = SERVICE_VISIBILITY_PROTECTED
+   1 visibility) = METHOD_VISIBILITY_PRIVATE</code></pre>
+
+<p>Four distinct non-public values are in use and we have no documentation for any of them.
+<code>PUBLIC_KENTIK</code> (on <code>diagnostic</code>) and <code>PROTECTED</code> (on
+<code>CapabilityReleaseService</code>) are particularly opaque. There is also a single
+<code>METHOD_VISIBILITY_PRIVATE</code>, on <code>deviceconf</code>'s <code>ExecuteCommand</code>
+RPC, which shows that per-method granularity exists and that a per-service rule would miss it.</p>
+
+<h3>5. Reproducing this</h3>
+
+<pre><code><span class="cmt"># From the community_sdk_python repo root, with ../api-schema-public checked out</span>
+uv run python reports/scripts/schema/annotation_audit.py
+
+<span class="cmt"># Tail of output:</span>
+Services annotated non-public:
+
+  diagnostic.DiagnosticService: SERVICE_VISIBILITY_PUBLIC_KENTIK  (REST paths published: 0)
+  kagent.CapabilityAdminService: SERVICE_VISIBILITY_PRIVATE       (REST paths published: 17)
+  kagent.CapabilityReleaseService: SERVICE_VISIBILITY_PROTECTED   (REST paths published: 17)
+  ktbgp.RouteService: SERVICE_VISIBILITY_PRIVATE                  (REST paths published: 3)
+  vault.VaultService: SERVICE_VISIBILITY_PRIVATE                  (REST paths published: 2)</code></pre>
+
+<p class="note">The path counts for <code>kagent</code> are per service directory, not per proto
+service. The per-service breakdown in section 2 above is the precise one.</p>
+
+<h2>Why this is hard to resolve on our side</h2>
+
+<p>The SDK is generated end to end from the swagger files. It never reads the protos. Three options
+exist and all of them need your input:</p>
+
+<table>
+  <thead><tr><th style="width:26%">Option</th><th style="width:37%">What it needs from the schema</th><th>Trade-off</th></tr></thead>
+  <tbody>
+    <tr><td>Propagate visibility into swagger</td>
+        <td>Emit the annotation as a vendor extension, for example
+          <code>x-kentik-visibility</code>, on each operation or tag</td>
+        <td><span class="badge b-green">Preferred.</span> Self-maintaining, works for every
+          downstream generator, and supports per-method granularity</td></tr>
+    <tr><td>Stop publishing private services to the public repo</td>
+        <td>Exclude non-public services from <code>gen/openapiv2/</code> and
+          <code>gen/openapiv3/</code></td>
+        <td>Cleanest boundary, but may break internal consumers that rely on the published
+          artifacts</td></tr>
+    <tr><td>SDK-side deny-list</td>
+        <td>Nothing</td>
+        <td><span class="badge b-red">Last resort.</span> Hand-maintained, silently goes stale as
+          the schema evolves, and duplicates a fact the schema already knows</td></tr>
+  </tbody>
+</table>
+
+<h2>Questions for the API team</h2>
+<ol>
+  <li>What do <code>SERVICE_VISIBILITY_PRIVATE</code>, <code>PROTECTED</code>, and
+    <code>PUBLIC_KENTIK</code> each mean? Is any of them intended to mean "do not expose in a
+    customer-facing SDK"?</li>
+  <li>Should <code>ktbgp</code>, <code>vault</code>, and the two <code>kagent</code> capability
+    services be reachable by customers holding an ordinary API token?</li>
+  <li>If not, can the visibility annotation be propagated into the generated swagger as a vendor
+    extension so downstream generators can honor it without a hand-maintained list?</li>
+  <li>Should services marked non-public be published to <code>gen/openapiv2/</code> and
+    <code>gen/openapiv3/</code> in the public repo at all?</li>
+  <li>Is <code>ktbgp</code>'s unversioned, unprefixed path shape (<code>/routes/announce</code>)
+    intentional?</li>
+</ol>
+
+<p class="note">If the answer to question 2 is "no", removing these from the SDK is a breaking change
+to its public surface, so we would want to coordinate timing and a deprecation note.</p>
+
+<h2>Copy-paste ticket body</h2>
+
+<div class="ticket">
+<pre>Title: Clarify SERVICE_VISIBILITY_PRIVATE semantics; private services publish public REST paths
+
+Repo: kentik/api-schema-public (89684ba, 2026-09-24)
+Reported by: Kentik Community Python SDK
+
+SUMMARY
+Three services are annotated non-public in the protos but publish REST paths
+into gen/openapiv2 and gen/openapiv3 in the public schema repo. The community
+Python SDK generates from those swagger files and therefore exposes all of them
+as callable client methods.
+
+The visibility annotation is a proto-layer custom option and does not survive
+into the generated swagger, so no downstream generator can see it.
+
+NON-PUBLIC ANNOTATIONS
+  proto/kentik/ktbgp/v202501/route_service.proto:14
+      service RouteService             SERVICE_VISIBILITY_PRIVATE
+  proto/kentik/vault/v202312alpha1/vault.proto:159
+      service VaultService             SERVICE_VISIBILITY_PRIVATE
+  proto/kentik/kagent/v202401/capability.proto:280
+      service CapabilityAdminService   SERVICE_VISIBILITY_PRIVATE
+  proto/kentik/kagent/v202401/capability.proto:230
+      service CapabilityReleaseService SERVICE_VISIBILITY_PROTECTED
+
+REST PATHS PUBLISHED FOR THEM
+  POST   /routes/announce                                  (RouteService_Announce)
+  POST   /routes/list                                      (RouteService_List)
+  POST   /routes/withdraw                                  (RouteService_Withdraw)
+  GET    /vault/v202312alpha1/secrets                      (ListSecret)
+  GET    /vault/v202312alpha1/secrets/{name}               (GetSecret)
+  GET    /kagent/v202401/capabilities                      (CapabilityAdminService_ListCapabilities)
+  POST   /kagent/v202401/capabilities                      (CapabilityAdminService_CreateCapability)
+  PATCH  /kagent/v202401/capabilities/{capability.name}    (CapabilityAdminService_UpdateCapability)
+  GET    /kagent/v202401/capabilities/{capability.name}    (CapabilityAdminService_GetCapability)
+  DELETE /kagent/v202401/capabilities/{capability.name}    (CapabilityAdminService_DeleteCapability)
+  GET    /kagent/v202401/releases                          (CapabilityReleaseService_GetCapabilityRelease)
+  GET    /kagent/v202401/releases/latest                   (CapabilityReleaseService_GetCapabilityLatestReleases)
+  GET    /kagent/v202401/releases/supported_distros        (CapabilityReleaseService_GetCapabilitySupportedDistros)
+
+ALL OF THESE ARE CALLABLE FROM THE SDK TODAY, e.g.
+  client.vault.get_secret()
+  client.vault.list_secret()
+  client.ktbgp.route_announce()
+  client.kagent.create_capability()
+
+This is not a claimed vulnerability: these endpoints enforce their own authz and
+we have not tested whether a customer token is accepted. The issue is that the
+schema's only machine-readable visibility signal is being ignored downstream.
+
+RELATED, AND THE INVERSE PROBLEM
+kptr is SERVICE_VISIBILITY_PUBLIC and has zero REST paths, because its RPCs lack
+google.api.http bindings. So the SDK currently exposes three services marked
+non-public while omitting one marked public. Filed separately.
+
+QUESTIONS
+1. What do SERVICE_VISIBILITY_PRIVATE / PROTECTED / PUBLIC_KENTIK mean? Does any
+   of them mean "do not expose in a customer-facing SDK"?
+2. Should ktbgp, vault, and the kagent capability services be reachable by a
+   customer holding an ordinary API token?
+3. Can the visibility annotation be propagated into generated swagger as a vendor
+   extension (e.g. x-kentik-visibility) so generators can honor it without a
+   hand-maintained deny-list? Note a METHOD_VISIBILITY_PRIVATE also exists (deviceconf ExecuteCommand), so
+   per-method granularity is needed.
+4. Should non-public services be published to gen/openapiv2 and gen/openapiv3 in
+   the public repo at all?
+5. Is ktbgp's unversioned, unprefixed path shape (/routes/announce) intentional?
+
+If the answer to (2) is no, removing these from the SDK is a breaking change to
+its public surface, so we would want to coordinate timing and a deprecation note.</pre>
+</div>
+
+<footer>
+  <p>Evidence gathered from <code>kentik/api-schema-public</code> at <code>master</code> on
+  2026-09-18, and revalidated at <code>89684ba</code> on 2026-09-24 with no change. Reproduce with <code>reports/scripts/schema/annotation_audit.py</code> in the
+  <code>community_sdk_python</code> repo. Companion report:
+  <a href="upstream-kptr-missing-http-annotations.html">missing HTTP annotations on kptr and
+  deviceconf</a>.</p>
+</footer>
+
+</div>
+</body>
+</html>

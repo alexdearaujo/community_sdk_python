@@ -1,6 +1,6 @@
 """Read-only probe of the V5 API: which endpoints still answer.
 
-Run: uv run python reports/v5_live_probe.py [us|eu]
+Run: uv run python reports/scripts/v5/live_probe.py [us|eu]
 
 Sends only GET calls and the read-only query POSTs. Prints status codes,
 top-level response keys, item counts, and quota headers. It never prints
@@ -91,7 +91,7 @@ def report(method: str, path: str, response: httpx.Response) -> None:
 
 def main() -> None:
     region = sys.argv[1] if len(sys.argv) > 1 else "us"
-    env = dotenv_values(Path(__file__).resolve().parents[1] / ".env")
+    env = dotenv_values(Path(__file__).resolve().parents[3] / ".env")
     headers = {
         "X-CH-Auth-Email": env["KENTIK_EMAIL"] or "",
         "X-CH-Auth-API-Token": env["KENTIK_API_TOKEN"] or "",
