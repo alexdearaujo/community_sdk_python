@@ -90,3 +90,9 @@ class DimensionField(BaseModel):
         default=None,
         description="When true, the field can be used with WINDOW_FUNCTION_COUNT",
     )
+
+    shared: Optional[bool] = Field(
+        validation_alias="shared",
+        default=None,
+        description="When true, the field can be used in child measurements",
+    )

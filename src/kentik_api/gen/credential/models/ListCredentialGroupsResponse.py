@@ -8,9 +8,9 @@ from pydantic import BaseModel, Field
 from .CredentialGroup import CredentialGroup
 
 
-class ListCredentialGroupResponse(BaseModel):
+class ListCredentialGroupsResponse(BaseModel):
     """
-    ListCredentialGroupResponse
+    ListCredentialGroupsResponse
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
@@ -18,5 +18,3 @@ class ListCredentialGroupResponse(BaseModel):
     groups: Optional[List[Optional[CredentialGroup]]] = Field(
         validation_alias="groups", default=None
     )
-
-    invalidCount: Optional[int] = Field(validation_alias="invalidCount", default=None)

@@ -20,6 +20,13 @@ from . import resources_pb2 as _resources_pb2
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class CapabilityPromotionState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CAPABILITY_PROMOTION_STATE_UNSPECIFIED: _ClassVar[CapabilityPromotionState]
+    CAPABILITY_PROMOTION_STATE_PROMOTED: _ClassVar[CapabilityPromotionState]
+    CAPABILITY_PROMOTION_STATE_PENDING: _ClassVar[CapabilityPromotionState]
+    CAPABILITY_PROMOTION_STATE_ROLLED_BACK: _ClassVar[CapabilityPromotionState]
+
 class AgentHealthState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     AGENT_HEALTH_STATE_UNSPECIFIED: _ClassVar[AgentHealthState]
@@ -55,6 +62,10 @@ class CapabilityHealthStateV2(int, metaclass=_enum_type_wrapper.EnumTypeWrapper)
     CAPABILITY_HEALTH_STATE_V2_CRITICAL: _ClassVar[CapabilityHealthStateV2]
     CAPABILITY_HEALTH_STATE_V2_DOWN: _ClassVar[CapabilityHealthStateV2]
 
+CAPABILITY_PROMOTION_STATE_UNSPECIFIED: CapabilityPromotionState
+CAPABILITY_PROMOTION_STATE_PROMOTED: CapabilityPromotionState
+CAPABILITY_PROMOTION_STATE_PENDING: CapabilityPromotionState
+CAPABILITY_PROMOTION_STATE_ROLLED_BACK: CapabilityPromotionState
 AGENT_HEALTH_STATE_UNSPECIFIED: AgentHealthState
 AGENT_HEALTH_STATE_HEALTHY: AgentHealthState
 AGENT_HEALTH_STATE_DEGRADED: AgentHealthState
@@ -182,6 +193,7 @@ class AgentCurrentState(_message.Message):
             "privileges",
             "resources",
             "host_resources",
+            "promotion_state",
             "mem_used_percent",
             "mem_free_bytes",
             "cpu_total_cores",
@@ -207,6 +219,7 @@ class AgentCurrentState(_message.Message):
         PRIVILEGES_FIELD_NUMBER: _ClassVar[int]
         RESOURCES_FIELD_NUMBER: _ClassVar[int]
         HOST_RESOURCES_FIELD_NUMBER: _ClassVar[int]
+        PROMOTION_STATE_FIELD_NUMBER: _ClassVar[int]
         MEM_USED_PERCENT_FIELD_NUMBER: _ClassVar[int]
         MEM_FREE_BYTES_FIELD_NUMBER: _ClassVar[int]
         CPU_TOTAL_CORES_FIELD_NUMBER: _ClassVar[int]
@@ -231,6 +244,7 @@ class AgentCurrentState(_message.Message):
         privileges: str
         resources: _resources_pb2.ProcessResources
         host_resources: _resources_pb2.HostResources
+        promotion_state: CapabilityPromotionState
         mem_used_percent: float
         mem_free_bytes: int
         cpu_total_cores: int
@@ -269,6 +283,7 @@ class AgentCurrentState(_message.Message):
             host_resources: _Optional[
                 _Union[_resources_pb2.HostResources, _Mapping]
             ] = ...,
+            promotion_state: _Optional[_Union[CapabilityPromotionState, str]] = ...,
             mem_used_percent: _Optional[float] = ...,
             mem_free_bytes: _Optional[int] = ...,
             cpu_total_cores: _Optional[int] = ...,
@@ -345,6 +360,7 @@ class CapabilityCurrentState(_message.Message):
         "cpu_used_cores",
         "mem_used_bytes",
         "resources",
+        "promotion_state",
     )
     NAME_FIELD_NUMBER: _ClassVar[int]
     VERSION_FIELD_NUMBER: _ClassVar[int]
@@ -369,6 +385,7 @@ class CapabilityCurrentState(_message.Message):
     CPU_USED_CORES_FIELD_NUMBER: _ClassVar[int]
     MEM_USED_BYTES_FIELD_NUMBER: _ClassVar[int]
     RESOURCES_FIELD_NUMBER: _ClassVar[int]
+    PROMOTION_STATE_FIELD_NUMBER: _ClassVar[int]
     name: str
     version: str
     installed: bool
@@ -392,6 +409,7 @@ class CapabilityCurrentState(_message.Message):
     cpu_used_cores: float
     mem_used_bytes: int
     resources: _resources_pb2.ProcessResources
+    promotion_state: CapabilityPromotionState
     def __init__(
         self,
         name: _Optional[str] = ...,
@@ -421,4 +439,5 @@ class CapabilityCurrentState(_message.Message):
         cpu_used_cores: _Optional[float] = ...,
         mem_used_bytes: _Optional[int] = ...,
         resources: _Optional[_Union[_resources_pb2.ProcessResources, _Mapping]] = ...,
+        promotion_state: _Optional[_Union[CapabilityPromotionState, str]] = ...,
     ) -> None: ...

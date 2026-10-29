@@ -35,38 +35,36 @@ class CredentialServiceWrapper:
                 self._grpc_stub_1 = None
                 self._grpc_import_error_1 = exc
 
-    def list_group(
+    def list(
         self, *, api_config_override: Optional[APIConfig] = None
-    ) -> rest_models.ListCredentialGroupResponse:
+    ) -> rest_models.ListCredentialsResponse:
         """
-        List credential groups.
+        List credentials.
 
-        Returns list of credential group information in Kentik vault.
+        Returns the latest version of every credential.
         """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
                 raise NotImplementedError(
                     f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
                 ) from self._grpc_import_error_1
-            _req = build_grpc_request(
-                self._grpc_pb2_1.ListCredentialGroupRequest, None, {}
-            )
+            _req = build_grpc_request(self._grpc_pb2_1.ListCredentialsRequest, None, {})
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_1.ListCredentialGroup,
+                self._grpc_stub_1.ListCredentials,
                 _req,
                 api_config=api_config_override,
-                error_cls=RestCredentialModule1.ListGroupError,
+                error_cls=RestCredentialModule1.ListError,
             )
             return parse_grpc_response(
-                rest_models.ListCredentialGroupResponse,
+                rest_models.ListCredentialsResponse,
                 _resp,
                 _rate_limit,
-                stub_method=self._grpc_stub_1.ListCredentialGroup,
-                operation_name="ListCredentialGroup",
+                stub_method=self._grpc_stub_1.ListCredentials,
+                operation_name="ListCredentials",
             )
         elif isinstance(self._transport, RestTransport):
             rest_transport = cast(RestTransport, self._transport)
-            return RestCredentialModule1.ListCredentialGroup(
+            return RestCredentialModule1.ListCredentials(
                 api_config_override=api_config_override or rest_transport.api_config
             )
         else:
@@ -74,13 +72,18 @@ class CredentialServiceWrapper:
                 f"Unsupported transport type: {self._transport.__class__.__name__}"
             )
 
-    def get_group(
-        self, *, api_config_override: Optional[APIConfig] = None, id: str
-    ) -> rest_models.GetCredentialGroupResponse:
+    def get(
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        name: str,
+        version: Optional[int] = None,
+        allVersions: Optional[bool] = None,
+    ) -> rest_models.GetCredentialResponse:
         """
-        Get a credential group by id.
+        Get a credential by name.
 
-        Returns specific credential group information in Kentik vault.
+        Returns the latest, a specific, or every version of a credential.
         """
         if isinstance(self._transport, GrpcTransport):
             if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
@@ -88,7 +91,229 @@ class CredentialServiceWrapper:
                     f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
                 ) from self._grpc_import_error_1
             _req = build_grpc_request(
-                self._grpc_pb2_1.GetCredentialGroupRequest, None, {"id": id}
+                self._grpc_pb2_1.GetCredentialRequest,
+                None,
+                {"name": name, "version": version, "allVersions": allVersions},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.GetCredential,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCredentialModule1.GetError,
+            )
+            return parse_grpc_response(
+                rest_models.GetCredentialResponse,
+                _resp,
+                _rate_limit,
+                stub_method=self._grpc_stub_1.GetCredential,
+                operation_name="GetCredential",
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestCredentialModule1.GetCredential(
+                api_config_override=api_config_override or rest_transport.api_config,
+                name=name,
+                version=version,
+                allVersions=allVersions,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def assign_consumer(
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        name: str,
+        data: rest_models.CredentialServiceAssignConsumerBody,
+    ) -> rest_models.AssignConsumerResponse:
+        """
+        Assign a consumer to a credential.
+
+        Records that an entity (synthetic test, device, etc.) uses the credential.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
+            _req = build_grpc_request(
+                self._grpc_pb2_1.AssignConsumerRequest,
+                data.model_dump(by_alias=True, exclude_unset=True),
+                {"name": name},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.AssignConsumer,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCredentialModule1.AssignConsumerError,
+            )
+            return parse_grpc_response(
+                rest_models.AssignConsumerResponse,
+                _resp,
+                _rate_limit,
+                stub_method=self._grpc_stub_1.AssignConsumer,
+                operation_name="AssignConsumer",
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestCredentialModule1.AssignConsumer(
+                api_config_override=api_config_override or rest_transport.api_config,
+                name=name,
+                data=data,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def delete(
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        name: str,
+        version: int,
+    ) -> rest_models.DeleteCredentialResponse:
+        """
+        Delete a credential version.
+
+        Deletes a single version of a credential. Fails if the credential has consumers.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteCredentialRequest,
+                None,
+                {"name": name, "version": version},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteCredential,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCredentialModule1.DeleteError,
+            )
+            return parse_grpc_response(
+                rest_models.DeleteCredentialResponse,
+                _resp,
+                _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteCredential,
+                operation_name="DeleteCredential",
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestCredentialModule1.DeleteCredential(
+                api_config_override=api_config_override or rest_transport.api_config,
+                name=name,
+                version=version,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def list_groups(
+        self, *, api_config_override: Optional[APIConfig] = None
+    ) -> rest_models.ListCredentialGroupsResponse:
+        """
+        List credential groups.
+
+        Returns every credential group with the latest version of its credentials.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListCredentialGroupsRequest, None, {}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListCredentialGroups,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCredentialModule1.ListGroupsError,
+            )
+            return parse_grpc_response(
+                rest_models.ListCredentialGroupsResponse,
+                _resp,
+                _rate_limit,
+                stub_method=self._grpc_stub_1.ListCredentialGroups,
+                operation_name="ListCredentialGroups",
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestCredentialModule1.ListCredentialGroups(
+                api_config_override=api_config_override or rest_transport.api_config
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def create_group(
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        data: rest_models.CreateCredentialGroupRequest,
+    ) -> rest_models.CreateCredentialGroupResponse:
+        """
+        Create a credential group.
+
+        Creates one credential per token and returns the created group.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
+            _req = build_grpc_request(
+                self._grpc_pb2_1.CreateCredentialGroupRequest,
+                data.model_dump(by_alias=True, exclude_unset=True),
+                {},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.CreateCredentialGroup,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCredentialModule1.CreateGroupError,
+            )
+            return parse_grpc_response(
+                rest_models.CreateCredentialGroupResponse,
+                _resp,
+                _rate_limit,
+                stub_method=self._grpc_stub_1.CreateCredentialGroup,
+                operation_name="CreateCredentialGroup",
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestCredentialModule1.CreateCredentialGroup(
+                api_config_override=api_config_override or rest_transport.api_config,
+                data=data,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def get_group(
+        self, *, api_config_override: Optional[APIConfig] = None, name: str
+    ) -> rest_models.GetCredentialGroupResponse:
+        """
+        Get a credential group by name.
+
+        Returns a single credential group.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
+            _req = build_grpc_request(
+                self._grpc_pb2_1.GetCredentialGroupRequest, None, {"name": name}
             )
             _resp, _rate_limit = call_grpc(
                 self._grpc_stub_1.GetCredentialGroup,
@@ -107,7 +332,133 @@ class CredentialServiceWrapper:
             rest_transport = cast(RestTransport, self._transport)
             return RestCredentialModule1.GetCredentialGroup(
                 api_config_override=api_config_override or rest_transport.api_config,
-                id=id,
+                name=name,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def update_group(
+        self,
+        *,
+        api_config_override: Optional[APIConfig] = None,
+        name: str,
+        data: rest_models.CredentialServiceUpdateCredentialGroupBody,
+    ) -> rest_models.UpdateCredentialGroupResponse:
+        """
+        Update a credential group.
+
+        Tokens with a value create a new credential version; tokens without one only update metadata.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
+            _req = build_grpc_request(
+                self._grpc_pb2_1.UpdateCredentialGroupRequest,
+                data.model_dump(by_alias=True, exclude_unset=True),
+                {"name": name},
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.UpdateCredentialGroup,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCredentialModule1.UpdateGroupError,
+            )
+            return parse_grpc_response(
+                rest_models.UpdateCredentialGroupResponse,
+                _resp,
+                _rate_limit,
+                stub_method=self._grpc_stub_1.UpdateCredentialGroup,
+                operation_name="UpdateCredentialGroup",
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestCredentialModule1.UpdateCredentialGroup(
+                api_config_override=api_config_override or rest_transport.api_config,
+                name=name,
+                data=data,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def delete_group(
+        self, *, api_config_override: Optional[APIConfig] = None, name: str
+    ) -> rest_models.DeleteCredentialGroupResponse:
+        """
+        Delete a credential group.
+
+        Deletes every version of every credential in the group. Fails if any credential has consumers.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
+            _req = build_grpc_request(
+                self._grpc_pb2_1.DeleteCredentialGroupRequest, None, {"name": name}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.DeleteCredentialGroup,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCredentialModule1.DeleteGroupError,
+            )
+            return parse_grpc_response(
+                rest_models.DeleteCredentialGroupResponse,
+                _resp,
+                _rate_limit,
+                stub_method=self._grpc_stub_1.DeleteCredentialGroup,
+                operation_name="DeleteCredentialGroup",
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestCredentialModule1.DeleteCredentialGroup(
+                api_config_override=api_config_override or rest_transport.api_config,
+                name=name,
+            )
+        else:
+            raise TypeError(
+                f"Unsupported transport type: {self._transport.__class__.__name__}"
+            )
+
+    def list_overviews(
+        self, *, api_config_override: Optional[APIConfig] = None
+    ) -> rest_models.ListCredentialOverviewsResponse:
+        """
+        List credential group names and types.
+
+        Returns a lightweight name and type listing of every credential group, for lookups.
+        """
+        if isinstance(self._transport, GrpcTransport):
+            if self._grpc_pb2_1 is None or self._grpc_stub_1 is None:
+                raise NotImplementedError(
+                    f"gRPC proto modules for credential service failed to import: {self._grpc_import_error_1!r}"
+                ) from self._grpc_import_error_1
+            _req = build_grpc_request(
+                self._grpc_pb2_1.ListCredentialOverviewsRequest, None, {}
+            )
+            _resp, _rate_limit = call_grpc(
+                self._grpc_stub_1.ListCredentialOverviews,
+                _req,
+                api_config=api_config_override,
+                error_cls=RestCredentialModule1.ListOverviewsError,
+            )
+            return parse_grpc_response(
+                rest_models.ListCredentialOverviewsResponse,
+                _resp,
+                _rate_limit,
+                stub_method=self._grpc_stub_1.ListCredentialOverviews,
+                operation_name="ListCredentialOverviews",
+            )
+        elif isinstance(self._transport, RestTransport):
+            rest_transport = cast(RestTransport, self._transport)
+            return RestCredentialModule1.ListCredentialOverviews(
+                api_config_override=api_config_override or rest_transport.api_config
             )
         else:
             raise TypeError(
