@@ -40,9 +40,8 @@ The read-only alert-list probe sent seven body variants. Every call returned
 HTTP 200. It returned 160 alerts for `activeAt` alone and for `startedAt`
 alone. It returned zero alerts for the other five bodies.
 
-Local logs and probe code are in
-[revalidation-2026-10-27/](revalidation-2026-10-27/). The folder is ignored by
-Git.
+Local logs and probe code remain in the ignored
+`local-evidence/revalidation-2026-10-27/` folder. Git does not track those files.
 
 ## Findings And Status
 
@@ -50,10 +49,10 @@ File separate tickets for unrelated behavior. Recheck older findings before
 filing them as current defects.
 
 | # | Finding | Status | Next action | Evidence |
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | 1 | Merge body and URL path fields for `UpdateASGroup` and `UpdateSiteMarket` | Confirmed on 2026-10-27 | File one ticket for this request shape. Keep the shared internal cause unconfirmed. | [Body-merge evidence](upstream-rest-update-body-merge.md) |
 | 2 | `CreateFlowTag` returns HTTP 500 | Confirmed over REST on 2026-10-27 | File separately. Recheck gRPC create with a disposable resource. | [Historical draft](archive/upstream-jira-drafts.md) |
-| 3 | V5 batch success status | HTTP 200 observed on 2026-10-27; contract unresolved | Ask which status is correct and whether the response must include a batch ID. | [Batch evidence](upstream-rest-update-body-merge.md) |
+| 3 | V5 batch success status | HTTP 200 observed on 2026-10-27; contract unresolved | Ask which status is correct and whether the response must include a batch ID. | Local evidence only; no request ID was captured. |
 | 4 | AutoAck `Replace` returns `SyntaxError` | Separate issue observed on 2026-10-27 | Ask the API team to inspect request `dbgge7gzked0089cpq20`. Do not classify this as a body-merge failure. | [Historical draft](archive/upstream-jira-drafts.md) |
 | 5 | gRPC calls with deadlines return `RangeError` | Reproduced on all six services on 2026-10-27 | Ask the API team to confirm the server-side cause in logs. | [Historical draft](archive/upstream-jira-drafts.md) |
 | 6 | Alert list requires `startedAt` | Not reproduced on 2026-10-27 | No action unless it recurs. Keep the old report as history. | [Archived report](archive/upstream-alert-list-requirements.html) |

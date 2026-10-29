@@ -27,6 +27,15 @@ The defect does not depend on the SDK. Plain `curl` gives the same results.
 | `PUT /as_group/v202212/as_group/{asGroup.id}` | 400 `request.as_group.name ... received: undefined` | 200, updated | OK, updated |
 | `PUT /site/v202509/site_markets/{siteMarket.id}` | 500 `internal error (name:TypeError)` | 200, updated | OK, updated |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/body-merge-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/body-merge-light.svg">
+  <img alt="Two REST updates fail with the documented camelCase body. The proto-name REST control and the gRPC controls succeed." src="assets/body-merge-light.svg">
+</picture>
+
+Open the [interactive request-path explorer](archive/upstream-rest-update-body-merge.html)
+to compare the documented REST body with the proto-name and gRPC controls.
+
 ## Follow-up validation, 2026-10-27
 
 Direct REST tests reproduced both failures above. They returned the documented
@@ -34,20 +43,12 @@ missing-field error for AS groups and the `TypeError` response for site markets.
 
 The documented camelCase body succeeded for `FlowTagService.UpdateFlowTag` on an
 existing disposable tag. The test deleted that tag after the update. The separate
-`CreateFlowTag` operation still returned HTTP 500, so the update test used an
-## Status tracking
+`CreateFlowTag` operation still returned HTTP 500. That create failure is a
+separate API issue.
 
 Current finding status and next actions live only in
 [kentik-api-team-findings.md](kentik-api-team-findings.md). This report holds
 the detailed body-merge evidence.
-
-**Observed:** The API returned HTTP 200 with `Successfully stored request.
-Batch queued for processing.` The generated SDK operation expects HTTP 202.
-The SDK raised before it received a batch ID. A later FlowTag search found no
-matching test tag, but that does not prove the queued batch did not run.
-
-Ask the API team to confirm the intended success status and whether the
-response must include a batch ID. Keep this separate from V6 FlowTag create.
 
 ## What the contract says
 

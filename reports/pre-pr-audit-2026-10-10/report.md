@@ -17,8 +17,8 @@ in, so read them as records, not as ready tests.
 
 The baseline is green:
 
-- `make test` gives 2948 passed, 145 skipped, and 468 e2e deselected.
-- Ruff lint, Ruff format, `ty`, `make check-specs`, and the Sphinx `-W` build pass.
+- `uv run poe test` gave 2948 passed, 145 skipped, and 468 e2e deselected.
+- Ruff lint, Ruff format, `ty`, `uv run poe check-specs`, and the Sphinx `-W` build passed.
 - A fresh regeneration at api-schema-public `9de9a68` is byte-identical to the
   committed tree. That commit is the upstream HEAD on 2026-10-10.
 - The regeneration gives the same bytes across hash seeds, working
@@ -30,20 +30,14 @@ with the schema. The REST e2e layer never reaches Kentik, and both e2e layers
 pass on any SDK error. Two model bugs and a lost gRPC service passed all 2948
 tests. The diagram shows the gap in each gate.
 
-```mermaid
-flowchart LR
-    S["Upstream schema"] --> G["Generator"]
-    G -->|"protoc errors only print (P1)"| M["Mocked tests"]
-    M -->|"bodies come from the models (T1)"| E["e2e tests"]
-    E -->|"REST calls go to api.example.com (B13)"| R["Surface record"]
-    R -->|"no wrapper names or types (P6)"| C["Changelog gate"]
-    C -->|"any substring passes (P6)"| OK["Green CI"]
-    click G "../../scripts/generate_sdk.py"
-    click M "../../tests/generated/test_endpoint_schema_coverage.py"
-    click E "../../tests/e2e/test_endpoints_e2e.py"
-    click R "../../api_surface.json"
-    click C "../../scripts/release_notes.py"
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/audit-pipeline-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="../assets/audit-pipeline-light.svg">
+  <img alt="Audit flow: schema, generator, mocked tests, live tests, API surface, changelog gate, and CI. Weak checks can produce a false green result." src="../assets/audit-pipeline-light.svg">
+</picture>
+
+Open the [interactive audit explorer](report.html) to select each gate and see
+its recorded failure and evidence.
 
 | Section | Count | What to do |
 | --- | --- | --- |
@@ -61,7 +55,7 @@ flowchart LR
 | A1 | Phase 1 setup | Tracking scaffolding for all finding sections | Validation ledger header + quickstart workflow review | Complete | Establishes execution header, batch tracker, and deferred-risk template. |
 | A2 | Phase 2 foundational | Finding-state governance for B1-B13, P1-P7, L1-L13, T1-T10, R1-R16, K1-K12, D1-D12 | Spot-check runner state hooks + policy checks | Complete | Enables per-finding state recording before story implementation work starts. |
 | B1 | US1 blockers | B1-B13 | Runtime regressions + C1-C5 replay + evidence scripts | Complete | Fixed B1, B5, B6, B7, B10, B13. Deferred B2, B3, B4, B8, B9, B11, B12. |
-| C1 | US2 generator and release | P1, P4 to P7, L1-L13 | Generator tests, `make generate local` | Complete | P1, P5, P7 fixed. P4, P6 partial. L1-L13 deferred. |
+| C1 | US2 generator and release | P1, P4 to P7, L1-L13 | Generator tests, `uv run poe generate --local` | Complete | P1, P5, P7 fixed. P4, P6 partial. L1-L13 deferred. |
 | D1 | US3 runtime | R1-R16 | Runtime suites | Complete | R1, R3, R8 fixed. R2, R12 partial. The rest deferred. |
 | E1 | US4 test gaps | T1-T10 | Smoke and generated suites | Complete | T5, T6, T8, T10 fixed. T2 partial. T1, T3, T4, T7, T9 deferred. |
 | F1 | US5 packaging and docs | K1-K12, D1-D12 | Packaging tests, `uv build`, Sphinx | Complete | K4-K7, K9-K12, D7-D10 fixed. The rest deferred. |
@@ -593,7 +587,7 @@ has 37%.
 | K9 | The sdist ships `.claude/`, `.github/`, `.specify/`, and `specs/`. A local sdist also picks up ignored folders. | [`pyproject.toml`](../../pyproject.toml) | Add a `[tool.hatch.build.targets.sdist]` include list. |
 | K10 | On Python 3.11, `pip install kentik-api` installs 1.0.7. Users with 1.x keep it. | [`README.md`](../../README.md), [`quickstart.md`](../../docs/sphinx/guides/quickstart.md) | Document `pip install -U "kentik-api>=2"`. |
 | K11 | A markdownlint comment sits in the Apache-2.0 title line of `LICENSE`. markdownlint does not read that file. | [`LICENSE`](../../LICENSE) | Restore the original line. |
-| K12 | `make deep-clean` deletes the tracked `uv.lock`. | [`Makefile:98`](../../Makefile#L98) | Keep the lock, or document the effect. |
+| K12 | The old `make deep-clean` task deleted the tracked `uv.lock`. | [`scripts/tasks.py`](../../scripts/tasks.py) | Fixed in feature 007. The current task preserves the lock. |
 
 ## Documentation
 
@@ -607,7 +601,7 @@ has 37%.
 | D6 | Three pages say that no proto declares `MitigationsService`. See B4. | [`rest-vs-grpc.md:129`](../../docs/sphinx/guides/rest-vs-grpc.md#L129) | Docs, after B4 |
 | D7 | The CHANGELOG command `make release-notes SINCE=v1.0.7` exits 1. | [`CHANGELOG.md:12`](../../CHANGELOG.md#L12) | Docs |
 | D8 | Four small errors. [`authentication.md:5`](../../docs/sphinx/authentication.md#L5) has a literal `\n`. [`migrating-from-1x.md:17`](../../docs/sphinx/guides/migrating-from-1x.md#L17) says that 1.x declared no Python version, but 1.0.7 declared `>=3.8`. [`docs/README.md:12`](../../docs/README.md#L12) promises pagination. The generated `services/README.md` has a broken link. | Several files | Docs and generator |
-| D9 | `make help` hides the e2e targets, because its regex excludes digits. Two help texts name the wrong defaults. | [`Makefile:22`](../../Makefile#L22) | Makefile |
+| D9 | The old `make help` hid e2e targets, because its regex excluded digits. Two help texts named the wrong defaults. | [`pyproject.toml`](../../pyproject.toml) | Poe tasks replaced the Makefile in feature 007. |
 | D10 | The agent file puts HTML comments before its front matter, so tools can ignore its name and tool list. | [`kentik-sdk-autogen.agent.md`](../../.github/agents/kentik-sdk-autogen.agent.md) | Docs |
 | D11 | The specs/001 quickstart has commands that truncate two device swagger files in zsh. | `specs/001-validate-schema-checkout/quickstart.md:30-31` | Docs |
 | D12 | No wrapper method has a docstring, and no model field carries its schema description. 5 docstrings show `&#34;`. | Generator templates | Generator |
@@ -654,90 +648,15 @@ stays, because the release tooling reads it.
 6. Automate the schema sync: P2, P3, and P6.
 7. Correct the docs: D1 to D12.
 
-## Push the branch and open the pull request
+## Current workflow
 
-This audit pushed nothing. Do these steps yourself.
+This audit's original push and pull request steps are obsolete. Follow the
+branch, remote, and pull request rules in [AGENTS.md](../../AGENTS.md). Use
+current commands from [pyproject.toml](../../pyproject.toml).
 
-1. Update the schema checkout.
+## Post-merge automation setup (ledger entry P3a)
 
-   ```bash
-   git -C ../api-schema-public pull --ff-only
-   ```
-
-2. Regenerate from it.
-
-   ```bash
-   make generate local
-   ```
-
-3. If the run ends with `API SURFACE CHANGED`, add a CHANGELOG entry for each
-   listed change.
-4. Run the same gates as CI.
-
-   ```bash
-   uv sync --locked
-   make test
-   uv run ruff check .
-   uv run ruff format --check .
-   make typecheck
-   make check-specs
-   uv run sphinx-build -W --keep-going -b html docs/sphinx docs/build/html
-   ```
-
-5. If the regeneration changed files, commit them with `schema.lock`.
-6. Make sure that `git status --porcelain` prints nothing.
-7. After the B13 fixes, run the live suites. They issue only read calls, but
-   they use the account in `.env`.
-
-   ```bash
-   make test-e2e
-   make test-e2e-grpc
-   ```
-
-8. Delete the stale build output, so that nobody uploads it.
-
-   ```bash
-   rm -rf dist/
-   ```
-
-9. Push `feat/v6-sdk` to `fork`. Your account cannot push to `origin`, so
-   the pull request comes from the fork.
-
-   ```bash
-   git push fork feat/v6-sdk
-   ```
-
-10. Write the PR description in a file outside the repo, for example
-    `~/v6-sdk-pr.md`. Name each deferred blocker in it.
-11. Open the PR as a draft, so that CI runs before review. Five CI jobs never
-    ran on GitHub: lint, changelog, determinism, docs, and spec references.
-
-    ```bash
-    gh pr create --repo kentik/community_sdk_python --base main \
-      --head alexdearaujo:feat/v6-sdk --draft \
-      --title "FA-2: Update the Python SDK from V5 to V6" \
-      --body-file ~/v6-sdk-pr.md
-    ```
-
-12. When CI passes, mark the PR ready for review. Use the PR number that
-    step 11 printed.
-
-    ```bash
-    gh pr ready <number> --repo kentik/community_sdk_python
-    ```
-
-Know these facts before the merge:
-
-- The CI `changelog` job tests nothing on this PR, because `main` has no
-  `api_surface.json`. Review the CHANGELOG by hand.
-- The determinism job regenerates at the commit in `schema.lock`, so an
-  upstream schema change before the merge does not fail it.
-- A squash merge replaces the 170 branch commits with one. A merge commit
-  keeps them.
-- After the merge, `pip install kentik-api` still installs 1.0.7 until you
-  publish 2.0.0.
-
-Do these steps after the merge (ledger entry P3a):
+After the V6 branch merges into `main`, complete these steps:
 
 1. Turn on **Settings > Actions > General > Allow GitHub Actions to create
    and approve pull requests**. The weekly `schema-sync` job fails without it.
@@ -748,13 +667,12 @@ Do these steps after the merge (ledger entry P3a):
    steps are in "Automated update pull requests" in
    [the generation guide](../../docs/sphinx/guides/generation.md).
 
-## Deferred risks for the PR description
+## Audit snapshot: risks open on 2026-10-12
 
-The remediation fixed or improved most findings. These stay open. The ledger in
-[`deferred-risks.md`](deferred-risks.md) has the owner and the revisit trigger
-for each one.
+This list records the risks that remained open at the audit date. The current
+status and revisit triggers are in [`deferred-risks.md`](deferred-risks.md).
 
-- **Blockers (name each in the PR):**
+- **Blockers:**
   - B2: `Alert.acknowledgement` has the wrong type.
   - B3: `ExternalContext` requires both members of a oneof.
   - B4: gRPC loses `MitigationsService` to a file-name collision.
@@ -767,4 +685,4 @@ for each one.
 - **Tests:** T1 to T4, T7, T9.
 - **Release and docs:** K1 to K3, K8, D1 to D6, D11, D12.
 
-The `dist/` folder holds stale 2.0.0 files (K1). Delete it before any upload.
+The audit flagged stale `dist/` output as K1. The owner deleted it before any upload.
