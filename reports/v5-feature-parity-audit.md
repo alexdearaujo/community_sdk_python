@@ -19,13 +19,27 @@ Status values:
 | 1 | Query API (`query.sql`, `query.data`, `query.chart`, `query.url`) and the `analytics` package | It was the only way to pull flow and traffic data into scripts and pandas | Done in feature 005: `client.v5.top_x_data`, `top_x_chart` (not verified), `query_url`, and the `analytics` extra. `sql` is retired |
 | 2 | Batch API for flow tags and populators | Bulk sync from a CMDB or IPAM becomes many single calls, which is slower and uses more quota | Done in feature 005: `client.v5.batch_tags`, `batch_populators`, `batch_status`, and the batch helpers in `v5_tools` |
 | 3 | Automatic retry on 429, 502, 503, and 504 | Batch scripts recovered from rate limits without code. Now they fail | Yes, but retrying a write is unsafe. A caller-side retry on 429 is the safer design |
-| 4 | Tolerance of unknown enum values (V5 ADR 0003) | A new enum value from the API now fails the whole call with a 502 until the SDK is regenerated | Yes, in the model template |
+| 4 | Tolerance of unknown enum values (V5 ADR 0003) | A new enum value from the API now fails the whole call with a 502 until the SDK is regenerated | No. V6 keeps strict enum parsing. |
 | 5 | Alert list and alert history semantics | Every alert-polling integration needs a rewrite | Yes. `alerting.alert_list` with `states` and `startedAt` returns cleared alerts (verified live) |
 | 6 | Credential profiles and `KTAPI_*` variables | Existing environments and `~/.kentik/<profile>` files stop working | Yes, with a small helper |
 | 7 | `DeviceCache` | Scripts that map device or interface names to objects or speeds must build their own lookup | Done in feature 005: `kentik_api.devices.DeviceLookup`, saved as JSON |
 | 8 | User-Agent header and debug logging | Kentik loses SDK usage data, and users lose request traces | Yes, a few lines in the runtime |
 | 9 | `proxy=` argument, SOCKS proxies, and custom hosts | Private or staging Kentik hosts and SOCKS users have no client option | Yes, small changes to `KentikAPI` and `APIConfig` |
 | 10 | Mutating examples and examples for 7 services | No copy-paste recipes for create, update, or delete | Yes, examples only |
+
+## Current request routing
+
+V6 and V5 calls use separate transport paths. The V5 path supports the query
+and batch endpoints that have no V6 equivalent.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/v5-routing-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/v5-routing-light.svg">
+  <img alt="V6 and V5 operations use separate paths from KentikAPI. V6 uses REST or gRPC. V5-only query and batch methods use a separate REST transport." src="assets/v5-routing-light.svg">
+</picture>
+
+Open the [interactive V5/V6 routing explorer](v5-feature-parity-audit.html) to
+select a transport path and inspect its role and evidence.
 
 ## Analytics support (`kentik_api.analytics`)
 
