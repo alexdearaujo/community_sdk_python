@@ -39,7 +39,7 @@ flowchart LR
 | Connectivity Checker | [connectivity_checker.md](connectivity_checker.md) | Create a Connectivity Checker Report. |
 | Core | [core.md](core.md) | |
 | Cost | [cost.md](cost.md) | List all cost providers. |
-| Credential | [credential.md](credential.md) | List credential groups. |
+| Credential | [credential.md](credential.md) | List credentials. |
 | Custom Application | [custom_application.md](custom_application.md) | List Custom Applications |
 | Custom Dimension | [custom_dimension.md](custom_dimension.md) | List Custom Dimensions |
 | Device | [device.md](device.md) | List all devices. |

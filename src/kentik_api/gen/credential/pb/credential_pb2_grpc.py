@@ -10,7 +10,7 @@ import warnings
 import grpc
 
 from . import (
-    credential_pb2 as kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2,
+    credential_pb2 as kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2,
 )
 
 GRPC_GENERATED_VERSION = "1.85.0"
@@ -29,7 +29,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f"The grpc package installed is at version {GRPC_VERSION},"
-        + " but the generated code in kentik/credential/v202407alpha1/credential_pb2_grpc.py depends on"
+        + " but the generated code in kentik/credential/v20261020alpha1/credential_pb2_grpc.py depends on"
         + f" grpcio>={GRPC_GENERATED_VERSION}."
         + f" Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}"
         + f" or downgrade your generated code using grpcio-tools<={GRPC_VERSION}."
@@ -37,7 +37,7 @@ if _version_not_supported:
 
 
 class CredentialServiceStub:
-    """Missing associated documentation comment in .proto file."""
+    """========== service =========="""
 
     def __init__(self, channel):
         """Constructor.
@@ -45,22 +45,106 @@ class CredentialServiceStub:
         Args:
             channel: A grpc.Channel.
         """
-        self.GetCredentialGroup = channel.unary_unary(
-            "/kentik.credential.v202407alpha1.CredentialService/GetCredentialGroup",
-            request_serializer=kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.GetCredentialGroupRequest.SerializeToString,
-            response_deserializer=kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.GetCredentialGroupResponse.FromString,
+        self.ListCredentials = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/ListCredentials",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialsRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialsResponse.FromString,
             _registered_method=True,
         )
-        self.ListCredentialGroup = channel.unary_unary(
-            "/kentik.credential.v202407alpha1.CredentialService/ListCredentialGroup",
-            request_serializer=kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.ListCredentialGroupRequest.SerializeToString,
-            response_deserializer=kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.ListCredentialGroupResponse.FromString,
+        self.GetCredential = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/GetCredential",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialResponse.FromString,
+            _registered_method=True,
+        )
+        self.DeleteCredential = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/DeleteCredential",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialResponse.FromString,
+            _registered_method=True,
+        )
+        self.AssignConsumer = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/AssignConsumer",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.AssignConsumerRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.AssignConsumerResponse.FromString,
+            _registered_method=True,
+        )
+        self.ListCredentialGroups = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/ListCredentialGroups",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialGroupsRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialGroupsResponse.FromString,
+            _registered_method=True,
+        )
+        self.ListCredentialOverviews = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/ListCredentialOverviews",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialOverviewsRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialOverviewsResponse.FromString,
+            _registered_method=True,
+        )
+        self.GetCredentialGroup = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/GetCredentialGroup",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialGroupRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialGroupResponse.FromString,
+            _registered_method=True,
+        )
+        self.CreateCredentialGroup = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/CreateCredentialGroup",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.CreateCredentialGroupRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.CreateCredentialGroupResponse.FromString,
+            _registered_method=True,
+        )
+        self.UpdateCredentialGroup = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/UpdateCredentialGroup",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.UpdateCredentialGroupRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.UpdateCredentialGroupResponse.FromString,
+            _registered_method=True,
+        )
+        self.DeleteCredentialGroup = channel.unary_unary(
+            "/kentik.credential.v20261020alpha1.CredentialService/DeleteCredentialGroup",
+            request_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialGroupRequest.SerializeToString,
+            response_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialGroupResponse.FromString,
             _registered_method=True,
         )
 
 
 class CredentialServiceServicer:
-    """Missing associated documentation comment in .proto file."""
+    """========== service =========="""
+
+    def ListCredentials(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
+    def GetCredential(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
+    def DeleteCredential(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
+    def AssignConsumer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
+    def ListCredentialGroups(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
+    def ListCredentialOverviews(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetCredentialGroup(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -68,7 +152,19 @@ class CredentialServiceServicer:
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
-    def ListCredentialGroup(self, request, context):
+    def CreateCredentialGroup(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
+    def UpdateCredentialGroup(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
+    def DeleteCredentialGroup(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
@@ -77,29 +173,249 @@ class CredentialServiceServicer:
 
 def add_CredentialServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+        "ListCredentials": grpc.unary_unary_rpc_method_handler(
+            servicer.ListCredentials,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialsRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialsResponse.SerializeToString,
+        ),
+        "GetCredential": grpc.unary_unary_rpc_method_handler(
+            servicer.GetCredential,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialResponse.SerializeToString,
+        ),
+        "DeleteCredential": grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteCredential,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialResponse.SerializeToString,
+        ),
+        "AssignConsumer": grpc.unary_unary_rpc_method_handler(
+            servicer.AssignConsumer,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.AssignConsumerRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.AssignConsumerResponse.SerializeToString,
+        ),
+        "ListCredentialGroups": grpc.unary_unary_rpc_method_handler(
+            servicer.ListCredentialGroups,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialGroupsRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialGroupsResponse.SerializeToString,
+        ),
+        "ListCredentialOverviews": grpc.unary_unary_rpc_method_handler(
+            servicer.ListCredentialOverviews,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialOverviewsRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialOverviewsResponse.SerializeToString,
+        ),
         "GetCredentialGroup": grpc.unary_unary_rpc_method_handler(
             servicer.GetCredentialGroup,
-            request_deserializer=kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.GetCredentialGroupRequest.FromString,
-            response_serializer=kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.GetCredentialGroupResponse.SerializeToString,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialGroupRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialGroupResponse.SerializeToString,
         ),
-        "ListCredentialGroup": grpc.unary_unary_rpc_method_handler(
-            servicer.ListCredentialGroup,
-            request_deserializer=kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.ListCredentialGroupRequest.FromString,
-            response_serializer=kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.ListCredentialGroupResponse.SerializeToString,
+        "CreateCredentialGroup": grpc.unary_unary_rpc_method_handler(
+            servicer.CreateCredentialGroup,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.CreateCredentialGroupRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.CreateCredentialGroupResponse.SerializeToString,
+        ),
+        "UpdateCredentialGroup": grpc.unary_unary_rpc_method_handler(
+            servicer.UpdateCredentialGroup,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.UpdateCredentialGroupRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.UpdateCredentialGroupResponse.SerializeToString,
+        ),
+        "DeleteCredentialGroup": grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteCredentialGroup,
+            request_deserializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialGroupRequest.FromString,
+            response_serializer=kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialGroupResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "kentik.credential.v202407alpha1.CredentialService", rpc_method_handlers
+        "kentik.credential.v20261020alpha1.CredentialService", rpc_method_handlers
     )
     server.add_generic_rpc_handlers((generic_handler,))
     server.add_registered_method_handlers(
-        "kentik.credential.v202407alpha1.CredentialService", rpc_method_handlers
+        "kentik.credential.v20261020alpha1.CredentialService", rpc_method_handlers
     )
 
 
 # This class is part of an EXPERIMENTAL API.
 class CredentialService:
-    """Missing associated documentation comment in .proto file."""
+    """========== service =========="""
+
+    @staticmethod
+    def ListCredentials(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/kentik.credential.v20261020alpha1.CredentialService/ListCredentials",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialsRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True,
+        )
+
+    @staticmethod
+    def GetCredential(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/kentik.credential.v20261020alpha1.CredentialService/GetCredential",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True,
+        )
+
+    @staticmethod
+    def DeleteCredential(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/kentik.credential.v20261020alpha1.CredentialService/DeleteCredential",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True,
+        )
+
+    @staticmethod
+    def AssignConsumer(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/kentik.credential.v20261020alpha1.CredentialService/AssignConsumer",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.AssignConsumerRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.AssignConsumerResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True,
+        )
+
+    @staticmethod
+    def ListCredentialGroups(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/kentik.credential.v20261020alpha1.CredentialService/ListCredentialGroups",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialGroupsRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialGroupsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True,
+        )
+
+    @staticmethod
+    def ListCredentialOverviews(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/kentik.credential.v20261020alpha1.CredentialService/ListCredentialOverviews",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialOverviewsRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.ListCredentialOverviewsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True,
+        )
 
     @staticmethod
     def GetCredentialGroup(
@@ -117,9 +433,9 @@ class CredentialService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/kentik.credential.v202407alpha1.CredentialService/GetCredentialGroup",
-            kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.GetCredentialGroupRequest.SerializeToString,
-            kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.GetCredentialGroupResponse.FromString,
+            "/kentik.credential.v20261020alpha1.CredentialService/GetCredentialGroup",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialGroupRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.GetCredentialGroupResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -132,7 +448,7 @@ class CredentialService:
         )
 
     @staticmethod
-    def ListCredentialGroup(
+    def CreateCredentialGroup(
         request,
         target,
         options=(),
@@ -147,9 +463,69 @@ class CredentialService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/kentik.credential.v202407alpha1.CredentialService/ListCredentialGroup",
-            kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.ListCredentialGroupRequest.SerializeToString,
-            kentik_dot_credential_dot_v202407alpha1_dot_credential__pb2.ListCredentialGroupResponse.FromString,
+            "/kentik.credential.v20261020alpha1.CredentialService/CreateCredentialGroup",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.CreateCredentialGroupRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.CreateCredentialGroupResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True,
+        )
+
+    @staticmethod
+    def UpdateCredentialGroup(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/kentik.credential.v20261020alpha1.CredentialService/UpdateCredentialGroup",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.UpdateCredentialGroupRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.UpdateCredentialGroupResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True,
+        )
+
+    @staticmethod
+    def DeleteCredentialGroup(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/kentik.credential.v20261020alpha1.CredentialService/DeleteCredentialGroup",
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialGroupRequest.SerializeToString,
+            kentik_dot_credential_dot_v20261020alpha1_dot_credential__pb2.DeleteCredentialGroupResponse.FromString,
             options,
             channel_credentials,
             insecure,

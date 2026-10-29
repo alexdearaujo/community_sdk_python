@@ -57,16 +57,25 @@ class ResolveAddressesResponse(_message.Message):
     ) -> None: ...
 
 class ListResolvedAddressesRequest(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
+    __slots__ = ("page_size", "page_token")
+    PAGE_SIZE_FIELD_NUMBER: _ClassVar[int]
+    PAGE_TOKEN_FIELD_NUMBER: _ClassVar[int]
+    page_size: int
+    page_token: str
+    def __init__(
+        self, page_size: _Optional[int] = ..., page_token: _Optional[str] = ...
+    ) -> None: ...
 
 class ListResolvedAddressesResponse(_message.Message):
-    __slots__ = ("results",)
+    __slots__ = ("results", "next_page_token")
     RESULTS_FIELD_NUMBER: _ClassVar[int]
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _ClassVar[int]
     results: _containers.RepeatedCompositeFieldContainer[_ptr_result_pb2.PtrResult]
+    next_page_token: str
     def __init__(
         self,
         results: _Optional[
             _Iterable[_Union[_ptr_result_pb2.PtrResult, _Mapping]]
         ] = ...,
+        next_page_token: _Optional[str] = ...,
     ) -> None: ...

@@ -6162,55 +6162,270 @@
       "mounted": true,
       "rest_only": false,
       "operations": {
-        "GET /credential/v202407alpha1/group": {
-          "operation": "ListCredentialGroup",
-          "method": "list_group",
-          "grpc": "CredentialService/ListCredentialGroup",
+        "DELETE /credential/v20261020alpha1/credentials/{name}/versions/{version}": {
+          "operation": "DeleteCredential",
+          "method": "delete",
+          "grpc": "CredentialService/DeleteCredential",
+          "status": 200,
+          "required_params": [
+            "name",
+            "version"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str",
+            "version": "int"
+          },
+          "returns": "DeleteCredentialResponse",
+          "error": "DeleteError",
+          "error_responses": {
+            "default": "DeleteUnexpectedError"
+          }
+        },
+        "DELETE /credential/v20261020alpha1/groups/{name}": {
+          "operation": "DeleteCredentialGroup",
+          "method": "delete_group",
+          "grpc": "CredentialService/DeleteCredentialGroup",
+          "status": 200,
+          "required_params": [
+            "name"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str"
+          },
+          "returns": "DeleteCredentialGroupResponse",
+          "error": "DeleteGroupError",
+          "error_responses": {
+            "default": "DeleteGroupUnexpectedError"
+          }
+        },
+        "GET /credential/v20261020alpha1/credentials": {
+          "operation": "ListCredentials",
+          "method": "list",
+          "grpc": "CredentialService/ListCredentials",
           "status": 200,
           "required_params": [],
           "params": {
             "api_config_override": "Optional[APIConfig]"
           },
-          "returns": "ListCredentialGroupResponse",
-          "error": "ListGroupError",
+          "returns": "ListCredentialsResponse",
+          "error": "ListError",
           "error_responses": {
-            "default": "ListGroupUnexpectedError"
+            "default": "ListUnexpectedError"
           }
         },
-        "GET /credential/v202407alpha1/group/{id}": {
+        "GET /credential/v20261020alpha1/credentials/{name}": {
+          "operation": "GetCredential",
+          "method": "get",
+          "grpc": "CredentialService/GetCredential",
+          "status": 200,
+          "required_params": [
+            "name"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str",
+            "version": "Optional[int]",
+            "allVersions": "Optional[bool]"
+          },
+          "returns": "GetCredentialResponse",
+          "error": "GetError",
+          "error_responses": {
+            "default": "GetUnexpectedError"
+          }
+        },
+        "GET /credential/v20261020alpha1/groups": {
+          "operation": "ListCredentialGroups",
+          "method": "list_groups",
+          "grpc": "CredentialService/ListCredentialGroups",
+          "status": 200,
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCredentialGroupsResponse",
+          "error": "ListGroupsError",
+          "error_responses": {
+            "default": "ListGroupsUnexpectedError"
+          }
+        },
+        "GET /credential/v20261020alpha1/groups/{name}": {
           "operation": "GetCredentialGroup",
           "method": "get_group",
           "grpc": "CredentialService/GetCredentialGroup",
           "status": 200,
           "required_params": [
-            "id"
+            "name"
           ],
           "params": {
             "api_config_override": "Optional[APIConfig]",
-            "id": "str"
+            "name": "str"
           },
           "returns": "GetCredentialGroupResponse",
           "error": "GetGroupError",
           "error_responses": {
             "default": "GetGroupUnexpectedError"
           }
+        },
+        "GET /credential/v20261020alpha1/overviews": {
+          "operation": "ListCredentialOverviews",
+          "method": "list_overviews",
+          "grpc": "CredentialService/ListCredentialOverviews",
+          "status": 200,
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCredentialOverviewsResponse",
+          "error": "ListOverviewsError",
+          "error_responses": {
+            "default": "ListOverviewsUnexpectedError"
+          }
+        },
+        "POST /credential/v20261020alpha1/groups": {
+          "operation": "CreateCredentialGroup",
+          "method": "create_group",
+          "grpc": "CredentialService/CreateCredentialGroup",
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateCredentialGroupRequest"
+          },
+          "returns": "CreateCredentialGroupResponse",
+          "error": "CreateGroupError",
+          "error_responses": {
+            "default": "CreateGroupUnexpectedError"
+          }
+        },
+        "PUT /credential/v20261020alpha1/credentials/{name}/consumer": {
+          "operation": "AssignConsumer",
+          "method": "assign_consumer",
+          "grpc": "CredentialService/AssignConsumer",
+          "status": 200,
+          "required_params": [
+            "data",
+            "name"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str",
+            "data": "CredentialServiceAssignConsumerBody"
+          },
+          "returns": "AssignConsumerResponse",
+          "error": "AssignConsumerError",
+          "error_responses": {
+            "default": "AssignConsumerUnexpectedError"
+          }
+        },
+        "PUT /credential/v20261020alpha1/groups/{name}": {
+          "operation": "UpdateCredentialGroup",
+          "method": "update_group",
+          "grpc": "CredentialService/UpdateCredentialGroup",
+          "status": 200,
+          "required_params": [
+            "data",
+            "name"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str",
+            "data": "CredentialServiceUpdateCredentialGroupBody"
+          },
+          "returns": "UpdateCredentialGroupResponse",
+          "error": "UpdateGroupError",
+          "error_responses": {
+            "default": "UpdateGroupUnexpectedError"
+          }
         }
       },
       "models": [
+        "AssignConsumerResponse",
+        "Consumer",
+        "CreateCredentialGroupRequest",
+        "CreateCredentialGroupResponse",
+        "CreatedBy",
+        "Credential",
         "CredentialGroup",
+        "CredentialOverview",
+        "CredentialServiceAssignConsumerBody",
+        "CredentialServiceUpdateCredentialGroupBody",
+        "CredentialType",
+        "DeleteCredentialGroupResponse",
+        "DeleteCredentialResponse",
         "GetCredentialGroupResponse",
-        "LandingType",
-        "ListCredentialGroupResponse",
-        "PermissionEntry",
-        "Role",
-        "Secret",
-        "SecretType",
-        "User",
+        "GetCredentialResponse",
+        "ListCredentialGroupsResponse",
+        "ListCredentialOverviewsResponse",
+        "ListCredentialsResponse",
+        "Token",
+        "UpdateCredentialGroupResponse",
         "protobufAny",
         "rpcStatus"
       ],
       "fields": {
-        "CredentialGroup": {
+        "AssignConsumerResponse": {
+          "credential": {
+            "type": "Optional[Credential]",
+            "required": false
+          }
+        },
+        "Consumer": {
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "consumerId": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "CreateCredentialGroupRequest": {
+          "name": {
+            "type": "str",
+            "required": true
+          },
+          "type": {
+            "type": "CredentialType",
+            "required": true
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "tokens": {
+            "type": "List[Token]",
+            "required": true
+          },
+          "labels": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "CreateCredentialGroupResponse": {
+          "group": {
+            "type": "Optional[CredentialGroup]",
+            "required": false
+          }
+        },
+        "CreatedBy": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "email": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fullName": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "Credential": {
           "id": {
             "type": "Optional[str]",
             "required": false
@@ -6220,15 +6435,15 @@
             "required": false
           },
           "version": {
-            "type": "int",
-            "required": true
+            "type": "Optional[int]",
+            "required": false
           },
           "description": {
             "type": "Optional[str]",
             "required": false
           },
           "type": {
-            "type": "Optional[SecretType]",
+            "type": "Optional[CredentialType]",
             "required": false
           },
           "cdate": {
@@ -6240,97 +6455,37 @@
             "required": false
           },
           "createdBy": {
-            "type": "Optional[User]",
-            "required": false
-          },
-          "credentials": {
-            "type": "Optional[List[Optional[Secret]]]",
+            "type": "Optional[CreatedBy]",
             "required": false
           },
           "labels": {
             "type": "Optional[List[str]]",
             "required": false
-          }
-        },
-        "GetCredentialGroupResponse": {
-          "group": {
-            "type": "Optional[CredentialGroup]",
+          },
+          "consumers": {
+            "type": "Optional[List[Optional[Consumer]]]",
             "required": false
           }
         },
-        "ListCredentialGroupResponse": {
-          "groups": {
-            "type": "Optional[List[Optional[CredentialGroup]]]",
+        "CredentialGroup": {
+          "id": {
+            "type": "Optional[str]",
             "required": false
           },
-          "invalidCount": {
-            "type": "Optional[int]",
-            "required": false
-          }
-        },
-        "PermissionEntry": {
-          "capability": {
-            "type": "str",
-            "required": true
-          },
-          "allowed": {
-            "type": "bool",
-            "required": true
-          }
-        },
-        "Secret": {
           "name": {
-            "type": "str",
-            "required": true
-          },
-          "value": {
-            "type": "str",
-            "required": true
+            "type": "Optional[str]",
+            "required": false
           },
           "version": {
-            "type": "int",
-            "required": true
+            "type": "Optional[int]",
+            "required": false
           },
           "description": {
             "type": "Optional[str]",
             "required": false
           },
           "type": {
-            "type": "Optional[SecretType]",
-            "required": false
-          },
-          "id": {
-            "type": "str",
-            "required": true
-          }
-        },
-        "User": {
-          "id": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "userEmail": {
-            "type": "str",
-            "required": true
-          },
-          "userFullName": {
-            "type": "str",
-            "required": true
-          },
-          "role": {
-            "type": "Role",
-            "required": true
-          },
-          "permissions": {
-            "type": "Optional[List[Optional[PermissionEntry]]]",
-            "required": false
-          },
-          "filter": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "lastLogin": {
-            "type": "Optional[str]",
+            "type": "Optional[CredentialType]",
             "required": false
           },
           "cdate": {
@@ -6341,20 +6496,102 @@
             "type": "Optional[str]",
             "required": false
           },
-          "defaultLandingPageType": {
-            "type": "Optional[LandingType]",
+          "createdBy": {
+            "type": "Optional[CreatedBy]",
             "required": false
           },
-          "defaultLandingPageValue": {
+          "labels": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "consumers": {
+            "type": "Optional[List[Optional[Consumer]]]",
+            "required": false
+          },
+          "credentials": {
+            "type": "Optional[List[Optional[Credential]]]",
+            "required": false
+          }
+        },
+        "CredentialOverview": {
+          "name": {
             "type": "Optional[str]",
             "required": false
           },
-          "roles": {
-            "type": "Optional[List[str]]",
+          "type": {
+            "type": "Optional[CredentialType]",
+            "required": false
+          }
+        },
+        "CredentialServiceAssignConsumerBody": {
+          "consumer": {
+            "type": "Consumer",
+            "required": true
+          }
+        },
+        "CredentialServiceUpdateCredentialGroupBody": {
+          "type": {
+            "type": "CredentialType",
+            "required": true
+          },
+          "description": {
+            "type": "Optional[str]",
             "required": false
           },
-          "roleSets": {
+          "tokens": {
+            "type": "List[Token]",
+            "required": true
+          },
+          "labels": {
             "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "DeleteCredentialGroupResponse": {},
+        "DeleteCredentialResponse": {},
+        "GetCredentialGroupResponse": {
+          "group": {
+            "type": "Optional[CredentialGroup]",
+            "required": false
+          }
+        },
+        "GetCredentialResponse": {
+          "credentials": {
+            "type": "Optional[List[Optional[Credential]]]",
+            "required": false
+          }
+        },
+        "ListCredentialGroupsResponse": {
+          "groups": {
+            "type": "Optional[List[Optional[CredentialGroup]]]",
+            "required": false
+          }
+        },
+        "ListCredentialOverviewsResponse": {
+          "overviews": {
+            "type": "Optional[List[Optional[CredentialOverview]]]",
+            "required": false
+          }
+        },
+        "ListCredentialsResponse": {
+          "credentials": {
+            "type": "Optional[List[Optional[Credential]]]",
+            "required": false
+          }
+        },
+        "Token": {
+          "key": {
+            "type": "str",
+            "required": true
+          },
+          "value": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "UpdateCredentialGroupResponse": {
+          "group": {
+            "type": "Optional[CredentialGroup]",
             "required": false
           }
         },
@@ -6380,39 +6617,21 @@
         }
       },
       "enums": {
-        "LandingType": [
-          "LANDING_TYPE_UNSPECIFIED",
-          "LANDING_TYPE_LOCAL",
-          "LANDING_TYPE_OBSERVATION_DECK",
-          "LANDING_TYPE_NMS_DASHBOARD",
-          "LANDING_TYPE_NETWORK_EXPLORER",
-          "LANDING_TYPE_LIBRARY",
-          "LANDING_TYPE_SYNTHETICS",
-          "LANDING_TYPE_EXPLORER",
-          "LANDING_TYPE_ALERTING",
-          "LANDING_TYPE_INSIGHTS",
-          "LANDING_TYPE_DASHBOARD",
-          "LANDING_TYPE_SAVED_VIEW",
-          "LANDING_TYPE_QUICK_VIEW",
-          "LANDING_TYPE_MARKET_INTELLIGENCE",
-          "LANDING_TYPE_AI_ADVISOR"
-        ],
-        "Role": [
-          "ROLE_UNSPECIFIED",
-          "ROLE_MEMBER",
-          "ROLE_ADMINISTRATOR",
-          "ROLE_SUPER_ADMINISTRATOR"
-        ],
-        "SecretType": [
-          "SECRET_TYPE_UNSPECIFIED",
-          "SECRET_TYPE_BASIC_AUTH",
-          "SECRET_TYPE_SNMP_V1",
-          "SECRET_TYPE_SNMP_V2C",
-          "SECRET_TYPE_SNMP_V3",
-          "SECRET_TYPE_STREAMING_TELEMETRY",
-          "SECRET_TYPE_BGP_MD5",
-          "SECRET_TYPE_API_TOKEN",
-          "SECRET_TYPE_OTHER"
+        "CredentialType": [
+          "CREDENTIAL_TYPE_UNSPECIFIED",
+          "CREDENTIAL_TYPE_BASIC_AUTH",
+          "CREDENTIAL_TYPE_SNMP_V1",
+          "CREDENTIAL_TYPE_SNMP_V2C",
+          "CREDENTIAL_TYPE_SNMP_V3",
+          "CREDENTIAL_TYPE_STREAMING_TELEMETRY",
+          "CREDENTIAL_TYPE_BGP_MD5",
+          "CREDENTIAL_TYPE_API_TOKEN",
+          "CREDENTIAL_TYPE_OTHER",
+          "CREDENTIAL_TYPE_SSH_KEY",
+          "CREDENTIAL_TYPE_SSH_PASSWORD",
+          "CREDENTIAL_TYPE_AI_API_TOKEN",
+          "CREDENTIAL_TYPE_MCP_HTTP_HEADERS",
+          "CREDENTIAL_TYPE_CLOUD"
         ]
       }
     },
@@ -8495,6 +8714,9 @@
         }
       },
       "models": [
+        "AppProtocol",
+        "AppProtocolMetadata",
+        "AssetTag",
         "BaseUnit",
         "DimensionField",
         "FieldDataType",
@@ -8512,6 +8734,44 @@
         "rpcStatus"
       ],
       "fields": {
+        "AppProtocol": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "displayName": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "addToStandardFields": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "status": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "metadata": {
+            "type": "Optional[AppProtocolMetadata]",
+            "required": false
+          }
+        },
+        "AppProtocolMetadata": {
+          "fullDataOnly": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "AssetTag": {
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "displayName": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "DimensionField": {
           "key": {
             "type": "Optional[str]",
@@ -8568,6 +8828,10 @@
           "canCount": {
             "type": "Optional[bool]",
             "required": false
+          },
+          "shared": {
+            "type": "Optional[bool]",
+            "required": false
           }
         },
         "GetDictionaryResponse": {
@@ -8581,6 +8845,14 @@
           },
           "metricFamilies": {
             "type": "Optional[List[Optional[MetricFamilyDef]]]",
+            "required": false
+          },
+          "assetTags": {
+            "type": "Optional[List[Optional[AssetTag]]]",
+            "required": false
+          },
+          "appProtocols": {
+            "type": "Optional[Dict[str, Any]]",
             "required": false
           }
         },
@@ -8711,6 +8983,10 @@
           },
           "baseUnit": {
             "type": "Optional[BaseUnit]",
+            "required": false
+          },
+          "shared": {
+            "type": "Optional[bool]",
             "required": false
           }
         },
@@ -11654,6 +11930,10 @@
         "ListResolvedAddressesResponse": {
           "results": {
             "type": "Optional[List[Optional[PtrResult]]]",
+            "required": false
+          },
+          "nextPageToken": {
+            "type": "Optional[str]",
             "required": false
           }
         },

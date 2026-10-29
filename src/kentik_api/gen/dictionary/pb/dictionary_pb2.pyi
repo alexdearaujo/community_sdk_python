@@ -195,6 +195,43 @@ class MetricFamilyDef(_message.Message):
         incompatible_with: _Optional[_Iterable[str]] = ...,
     ) -> None: ...
 
+class AssetTag(_message.Message):
+    __slots__ = ("name", "display_name")
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    display_name: str
+    def __init__(
+        self, name: _Optional[str] = ..., display_name: _Optional[str] = ...
+    ) -> None: ...
+
+class AppProtocolMetadata(_message.Message):
+    __slots__ = ("full_data_only",)
+    FULL_DATA_ONLY_FIELD_NUMBER: _ClassVar[int]
+    full_data_only: bool
+    def __init__(self, full_data_only: _Optional[bool] = ...) -> None: ...
+
+class AppProtocol(_message.Message):
+    __slots__ = ("id", "display_name", "add_to_standard_fields", "status", "metadata")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
+    ADD_TO_STANDARD_FIELDS_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    METADATA_FIELD_NUMBER: _ClassVar[int]
+    id: int
+    display_name: str
+    add_to_standard_fields: bool
+    status: str
+    metadata: AppProtocolMetadata
+    def __init__(
+        self,
+        id: _Optional[int] = ...,
+        display_name: _Optional[str] = ...,
+        add_to_standard_fields: _Optional[bool] = ...,
+        status: _Optional[str] = ...,
+        metadata: _Optional[_Union[AppProtocolMetadata, _Mapping]] = ...,
+    ) -> None: ...
+
 class DimensionField(_message.Message):
     __slots__ = (
         "key",
@@ -211,6 +248,7 @@ class DimensionField(_message.Message):
         "filter_column",
         "query_column",
         "can_count",
+        "shared",
     )
     class ValuesEntry(_message.Message):
         __slots__ = ("key", "value")
@@ -236,6 +274,7 @@ class DimensionField(_message.Message):
     FILTER_COLUMN_FIELD_NUMBER: _ClassVar[int]
     QUERY_COLUMN_FIELD_NUMBER: _ClassVar[int]
     CAN_COUNT_FIELD_NUMBER: _ClassVar[int]
+    SHARED_FIELD_NUMBER: _ClassVar[int]
     key: str
     label: str
     data_type: FieldDataType
@@ -250,6 +289,7 @@ class DimensionField(_message.Message):
     filter_column: str
     query_column: str
     can_count: bool
+    shared: bool
     def __init__(
         self,
         key: _Optional[str] = ...,
@@ -266,6 +306,7 @@ class DimensionField(_message.Message):
         filter_column: _Optional[str] = ...,
         query_column: _Optional[str] = ...,
         can_count: _Optional[bool] = ...,
+        shared: _Optional[bool] = ...,
     ) -> None: ...
 
 class MetricField(_message.Message):
@@ -288,6 +329,7 @@ class MetricField(_message.Message):
         "healthy_value",
         "family_key",
         "base_unit",
+        "shared",
     )
     class ValuesEntry(_message.Message):
         __slots__ = ("key", "value")
@@ -317,6 +359,7 @@ class MetricField(_message.Message):
     HEALTHY_VALUE_FIELD_NUMBER: _ClassVar[int]
     FAMILY_KEY_FIELD_NUMBER: _ClassVar[int]
     BASE_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SHARED_FIELD_NUMBER: _ClassVar[int]
     key: str
     label: str
     data_type: FieldDataType
@@ -335,6 +378,7 @@ class MetricField(_message.Message):
     healthy_value: str
     family_key: str
     base_unit: BaseUnit
+    shared: bool
     def __init__(
         self,
         key: _Optional[str] = ...,
@@ -355,6 +399,7 @@ class MetricField(_message.Message):
         healthy_value: _Optional[str] = ...,
         family_key: _Optional[str] = ...,
         base_unit: _Optional[_Union[BaseUnit, str]] = ...,
+        shared: _Optional[bool] = ...,
     ) -> None: ...
 
 class MeasurementDetail(_message.Message):
@@ -397,16 +442,40 @@ class GetDictionaryRequest(_message.Message):
     def __init__(self) -> None: ...
 
 class GetDictionaryResponse(_message.Message):
-    __slots__ = ("measurements", "operator_sets", "metric_families")
+    __slots__ = (
+        "measurements",
+        "operator_sets",
+        "metric_families",
+        "asset_tags",
+        "app_protocols",
+    )
+    class AppProtocolsEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: AppProtocol
+        def __init__(
+            self,
+            key: _Optional[str] = ...,
+            value: _Optional[_Union[AppProtocol, _Mapping]] = ...,
+        ) -> None: ...
+
     MEASUREMENTS_FIELD_NUMBER: _ClassVar[int]
     OPERATOR_SETS_FIELD_NUMBER: _ClassVar[int]
     METRIC_FAMILIES_FIELD_NUMBER: _ClassVar[int]
+    ASSET_TAGS_FIELD_NUMBER: _ClassVar[int]
+    APP_PROTOCOLS_FIELD_NUMBER: _ClassVar[int]
     measurements: _containers.RepeatedCompositeFieldContainer[MeasurementDetail]
     operator_sets: _containers.RepeatedCompositeFieldContainer[OperatorSet]
     metric_families: _containers.RepeatedCompositeFieldContainer[MetricFamilyDef]
+    asset_tags: _containers.RepeatedCompositeFieldContainer[AssetTag]
+    app_protocols: _containers.MessageMap[str, AppProtocol]
     def __init__(
         self,
         measurements: _Optional[_Iterable[_Union[MeasurementDetail, _Mapping]]] = ...,
         operator_sets: _Optional[_Iterable[_Union[OperatorSet, _Mapping]]] = ...,
         metric_families: _Optional[_Iterable[_Union[MetricFamilyDef, _Mapping]]] = ...,
+        asset_tags: _Optional[_Iterable[_Union[AssetTag, _Mapping]]] = ...,
+        app_protocols: _Optional[_Mapping[str, AppProtocol]] = ...,
     ) -> None: ...
