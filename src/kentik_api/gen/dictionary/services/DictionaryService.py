@@ -8,9 +8,6 @@ from kentik_api.core.rest_runtime import parse_response_model, request_json
 
 from ..error import GetError
 from ..models import (  # noqa: F401
-    AppProtocol,
-    AppProtocolMetadata,
-    AssetTag,
     BaseUnit,
     DimensionField,
     FieldDataType,

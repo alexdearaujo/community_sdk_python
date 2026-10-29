@@ -36,7 +36,7 @@ from kentik_api.gen.core.pb import (
 from . import ptr_result_pb2 as kentik_dot_kptr_dot_v202602_dot_ptr__result__pb2
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n&kentik/kptr/v202602/kptr_service.proto\x12\x13kentik.kptr.v202602\x1a\x1fgoogle/protobuf/timestamp.proto\x1a%kentik/core/v202303/annotations.proto\x1a$kentik/kptr/v202602/ptr_result.proto"R\n\x19UpdateAddressNamesRequest\x12\x35\n\raddress_names\x18\x01 \x03(\x0b\x32\x1e.kentik.kptr.v202602.PtrResult"\x1c\n\x1aUpdateAddressNamesResponse"#\n!GetNetworkRangeAssignmentsRequest"<\n"GetNetworkRangeAssignmentsResponse\x12\x16\n\x0enetwork_ranges\x18\x01 \x03(\t"/\n\x17ResolveAddressesRequest\x12\x14\n\x0cip_addresses\x18\x01 \x03(\t"K\n\x18ResolveAddressesResponse\x12/\n\x07results\x18\x01 \x03(\x0b\x32\x1e.kentik.kptr.v202602.PtrResult"E\n\x1cListResolvedAddressesRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t"i\n\x1dListResolvedAddressesResponse\x12/\n\x07results\x18\x01 \x03(\x0b\x32\x1e.kentik.kptr.v202602.PtrResult\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t2\xd8\x04\n\x0bKptrService\x12\x9c\x01\n\x1aGetNetworkRangeAssignments\x12\x36.kentik.kptr.v202602.GetNetworkRangeAssignmentsRequest\x1a\x37.kentik.kptr.v202602.GetNetworkRangeAssignmentsResponse"\r\xf2\xd7\x02\tkptr:read\x12\x85\x01\n\x12UpdateAddressNames\x12..kentik.kptr.v202602.UpdateAddressNamesRequest\x1a/.kentik.kptr.v202602.UpdateAddressNamesResponse"\x0e\xf2\xd7\x02\nkptr:write\x12~\n\x10ResolveAddresses\x12,.kentik.kptr.v202602.ResolveAddressesRequest\x1a-.kentik.kptr.v202602.ResolveAddressesResponse"\r\xf2\xd7\x02\tkptr:read\x12\x8d\x01\n\x15ListResolvedAddresses\x12\x31.kentik.kptr.v202602.ListResolvedAddressesRequest\x1a\x32.kentik.kptr.v202602.ListResolvedAddressesResponse"\r\xf2\xd7\x02\tkptr:read\x1a\x12\xea\xd7\x02\nkptr:admin\x90\xd8\x02\x03\x42\x45ZCgithub.com/kentik/api-schema-public/gen/go/kentik/kptr/v202602;kptrb\x06proto3'
+    b'\n&kentik/kptr/v202602/kptr_service.proto\x12\x13kentik.kptr.v202602\x1a\x1fgoogle/protobuf/timestamp.proto\x1a%kentik/core/v202303/annotations.proto\x1a$kentik/kptr/v202602/ptr_result.proto"R\n\x19UpdateAddressNamesRequest\x12\x35\n\raddress_names\x18\x01 \x03(\x0b\x32\x1e.kentik.kptr.v202602.PtrResult"\x1c\n\x1aUpdateAddressNamesResponse"#\n!GetNetworkRangeAssignmentsRequest"<\n"GetNetworkRangeAssignmentsResponse\x12\x16\n\x0enetwork_ranges\x18\x01 \x03(\t"/\n\x17ResolveAddressesRequest\x12\x14\n\x0cip_addresses\x18\x01 \x03(\t"K\n\x18ResolveAddressesResponse\x12/\n\x07results\x18\x01 \x03(\x0b\x32\x1e.kentik.kptr.v202602.PtrResult"\x1e\n\x1cListResolvedAddressesRequest"P\n\x1dListResolvedAddressesResponse\x12/\n\x07results\x18\x01 \x03(\x0b\x32\x1e.kentik.kptr.v202602.PtrResult2\xd8\x04\n\x0bKptrService\x12\x9c\x01\n\x1aGetNetworkRangeAssignments\x12\x36.kentik.kptr.v202602.GetNetworkRangeAssignmentsRequest\x1a\x37.kentik.kptr.v202602.GetNetworkRangeAssignmentsResponse"\r\xf2\xd7\x02\tkptr:read\x12\x85\x01\n\x12UpdateAddressNames\x12..kentik.kptr.v202602.UpdateAddressNamesRequest\x1a/.kentik.kptr.v202602.UpdateAddressNamesResponse"\x0e\xf2\xd7\x02\nkptr:write\x12~\n\x10ResolveAddresses\x12,.kentik.kptr.v202602.ResolveAddressesRequest\x1a-.kentik.kptr.v202602.ResolveAddressesResponse"\r\xf2\xd7\x02\tkptr:read\x12\x8d\x01\n\x15ListResolvedAddresses\x12\x31.kentik.kptr.v202602.ListResolvedAddressesRequest\x1a\x32.kentik.kptr.v202602.ListResolvedAddressesResponse"\r\xf2\xd7\x02\tkptr:read\x1a\x12\xea\xd7\x02\nkptr:admin\x90\xd8\x02\x03\x42\x45ZCgithub.com/kentik/api-schema-public/gen/go/kentik/kptr/v202602;kptrb\x06proto3'
 )
 
 _globals = globals()
@@ -90,9 +90,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
     _globals["_RESOLVEADDRESSESRESPONSE"]._serialized_start = 435
     _globals["_RESOLVEADDRESSESRESPONSE"]._serialized_end = 510
     _globals["_LISTRESOLVEDADDRESSESREQUEST"]._serialized_start = 512
-    _globals["_LISTRESOLVEDADDRESSESREQUEST"]._serialized_end = 581
-    _globals["_LISTRESOLVEDADDRESSESRESPONSE"]._serialized_start = 583
-    _globals["_LISTRESOLVEDADDRESSESRESPONSE"]._serialized_end = 688
-    _globals["_KPTRSERVICE"]._serialized_start = 691
-    _globals["_KPTRSERVICE"]._serialized_end = 1291
+    _globals["_LISTRESOLVEDADDRESSESREQUEST"]._serialized_end = 542
+    _globals["_LISTRESOLVEDADDRESSESRESPONSE"]._serialized_start = 544
+    _globals["_LISTRESOLVEDADDRESSESRESPONSE"]._serialized_end = 624
+    _globals["_KPTRSERVICE"]._serialized_start = 627
+    _globals["_KPTRSERVICE"]._serialized_end = 1227
 # @@protoc_insertion_point(module_scope)

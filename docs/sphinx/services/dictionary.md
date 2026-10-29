@@ -96,18 +96,16 @@ response = client.dictionary.get()
 ## Data Models
 
 <details>
-<summary>Model relationships (7 of 18 models)</summary>
+<summary>Model relationships (6 of 15 models)</summary>
 
 ```mermaid
 classDiagram
-    class AssetTag
     class GetDictionaryResponse
     class MeasurementDetail
     class MetricFamilyDef
     class OperatorSet
     class protobufAny
     class rpcStatus
-    GetDictionaryResponse --> AssetTag
     GetDictionaryResponse --> MeasurementDetail
     GetDictionaryResponse --> MetricFamilyDef
     GetDictionaryResponse --> OperatorSet
@@ -115,18 +113,6 @@ classDiagram
 ```
 
 </details>
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.dictionary.models.AppProtocol
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.dictionary.models.AppProtocolMetadata
-```
-
-```{eval-rst}
-.. autopydantic_model:: kentik_api.gen.dictionary.models.AssetTag
-```
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.dictionary.models.BaseUnit
