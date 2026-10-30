@@ -26,6 +26,7 @@ _MERMAID_CLASSES = {
     "blueSrc": "fill:#a5d8ff,stroke:#1971c2,color:#1864ab",
     "blue": "fill:#e7f5ff,stroke:#1971c2,color:#1864ab",
     "greenSrc": "fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e",
+    "green": "fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e",
     "violetSrc": "fill:#d0bfff,stroke:#7048e8,color:#5f3dc4",
     "violet": "fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4",
     "orange": "fill:#fff4e6,stroke:#e8590c,color:#d9480f",

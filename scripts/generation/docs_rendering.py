@@ -187,28 +187,24 @@ def _resolve_import_from(current_module: str, level: int, module: str | None) ->
     return ".".join(parts + suffix)
 
 
-_GROUP_CONFIG: dict[str, tuple[str, str, str]] = {
-    # label: (layer, source path under kentik_api/, diagram color class)
-    "Client API": ("client", "client.py", "orange"),
-    "Client Mixin": ("client", "client_mixin.py", "orange"),
-    "Auth Credentials": ("foundation", "auth/", "hub"),
-    "API Config": ("foundation", "core/api_config.py", "hub"),
-    "REST Runtime": ("foundation", "core/rest_runtime.py", "blue"),
-    "gRPC Runtime": ("foundation", "core/grpc_runtime.py", "violet"),
-    "Rate Limit": ("foundation", "core/rate_limit.py", "hub"),
-    "Error Types": ("foundation", "errors/", "hub"),
-    "Transport Base": ("transport", "transports/base.py", "hub"),
-    "REST Transport": ("transport", "transports/rest_client.py", "blue"),
-    "gRPC Transport": ("transport", "transports/grpc_client.py", "violet"),
-    "Generated Service Wrappers": (
-        "generated",
-        "gen/{service}/services/{service}.py",
-        "orange",
-    ),
-    "Generated REST Services": ("generated", "gen/{service}/services/", "blue"),
-    "Generated Models": ("generated", "gen/{service}/models/", "hub"),
-    "Generated Error Classes": ("generated", "gen/{service}/error/", "hub"),
-    "Generated Proto Stubs": ("generated", "gen/{service}/pb/", "violet"),
+_GROUP_CONFIG: dict[str, tuple[str, str]] = {
+    # label: (layer, source path under kentik_api/)
+    "Client API": ("client", "client.py"),
+    "Client Mixin": ("client", "client_mixin.py"),
+    "Auth Credentials": ("foundation", "auth/"),
+    "API Config": ("foundation", "core/api_config.py"),
+    "REST Runtime": ("foundation", "core/rest_runtime.py"),
+    "gRPC Runtime": ("foundation", "core/grpc_runtime.py"),
+    "Rate Limit": ("foundation", "core/rate_limit.py"),
+    "Error Types": ("foundation", "errors/"),
+    "Transport Base": ("transport", "transports/base.py"),
+    "REST Transport": ("transport", "transports/rest_client.py"),
+    "gRPC Transport": ("transport", "transports/grpc_client.py"),
+    "Generated Service Wrappers": ("generated", "gen/{service}/services/{service}.py"),
+    "Generated REST Services": ("generated", "gen/{service}/services/"),
+    "Generated Models": ("generated", "gen/{service}/models/"),
+    "Generated Error Classes": ("generated", "gen/{service}/error/"),
+    "Generated Proto Stubs": ("generated", "gen/{service}/pb/"),
 }
 
 _LAYER_NAMES: dict[str, str] = {
@@ -216,6 +212,14 @@ _LAYER_NAMES: dict[str, str] = {
     "generated": "Generated Layer",
     "transport": "Transport Layer",
     "foundation": "Shared Foundation",
+}
+
+# layer: (source paths under kentik_api/, diagram color class)
+_LAYER_BOXES: dict[str, tuple[str, str]] = {
+    "client": ("client.py, client_mixin.py", "orange"),
+    "generated": ("gen/{service}/", "green"),
+    "transport": ("transports/", "violet"),
+    "foundation": ("core/, auth/, errors/", "hub"),
 }
 
 _GROUP_ROLES: dict[str, str] = {
@@ -230,6 +234,11 @@ _GROUP_ROLES: dict[str, str] = {
     "REST Runtime": "`request_json()`: the one function that sends REST traffic.",
     "gRPC Runtime": "`call_grpc()`: the one function that sends gRPC traffic.",
     "Error Types": "The shared exception hierarchy under `KentikError`.",
+    "Auth Credentials": "Builds the Kentik auth headers for REST and for gRPC.",
+    "Rate Limit": "`RateLimit`: the quota that each response reports.",
+    "Transport Base": "The base class of both transports.",
+    "REST Transport": "`RestTransport`: holds the `APIConfig` for REST calls.",
+    "gRPC Transport": "`GrpcTransport`: the TLS channel, with auth and the default deadline.",
 }
 
 
@@ -247,35 +256,32 @@ def _call_path_diagram() -> list[str]:
 
     return [
         "```mermaid",
-        MERMAID_INIT,
-        "flowchart LR",
-        '    code("Your code"):::greenSrc',
-        '    subgraph sdk["kentik_api"]',
-        f'        wrap("Service wrapper<br/>client.{{service}}<br/>{services} services, {operations} operations"):::orange',
-        '        rest("REST function<br/>gen/{service}/services/"):::blue',
-        '        rj("request_json()<br/>auth headers, quota, errors"):::blue',
-        '        cg("call_grpc()<br/>deadline, quota, errors"):::violet',
+        "sequenceDiagram",
+        "    participant C as Your code",
+        f"    participant W as Service wrapper<br/>({services} services, {operations} operations)",
+        "    participant R as REST function<br/>gen/{service}/services/",
+        "    participant RJ as request_json()",
+        "    participant RA as Kentik REST API",
+        "    participant CG as call_grpc()",
+        "    participant GA as Kentik gRPC API",
+        "",
+        "    C->>W: client.{service}.{method}(arguments)",
+        "    alt REST transport",
+        "        W->>R: arguments",
+        "        R->>RJ: method, path, body, APIConfig",
+        "        RJ->>RA: HTTPS request with auth headers",
+        "        RA-->>RJ: JSON response",
+        "        RJ-->>R: JSON dict + quota",
+        "        R-->>W: Pydantic model",
+        "    else gRPC transport",
+        "        W->>CG: stub method + proto request",
+        "        CG->>GA: gRPC call over TLS",
+        "        GA-->>CG: proto response",
+        "        CG-->>W: proto response + quota",
+        "        W->>W: parse_grpc_response()",
         "    end",
-        '    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc',
-        '    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc',
-        "",
-        '    code -->|"method call"| wrap',
-        '    wrap -->|"Pydantic model,<br/>or a raised KentikError"| code',
-        '    wrap -->|"arguments"| rest',
-        '    rest -->|"Pydantic model"| wrap',
-        '    rest -->|"method, path, body,<br/>APIConfig"| rj',
-        '    rj -->|"JSON dict + quota"| rest',
-        '    rj -->|"HTTPS request"| restapi',
-        '    restapi -->|"JSON response"| rj',
-        '    wrap -->|"stub method +<br/>proto request"| cg',
-        '    cg -->|"proto response + quota"| wrap',
-        '    cg -->|"gRPC call"| grpcapi',
-        '    grpcapi -->|"proto response"| cg',
-        "",
-        *mermaid_style(
-            ["greenSrc", "orange", "blue", "blueSrc", "violet", "violetSrc"],
-            ("sdk",),
-        ),
+        "    W-->>C: Pydantic model",
+        "    Note over C,GA: On a failure, request_json() or call_grpc() raises a KentikError subclass.",
         "```",
     ]
 
@@ -351,7 +357,9 @@ def _generate_runtime_architecture_docs(
     nodes: set[str] = set()
 
     for py_file in scan_paths:
-        if not py_file.exists() or py_file.name == "__init__.py":
+        if not py_file.exists() or (
+            py_file.name == "__init__.py" and py_file.parent.name != "error"
+        ):
             continue
         try:
             tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
@@ -385,54 +393,39 @@ def _generate_runtime_architecture_docs(
                 key = (src_group, dst_group)
                 edge_counts[key] = edge_counts.get(key, 0) + 1
 
-    from collections import defaultdict
+    layer_counts: dict[tuple[str, str], int] = {}
+    imports_of: dict[str, list[str]] = {}
+    for (src, dst), count in sorted(edge_counts.items()):
+        imports_of.setdefault(src, []).append(f"{dst} ({count})")
+        key = (_GROUP_CONFIG[src][0], _GROUP_CONFIG[dst][0])
+        if key[0] != key[1]:
+            layer_counts[key] = layer_counts.get(key, 0) + count
 
-    layer_members: dict[str, set[str]] = defaultdict(set)
-    for label, (layer_key, _, _) in _GROUP_CONFIG.items():
-        layer_members[layer_key].add(label)
-    _LAYERS: list[tuple[str, str, set[str]]] = [
-        (key, _LAYER_NAMES[key], layer_members[key])
-        for key in _LAYER_NAMES
-        if layer_members[key]
+    used_layers = [
+        key for key in _LAYER_NAMES if any(_GROUP_CONFIG[n][0] == key for n in nodes)
     ]
-
-    def node_line(node_name: str) -> str:
-        node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
-        _, path, css = _GROUP_CONFIG[node_name]
-        return f'{node_id}("{node_name}<br/>{path}"):::{css}'
-
-    mermaid_lines = [MERMAID_INIT, "flowchart LR"]
-
-    placed: set[str] = set()
-    for layer_key, layer_label, members in _LAYERS:
-        in_layer = members & nodes
-        if not in_layer:
-            continue
-        mermaid_lines.append(f'    subgraph {layer_key}["{layer_label}"]')
-        for node_name in sorted(in_layer):
-            mermaid_lines.append(f"        {node_line(node_name)}")
-            placed.add(node_name)
-        mermaid_lines.append("    end")
-
-    for node_name in sorted(nodes - placed):
-        mermaid_lines.append(f"    {node_line(node_name)}")
-
+    mermaid_lines = [MERMAID_INIT, "flowchart BT"]
+    for key in used_layers:
+        paths, css = _LAYER_BOXES[key]
+        mermaid_lines.append(f'    {key}("{_LAYER_NAMES[key]}<br/>{paths}"):::{css}')
     mermaid_lines.append("")
-    for (source_group, dest_group), count in sorted(edge_counts.items()):
-        source_group_id = re.sub(r"[^A-Za-z0-9_]", "_", source_group)
-        dest_group_id = re.sub(r"[^A-Za-z0-9_]", "_", dest_group)
+    for (src_layer, dst_layer), count in sorted(
+        layer_counts.items(),
+        key=lambda item: (used_layers.index(item[0][0]), used_layers.index(item[0][1])),
+    ):
         label = f"{count} imports" if count > 1 else "1 import"
-        mermaid_lines.append(f'    {source_group_id} -->|"{label}"| {dest_group_id}')
-
+        mermaid_lines.append(f'    {src_layer} -->|"{label}"| {dst_layer}')
     mermaid_lines.extend(
-        [
-            "",
-            *mermaid_style(
-                sorted({css for _, _, css in _GROUP_CONFIG.values()}),
-                tuple(key for key, _, members in _LAYERS if members & nodes),
-            ),
-        ]
+        ["", *mermaid_style([_LAYER_BOXES[key][1] for key in used_layers])]
     )
+
+    group_rows = [
+        f"| {label} | {_LAYER_NAMES[layer]} | `{path}` | "
+        f"{', '.join(imports_of.get(label, [])) or 'nothing in the SDK'} | "
+        f"{_GROUP_ROLES.get(label, '')} |"
+        for label, (layer, path) in _GROUP_CONFIG.items()
+        if label in nodes
+    ]
 
     architecture_md = [
         "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_runtime_architecture_docs() -->",
@@ -463,23 +456,23 @@ def _generate_runtime_architecture_docs(
         "5. Both runtimes turn each failure into a `kentik_api.errors` type, or into",
         "   the error class that the service generates for that operation.",
         "",
-        "## Module Dependency Graph",
+        "## Module Dependencies",
         "",
-        "Each arrow points from a module group to a group that it imports. A number",
-        "on an arrow counts the import statements. The generator reads the imports",
-        "from the source on every run. Colors match the call path: blue is REST,",
-        "violet is gRPC, orange is the client and its wrappers, and gray is shared.",
+        "The SDK has a client layer, a generated layer, a transport layer, and a shared",
+        "foundation. Each arrow points from a layer to a layer that it imports, and the",
+        "number counts the import statements. The generator reads the imports from the",
+        "source on every run.",
         "",
         "```mermaid",
         *mermaid_lines,
         "```",
         "",
-        "| Group | Source | Role |",
-        "| --- | --- | --- |",
-        *(
-            f"| {label} | `{_GROUP_CONFIG[label][1]}` | {role} |"
-            for label, role in _GROUP_ROLES.items()
-        ),
+        "The table lists each module group in a layer, and the groups that it imports,",
+        "with the number of import statements.",
+        "",
+        "| Group | Layer | Source | Imports from | Role |",
+        "| --- | --- | --- | --- | --- |",
+        *group_rows,
         "",
         *_services_without_wrappers_section(),
         *_rest_only_services_section(rest_only),

@@ -38,7 +38,7 @@ def test_every_hand_written_module_maps_to_a_group():
 def test_every_layer_in_group_config_has_a_layer_name():
     """Every layer key referenced in _GROUP_CONFIG must have an entry in _LAYER_NAMES."""
     missing = {
-        layer for layer, _, _ in _GROUP_CONFIG.values() if layer not in _LAYER_NAMES
+        layer for layer, _ in _GROUP_CONFIG.values() if layer not in _LAYER_NAMES
     }
     assert not missing, (
         f"Layer keys in _GROUP_CONFIG with no _LAYER_NAMES entry: {missing}"
@@ -124,6 +124,7 @@ def test_architecture_page_matches_committed_apart_from_edge_counts(sandbox):
     rel = "docs/sphinx/sdk_runtime_architecture.md"
     service_dependent = [
         (re.compile(r'\|"\d+ imports?"\|'), "|n|"),
+        (re.compile(r" \(\d+\)"), " (n)"),
         (re.compile(r"\d+ services, \d+ operations"), "n services, n operations"),
         (re.compile(r"\d+ Services are in that state today: [^\n]*"), "N Services ..."),
         (re.compile(r"\n## REST-Only Services\n.*\Z", re.DOTALL), ""),
@@ -148,16 +149,18 @@ def test_architecture_page_lists_every_layer(sandbox):
         assert layer in page
 
 
-def test_architecture_graph_shows_wrappers_using_models_and_proto_stubs(sandbox):
+def test_architecture_table_shows_wrappers_using_models_and_proto_stubs(sandbox):
     docs_rendering.generate()
 
     page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
-    assert re.search(
-        r'Generated_Service_Wrappers -->\|"[^"]*"\| Generated_Models\n', page
+    row = next(
+        line
+        for line in page.splitlines()
+        if line.startswith("| Generated Service Wrappers |")
     )
-    assert re.search(
-        r'Generated_Service_Wrappers -->\|"[^"]*"\| Generated_Proto_Stubs\n', page
-    )
+    assert "Generated Models (" in row
+    assert "Generated Proto Stubs (" in row
+    assert re.search(r'generated -->\|"\d+ imports?"\| foundation\n', page)
 
 
 @pytest.mark.parametrize("guide", _GUIDES)
