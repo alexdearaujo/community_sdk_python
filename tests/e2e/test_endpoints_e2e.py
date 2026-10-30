@@ -22,6 +22,8 @@ Scope, by design (see AGENTS.md's end-to-end testing requirement):
     error path still matches the schema. A 5xx is a server failure, and
     any other exception is an SDK failure. We don't control what data
     exists in the real account, so a 4xx for a sample ID is expected.
+    A 404 on a path with no parameters fails: there is no ID to miss, so
+    the server does not serve that route.
 
 Opt-in only: excluded from `uv run poe test`/`uv run poe all` by the `e2e` pytest marker
 (see pyproject.toml's addopts) and only actually run via `uv run poe test-e2e` or
@@ -82,6 +84,10 @@ def test_read_endpoint_against_real_api(
     except HTTPException as exc:
         if exc.status_code >= 500:
             print(f'E2E: "{label}" failed on the server. RESULT=FAIL')
+            raise
+        if exc.status_code == 404 and "{" not in case.path:
+            # No ID to miss, so a 404 means the server does not serve this route.
+            print(f'E2E: "{label}" has no route on the server. RESULT=FAIL')
             raise
         print(
             f'E2E: "{label}" raised {type(exc).__name__} '
