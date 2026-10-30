@@ -1,11 +1,10 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `uv run poe generate`. Do not edit by hand.
 
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from .AssetTag import AssetTag
 from .MeasurementDetail import MeasurementDetail
 from .MetricFamilyDef import MetricFamilyDef
 from .OperatorSet import OperatorSet
@@ -34,16 +33,4 @@ class GetDictionaryResponse(BaseModel):
         validation_alias="metricFamilies",
         default=None,
         description="All metric family definitions",
-    )
-
-    assetTags: Optional[List[Optional[AssetTag]]] = Field(
-        validation_alias="assetTags",
-        default=None,
-        description="All asset tag definitions",
-    )
-
-    appProtocols: Optional[Dict[str, Any]] = Field(
-        validation_alias="appProtocols",
-        default=None,
-        description="All AppProtocol definitions",
     )

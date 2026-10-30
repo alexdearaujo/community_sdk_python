@@ -80,91 +80,6 @@ class CredentialError(HTTPException):
         )
 
 
-class AssignConsumerError(CredentialError):
-    """Operation-local error for client.credential.assign_consumer()."""
-
-    response_error_map: dict[str, type[CredentialError]] = {}
-
-
-class AssignConsumerUnexpectedError(AssignConsumerError):
-    """Operation-local response error for assign_consumer (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-AssignConsumerError.response_error_map = {
-    "default": AssignConsumerUnexpectedError,
-}
-
-
-class CreateGroupError(CredentialError):
-    """Operation-local error for client.credential.create_group()."""
-
-    response_error_map: dict[str, type[CredentialError]] = {}
-
-
-class CreateGroupUnexpectedError(CreateGroupError):
-    """Operation-local response error for create_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-CreateGroupError.response_error_map = {
-    "default": CreateGroupUnexpectedError,
-}
-
-
-class DeleteError(CredentialError):
-    """Operation-local error for client.credential.delete()."""
-
-    response_error_map: dict[str, type[CredentialError]] = {}
-
-
-class DeleteUnexpectedError(DeleteError):
-    """Operation-local response error for delete (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-DeleteError.response_error_map = {
-    "default": DeleteUnexpectedError,
-}
-
-
-class DeleteGroupError(CredentialError):
-    """Operation-local error for client.credential.delete_group()."""
-
-    response_error_map: dict[str, type[CredentialError]] = {}
-
-
-class DeleteGroupUnexpectedError(DeleteGroupError):
-    """Operation-local response error for delete_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-DeleteGroupError.response_error_map = {
-    "default": DeleteGroupUnexpectedError,
-}
-
-
-class GetError(CredentialError):
-    """Operation-local error for client.credential.get()."""
-
-    response_error_map: dict[str, type[CredentialError]] = {}
-
-
-class GetUnexpectedError(GetError):
-    """Operation-local response error for get (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-GetError.response_error_map = {
-    "default": GetUnexpectedError,
-}
-
-
 class GetGroupError(CredentialError):
     """Operation-local error for client.credential.get_group()."""
 
@@ -182,107 +97,32 @@ GetGroupError.response_error_map = {
 }
 
 
-class ListError(CredentialError):
-    """Operation-local error for client.credential.list()."""
+class ListGroupError(CredentialError):
+    """Operation-local error for client.credential.list_group()."""
 
     response_error_map: dict[str, type[CredentialError]] = {}
 
 
-class ListUnexpectedError(ListError):
-    """Operation-local response error for list (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+class ListGroupUnexpectedError(ListGroupError):
+    """Operation-local response error for list_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
 
     pass
 
 
-ListError.response_error_map = {
-    "default": ListUnexpectedError,
-}
-
-
-class ListGroupsError(CredentialError):
-    """Operation-local error for client.credential.list_groups()."""
-
-    response_error_map: dict[str, type[CredentialError]] = {}
-
-
-class ListGroupsUnexpectedError(ListGroupsError):
-    """Operation-local response error for list_groups (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-ListGroupsError.response_error_map = {
-    "default": ListGroupsUnexpectedError,
-}
-
-
-class ListOverviewsError(CredentialError):
-    """Operation-local error for client.credential.list_overviews()."""
-
-    response_error_map: dict[str, type[CredentialError]] = {}
-
-
-class ListOverviewsUnexpectedError(ListOverviewsError):
-    """Operation-local response error for list_overviews (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-ListOverviewsError.response_error_map = {
-    "default": ListOverviewsUnexpectedError,
-}
-
-
-class UpdateGroupError(CredentialError):
-    """Operation-local error for client.credential.update_group()."""
-
-    response_error_map: dict[str, type[CredentialError]] = {}
-
-
-class UpdateGroupUnexpectedError(UpdateGroupError):
-    """Operation-local response error for update_group (default: An unexpected error response. #/components/schemas/rpcStatus)."""
-
-    pass
-
-
-UpdateGroupError.response_error_map = {
-    "default": UpdateGroupUnexpectedError,
+ListGroupError.response_error_map = {
+    "default": ListGroupUnexpectedError,
 }
 
 ERROR_BY_METHOD: dict[str, type[CredentialError]] = {
-    "assign_consumer": AssignConsumerError,
-    "create_group": CreateGroupError,
-    "delete": DeleteError,
-    "delete_group": DeleteGroupError,
-    "get": GetError,
     "get_group": GetGroupError,
-    "list": ListError,
-    "list_groups": ListGroupsError,
-    "list_overviews": ListOverviewsError,
-    "update_group": UpdateGroupError,
+    "list_group": ListGroupError,
 }
 
 __all__ = [
     "CredentialError",
-    "AssignConsumerUnexpectedError",
-    "CreateGroupUnexpectedError",
-    "DeleteUnexpectedError",
-    "DeleteGroupUnexpectedError",
-    "GetUnexpectedError",
     "GetGroupUnexpectedError",
-    "ListUnexpectedError",
-    "ListGroupsUnexpectedError",
-    "ListOverviewsUnexpectedError",
-    "UpdateGroupUnexpectedError",
-    "AssignConsumerError",
-    "CreateGroupError",
-    "DeleteError",
-    "DeleteGroupError",
-    "GetError",
+    "ListGroupUnexpectedError",
     "GetGroupError",
-    "ListError",
-    "ListGroupsError",
-    "ListOverviewsError",
-    "UpdateGroupError",
+    "ListGroupError",
     "ERROR_BY_METHOD",
 ]

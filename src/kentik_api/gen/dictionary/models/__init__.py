@@ -1,9 +1,6 @@
 # AUTO-GENERATED: openapi-python-generator, model generation
 # Rebuilt on every `uv run poe generate`. Do not edit by hand.
 
-from .AppProtocol import AppProtocol as AppProtocol
-from .AppProtocolMetadata import AppProtocolMetadata as AppProtocolMetadata
-from .AssetTag import AssetTag as AssetTag
 from .BaseUnit import BaseUnit as BaseUnit
 from .DimensionField import DimensionField as DimensionField
 from .FieldDataType import FieldDataType as FieldDataType

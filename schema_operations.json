@@ -860,8 +860,8 @@
     }
   },
   "credential": {
-    "GET /credential/v20261020alpha1/credentials": {
-      "operation": "ListCredentials",
+    "GET /credential/v202407alpha1/group": {
+      "operation": "ListCredentialGroup",
       "params": [],
       "body": false,
       "responses": [
@@ -869,96 +869,11 @@
         "default"
       ]
     },
-    "GET /credential/v20261020alpha1/credentials/{name}": {
-      "operation": "GetCredential",
-      "params": [
-        "allVersions",
-        "name",
-        "version"
-      ],
-      "body": false,
-      "responses": [
-        "200",
-        "default"
-      ]
-    },
-    "PUT /credential/v20261020alpha1/credentials/{name}/consumer": {
-      "operation": "AssignConsumer",
-      "params": [
-        "name"
-      ],
-      "body": true,
-      "responses": [
-        "200",
-        "default"
-      ]
-    },
-    "DELETE /credential/v20261020alpha1/credentials/{name}/versions/{version}": {
-      "operation": "DeleteCredential",
-      "params": [
-        "name",
-        "version"
-      ],
-      "body": false,
-      "responses": [
-        "200",
-        "default"
-      ]
-    },
-    "GET /credential/v20261020alpha1/groups": {
-      "operation": "ListCredentialGroups",
-      "params": [],
-      "body": false,
-      "responses": [
-        "200",
-        "default"
-      ]
-    },
-    "POST /credential/v20261020alpha1/groups": {
-      "operation": "CreateCredentialGroup",
-      "params": [],
-      "body": true,
-      "responses": [
-        "200",
-        "default"
-      ]
-    },
-    "DELETE /credential/v20261020alpha1/groups/{name}": {
-      "operation": "DeleteCredentialGroup",
-      "params": [
-        "name"
-      ],
-      "body": false,
-      "responses": [
-        "200",
-        "default"
-      ]
-    },
-    "GET /credential/v20261020alpha1/groups/{name}": {
+    "GET /credential/v202407alpha1/group/{id}": {
       "operation": "GetCredentialGroup",
       "params": [
-        "name"
+        "id"
       ],
-      "body": false,
-      "responses": [
-        "200",
-        "default"
-      ]
-    },
-    "PUT /credential/v20261020alpha1/groups/{name}": {
-      "operation": "UpdateCredentialGroup",
-      "params": [
-        "name"
-      ],
-      "body": true,
-      "responses": [
-        "200",
-        "default"
-      ]
-    },
-    "GET /credential/v20261020alpha1/overviews": {
-      "operation": "ListCredentialOverviews",
-      "params": [],
       "body": false,
       "responses": [
         "200",

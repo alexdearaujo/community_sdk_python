@@ -18,5 +18,3 @@ class ListResolvedAddressesResponse(BaseModel):
     results: Optional[List[Optional[PtrResult]]] = Field(
         validation_alias="results", default=None
     )
-
-    nextPageToken: Optional[str] = Field(validation_alias="nextPageToken", default=None)

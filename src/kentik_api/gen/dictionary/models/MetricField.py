@@ -112,9 +112,3 @@ class MetricField(BaseModel):
     )
 
     baseUnit: Optional[BaseUnit] = Field(validation_alias="baseUnit", default=None)
-
-    shared: Optional[bool] = Field(
-        validation_alias="shared",
-        default=None,
-        description="When true, the metric can be used in child measurements",
-    )

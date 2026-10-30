@@ -5,55 +5,40 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from .Consumer import Consumer
-from .CreatedBy import CreatedBy
-from .Credential import Credential
-from .CredentialType import CredentialType
+from .Secret import Secret
+from .SecretType import SecretType
+from .User import User
 
 
 class CredentialGroup(BaseModel):
     """
-    CredentialGroup
+    CredentialGroup model
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    id: Optional[str] = Field(
-        validation_alias="id",
-        default=None,
-        description="Pipe-delimited ids of the latest version of each credential in the group",
-    )
+    id: Optional[str] = Field(validation_alias="id", default=None)
 
-    name: Optional[str] = Field(
-        validation_alias="name", default=None, description="Credential group name"
-    )
+    name: Optional[str] = Field(validation_alias="name", default=None)
 
-    version: Optional[int] = Field(
-        validation_alias="version", default=None, description="Group version"
-    )
+    version: int = Field(validation_alias="version", description="The secret's version")
 
     description: Optional[str] = Field(
         validation_alias="description",
         default=None,
-        description="Purpose of this credential group",
+        description="Purpose of this secret",
     )
 
-    type: Optional[CredentialType] = Field(validation_alias="type", default=None)
+    type: Optional[SecretType] = Field(validation_alias="type", default=None)
 
     cdate: Optional[str] = Field(validation_alias="cdate", default=None)
 
     edate: Optional[str] = Field(validation_alias="edate", default=None)
 
-    createdBy: Optional[CreatedBy] = Field(validation_alias="createdBy", default=None)
+    createdBy: Optional[User] = Field(validation_alias="createdBy", default=None)
 
-    labels: Optional[List[str]] = Field(
-        validation_alias="labels", default=None, description="Label ids"
-    )
-
-    consumers: Optional[List[Optional[Consumer]]] = Field(
-        validation_alias="consumers", default=None
-    )
-
-    credentials: Optional[List[Optional[Credential]]] = Field(
+    credentials: Optional[List[Optional[Secret]]] = Field(
         validation_alias="credentials", default=None
     )
+
+    labels: Optional[List[str]] = Field(validation_alias="labels", default=None)
