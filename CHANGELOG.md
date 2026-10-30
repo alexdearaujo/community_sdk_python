@@ -119,7 +119,7 @@ underscore; if one word is left, the module noun stays
 | `pathfinder` | `create_pathfinder_report` | `create_report` |
 | `site` | `list_site_markets`, `get_site_market`, `create_site_market`, `update_site_market`, `delete_site_market` | `list_markets`, `get_market`, `create_market`, `update_market`, `delete_market` |
 
-`api_surface.json` now records the client method for each operation, so
+[`api_surface.json`](api_surface.json) now records the client method for each operation, so
 `uv run poe check-changelog` flags a renamed method as a breaking change. It also
 records the gRPC method each operation calls, so an operation that stops
 working over gRPC is a breaking change too.
@@ -287,7 +287,7 @@ classes follow: `client.site.create` raises `CreateError`, in
 
 - **`v5` service.** `client.v5` brings back the V5 query calls that have no
   V6 equivalent: `top_x_data`, `top_x_chart`, and `query_url`. They are
-  generated from a hand-maintained description in `schema/openapi/` and
+  generated from a hand-maintained description in [`schema/openapi/`](schema/openapi/) and
   always go over REST to the V5 host (`https://api.kentik.com/api/v5`, or
   `https://api.kentik.eu/api/v5` for `region="eu"`), also on a client created
   with `protocol="grpc"`. A query model keeps every field it gets, so query
@@ -316,7 +316,7 @@ classes follow: `client.site.create` raises `CreateError`, in
 - **`v5_base_url` argument and `v5_api_config` property.** `KentikAPI` takes
   a custom V5 host (it must use https). `client.v5_api_config` is the base
   for a per-call override of a `client.v5` call.
-- **Stable public names.** `public_names.json` sets the name of every Service,
+- **Stable public names.** [`public_names.json`](public_names.json) sets the name of every Service,
   client method, and model, and each method's error classes follow its name. A version bump or a new operationId upstream no
   longer renames anything. When upstream moves or renames something,
   generation fails and names the entry to update. See "Keep public names
@@ -563,5 +563,5 @@ This section is for contributors. It does not change the SDK.
   use `generate`, `test`, `uv sync`, bare `uv run poe`, and `--local`.
 - CI runs the tests, lint, type check, and the generated-output drift check
   on Windows and macOS as well as Linux.
-- `AGENTS.md` holds the agent instructions. `CLAUDE.md` imports it, so it
+- [`AGENTS.md`](AGENTS.md) holds the agent instructions. [`CLAUDE.md`](CLAUDE.md) imports it, so it
   also works on a Windows checkout.

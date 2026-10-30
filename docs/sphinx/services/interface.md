@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["InterfaceServiceWrapper\nclient.interface"]
-        REST["REST functions\ngen/interface/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/interface/models/"]
-        E["Error classes\ngen/interface/error/"]
+        wrap("InterfaceServiceWrapper<br/>client.interface<br/>6 operations"):::orange
+        rest("REST functions<br/>gen/interface/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/interface/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/interface/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -33,7 +52,7 @@ Fetch Search Interfaces
 
 Return list of interfaces matches search critera.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -54,7 +73,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -113,7 +132,7 @@ Create a interface.
 
 Create a interface from request. returns created.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -134,7 +153,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -190,7 +209,7 @@ Get a interface.
 
 Returns information about a interface specified with ID.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -211,7 +230,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -266,7 +285,7 @@ Update a interface.
 
 Replaces the entire interface attributes specified with id.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -287,7 +306,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -345,7 +364,7 @@ Delete a interface.
 
 Deletes the interface specified with id.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -366,7 +385,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -421,7 +440,7 @@ Manual Classify Interface
 
 Manually set interface(s) classification.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -442,7 +461,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -495,6 +514,8 @@ response = client.interface.manual_classify(
 <details>
 <summary>Model relationships (14 of 17 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class ConnectivityType
@@ -511,16 +532,16 @@ classDiagram
     class UpdateInterfaceResponse
     class protobufAny
     class rpcStatus
-    CreateInterfaceRequest --> Interface
-    CreateInterfaceResponse --> Interface
-    GetInterfaceResponse --> Interface
-    Interface --> ConnectivityType
-    Interface --> NetworkBoundary
-    ListInterfaceResponse --> Interface
-    ManualClassifyRequest --> ConnectivityType
-    ManualClassifyRequest --> NetworkBoundary
-    UpdateInterfaceResponse --> Interface
-    rpcStatus --> protobufAny
+    CreateInterfaceRequest --> Interface : interface
+    CreateInterfaceResponse --> Interface : interface
+    GetInterfaceResponse --> Interface : interface
+    Interface --> ConnectivityType : connectivityType, initialConnectivityType
+    Interface --> NetworkBoundary : networkBoundary, initialNetworkBoundary
+    ListInterfaceResponse --> Interface : interfaces
+    ManualClassifyRequest --> ConnectivityType : connectivityType
+    ManualClassifyRequest --> NetworkBoundary : networkBoundary
+    UpdateInterfaceResponse --> Interface : interface
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

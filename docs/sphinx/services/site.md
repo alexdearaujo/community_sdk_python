@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["SiteServiceWrapper\nclient.site"]
-        REST["REST functions\ngen/site/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/site/models/"]
-        E["Error classes\ngen/site/error/"]
+        wrap("SiteServiceWrapper<br/>client.site<br/>10 operations"):::orange
+        rest("REST functions<br/>gen/site/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/site/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/site/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -33,7 +52,7 @@ List all site markets.
 
 Returns list of configured site markets.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -54,7 +73,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -101,7 +120,7 @@ Configure a new site market.
 
 Create configuration for a new site market. Returns the newly created configuration.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -122,7 +141,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -178,7 +197,7 @@ Retrieve configuration of a site market.
 
 Returns configuration of a site market specified by ID.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -199,7 +218,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -254,7 +273,7 @@ Updates configuration of a site market.
 
 Replaces configuration of a site market with attributes in the request. Returns the updated configuration.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -275,7 +294,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -333,7 +352,7 @@ Delete configuration of a site market.
 
 Deletes configuration of a site market with specific ID.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -354,7 +373,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -409,7 +428,7 @@ List all sites.
 
 Returns list of configured sites.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -430,7 +449,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -477,7 +496,7 @@ Configure a new site.
 
 Create configuration for a new site. Returns the newly created configuration.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -498,7 +517,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -554,7 +573,7 @@ Retrieve configuration of a site.
 
 Returns configuration of a site specified by ID.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -575,7 +594,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -630,7 +649,7 @@ Updates configuration of a site.
 
 Replaces configuration of a site with attributes in the request. Returns the updated configuration.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -651,7 +670,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -709,7 +728,7 @@ Delete configuration of a site.
 
 Deletes configuration of a site with specific ID.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -730,7 +749,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -782,6 +801,8 @@ response = client.site.delete(
 <details>
 <summary>Model relationships (18 of 24 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class CreateSiteMarketRequest
@@ -802,18 +823,18 @@ classDiagram
     class UpdateSiteResponse
     class protobufAny
     class rpcStatus
-    CreateSiteMarketRequest --> SiteMarket
-    CreateSiteMarketResponse --> SiteMarket
-    CreateSiteRequest --> Site
-    CreateSiteResponse --> Site
-    GetSiteMarketResponse --> SiteMarket
-    GetSiteResponse --> Site
-    ListSiteMarketsResponse --> SiteMarket
-    ListSitesResponse --> Site
-    Site --> SiteMarket
-    UpdateSiteMarketResponse --> SiteMarket
-    UpdateSiteResponse --> Site
-    rpcStatus --> protobufAny
+    CreateSiteMarketRequest --> SiteMarket : siteMarket
+    CreateSiteMarketResponse --> SiteMarket : siteMarket
+    CreateSiteRequest --> Site : site
+    CreateSiteResponse --> Site : site
+    GetSiteMarketResponse --> SiteMarket : siteMarket
+    GetSiteResponse --> Site : site
+    ListSiteMarketsResponse --> SiteMarket : siteMarkets
+    ListSitesResponse --> Site : sites
+    Site --> SiteMarket : siteMarket
+    UpdateSiteMarketResponse --> SiteMarket : siteMarket
+    UpdateSiteResponse --> Site : site
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

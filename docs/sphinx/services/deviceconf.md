@@ -12,6 +12,8 @@ This service's schema defines shared types only. It has no REST endpoints.
 <details>
 <summary>Model relationships (27 of 27 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class AclAction
@@ -41,23 +43,23 @@ classDiagram
     class UpdateDeviceConfigurationResponse
     class protobufAny
     class rpcStatus
-    CommandAcl --> AclAction
-    CommandAcl --> AclMode
-    DeleteDeviceConfigurationResponse --> Revision
-    Device --> DevicePlatform
-    Device --> DeviceSSHCreds
-    Device --> FetchParameters
-    ExecuteCommandResponse --> CommandResult
-    GetCommandAclsResponse --> CommandAcl
-    GetDeviceAssignmentsResponse --> Device
-    GetDeviceConfigurationResponse --> Snapshot
-    ListDeviceConfigurationRevisionsResponse --> Revision
-    MessageSignature --> SignatureAlgorithm
-    Snapshot --> CommitDetails
-    Snapshot --> ConfigEncoding
-    Snapshot --> DevicePlatform
-    Snapshot --> Revision
-    rpcStatus --> protobufAny
+    CommandAcl --> AclAction : action
+    CommandAcl --> AclMode : mode
+    DeleteDeviceConfigurationResponse --> Revision : orphanedRevision
+    Device --> DevicePlatform : platform
+    Device --> DeviceSSHCreds : sshCreds
+    Device --> FetchParameters : fetchParams
+    ExecuteCommandResponse --> CommandResult : commandResult
+    GetCommandAclsResponse --> CommandAcl : acls
+    GetDeviceAssignmentsResponse --> Device : devices
+    GetDeviceConfigurationResponse --> Snapshot : config
+    ListDeviceConfigurationRevisionsResponse --> Revision : revisions
+    MessageSignature --> SignatureAlgorithm : algorithm
+    Snapshot --> CommitDetails : commitDetails
+    Snapshot --> ConfigEncoding : encoding
+    Snapshot --> DevicePlatform : platform
+    Snapshot --> Revision : revision, diffRevision
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

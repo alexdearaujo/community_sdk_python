@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["SyntheticsServiceWrapper\nclient.synthetics"]
-        REST["REST functions\ngen/synthetics/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/synthetics/models/"]
-        E["Error classes\ngen/synthetics/error/"]
+        wrap("SyntheticsServiceWrapper<br/>client.synthetics<br/>18 operations"):::orange
+        rest("REST functions<br/>gen/synthetics/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/synthetics/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/synthetics/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -35,7 +54,7 @@ List agent alert configurations
 
 Lists all agent alert configurations, optionally filtered by a list of agent ids.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -56,7 +75,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -109,7 +128,7 @@ Create an agent alert configuration
 
 Creates a new agent alert configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -130,7 +149,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -186,7 +205,7 @@ Get an agent alert configuration
 
 Retrieves an existing agent alert configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -207,7 +226,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -262,7 +281,7 @@ Update an agent alert configuration
 
 Updates an existing agent alert configuration with the time threshold and notification channels provided.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -283,7 +302,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -341,7 +360,7 @@ Delete an agent alert configuration
 
 Deletes an existing agent alert configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -362,7 +381,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -417,7 +436,7 @@ List available agents
 
 Returns list of all synthetic agents available in the account.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -438,7 +457,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -485,7 +504,7 @@ Get information about an agent
 
 Returns information about the requested synthetic agent.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -506,7 +525,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -561,7 +580,7 @@ Update configuration of an agent
 
 Update configuration of a synthetic agent.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -582,7 +601,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -640,7 +659,7 @@ Delete an agent
 
 Deletes the requested agent. The deleted agent is removed from configuration of all tests.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -661,7 +680,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -716,7 +735,7 @@ List all tests
 
 Returns a list of all configured active and paused synthetic tests.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -737,7 +756,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -784,7 +803,7 @@ Create a test
 
 Create synthetic test based on configuration provided in the request.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -805,7 +824,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -861,7 +880,7 @@ Get information about a test
 
 Returns configuration and status for the requested synthetic test.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -882,7 +901,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -937,7 +956,7 @@ Update configuration of a test
 
 Updates configuration of a synthetic test.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -958,7 +977,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1016,7 +1035,7 @@ Delete a synthetic test.
 
 Deletes the synthetics test. All accumulated results for the test cease to be accessible.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1037,7 +1056,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1090,7 +1109,7 @@ response = client.synthetics.delete_test(
 
 Update status of a synthetic test
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1111,7 +1130,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1169,7 +1188,7 @@ Get results for tests
 
 Returns probe results for a set of tests for specified period of time.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1190,7 +1209,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1246,7 +1265,7 @@ Get test results in CSV format
 
 Returns probe results for tests in CSV format.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1267,7 +1286,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1323,7 +1342,7 @@ Get network trace data for a test
 
 Get network trace data for a specific synthetic test. The test must have traceroute task configured.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1344,7 +1363,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1397,6 +1416,8 @@ response = client.synthetics.get_trace_for_test(
 <details>
 <summary>Model relationships (30 of 77 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class Agent
@@ -1429,19 +1450,19 @@ classDiagram
     class Test
     class TestResults
     class TestStatus
-    CreateAgentAlertResponse --> AgentAlert
-    CreateTestRequest --> Test
-    CreateTestResponse --> Test
-    GetAgentAlertResponse --> AgentAlert
-    GetAgentResponse --> Agent
-    GetResultsForTestsResponse --> TestResults
-    GetTestResponse --> Test
-    GetTraceForTestResponse --> Path
-    ListAgentAlertsResponse --> AgentAlert
-    ListAgentsResponse --> Agent
-    ListTestsResponse --> Test
-    SyntheticsAdminServiceSetTestStatusBody --> TestStatus
-    Test --> TestStatus
+    CreateAgentAlertResponse --> AgentAlert : agentAlert
+    CreateTestRequest --> Test : test
+    CreateTestResponse --> Test : test
+    GetAgentAlertResponse --> AgentAlert : agentAlert
+    GetAgentResponse --> Agent : agent
+    GetResultsForTestsResponse --> TestResults : results
+    GetTestResponse --> Test : test
+    GetTraceForTestResponse --> Path : paths
+    ListAgentAlertsResponse --> AgentAlert : agentAlerts
+    ListAgentsResponse --> Agent : agents
+    ListTestsResponse --> Test : tests
+    SyntheticsAdminServiceSetTestStatusBody --> TestStatus : status
+    Test --> TestStatus : status
 ```
 
 </details>

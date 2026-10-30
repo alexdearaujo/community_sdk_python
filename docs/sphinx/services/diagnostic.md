@@ -12,6 +12,8 @@ This service's schema defines shared types only. It has no REST endpoints.
 <details>
 <summary>Model relationships (5 of 5 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class ChatResponse
@@ -19,9 +21,9 @@ classDiagram
     class EchoResponse
     class protobufAny
     class rpcStatus
-    ChatResponse --> EchoRequest
-    ChatResponse --> EchoResponse
-    rpcStatus --> protobufAny
+    ChatResponse --> EchoRequest : echoRequest
+    ChatResponse --> EchoResponse : echoResponse
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

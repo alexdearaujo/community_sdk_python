@@ -12,6 +12,8 @@ This service's schema defines shared types only. It has no REST endpoints.
 <details>
 <summary>Model relationships (7 of 7 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class GetNetworkRangeAssignmentsResponse
@@ -21,9 +23,9 @@ classDiagram
     class UpdateAddressNamesResponse
     class protobufAny
     class rpcStatus
-    ListResolvedAddressesResponse --> PtrResult
-    ResolveAddressesResponse --> PtrResult
-    rpcStatus --> protobufAny
+    ListResolvedAddressesResponse --> PtrResult : results
+    ResolveAddressesResponse --> PtrResult : results
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

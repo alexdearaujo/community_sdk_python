@@ -8,8 +8,8 @@ where the two transports differ and how to choose one.
 
 ## Choosing a transport
 
-Use REST unless you have a reason not to. The two transports behave the same
-in most ways that matter, and REST covers every operation.
+Use REST unless you have a reason to use gRPC. The two transports behave the
+same in most ways that matter, and REST covers every operation.
 
 | Workload | Use | Why |
 | --- | --- | --- |
@@ -20,7 +20,8 @@ in most ways that matter, and REST covers every operation.
 | Debugging an API problem | REST | You can read the body and reproduce the call with curl. |
 
 This guide does not cover payload size, general speed, or behavior behind a
-proxy. None of the three was measured, so no advice here depends on them.
+proxy. The project did not measure these three, so no advice here depends on
+them.
 
 ## What is the same on both transports
 
@@ -32,11 +33,11 @@ proxy. None of the three was measured, so no advice here depends on them.
 | Timeout | Every call has one: 60 seconds by default, set with `timeout`. |
 | Quota | One budget per endpoint, shared by both transports. |
 
-The client is the unit to reuse on both transports. The first call on a new
+Reuse one client for many calls, on both transports. The first call on a new
 client pays for the TCP connection and the TLS handshake. In a measured run of
 five `device.list` calls, the first call took 1.5 s on REST and 1.2 s on gRPC.
-Later calls took 0.86 s and 0.76 s on average. Five calls is too few to rank
-the transports, but it shows that a new client for each call adds hundreds of
+Later calls took 0.86 s and 0.76 s on average. Five calls are too few to rank
+the transports. The run shows that a new client for each call adds hundreds of
 milliseconds.
 
 ## How each transport works
@@ -47,21 +48,21 @@ milliseconds.
 | Body | JSON (`application/json`) | Protobuf (`application/grpc`) |
 | Readable without tools | Yes | No. Field numbers replace field names. |
 | Reproduce with curl | Yes | No. `grpcurl` can, with the `.proto` files. |
-| Runtime entry point | [`request_json()`](../../../src/kentik_api/core/rest_runtime.py) | [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) |
+| Runtime entry point | [`request_json()`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/core/rest_runtime.py) | [`call_grpc()`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/core/grpc_runtime.py) |
 
 Each service method checks the transport once. On gRPC, the method converts
-the request to a protobuf message, calls the stub through `call_grpc()`, and
-converts the response back into the same Pydantic model that REST returns.
+the request to a protobuf message and calls the stub through `call_grpc()`.
+It then converts the response into the same Pydantic model that REST returns.
 
 ### Deadlines
 
-A gRPC channel stays open for as long as the client lives, and gRPC's own
-default is to wait forever. The SDK adds the client's deadline to every gRPC
-call that has none, in
-[`GrpcTransport`](../../../src/kentik_api/transports/grpc_client.py). A call
-to a server that accepts the connection and never answers raises
-`TransportError` at the deadline. To give one slow call more time, on either
-transport:
+A gRPC channel stays open while the client lives. By default, gRPC waits
+forever for an answer.
+[`GrpcTransport`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/transports/grpc_client.py)
+adds the deadline of the client to every gRPC call that has none. A call to a
+server that accepts the connection and never answers raises `TransportError`
+at the deadline. To give one slow call more time, on either transport, use
+`with_timeout()`:
 
 ```python
 result = client.device.list(
@@ -71,7 +72,7 @@ result = client.device.list(
 
 Keep the 60-second default or raise it. An unthrottled `device.list` call
 returns in about 0.6 s. Past Kentik's soft limit, the API delays each response
-by up to 1.5 s and does not return an error, so a short timeout turns
+by up to 1.5 s and does not return an error. A short timeout therefore turns
 throttling into a `TransportError`.
 
 ### Errors that only gRPC has
@@ -85,10 +86,10 @@ status 409.
 
 ## Both transports reach the same services
 
-Kentik's REST API is a transcoding layer in front of the gRPC services. An
-Envoy proxy receives each REST request, converts it to a gRPC call, and
-converts the gRPC response back to JSON. Every REST response carries the
-evidence:
+Kentik's REST API is a transcoding layer in front of the gRPC services: a
+layer that converts each REST call into a gRPC call. An Envoy proxy receives
+each REST request and converts it to a gRPC call. It then converts the gRPC
+response back to JSON. Three headers on every REST response show this:
 
 | Response header | What it shows |
 | --- | --- |
@@ -97,17 +98,37 @@ evidence:
 | `grpc-message` | The error text of that gRPC call, when it failed. |
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
-    R["KentikAPI(protocol='rest')"] -->|HTTPS + JSON| E[Envoy transcoder]
-    G["KentikAPI(protocol='grpc')"] -->|HTTP/2 + protobuf| S
-    E -->|gRPC| S[Kentik gRPC services]
+  rest("KentikAPI(protocol='rest')<br/>HTTPS + JSON"):::blueSrc
+  grpc("KentikAPI(protocol='grpc')<br/>HTTP/2 + protobuf"):::violetSrc
+
+  subgraph kentik["Kentik API"]
+    envoy("Envoy transcoder<br/>JSON to gRPC and back"):::blue
+    svc("Kentik gRPC services<br/>one quota per endpoint"):::hub
+  end
+
+  rest --> envoy
+  envoy -->|"JSON response"| rest
+  envoy -->|"gRPC call"| svc
+  svc -->|"gRPC response"| envoy
+  grpc --> svc
+  svc -->|"protobuf response"| grpc
+
+  classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+  classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+  classDef hub fill:#f8f9fa,stroke:#495057,color:#212529
+  classDef blueSrc,blue,violetSrc,hub stroke-width:2px,rx:10px
+  style kentik fill:none,stroke:#868e96,stroke-width:2px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
 
 The two transports therefore share one quota. Kentik allows 60 requests per
-60 seconds for each endpoint, and a REST call and a gRPC call to the same
-endpoint take from the same 60. In a measured run that alternated between
-the transports, the remaining quota fell by one on each call: 59, 58, 57, 56,
-55, 54. A change of transport does not give you more requests. See the
+60 seconds for each endpoint. A REST call and a gRPC call to the same endpoint
+take from the same 60. In a measured run that alternated between the
+transports, the remaining quota fell by one on each call: 59, 58, 57, 56, 55,
+54. A change of transport does not give you more requests. See the
 [rate limiting guide](rate_limiting.md) for the quota headers and the limits
 that no header shows.
 

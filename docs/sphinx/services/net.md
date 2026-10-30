@@ -12,11 +12,13 @@ This service's schema defines shared types only. It has no REST endpoints.
 <details>
 <summary>Model relationships (2 of 2 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class protobufAny
     class rpcStatus
-    rpcStatus --> protobufAny
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

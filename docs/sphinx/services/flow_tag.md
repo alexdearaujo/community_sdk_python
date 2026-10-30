@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["Flow TagServiceWrapper\nclient.flow_tag"]
-        REST["REST functions\ngen/flow_tag/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/flow_tag/models/"]
-        E["Error classes\ngen/flow_tag/error/"]
+        wrap("FlowTagServiceWrapper<br/>client.flow_tag<br/>5 operations"):::orange
+        rest("REST functions<br/>gen/flow_tag/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/flow_tag/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/flow_tag/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -33,7 +52,7 @@ Search flow tag configuration.
 
 Returns configuration of flow tag with search parameters.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -54,7 +73,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -111,7 +130,7 @@ Create flow tag configuration.
 
 Create a flow tag configuration.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -132,7 +151,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -188,7 +207,7 @@ Get flow tag configuration.
 
 Returns configuration of flow tag with specified ID.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -209,7 +228,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -264,7 +283,7 @@ Update flow tag configuration.
 
 Update a flow tag configuration.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -285,7 +304,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -343,7 +362,7 @@ Delete flow tag configuration.
 
 Delete a flow tag configuration with id.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -364,7 +383,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -416,6 +435,8 @@ response = client.flow_tag.delete(
 <details>
 <summary>Model relationships (10 of 15 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class CreateFlowTagRequest
@@ -428,12 +449,12 @@ classDiagram
     class UpdateFlowTagResponse
     class protobufAny
     class rpcStatus
-    CreateFlowTagRequest --> FlowTag
-    CreateFlowTagResponse --> FlowTag
-    GetFlowTagResponse --> FlowTag
-    SearchFlowTagResponse --> FlowTag
-    UpdateFlowTagResponse --> FlowTag
-    rpcStatus --> protobufAny
+    CreateFlowTagRequest --> FlowTag : flowTag
+    CreateFlowTagResponse --> FlowTag : flowTag
+    GetFlowTagResponse --> FlowTag : flowTag
+    SearchFlowTagResponse --> FlowTag : flowTags
+    UpdateFlowTagResponse --> FlowTag : flowTag
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

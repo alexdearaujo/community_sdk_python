@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["Custom DimensionServiceWrapper\nclient.custom_dimension"]
-        REST["REST functions\ngen/custom_dimension/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/custom_dimension/models/"]
-        E["Error classes\ngen/custom_dimension/error/"]
+        wrap("CustomDimensionServiceWrapper<br/>client.custom_dimension<br/>10 operations"):::orange
+        rest("REST functions<br/>gen/custom_dimension/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/custom_dimension/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/custom_dimension/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -33,7 +52,7 @@ List Custom Dimensions
 
 Returns an array of custom dimension objects that each contain information about an individual custom dimension.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -54,7 +73,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -101,7 +120,7 @@ Custom Dimension Info
 
 Returns a custom dimension object containing information about an individual custom dimension.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -122,7 +141,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -177,7 +196,7 @@ Update Custom Dimension
 
 Updates and returns a custom dimension object containing information about an individual custom dimension (see About Custom Dimensions). Populators are not sent back in the response body. To get them use 'Custom Dimension info' API instead.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -198,7 +217,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -256,7 +275,7 @@ Delete Custom Dimension
 
 Deletes a custom dimension.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -277,7 +296,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -332,7 +351,7 @@ Create Populator
 
 Creates and returns a populator object containing information about an individual populator.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -353,7 +372,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -411,7 +430,7 @@ Get Populator
 
 Get Populator by Dimension and Populator ID.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -432,7 +451,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -490,7 +509,7 @@ Update Populator
 
 Updates and returns a populator object containing information about an individual populator.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -511,7 +530,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -571,7 +590,7 @@ Delete Populator
 
 Deletes a populator.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -592,7 +611,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -649,7 +668,7 @@ Get Populator Field
 
 Get Populator field by Dimension, Populator ID, and field name.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -670,7 +689,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -731,7 +750,7 @@ Create Custom Dimension
 
 Creates and returns a custom dimension object containing information about an individual custom dimension
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -752,7 +771,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -805,6 +824,8 @@ response = client.custom_dimension.create(
 <details>
 <summary>Model relationships (14 of 15 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class CreateCustomDimensionResponse
@@ -821,15 +842,15 @@ classDiagram
     class UpdatePopulatorResponse
     class protobufAny
     class rpcStatus
-    CreateCustomDimensionResponse --> CustomDimension
-    CreatePopulatorResponse --> Populator
-    CustomDimension --> Populator
-    GetCustomDimensionInfoResponse --> CustomDimension
-    GetPopulatorResponse --> Populator
-    ListCustomDimensionsResponse --> CustomDimension
-    UpdateCustomDimensionResponse --> CustomDimension
-    UpdatePopulatorResponse --> Populator
-    rpcStatus --> protobufAny
+    CreateCustomDimensionResponse --> CustomDimension : dimension
+    CreatePopulatorResponse --> Populator : populator
+    CustomDimension --> Populator : populators
+    GetCustomDimensionInfoResponse --> CustomDimension : dimension
+    GetPopulatorResponse --> Populator : populator
+    ListCustomDimensionsResponse --> CustomDimension : dimensions
+    UpdateCustomDimensionResponse --> CustomDimension : dimension
+    UpdatePopulatorResponse --> Populator : populator
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

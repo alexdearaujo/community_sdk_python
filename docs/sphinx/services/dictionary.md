@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["DictionaryServiceWrapper\nclient.dictionary"]
-        REST["REST functions\ngen/dictionary/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/dictionary/models/"]
-        E["Error classes\ngen/dictionary/error/"]
+        wrap("DictionaryServiceWrapper<br/>client.dictionary<br/>1 operations"):::orange
+        rest("REST functions<br/>gen/dictionary/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/dictionary/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/dictionary/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -33,7 +52,7 @@ Get Dictionary
 
 Returns the full UDE dictionary for the authenticated company, including all measurements with their dimension and metric fields, operator sets, and metric family definitions.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -54,7 +73,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -98,6 +117,8 @@ response = client.dictionary.get()
 <details>
 <summary>Model relationships (6 of 15 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class GetDictionaryResponse
@@ -106,10 +127,10 @@ classDiagram
     class OperatorSet
     class protobufAny
     class rpcStatus
-    GetDictionaryResponse --> MeasurementDetail
-    GetDictionaryResponse --> MetricFamilyDef
-    GetDictionaryResponse --> OperatorSet
-    rpcStatus --> protobufAny
+    GetDictionaryResponse --> MeasurementDetail : measurements
+    GetDictionaryResponse --> MetricFamilyDef : metricFamilies
+    GetDictionaryResponse --> OperatorSet : operatorSets
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

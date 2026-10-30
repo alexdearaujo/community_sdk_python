@@ -15,7 +15,7 @@ Install the SDK and make your first API call in under five minutes.
 pip install -U "kentik-api>=2"
 ```
 
-Or with uv in a project:
+In a uv project, use this command instead:
 
 ```bash
 uv add kentik-api
@@ -30,7 +30,8 @@ KENTIK_EMAIL=you@example.com
 KENTIK_API_TOKEN=your_api_token
 ```
 
-The SDK loads these automatically. You can also pass them explicitly:
+The SDK reads these values when you create the client. You can also pass them
+as arguments:
 
 ```python
 from kentik_api.client import KentikAPI
@@ -59,7 +60,7 @@ print(response)  # ListASGroupsResponse
 
 ## Switch to gRPC
 
-Change one argument:
+To use gRPC, change one argument:
 
 <!-- kentik-gen:grpc-call-example -->
 ```python
@@ -68,39 +69,41 @@ response = client.as_group.list()  # same API, same response models
 ```
 <!-- /kentik-gen:grpc-call-example -->
 
-See [grpc.md](grpc.md) for the full gRPC guide.
+For more, see the [gRPC transport guide](grpc.md).
 
 ## Set a timeout
 
 Every call uses a timeout: 60 seconds by default, on both transports.
-Set it for the whole client:
+To set it for the whole client, pass `timeout`:
 
 ```python
 client = KentikAPI(timeout=10)
 ```
 
-Or give one slow call more time, without a second client:
+To give one slow call more time without a second client, use `with_timeout()`:
 
 ```python
 slow = client.api_config.with_timeout(300)
 response = client.device.list(api_config_override=slow)
 ```
 
-`with_timeout()` copies the client's configuration and can change only the
-timeouts. It shares the client's connection and credentials. A config passed as
-`api_config_override` replaces the client's for that one call, so an override
-built any other way must carry its own credentials.
+`with_timeout()` copies the configuration of the client and can change only
+the timeouts. It shares the connection and the credentials of the client. A
+configuration that you pass as `api_config_override` replaces the
+configuration of the client for that one call. An override that you build any
+other way must therefore carry its own credentials.
 
 Timeout settings are read-only. The SDK copies any supplied
 `httpx.Timeout`, and `client.api_config.rest_timeout` returns a detached
-snapshot. Changing either object does not change active settings.
-Use `with_timeout()` rather than changing the returned timeout object.
+snapshot. A change to either object does not change the active settings.
+To change a timeout, use `with_timeout()`, not the returned timeout object.
 
-A number is a total deadline for the call. To bound each REST phase separately
-instead, as httpx does, pass `rest_timeout=httpx.Timeout(...)`: a slow body then
-keeps the call open for as long as each read arrives in time.
-REST total deadlines are cooperative. A blocking operation can finish
-after the deadline rather than stopping at an exact wall-clock instant.
+A number is a total deadline for the call. To bound each REST phase
+separately, as httpx does, pass `rest_timeout=httpx.Timeout(...)`. A slow body
+then keeps the call open while each read arrives in time. A REST total
+deadline is cooperative: the SDK checks it after the response headers and each
+chunk arrive. A blocking operation can finish after the deadline. It does not
+stop at an exact wall-clock instant.
 
 ## Next steps
 
@@ -110,5 +113,6 @@ after the deadline rather than stopping at an exact wall-clock instant.
 - [Runnable examples](https://github.com/kentik/community_sdk_python/blob/main/examples/README.md)
 
 > [!NOTE]
-> Run examples with `python -m` from the project root to avoid module naming
-> conflicts: `uv run python -m examples.device.rest`
+> Run each example with `python -m` from the project root, for example
+> `uv run python -m examples.device.rest`. This prevents conflicts between
+> module names.

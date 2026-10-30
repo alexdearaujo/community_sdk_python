@@ -6,9 +6,9 @@ These scripts demonstrate the v6 SDK against the live Kentik API.
 Each script is self-contained and safe to run read-only.
 
 > [!NOTE]
-> The [`examples/`](README.md) directory is **hand-written** and is not generated or
-> removed by [`uv run poe generate`](../pyproject.toml) or [`uv run poe clean`](../pyproject.toml). Edit these files directly
-> when adding new examples or updating existing ones.
+> The [`examples/`](README.md) directory is hand-written. [`uv run poe generate`](../pyproject.toml) and
+> [`uv run poe clean`](../pyproject.toml) do not generate or remove it. Edit these files directly
+> when you add new examples or update existing ones.
 
 ## Setup
 
@@ -19,7 +19,7 @@ Each script is self-contained and safe to run read-only.
     KENTIK_API_TOKEN=your_api_token
     ```
 
-2. Run any example with `python -m` from the project root (the `-m` flag
+2. Run any example with `python -m` from the repository root (the `-m` flag
    prevents `grpc.py` from shadowing the `grpc` package):
 
     ```bash
@@ -30,14 +30,13 @@ Each script is self-contained and safe to run read-only.
 ## Layout
 
 Each service has a `rest.py` and a `grpc.py` that perform the same
-operation over each transport. The API surface is identical; only the
-`protocol=` argument differs. `common/error_handling.py` is a standalone
-example, not a helper module: pass `grpc` as its first argument to run it over
-gRPC.
+operation over each transport. The API surface is identical. Only the
+`protocol=` argument differs. [`common/error_handling.py`](common/error_handling.py) is a standalone
+example, not a helper module. To run it over gRPC, pass `grpc` as its first argument.
 
 [`tests/smoke/test_examples_import.py`](../tests/smoke/test_examples_import.py)
-imports every example and checks each `client.<service>.<method>(...)` call
-against the real client, so an example that stops matching the SDK fails
+imports every example. It also makes sure that each `client.<service>.<method>(...)` call
+resolves against the real client. So an example that stops matching the SDK fails
 `uv run poe test`.
 
 | Directory | Service | REST | gRPC |
@@ -59,7 +58,7 @@ against the real client, so an example that stops matching the SDK fails
 | Script | What it does |
 | --- | --- |
 | [`v5/query.py`](v5/query.py) | Top-X data, Data Explorer URL, and chart queries. Read-only |
-| [`v5/batch.py`](v5/batch.py) | Flow tag batch. A dry run unless you pass `--send`, which writes to your account |
+| [`v5/batch.py`](v5/batch.py) | Flow tag batch. A dry run by default. If you pass `--send`, it writes to your account |
 | [`v5/analytics_topx.py`](v5/analytics_topx.py) | Flat-traffic analysis with pandas. Needs `kentik-api[analytics]`. Read-only |
 
 [`tests/smoke/test_examples_v5.py`](../tests/smoke/test_examples_v5.py) runs

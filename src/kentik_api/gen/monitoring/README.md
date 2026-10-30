@@ -2,6 +2,6 @@
 <!-- Rebuilt on every `uv run poe generate`. Do not edit by hand. -->
 # Monitoring Service
 
-This module was automatically generated from the Kentik OpenAPIv3 schema.
+The generator builds this module from the Kentik OpenAPI v3 schema.
 
-For the full endpoint reference (parameters, responses, usage examples) and data model documentation, see the Sphinx docs: [`docs/sphinx/services/monitoring.md`](../../../../docs/sphinx/services/monitoring.md).
+The Sphinx page [`docs/sphinx/services/monitoring.md`](../../../../docs/sphinx/services/monitoring.md) gives the parameters, responses, and a usage example for each operation, and documents each data model.

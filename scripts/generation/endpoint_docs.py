@@ -17,6 +17,7 @@ from pathlib import Path
 from types import FunctionType
 
 from ._shared import (
+    MERMAID_INIT,
     PROJECT_ROOT,
     REGENERATE_COMMAND,
     GrpcCall,
@@ -24,7 +25,9 @@ from ._shared import (
     grpc_call,
     grpc_stub_services,
     iter_service_dirs,
+    mermaid_style,
     parse_wrapper_methods,
+    service_to_pascal_case,
     write_text_lf,
 )
 
@@ -411,6 +414,7 @@ def _render_operation_sequence_diagram(
     method_name: str,
     params: list[tuple[str, str, bool]],
     grpc_call: GrpcCall | None,
+    sub_heading: str,
     rest_only: bool = False,
 ) -> list[str]:
     """Renders REST and gRPC sequence diagrams side by side for one operation."""
@@ -426,7 +430,7 @@ def _render_operation_sequence_diagram(
     success_model = success_resp.type_label if success_resp else "response"
 
     rest_diagram = [
-        "**REST transport**",
+        f"{sub_heading} REST call flow",
         "",
         f"{MD_FENCE}mermaid",
         "sequenceDiagram",
@@ -451,11 +455,11 @@ def _render_operation_sequence_diagram(
 
     if rest_only:
         grpc_diagram = [
-            "**gRPC transport**",
+            f"{sub_heading} gRPC call flow",
             "",
             (
-                "Not used: this endpoint exists only on REST, so a client created "
-                'with `protocol="grpc"` sends this call over REST too.'
+                "Not used. This endpoint exists only on REST. A client with "
+                '`protocol="grpc"` also sends this call over REST.'
             ),
             "",
         ]
@@ -463,11 +467,11 @@ def _render_operation_sequence_diagram(
 
     if grpc_call is None:
         grpc_diagram = [
-            "**gRPC transport**",
+            f"{sub_heading} gRPC call flow",
             "",
             (
-                "Not available: no RPC declares this operation's HTTP rule, so on "
-                '`protocol="grpc"` this method raises `NotImplementedError`. Call it '
+                "Not available. No RPC declares the HTTP rule of this operation. On "
+                '`protocol="grpc"`, this method raises `NotImplementedError`. Call it '
                 'through a `protocol="rest"` client.'
             ),
             "",
@@ -475,7 +479,7 @@ def _render_operation_sequence_diagram(
         return rest_diagram + grpc_diagram
 
     grpc_diagram = [
-        "**gRPC transport**",
+        f"{sub_heading} gRPC call flow",
         "",
         f"{MD_FENCE}mermaid",
         "sequenceDiagram",
@@ -526,7 +530,7 @@ def _render_endpoint_section(
     if method_name is not None:
         lines.extend(
             _render_operation_sequence_diagram(
-                service, doc, method_name, params, grpc_call, rest_only
+                service, doc, method_name, params, grpc_call, sub_heading, rest_only
             )
         )
 
@@ -617,17 +621,17 @@ def _autodoc_directive_for_model(models_dir: Path, class_name: str) -> str:
 
 def _model_reference_edges(
     models_dir: Path, model_classes: list[str]
-) -> dict[str, set[str]]:
-    """Maps each model to the sibling models it names in a field annotation.
+) -> dict[str, dict[str, list[str]]]:
+    """Maps each model to the sibling models its fields name, with those field names.
 
     Parses annotations statically (no import) and matches sibling class names
-    by word boundary, so `Optional[List[FooConfig]]` yields an edge to
-    `FooConfig` when `FooConfig` is another model in the same service.
+    by word boundary, so `items: Optional[List[FooConfig]]` yields an edge to
+    `FooConfig` labeled `items` when `FooConfig` is another model in the same service.
     """
     names = set(model_classes)
-    edges: dict[str, set[str]] = {}
+    edges: dict[str, dict[str, list[str]]] = {}
     for cls in model_classes:
-        refs: set[str] = set()
+        refs: dict[str, list[str]] = {}
         model_file = models_dir / f"{cls}.py"
         try:
             tree = ast.parse(
@@ -637,13 +641,14 @@ def _model_reference_edges(
             edges[cls] = refs
             continue
         for node in ast.walk(tree):
-            annotation = getattr(node, "annotation", None)
-            if annotation is None:
+            if not (
+                isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name)
+            ):
                 continue
-            text = ast.unparse(annotation)
+            text = ast.unparse(node.annotation)
             for other in names:
                 if other != cls and re.search(rf"\b{re.escape(other)}\b", text):
-                    refs.add(other)
+                    refs.setdefault(other, []).append(node.target.id)
         edges[cls] = refs
     return edges
 
@@ -686,25 +691,31 @@ def _render_model_relationship_diagram(
 
     nodes: set[str] = set(entry)
     for cls in entry:
-        nodes |= edges.get(cls, set())
+        nodes |= set(edges.get(cls, {}))
 
     if len(nodes) > _MODEL_DIAGRAM_MAX_NODES:
         nodes = set(sorted(nodes)[:_MODEL_DIAGRAM_MAX_NODES])
 
     shown_edges = sorted(
-        (src, dst) for src in nodes for dst in edges.get(src, set()) if dst in nodes
+        (src, dst, fields)
+        for src in nodes
+        for dst, fields in edges.get(src, {}).items()
+        if dst in nodes
     )
 
     diagram = ["classDiagram"]
     for name in sorted(nodes):
         diagram.append(f"    class {name}")
-    for src, dst in shown_edges:
-        diagram.append(f"    {src} --> {dst}")
+    for src, dst, fields in shown_edges:
+        label = ", ".join(fields[:2]) + (", ..." if len(fields) > 2 else "")
+        diagram.append(f"    {src} --> {dst} : {label}")
 
     summary = f"Model relationships ({len(nodes)} of {len(model_classes)} models)"
     return [
         "<details>",
         f"<summary>{summary}</summary>",
+        "",
+        "Each arrow points from a model to a model that one of its fields holds. The label names the field.",
         "",
         f"{MD_FENCE}mermaid",
         *diagram,
@@ -716,38 +727,73 @@ def _render_model_relationship_diagram(
 
 
 def _render_service_overview(
-    service: str, group_order: list[str], grouped: dict[str, list[EndpointDoc]]
+    service: str,
+    group_order: list[str],
+    grouped: dict[str, list[EndpointDoc]],
+    rest_only: bool,
 ) -> list[str]:
-    """Renders a component diagram showing the SDK code structure for this service.
+    """Renders the call path of this service, from the caller to the Kentik API.
 
     Returns nothing for schema-only services.
     """
     if not group_order:
         return []
 
-    title = service.replace("_", " ").title()
+    title = service_to_pascal_case(service)
+    operations = sum(len(docs) for docs in grouped.values())
+    grpc_rows = (
+        []
+        if rest_only
+        else [
+            '        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet',
+            "    end",
+            '    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc',
+        ]
+    )
+    grpc_arrows = (
+        []
+        if rest_only
+        else [
+            '    wrap -->|"proto request"| cg',
+            '    cg -->|"proto response"| wrap',
+            '    cg -->|"gRPC call"| grpcapi',
+            '    grpcapi -->|"proto response"| cg',
+        ]
+    )
+    classes = ["greenSrc", "orange", "blue", "blueSrc"]
+    if not rest_only:
+        classes += ["violet", "violetSrc"]
     return [
         "## Overview",
         "",
         f"{MD_FENCE}mermaid",
+        MERMAID_INIT,
         "flowchart LR",
+        '    code("Your code"):::greenSrc',
         '    subgraph sdk["kentik_api"]',
-        '        KA["KentikAPI"]',
-        f'        W["{title}ServiceWrapper\\nclient.{service}"]',
-        f'        REST["REST functions\\ngen/{service}/services/"]',
-        '        RJ["request_json()\\ncore/rest_runtime"]',
-        f'        M["Models\\ngen/{service}/models/"]',
-        f'        E["Error classes\\ngen/{service}/error/"]',
-        "    end",
-        '    API["Kentik API"]',
+        f'        wrap("{title}ServiceWrapper<br/>client.{service}<br/>{operations} operations"):::orange',
+        f'        rest("REST functions<br/>gen/{service}/services/"):::blue',
+        '        rj("request_json()<br/>core/rest_runtime.py"):::blue',
+        *(grpc_rows or ["    end"]),
+        '    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc',
         "",
-        "    KA --> W",
-        "    W --> REST",
-        "    REST --> RJ",
-        "    REST --> M",
-        "    REST --> E",
-        "    RJ --> API",
+        '    code -->|"method call"| wrap',
+        f'    wrap -->|"Pydantic model from<br/>gen/{service}/models/"| code',
+        '    wrap -->|"arguments"| rest',
+        '    rest -->|"Pydantic model"| wrap',
+        '    rest -->|"method, path, body"| rj',
+        '    rj -->|"JSON dict"| rest',
+        '    rj -->|"HTTPS request"| restapi',
+        '    restapi -->|"JSON response"| rj',
+        *grpc_arrows,
+        "",
+        *mermaid_style(classes, ("sdk",)),
         MD_FENCE,
+        "",
+        (
+            f"On an error status or a failed call, the SDK raises an error class from "
+            f"`gen/{service}/error/`, or a shared type from `kentik_api.errors`."
+        ),
         "",
     ]
 
@@ -828,7 +874,7 @@ def _service_page(
     ]
 
     group_order, grouped = _group_by_tag(endpoint_docs)
-    lines.extend(_render_service_overview(service, group_order, grouped))
+    lines.extend(_render_service_overview(service, group_order, grouped, rest_only))
     lines.extend(["## Endpoints", ""])
 
     if not endpoint_docs:
@@ -917,25 +963,24 @@ def _services_readme_page(
             "",
             "# API Service Pages",
             "",
-            "One Markdown page per Kentik API service, generated by",
-            "[`scripts/generation/endpoint_docs.py`](../../scripts/generation/endpoint_docs.py). **Do not hand-edit these files**;",
-            f"they are overwritten on every `{REGENERATE_COMMAND}` run.",
+            "This folder holds one Markdown page per Kentik API service.",
+            "[`scripts/generation/endpoint_docs.py`](../../scripts/generation/endpoint_docs.py) writes each page.",
+            "",
+            "> [!WARNING]",
+            f"> Do not edit these files. Each `{REGENERATE_COMMAND}` run writes them again.",
             "",
             "## What each page contains",
             "",
-            f"{MD_FENCE}mermaid",
-            "flowchart LR",
-            '    subgraph page["service.md"]',
-            '        OV["Overview\\n(component diagram)"]',
-            '        EP["Endpoints\\n(one section per operation)"]',
-            '        subgraph sec["per-operation section"]',
-            '            SD["Sequence diagram"]',
-            '            PT["Parameter table"]',
-            '            RT["Response table"]',
-            '            EX["Usage example"]',
-            "        end",
-            "        OV --> EP --> sec",
-            "    end",
+            f"{MD_FENCE}text",
+            "<service>.md",
+            "├── Overview          the call path of the service, from your code to the Kentik API",
+            "├── Endpoints         one section per operation",
+            "│   ├── REST call flow    sequence diagram",
+            "│   ├── gRPC call flow    sequence diagram, or why the operation has none",
+            "│   ├── Parameters        name, location, type, and required flag",
+            "│   ├── Responses         status, description, and model",
+            "│   └── Example           a Python call to the operation",
+            "└── Data Models       a model diagram, and the fields of each model",
             MD_FENCE,
             "",
             "## Services",

@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["AlertingServiceWrapper\nclient.alerting"]
-        REST["REST functions\ngen/alerting/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/alerting/models/"]
-        E["Error classes\ngen/alerting/error/"]
+        wrap("AlertingServiceWrapper<br/>client.alerting<br/>37 operations"):::orange
+        rest("REST functions<br/>gen/alerting/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/alerting/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/alerting/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -35,7 +54,7 @@ List Alerts
 
 Returns an array of alert objects that contain information about individual alerts.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -56,7 +75,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -112,7 +131,7 @@ Clear Alerts
 
 Clears alerts.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -133,7 +152,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -189,7 +208,7 @@ List Alert Comments
 
 Returns all comments for an alert.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -210,7 +229,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -265,7 +284,7 @@ Add Alert Comment
 
 Adds a comment to an alert.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -286,7 +305,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -344,7 +363,7 @@ Set External Context for Alert
 
 Add or replace external context
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -365,7 +384,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -423,7 +442,7 @@ Get Alert
 
 Returns an alert object that contains information about an individual alert.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -444,7 +463,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -499,7 +518,7 @@ Ack Alert
 
 Acknowledges an alert.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -520,7 +539,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -578,7 +597,7 @@ UnAck Alert
 
 Unacknowledges an alert (removes the acknowledgement).
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -599,7 +618,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -657,7 +676,7 @@ Create Auto-Ack
 
 Creates a new auto-ack configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -678,7 +697,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -734,7 +753,7 @@ List Auto-Acks
 
 Returns a list of auto-ack configurations.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -755,7 +774,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -811,7 +830,7 @@ Get Auto-Ack
 
 Returns an auto-ack configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -832,7 +851,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -887,7 +906,7 @@ Replace Auto-Ack
 
 Replaces an auto-ack configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -908,7 +927,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -966,7 +985,7 @@ Delete Auto-Ack
 
 Deletes an auto-ack configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -987,7 +1006,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1042,7 +1061,7 @@ List Mitigations
 
 Returns a list of mitigations.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1063,7 +1082,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1128,7 +1147,7 @@ Create Mitigation
 
 Creates a new manual mitigation.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1149,7 +1168,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1205,7 +1224,7 @@ Get Available Actions
 
 Returns available actions for mitigations.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1226,7 +1245,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1273,7 +1292,7 @@ Get Mitigation
 
 Returns a mitigation.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1294,7 +1313,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1349,7 +1368,7 @@ Act on Mitigation
 
 Performs an action on one or more mitigations.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1370,7 +1389,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1428,7 +1447,7 @@ Get Available Actions for Mitigation
 
 Returns available actions for a specific mitigation.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1449,7 +1468,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1504,7 +1523,7 @@ List Mitigation Methods
 
 Returns a list of mitigation methods.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1525,7 +1544,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1586,7 +1605,7 @@ Get Mitigation Method
 
 Returns a mitigation method.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1607,7 +1626,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1662,7 +1681,7 @@ List Mitigation Platforms
 
 Returns a list of mitigation platforms.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1683,7 +1702,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1744,7 +1763,7 @@ Get Mitigation Platform
 
 Returns a mitigation platform.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1765,7 +1784,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1820,7 +1839,7 @@ List Policies
 
 Returns a list of alerting policies.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1841,7 +1860,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1897,7 +1916,7 @@ Get Policy
 
 Returns an alerting policy.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1918,7 +1937,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1975,7 +1994,7 @@ Disable Policy
 
 Disables an alerting policy.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1996,7 +2015,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2056,7 +2075,7 @@ Enable Policy
 
 Enables an alerting policy.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2077,7 +2096,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2137,7 +2156,7 @@ Create Alert Silence Notifications
 
 Creates a new alert silence notifications configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2158,7 +2177,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2214,7 +2233,7 @@ List Alert Notification Silences
 
 Returns a list of alert silence notifications configurations.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2235,7 +2254,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2291,7 +2310,7 @@ Get Alert Silence Notifications
 
 Returns an alert silence notifications configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2312,7 +2331,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2367,7 +2386,7 @@ Replace Alert Notification Silence
 
 Replaces an alert silence notifications configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2388,7 +2407,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2446,7 +2465,7 @@ Delete Alert Notification Silence
 
 Deletes an alert silence notifications configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2467,7 +2486,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2522,7 +2541,7 @@ Create Suppression
 
 Creates a new suppression configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2543,7 +2562,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2599,7 +2618,7 @@ List Suppressions
 
 Returns a list of suppression configurations.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2620,7 +2639,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2676,7 +2695,7 @@ Get Suppression
 
 Returns a suppression configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2697,7 +2716,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2752,7 +2771,7 @@ Replace Suppression
 
 Replaces a suppression configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2773,7 +2792,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2831,7 +2850,7 @@ Delete Suppression
 
 Deletes a suppression configuration.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2852,7 +2871,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2904,6 +2923,8 @@ response = client.alerting.suppression_delete(
 <details>
 <summary>Model relationships (30 of 186 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class Alert
@@ -2936,19 +2957,19 @@ classDiagram
     class AlertSilenceNotificationFilters
     class AlertSilenceNotificationsDefinition
     class AlertSilenceNotificationsServiceCreateRequest
-    AlertAutoAckServiceCreateRequest --> AlertAutoAck
-    AlertAutoAckServiceCreateResponse --> AlertAutoAck
-    AlertAutoAckServiceGetResponse --> AlertAutoAck
-    AlertAutoAckServiceListRequest --> AlertAutoAckFilters
-    AlertAutoAckServiceListResponse --> AlertAutoAck
-    AlertAutoAckServiceReplaceResponse --> AlertAutoAck
-    AlertServiceAckResponse --> Alert
-    AlertServiceGetResponse --> Alert
-    AlertServiceGetResponse --> AlertPhase
-    AlertServiceListRequest --> AlertFilters
-    AlertServiceListResponse --> Alert
-    AlertServiceUnAckResponse --> Alert
-    AlertSilenceNotificationsServiceCreateRequest --> AlertSilenceNotificationsDefinition
+    AlertAutoAckServiceCreateRequest --> AlertAutoAck : autoAck
+    AlertAutoAckServiceCreateResponse --> AlertAutoAck : autoAck
+    AlertAutoAckServiceGetResponse --> AlertAutoAck : autoAck
+    AlertAutoAckServiceListRequest --> AlertAutoAckFilters : filters
+    AlertAutoAckServiceListResponse --> AlertAutoAck : autoAcks
+    AlertAutoAckServiceReplaceResponse --> AlertAutoAck : autoAck
+    AlertServiceAckResponse --> Alert : alert
+    AlertServiceGetResponse --> Alert : alert
+    AlertServiceGetResponse --> AlertPhase : history
+    AlertServiceListRequest --> AlertFilters : filters
+    AlertServiceListResponse --> Alert : alerts
+    AlertServiceUnAckResponse --> Alert : alert
+    AlertSilenceNotificationsServiceCreateRequest --> AlertSilenceNotificationsDefinition : silence
 ```
 
 </details>

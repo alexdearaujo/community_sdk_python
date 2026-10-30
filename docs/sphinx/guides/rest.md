@@ -2,7 +2,7 @@
 
 # REST Transport Guide
 
-The REST transport is the default and fully supported transport.
+REST is the default transport. It supports every operation of the SDK.
 
 ## Instantiate the client
 
@@ -12,11 +12,11 @@ from kentik_api.client import KentikAPI
 client = KentikAPI(protocol="rest")  # loads credentials from .env
 ```
 
-See [quickstart.md](quickstart.md) for credential setup.
+For credential setup, see the [Quick Start](quickstart.md).
 
 ## Call any service method
 
-Every generated service is available as an attribute on the client:
+Each generated service is an attribute of the client:
 
 <!-- kentik-gen:list-methods-example -->
 ```python
@@ -27,8 +27,8 @@ response = client.audit.list_events()
 <!-- /kentik-gen:list-methods-example -->
 
 All methods return Pydantic v2 models. Optional list fields use
-`Optional[List[Optional[Model]]]` to reflect the OpenAPI schema; filter
-out `None` items before iterating:
+`Optional[List[Optional[Model]]]`, as the OpenAPI schema declares them. Before
+you iterate over such a list, remove the `None` items:
 
 ```python
 devices = [d for d in (response.devices or []) if d is not None]
@@ -48,7 +48,7 @@ response = client.alerting.auto_ack_list(data=AlertAutoAckServiceListRequest())
 
 ## Regions
 
-Pass `region` to target a non-default Kentik region:
+To use a Kentik region other than the default, pass `region`:
 
 ```python
 client = KentikAPI(protocol="rest", region="eu")
@@ -58,17 +58,17 @@ client = KentikAPI(protocol="rest", region="eu")
 
 A numeric `timeout` or `rest_timeout` is a total deadline for the whole call.
 An `httpx.Timeout` bounds each phase and each read separately.
-Total deadlines are cooperative: the SDK checks them after response
-headers and chunks arrive. A blocking operation can finish after the
-deadline. The SDK does not force interruption at an exact instant.
+A total deadline is cooperative: the SDK checks it after the response
+headers and each chunk arrive. A blocking operation can finish after the
+deadline. The SDK does not force an interruption at an exact instant.
 
 Timeout settings are read-only. The SDK copies a supplied `httpx.Timeout`
 and returns a detached copy from `client.api_config.rest_timeout`.
-Changing either object does not change active settings.
-Use `client.api_config.with_timeout(...)` for a per-call change.
+A change to either object does not change the active settings.
+To change the timeout of one call, use `client.api_config.with_timeout(...)`.
 The copy shares the original connection, credentials, and quota tracking.
 
-The REST transport honors `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and
+The REST transport uses `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and
 `NO_PROXY`.
 
 A success status with a body that is not JSON, or that does not match the
@@ -83,12 +83,12 @@ sequenceDiagram
     participant RJ as request_json()
     participant API as Kentik REST API
 
-    C->>W: method(params)
-    W->>RJ: api_config, method, path, query/body params
-    RJ->>API: HTTP request (HTTPS)
+    C->>W: service method(arguments)
+    W->>RJ: api_config, HTTP method, path, query and body
+    RJ->>API: HTTPS request with auth headers
     alt success
         API-->>RJ: JSON response
-        RJ-->>W: parsed dict
+        RJ-->>W: JSON body as a dict, with the quota
         W-->>C: Pydantic response model
     else 401
         API-->>RJ: error JSON
@@ -101,15 +101,15 @@ sequenceDiagram
     end
 ```
 
-See [`core/rest_runtime.py`](../../../src/kentik_api/core/rest_runtime.py) for
-the implementation. Every REST operation routes through the single
-`request_json()` function.
+Every REST operation goes through the one `request_json()` function.
+[`src/kentik_api/core/rest_runtime.py`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/core/rest_runtime.py)
+holds the implementation.
 
 ## Runnable examples
 
-- [`examples/device/rest.py`](../../../examples/device/rest.py)
-- [`examples/user/rest.py`](../../../examples/user/rest.py)
-- [`examples/label/rest.py`](../../../examples/label/rest.py)
-- [`examples/site/rest.py`](../../../examples/site/rest.py)
-- [`examples/alerting/rest.py`](../../../examples/alerting/rest.py)
-- [`examples/synthetics/rest.py`](../../../examples/synthetics/rest.py)
+- [`examples/device/rest.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/device/rest.py)
+- [`examples/user/rest.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/user/rest.py)
+- [`examples/label/rest.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/label/rest.py)
+- [`examples/site/rest.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/site/rest.py)
+- [`examples/alerting/rest.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/alerting/rest.py)
+- [`examples/synthetics/rest.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/synthetics/rest.py)

@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["KtbgpServiceWrapper\nclient.ktbgp"]
-        REST["REST functions\ngen/ktbgp/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/ktbgp/models/"]
-        E["Error classes\ngen/ktbgp/error/"]
+        wrap("KtbgpServiceWrapper<br/>client.ktbgp<br/>3 operations"):::orange
+        rest("REST functions<br/>gen/ktbgp/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/ktbgp/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/ktbgp/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -31,7 +50,7 @@ flowchart LR
 
 Announce a BGP route to a specified set of devices
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -52,7 +71,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -106,7 +125,7 @@ response = client.ktbgp.route_announce(
 
 List active BGP updates for a specified set of devices
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -127,7 +146,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -181,7 +200,7 @@ response = client.ktbgp.route_list(
 
 Withdraw active BGP updates from devices
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -202,7 +221,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -255,6 +274,8 @@ response = client.ktbgp.route_withdraw(
 <details>
 <summary>Model relationships (14 of 45 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class DeviceAdverts
@@ -271,16 +292,16 @@ classDiagram
     class Withdraw
     class protobufAny
     class rpcStatus
-    DeviceAdverts --> FlowspecUpdate
-    DeviceAdverts --> RTBHUpdate
-    RouteServiceAnnounceRequest --> FlowspecUpdate
-    RouteServiceAnnounceRequest --> RTBHUpdate
-    RouteServiceAnnounceResponse --> UpdateResult
-    RouteServiceListRequest --> RoutesFilter
-    RouteServiceListResponse --> DeviceAdverts
-    RouteServiceWithdrawRequest --> Withdraw
-    RouteServiceWithdrawResponse --> UpdateResult
-    rpcStatus --> protobufAny
+    DeviceAdverts --> FlowspecUpdate : flowspec
+    DeviceAdverts --> RTBHUpdate : rtbh
+    RouteServiceAnnounceRequest --> FlowspecUpdate : flowspec
+    RouteServiceAnnounceRequest --> RTBHUpdate : rtbh
+    RouteServiceAnnounceResponse --> UpdateResult : results
+    RouteServiceListRequest --> RoutesFilter : filters
+    RouteServiceListResponse --> DeviceAdverts : result
+    RouteServiceWithdrawRequest --> Withdraw : withdraw
+    RouteServiceWithdrawResponse --> UpdateResult : results
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

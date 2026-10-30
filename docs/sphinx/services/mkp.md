@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["MkpServiceWrapper\nclient.mkp"]
-        REST["REST functions\ngen/mkp/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/mkp/models/"]
-        E["Error classes\ngen/mkp/error/"]
+        wrap("MkpServiceWrapper<br/>client.mkp<br/>14 operations"):::orange
+        rest("REST functions<br/>gen/mkp/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/mkp/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/mkp/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -35,7 +54,7 @@ List MKP packages.
 
 Returns a list of MKP packages.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -56,7 +75,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -103,7 +122,7 @@ Create a package template.
 
 Create package from request. returns created package.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -124,7 +143,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -180,7 +199,7 @@ Get information aboout a package.
 
 Returns information about package specified with ID.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -201,7 +220,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -256,7 +275,7 @@ Update a package.
 
 Update package attributes specified with id.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -277,7 +296,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -335,7 +354,7 @@ Delete a package.
 
 Deletes the package specified with id.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -356,7 +375,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -411,7 +430,7 @@ List MKP tenants.
 
 Returns a list of MKP tenants.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -432,7 +451,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -479,7 +498,7 @@ Create a tenant.
 
 Create tenant from request. returns created tenant.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -500,7 +519,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -556,7 +575,7 @@ Get information aboout a tenant.
 
 Returns information about package specified with ID.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -577,7 +596,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -632,7 +651,7 @@ Update a tenant.
 
 Update tenant attributes specified with id.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -653,7 +672,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -711,7 +730,7 @@ Delete a tenant.
 
 Deletes the tenant specified with id.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -732,7 +751,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -787,7 +806,7 @@ List users for a tenant.
 
 Returns a list of users associated with the specified tenant.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -808,7 +827,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -863,7 +882,7 @@ Add a user to a tenant.
 
 Creates a user association with the specified tenant.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -884,7 +903,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -942,7 +961,7 @@ Update a tenant user.
 
 Updates the user associated with the specified tenant and user ID.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -963,7 +982,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1023,7 +1042,7 @@ Remove a user from a tenant.
 
 Deletes the user association with the specified tenant.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1044,7 +1063,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1098,6 +1117,8 @@ response = client.mkp.tenant_user_delete(
 <details>
 <summary>Model relationships (25 of 42 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class CreatePackageRequest
@@ -1125,21 +1146,21 @@ classDiagram
     class UpdateTenantUserResponse
     class protobufAny
     class rpcStatus
-    CreatePackageRequest --> Package
-    CreatePackageResponse --> Package
-    CreateTenantRequest --> Tenant
-    CreateTenantResponse --> Tenant
-    CreateTenantUserResponse --> TenantUser
-    GetPackageResponse --> Package
-    GetTenantResponse --> Tenant
-    ListPackageResponse --> Package
-    ListTenantResponse --> Tenant
-    ListTenantUserResponse --> TenantUser
-    Tenant --> Package
-    UpdatePackageResponse --> Package
-    UpdateTenantResponse --> Tenant
-    UpdateTenantUserResponse --> TenantUser
-    rpcStatus --> protobufAny
+    CreatePackageRequest --> Package : package
+    CreatePackageResponse --> Package : package
+    CreateTenantRequest --> Tenant : tenant
+    CreateTenantResponse --> Tenant : tenant
+    CreateTenantUserResponse --> TenantUser : user
+    GetPackageResponse --> Package : package
+    GetTenantResponse --> Tenant : tenant
+    ListPackageResponse --> Package : packages
+    ListTenantResponse --> Tenant : tenants
+    ListTenantUserResponse --> TenantUser : users
+    Tenant --> Package : packages
+    UpdatePackageResponse --> Package : package
+    UpdateTenantResponse --> Tenant : tenant
+    UpdateTenantUserResponse --> TenantUser : user
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

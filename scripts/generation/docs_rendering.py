@@ -11,10 +11,12 @@ import re
 from pathlib import Path
 
 from ._shared import (
+    MERMAID_INIT,
     PROJECT_ROOT,
     REGENERATE_COMMAND,
     SDK_OUTPUT_DIR,
     iter_service_dirs,
+    mermaid_style,
     parse_generated_rest_module,
     parse_wrapper_methods,
     write_text_lf,
@@ -27,58 +29,52 @@ _GEN_ROOT_README = f"""\
 <!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->
 # Generated Services (`kentik_api.gen`)
 
-Fully generated. Every [`{REGENERATE_COMMAND}`](../../../pyproject.toml) run wipes and rebuilds every
-subdirectory here, and rewrites this file too. **Never hand-edit
-anything under this folder**, including this README. If output here is
-wrong, fix the generator ([`scripts/generate_sdk.py`](../../../scripts/generate_sdk.py), a phase module in
-[`scripts/generation/`](../../../scripts/generation/README.md)), or a
-template in
-[`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
-Then regenerate.
+The generator builds every file in this folder. Each
+[`{REGENERATE_COMMAND}`](../../../pyproject.toml) run deletes each subdirectory here,
+builds it again, and writes this README again.
+
+> [!WARNING]
+> Do not edit any file in this folder, this README included. The next run deletes the edit.
+> If the output is wrong, fix the generator ([`scripts/generate_sdk.py`](../../../scripts/generate_sdk.py)),
+> a phase module in [`scripts/generation/`](../../../scripts/generation/README.md), or a template in
+> [`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md). Then run the generator again.
 
 ## Layout
 
-Each subdirectory is one Kentik API service (`device`, `alerting`,
-`user`, and so on), built from that service's OpenAPI v3 schema files.
-Every service directory has the same shape:
+Each subdirectory is one Kentik API service (`device`, `alerting`, `user`, and others).
+The generator builds it from the OpenAPI v3 schema files of that service.
+Each service directory has the same shape:
 
-| Path | Contents |
-| --- | --- |
-| `models/` | Pydantic v2 request/response models |
-| `services/` | Raw REST operation functions, plus a unified `<Service>ServiceWrapper` class |
-| `error/` | Per-operation error classes, dispatched from each declared response status code |
-| `pb/` | gRPC stubs (`*_pb2.py`, `*_pb2_grpc.py`) used by the gRPC transport, see below |
-| `README.md` | One-paragraph pointer to the full Sphinx reference for that service |
-
-```mermaid
-flowchart TD
-    G["kentik_api.gen.device"] --> M[models/]
-    G --> S[services/]
-    G --> E[error/]
-    G --> P[pb/]
-    S -->|calls| R["kentik_api.core.rest_runtime.request_json()"]
-    S -->|on error status| E
+```text
+gen/device/
+├── models/      Pydantic v2 request and response models
+├── services/    one REST function per operation, and the DeviceServiceWrapper class
+├── error/       one error class per operation, picked by the response status code
+├── pb/          gRPC stubs (*_pb2.py, *_pb2_grpc.py) for the gRPC transport
+└── README.md    a link to the Sphinx reference page of the service
 ```
 
-## Where a call actually runs
+## Where a call runs
 
-Every generated REST operation, across every service, routes through
-one shared function: `request_json()` in
-[`kentik_api.core`](../core/README.md). No service directory here
-implements its own HTTP, auth, or retry logic. The gRPC transport is
-fully implemented too: a wrapper method routes through `call_grpc()`
-in [`kentik_api.core`](../core/README.md) whenever the generator
-found an RPC that shares that REST operation's HTTP rule (proto
-service, verb, and path). A wrapper method raises
-`NotImplementedError` for `GrpcTransport` only when that service's
-proto companions failed to import, or when no RPC shares that
-operation's HTTP rule.
+No service directory here has its own HTTP, auth, or retry code.
+
+- On a REST transport, each generated REST function calls `request_json()` in
+  [`kentik_api.core`](../core/README.md). That one function sends the REST traffic of every service.
+- On a gRPC transport, a wrapper method calls `call_grpc()` in [`kentik_api.core`](../core/README.md).
+  The generator writes that call when an RPC has the same HTTP rule as the REST operation: the same
+  proto service, verb, and path.
+
+A wrapper method raises `NotImplementedError` on a `GrpcTransport` in two cases only:
+
+1. The proto companions of the service did not import.
+2. No RPC has the same HTTP rule as the operation.
+
+[SDK Runtime Architecture](../../../docs/sphinx/sdk_runtime_architecture.md) shows the full call path.
 
 ## Full reference
 
-For endpoint parameters, response shapes, and usage examples per
-service, see `docs/sphinx/services/<service>.md`, or the built
-Sphinx docs.
+The page `docs/sphinx/services/<service>.md` gives the parameters, the response shapes, and a usage
+example for each operation of a service. The built Sphinx docs show the same pages.
 """
 
 
@@ -102,20 +98,20 @@ def _services_without_wrappers_section() -> list[str]:
     return [
         "## Services Without A Wrapper",
         "",
-        "Wrapper generation is driven by REST paths in the OpenAPI schema. A Service",
-        "whose schema declares no paths produces models and proto stubs but no",
-        "wrapper, so it is not mounted on the client. That is intentional: REST",
-        "operations are this SDK's contract, and proto-driven wrapper generation is",
-        "deliberately out of scope.",
+        "The REST paths in the OpenAPI schema drive wrapper generation. If the schema",
+        "of a Service declares no paths, the generator writes its models and proto",
+        "stubs but no wrapper, and the client does not mount it. This is intentional.",
+        "REST operations are the contract of this SDK. Wrapper generation from protos",
+        "is out of scope.",
         "",
         f"{len(unmounted)} Services are in that state today: "
         + ", ".join(f"`{name}`" for name in unmounted)
         + ".",
         "",
-        "Some of these declare gRPC RPCs upstream but carry no `google.api.http`",
-        "annotation, which is why no path reaches the schema. Those cases are an",
-        "upstream schema gap, not an SDK limitation, and they resolve here",
-        "automatically once the annotation is added.",
+        "Some of these Services declare gRPC RPCs upstream, but the RPCs have no",
+        "`google.api.http` annotation, so no path reaches the schema. That is a gap",
+        "in the upstream schema, not in the SDK. If upstream adds the annotation, the",
+        "next run generates the wrapper.",
         "",
     ]
 
@@ -127,10 +123,10 @@ def _rest_only_services_section(rest_only: frozenset[str]) -> list[str]:
     return [
         "## REST-Only Services",
         "",
-        "These Services come from the local schema base, `schema/openapi/`:",
-        "hand-maintained descriptions of endpoints that upstream does not publish.",
-        "Every client mounts them on a REST transport to their own host, so a",
-        'client created with `protocol="grpc"` sends their calls over REST too: '
+        "These Services come from the local schema base, `schema/openapi/`. It holds",
+        "descriptions, maintained by hand, of endpoints that upstream does not publish.",
+        "Each client mounts these Services on a REST transport to their own host. A",
+        'client with `protocol="grpc"` also sends their calls over REST: '
         + ", ".join(f"`{name}`" for name in sorted(rest_only))
         + ".",
         "",
@@ -149,10 +145,9 @@ def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
     for service_dir in iter_service_dirs():
         service_name = service_dir.name
         source = (
-            "a hand-maintained description in the local schema base, "
-            "`schema/openapi/`. It is REST only."
+            "a description in the local schema base, `schema/openapi/`. It is REST only."
             if service_name in rest_only
-            else "the Kentik OpenAPIv3 schema."
+            else "the Kentik OpenAPI v3 schema."
         )
 
         lines = [
@@ -160,12 +155,13 @@ def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
             f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
             f"# {service_name.replace('_', ' ').title()} Service",
             "",
-            f"This module was automatically generated from {source}",
+            f"The generator builds this module from {source}",
             "",
             (
-                "For the full endpoint reference (parameters, responses, usage "
-                "examples) and data model documentation, see the Sphinx docs: "
-                f"[`docs/sphinx/services/{service_name}.md`](../../../../docs/sphinx/services/{service_name}.md)."
+                "The Sphinx page "
+                f"[`docs/sphinx/services/{service_name}.md`](../../../../docs/sphinx/services/{service_name}.md) "
+                "gives the parameters, responses, and a usage example for each operation, "
+                "and documents each data model."
             ),
         ]
 
@@ -191,23 +187,28 @@ def _resolve_import_from(current_module: str, level: int, module: str | None) ->
     return ".".join(parts + suffix)
 
 
-_GROUP_CONFIG: dict[str, str] = {
-    "Client API": "client",
-    "Client Mixin": "client",
-    "Auth Credentials": "foundation",
-    "API Config": "foundation",
-    "REST Runtime": "foundation",
-    "gRPC Runtime": "foundation",
-    "Rate Limit": "foundation",
-    "Error Types": "foundation",
-    "Transport Base": "transport",
-    "REST Transport": "transport",
-    "gRPC Transport": "transport",
-    "Generated Service Wrappers": "generated",
-    "Generated REST Services": "generated",
-    "Generated Models": "generated",
-    "Generated Error Classes": "generated",
-    "Generated Proto Stubs": "generated",
+_GROUP_CONFIG: dict[str, tuple[str, str, str]] = {
+    # label: (layer, source path under kentik_api/, diagram color class)
+    "Client API": ("client", "client.py", "orange"),
+    "Client Mixin": ("client", "client_mixin.py", "orange"),
+    "Auth Credentials": ("foundation", "auth/", "hub"),
+    "API Config": ("foundation", "core/api_config.py", "hub"),
+    "REST Runtime": ("foundation", "core/rest_runtime.py", "blue"),
+    "gRPC Runtime": ("foundation", "core/grpc_runtime.py", "violet"),
+    "Rate Limit": ("foundation", "core/rate_limit.py", "hub"),
+    "Error Types": ("foundation", "errors/", "hub"),
+    "Transport Base": ("transport", "transports/base.py", "hub"),
+    "REST Transport": ("transport", "transports/rest_client.py", "blue"),
+    "gRPC Transport": ("transport", "transports/grpc_client.py", "violet"),
+    "Generated Service Wrappers": (
+        "generated",
+        "gen/{service}/services/{service}.py",
+        "orange",
+    ),
+    "Generated REST Services": ("generated", "gen/{service}/services/", "blue"),
+    "Generated Models": ("generated", "gen/{service}/models/", "hub"),
+    "Generated Error Classes": ("generated", "gen/{service}/error/", "hub"),
+    "Generated Proto Stubs": ("generated", "gen/{service}/pb/", "violet"),
 }
 
 _LAYER_NAMES: dict[str, str] = {
@@ -216,6 +217,67 @@ _LAYER_NAMES: dict[str, str] = {
     "transport": "Transport Layer",
     "foundation": "Shared Foundation",
 }
+
+_GROUP_ROLES: dict[str, str] = {
+    "Client API": "`KentikAPI`: reads the credentials and selects the transport.",
+    "Client Mixin": "Mounts each service wrapper as `client.<service>`.",
+    "Generated Service Wrappers": "Send each call to the REST function or to the gRPC stub, for the transport in use.",
+    "Generated REST Services": "One function per operation in the OpenAPI schema. Each function calls `request_json()`.",
+    "Generated Models": "Pydantic request and response models.",
+    "Generated Error Classes": "One error class per operation, picked by the response status.",
+    "Generated Proto Stubs": "The modules that protoc compiles. Wrappers call them on a gRPC transport.",
+    "API Config": "`APIConfig`: base URL, credentials, TLS, timeouts, and the shared HTTP client.",
+    "REST Runtime": "`request_json()`: the one function that sends REST traffic.",
+    "gRPC Runtime": "`call_grpc()`: the one function that sends gRPC traffic.",
+    "Error Types": "The shared exception hierarchy under `KentikError`.",
+}
+
+
+def _call_path_diagram() -> list[str]:
+    """The overview: one REST row and one gRPC row from the caller to the Kentik API."""
+    services = 0
+    operations = 0
+    for service_dir in iter_service_dirs():
+        ops = sum(
+            len(parse_generated_rest_module(module))
+            for module in (service_dir / "services").glob("*.py")
+        )
+        services += ops > 0
+        operations += ops
+
+    return [
+        "```mermaid",
+        MERMAID_INIT,
+        "flowchart LR",
+        '    code("Your code"):::greenSrc',
+        '    subgraph sdk["kentik_api"]',
+        f'        wrap("Service wrapper<br/>client.{{service}}<br/>{services} services, {operations} operations"):::orange',
+        '        rest("REST function<br/>gen/{service}/services/"):::blue',
+        '        rj("request_json()<br/>auth headers, quota, errors"):::blue',
+        '        cg("call_grpc()<br/>deadline, quota, errors"):::violet',
+        "    end",
+        '    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc',
+        '    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc',
+        "",
+        '    code -->|"method call"| wrap',
+        '    wrap -->|"Pydantic model,<br/>or a raised KentikError"| code',
+        '    wrap -->|"arguments"| rest',
+        '    rest -->|"Pydantic model"| wrap',
+        '    rest -->|"method, path, body,<br/>APIConfig"| rj',
+        '    rj -->|"JSON dict + quota"| rest',
+        '    rj -->|"HTTPS request"| restapi',
+        '    restapi -->|"JSON response"| rj',
+        '    wrap -->|"stub method +<br/>proto request"| cg',
+        '    cg -->|"proto response + quota"| wrap',
+        '    cg -->|"gRPC call"| grpcapi',
+        '    grpcapi -->|"proto response"| cg',
+        "",
+        *mermaid_style(
+            ["greenSrc", "orange", "blue", "blueSrc", "violet", "violetSrc"],
+            ("sdk",),
+        ),
+        "```",
+    ]
 
 
 def _module_group(module_name: str, source_file: Path | None = None) -> str | None:
@@ -326,7 +388,7 @@ def _generate_runtime_architecture_docs(
     from collections import defaultdict
 
     layer_members: dict[str, set[str]] = defaultdict(set)
-    for label, layer_key in _GROUP_CONFIG.items():
+    for label, (layer_key, _, _) in _GROUP_CONFIG.items():
         layer_members[layer_key].add(label)
     _LAYERS: list[tuple[str, str, set[str]]] = [
         (key, _LAYER_NAMES[key], layer_members[key])
@@ -334,7 +396,12 @@ def _generate_runtime_architecture_docs(
         if layer_members[key]
     ]
 
-    mermaid_lines = ["flowchart TB"]
+    def node_line(node_name: str) -> str:
+        node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
+        _, path, css = _GROUP_CONFIG[node_name]
+        return f'{node_id}("{node_name}<br/>{path}"):::{css}'
+
+    mermaid_lines = [MERMAID_INIT, "flowchart LR"]
 
     placed: set[str] = set()
     for layer_key, layer_label, members in _LAYERS:
@@ -343,21 +410,29 @@ def _generate_runtime_architecture_docs(
             continue
         mermaid_lines.append(f'    subgraph {layer_key}["{layer_label}"]')
         for node_name in sorted(in_layer):
-            node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
-            mermaid_lines.append(f'        {node_id}["{node_name}"]')
+            mermaid_lines.append(f"        {node_line(node_name)}")
             placed.add(node_name)
         mermaid_lines.append("    end")
 
     for node_name in sorted(nodes - placed):
-        node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
-        mermaid_lines.append(f'    {node_id}["{node_name}"]')
+        mermaid_lines.append(f"    {node_line(node_name)}")
 
     mermaid_lines.append("")
     for (source_group, dest_group), count in sorted(edge_counts.items()):
         source_group_id = re.sub(r"[^A-Za-z0-9_]", "_", source_group)
         dest_group_id = re.sub(r"[^A-Za-z0-9_]", "_", dest_group)
-        label = f'|"x{count}"|' if count > 1 else ""
-        mermaid_lines.append(f"    {source_group_id} -->{label} {dest_group_id}")
+        label = f"{count} imports" if count > 1 else "1 import"
+        mermaid_lines.append(f'    {source_group_id} -->|"{label}"| {dest_group_id}')
+
+    mermaid_lines.extend(
+        [
+            "",
+            *mermaid_style(
+                sorted({css for _, _, css in _GROUP_CONFIG.values()}),
+                tuple(key for key, _, members in _LAYERS if members & nodes),
+            ),
+        ]
+    )
 
     architecture_md = [
         "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_runtime_architecture_docs() -->",
@@ -365,30 +440,46 @@ def _generate_runtime_architecture_docs(
         "",
         "# SDK Runtime Architecture",
         "",
-        "This page explains how core runtime modules and generated services connect at runtime.",
+        "This page shows how a call moves through the SDK, and how the hand-written",
+        "runtime modules and the generated services depend on each other.",
         "",
-        "## Runtime Flow",
+        "## Call Path",
         "",
-        "1. `kentik_api.client.KentikAPI` reads credentials and selects transport.",
-        "2. `kentik_api.client_mixin.KentikClientMixin` mounts generated service wrappers.",
-        "3. Wrapper classes in `kentik_api.gen.<service>.services.<service>` delegate\n   to generated REST functions.",
-        "4. Generated REST services use `kentik_api.core.api_config` and `kentik_api.core.rest_runtime`.",
-        "5. Generated wrappers on a gRPC transport call `kentik_api.core.grpc_runtime`\n   instead, against the compiled proto stubs in `kentik_api.gen.<service>.pb`.",
-        "6. Runtime failures are normalized into `kentik_api.errors` and generated\n   service-local error classes.",
+        "Each method call on `client.<service>` takes one of two paths. The transport",
+        "that the client uses selects the path. Both paths return the same Pydantic",
+        "models and raise the same exception types.",
+        "",
+        *_call_path_diagram(),
+        "",
+        "1. `kentik_api.client.KentikAPI` reads the credentials and selects the transport.",
+        "2. `kentik_api.client_mixin.KentikClientMixin` mounts one generated service",
+        "   wrapper per service.",
+        "3. On a REST transport, a wrapper calls the generated REST function in",
+        "   `kentik_api.gen.<service>.services`. That function calls `request_json()`",
+        "   in `kentik_api.core.rest_runtime`, with the shared `APIConfig`.",
+        "4. On a gRPC transport, a wrapper calls `call_grpc()` in",
+        "   `kentik_api.core.grpc_runtime`, with the compiled proto stubs in",
+        "   `kentik_api.gen.<service>.pb`.",
+        "5. Both runtimes turn each failure into a `kentik_api.errors` type, or into",
+        "   the error class that the service generates for that operation.",
         "",
         "## Module Dependency Graph",
+        "",
+        "Each arrow points from a module group to a group that it imports. A number",
+        "on an arrow counts the import statements. The generator reads the imports",
+        "from the source on every run. Colors match the call path: blue is REST,",
+        "violet is gRPC, orange is the client and its wrappers, and gray is shared.",
         "",
         "```mermaid",
         *mermaid_lines,
         "```",
         "",
-        "## Reading The Graph",
-        "",
-        "- `Client API` and `Client Mixin` are the orchestration entrypoints.",
-        "- `Generated Service Wrappers` are transport-aware facades exposed as `client.<service>`.",
-        "- `Generated REST Services` host operation functions generated from OpenAPI schemas.",
-        "- `Generated Proto Stubs` are the protoc-compiled modules that wrappers call on a gRPC transport.",
-        "- `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.",
+        "| Group | Source | Role |",
+        "| --- | --- | --- |",
+        *(
+            f"| {label} | `{_GROUP_CONFIG[label][1]}` | {role} |"
+            for label, role in _GROUP_ROLES.items()
+        ),
         "",
         *_services_without_wrappers_section(),
         *_rest_only_services_section(rest_only),

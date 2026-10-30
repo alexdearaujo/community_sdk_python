@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["KagentServiceWrapper\nclient.kagent"]
-        REST["REST functions\ngen/kagent/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/kagent/models/"]
-        E["Error classes\ngen/kagent/error/"]
+        wrap("KagentServiceWrapper<br/>client.kagent<br/>28 operations"):::orange
+        rest("REST functions<br/>gen/kagent/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/kagent/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/kagent/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -35,7 +54,7 @@ List agents.
 
 Returns a list of agents in the account, optionally filtered by registration state, IDs or capabilities.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -56,7 +75,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -112,7 +131,7 @@ Create an agent.
 
 Registers a new agent based on configuration in the request and returns it together with the commands for installing it on the target host.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -133,7 +152,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -189,7 +208,7 @@ Authorize an unregistered agent.
 
 Approves the agent installed under the specified install ID and returns the ID assigned to it.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -210,7 +229,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -265,7 +284,7 @@ Generate agent install commands.
 
 Returns commands for deploying an agent. The commands embed a provisioning token and are ready to execute on the target host.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -286,7 +305,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -342,7 +361,7 @@ Get agent configuration and state.
 
 Returns configuration and state of the agent with the specified ID.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -363,7 +382,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -419,7 +438,7 @@ Update configuration of an agent.
 
 Updates the attributes of an agent selected by the field mask in the request.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -440,7 +459,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -499,7 +518,7 @@ Delete an agent.
 
 Deletes the agent with the specified ID.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -520,7 +539,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -576,7 +595,7 @@ List agent capabilities.
 
 Returns a list of all capabilities of the specified agent.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -597,7 +616,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -652,7 +671,7 @@ Get an agent capability.
 
 Returns configuration of the named capability of the specified agent.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -673,7 +692,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -730,7 +749,7 @@ Create or update an agent capability.
 
 Adds the capability to the agent, or updates it if already present.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -751,7 +770,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -812,7 +831,7 @@ Delete an agent capability.
 
 Removes the named capability from the specified agent.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -833,7 +852,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -888,7 +907,7 @@ response = client.kagent.delete_agent_capability(
 
 List all capabilities
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -909,7 +928,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -954,7 +973,7 @@ response = client.kagent.list_capabilities()
 
 Create a new capability
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -975,7 +994,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1029,7 +1048,7 @@ response = client.kagent.create_capability(
 
 Get a capabilities
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1050,7 +1069,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1103,7 +1122,7 @@ response = client.kagent.get_capability(
 
 Update an existing capability
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1124,7 +1143,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1180,7 +1199,7 @@ response = client.kagent.update_capability(
 
 Delete a capability
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1201,7 +1220,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1254,7 +1273,7 @@ response = client.kagent.delete_capability(
 
 GetCapabilityRelease can be used by install/upgrade modules to fetch a single release.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1275,7 +1294,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1331,7 +1350,7 @@ response = client.kagent.get_capability_release()
 
 GetCapabilityLatestReleases can be used by install/upgrade modules to fetch the latest available releases.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1352,7 +1371,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1406,7 +1425,7 @@ response = client.kagent.get_capability_latest_releases()
 
 #### `GET` `/kagent/v202401/releases/supported_distros`
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1427,7 +1446,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1480,7 +1499,7 @@ Create a config.
 
 Creates a new config based on the request and returns it.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1501,7 +1520,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1557,7 +1576,7 @@ Get a config.
 
 Returns the config with the specified name.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1578,7 +1597,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1633,7 +1652,7 @@ Update a config.
 
 Updates the attributes of a config selected by the field mask in the request.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1654,7 +1673,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1712,7 +1731,7 @@ Delete a config.
 
 Deletes the config with the specified name.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1733,7 +1752,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1788,7 +1807,7 @@ List provisioning tokens.
 
 Returns a list of all provisioning tokens in the account.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1809,7 +1828,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1856,7 +1875,7 @@ Create a provisioning token.
 
 Creates a new provisioning token based on configuration in the request and returns it, including its secret value.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1877,7 +1896,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -1933,7 +1952,7 @@ Get provisioning token configuration and status.
 
 Returns configuration, usage and revocation status of the provisioning token with the specified value.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -1954,7 +1973,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2009,7 +2028,7 @@ List agents registered with a provisioning token.
 
 Returns the IDs of all agents that have registered with the provisioning token with the specified value.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2030,7 +2049,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2085,7 +2104,7 @@ Revoke a provisioning token.
 
 Revokes the provisioning token with the specified value. Agents already registered with the token are not affected, but the token can no longer be used for new registrations.
 
-**REST transport**
+##### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -2106,7 +2125,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+##### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -2163,6 +2182,8 @@ response = client.kagent.revoke_provisioning_token(
 <details>
 <summary>Model relationships (30 of 60 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class Agent
@@ -2195,19 +2216,19 @@ classDiagram
     class GetAgentResponse
     class GetCapabilityLatestReleasesResponse
     class GetCapabilityReleaseResponse
-    Agent --> AgentConfig
-    AgentServiceUpdateAgentBody --> AgentConfig
-    Config --> ConfigLayer
-    CreateAgentRequest --> AgentRegistration
-    CreateAgentResponse --> Agent
-    CreateAgentResponse --> BootstrapInfo
-    CreateCapabilityResponse --> Capability
-    CreateConfigResponse --> Config
-    GenerateInstallCommandsResponse --> BootstrapInfo
-    GetAgentCapabilityResponse --> AgentCapability
-    GetAgentResponse --> Agent
-    GetCapabilityLatestReleasesResponse --> CapabilityRelease
-    GetCapabilityReleaseResponse --> CapabilityRelease
+    Agent --> AgentConfig : config
+    AgentServiceUpdateAgentBody --> AgentConfig : config
+    Config --> ConfigLayer : layers
+    CreateAgentRequest --> AgentRegistration : agent
+    CreateAgentResponse --> Agent : agent
+    CreateAgentResponse --> BootstrapInfo : bootstrap
+    CreateCapabilityResponse --> Capability : capability
+    CreateConfigResponse --> Config : config
+    GenerateInstallCommandsResponse --> BootstrapInfo : bootstrap
+    GetAgentCapabilityResponse --> AgentCapability : capability
+    GetAgentResponse --> Agent : agent
+    GetCapabilityLatestReleasesResponse --> CapabilityRelease : releases
+    GetCapabilityReleaseResponse --> CapabilityRelease : release
 ```
 
 </details>

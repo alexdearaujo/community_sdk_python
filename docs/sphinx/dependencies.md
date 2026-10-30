@@ -2,20 +2,21 @@
 
 # Dependencies
 
-This page lists each package that `pyproject.toml` declares, why the project
-needs it, and what the last audit decided. The audit on 2026-10-17 read the
-release notes of each package and probed this repository.
-`tests/smoke/test_declared_dependencies.py` fails when this table and
-`pyproject.toml` disagree, or when code imports a package that no group
-declares.
+This page lists each package that
+[`pyproject.toml`](https://github.com/kentik/community_sdk_python/blob/main/pyproject.toml)
+declares, why the project needs it, and what the last audit decided. The audit
+on 2026-10-17 read the release notes of each package and probed this
+repository.
+[`tests/smoke/test_declared_dependencies.py`](https://github.com/kentik/community_sdk_python/blob/main/tests/smoke/test_declared_dependencies.py)
+fails when this table and `pyproject.toml` disagree, or when code imports a
+package that no group declares.
 
-Groups:
+The groups are:
 
-- **runtime**: installed with the SDK.
-- **analytics**: the optional `kentik-api[analytics]` extra.
-- **dev**, **test**, **docs**: dependency groups for contributors. They are
-  not part of the published package.
-- **build**: the build backend in `[build-system]`.
+- `runtime`: packages that install with the SDK.
+- `analytics`: the optional `kentik-api[analytics]` extra.
+- `dev`, `test`, `docs`: dependency groups for contributors. They are not part of the published package.
+- `build`: the build backend in `[build-system]`.
 
 | Dependency | Group | Purpose | Decision (audit 2026-10-17) |
 | --- | --- | --- | --- |
@@ -35,12 +36,12 @@ Groups:
 | openapi-python-generator | dev | Generates the REST modules and models | Keep, pinned. See the openapi-python-generator section below |
 | packaging | dev | Version and requirement parsing in the release scripts and tests | Keep |
 | rumdl | dev | Markdown linter that reads `.markdownlint-cli2.jsonc` and needs no Node | Added, pinned |
-| markdown-it-py | dev | Renders the impact report to HTML in `scripts/impact_report.py` | Declared: it was imported but installed only through Sphinx |
-| poethepoet | dev | Task runner: every project task runs as `uv run poe <task>` on any OS | Added, pinned. Its agent skill in `.claude/skills/poethepoet/` must match this version |
+| markdown-it-py | dev | Renders the impact report to HTML in [`scripts/impact_report.py`](https://github.com/kentik/community_sdk_python/blob/main/scripts/impact_report.py) | Declared. Code imported it, but only Sphinx installed it |
+| poethepoet | dev | Task runner: every project task runs as `uv run poe <task>` on any OS | Added, pinned. Its agent skill in [`.claude/skills/poethepoet/`](https://github.com/kentik/community_sdk_python/tree/main/.claude/skills/poethepoet) must match this version |
 | pytest | test | Test runner, in strict mode | Keep |
 | respx | test | Mocks HTTP for the mocked test layers | Keep. Replacing it needs a transport seam in the protected runtime |
-| jinja2 | test | Renders the generator templates in `tests/generator/` | Declared: it was imported but installed only through other packages |
-| httpcore | test | Checks the httpx connection pool in `tests/runtime/` | Declared: it was imported but installed only through httpx |
+| jinja2 | test | Renders the generator templates in [`tests/generator/`](https://github.com/kentik/community_sdk_python/tree/main/tests/generator) | Declared. Tests imported it, but only other packages installed it |
+| httpcore | test | Checks the httpx connection pool in [`tests/runtime/`](https://github.com/kentik/community_sdk_python/tree/main/tests/runtime) | Declared. Tests imported it, but only httpx installed it |
 | autodoc-pydantic | docs | Renders model field tables in the service pages | Keep. Last release 2024-04-27, but the repository is active |
 | myst-parser | docs | Markdown pages in Sphinx, with GitHub alerts | Keep. Floor 5.1.0: first release with the `alert` extension |
 | sphinx | docs | Builds the docs | Keep |
@@ -51,20 +52,22 @@ Groups:
 
 ## openapi-python-generator
 
-The generator always installs Black, isort, and orjson, but this project
-calls it with `--formatter none` and formats with Ruff, so the three
-packages are unused. They are in the dev group only, so no SDK user
-installs them.
+The generator always installs Black, isort, and orjson. This project calls it
+with `--formatter none` and formats with Ruff, so it does not use the three
+packages. They are in the dev group only, so no SDK user installs them.
 
 Upstream had no release or merge from 2025-09-29 to the audit. The project
-keeps the exact pin, and neither forks it nor sends it a pull request for
-this finding. Fork it when one of these is true:
+keeps the exact pin. It does not fork the generator or send it a pull request
+for this finding. Fork it only when one of these conditions is true:
 
-- A needed generator fix is not possible in `scripts/openapi_templates/` or
-  `scripts/generation/fixup.py`, and upstream does not answer a pull request.
+- A needed generator fix is not possible in
+  [`scripts/openapi_templates/`](https://github.com/kentik/community_sdk_python/blob/main/scripts/openapi_templates/README.md)
+  or
+  [`scripts/generation/fixup.py`](https://github.com/kentik/community_sdk_python/blob/main/scripts/generation/fixup.py),
+  and upstream does not answer a pull request.
 - A security advisory affects the generator or a dependency it requires,
   and upstream publishes no fix.
-- Fixing problems at the source would retire a large part of `fixup.py`.
+- A fix at the source can retire a large part of `fixup.py`.
 
 To try a fork without a code change, set `OPENAPI_GENERATOR_FROM` (see
 [Local generation workflow](local_generation_workflow.md)).
@@ -72,6 +75,7 @@ To try a fork without a code change, set `OPENAPI_GENERATOR_FROM` (see
 ## Markdown rules
 
 rumdl checks Markdown in `uv run poe lint` and in CI. An editor with the
-markdownlint extension reads the same `.markdownlint-cli2.jsonc`, but can
-report a different result, for example on table style. The CI result
-decides.
+markdownlint extension reads the same
+[`.markdownlint-cli2.jsonc`](https://github.com/kentik/community_sdk_python/blob/main/.markdownlint-cli2.jsonc),
+but it can report a different result, for example on table style. The CI
+result decides.

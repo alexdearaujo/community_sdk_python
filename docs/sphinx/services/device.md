@@ -6,24 +6,43 @@
 ## Overview
 
 ```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
+    code("Your code"):::greenSrc
     subgraph sdk["kentik_api"]
-        KA["KentikAPI"]
-        W["DeviceServiceWrapper\nclient.device"]
-        REST["REST functions\ngen/device/services/"]
-        RJ["request_json()\ncore/rest_runtime"]
-        M["Models\ngen/device/models/"]
-        E["Error classes\ngen/device/error/"]
+        wrap("DeviceServiceWrapper<br/>client.device<br/>10 operations"):::orange
+        rest("REST functions<br/>gen/device/services/"):::blue
+        rj("request_json()<br/>core/rest_runtime.py"):::blue
+        cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
     end
-    API["Kentik API"]
+    grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+    restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
 
-    KA --> W
-    W --> REST
-    REST --> RJ
-    REST --> M
-    REST --> E
-    RJ --> API
+    code -->|"method call"| wrap
+    wrap -->|"Pydantic model from<br/>gen/device/models/"| code
+    wrap -->|"arguments"| rest
+    rest -->|"Pydantic model"| wrap
+    rest -->|"method, path, body"| rj
+    rj -->|"JSON dict"| rest
+    rj -->|"HTTPS request"| restapi
+    restapi -->|"JSON response"| rj
+    wrap -->|"proto request"| cg
+    cg -->|"proto response"| wrap
+    cg -->|"gRPC call"| grpcapi
+    grpcapi -->|"proto response"| cg
+
+    classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e
+    classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+    classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+    classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+    classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+    classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+    classDef greenSrc,orange,blue,blueSrc,violet,violetSrc stroke-width:2px,rx:10px
+    style sdk fill:none,stroke:#868e96,stroke-width:2px
+    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
+
+On an error status or a failed call, the SDK raises an error class from `gen/device/error/`, or a shared type from `kentik_api.errors`.
 
 ## Endpoints
 
@@ -33,7 +52,7 @@ List all devices.
 
 Returns list of configured devices. Use the 'view' parameter to control response detail: FULL (default), BASIC (id, name, status), or ID_ONLY (id only). See [About Devices](https://kb.kentik.com/v4/Cb01.htm).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -54,7 +73,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -108,7 +127,7 @@ Configure a new device.
 
 Create configuration for a new device. Returns the newly created configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -129,7 +148,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -185,7 +204,7 @@ Configure multiple devices (max 100).
 
 Create configuration for multiple devices. Returns the newly created configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -206,7 +225,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -262,7 +281,7 @@ Delete configuration of multiple devices.
 
 Deletes configuration of multiple devices with specific IDs (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -283,7 +302,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -339,7 +358,7 @@ Updates configuration of multiple devices (max 100).
 
 Replaces configuration of multiple devices with attributes in the request. Returns the updated configurations (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -360,7 +379,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -416,7 +435,7 @@ Retrieve configuration of a device by name.
 
 Returns configuration of a device specified by name (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -437,7 +456,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -493,7 +512,7 @@ Retrieve configuration of a device.
 
 Returns configuration of a device specified by ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -514,7 +533,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -570,7 +589,7 @@ Updates configuration of a device.
 
 Replaces configuration of a device with attributes in the request. Returns the updated configuration (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -591,7 +610,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -649,7 +668,7 @@ Delete configuration of a device.
 
 Deletes configuration of a device with specific ID (see [About Devices](https://kb.kentik.com/v4/Cb01.htm)).
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -670,7 +689,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -725,7 +744,7 @@ Updates labels of a device.
 
 Removes all existing labels from the device and applies the device labels (see [About Device Labels](https://kb.kentik.com/v4/Cb16.htm)) specified by id. Returns the updated configuration.
 
-**REST transport**
+#### REST call flow
 
 ```mermaid
 sequenceDiagram
@@ -746,7 +765,7 @@ sequenceDiagram
     end
 ```
 
-**gRPC transport**
+#### gRPC call flow
 
 ```mermaid
 sequenceDiagram
@@ -801,6 +820,8 @@ response = client.device.update_labels(
 <details>
 <summary>Model relationships (21 of 33 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
 classDiagram
     class CreateDeviceRequest
@@ -824,19 +845,19 @@ classDiagram
     class UpdateDevicesResponse
     class protobufAny
     class rpcStatus
-    CreateDeviceRequest --> DeviceConcise
-    CreateDeviceResponse --> DeviceDetailed
-    CreateDevicesRequest --> DeviceConcise
-    CreateDevicesResponse --> DeviceDetailed
-    DeviceServiceUpdateDeviceLabelsBody --> LabelConcise
-    GetDeviceByNameResponse --> DeviceDetailed
-    GetDeviceResponse --> DeviceDetailed
-    ListDevicesResponse --> DeviceDetailed
-    UpdateDeviceLabelsResponse --> DeviceDetailed
-    UpdateDeviceResponse --> DeviceDetailed
-    UpdateDevicesRequest --> DeviceConcise
-    UpdateDevicesResponse --> DeviceDetailed
-    rpcStatus --> protobufAny
+    CreateDeviceRequest --> DeviceConcise : device
+    CreateDeviceResponse --> DeviceDetailed : device
+    CreateDevicesRequest --> DeviceConcise : devices
+    CreateDevicesResponse --> DeviceDetailed : devices
+    DeviceServiceUpdateDeviceLabelsBody --> LabelConcise : labels
+    GetDeviceByNameResponse --> DeviceDetailed : device
+    GetDeviceResponse --> DeviceDetailed : device
+    ListDevicesResponse --> DeviceDetailed : devices
+    UpdateDeviceLabelsResponse --> DeviceDetailed : device
+    UpdateDeviceResponse --> DeviceDetailed : device
+    UpdateDevicesRequest --> DeviceConcise : devices
+    UpdateDevicesResponse --> DeviceDetailed : devices
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

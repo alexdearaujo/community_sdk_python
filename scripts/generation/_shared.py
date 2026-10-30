@@ -14,6 +14,37 @@ REGENERATE_COMMAND = "uv run poe generate"
 
 INTERNAL_GEN_DIRS = frozenset({"__pycache__", "pb_companions"})
 
+# The init line, not YAML frontmatter: MyST reads a leading `---` block in a
+# mermaid fence as directive options.
+MERMAID_INIT = (
+    '%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", '
+    '"flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, '
+    '"wrappingWidth": 400}}}%%'
+)
+
+_MERMAID_CLASSES = {
+    "blueSrc": "fill:#a5d8ff,stroke:#1971c2,color:#1864ab",
+    "blue": "fill:#e7f5ff,stroke:#1971c2,color:#1864ab",
+    "greenSrc": "fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e",
+    "violetSrc": "fill:#d0bfff,stroke:#7048e8,color:#5f3dc4",
+    "violet": "fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4",
+    "orange": "fill:#fff4e6,stroke:#e8590c,color:#d9480f",
+    "hub": "fill:#f8f9fa,stroke:#495057,color:#212529",
+}
+
+
+def mermaid_style(classes: list[str], containers: tuple[str, ...] = ()) -> list[str]:
+    """The house-style classDef, container, and link lines for a flowchart."""
+    return [
+        *(f"    classDef {name} {_MERMAID_CLASSES[name]}" for name in classes),
+        f"    classDef {','.join(classes)} stroke-width:2px,rx:10px",
+        *(
+            f"    style {name} fill:none,stroke:#868e96,stroke-width:2px"
+            for name in containers
+        ),
+        "    linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round",
+    ]
+
 
 def write_text_lf(path: Path, text: str) -> None:
     """Writes UTF-8 text with LF line endings on every OS.
