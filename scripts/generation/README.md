@@ -18,7 +18,7 @@ package owns one concern of SDK generation.
 | [`docs_rendering.py`](docs_rendering.py) | The runtime architecture page (inline Mermaid), the `gen/` root README, service READMEs, and the `kentik-gen` blocks in `docs/sphinx/guides/*.md` and [`docs/sphinx/README.md`](../../docs/sphinx/README.md) | `generate()` |
 | [`endpoint_docs.py`](endpoint_docs.py) | Per-endpoint Sphinx documentation, and [`schema_operations.json`](../../schema_operations.json), the swagger-derived operation record | `EndpointDocsCollector` |
 | [`api_surface.py`](api_surface.py) | Records the public API surface (operations with their client methods, gRPC routes, and error classes, model fields, enum values) to [`api_surface.json`](../../api_surface.json), and compares two recordings to make release notes | `generate()`, `capture()`, `diff()`, `breaking_changes()`, `render_markdown()`, `read()`, `recorded_at()`, `render_regeneration_alert()` |
-| [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `REGENERATE_COMMAND`, `INTERNAL_GEN_DIRS`, `iter_service_dirs()`, `discover_service_model_classes()`, `service_to_pascal_case()`, `normalize_symbol()`, `write_text_lf()`, `MERMAID_INIT`, `mermaid_style()`, `RestOperation`, `parse_generated_rest_module()`, `WrapperMethod`, `parse_wrapper_methods()`, `GrpcCall`, `grpc_call()`, `grpc_stub_services()` |
+| [`_shared.py`](_shared.py) | Constants and helpers shared by two or more phase modules | `PROJECT_ROOT`, `SDK_OUTPUT_DIR`, `REGENERATE_COMMAND`, `INTERNAL_GEN_DIRS`, `iter_service_dirs()`, `discover_service_model_classes()`, `service_to_pascal_case()`, `normalize_symbol()`, `write_text_lf()`, `mermaid_init()`, `mermaid_style()`, `RestOperation`, `parse_generated_rest_module()`, `WrapperMethod`, `parse_wrapper_methods()`, `GrpcCall`, `grpc_call()`, `grpc_stub_services()` |
 
 Keep a helper in [`_shared.py`](_shared.py) only when two or more phase modules call
 it. Put a single-consumer helper in the one module that calls it
@@ -30,7 +30,7 @@ instead.
 modules in this order. Each arrow names what the step before it leaves on disk.
 
 ```mermaid
-%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart TD
   subgraph window["Schema checkout open · get_schema_root()"]
     s1("1. parity.select_latest_swagger_files_by_service()"):::blue

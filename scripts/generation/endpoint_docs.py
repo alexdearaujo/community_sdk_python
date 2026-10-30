@@ -17,7 +17,6 @@ from pathlib import Path
 from types import FunctionType
 
 from ._shared import (
-    MERMAID_INIT,
     PROJECT_ROOT,
     REGENERATE_COMMAND,
     GrpcCall,
@@ -25,6 +24,7 @@ from ._shared import (
     grpc_call,
     grpc_stub_services,
     iter_service_dirs,
+    mermaid_init,
     mermaid_style,
     parse_wrapper_methods,
     service_to_pascal_case,
@@ -433,6 +433,7 @@ def _render_operation_sequence_diagram(
         f"{sub_heading} REST call flow",
         "",
         f"{MD_FENCE}mermaid",
+        mermaid_init(),
         "sequenceDiagram",
         "    participant C as Caller",
         f"    participant W as client.{service}",
@@ -482,6 +483,7 @@ def _render_operation_sequence_diagram(
         f"{sub_heading} gRPC call flow",
         "",
         f"{MD_FENCE}mermaid",
+        mermaid_init(),
         "sequenceDiagram",
         "    participant C as Caller",
         f"    participant W as client.{service}",
@@ -703,7 +705,7 @@ def _render_model_relationship_diagram(
         if dst in nodes
     )
 
-    diagram = ["classDiagram"]
+    diagram = [mermaid_init(), "classDiagram"]
     for name in sorted(nodes):
         diagram.append(f"    class {name}")
     for src, dst, fields in shown_edges:
@@ -767,7 +769,7 @@ def _render_service_overview(
         "## Overview",
         "",
         f"{MD_FENCE}mermaid",
-        MERMAID_INIT,
+        mermaid_init(),
         "flowchart LR",
         '    code("Your code"):::greenSrc',
         '    subgraph sdk["kentik_api"]',

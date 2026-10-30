@@ -11,11 +11,11 @@ import re
 from pathlib import Path
 
 from ._shared import (
-    MERMAID_INIT,
     PROJECT_ROOT,
     REGENERATE_COMMAND,
     SDK_OUTPUT_DIR,
     iter_service_dirs,
+    mermaid_init,
     mermaid_style,
     parse_generated_rest_module,
     parse_wrapper_methods,
@@ -256,14 +256,19 @@ def _call_path_diagram() -> list[str]:
 
     return [
         "```mermaid",
+        mermaid_init(),
         "sequenceDiagram",
         "    participant C as Your code",
         f"    participant W as Service wrapper<br/>({services} services, {operations} operations)",
+        "    box rgb(231,245,255) REST transport",
         "    participant R as REST function<br/>gen/{service}/services/",
         "    participant RJ as request_json()",
         "    participant RA as Kentik REST API",
+        "    end",
+        "    box rgb(243,240,255) gRPC transport",
         "    participant CG as call_grpc()",
         "    participant GA as Kentik gRPC API",
+        "    end",
         "",
         "    C->>W: client.{service}.{method}(arguments)",
         "    alt REST transport",
@@ -404,7 +409,8 @@ def _generate_runtime_architecture_docs(
     used_layers = [
         key for key in _LAYER_NAMES if any(_GROUP_CONFIG[n][0] == key for n in nodes)
     ]
-    mermaid_lines = [MERMAID_INIT, "flowchart BT"]
+    # Smooth curves: with skip-layer arrows, right-angle turns hide where a line goes.
+    mermaid_lines = [mermaid_init(curve="basis"), "flowchart TB"]
     for key in used_layers:
         paths, css = _LAYER_BOXES[key]
         mermaid_lines.append(f'    {key}("{_LAYER_NAMES[key]}<br/>{paths}"):::{css}')
@@ -752,6 +758,7 @@ print(response)  # {primary["response_class"]}
             "rest-callflow-diagram",
             f"""
 ```mermaid
+{mermaid_init()}
 sequenceDiagram
     participant C as Caller
     participant W as ServiceWrapper
@@ -782,6 +789,7 @@ sequenceDiagram
             "grpc-callflow-diagram",
             f"""
 ```mermaid
+{mermaid_init()}
 sequenceDiagram
     participant C as Caller
     participant W as ServiceWrapper
