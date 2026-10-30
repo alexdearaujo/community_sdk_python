@@ -545,6 +545,7 @@ def build_all_kwargs(method: Any, every_field: bool = True) -> dict[str, Any]:
 @dataclass(frozen=True)
 class RestCallMetadata:
     method: str
+    path: str
     expected_status: int
     error_cls_name: str
     operation_name: str
@@ -561,6 +562,7 @@ def parse_rest_call_metadata(
         if op.name == function_name:
             return RestCallMetadata(
                 method=op.http_method,
+                path=op.path,
                 expected_status=op.expected_status,
                 error_cls_name=op.error_cls_name,
                 operation_name=op.operation_name,
@@ -580,6 +582,7 @@ class EndpointCase:
     wrapper: WrapperCase
     operation_name: str
     method: str
+    path: str
 
 
 def discover_endpoint_cases() -> list[EndpointCase]:
@@ -604,6 +607,7 @@ def discover_endpoint_cases() -> list[EndpointCase]:
                 wrapper=wrapper_case,
                 operation_name=metadata.operation_name,
                 method=metadata.method.lower(),
+                path=metadata.path,
             )
         )
     return cases

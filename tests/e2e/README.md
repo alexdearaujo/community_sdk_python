@@ -42,6 +42,7 @@ flowchart TD
     C --> D{Result}
     D -->|Correctly-typed response| E[Pass]
     D -->|4xx HTTPException| E
+    D -->|"REST 404 on a path<br/>with no parameters"| F
     D -->|"NotImplementedError<br/>(gRPC suite only)"| E
     D -->|"5xx listed in upstream_bugs.py"| X[Expected failure]
     D -->|Any other 5xx or exception| F[Fail]
@@ -56,6 +57,10 @@ the mocked suites already cover every option. A read call passes when it
 returns a correctly-typed response, or when it raises a 4xx `HTTPException`,
 for example 404 for a sample ID. The test cannot control what data exists in
 the real account, so a 4xx is a valid answer.
+
+One 4xx fails the REST test: a 404 on a path with no parameters. Such a call
+has no ID to miss, so the 404 means the server does not serve the route. This
+happens when upstream publishes a schema version before it deploys it.
 
 A 5xx fails the test, because it is a server failure. When the failure is an
 upstream bug, add the operation to `upstream_bugs.py` with the bug it hits.
