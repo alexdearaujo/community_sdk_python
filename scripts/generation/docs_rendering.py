@@ -16,6 +16,7 @@ from ._shared import (
     SDK_OUTPUT_DIR,
     iter_service_dirs,
     mermaid_init,
+    mermaid_link_color,
     mermaid_style,
     parse_generated_rest_module,
     parse_wrapper_methods,
@@ -222,6 +223,17 @@ _LAYER_BOXES: dict[str, tuple[str, str]] = {
     "foundation": ("core/, auth/, errors/", "hub"),
 }
 
+# Mermaid places nodes by edge order. This order puts the transport layer on the
+# left and keeps every line clear of the others, so each label sits on one line.
+_LAYER_EDGE_ORDER = [
+    ("client", "transport"),
+    ("client", "generated"),
+    ("generated", "transport"),
+    ("client", "foundation"),
+    ("generated", "foundation"),
+    ("transport", "foundation"),
+]
+
 _GROUP_ROLES: dict[str, str] = {
     "Client API": "`KentikAPI`: reads the credentials and selects the transport.",
     "Client Mixin": "Mounts each service wrapper as `client.<service>`.",
@@ -415,14 +427,31 @@ def _generate_runtime_architecture_docs(
         paths, css = _LAYER_BOXES[key]
         mermaid_lines.append(f'    {key}("{_LAYER_NAMES[key]}<br/>{paths}"):::{css}')
     mermaid_lines.append("")
-    for (src_layer, dst_layer), count in sorted(
+    edges = sorted(
         layer_counts.items(),
-        key=lambda item: (used_layers.index(item[0][0]), used_layers.index(item[0][1])),
-    ):
+        key=lambda item: (
+            _LAYER_EDGE_ORDER.index(item[0])
+            if item[0] in _LAYER_EDGE_ORDER
+            else len(_LAYER_EDGE_ORDER),
+            item[0],
+        ),
+    )
+    for (src_layer, dst_layer), count in edges:
         label = f"{count} imports" if count > 1 else "1 import"
         mermaid_lines.append(f'    {src_layer} -->|"{label}"| {dst_layer}')
+    link_colors = [
+        mermaid_link_color(
+            [i for i, ((src, _), _) in enumerate(edges) if src == key],
+            _LAYER_BOXES[key][1],
+        )
+        for key in used_layers
+    ]
     mermaid_lines.extend(
-        ["", *mermaid_style([_LAYER_BOXES[key][1] for key in used_layers])]
+        [
+            "",
+            *mermaid_style([_LAYER_BOXES[key][1] for key in used_layers]),
+            *(line for line in link_colors if line),
+        ]
     )
 
     group_rows = [

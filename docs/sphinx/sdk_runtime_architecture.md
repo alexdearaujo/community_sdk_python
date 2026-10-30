@@ -73,10 +73,10 @@ flowchart TB
     transport("Transport Layer<br/>transports/"):::violet
     foundation("Shared Foundation<br/>core/, auth/, errors/"):::hub
 
-    client -->|"74 imports"| generated
     client -->|"4 imports"| transport
-    client -->|"3 imports"| foundation
+    client -->|"74 imports"| generated
     generated -->|"74 imports"| transport
+    client -->|"3 imports"| foundation
     generated -->|"224 imports"| foundation
     transport -->|"6 imports"| foundation
 
@@ -86,6 +86,9 @@ flowchart TB
     classDef hub fill:#f8f9fa,stroke:#495057,color:#212529
     classDef orange,green,violet,hub stroke-width:2px,rx:10px
     linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
+    linkStyle 0,1,3 stroke:#e8590c,color:#d9480f
+    linkStyle 2,4 stroke:#2f9e44,color:#2b8a3e
+    linkStyle 5 stroke:#7048e8,color:#5f3dc4
 ```
 
 The table lists each module group in a layer, and the groups that it imports,

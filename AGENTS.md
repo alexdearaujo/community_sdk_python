@@ -178,7 +178,7 @@ subpackage of independently testable phase modules (see
   "is this directory a Service"), `discover_service_model_classes`,
   `service_to_pascal_case`, `normalize_symbol` (the REST generator's
   own naming rule), `write_text_lf` (every generator write, so output
-  has LF on Windows too), `mermaid_init()` and `mermaid_style()` (the house
+  has LF on Windows too), `mermaid_init()`, `mermaid_style()`, and `mermaid_link_color()` (the house
   diagram style of every generated flowchart), and the generated-source parsers
   `parse_generated_rest_module` / `RestOperation`,
   `parse_wrapper_methods` / `WrapperMethod`, and `grpc_call` /

@@ -163,6 +163,18 @@ def test_architecture_table_shows_wrappers_using_models_and_proto_stubs(sandbox)
     assert re.search(r'generated -->\|"\d+ imports?"\| foundation\n', page)
 
 
+def test_layer_arrows_keep_the_order_that_avoids_crossings(sandbox):
+    docs_rendering.generate()
+
+    page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
+    arrows = re.findall(r"^    (\w+) -->\|\"[^\"]*\"\| (\w+)$", page, re.MULTILINE)
+    layer_arrows = [a for a in arrows if a in docs_rendering._LAYER_EDGE_ORDER]
+    assert layer_arrows == [
+        e for e in docs_rendering._LAYER_EDGE_ORDER if e in layer_arrows
+    ]
+    assert re.search(r"linkStyle [\d,]+ stroke:#e8590c,color:#d9480f\n", page)
+
+
 @pytest.mark.parametrize("guide", _GUIDES)
 def test_guide_prose_outside_marker_blocks_is_left_untouched(sandbox, guide):
     rel = f"docs/sphinx/guides/{guide}.md"

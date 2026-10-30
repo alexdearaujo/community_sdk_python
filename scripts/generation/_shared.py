@@ -87,6 +87,17 @@ def mermaid_style(classes: list[str], containers: tuple[str, ...] = ()) -> list[
     ]
 
 
+def mermaid_link_color(indexes: list[int], css: str) -> str:
+    """A linkStyle line that gives arrows and their labels the border and text color of a class."""
+    if not indexes:
+        return ""
+    style = dict(part.split(":") for part in _MERMAID_CLASSES[css].split(","))
+    return (
+        f"    linkStyle {','.join(map(str, indexes))} "
+        f"stroke:{style['stroke']},color:{style['color']}"
+    )
+
+
 def write_text_lf(path: Path, text: str) -> None:
     """Writes UTF-8 text with LF line endings on every OS.
 
