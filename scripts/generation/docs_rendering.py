@@ -573,10 +573,11 @@ def _dependency_explorer(edge_counts: dict[tuple[str, str], int]) -> list[str]:
     ]
     markup = dk.svg(
         "deps-svg",
-        (960, 690),
+        (1060, 690),
         "Module dependencies: the shared foundation feeds the runtimes and the transports. "
         "They, the models and the proto stubs feed the service wrappers, which KentikAPI mounts.",
-        "".join(wires + boxes),
+        # The transport channel sits right of the grid, so shift the grid to center the start.
+        '<g transform="translate(100,0)">' + "".join(wires + boxes) + "</g>",
         prefix,
     )
     data = {
@@ -929,6 +930,214 @@ def _replace_marker(text: str, marker: str, new_content: str) -> str:
     return pattern.sub(replacement, text)
 
 
+def _transport_paths_explorer() -> list[str]:
+    """The REST vs gRPC guide's explorer: both clients reach the same gRPC services."""
+    p = "tp"
+    # part: (box, family, kind, lines, title, role, facts, if it stops)
+    parts = {
+        "code": (
+            (450, 30),
+            "green",
+            "src",
+            ["Your code", "same methods"],
+            "Your code",
+            "Calls the same service methods on either client.",
+            ["Both clients return the same Pydantic models"],
+            "Nothing is sent.",
+        ),
+        "restc": (
+            (160, 170),
+            "blue",
+            "proc",
+            ['protocol="rest"', "HTTPS + JSON"],
+            'KentikAPI(protocol="rest")',
+            "Sends each call as an HTTPS request with a JSON body.",
+            ["HTTP/1.1", "Every operation, V5 included"],
+            "Expected: REST calls stop. A gRPC client keeps working.",
+        ),
+        "grpcc": (
+            (740, 170),
+            "violet",
+            "proc",
+            ['protocol="grpc"', "HTTP/2 + protobuf"],
+            'KentikAPI(protocol="grpc")',
+            "Sends each call as a gRPC call with a protobuf body.",
+            ["HTTP/2", "Every V6 operation. V5 calls go over REST"],
+            "Expected: gRPC calls stop. A REST client keeps working.",
+        ),
+        "envoy": (
+            (160, 310),
+            "blue",
+            "proc",
+            ["Envoy transcoder", "JSON to gRPC and back"],
+            "Envoy transcoder",
+            "Converts each REST request into a gRPC call, and the answer back into JSON.",
+            [
+                "Answers with the header server: envoy",
+                "Copies the gRPC status into grpc-status",
+            ],
+            "Expected: REST calls fail. gRPC calls keep working.",
+        ),
+        "svc": (
+            (450, 450),
+            "neutral",
+            "hub",
+            ["Kentik gRPC services", "one quota per endpoint"],
+            "Kentik gRPC services",
+            "The services behind both transports.",
+            [
+                "60 requests per 60 seconds for each endpoint",
+                "REST and gRPC take from the same quota",
+            ],
+            "Expected: both transports fail.",
+        ),
+    }
+    # wire id: (path, link, label, label position, anchor, kind)
+    wires = [
+        (
+            "code_rest",
+            "M450,56 H230 V170",
+            "code>restc",
+            "method call",
+            (340, 48),
+            "middle",
+            "call",
+        ),
+        (
+            "rest_code",
+            "M290,170 V86 H450",
+            "restc>code",
+            "Pydantic model",
+            (298, 130),
+            "start",
+            "data",
+        ),
+        (
+            "code_grpc",
+            "M650,56 H870 V170",
+            "code>grpcc",
+            "method call",
+            (760, 48),
+            "middle",
+            "call",
+        ),
+        (
+            "grpc_code",
+            "M810,170 V86 H650",
+            "grpcc>code",
+            "Pydantic model",
+            (802, 130),
+            "end",
+            "data",
+        ),
+        (
+            "rest_envoy",
+            "M230,242 V310",
+            "restc>envoy",
+            "HTTPS + JSON",
+            (222, 280),
+            "end",
+            "call",
+        ),
+        (
+            "envoy_rest",
+            "M290,310 V242",
+            "envoy>restc",
+            "JSON",
+            (298, 280),
+            "start",
+            "data",
+        ),
+        (
+            "envoy_svc",
+            "M290,382 V476 H450",
+            "envoy>svc",
+            "gRPC call",
+            (361, 468),
+            "middle",
+            "call",
+        ),
+        (
+            "svc_envoy",
+            "M450,506 H230 V382",
+            "svc>envoy",
+            "gRPC response",
+            (340, 524),
+            "middle",
+            "data",
+        ),
+        (
+            "grpc_svc",
+            "M810,242 V476 H650",
+            "grpcc>svc",
+            "gRPC call",
+            (802, 420),
+            "end",
+            "call",
+        ),
+        (
+            "svc_grpc",
+            "M650,506 H870 V242",
+            "svc>grpcc",
+            "gRPC response",
+            (878, 420),
+            "start",
+            "data",
+        ),
+    ]
+    segs = [
+        dk.seg(sid, d, [key], p, label, at, anchor=anchor, kind=kind)
+        for sid, d, key, label, at, anchor, kind in wires
+    ]
+    boxes = [
+        dk.node(pid, (x, y, 200, 72), fam, kind, lines, label=title)
+        for pid, ((x, y), fam, kind, lines, title, *_) in parts.items()
+    ]
+    markup = dk.svg(
+        "transports-svg",
+        (1100, 560),
+        "Both clients reach the same Kentik gRPC services: REST through the Envoy transcoder, gRPC directly.",
+        "".join(segs + boxes),
+        p,
+    )
+    data = {
+        "select": "svc",
+        "parts": {
+            pid: {"title": title, "role": role, "facts": facts, "stops": stops}
+            for pid, (*_, title, role, facts, stops) in parts.items()
+        },
+        "paths": {
+            "rest": {
+                "label": "REST",
+                "family": "blue",
+                "title": "A REST call",
+                "text": "Envoy converts the request into a gRPC call and the answer back into JSON.",
+                "links": [
+                    "code>restc",
+                    "restc>envoy",
+                    "envoy>svc",
+                    "svc>envoy",
+                    "envoy>restc",
+                    "restc>code",
+                ],
+            },
+            "grpc": {
+                "label": "gRPC",
+                "family": "violet",
+                "title": "A gRPC call",
+                "text": "The gRPC client calls the services directly.",
+                "links": ["code>grpcc", "grpcc>svc", "svc>grpcc", "grpcc>code"],
+            },
+        },
+    }
+    return fragment(
+        markup,
+        data,
+        "Select a part. Each hop is a call going down and its answer coming back up. "
+        "Both paths end at the same services, so both take from the same quota.",
+    )
+
+
 def _update_guide_snippets() -> None:
     """Injects current generated operation names and counts into docs/sphinx/guides/ marker blocks."""
     if not SDK_OUTPUT_DIR.exists():
@@ -953,6 +1162,13 @@ def _update_guide_snippets() -> None:
         text = gen_md.read_text(encoding="utf-8")
         text = _replace_marker(text, "service-count", str(service_count))
         write_text_lf(gen_md, text)
+
+    transports_md = _GUIDES_DIR / "rest-vs-grpc.md"
+    if transports_md.exists():
+        text = transports_md.read_text(encoding="utf-8")
+        explorer = "\n".join(_transport_paths_explorer())
+        text = _replace_marker(text, "transport-paths-explorer", f"\n{explorer}\n")
+        write_text_lf(transports_md, text)
 
     sphinx_readme = PROJECT_ROOT / "docs" / "sphinx" / "README.md"
     if sphinx_readme.exists():
