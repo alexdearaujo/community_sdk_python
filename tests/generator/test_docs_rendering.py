@@ -78,6 +78,7 @@ def test_group_config_has_no_duplicate_layer_assignments():
     )
 
 
+import json  # noqa: E402
 import re  # noqa: E402
 
 import pytest  # noqa: E402
@@ -125,6 +126,7 @@ def test_architecture_page_matches_committed_apart_from_edge_counts(sandbox):
     service_dependent = [
         (re.compile(r'\|"\d+ imports?"\|'), "|n|"),
         (re.compile(r" \(\d+\)"), " (n)"),
+        (re.compile(r"\d+ import statements"), "n import statements"),
         (re.compile(r"\d+ services, \d+ operations"), "n services, n operations"),
         (re.compile(r"\d+ Services are in that state today: [^\n]*"), "N Services ..."),
         (re.compile(r"\n## REST-Only Services\n.*\Z", re.DOTALL), ""),
@@ -160,19 +162,25 @@ def test_architecture_table_shows_wrappers_using_models_and_proto_stubs(sandbox)
     )
     assert "Generated Models (" in row
     assert "Generated Proto Stubs (" in row
-    assert re.search(r'generated -->\|"\d+ imports?"\| foundation\n', page)
 
 
-def test_layer_arrows_keep_the_order_that_avoids_crossings(sandbox):
+def test_dependency_explorer_draws_only_real_imports(sandbox):
     docs_rendering.generate()
 
     page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
-    arrows = re.findall(r"^    (\w+) -->\|\"[^\"]*\"\| (\w+)$", page, re.MULTILINE)
-    layer_arrows = [a for a in arrows if a in docs_rendering._LAYER_EDGE_ORDER]
-    assert layer_arrows == [
-        e for e in docs_rendering._LAYER_EDGE_ORDER if e in layer_arrows
-    ]
-    assert re.search(r"linkStyle [\d,]+ stroke:#e8590c,color:#d9480f\n", page)
+    blob = re.search(
+        r'<script type="application/json" id="diagram-data">(.*?)</script>', page
+    )
+    assert blob
+    data = json.loads(blob.group(1))["deps-svg"]
+    assert set(data["parts"]) == set(docs_rendering._PARTS)
+    assert all("import statements" in label for label in data["links"].values())
+    assert (sandbox.docs / "_static" / "explorer.js").exists()
+
+
+def test_dependency_explorer_fails_on_a_wire_with_no_import():
+    with pytest.raises(ValueError, match="draws imports that do not exist"):
+        docs_rendering._dependency_explorer({})
 
 
 @pytest.mark.parametrize("guide", _GUIDES)

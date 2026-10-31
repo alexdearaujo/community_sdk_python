@@ -10,18 +10,18 @@ import ast
 import re
 from pathlib import Path
 
+from . import diagram_kit as dk
 from ._shared import (
     PROJECT_ROOT,
     REGENERATE_COMMAND,
     SDK_OUTPUT_DIR,
     iter_service_dirs,
     mermaid_init,
-    mermaid_link_color,
-    mermaid_style,
     parse_generated_rest_module,
     parse_wrapper_methods,
     write_text_lf,
 )
+from .explorer_docs import fragment, write_static_assets
 
 _GUIDES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "guides"
 
@@ -215,24 +215,249 @@ _LAYER_NAMES: dict[str, str] = {
     "foundation": "Shared Foundation",
 }
 
-# layer: (source paths under kentik_api/, diagram color class)
-_LAYER_BOXES: dict[str, tuple[str, str]] = {
-    "client": ("client.py, client_mixin.py", "orange"),
-    "generated": ("gen/{service}/", "green"),
-    "transport": ("transports/", "violet"),
-    "foundation": ("core/, auth/, errors/", "hub"),
+# Explorer parts, each a set of module groups. The layout is fixed by hand, so
+# _dependency_explorer() checks every drawn wire against the scanned imports.
+_PART_GROUPS: dict[str, tuple[str, ...]] = {
+    "base": ("API Config", "Auth Credentials", "Error Types", "Rate Limit"),
+    "rj": ("REST Runtime",),
+    "cg": ("gRPC Runtime",),
+    "tr": ("Transport Base", "REST Transport", "gRPC Transport"),
+    "models": ("Generated Models",),
+    "rest": ("Generated REST Services", "Generated Error Classes"),
+    "pb": ("Generated Proto Stubs",),
+    "wrap": ("Generated Service Wrappers",),
+    "client": ("Client API", "Client Mixin"),
 }
 
-# Mermaid places nodes by edge order. This order puts the transport layer on the
-# left and keeps every line clear of the others, so each label sits on one line.
-_LAYER_EDGE_ORDER = [
-    ("client", "transport"),
-    ("client", "generated"),
-    ("generated", "transport"),
-    ("client", "foundation"),
-    ("generated", "foundation"),
-    ("transport", "foundation"),
+_W, _H = 200, 72
+_COLS = (40, 330, 620)
+_ROWS = (30, 170, 310, 450, 590)
+
+# part: (column, row, family, kind, box lines, card title, role, if it stops)
+_PARTS: dict[str, tuple[int, int, str, str, list[str], str, str, str]] = {
+    "base": (
+        1,
+        0,
+        "neutral",
+        "hub",
+        ["Shared foundation", "APIConfig, auth,", "KentikError, RateLimit"],
+        "Shared foundation",
+        "APIConfig, the auth headers, the KentikError hierarchy and RateLimit. Every other part imports it.",
+        "Expected: nothing in the SDK imports, so every call fails.",
+    ),
+    "rj": (
+        0,
+        1,
+        "neutral",
+        "hub",
+        ["request_json()", "core/rest_runtime.py", "all REST traffic"],
+        "request_json()",
+        "The one function that sends REST traffic: auth headers, quota, and errors.",
+        "Expected: every REST call fails. gRPC calls fail too, because they parse responses with it.",
+    ),
+    "cg": (
+        1,
+        1,
+        "neutral",
+        "hub",
+        ["call_grpc()", "core/grpc_runtime.py", "all gRPC traffic"],
+        "call_grpc()",
+        "The one function that sends gRPC traffic: deadline, quota, and errors.",
+        "Expected: every gRPC call fails. REST calls keep working.",
+    ),
+    "tr": (
+        2,
+        1,
+        "violet",
+        "proc",
+        ["Transports", "transports/", "REST and gRPC"],
+        "Transports",
+        "RestTransport holds the APIConfig. GrpcTransport holds the TLS channel and the default deadline.",
+        "Expected: the client cannot be built, on either transport.",
+    ),
+    "rest": (
+        0,
+        2,
+        "green",
+        "proc",
+        ["REST functions", "gen/{service}/services/", "+ error classes"],
+        "REST functions and error classes",
+        "One function per operation. Each one calls request_json() with its own error class.",
+        "Expected: REST calls fail for that service. gRPC calls through the same wrapper keep working.",
+    ),
+    "models": (
+        1,
+        2,
+        "green",
+        "src",
+        ["Models", "gen/{service}/models/", "Pydantic v2"],
+        "Models",
+        "The request and response models of every operation. They import nothing else in the SDK.",
+        "Expected: the REST functions and the wrappers of that service do not import, so it does not mount.",
+    ),
+    "pb": (
+        2,
+        2,
+        "green",
+        "src",
+        ["Proto stubs", "gen/{service}/pb/", "protoc output"],
+        "Proto stubs",
+        "The modules that protoc compiles. Wrappers call them on a gRPC transport.",
+        "Expected: gRPC calls for that service raise NotImplementedError. REST calls keep working.",
+    ),
+    "wrap": (
+        1,
+        3,
+        "green",
+        "proc",
+        ["Service wrappers", "client.{service}", "one per service"],
+        "Service wrappers",
+        "Send each call to the REST function or to call_grpc(), for the transport in use.",
+        "Expected: the client does not mount that service, on either transport.",
+    ),
+    "client": (
+        1,
+        4,
+        "orange",
+        "proc",
+        ["KentikAPI", "client.py", "client_mixin.py"],
+        "KentikAPI client",
+        "Reads the credentials, picks the transport, and mounts every wrapper.",
+        "Expected: nothing in the SDK can be called.",
+    ),
+}
+
+# wire id: (path, provider>consumer keys, label, label position, anchor, arrow)
+_WIRES: list[tuple[str, str, list[str], str | None, tuple[int, int], str, bool]] = [
+    (
+        "base_rj",
+        "M330,66 H140 V170",
+        ["base>rj"],
+        "APIConfig, auth",
+        (235, 58),
+        "middle",
+        True,
+    ),
+    ("base_cg", "M430,102 V170", ["base>cg"], "APIConfig", (438, 140), "start", True),
+    (
+        "base_tr",
+        "M530,66 H720 V170",
+        ["base>tr"],
+        "APIConfig, auth",
+        (625, 58),
+        "middle",
+        True,
+    ),
+    ("rj_cg", "M240,206 H330", ["rj>cg"], "parsing", (276, 198), "middle", True),
+    (
+        "rj_rest",
+        "M140,242 V310",
+        ["rj>rest"],
+        "request_json()",
+        (132, 280),
+        "end",
+        True,
+    ),
+    (
+        "cg_wrap",
+        "M530,226 H575 V420 H490 V450",
+        ["cg>wrap"],
+        "call_grpc()",
+        (567, 290),
+        "end",
+        True,
+    ),
+    (
+        "models_rest",
+        "M330,346 H240",
+        ["models>rest"],
+        "models",
+        (294, 338),
+        "middle",
+        True,
+    ),
+    (
+        "models_wrap",
+        "M430,382 V450",
+        ["models>wrap"],
+        "models",
+        (438, 420),
+        "start",
+        True,
+    ),
+    (
+        "rest_wrap",
+        "M140,382 V486 H330",
+        ["rest>wrap"],
+        "operations",
+        (148, 440),
+        "start",
+        True,
+    ),
+    (
+        "pb_wrap",
+        "M720,382 V470 H530",
+        ["pb>wrap"],
+        "proto stubs",
+        (728, 430),
+        "start",
+        True,
+    ),
+    (
+        "tr_stem",
+        "M820,206 H860 V500",
+        ["tr>wrap", "tr>client"],
+        "transport",
+        (868, 350),
+        "start",
+        False,
+    ),
+    ("tr_wrap", "M860,500 H530", ["tr>wrap"], None, (0, 0), "middle", True),
+    ("tr_client", "M860,500 V626 H530", ["tr>client"], None, (0, 0), "middle", True),
+    (
+        "wrap_client",
+        "M430,522 V590",
+        ["wrap>client"],
+        "wrappers",
+        (438, 560),
+        "start",
+        True,
+    ),
 ]
+
+# Real imports the explorer leaves out, so the figure stays readable.
+_UNDRAWN = {"base>rest", "base>wrap", "base>client", "rest>client"}
+
+_PATHS = {
+    "rest": {
+        "label": "REST call",
+        "family": "blue",
+        "title": "A call on a REST transport",
+        "text": "The wrapper calls the REST function. It builds the request with the models and sends it with request_json().",
+        "links": ["base>rj", "rj>rest", "models>rest", "rest>wrap", "wrap>client"],
+    },
+    "grpc": {
+        "label": "gRPC call",
+        "family": "violet",
+        "title": "A call on a gRPC transport",
+        "text": "The wrapper builds the proto request with the stubs and sends it with call_grpc(), which parses the answer into the REST models.",
+        "links": [
+            "base>cg",
+            "rj>cg",
+            "cg>wrap",
+            "pb>wrap",
+            "models>wrap",
+            "wrap>client",
+        ],
+    },
+    "setup": {
+        "label": "Client setup",
+        "family": "orange",
+        "title": "Building the client",
+        "text": "KentikAPI builds one transport from the APIConfig and gives it to every wrapper that it mounts.",
+        "links": ["base>tr", "tr>client", "tr>wrap", "wrap>client"],
+    },
+}
 
 _GROUP_ROLES: dict[str, str] = {
     "Client API": "`KentikAPI`: reads the credentials and selects the transport.",
@@ -301,6 +526,72 @@ def _call_path_diagram() -> list[str]:
         "    Note over C,GA: On a failure, request_json() or call_grpc() raises a KentikError subclass.",
         "```",
     ]
+
+
+def _dependency_explorer(edge_counts: dict[tuple[str, str], int]) -> list[str]:
+    """The Module Dependencies explorer: provider-to-consumer wires between the parts."""
+    part_of = {group: part for part, groups in _PART_GROUPS.items() for group in groups}
+    imports: dict[str, int] = {}
+    for (importer, imported), count in edge_counts.items():
+        provider, consumer = part_of.get(imported), part_of.get(importer)
+        if provider and consumer and provider != consumer:
+            key = f"{provider}>{consumer}"
+            imports[key] = imports.get(key, 0) + count
+
+    drawn = {key for _, _, keys, *_ in _WIRES for key in keys}
+    if missing := sorted(drawn - imports.keys()):
+        raise ValueError(
+            f"the dependency explorer draws imports that do not exist: {missing}"
+        )
+    if left_out := sorted(imports.keys() - drawn - _UNDRAWN):
+        print(f"    ⚠️  The dependency explorer does not draw: {', '.join(left_out)}")
+
+    def counted(keys: list[str], index: int) -> list[str]:
+        return [
+            f"{_PARTS[key.split('>')[index]][5]} ({imports[key]})"
+            for key in sorted(keys)
+        ]
+
+    parts = {}
+    for pid, (*_, title, role, stops) in _PARTS.items():
+        sources = ", ".join(_GROUP_CONFIG[g][1] for g in _PART_GROUPS[pid])
+        facts = [f"Source: {sources}"]
+        if uses := counted([k for k in imports if k.endswith(f">{pid}")], 0):
+            facts.append("Imports " + ", ".join(uses))
+        if users := counted([k for k in imports if k.startswith(f"{pid}>")], 1):
+            facts.append("Imported by " + ", ".join(users))
+        parts[pid] = {"title": title, "role": role, "facts": facts, "stops": stops}
+
+    prefix = "deps"
+    wires = [
+        dk.seg(sid, d, keys, prefix, label, at, anchor=anchor, arrow=arrow)
+        for sid, d, keys, label, at, anchor, arrow in _WIRES
+    ]
+    boxes = [
+        dk.node(pid, (_COLS[col], _ROWS[row], _W, _H), fam, kind, lines, label=title)
+        for pid, (col, row, fam, kind, lines, title, _, _) in _PARTS.items()
+    ]
+    markup = dk.svg(
+        "deps-svg",
+        (960, 690),
+        "Module dependencies: the shared foundation feeds the runtimes and the transports. "
+        "They, the models and the proto stubs feed the service wrappers, which KentikAPI mounts.",
+        "".join(wires + boxes),
+        prefix,
+    )
+    data = {
+        "select": "wrap",
+        "parts": parts,
+        "links": {key: f"{imports[key]} import statements" for key in sorted(drawn)},
+        "paths": _PATHS,
+    }
+    return fragment(
+        markup,
+        data,
+        "Select a part. Bold lines show what it needs. Moving lines show where it is used. Each arrow "
+        "points from a module to a module that imports it. Every part also imports the shared "
+        "foundation, but the diagram draws that only for the runtimes and the transports.",
+    )
 
 
 def _module_group(module_name: str, source_file: Path | None = None) -> str | None:
@@ -410,49 +701,9 @@ def _generate_runtime_architecture_docs(
                 key = (src_group, dst_group)
                 edge_counts[key] = edge_counts.get(key, 0) + 1
 
-    layer_counts: dict[tuple[str, str], int] = {}
     imports_of: dict[str, list[str]] = {}
     for (src, dst), count in sorted(edge_counts.items()):
         imports_of.setdefault(src, []).append(f"{dst} ({count})")
-        key = (_GROUP_CONFIG[src][0], _GROUP_CONFIG[dst][0])
-        if key[0] != key[1]:
-            layer_counts[key] = layer_counts.get(key, 0) + count
-
-    used_layers = [
-        key for key in _LAYER_NAMES if any(_GROUP_CONFIG[n][0] == key for n in nodes)
-    ]
-    # Smooth curves: with skip-layer arrows, right-angle turns hide where a line goes.
-    mermaid_lines = [mermaid_init(curve="basis"), "flowchart TB"]
-    for key in used_layers:
-        paths, css = _LAYER_BOXES[key]
-        mermaid_lines.append(f'    {key}("{_LAYER_NAMES[key]}<br/>{paths}"):::{css}')
-    mermaid_lines.append("")
-    edges = sorted(
-        layer_counts.items(),
-        key=lambda item: (
-            _LAYER_EDGE_ORDER.index(item[0])
-            if item[0] in _LAYER_EDGE_ORDER
-            else len(_LAYER_EDGE_ORDER),
-            item[0],
-        ),
-    )
-    for (src_layer, dst_layer), count in edges:
-        label = f"{count} imports" if count > 1 else "1 import"
-        mermaid_lines.append(f'    {src_layer} -->|"{label}"| {dst_layer}')
-    link_colors = [
-        mermaid_link_color(
-            [i for i, ((src, _), _) in enumerate(edges) if src == key],
-            _LAYER_BOXES[key][1],
-        )
-        for key in used_layers
-    ]
-    mermaid_lines.extend(
-        [
-            "",
-            *mermaid_style([_LAYER_BOXES[key][1] for key in used_layers]),
-            *(line for line in link_colors if line),
-        ]
-    )
 
     group_rows = [
         f"| {label} | {_LAYER_NAMES[layer]} | `{path}` | "
@@ -463,6 +714,10 @@ def _generate_runtime_architecture_docs(
     ]
 
     architecture_md = [
+        "---",
+        "html_theme.sidebar_secondary.remove: true",
+        "---",
+        "",
         "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_runtime_architecture_docs() -->",
         f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
         "",
@@ -493,17 +748,13 @@ def _generate_runtime_architecture_docs(
         "",
         "## Module Dependencies",
         "",
-        "The SDK has a client layer, a generated layer, a transport layer, and a shared",
-        "foundation. Each arrow points from a layer to a layer that it imports, and the",
-        "number counts the import statements. The generator reads the imports from the",
-        "source on every run.",
+        "The SDK splits into the parts below. Select one to see what it imports and what",
+        "imports it. The generator reads the imports from the source on every run.",
         "",
-        "```mermaid",
-        *mermaid_lines,
-        "```",
+        *_dependency_explorer(edge_counts),
         "",
-        "The table lists each module group in a layer, and the groups that it imports,",
-        "with the number of import statements.",
+        "The table lists each module group, and the groups that it imports, with the",
+        "number of import statements.",
         "",
         "| Group | Layer | Source | Imports from | Role |",
         "| --- | --- | --- | --- | --- |",
@@ -859,3 +1110,4 @@ def generate(rest_only: frozenset[str] = frozenset()) -> None:
     _generate_gen_root_readme()
     _generate_service_readmes(rest_only)
     _update_guide_snippets()
+    write_static_assets(PROJECT_ROOT / "docs" / "sphinx" / "_static")

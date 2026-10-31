@@ -37,8 +37,9 @@ These files are hand-written. Every regeneration keeps them:
 - `scripts/generation/`: the generator's phase modules
   (`parity.py`, `error_package.py`, `fixup.py`,
   `wrapper_generation.py`, `docs_rendering.py`, `endpoint_docs.py`,
-  `api_surface.py`, `public_names.py`, `_shared.py`), orchestrated by
-  `scripts/generate_sdk.py`
+  `api_surface.py`, `public_names.py`, `explorer_docs.py`, `_shared.py`),
+  orchestrated by `scripts/generate_sdk.py`, plus `diagram_kit.py` and
+  `diagram_assets/`, a copy of the diagrams skill's kit
 - [`public_names.json`](public_names.json): the public name of every Service, client
   method, and model. You edit it by hand. A run only adds entries (see
   "Public names" below)
@@ -62,7 +63,9 @@ These files are fully generated. Every `uv run poe generate` run wipes and rebui
   `README.md`
 - [`src/kentik_api/gen/README.md`](src/kentik_api/gen/README.md): the `gen/` root README
 - [`docs/sphinx/sdk_runtime_architecture.md`](docs/sphinx/sdk_runtime_architecture.md): the runtime
-  architecture page, with an inline Mermaid dependency graph
+  architecture page, with a Mermaid call path and an interactive dependency explorer
+- `docs/sphinx/_static/explorer.css` and `explorer.js`: the explorer assets, written by
+  `explorer_docs.write_static_assets()` from `scripts/generation/diagram_assets/`
 - `docs/sphinx/services/<service>.md`, `index.md`, and `README.md`:
   one reference page per service and the two index pages, written by
   `endpoint_docs.EndpointDocsCollector.render()`
@@ -178,7 +181,7 @@ subpackage of independently testable phase modules (see
   "is this directory a Service"), `discover_service_model_classes`,
   `service_to_pascal_case`, `normalize_symbol` (the REST generator's
   own naming rule), `write_text_lf` (every generator write, so output
-  has LF on Windows too), `mermaid_init()`, `mermaid_style()`, and `mermaid_link_color()` (the house
+  has LF on Windows too), `mermaid_init()` and `mermaid_style()` (the house
   diagram style of every generated flowchart), and the generated-source parsers
   `parse_generated_rest_module` / `RestOperation`,
   `parse_wrapper_methods` / `WrapperMethod`, and `grpc_call` /

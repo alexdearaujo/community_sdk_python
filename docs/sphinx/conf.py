@@ -40,6 +40,12 @@ myst_fence_as_directive = ["mermaid"]
 
 html_theme = "sphinx_book_theme"
 
+# The generator writes these from scripts/generation/diagram_assets/. The script
+# only acts on pages that hold an interactive diagram.
+html_static_path = ["_static"]
+html_css_files = ["explorer.css"]
+html_js_files = [("explorer.js", {"defer": "defer"})]
+
 # Skip copying every source page into build/html/_sources/. Those copies are
 # byte-identical to docs/sphinx/**, and this repo already tracks the
 # rendered HTML in git, so the copies were pure duplication.
