@@ -144,4 +144,7 @@
 .kx .diagram svg { min-width: 720px; }
 .kx.seq-steps { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0.5rem 0 1.5rem; }
 .kx .seq-nav { background: var(--sunk); }
+.kx .seq-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.kx .seq-group + .seq-group { padding-left: 12px; border-left: 1px solid var(--line-strong); }
+.kx .chip:disabled { opacity: 0.4; cursor: default; }
 .kx .seq-status { flex-basis: 100%; font: 0.85rem/1.4 var(--mono); color: var(--muted); }

@@ -57,6 +57,9 @@ def explorer_css() -> str:
             f"{_SCOPE} .diagram svg {{ min-width: 720px; }}",
             f"{_SCOPE}.seq-steps {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0.5rem 0 1.5rem; }}",
             f"{_SCOPE} .seq-nav {{ background: var(--sunk); }}",
+            f"{_SCOPE} .seq-group {{ display: flex; flex-wrap: wrap; gap: 8px; }}",
+            f"{_SCOPE} .seq-group + .seq-group {{ padding-left: 12px; border-left: 1px solid var(--line-strong); }}",
+            f"{_SCOPE} .chip:disabled {{ opacity: 0.4; cursor: default; }}",
             f"{_SCOPE} .seq-status {{ flex-basis: 100%; font: 0.85rem/1.4 var(--mono); color: var(--muted); }}",
             "",
         ]

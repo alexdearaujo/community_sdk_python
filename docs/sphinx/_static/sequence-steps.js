@@ -50,44 +50,48 @@
         s.text.style.fontWeight = lit ? "700" : "";
       }
       if (current < 0) {
-        status.textContent = shown !== steps
-          ? `${shown.length} steps on this path. Press Next to follow them.`
-          : branches.length
-            ? `Each call takes only one section of the dotted alt box. Pick one above, or press Next to follow the first: ${branches[0].name}.`
-            : `${steps.length} steps. Press Next to follow them one at a time.`;
+        status.textContent = `${shown.length} steps. Press Next to follow them one at a time.`;
       } else {
         status.textContent = `Step ${current + 1} of ${shown.length}: ${shown[current].label}`;
       }
+      back.disabled = current < 0;
+      next.disabled = current >= shown.length - 1;
     }
 
+    // Each call takes one branch of the alt box, so the first branch starts selected.
+    const choose = (b, keep) => { shown = keep; current = -1; press(b); paint(); };
     const branchButtons = branches.map((branch) => {
-      const b = button(branch.name, () => {
-        shown = branch.keep;
-        current = -1;
-        press(b);
-        paint();
-      });
+      const b = button(branch.name, () => choose(b, branch.keep));
       return b;
     });
-    const all = button("All steps", () => { shown = steps; current = -1; press(all); paint(); });
+    const all = button("Show all", () => choose(all, steps));
     function press(active) {
-      for (const b of [all, ...branchButtons]) b.setAttribute("aria-pressed", String(b === active));
+      for (const b of [...branchButtons, all]) b.setAttribute("aria-pressed", String(b === active));
     }
 
     const back = button("Back", () => { current = Math.max(-1, current - 1); paint(); });
     const next = button("Next", () => {
       // Stepping through every branch would suggest that a call runs all of them.
-      if (shown === steps && branchButtons.length) branchButtons[0].click();
+      if (shown === steps && branchButtons.length) choose(branchButtons[0], branches[0].keep);
       current = Math.min(shown.length - 1, current + 1);
       paint();
     });
     back.classList.add("seq-nav");
     next.classList.add("seq-nav");
 
-    bar.append(back, next, all, ...branchButtons, status);
-    press(all);
+    const group = (label, buttons) => {
+      const g = document.createElement("div");
+      g.className = "seq-group";
+      g.setAttribute("role", "group");
+      g.setAttribute("aria-label", label);
+      g.append(...buttons);
+      return g;
+    };
+    if (branchButtons.length) bar.append(group("Choose a path", [...branchButtons, all]));
+    bar.append(group("Step through", [back, next]), status);
     svg.closest(".mermaid")?.after(bar);
-    paint();
+    if (branchButtons.length) choose(branchButtons[0], branches[0].keep);
+    else paint();
   }
 
   function scan() {
