@@ -31,14 +31,14 @@ Returns all Focus Scopes for the user's company.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
     participant API as Kentik REST API
 
-    C->>W: list_scopes()
-    W->>API: GET /rbux/v202607alpha1/scopes
+    C->>+W: list_scopes()
+    W->>+API: GET /rbux/v202607alpha1/scopes
     alt success
         API-->>W: ListScopesResponse (JSON)
         W-->>C: ListScopesResponse
@@ -48,21 +48,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_scopes()
-    W->>R: build_grpc_request(ListScopesRequest, arguments)
-    R->>API: ScopeService/ListScopes (gRPC/TLS)
+    C->>+W: list_scopes()
+    W->>+R: build_grpc_request(ListScopesRequest, arguments)
+    R->>+API: ScopeService/ListScopes (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -71,6 +73,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Responses
@@ -101,14 +106,14 @@ Creates and returns a new Focus Scope.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
     participant API as Kentik REST API
 
-    C->>W: create_scope(data=Scope(...))
-    W->>API: POST /rbux/v202607alpha1/scopes
+    C->>+W: create_scope(data=Scope(...))
+    W->>+API: POST /rbux/v202607alpha1/scopes
     alt success
         API-->>W: CreateScopeResponse (JSON)
         W-->>C: CreateScopeResponse
@@ -118,21 +123,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_scope(data=Scope(...))
-    W->>R: build_grpc_request(CreateScopeRequest, arguments)
-    R->>API: ScopeService/CreateScope (gRPC/TLS)
+    C->>+W: create_scope(data=Scope(...))
+    W->>+R: build_grpc_request(CreateScopeRequest, arguments)
+    R->>+API: ScopeService/CreateScope (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -141,6 +148,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -180,14 +190,14 @@ Returns a single Focus Scope by id.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
     participant API as Kentik REST API
 
-    C->>W: get_scope(id="id-example")
-    W->>API: GET /rbux/v202607alpha1/scopes/{id}
+    C->>+W: get_scope(id="id-example")
+    W->>+API: GET /rbux/v202607alpha1/scopes/{id}
     alt success
         API-->>W: GetScopeResponse (JSON)
         W-->>C: GetScopeResponse
@@ -197,21 +207,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_scope(id="id-example")
-    W->>R: build_grpc_request(GetScopeRequest, arguments)
-    R->>API: ScopeService/GetScope (gRPC/TLS)
+    C->>+W: get_scope(id="id-example")
+    W->>+R: build_grpc_request(GetScopeRequest, arguments)
+    R->>+API: ScopeService/GetScope (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -220,6 +232,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -258,14 +273,14 @@ Updates and returns an existing Focus Scope.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
     participant API as Kentik REST API
 
-    C->>W: update_scope(id="id-example", data=ScopeServiceUpdateScopeBody(...))
-    W->>API: PUT /rbux/v202607alpha1/scopes/{id}
+    C->>+W: update_scope(id="id-example", data=ScopeServiceUpdateScopeBody(...))
+    W->>+API: PUT /rbux/v202607alpha1/scopes/{id}
     alt success
         API-->>W: UpdateScopeResponse (JSON)
         W-->>C: UpdateScopeResponse
@@ -275,21 +290,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_scope(id="id-example", data=ScopeServiceUpdateScopeBody(...))
-    W->>R: build_grpc_request(UpdateScopeRequest, arguments)
-    R->>API: ScopeService/UpdateScope (gRPC/TLS)
+    C->>+W: update_scope(id="id-example", data=ScopeServiceUpdateScopeBody(...))
+    W->>+R: build_grpc_request(UpdateScopeRequest, arguments)
+    R->>+API: ScopeService/UpdateScope (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -298,6 +315,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -339,14 +359,14 @@ Deletes a Focus Scope.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
     participant API as Kentik REST API
 
-    C->>W: delete_scope(id="id-example")
-    W->>API: DELETE /rbux/v202607alpha1/scopes/{id}
+    C->>+W: delete_scope(id="id-example")
+    W->>+API: DELETE /rbux/v202607alpha1/scopes/{id}
     alt success
         API-->>W: DeleteScopeResponse (JSON)
         W-->>C: DeleteScopeResponse
@@ -356,21 +376,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.rbux
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.rbux
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_scope(id="id-example")
-    W->>R: build_grpc_request(DeleteScopeRequest, arguments)
-    R->>API: ScopeService/DeleteScope (gRPC/TLS)
+    C->>+W: delete_scope(id="id-example")
+    W->>+R: build_grpc_request(DeleteScopeRequest, arguments)
+    R->>+API: ScopeService/DeleteScope (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -379,6 +401,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -414,7 +439,7 @@ response = client.rbux.delete_scope(
 Each arrow points from a model to a model that one of its fields holds. The label names the field.
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 classDiagram
     class CreateScopeResponse
     class DeleteScopeResponse

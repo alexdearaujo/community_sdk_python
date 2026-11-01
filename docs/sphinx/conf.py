@@ -37,6 +37,8 @@ myst_enable_extensions = [
 ]
 
 myst_fence_as_directive = ["mermaid"]
+# Pinned: participant types and the neo look need 12, and the step script reads its SVG classes.
+mermaid_version = "12.2.0"
 
 html_theme = "sphinx_book_theme"
 

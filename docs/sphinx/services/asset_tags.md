@@ -31,14 +31,14 @@ Returns a list of tag values.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
-    W->>API: GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values
+    C->>+W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
+    W->>+API: GET /asset_tags/v20260515beta1/assets/{assetType}/{assetId}/values
     alt success
         API-->>W: GetTagValuesResponse (JSON)
         W-->>C: GetTagValuesResponse
@@ -48,21 +48,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
-    W->>R: build_grpc_request(GetTagValuesRequest, arguments)
-    R->>API: AssetTagsService/GetTagValues (gRPC/TLS)
+    C->>+W: get_tag_values(assetType="assetType-example", assetId="assetId-example")
+    W->>+R: build_grpc_request(GetTagValuesRequest, arguments)
+    R->>+API: AssetTagsService/GetTagValues (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -71,6 +73,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -111,14 +116,14 @@ Returns a list of tag keys.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: list_tag_keys()
-    W->>API: GET /asset_tags/v20260515beta1/keys
+    C->>+W: list_tag_keys()
+    W->>+API: GET /asset_tags/v20260515beta1/keys
     alt success
         API-->>W: ListTagKeysResponse (JSON)
         W-->>C: ListTagKeysResponse
@@ -128,21 +133,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_tag_keys()
-    W->>R: build_grpc_request(ListTagKeysRequest, arguments)
-    R->>API: AssetTagsService/ListTagKeys (gRPC/TLS)
+    C->>+W: list_tag_keys()
+    W->>+R: build_grpc_request(ListTagKeysRequest, arguments)
+    R->>+API: AssetTagsService/ListTagKeys (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -151,6 +158,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Responses
@@ -181,14 +191,14 @@ Returns the created tag key.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: create_tag_key(data=CreateTagKeyRequest(...))
-    W->>API: POST /asset_tags/v20260515beta1/keys
+    C->>+W: create_tag_key(data=CreateTagKeyRequest(...))
+    W->>+API: POST /asset_tags/v20260515beta1/keys
     alt success
         API-->>W: CreateTagKeyResponse (JSON)
         W-->>C: CreateTagKeyResponse
@@ -198,21 +208,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: create_tag_key(data=CreateTagKeyRequest(...))
-    W->>R: build_grpc_request(CreateTagKeyRequest, arguments)
-    R->>API: AssetTagsService/CreateTagKey (gRPC/TLS)
+    C->>+W: create_tag_key(data=CreateTagKeyRequest(...))
+    W->>+R: build_grpc_request(CreateTagKeyRequest, arguments)
+    R->>+API: AssetTagsService/CreateTagKey (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -221,6 +233,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -260,14 +275,14 @@ Returns a single tag key.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: get_tag_key(id="id-example")
-    W->>API: GET /asset_tags/v20260515beta1/keys/{id}
+    C->>+W: get_tag_key(id="id-example")
+    W->>+API: GET /asset_tags/v20260515beta1/keys/{id}
     alt success
         API-->>W: GetTagKeyResponse (JSON)
         W-->>C: GetTagKeyResponse
@@ -277,21 +292,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: get_tag_key(id="id-example")
-    W->>R: build_grpc_request(GetTagKeyRequest, arguments)
-    R->>API: AssetTagsService/GetTagKey (gRPC/TLS)
+    C->>+W: get_tag_key(id="id-example")
+    W->>+R: build_grpc_request(GetTagKeyRequest, arguments)
+    R->>+API: AssetTagsService/GetTagKey (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -300,6 +317,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -338,14 +358,14 @@ Returns the updated tag key.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
-    W->>API: PUT /asset_tags/v20260515beta1/keys/{id}
+    C->>+W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
+    W->>+API: PUT /asset_tags/v20260515beta1/keys/{id}
     alt success
         API-->>W: UpdateTagKeyResponse (JSON)
         W-->>C: UpdateTagKeyResponse
@@ -355,21 +375,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
-    W->>R: build_grpc_request(UpdateTagKeyRequest, arguments)
-    R->>API: AssetTagsService/UpdateTagKey (gRPC/TLS)
+    C->>+W: update_tag_key(id="id-example", data=AssetTagsServiceUpdateTagKeyBody(...))
+    W->>+R: build_grpc_request(UpdateTagKeyRequest, arguments)
+    R->>+API: AssetTagsService/UpdateTagKey (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -378,6 +400,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -419,14 +444,14 @@ Returns an empty response
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: delete_tag_key(id="id-example")
-    W->>API: DELETE /asset_tags/v20260515beta1/keys/{id}
+    C->>+W: delete_tag_key(id="id-example")
+    W->>+API: DELETE /asset_tags/v20260515beta1/keys/{id}
     alt success
         API-->>W: DeleteTagKeyResponse (JSON)
         W-->>C: DeleteTagKeyResponse
@@ -436,21 +461,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_tag_key(id="id-example")
-    W->>R: build_grpc_request(DeleteTagKeyRequest, arguments)
-    R->>API: AssetTagsService/DeleteTagKey (gRPC/TLS)
+    C->>+W: delete_tag_key(id="id-example")
+    W->>+R: build_grpc_request(DeleteTagKeyRequest, arguments)
+    R->>+API: AssetTagsService/DeleteTagKey (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -459,6 +486,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -497,14 +527,14 @@ Returns a list of tag values.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
-    W->>API: GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values
+    C->>+W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
+    W->>+API: GET /asset_tags/v20260515beta1/keys/{tagId}/{assetType}/values
     alt success
         API-->>W: ListTagValuesResponse (JSON)
         W-->>C: ListTagValuesResponse
@@ -514,21 +544,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
-    W->>R: build_grpc_request(ListTagValuesRequest, arguments)
-    R->>API: AssetTagsService/ListTagValues (gRPC/TLS)
+    C->>+W: list_tag_values(tagId="tagId-example", assetType="assetType-example")
+    W->>+R: build_grpc_request(ListTagValuesRequest, arguments)
+    R->>+API: AssetTagsService/ListTagValues (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -537,6 +569,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -577,14 +612,14 @@ Returns a list of tag values.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: set_tag_values(data=SetTagValuesRequest(...))
-    W->>API: PUT /asset_tags/v20260515beta1/values
+    C->>+W: set_tag_values(data=SetTagValuesRequest(...))
+    W->>+API: PUT /asset_tags/v20260515beta1/values
     alt success
         API-->>W: SetTagValuesResponse (JSON)
         W-->>C: SetTagValuesResponse
@@ -594,21 +629,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: set_tag_values(data=SetTagValuesRequest(...))
-    W->>R: build_grpc_request(SetTagValuesRequest, arguments)
-    R->>API: AssetTagsService/SetTagValues (gRPC/TLS)
+    C->>+W: set_tag_values(data=SetTagValuesRequest(...))
+    W->>+R: build_grpc_request(SetTagValuesRequest, arguments)
+    R->>+API: AssetTagsService/SetTagValues (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -617,6 +654,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -656,14 +696,14 @@ Returns an empty response.
 #### REST call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
     participant API as Kentik REST API
 
-    C->>W: delete_tag_values(data=DeleteTagValuesRequest(...))
-    W->>API: POST /asset_tags/v20260515beta1/values/delete
+    C->>+W: delete_tag_values(data=DeleteTagValuesRequest(...))
+    W->>+API: POST /asset_tags/v20260515beta1/values/delete
     alt success
         API-->>W: DeleteTagValuesResponse (JSON)
         W-->>C: DeleteTagValuesResponse
@@ -673,21 +713,23 @@ sequenceDiagram
     else no response
         W-->>C: raise TransportError
     end
+    deactivate API
+    deactivate W
 ```
 
 #### gRPC call flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as client.asset_tags
-    participant R as grpc_runtime
+    actor C as Caller
+    participant W@{ "type": "boundary" } as client.asset_tags
+    participant R@{ "type": "control" } as grpc_runtime
     participant API as Kentik gRPC API
 
-    C->>W: delete_tag_values(data=DeleteTagValuesRequest(...))
-    W->>R: build_grpc_request(DeleteTagValuesRequest, arguments)
-    R->>API: AssetTagsService/DeleteTagValues (gRPC/TLS)
+    C->>+W: delete_tag_values(data=DeleteTagValuesRequest(...))
+    W->>+R: build_grpc_request(DeleteTagValuesRequest, arguments)
+    R->>+API: AssetTagsService/DeleteTagValues (gRPC/TLS)
     alt success
         API-->>R: response message
         R-->>W: parse_grpc_response(response)
@@ -696,6 +738,9 @@ sequenceDiagram
         R-->>W: map_grpc_error()
         W-->>C: raise AuthenticationError, HTTPException, or TransportError
     end
+    deactivate API
+    deactivate R
+    deactivate W
 ```
 
 #### Parameters
@@ -732,7 +777,7 @@ response = client.asset_tags.delete_tag_values(
 Each arrow points from a model to a model that one of its fields holds. The label names the field.
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 classDiagram
     class AssetTagsServiceUpdateTagKeyBody
     class AssetType

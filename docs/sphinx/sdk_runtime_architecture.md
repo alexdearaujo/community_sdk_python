@@ -17,36 +17,42 @@ that the client uses selects the path. Both paths return the same Pydantic
 models and raise the same exception types.
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Your code
-    participant W as Service wrapper<br/>(37 services, 240 operations)
+    actor C as Your code
+    participant W@{ "type": "boundary" } as Service wrapper<br/>(37 services, 240 operations)
     box transparent REST transport
-    participant R as REST function<br/>gen/{service}/services/
-    participant RJ as request_json()
+    participant R@{ "type": "control" } as REST function<br/>gen/{service}/services/
+    participant RJ@{ "type": "control" } as request_json()
     participant RA as Kentik REST API
     end
     box transparent gRPC transport
-    participant CG as call_grpc()
+    participant CG@{ "type": "control" } as call_grpc()
     participant GA as Kentik gRPC API
     end
 
-    C->>W: client.{service}.{method}(arguments)
+    C->>+W: client.{service}.{method}(arguments)
     alt REST transport
-        W->>R: arguments
-        R->>RJ: method, path, body, APIConfig
-        RJ->>RA: HTTPS request with auth headers
-        RA-->>RJ: JSON response
-        RJ-->>R: JSON dict + quota
-        R-->>W: Pydantic model
+        W->>+R: arguments
+        rect rgba(120,130,140,0.14)
+        Note over RJ,RA: Shared runtime:<br/>every REST endpoint<br/>goes through request_json()
+        R->>+RJ: method, path, body, APIConfig
+        RJ->>+RA: HTTPS request with auth headers
+        RA-->>-RJ: JSON response
+        RJ-->>-R: JSON dict + quota
+        end
+        R-->>-W: Pydantic model
     else gRPC transport
-        W->>CG: stub method + proto request
-        CG->>GA: gRPC call over TLS
-        GA-->>CG: proto response
-        CG-->>W: proto response + quota
+        rect rgba(120,130,140,0.14)
+        Note over CG,GA: Shared runtime:<br/>every gRPC endpoint<br/>goes through call_grpc()
+        W->>+CG: stub method + proto request
+        CG->>+GA: gRPC call over TLS
+        GA-->>-CG: proto response
+        CG-->>-W: proto response + quota
+        end
         W->>W: parse_grpc_response()
     end
-    W-->>C: Pydantic model
+    W-->>-C: Pydantic model
     Note over C,GA: On a failure, request_json() or call_grpc() raises a KentikError subclass.
 ```
 

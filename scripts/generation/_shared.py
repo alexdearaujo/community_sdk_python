@@ -46,12 +46,16 @@ def mermaid_init(curve: str = "step") -> str:
     """The first line of a house-style Mermaid block.
 
     An init line, not YAML frontmatter: MyST reads a leading `---` block in a
-    mermaid fence as directive options.
+    mermaid fence as directive options. The redux theme gives Mermaid 12's
+    default shapes and line widths; themeVariables keep the house colors.
     """
     config = {
-        "theme": "base",
+        "theme": "redux",
+        "look": "neo",
+        "layout": "dagre",
         "fontFamily": _MERMAID_FONT,
         "themeVariables": _MERMAID_THEME,
+        "sequence": {"activationWidth": 16},
         "flowchart": {
             "curve": curve,
             "nodeSpacing": 30,

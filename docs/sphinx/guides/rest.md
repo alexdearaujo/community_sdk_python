@@ -77,16 +77,16 @@ model, raises `HTTPException` with status 502.
 ## Request flow
 
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as ServiceWrapper
-    participant RJ as request_json()
+    actor C as Caller
+    participant W@{ "type": "boundary" } as ServiceWrapper
+    participant RJ@{ "type": "control" } as request_json()
     participant API as Kentik REST API
 
-    C->>W: service method(arguments)
-    W->>RJ: api_config, HTTP method, path, query and body
-    RJ->>API: HTTPS request with auth headers
+    C->>+W: service method(arguments)
+    W->>+RJ: api_config, HTTP method, path, query and body
+    RJ->>+API: HTTPS request with auth headers
     alt success
         API-->>RJ: JSON response
         RJ-->>W: JSON body as a dict, with the quota
@@ -100,6 +100,9 @@ sequenceDiagram
     else no response (unreachable or timed out)
         RJ-->>C: raise TransportError
     end
+    deactivate API
+    deactivate RJ
+    deactivate W
 ```
 
 Every REST operation goes through the one `request_json()` function.

@@ -34,16 +34,16 @@ print(response)  # ListASGroupsResponse
 
 <!-- kentik-gen:rest-callflow-diagram -->
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as ServiceWrapper
-    participant RJ as request_json()
+    actor C as Caller
+    participant W@{ "type": "boundary" } as ServiceWrapper
+    participant RJ@{ "type": "control" } as request_json()
     participant API as Kentik REST API
 
-    C->>W: list()
-    W->>RJ: api_config, method, path, params
-    RJ->>API: HTTP request (HTTPS)
+    C->>+W: list()
+    W->>+RJ: api_config, method, path, params
+    RJ->>+API: HTTP request (HTTPS)
     alt success
         API-->>RJ: JSON response
         RJ-->>W: parsed dict
@@ -57,6 +57,9 @@ sequenceDiagram
     else no response (unreachable or timed out)
         RJ-->>C: raise TransportError
     end
+    deactivate API
+    deactivate RJ
+    deactivate W
 ```
 <!-- /kentik-gen:rest-callflow-diagram -->
 
@@ -68,19 +71,19 @@ The REST path sends every call through
 
 <!-- kentik-gen:grpc-callflow-diagram -->
 ```mermaid
-%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant C as Caller
-    participant W as ServiceWrapper
-    participant CG as call_grpc()
-    participant S as gRPC stub
+    actor C as Caller
+    participant W@{ "type": "boundary" } as ServiceWrapper
+    participant CG@{ "type": "control" } as call_grpc()
+    participant S@{ "type": "control" } as gRPC stub
     participant API as Kentik gRPC API
 
-    C->>W: list()
+    C->>+W: list()
     W->>W: build ListASGroupsRequest proto<br/>(ParseDict for operations with a body)
-    W->>CG: stub method + proto request
-    CG->>S: ListASGroups (gRPC/TLS, deadline set by the channel)
-    S->>API: serialized proto request
+    W->>+CG: stub method + proto request
+    CG->>+S: ListASGroups (gRPC/TLS, deadline set by the channel)
+    S->>+API: serialized proto request
     alt success
         API-->>S: serialized proto response
         S-->>CG: ListASGroupsResponse proto
@@ -90,6 +93,10 @@ sequenceDiagram
         S-->>CG: raise RpcError
         CG-->>C: map_grpc_error(): AuthenticationError,<br/>the operation's HTTPException subclass, or TransportError
     end
+    deactivate API
+    deactivate S
+    deactivate CG
+    deactivate W
 ```
 <!-- /kentik-gen:grpc-callflow-diagram -->
 

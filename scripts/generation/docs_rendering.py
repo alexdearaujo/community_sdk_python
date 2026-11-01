@@ -24,6 +24,8 @@ from ._shared import (
 from .explorer_docs import fragment, write_static_assets
 
 _GUIDES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "guides"
+# A Mermaid rect takes no CSS variable, so the gray must read on light and dark pages.
+_SHARED_RUNTIME_BAND = "rgba(120,130,140,0.14)"
 
 _GEN_ROOT_README = f"""\
 <!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_gen_root_readme() -->
@@ -506,34 +508,43 @@ def _call_path_diagram() -> list[str]:
         "```mermaid",
         mermaid_init(),
         "sequenceDiagram",
-        "    participant C as Your code",
-        f"    participant W as Service wrapper<br/>({services} services, {operations} operations)",
+        "    actor C as Your code",
+        (
+            '    participant W@{ "type": "boundary" } as Service wrapper<br/>'
+            f"({services} services, {operations} operations)"
+        ),
         "    box transparent REST transport",
-        "    participant R as REST function<br/>gen/{service}/services/",
-        "    participant RJ as request_json()",
+        '    participant R@{ "type": "control" } as REST function<br/>gen/{service}/services/',
+        '    participant RJ@{ "type": "control" } as request_json()',
         "    participant RA as Kentik REST API",
         "    end",
         "    box transparent gRPC transport",
-        "    participant CG as call_grpc()",
+        '    participant CG@{ "type": "control" } as call_grpc()',
         "    participant GA as Kentik gRPC API",
         "    end",
         "",
-        "    C->>W: client.{service}.{method}(arguments)",
+        "    C->>+W: client.{service}.{method}(arguments)",
         "    alt REST transport",
-        "        W->>R: arguments",
-        "        R->>RJ: method, path, body, APIConfig",
-        "        RJ->>RA: HTTPS request with auth headers",
-        "        RA-->>RJ: JSON response",
-        "        RJ-->>R: JSON dict + quota",
-        "        R-->>W: Pydantic model",
+        "        W->>+R: arguments",
+        f"        rect {_SHARED_RUNTIME_BAND}",
+        "        Note over RJ,RA: Shared runtime:<br/>every REST endpoint<br/>goes through request_json()",
+        "        R->>+RJ: method, path, body, APIConfig",
+        "        RJ->>+RA: HTTPS request with auth headers",
+        "        RA-->>-RJ: JSON response",
+        "        RJ-->>-R: JSON dict + quota",
+        "        end",
+        "        R-->>-W: Pydantic model",
         "    else gRPC transport",
-        "        W->>CG: stub method + proto request",
-        "        CG->>GA: gRPC call over TLS",
-        "        GA-->>CG: proto response",
-        "        CG-->>W: proto response + quota",
+        f"        rect {_SHARED_RUNTIME_BAND}",
+        "        Note over CG,GA: Shared runtime:<br/>every gRPC endpoint<br/>goes through call_grpc()",
+        "        W->>+CG: stub method + proto request",
+        "        CG->>+GA: gRPC call over TLS",
+        "        GA-->>-CG: proto response",
+        "        CG-->>-W: proto response + quota",
+        "        end",
         "        W->>W: parse_grpc_response()",
         "    end",
-        "    W-->>C: Pydantic model",
+        "    W-->>-C: Pydantic model",
         "    Note over C,GA: On a failure, request_json() or call_grpc() raises a KentikError subclass.",
         "```",
     ]
@@ -1271,14 +1282,14 @@ print(response)  # {primary["response_class"]}
 ```mermaid
 {mermaid_init()}
 sequenceDiagram
-    participant C as Caller
-    participant W as ServiceWrapper
-    participant RJ as request_json()
+    actor C as Caller
+    participant W@{{ "type": "boundary" }} as ServiceWrapper
+    participant RJ@{{ "type": "control" }} as request_json()
     participant API as Kentik REST API
 
-    C->>W: {primary["method"]}()
-    W->>RJ: api_config, method, path, params
-    RJ->>API: HTTP request (HTTPS)
+    C->>+W: {primary["method"]}()
+    W->>+RJ: api_config, method, path, params
+    RJ->>+API: HTTP request (HTTPS)
     alt success
         API-->>RJ: JSON response
         RJ-->>W: parsed dict
@@ -1292,6 +1303,9 @@ sequenceDiagram
     else no response (unreachable or timed out)
         RJ-->>C: raise TransportError
     end
+    deactivate API
+    deactivate RJ
+    deactivate W
 ```
 """,
         )
@@ -1302,17 +1316,17 @@ sequenceDiagram
 ```mermaid
 {mermaid_init()}
 sequenceDiagram
-    participant C as Caller
-    participant W as ServiceWrapper
-    participant CG as call_grpc()
-    participant S as gRPC stub
+    actor C as Caller
+    participant W@{{ "type": "boundary" }} as ServiceWrapper
+    participant CG@{{ "type": "control" }} as call_grpc()
+    participant S@{{ "type": "control" }} as gRPC stub
     participant API as Kentik gRPC API
 
-    C->>W: {primary["method"]}()
+    C->>+W: {primary["method"]}()
     W->>W: build {request_proto} proto<br/>(ParseDict for operations with a body)
-    W->>CG: stub method + proto request
-    CG->>S: {stub_method} (gRPC/TLS, deadline set by the channel)
-    S->>API: serialized proto request
+    W->>+CG: stub method + proto request
+    CG->>+S: {stub_method} (gRPC/TLS, deadline set by the channel)
+    S->>+API: serialized proto request
     alt success
         API-->>S: serialized proto response
         S-->>CG: {primary["response_class"]} proto
@@ -1322,6 +1336,10 @@ sequenceDiagram
         S-->>CG: raise RpcError
         CG-->>C: map_grpc_error(): AuthenticationError,<br/>the operation's HTTPException subclass, or TransportError
     end
+    deactivate API
+    deactivate S
+    deactivate CG
+    deactivate W
 ```
 """,
         )

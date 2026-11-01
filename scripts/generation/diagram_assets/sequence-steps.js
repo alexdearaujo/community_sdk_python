@@ -1,6 +1,7 @@
-/* Step-through controls for Mermaid sequence diagrams. Under each diagram it
-   adds Back and Next buttons that light one message at a time, and one button
-   per branch of an alt box that lights only the steps of that outcome. */
+/* Step-through controls for Mermaid 12 sequence diagrams. Under each diagram it
+   adds one button per branch of an alt box, and Back and Next buttons that light
+   one message at a time. The chosen branch colors its band, its own participants
+   and the activation bars, and fades the parts of the other branches. */
 (() => {
   "use strict";
   const DIM = "0.15";
@@ -18,12 +19,24 @@
   function controls(svg) {
     const lines = [...svg.querySelectorAll(".messageLine0, .messageLine1")];
     const texts = [...svg.querySelectorAll(".messageText")];
-    if (!lines.length || lines.length !== texts.length) return;
+    if (!lines.length || texts.length < lines.length) return;
     const y = (el) => parseFloat(el.getAttribute("y1") || el.getAttribute("y") || "0");
-    // A self-message is a path with no y attribute, so place every step by its text.
-    const steps = lines.map((line, i) => ({ line, text: texts[i], y: y(texts[i]), label: texts[i].textContent.trim() }));
+    // A <br/> splits a message into several texts above its line; a self-message is a path with no y.
+    const lineY = (l) => (l.hasAttribute("y1") ? y(l) : l.getBBox().y);
+    const owned = lines.map(() => []);
+    for (const t of texts) {
+      const i = lines.findIndex((l) => lineY(l) >= y(t) - 1);
+      owned[i < 0 ? lines.length - 1 : i].push(t);
+    }
+    if (owned.some((ts) => !ts.length)) return;
+    const steps = lines.map((line, i) => ({
+      line,
+      texts: owned[i],
+      y: y(owned[i][0]),
+      label: owned[i].map((t) => t.textContent.trim()).join(" "),
+    }));
 
-    const labels = [...svg.querySelectorAll(".loopText")].map((t) => ({ el: t, name: t.textContent.trim().replace(/^\[|\]$/g, ""), y: y(t) }));
+    const labels = [...svg.querySelectorAll(".loopText, .sectionTitle")].map((t) => ({ el: t, name: t.textContent.trim().replace(/^\[|\]$/g, ""), y: y(t) }));
     const loopLines = [...svg.querySelectorAll(".loopLine")];
     const bottom = Math.max(...loopLines.map((l) => Math.max(y(l), parseFloat(l.getAttribute("y2") || "0"))), 0);
     const top = labels.length ? labels[0].y : Infinity;
@@ -43,8 +56,52 @@
         band.style.fill = `var(--${tone}-pale)`;
         svg.insertBefore(band, svg.querySelector(":scope > g"));
       }
-      return { name: label.name, tone, band, keep: steps.filter((s) => s.y < top || s.y > bottom || (s.y > label.y && s.y < end)) };
+      const inRow = (el) => {
+        const t = parseFloat(el.getAttribute("y") || "0");
+        return rows.length === labels.length + 1 && t >= rows[i] && t <= rows[i + 1];
+      };
+      const gray = [...svg.querySelectorAll("rect.rect, rect.note, text.noteText")].filter(inRow);
+      return { name: label.name, tone, band, gray, keep: steps.filter((s) => s.y < top || s.y > bottom || (s.y > label.y && s.y < end)) };
     });
+
+    // A participant that only one branch talks to takes that branch's color.
+    const parts = new Map();
+    for (const g of svg.querySelectorAll("g")) {
+      const name = g.querySelector(":scope > text.actor")?.textContent.trim();
+      if (!name) continue;
+      const box = g.getBBox();
+      const part = parts.get(name) || { els: [], x: box.x + box.width / 2 };
+      part.els.push(g);
+      parts.set(name, part);
+    }
+    if (!parts.size) return;
+    for (const l of svg.querySelectorAll("line.actor-line")) {
+      const x = parseFloat(l.getAttribute("x1") || "0");
+      const part = [...parts.values()].find((p) => Math.abs(p.x - x) < 2);
+      if (part) part.els.push(l);
+    }
+    const nearest = (x) => [...parts.values()].reduce((a, b) => (Math.abs(b.x - x) < Math.abs(a.x - x) ? b : a));
+    for (const s of steps) {
+      const ends = s.line.hasAttribute("x1")
+        ? [s.line.getAttribute("x1"), s.line.getAttribute("x2")].map(Number)
+        : [s.line.getBBox().x];
+      s.parts = ends.map(nearest);
+    }
+    const common = new Set(steps.filter((s) => branches.every((b) => b.keep.includes(s))).flatMap((s) => s.parts));
+    for (const b of branches) {
+      const others = new Set(branches.filter((o) => o !== b).flatMap((o) => o.keep.flatMap((s) => s.parts)));
+      b.parts = [...new Set(b.keep.flatMap((s) => s.parts))].filter((p) => !common.has(p) && !others.has(p));
+      for (const p of b.parts) {
+        for (const el of p.els) {
+          if (el.matches("line.actor-line")) { el.style.stroke = `var(--${b.tone}-border)`; continue; }
+          for (const shape of el.querySelectorAll("rect, circle, line, path")) {
+            shape.style.stroke = `var(--${b.tone}-border)`;
+            if (!shape.matches("line")) shape.style.fill = `var(--${b.tone}-pale)`;
+          }
+          for (const t of el.querySelectorAll("text")) t.style.fill = `var(--${b.tone}-text)`;
+        }
+      }
+    }
 
     const bar = document.createElement("div");
     bar.className = "kx seq-steps";
@@ -69,6 +126,11 @@
     let current = -1;
     let shown = steps;
     let tone = null;
+    const acts = [...svg.querySelectorAll('rect[class^="activation"]')].map((el) => {
+      const box = el.getBBox();
+      const part = nearest(box.x + box.width / 2);
+      return { el, owner: branches.find((b) => b.parts.includes(part)) };
+    });
 
     function paint() {
       for (const s of steps) {
@@ -77,14 +139,26 @@
         const visible = inPath && (current < 0 || index <= current);
         const lit = inPath && index === current;
         s.line.style.opacity = visible ? "1" : DIM;
-        s.text.style.opacity = visible ? "1" : DIM;
+        for (const t of s.texts) {
+          t.style.opacity = visible ? "1" : DIM;
+          t.style.fontWeight = lit ? "700" : "";
+          t.style.fill = lit && tone ? `var(--${tone}-text)` : "";
+        }
         s.line.style.strokeWidth = lit ? "3" : "";
         s.line.style.stroke = lit && tone ? `var(--${tone}-border)` : "";
-        s.text.style.fontWeight = lit ? "700" : "";
-        s.text.style.fill = lit && tone ? `var(--${tone}-text)` : "";
       }
       for (const b of branches) {
-        if (b.band) b.band.style.opacity = shown === steps || shown === b.keep ? "1" : "0.3";
+        const on = shown === steps || shown === b.keep ? "1" : "0.3";
+        if (b.band) b.band.style.opacity = on;
+        for (const el of [...b.gray, ...b.parts.flatMap((p) => p.els)]) el.style.opacity = on;
+      }
+      // A bar on a shared part follows the chosen path; a bar on a branch part keeps its branch color.
+      for (const a of acts) {
+        const t = a.owner ? a.owner.tone : tone;
+        a.el.style.fill = t ? `var(--${t}-strong)` : "var(--neu-fill)";
+        a.el.style.stroke = t ? `var(--${t}-border)` : "var(--neu-border)";
+        a.el.style.strokeWidth = "2";
+        a.el.style.opacity = !a.owner || shown === steps || shown === a.owner.keep ? "1" : "0.3";
       }
       if (tone) bar.dataset.tone = tone;
       else delete bar.dataset.tone;
