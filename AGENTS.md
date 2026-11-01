@@ -64,7 +64,8 @@ These files are fully generated. Every `uv run poe generate` run wipes and rebui
 - [`src/kentik_api/gen/README.md`](src/kentik_api/gen/README.md): the `gen/` root README
 - [`docs/sphinx/sdk_runtime_architecture.md`](docs/sphinx/sdk_runtime_architecture.md): the runtime
   architecture page, with a Mermaid call path and an interactive dependency explorer
-- `docs/sphinx/_static/explorer.css` and `explorer.js`: the explorer assets, written by
+- `docs/sphinx/_static/explorer.css`, `explorer.js`, and `sequence-steps.js`: the explorer
+  assets and the step-through controls of every Mermaid sequence diagram, written by
   `explorer_docs.write_static_assets()` from `scripts/generation/diagram_assets/`
 - `docs/sphinx/services/<service>.md`, `index.md`, and `README.md`:
   one reference page per service and the two index pages, written by

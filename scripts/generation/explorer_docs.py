@@ -55,6 +55,9 @@ def explorer_css() -> str:
             _scoped(components + badges + dk.DIAGRAM_CSS + headings),
             f"{_SCOPE} {{ display: grid; gap: 14px; margin: 1.5rem 0; color: var(--fg); }}",
             f"{_SCOPE} .diagram svg {{ min-width: 720px; }}",
+            f"{_SCOPE}.seq-steps {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0.5rem 0 1.5rem; }}",
+            f"{_SCOPE} .seq-nav {{ background: var(--sunk); }}",
+            f"{_SCOPE} .seq-status {{ flex-basis: 100%; font: 0.85rem/1.4 var(--mono); color: var(--muted); }}",
             "",
         ]
     )
@@ -64,15 +67,26 @@ def write_static_assets(static_dir: Path) -> None:
     static_dir.mkdir(parents=True, exist_ok=True)
     write_text_lf(static_dir / "explorer.css", explorer_css())
     write_text_lf(static_dir / "explorer.js", dk.EXPLORER_JS)
+    write_text_lf(
+        static_dir / "sequence-steps.js",
+        (dk.ASSETS / "sequence-steps.js").read_text(encoding="utf-8"),
+    )
 
 
 def fragment(
-    markup: str, data: dict, caption: str, *, access: str | None = None
+    markup: str,
+    data: dict,
+    caption: str,
+    *,
+    access: str | None = None,
+    legend: tuple[str, str] | None = None,
 ) -> list[str]:
     """A MyST raw-HTML block with the path chips, the diagram, the legend and the card.
 
-    Raises ValueError when dk.check() finds a mismatch or a geometry fault, so a
-    broken diagram fails generation instead of shipping.
+    legend renames the bold-line and moving-line entries, for a diagram whose
+    arrows mean something other than data flow. Raises ValueError when
+    dk.check() finds a mismatch or a geometry fault, so a broken diagram fails
+    generation instead of shipping.
     """
     svg_id = re.match(r'<svg id="([^"]+)"', markup)
     if svg_id is None:
@@ -81,6 +95,11 @@ def fragment(
     if problems := dk.check(markup, {sid: data}):
         raise ValueError(f"{sid}: " + "; ".join(problems))
     blob = json.dumps({sid: data}, ensure_ascii=False).replace("</", "<\\/")
+    key = dk.legend(access)
+    if legend:
+        key = key.replace("what the selected part needs", dk.esc(legend[0])).replace(
+            "where its data goes", dk.esc(legend[1])
+        )
     return [
         "```{raw} html",
         '<div class="kx">',
@@ -89,7 +108,7 @@ def fragment(
         f'<div class="diagram explorer">{markup}</div>',
         f"<figcaption>{dk.esc(caption)}</figcaption>",
         "</figure>",
-        dk.legend(access),
+        key,
         f'<div class="detail" data-detail-for="{sid}" aria-live="polite"></div>',
         f'<script type="application/json" id="diagram-data">{blob}</script>',
         "</div>",

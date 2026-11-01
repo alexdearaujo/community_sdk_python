@@ -233,37 +233,29 @@ _W, _H = 200, 72
 _COLS = (40, 330, 620)
 _ROWS = (30, 170, 310, 450, 590)
 
+# The import graph has one root, KentikAPI, so it starts at the top center and
+# each arrow points from a part to a part that it imports.
 # part: (column, row, family, kind, box lines, card title, role, if it stops)
 _PARTS: dict[str, tuple[int, int, str, str, list[str], str, str, str]] = {
-    "base": (
+    "client": (
         1,
         0,
-        "neutral",
-        "hub",
-        ["Shared foundation", "APIConfig, auth,", "KentikError, RateLimit"],
-        "Shared foundation",
-        "APIConfig, the auth headers, the KentikError hierarchy and RateLimit. Every other part imports it.",
-        "Expected: nothing in the SDK imports, so every call fails.",
+        "orange",
+        "src",
+        ["KentikAPI", "client.py", "client_mixin.py"],
+        "KentikAPI client",
+        "The starting point. Reads the credentials, picks the transport, and mounts every wrapper.",
+        "Expected: nothing in the SDK can be called.",
     ),
-    "rj": (
-        0,
-        1,
-        "neutral",
-        "hub",
-        ["request_json()", "core/rest_runtime.py", "all REST traffic"],
-        "request_json()",
-        "The one function that sends REST traffic: auth headers, quota, and errors.",
-        "Expected: every REST call fails. gRPC calls fail too, because they parse responses with it.",
-    ),
-    "cg": (
+    "wrap": (
         1,
         1,
-        "neutral",
-        "hub",
-        ["call_grpc()", "core/grpc_runtime.py", "all gRPC traffic"],
-        "call_grpc()",
-        "The one function that sends gRPC traffic: deadline, quota, and errors.",
-        "Expected: every gRPC call fails. REST calls keep working.",
+        "green",
+        "proc",
+        ["Service wrappers", "client.{service}", "one per service"],
+        "Service wrappers",
+        "Send each call to the REST function or to call_grpc(), for the transport in use.",
+        "Expected: the client does not mount that service, on either transport.",
     ),
     "tr": (
         2,
@@ -289,7 +281,7 @@ _PARTS: dict[str, tuple[int, int, str, str, list[str], str, str, str]] = {
         1,
         2,
         "green",
-        "src",
+        "proc",
         ["Models", "gen/{service}/models/", "Pydantic v2"],
         "Models",
         "The request and response models of every operation. They import nothing else in the SDK.",
@@ -299,163 +291,182 @@ _PARTS: dict[str, tuple[int, int, str, str, list[str], str, str, str]] = {
         2,
         2,
         "green",
-        "src",
+        "proc",
         ["Proto stubs", "gen/{service}/pb/", "protoc output"],
         "Proto stubs",
         "The modules that protoc compiles. Wrappers call them on a gRPC transport.",
         "Expected: gRPC calls for that service raise NotImplementedError. REST calls keep working.",
     ),
-    "wrap": (
-        1,
+    "rj": (
+        0,
         3,
-        "green",
-        "proc",
-        ["Service wrappers", "client.{service}", "one per service"],
-        "Service wrappers",
-        "Send each call to the REST function or to call_grpc(), for the transport in use.",
-        "Expected: the client does not mount that service, on either transport.",
+        "neutral",
+        "hub",
+        ["request_json()", "core/rest_runtime.py", "all REST traffic"],
+        "request_json()",
+        "The one function that sends REST traffic: auth headers, quota, and errors.",
+        "Expected: every REST call fails. gRPC calls fail too, because they parse responses with it.",
     ),
-    "client": (
+    "cg": (
+        2,
+        3,
+        "neutral",
+        "hub",
+        ["call_grpc()", "core/grpc_runtime.py", "all gRPC traffic"],
+        "call_grpc()",
+        "The one function that sends gRPC traffic: deadline, quota, and errors.",
+        "Expected: every gRPC call fails. REST calls keep working.",
+    ),
+    "base": (
         1,
         4,
-        "orange",
-        "proc",
-        ["KentikAPI", "client.py", "client_mixin.py"],
-        "KentikAPI client",
-        "Reads the credentials, picks the transport, and mounts every wrapper.",
-        "Expected: nothing in the SDK can be called.",
+        "neutral",
+        "hub",
+        ["Shared foundation", "APIConfig, auth,", "KentikError, RateLimit"],
+        "Shared foundation",
+        "APIConfig, the auth headers, the KentikError hierarchy and RateLimit. Every other part imports it.",
+        "Expected: nothing in the SDK imports, so every call fails.",
     ),
 }
 
-# wire id: (path, provider>consumer keys, label, label position, anchor, arrow)
+# wire id: (path, importer>imported keys, label, label position, anchor, arrow)
 _WIRES: list[tuple[str, str, list[str], str | None, tuple[int, int], str, bool]] = [
     (
-        "base_rj",
-        "M330,66 H140 V170",
-        ["base>rj"],
-        "APIConfig, auth",
-        (235, 58),
-        "middle",
+        "client_wrap",
+        "M430,102 V170",
+        ["client>wrap"],
+        "wrappers",
+        (438, 140),
+        "start",
         True,
     ),
-    ("base_cg", "M430,102 V170", ["base>cg"], "APIConfig", (438, 140), "start", True),
     (
-        "base_tr",
+        "client_tr",
         "M530,66 H720 V170",
-        ["base>tr"],
-        "APIConfig, auth",
+        ["client>tr"],
+        "transports",
         (625, 58),
         "middle",
         True,
     ),
-    ("rj_cg", "M240,206 H330", ["rj>cg"], "parsing", (276, 198), "middle", True),
+    ("wrap_tr", "M530,206 H620", ["wrap>tr"], "transport", (575, 198), "middle", True),
     (
-        "rj_rest",
-        "M140,242 V310",
-        ["rj>rest"],
-        "request_json()",
-        (132, 280),
-        "end",
-        True,
-    ),
-    (
-        "cg_wrap",
-        "M530,226 H575 V420 H490 V450",
-        ["cg>wrap"],
-        "call_grpc()",
-        (567, 290),
-        "end",
-        True,
-    ),
-    (
-        "models_rest",
-        "M330,346 H240",
-        ["models>rest"],
-        "models",
-        (294, 338),
+        "wrap_rest",
+        "M330,206 H140 V310",
+        ["wrap>rest"],
+        "REST functions",
+        (235, 198),
         "middle",
         True,
     ),
     (
-        "models_wrap",
-        "M430,382 V450",
-        ["models>wrap"],
+        "wrap_models",
+        "M430,242 V310",
+        ["wrap>models"],
         "models",
-        (438, 420),
-        "start",
+        (422, 290),
+        "end",
         True,
     ),
     (
-        "rest_wrap",
-        "M140,382 V486 H330",
-        ["rest>wrap"],
-        "operations",
-        (148, 440),
-        "start",
-        True,
-    ),
-    (
-        "pb_wrap",
-        "M720,382 V470 H530",
-        ["pb>wrap"],
+        "wrap_pb",
+        "M510,242 V260 H690 V310",
+        ["wrap>pb"],
         "proto stubs",
-        (728, 430),
+        (698, 290),
         "start",
         True,
     ),
     (
-        "tr_stem",
-        "M820,206 H860 V500",
-        ["tr>wrap", "tr>client"],
-        "transport",
-        (868, 350),
+        "wrap_cg",
+        "M480,242 V290 H575 V486 H620",
+        ["wrap>cg"],
+        "call_grpc()",
+        (583, 400),
         "start",
-        False,
+        True,
     ),
-    ("tr_wrap", "M860,500 H530", ["tr>wrap"], None, (0, 0), "middle", True),
-    ("tr_client", "M860,500 V626 H530", ["tr>client"], None, (0, 0), "middle", True),
     (
-        "wrap_client",
-        "M430,522 V590",
-        ["wrap>client"],
-        "wrappers",
-        (438, 560),
+        "rest_models",
+        "M240,346 H330",
+        ["rest>models"],
+        "models",
+        (285, 338),
+        "middle",
+        True,
+    ),
+    (
+        "rest_rj",
+        "M140,382 V450",
+        ["rest>rj"],
+        "request_json()",
+        (148, 420),
         "start",
+        True,
+    ),
+    ("cg_rj", "M620,506 H240", ["cg>rj"], "parsing", (439, 498), "middle", True),
+    (
+        "rj_base",
+        "M140,522 V626 H330",
+        ["rj>base"],
+        "APIConfig, auth",
+        (148, 570),
+        "start",
+        True,
+    ),
+    (
+        "cg_base",
+        "M720,522 V610 H530",
+        ["cg>base"],
+        "APIConfig, errors",
+        (728, 570),
+        "start",
+        True,
+    ),
+    (
+        "tr_base",
+        "M820,206 H860 V640 H530",
+        ["tr>base"],
+        "APIConfig, auth",
+        (852, 420),
+        "end",
         True,
     ),
 ]
 
 # Real imports the explorer leaves out, so the figure stays readable.
-_UNDRAWN = {"base>rest", "base>wrap", "base>client", "rest>client"}
+_UNDRAWN = {"client>base", "client>rest", "wrap>base", "rest>base"}
 
 _PATHS = {
     "rest": {
         "label": "REST call",
         "family": "blue",
-        "title": "A call on a REST transport",
-        "text": "The wrapper calls the REST function. It builds the request with the models and sends it with request_json().",
-        "links": ["base>rj", "rj>rest", "models>rest", "rest>wrap", "wrap>client"],
+        "title": "What a REST call uses",
+        "text": "KentikAPI calls a wrapper. The wrapper calls the REST function, which builds the request "
+        "with the models and sends it with request_json().",
+        "links": ["client>wrap", "wrap>rest", "rest>models", "rest>rj", "rj>base"],
     },
     "grpc": {
         "label": "gRPC call",
         "family": "violet",
-        "title": "A call on a gRPC transport",
-        "text": "The wrapper builds the proto request with the stubs and sends it with call_grpc(), which parses the answer into the REST models.",
+        "title": "What a gRPC call uses",
+        "text": "KentikAPI calls a wrapper. The wrapper builds the proto request with the stubs and sends it "
+        "with call_grpc(), which parses the answer into the same models as REST.",
         "links": [
-            "base>cg",
-            "rj>cg",
-            "cg>wrap",
-            "pb>wrap",
-            "models>wrap",
-            "wrap>client",
+            "client>wrap",
+            "wrap>pb",
+            "wrap>models",
+            "wrap>cg",
+            "cg>rj",
+            "cg>base",
         ],
     },
     "setup": {
         "label": "Client setup",
         "family": "orange",
-        "title": "Building the client",
+        "title": "What building the client uses",
         "text": "KentikAPI builds one transport from the APIConfig and gives it to every wrapper that it mounts.",
-        "links": ["base>tr", "tr>client", "tr>wrap", "wrap>client"],
+        "links": ["client>tr", "client>wrap", "wrap>tr", "tr>base"],
     },
 }
 
@@ -529,13 +540,13 @@ def _call_path_diagram() -> list[str]:
 
 
 def _dependency_explorer(edge_counts: dict[tuple[str, str], int]) -> list[str]:
-    """The Module Dependencies explorer: provider-to-consumer wires between the parts."""
+    """The Module Dependencies explorer: from KentikAPI at the top down to the shared foundation."""
     part_of = {group: part for part, groups in _PART_GROUPS.items() for group in groups}
     imports: dict[str, int] = {}
     for (importer, imported), count in edge_counts.items():
-        provider, consumer = part_of.get(imported), part_of.get(importer)
-        if provider and consumer and provider != consumer:
-            key = f"{provider}>{consumer}"
+        user, used = part_of.get(importer), part_of.get(imported)
+        if user and used and user != used:
+            key = f"{user}>{used}"
             imports[key] = imports.get(key, 0) + count
 
     drawn = {key for _, _, keys, *_ in _WIRES for key in keys}
@@ -544,7 +555,9 @@ def _dependency_explorer(edge_counts: dict[tuple[str, str], int]) -> list[str]:
             f"the dependency explorer draws imports that do not exist: {missing}"
         )
     if left_out := sorted(imports.keys() - drawn - _UNDRAWN):
-        print(f"    ⚠️  The dependency explorer does not draw: {', '.join(left_out)}")
+        print(
+            f"    \u26a0\ufe0f  The dependency explorer does not draw: {', '.join(left_out)}"
+        )
 
     def counted(keys: list[str], index: int) -> list[str]:
         return [
@@ -556,9 +569,9 @@ def _dependency_explorer(edge_counts: dict[tuple[str, str], int]) -> list[str]:
     for pid, (*_, title, role, stops) in _PARTS.items():
         sources = ", ".join(_GROUP_CONFIG[g][1] for g in _PART_GROUPS[pid])
         facts = [f"Source: {sources}"]
-        if uses := counted([k for k in imports if k.endswith(f">{pid}")], 0):
+        if uses := counted([k for k in imports if k.startswith(f"{pid}>")], 1):
             facts.append("Imports " + ", ".join(uses))
-        if users := counted([k for k in imports if k.startswith(f"{pid}>")], 1):
+        if users := counted([k for k in imports if k.endswith(f">{pid}")], 0):
             facts.append("Imported by " + ", ".join(users))
         parts[pid] = {"title": title, "role": role, "facts": facts, "stops": stops}
 
@@ -573,25 +586,27 @@ def _dependency_explorer(edge_counts: dict[tuple[str, str], int]) -> list[str]:
     ]
     markup = dk.svg(
         "deps-svg",
-        (1060, 690),
-        "Module dependencies: the shared foundation feeds the runtimes and the transports. "
-        "They, the models and the proto stubs feed the service wrappers, which KentikAPI mounts.",
-        # The transport channel sits right of the grid, so shift the grid to center the start.
-        '<g transform="translate(100,0)">' + "".join(wires + boxes) + "</g>",
+        (900, 690),
+        "Module dependencies: KentikAPI at the top imports the service wrappers and the transports. "
+        "They import the runtimes, the models and the proto stubs, down to the shared foundation.",
+        # The right channel of the transport wire makes the grid off center by 20 px.
+        '<g transform="translate(20,0)">' + "".join(wires + boxes) + "</g>",
         prefix,
     )
     data = {
-        "select": "wrap",
+        "select": "client",
         "parts": parts,
         "links": {key: f"{imports[key]} import statements" for key in sorted(drawn)},
         "paths": _PATHS,
+        "words": {"from": "Used by", "to": "Uses"},
     }
     return fragment(
         markup,
         data,
-        "Select a part. Bold lines show what it needs. Moving lines show where it is used. Each arrow "
-        "points from a module to a module that imports it. Every part also imports the shared "
-        "foundation, but the diagram draws that only for the runtimes and the transports.",
+        "Start at KentikAPI at the top. Each arrow points from a part to a part that it imports. Select a "
+        "part: moving lines show what it uses, and bold lines show what uses it. Every part also imports "
+        "the shared foundation, but the diagram draws that only for the runtimes and the transports.",
+        legend=("what uses the selected part", "what the selected part uses"),
     )
 
 

@@ -121,6 +121,7 @@
   function wire(svg) {
     const d = DATA[svg.id] || {};
     const parts = d.parts || {};
+    const words = d.words || {};
     const card = document.querySelector(`[data-detail-for="${svg.id}"]`);
     const chipBox = document.querySelector(`[data-paths-for="${svg.id}"]`);
     const chips = [];
@@ -162,7 +163,7 @@
       if (p.facts?.length) left.append(el("h4", { text: "Facts" }), el("ul", {}, p.facts.map((f) => el("li", { text: f }))));
       if (p.setting) left.append(el("h4", { text: "Setting" }), el("div", { class: "setting", text: p.setting }));
       if (p.text) left.append(el("p", { text: p.text }));
-      const right = el("div", {}, [el("h4", { text: "Gets data from" }), rel(ups), el("h4", { text: "Sends data to" }), rel(downs)]);
+      const right = el("div", {}, [el("h4", { text: words.from || "Gets data from" }), rel(ups), el("h4", { text: words.to || "Sends data to" }), rel(downs)]);
       if (requests.length) {
         const text = requests.map((l) => `${title(l.from)} to ${title(l.to)}: ${l.label}`).join(". ");
         right.append(el("h4", { text: "Requests" }), el("p", { class: "none", text: `${text}.` }));
