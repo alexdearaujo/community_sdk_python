@@ -182,7 +182,7 @@
       chips.push(all);
       for (const [key, path] of Object.entries(d.paths)) {
         const fam = path.family === "neutral" ? "neu" : path.family || "neu";
-        const b = el("button", { class: "chip", type: "button", "aria-pressed": "false", "data-path": key }, [
+        const b = el("button", { class: "chip", type: "button", "aria-pressed": "false", "data-path": key, "data-tone": fam }, [
           el("span", { class: "dot", style: `background:var(--${fam}-border)` }), path.label || key,
         ]);
         b.addEventListener("click", () => {

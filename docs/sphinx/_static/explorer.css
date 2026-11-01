@@ -142,9 +142,21 @@
 .kx h4 { margin: 0 0 6px; font: 600 0.72rem/1.3 var(--body); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .kx { display: grid; gap: 14px; margin: 1.5rem 0; color: var(--fg); }
 .kx .diagram svg { min-width: 720px; }
+.kx { --tone: var(--fg); --tone-bg: var(--fg); --tone-fg: var(--bg); }
+.kx [data-tone="blue"], .kx[data-tone="blue"] { --tone: var(--blue-border); --tone-bg: var(--blue-strong); --tone-fg: var(--blue-text); }
+.kx [data-tone="violet"], .kx[data-tone="violet"] { --tone: var(--violet-border); --tone-bg: var(--violet-strong); --tone-fg: var(--violet-text); }
+.kx [data-tone="green"], .kx[data-tone="green"] { --tone: var(--green-border); --tone-bg: var(--green-strong); --tone-fg: var(--green-text); }
+.kx [data-tone="orange"], .kx[data-tone="orange"] { --tone: var(--orange-border); --tone-bg: var(--orange-strong); --tone-fg: var(--orange-text); }
+.kx [data-tone="red"], .kx[data-tone="red"] { --tone: var(--red-border); --tone-bg: var(--red-strong); --tone-fg: var(--red-text); }
+.kx [data-tone="cyan"], .kx[data-tone="cyan"] { --tone: var(--cyan-border); --tone-bg: var(--cyan-strong); --tone-fg: var(--cyan-text); }
+.kx [data-tone="yellow"], .kx[data-tone="yellow"] { --tone: var(--yellow-border); --tone-bg: var(--yellow-strong); --tone-fg: var(--yellow-text); }
+.kx .chip .dot { background: var(--tone); }
+.kx .chip:hover:not(:disabled) { border-color: var(--tone); }
+.kx .chip[aria-pressed="true"] { background: var(--tone-bg); color: var(--tone-fg); border-color: var(--tone); }
 .kx.seq-steps { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0.5rem 0 1.5rem; }
-.kx .seq-nav { background: var(--sunk); }
+.kx .seq-nav { border-color: var(--tone); }
+.kx .seq-nav:last-child:not(:disabled) { background: var(--tone-bg); color: var(--tone-fg); }
 .kx .seq-group { display: flex; flex-wrap: wrap; gap: 8px; }
 .kx .seq-group + .seq-group { padding-left: 12px; border-left: 1px solid var(--line-strong); }
 .kx .chip:disabled { opacity: 0.4; cursor: default; }
-.kx .seq-status { flex-basis: 100%; font: 0.85rem/1.4 var(--mono); color: var(--muted); }
+.kx .seq-status { flex-basis: 100%; font: 0.85rem/1.4 var(--mono); color: var(--muted); border-left: 3px solid var(--tone); padding-left: 8px; }

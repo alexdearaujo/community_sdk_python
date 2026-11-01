@@ -21,12 +21,12 @@ models and raise the same exception types.
 sequenceDiagram
     participant C as Your code
     participant W as Service wrapper<br/>(37 services, 240 operations)
-    box rgb(231,245,255) REST transport
+    box transparent REST transport
     participant R as REST function<br/>gen/{service}/services/
     participant RJ as request_json()
     participant RA as Kentik REST API
     end
-    box rgb(243,240,255) gRPC transport
+    box transparent gRPC transport
     participant CG as call_grpc()
     participant GA as Kentik gRPC API
     end

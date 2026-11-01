@@ -15,6 +15,7 @@ from . import diagram_kit as dk
 from ._shared import write_text_lf
 
 _SCOPE = ".kx"
+_TONES = ("blue", "violet", "green", "orange", "red", "cyan", "yellow")
 
 
 def _scoped(css: str) -> str:
@@ -55,12 +56,25 @@ def explorer_css() -> str:
             _scoped(components + badges + dk.DIAGRAM_CSS + headings),
             f"{_SCOPE} {{ display: grid; gap: 14px; margin: 1.5rem 0; color: var(--fg); }}",
             f"{_SCOPE} .diagram svg {{ min-width: 720px; }}",
+            f"{_SCOPE} {{ --tone: var(--fg); --tone-bg: var(--fg); --tone-fg: var(--bg); }}",
+            *(
+                f'{_SCOPE} [data-tone="{fam}"], {_SCOPE}[data-tone="{fam}"] {{ --tone: var(--{fam}-border); '
+                f"--tone-bg: var(--{fam}-strong); --tone-fg: var(--{fam}-text); }}"
+                for fam in _TONES
+            ),
+            f"{_SCOPE} .chip .dot {{ background: var(--tone); }}",
+            f"{_SCOPE} .chip:hover:not(:disabled) {{ border-color: var(--tone); }}",
+            f'{_SCOPE} .chip[aria-pressed="true"] {{ background: var(--tone-bg); color: var(--tone-fg); border-color: var(--tone); }}',
             f"{_SCOPE}.seq-steps {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0.5rem 0 1.5rem; }}",
-            f"{_SCOPE} .seq-nav {{ background: var(--sunk); }}",
+            f"{_SCOPE} .seq-nav {{ border-color: var(--tone); }}",
+            f"{_SCOPE} .seq-nav:last-child:not(:disabled) {{ background: var(--tone-bg); color: var(--tone-fg); }}",
             f"{_SCOPE} .seq-group {{ display: flex; flex-wrap: wrap; gap: 8px; }}",
             f"{_SCOPE} .seq-group + .seq-group {{ padding-left: 12px; border-left: 1px solid var(--line-strong); }}",
             f"{_SCOPE} .chip:disabled {{ opacity: 0.4; cursor: default; }}",
-            f"{_SCOPE} .seq-status {{ flex-basis: 100%; font: 0.85rem/1.4 var(--mono); color: var(--muted); }}",
+            (
+                f"{_SCOPE} .seq-status {{ flex-basis: 100%; font: 0.85rem/1.4 var(--mono); color: var(--muted); "
+                f"border-left: 3px solid var(--tone); padding-left: 8px; }}"
+            ),
             "",
         ]
     )
