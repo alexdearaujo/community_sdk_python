@@ -10,7 +10,8 @@
     const texts = [...svg.querySelectorAll(".messageText")];
     if (!lines.length || lines.length !== texts.length) return;
     const y = (el) => parseFloat(el.getAttribute("y1") || el.getAttribute("y") || "0");
-    const steps = lines.map((line, i) => ({ line, text: texts[i], y: y(line), label: texts[i].textContent.trim() }));
+    // A self-message is a path with no y attribute, so place every step by its text.
+    const steps = lines.map((line, i) => ({ line, text: texts[i], y: y(texts[i]), label: texts[i].textContent.trim() }));
 
     const labels = [...svg.querySelectorAll(".loopText")].map((t) => ({ name: t.textContent.trim().replace(/^\[|\]$/g, ""), y: y(t) }));
     const bottom = Math.max(...[...svg.querySelectorAll(".loopLine")].map((l) => Math.max(y(l), parseFloat(l.getAttribute("y2") || "0"))), 0);
@@ -49,9 +50,11 @@
         s.text.style.fontWeight = lit ? "700" : "";
       }
       if (current < 0) {
-        status.textContent = shown === steps
-          ? `${steps.length} steps. Press Next to follow them one at a time.`
-          : `${shown.length} steps on this path. Press Next to follow them.`;
+        status.textContent = shown !== steps
+          ? `${shown.length} steps on this path. Press Next to follow them.`
+          : branches.length
+            ? `Each call takes only one section of the dotted alt box. Pick one above, or press Next to follow the first: ${branches[0].name}.`
+            : `${steps.length} steps. Press Next to follow them one at a time.`;
       } else {
         status.textContent = `Step ${current + 1} of ${shown.length}: ${shown[current].label}`;
       }
@@ -72,7 +75,12 @@
     }
 
     const back = button("Back", () => { current = Math.max(-1, current - 1); paint(); });
-    const next = button("Next", () => { current = Math.min(shown.length - 1, current + 1); paint(); });
+    const next = button("Next", () => {
+      // Stepping through every branch would suggest that a call runs all of them.
+      if (shown === steps && branchButtons.length) branchButtons[0].click();
+      current = Math.min(shown.length - 1, current + 1);
+      paint();
+    });
     back.classList.add("seq-nav");
     next.classList.add("seq-nav");
 
