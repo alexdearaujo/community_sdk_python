@@ -1,9 +1,9 @@
 # kentik-api
 
 A type-safe Python client for the [Kentik](https://www.kentik.com) API v6.
-It is generated from Kentik's public
+A generator builds it from Kentik's public
 [OpenAPI schema](https://github.com/kentik/api-schema-public), so it covers
-every published endpoint, and it calls them over REST or gRPC.
+every published endpoint. It calls the endpoints over REST or gRPC.
 
 Version 2 is a rewrite. If you use kentik-api 1.x, read the
 [migration guide](https://github.com/kentik/community_sdk_python/blob/main/docs/sphinx/guides/migrating-from-1x.md)
@@ -15,7 +15,7 @@ before you upgrade.
 pip install -U "kentik-api>=2"
 ```
 
-Requires Python 3.12 or later.
+kentik-api requires Python 3.12 or later.
 
 ## Make a call
 
@@ -27,7 +27,7 @@ KENTIK_EMAIL=you@example.com
 KENTIK_API_TOKEN=your_api_token
 ```
 
-Then:
+Then make the call:
 
 ```python
 from kentik_api import KentikAPI
@@ -64,5 +64,5 @@ exceptions, so you can switch without changing other code.
 
 ## License
 
-Apache-2.0. See
+kentik-api uses the Apache-2.0 license. See
 [LICENSE](https://github.com/kentik/community_sdk_python/blob/main/LICENSE).

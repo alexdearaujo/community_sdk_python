@@ -2,10 +2,11 @@
 
 # Kentik Community SDK Documentation
 
-Welcome to the automated documentation for the Kentik Community SDK.
+The Kentik Community SDK is a type-safe Python client for the Kentik API. A
+generator builds it from the Kentik OpenAPI schemas. It uses Pydantic v2 for
+its models and HTTPX for REST calls.
 
-This SDK is automatically generated from the Kentik OpenAPI schemas, providing
-a modern, type-safe Python interface powered by **Pydantic v2** and **HTTPX**.
+To make your first call, start with the [Quick Start](guides/quickstart.md).
 
 :::{toctree}
 :maxdepth: 2

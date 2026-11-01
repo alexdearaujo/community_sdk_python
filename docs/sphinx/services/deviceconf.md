@@ -12,7 +12,10 @@ This service's schema defines shared types only. It has no REST endpoints.
 <details>
 <summary>Model relationships (27 of 27 models)</summary>
 
+Each arrow points from a model to a model that one of its fields holds. The label names the field.
+
 ```mermaid
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 classDiagram
     class AclAction
     class AclMode
@@ -41,23 +44,23 @@ classDiagram
     class UpdateDeviceConfigurationResponse
     class protobufAny
     class rpcStatus
-    CommandAcl --> AclAction
-    CommandAcl --> AclMode
-    DeleteDeviceConfigurationResponse --> Revision
-    Device --> DevicePlatform
-    Device --> DeviceSSHCreds
-    Device --> FetchParameters
-    ExecuteCommandResponse --> CommandResult
-    GetCommandAclsResponse --> CommandAcl
-    GetDeviceAssignmentsResponse --> Device
-    GetDeviceConfigurationResponse --> Snapshot
-    ListDeviceConfigurationRevisionsResponse --> Revision
-    MessageSignature --> SignatureAlgorithm
-    Snapshot --> CommitDetails
-    Snapshot --> ConfigEncoding
-    Snapshot --> DevicePlatform
-    Snapshot --> Revision
-    rpcStatus --> protobufAny
+    CommandAcl --> AclAction : action
+    CommandAcl --> AclMode : mode
+    DeleteDeviceConfigurationResponse --> Revision : orphanedRevision
+    Device --> DevicePlatform : platform
+    Device --> DeviceSSHCreds : sshCreds
+    Device --> FetchParameters : fetchParams
+    ExecuteCommandResponse --> CommandResult : commandResult
+    GetCommandAclsResponse --> CommandAcl : acls
+    GetDeviceAssignmentsResponse --> Device : devices
+    GetDeviceConfigurationResponse --> Snapshot : config
+    ListDeviceConfigurationRevisionsResponse --> Revision : revisions
+    MessageSignature --> SignatureAlgorithm : algorithm
+    Snapshot --> CommitDetails : commitDetails
+    Snapshot --> ConfigEncoding : encoding
+    Snapshot --> DevicePlatform : platform
+    Snapshot --> Revision : revision, diffRevision
+    rpcStatus --> protobufAny : details
 ```
 
 </details>

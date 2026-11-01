@@ -37,8 +37,19 @@ myst_enable_extensions = [
 ]
 
 myst_fence_as_directive = ["mermaid"]
+# Pinned: participant types and the neo look need 12, and the step script reads its SVG classes.
+mermaid_version = "12.2.0"
 
 html_theme = "sphinx_book_theme"
+
+# The generator writes these from scripts/generation/diagram_assets/. The script
+# only acts on pages that hold an interactive diagram.
+html_static_path = ["_static"]
+html_css_files = ["explorer.css"]
+html_js_files = [
+    ("explorer.js", {"defer": "defer"}),
+    ("sequence-steps.js", {"defer": "defer"}),
+]
 
 # Skip copying every source page into build/html/_sources/. Those copies are
 # byte-identical to docs/sphinx/**, and this repo already tracks the

@@ -2,6 +2,7 @@
 """Constants and helpers used by more than one generation phase module."""
 
 import ast
+import json
 import keyword
 import re
 from dataclasses import dataclass
@@ -13,6 +14,56 @@ SDK_OUTPUT_DIR = PROJECT_ROOT / "src" / "kentik_api" / "gen"
 REGENERATE_COMMAND = "uv run poe generate"
 
 INTERNAL_GEN_DIRS = frozenset({"__pycache__", "pb_companions"})
+
+_MERMAID_FONT = "ui-monospace, SFMono-Regular, Menlo, monospace"
+
+# The diagrams-skill palette, so sequence diagrams match the flowchart classes.
+_MERMAID_THEME = {
+    "fontFamily": _MERMAID_FONT,
+    "primaryColor": "#f8f9fa",
+    "primaryBorderColor": "#495057",
+    "primaryTextColor": "#212529",
+    "textColor": "#212529",
+    "lineColor": "#77818c",
+    "edgeLabelBackground": "#ffffff",
+    "actorBkg": "#f8f9fa",
+    "actorBorder": "#495057",
+    "actorTextColor": "#212529",
+    "actorLineColor": "#a9b3be",
+    "signalColor": "#57616d",
+    "signalTextColor": "#212529",
+    "labelBoxBkgColor": "#f8f9fa",
+    "labelBoxBorderColor": "#495057",
+    "labelTextColor": "#212529",
+    "loopTextColor": "#57616d",
+    "noteBkgColor": "#fff9db",
+    "noteBorderColor": "#f08c00",
+    "noteTextColor": "#a35a00",
+}
+
+
+def mermaid_init(curve: str = "step") -> str:
+    """The first line of a house-style Mermaid block.
+
+    An init line, not YAML frontmatter: MyST reads a leading `---` block in a
+    mermaid fence as directive options. The redux theme gives Mermaid 12's
+    default shapes and line widths; themeVariables keep the house colors.
+    """
+    config = {
+        "theme": "redux",
+        "look": "neo",
+        "layout": "dagre",
+        "fontFamily": _MERMAID_FONT,
+        "themeVariables": _MERMAID_THEME,
+        "sequence": {"activationWidth": 16},
+        "flowchart": {
+            "curve": curve,
+            "nodeSpacing": 30,
+            "rankSpacing": 70,
+            "wrappingWidth": 400,
+        },
+    }
+    return f"%%{{init: {json.dumps(config)}}}%%"
 
 
 def write_text_lf(path: Path, text: str) -> None:

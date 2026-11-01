@@ -1,4 +1,4 @@
-<!-- HAND-WRITTEN: not modified by [`uv run poe generate`](../../../pyproject.toml). Edit directly. -->
+<!-- HAND-WRITTEN prose, except the `kentik-gen` marker blocks, which [`uv run poe generate`](../../../pyproject.toml) rewrites. Fix those in scripts/generation/docs_rendering.py. -->
 
 # REST vs gRPC
 
@@ -8,8 +8,8 @@ where the two transports differ and how to choose one.
 
 ## Choosing a transport
 
-Use REST unless you have a reason not to. The two transports behave the same
-in most ways that matter, and REST covers every operation.
+Use REST unless you have a reason to use gRPC. The two transports behave the
+same in most ways that matter, and REST covers every operation.
 
 | Workload | Use | Why |
 | --- | --- | --- |
@@ -20,7 +20,8 @@ in most ways that matter, and REST covers every operation.
 | Debugging an API problem | REST | You can read the body and reproduce the call with curl. |
 
 This guide does not cover payload size, general speed, or behavior behind a
-proxy. None of the three was measured, so no advice here depends on them.
+proxy. The project did not measure these three, so no advice here depends on
+them.
 
 ## What is the same on both transports
 
@@ -32,11 +33,11 @@ proxy. None of the three was measured, so no advice here depends on them.
 | Timeout | Every call has one: 60 seconds by default, set with `timeout`. |
 | Quota | One budget per endpoint, shared by both transports. |
 
-The client is the unit to reuse on both transports. The first call on a new
+Reuse one client for many calls, on both transports. The first call on a new
 client pays for the TCP connection and the TLS handshake. In a measured run of
 five `device.list` calls, the first call took 1.5 s on REST and 1.2 s on gRPC.
-Later calls took 0.86 s and 0.76 s on average. Five calls is too few to rank
-the transports, but it shows that a new client for each call adds hundreds of
+Later calls took 0.86 s and 0.76 s on average. Five calls are too few to rank
+the transports. The run shows that a new client for each call adds hundreds of
 milliseconds.
 
 ## How each transport works
@@ -47,21 +48,21 @@ milliseconds.
 | Body | JSON (`application/json`) | Protobuf (`application/grpc`) |
 | Readable without tools | Yes | No. Field numbers replace field names. |
 | Reproduce with curl | Yes | No. `grpcurl` can, with the `.proto` files. |
-| Runtime entry point | [`request_json()`](../../../src/kentik_api/core/rest_runtime.py) | [`call_grpc()`](../../../src/kentik_api/core/grpc_runtime.py) |
+| Runtime entry point | [`request_json()`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/core/rest_runtime.py) | [`call_grpc()`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/core/grpc_runtime.py) |
 
 Each service method checks the transport once. On gRPC, the method converts
-the request to a protobuf message, calls the stub through `call_grpc()`, and
-converts the response back into the same Pydantic model that REST returns.
+the request to a protobuf message and calls the stub through `call_grpc()`.
+It then converts the response into the same Pydantic model that REST returns.
 
 ### Deadlines
 
-A gRPC channel stays open for as long as the client lives, and gRPC's own
-default is to wait forever. The SDK adds the client's deadline to every gRPC
-call that has none, in
-[`GrpcTransport`](../../../src/kentik_api/transports/grpc_client.py). A call
-to a server that accepts the connection and never answers raises
-`TransportError` at the deadline. To give one slow call more time, on either
-transport:
+A gRPC channel stays open while the client lives. By default, gRPC waits
+forever for an answer.
+[`GrpcTransport`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/transports/grpc_client.py)
+adds the deadline of the client to every gRPC call that has none. A call to a
+server that accepts the connection and never answers raises `TransportError`
+at the deadline. To give one slow call more time, on either transport, use
+`with_timeout()`:
 
 ```python
 result = client.device.list(
@@ -71,7 +72,7 @@ result = client.device.list(
 
 Keep the 60-second default or raise it. An unthrottled `device.list` call
 returns in about 0.6 s. Past Kentik's soft limit, the API delays each response
-by up to 1.5 s and does not return an error, so a short timeout turns
+by up to 1.5 s and does not return an error. A short timeout therefore turns
 throttling into a `TransportError`.
 
 ### Errors that only gRPC has
@@ -85,10 +86,10 @@ status 409.
 
 ## Both transports reach the same services
 
-Kentik's REST API is a transcoding layer in front of the gRPC services. An
-Envoy proxy receives each REST request, converts it to a gRPC call, and
-converts the gRPC response back to JSON. Every REST response carries the
-evidence:
+Kentik's REST API is a transcoding layer in front of the gRPC services: a
+layer that converts each REST call into a gRPC call. An Envoy proxy receives
+each REST request and converts it to a gRPC call. It then converts the gRPC
+response back to JSON. Three headers on every REST response show this:
 
 | Response header | What it shows |
 | --- | --- |
@@ -96,18 +97,26 @@ evidence:
 | `grpc-status` | The status code of the gRPC call behind the REST call. |
 | `grpc-message` | The error text of that gRPC call, when it failed. |
 
-```mermaid
-flowchart LR
-    R["KentikAPI(protocol='rest')"] -->|HTTPS + JSON| E[Envoy transcoder]
-    G["KentikAPI(protocol='grpc')"] -->|HTTP/2 + protobuf| S
-    E -->|gRPC| S[Kentik gRPC services]
+<!-- kentik-gen:transport-paths-explorer -->
+```{raw} html
+<div class="kx">
+<div class="chips" role="group" aria-label="Show one path" data-paths-for="transports-svg"></div>
+<figure>
+<div class="diagram explorer"><svg id="transports-svg" viewBox="0 0 1100 560" role="img" aria-label="Both clients reach the same Kentik gRPC services: REST through the Envoy transcoder, gRPC directly." xmlns="http://www.w3.org/2000/svg"><defs><marker id="tp-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker><marker id="tp-ah-hi" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-hi"/></marker></defs><g class="edge call" data-seg="code_rest" data-links="code>restc"><path d="M450,56 H230 V170" class="wire arrow" marker-end="url(#tp-ah)"/><text x="340" y="48" class="elabel" text-anchor="middle">method call</text></g><g class="edge data" data-seg="rest_code" data-links="restc>code"><path d="M290,170 V86 H450" class="wire arrow" marker-end="url(#tp-ah)"/><text x="298" y="130" class="elabel" text-anchor="start">Pydantic model</text></g><g class="edge call" data-seg="code_grpc" data-links="code>grpcc"><path d="M650,56 H870 V170" class="wire arrow" marker-end="url(#tp-ah)"/><text x="760" y="48" class="elabel" text-anchor="middle">method call</text></g><g class="edge data" data-seg="grpc_code" data-links="grpcc>code"><path d="M810,170 V86 H650" class="wire arrow" marker-end="url(#tp-ah)"/><text x="802" y="130" class="elabel" text-anchor="end">Pydantic model</text></g><g class="edge call" data-seg="rest_envoy" data-links="restc>envoy"><path d="M230,242 V310" class="wire arrow" marker-end="url(#tp-ah)"/><text x="222" y="280" class="elabel" text-anchor="end">HTTPS + JSON</text></g><g class="edge data" data-seg="envoy_rest" data-links="envoy>restc"><path d="M290,310 V242" class="wire arrow" marker-end="url(#tp-ah)"/><text x="298" y="280" class="elabel" text-anchor="start">JSON</text></g><g class="edge call" data-seg="envoy_svc" data-links="envoy>svc"><path d="M290,382 V476 H450" class="wire arrow" marker-end="url(#tp-ah)"/><text x="361" y="468" class="elabel" text-anchor="middle">gRPC call</text></g><g class="edge data" data-seg="svc_envoy" data-links="svc>envoy"><path d="M450,506 H230 V382" class="wire arrow" marker-end="url(#tp-ah)"/><text x="340" y="524" class="elabel" text-anchor="middle">gRPC response</text></g><g class="edge call" data-seg="grpc_svc" data-links="grpcc>svc"><path d="M810,242 V476 H650" class="wire arrow" marker-end="url(#tp-ah)"/><text x="802" y="420" class="elabel" text-anchor="end">gRPC call</text></g><g class="edge data" data-seg="svc_grpc" data-links="svc>grpcc"><path d="M650,506 H870 V242" class="wire arrow" marker-end="url(#tp-ah)"/><text x="878" y="420" class="elabel" text-anchor="start">gRPC response</text></g><g class="node fam-green src " data-id="code" tabindex="0" role="button" aria-label="Select Your code"><rect x="450" y="30" width="200" height="72" rx="14"/><text x="550.0" y="62.5" class="nm">Your code</text><text x="550.0" y="79.5" class="ft">same methods</text></g><g class="node fam-blue proc " data-id="restc" tabindex="0" role="button" aria-label="Select KentikAPI(protocol=&quot;rest&quot;)"><rect x="160" y="170" width="200" height="72" rx="14"/><text x="260.0" y="202.5" class="nm">protocol=&quot;rest&quot;</text><text x="260.0" y="219.5" class="ft">HTTPS + JSON</text></g><g class="node fam-violet proc " data-id="grpcc" tabindex="0" role="button" aria-label="Select KentikAPI(protocol=&quot;grpc&quot;)"><rect x="740" y="170" width="200" height="72" rx="14"/><text x="840.0" y="202.5" class="nm">protocol=&quot;grpc&quot;</text><text x="840.0" y="219.5" class="ft">HTTP/2 + protobuf</text></g><g class="node fam-blue proc " data-id="envoy" tabindex="0" role="button" aria-label="Select Envoy transcoder"><rect x="160" y="310" width="200" height="72" rx="14"/><text x="260.0" y="342.5" class="nm">Envoy transcoder</text><text x="260.0" y="359.5" class="ft">JSON to gRPC and back</text></g><g class="node fam-neutral hub " data-id="svc" tabindex="0" role="button" aria-label="Select Kentik gRPC services"><rect x="450" y="450" width="200" height="72" rx="14"/><text x="550.0" y="482.5" class="nm">Kentik gRPC services</text><text x="550.0" y="499.5" class="ft">one quota per endpoint</text></g></svg></div>
+<figcaption>Select a part. Each hop is a call going down and its answer coming back up. Both paths end at the same services, so both take from the same quota.</figcaption>
+</figure>
+<div class="legend" aria-hidden="true"><span><svg viewBox="0 0 34 10"><line x1="2" y1="5" x2="32" y2="5" stroke="var(--wire-hi)" stroke-linecap="round" stroke-width="3"/></svg>what the selected part needs</span><span><svg viewBox="0 0 34 10"><line x1="2" y1="5" x2="32" y2="5" stroke="var(--wire-hi)" stroke-linecap="round" stroke-width="3" stroke-dasharray="9 7"/></svg>where its data goes</span></div>
+<div class="detail" data-detail-for="transports-svg" aria-live="polite"></div>
+<script type="application/json" id="diagram-data">{"transports-svg": {"select": "svc", "parts": {"code": {"title": "Your code", "role": "Calls the same service methods on either client.", "facts": ["Both clients return the same Pydantic models"], "stops": "Nothing is sent."}, "restc": {"title": "KentikAPI(protocol=\"rest\")", "role": "Sends each call as an HTTPS request with a JSON body.", "facts": ["HTTP/1.1", "Every operation, V5 included"], "stops": "Expected: REST calls stop. A gRPC client keeps working."}, "grpcc": {"title": "KentikAPI(protocol=\"grpc\")", "role": "Sends each call as a gRPC call with a protobuf body.", "facts": ["HTTP/2", "Every V6 operation. V5 calls go over REST"], "stops": "Expected: gRPC calls stop. A REST client keeps working."}, "envoy": {"title": "Envoy transcoder", "role": "Converts each REST request into a gRPC call, and the answer back into JSON.", "facts": ["Answers with the header server: envoy", "Copies the gRPC status into grpc-status"], "stops": "Expected: REST calls fail. gRPC calls keep working."}, "svc": {"title": "Kentik gRPC services", "role": "The services behind both transports.", "facts": ["60 requests per 60 seconds for each endpoint", "REST and gRPC take from the same quota"], "stops": "Expected: both transports fail."}}, "paths": {"rest": {"label": "REST", "family": "blue", "title": "A REST call", "text": "Envoy converts the request into a gRPC call and the answer back into JSON.", "links": ["code>restc", "restc>envoy", "envoy>svc", "svc>envoy", "envoy>restc", "restc>code"]}, "grpc": {"label": "gRPC", "family": "violet", "title": "A gRPC call", "text": "The gRPC client calls the services directly.", "links": ["code>grpcc", "grpcc>svc", "svc>grpcc", "grpcc>code"]}}}}</script>
+</div>
 ```
+<!-- /kentik-gen:transport-paths-explorer -->
 
 The two transports therefore share one quota. Kentik allows 60 requests per
-60 seconds for each endpoint, and a REST call and a gRPC call to the same
-endpoint take from the same 60. In a measured run that alternated between
-the transports, the remaining quota fell by one on each call: 59, 58, 57, 56,
-55, 54. A change of transport does not give you more requests. See the
+60 seconds for each endpoint. A REST call and a gRPC call to the same endpoint
+take from the same 60. In a measured run that alternated between the
+transports, the remaining quota fell by one on each call: 59, 58, 57, 56, 55,
+54. A change of transport does not give you more requests. See the
 [rate limiting guide](rate_limiting.md) for the quota headers and the limits
 that no header shows.
 

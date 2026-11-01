@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from types import FunctionType
 
+from . import diagram_kit as dk
 from ._shared import (
     PROJECT_ROOT,
     REGENERATE_COMMAND,
@@ -24,9 +25,12 @@ from ._shared import (
     grpc_call,
     grpc_stub_services,
     iter_service_dirs,
+    mermaid_init,
     parse_wrapper_methods,
+    service_to_pascal_case,
     write_text_lf,
 )
+from .explorer_docs import fragment
 
 MD_FENCE = "`" * 3
 SCHEMA_RECORD_FILE = PROJECT_ROOT / "schema_operations.json"
@@ -411,6 +415,7 @@ def _render_operation_sequence_diagram(
     method_name: str,
     params: list[tuple[str, str, bool]],
     grpc_call: GrpcCall | None,
+    sub_heading: str,
     rest_only: bool = False,
 ) -> list[str]:
     """Renders REST and gRPC sequence diagrams side by side for one operation."""
@@ -426,16 +431,17 @@ def _render_operation_sequence_diagram(
     success_model = success_resp.type_label if success_resp else "response"
 
     rest_diagram = [
-        "**REST transport**",
+        f"{sub_heading} REST call flow",
         "",
         f"{MD_FENCE}mermaid",
+        mermaid_init(),
         "sequenceDiagram",
-        "    participant C as Caller",
-        f"    participant W as client.{service}",
+        "    actor C as Caller",
+        f'    participant W@{{ "type": "boundary" }} as client.{service}',
         "    participant API as Kentik REST API",
         "",
-        f"    C->>W: {method_name}({call_args})",
-        f"    W->>API: {doc.method} {doc.path}",
+        f"    C->>+W: {method_name}({call_args})",
+        f"    W->>+API: {doc.method} {doc.path}",
         "    alt success",
         f"        API-->>W: {success_model} (JSON)",
         f"        W-->>C: {success_model}",
@@ -445,17 +451,19 @@ def _render_operation_sequence_diagram(
         "    else no response",
         "        W-->>C: raise TransportError",
         "    end",
+        "    deactivate API",
+        "    deactivate W",
         MD_FENCE,
         "",
     ]
 
     if rest_only:
         grpc_diagram = [
-            "**gRPC transport**",
+            f"{sub_heading} gRPC call flow",
             "",
             (
-                "Not used: this endpoint exists only on REST, so a client created "
-                'with `protocol="grpc"` sends this call over REST too.'
+                "Not used. This endpoint exists only on REST. A client with "
+                '`protocol="grpc"` also sends this call over REST.'
             ),
             "",
         ]
@@ -463,11 +471,11 @@ def _render_operation_sequence_diagram(
 
     if grpc_call is None:
         grpc_diagram = [
-            "**gRPC transport**",
+            f"{sub_heading} gRPC call flow",
             "",
             (
-                "Not available: no RPC declares this operation's HTTP rule, so on "
-                '`protocol="grpc"` this method raises `NotImplementedError`. Call it '
+                "Not available. No RPC declares the HTTP rule of this operation. On "
+                '`protocol="grpc"`, this method raises `NotImplementedError`. Call it '
                 'through a `protocol="rest"` client.'
             ),
             "",
@@ -475,18 +483,19 @@ def _render_operation_sequence_diagram(
         return rest_diagram + grpc_diagram
 
     grpc_diagram = [
-        "**gRPC transport**",
+        f"{sub_heading} gRPC call flow",
         "",
         f"{MD_FENCE}mermaid",
+        mermaid_init(),
         "sequenceDiagram",
-        "    participant C as Caller",
-        f"    participant W as client.{service}",
-        "    participant R as grpc_runtime",
+        "    actor C as Caller",
+        f'    participant W@{{ "type": "boundary" }} as client.{service}',
+        '    participant R@{ "type": "control" } as grpc_runtime',
         "    participant API as Kentik gRPC API",
         "",
-        f"    C->>W: {method_name}({call_args})",
-        f"    W->>R: build_grpc_request({grpc_call.request}, arguments)",
-        f"    R->>API: {grpc_call.rpc} (gRPC/TLS)",
+        f"    C->>+W: {method_name}({call_args})",
+        f"    W->>+R: build_grpc_request({grpc_call.request}, arguments)",
+        f"    R->>+API: {grpc_call.rpc} (gRPC/TLS)",
         "    alt success",
         "        API-->>R: response message",
         "        R-->>W: parse_grpc_response(response)",
@@ -495,6 +504,9 @@ def _render_operation_sequence_diagram(
         "        R-->>W: map_grpc_error()",
         "        W-->>C: raise AuthenticationError, HTTPException, or TransportError",
         "    end",
+        "    deactivate API",
+        "    deactivate R",
+        "    deactivate W",
         MD_FENCE,
         "",
     ]
@@ -526,7 +538,7 @@ def _render_endpoint_section(
     if method_name is not None:
         lines.extend(
             _render_operation_sequence_diagram(
-                service, doc, method_name, params, grpc_call, rest_only
+                service, doc, method_name, params, grpc_call, sub_heading, rest_only
             )
         )
 
@@ -617,17 +629,17 @@ def _autodoc_directive_for_model(models_dir: Path, class_name: str) -> str:
 
 def _model_reference_edges(
     models_dir: Path, model_classes: list[str]
-) -> dict[str, set[str]]:
-    """Maps each model to the sibling models it names in a field annotation.
+) -> dict[str, dict[str, list[str]]]:
+    """Maps each model to the sibling models its fields name, with those field names.
 
     Parses annotations statically (no import) and matches sibling class names
-    by word boundary, so `Optional[List[FooConfig]]` yields an edge to
-    `FooConfig` when `FooConfig` is another model in the same service.
+    by word boundary, so `items: Optional[List[FooConfig]]` yields an edge to
+    `FooConfig` labeled `items` when `FooConfig` is another model in the same service.
     """
     names = set(model_classes)
-    edges: dict[str, set[str]] = {}
+    edges: dict[str, dict[str, list[str]]] = {}
     for cls in model_classes:
-        refs: set[str] = set()
+        refs: dict[str, list[str]] = {}
         model_file = models_dir / f"{cls}.py"
         try:
             tree = ast.parse(
@@ -637,13 +649,14 @@ def _model_reference_edges(
             edges[cls] = refs
             continue
         for node in ast.walk(tree):
-            annotation = getattr(node, "annotation", None)
-            if annotation is None:
+            if not (
+                isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name)
+            ):
                 continue
-            text = ast.unparse(annotation)
+            text = ast.unparse(node.annotation)
             for other in names:
                 if other != cls and re.search(rf"\b{re.escape(other)}\b", text):
-                    refs.add(other)
+                    refs.setdefault(other, []).append(node.target.id)
         edges[cls] = refs
     return edges
 
@@ -686,25 +699,31 @@ def _render_model_relationship_diagram(
 
     nodes: set[str] = set(entry)
     for cls in entry:
-        nodes |= edges.get(cls, set())
+        nodes |= set(edges.get(cls, {}))
 
     if len(nodes) > _MODEL_DIAGRAM_MAX_NODES:
         nodes = set(sorted(nodes)[:_MODEL_DIAGRAM_MAX_NODES])
 
     shown_edges = sorted(
-        (src, dst) for src in nodes for dst in edges.get(src, set()) if dst in nodes
+        (src, dst, fields)
+        for src in nodes
+        for dst, fields in edges.get(src, {}).items()
+        if dst in nodes
     )
 
-    diagram = ["classDiagram"]
+    diagram = [mermaid_init(), "classDiagram"]
     for name in sorted(nodes):
         diagram.append(f"    class {name}")
-    for src, dst in shown_edges:
-        diagram.append(f"    {src} --> {dst}")
+    for src, dst, fields in shown_edges:
+        label = ", ".join(fields[:2]) + (", ..." if len(fields) > 2 else "")
+        diagram.append(f"    {src} --> {dst} : {label}")
 
     summary = f"Model relationships ({len(nodes)} of {len(model_classes)} models)"
     return [
         "<details>",
         f"<summary>{summary}</summary>",
+        "",
+        "Each arrow points from a model to a model that one of its fields holds. The label names the field.",
         "",
         f"{MD_FENCE}mermaid",
         *diagram,
@@ -715,39 +734,351 @@ def _render_model_relationship_diagram(
     ]
 
 
-def _render_service_overview(
-    service: str, group_order: list[str], grouped: dict[str, list[EndpointDoc]]
-) -> list[str]:
-    """Renders a component diagram showing the SDK code structure for this service.
+_OV_COLS = (160, 450, 740)
+_OV_ROWS = (30, 170, 310, 450, 590)
 
-    Returns nothing for schema-only services.
+
+def _render_service_overview(
+    service: str,
+    group_order: list[str],
+    grouped: dict[str, list[EndpointDoc]],
+    rest_only: bool,
+) -> list[str]:
+    """Renders the call path of this service as an explorer, from your code down to the Kentik API.
+
+    Each hop is a call (down) and its answer (up), so selecting a part shows what
+    answers it and what waits for it. Returns nothing for schema-only services.
     """
     if not group_order:
         return []
 
-    title = service.replace("_", " ").title()
+    title = service_to_pascal_case(service)
+    operations = sum(len(docs) for docs in grouped.values())
+    p = "ov"
+    # part: (column, row, family, kind, box lines, card title, role, facts, if it stops)
+    parts: dict[str, tuple[int, int, str, str, list[str], str, str, list[str], str]] = {
+        "code": (
+            1,
+            0,
+            "green",
+            "src",
+            ["Your code", f"client.{service}"],
+            "Your code",
+            "Calls a method on the service wrapper.",
+            [f"client.{service}.<method>(...)"],
+            "Nothing in the SDK runs.",
+        ),
+        "wrap": (
+            1,
+            1,
+            "orange",
+            "proc",
+            [f"{title}ServiceWrapper", f"client.{service}", f"{operations} operations"],
+            f"{title}ServiceWrapper",
+            "Sends each call to the REST function or to call_grpc(), for the transport that the client uses.",
+            [
+                f"Source: gen/{service}/services/{service}.py",
+                f"Returns models from gen/{service}/models/",
+            ],
+            "Expected: no operation of this service can be called.",
+        ),
+        "rest": (
+            0,
+            2,
+            "blue",
+            "proc",
+            ["REST functions", f"gen/{service}/services/"],
+            "REST functions",
+            "One function per operation. Each one calls request_json() with its own error class.",
+            [f"Error classes: gen/{service}/error/"],
+            "Expected: calls on a REST transport fail. A gRPC client keeps working.",
+        ),
+        "rj": (
+            0,
+            3,
+            "blue",
+            "proc",
+            ["request_json()", "core/rest_runtime.py"],
+            "request_json()",
+            "The one function that sends REST traffic: auth headers, quota, and errors.",
+            [
+                "Raises AuthenticationError on 401",
+                "Raises the operation's error class on other errors",
+            ],
+            "Expected: every REST call of every service fails.",
+        ),
+        "restapi": (
+            0,
+            4,
+            "blue",
+            "src",
+            ["Kentik REST API", "HTTPS + JSON"],
+            "Kentik REST API",
+            "The REST endpoints of the service.",
+            ["Reports the quota in response headers"],
+            "Expected: REST calls raise TransportError. A gRPC client keeps working.",
+        ),
+    }
+    # wire id: (path, links, label, label position, anchor, kind)
+    wires: list[tuple[str, str, str, str, tuple[int, int], str, str]] = [
+        (
+            "code_call",
+            "M520,102 V170",
+            "code>wrap",
+            "method call",
+            (512, 140),
+            "end",
+            "call",
+        ),
+        (
+            "wrap_answer",
+            "M580,170 V102",
+            "wrap>code",
+            "Pydantic model",
+            (588, 140),
+            "start",
+            "data",
+        ),
+        (
+            "rest_call",
+            "M450,196 H230 V310",
+            "wrap>rest",
+            "arguments",
+            (340, 188),
+            "middle",
+            "call",
+        ),
+        (
+            "rest_answer",
+            "M290,310 V226 H450",
+            "rest>wrap",
+            "Pydantic model",
+            (298, 275),
+            "start",
+            "data",
+        ),
+        (
+            "rj_call",
+            "M230,382 V450",
+            "rest>rj",
+            "method, path, body",
+            (222, 420),
+            "end",
+            "call",
+        ),
+        (
+            "rj_answer",
+            "M290,450 V382",
+            "rj>rest",
+            "JSON dict",
+            (298, 420),
+            "start",
+            "data",
+        ),
+        (
+            "api_call",
+            "M230,522 V590",
+            "rj>restapi",
+            "HTTPS request",
+            (222, 560),
+            "end",
+            "call",
+        ),
+        (
+            "api_answer",
+            "M290,590 V522",
+            "restapi>rj",
+            "JSON response",
+            (298, 560),
+            "start",
+            "data",
+        ),
+    ]
+    if rest_only:
+        # One path only, so it runs straight down the middle.
+        parts = {
+            pid: (1, row, fam, kind, lines, name, role, facts, stops)
+            for pid, (
+                _,
+                row,
+                fam,
+                kind,
+                lines,
+                name,
+                role,
+                facts,
+                stops,
+            ) in parts.items()
+        }
+        hops = [
+            ("wrap", "rest", "arguments", "Pydantic model", 242),
+            ("rest", "rj", "method, path, body", "JSON dict", 382),
+            ("rj", "restapi", "HTTPS request", "JSON response", 522),
+        ]
+        wires = wires[:2] + [
+            wire
+            for upper, lower, ask, answer, y in hops
+            for wire in (
+                (
+                    f"{lower}_call",
+                    f"M520,{y} V{y + 68}",
+                    f"{upper}>{lower}",
+                    ask,
+                    (512, y + 38),
+                    "end",
+                    "call",
+                ),
+                (
+                    f"{lower}_answer",
+                    f"M580,{y + 68} V{y}",
+                    f"{lower}>{upper}",
+                    answer,
+                    (588, y + 38),
+                    "start",
+                    "data",
+                ),
+            )
+        ]
+    rest_path = [
+        "code>wrap",
+        "wrap>rest",
+        "rest>rj",
+        "rj>restapi",
+        "restapi>rj",
+        "rj>rest",
+        "rest>wrap",
+        "wrap>code",
+    ]
+    paths = {
+        "rest": {
+            "label": "REST call",
+            "family": "blue",
+            "title": "A call on a REST transport",
+            "text": "The wrapper calls the REST function, which sends the request with request_json().",
+            "links": rest_path,
+        }
+    }
+    if not rest_only:
+        parts |= {
+            "cg": (
+                2,
+                2,
+                "violet",
+                "proc",
+                ["call_grpc()", "core/grpc_runtime.py"],
+                "call_grpc()",
+                "The one function that sends gRPC traffic: deadline, quota, and errors.",
+                ["Parses each answer into the same models as REST"],
+                "Expected: every gRPC call fails. A REST client keeps working.",
+            ),
+            "grpcapi": (
+                2,
+                4,
+                "violet",
+                "src",
+                ["Kentik gRPC API", "HTTP/2 + protobuf"],
+                "Kentik gRPC API",
+                "The gRPC methods of the service.",
+                ["Reports the quota in response metadata"],
+                "Expected: gRPC calls raise TransportError. A REST client keeps working.",
+            ),
+        }
+        wires += [
+            (
+                "cg_call",
+                "M650,196 H870 V310",
+                "wrap>cg",
+                "proto request",
+                (760, 188),
+                "middle",
+                "call",
+            ),
+            (
+                "cg_answer",
+                "M810,310 V226 H650",
+                "cg>wrap",
+                "proto response",
+                (802, 275),
+                "end",
+                "data",
+            ),
+            (
+                "grpc_call",
+                "M810,382 V590",
+                "cg>grpcapi",
+                "gRPC call",
+                (802, 490),
+                "end",
+                "call",
+            ),
+            (
+                "grpc_answer",
+                "M870,590 V382",
+                "grpcapi>cg",
+                "proto response",
+                (878, 490),
+                "start",
+                "data",
+            ),
+        ]
+        paths["grpc"] = {
+            "label": "gRPC call",
+            "family": "violet",
+            "title": "A call on a gRPC transport",
+            "text": "The wrapper builds the proto request and sends it with call_grpc().",
+            "links": [
+                "code>wrap",
+                "wrap>cg",
+                "cg>grpcapi",
+                "grpcapi>cg",
+                "cg>wrap",
+                "wrap>code",
+            ],
+        }
+
+    segs = [
+        dk.seg(sid, d, [key], p, label, at, anchor=anchor, kind=kind)
+        for sid, d, key, label, at, anchor, kind in wires
+    ]
+    boxes = [
+        dk.node(
+            pid, (_OV_COLS[col], _OV_ROWS[row], 200, 72), fam, kind, lines, label=name
+        )
+        for pid, (col, row, fam, kind, lines, name, *_) in parts.items()
+    ]
+    markup = dk.svg(
+        "overview-svg",
+        (1100, 680),
+        f"Call path of client.{service}: your code calls the wrapper, which sends the call over REST"
+        + ("." if rest_only else " or gRPC."),
+        "".join(segs + boxes),
+        p,
+    )
+    data = {
+        "select": "wrap",
+        "parts": {
+            pid: {"title": name, "role": role, "facts": facts, "stops": stops}
+            for pid, (*_, name, role, facts, stops) in parts.items()
+        },
+        "paths": paths,
+    }
+    caption = (
+        "Select a part. Each hop is a call going down and its answer coming back up."
+        + (
+            " This service is REST only, so a gRPC client also sends its calls over REST."
+            if rest_only
+            else ""
+        )
+    )
     return [
         "## Overview",
         "",
-        f"{MD_FENCE}mermaid",
-        "flowchart LR",
-        '    subgraph sdk["kentik_api"]',
-        '        KA["KentikAPI"]',
-        f'        W["{title}ServiceWrapper\\nclient.{service}"]',
-        f'        REST["REST functions\\ngen/{service}/services/"]',
-        '        RJ["request_json()\\ncore/rest_runtime"]',
-        f'        M["Models\\ngen/{service}/models/"]',
-        f'        E["Error classes\\ngen/{service}/error/"]',
-        "    end",
-        '    API["Kentik API"]',
+        *fragment(markup, data, caption),
         "",
-        "    KA --> W",
-        "    W --> REST",
-        "    REST --> RJ",
-        "    REST --> M",
-        "    REST --> E",
-        "    RJ --> API",
-        MD_FENCE,
+        (
+            f"On an error status or a failed call, the SDK raises an error class from "
+            f"`gen/{service}/error/`, or a shared type from `kentik_api.errors`."
+        ),
         "",
     ]
 
@@ -828,7 +1159,7 @@ def _service_page(
     ]
 
     group_order, grouped = _group_by_tag(endpoint_docs)
-    lines.extend(_render_service_overview(service, group_order, grouped))
+    lines.extend(_render_service_overview(service, group_order, grouped, rest_only))
     lines.extend(["## Endpoints", ""])
 
     if not endpoint_docs:
@@ -917,25 +1248,24 @@ def _services_readme_page(
             "",
             "# API Service Pages",
             "",
-            "One Markdown page per Kentik API service, generated by",
-            "[`scripts/generation/endpoint_docs.py`](../../scripts/generation/endpoint_docs.py). **Do not hand-edit these files**;",
-            f"they are overwritten on every `{REGENERATE_COMMAND}` run.",
+            "This folder holds one Markdown page per Kentik API service.",
+            "[`scripts/generation/endpoint_docs.py`](../../scripts/generation/endpoint_docs.py) writes each page.",
+            "",
+            "> [!WARNING]",
+            f"> Do not edit these files. Each `{REGENERATE_COMMAND}` run writes them again.",
             "",
             "## What each page contains",
             "",
-            f"{MD_FENCE}mermaid",
-            "flowchart LR",
-            '    subgraph page["service.md"]',
-            '        OV["Overview\\n(component diagram)"]',
-            '        EP["Endpoints\\n(one section per operation)"]',
-            '        subgraph sec["per-operation section"]',
-            '            SD["Sequence diagram"]',
-            '            PT["Parameter table"]',
-            '            RT["Response table"]',
-            '            EX["Usage example"]',
-            "        end",
-            "        OV --> EP --> sec",
-            "    end",
+            f"{MD_FENCE}text",
+            "<service>.md",
+            "├── Overview          the call path of the service, from your code to the Kentik API",
+            "├── Endpoints         one section per operation",
+            "│   ├── REST call flow    sequence diagram",
+            "│   ├── gRPC call flow    sequence diagram, or why the operation has none",
+            "│   ├── Parameters        name, location, type, and required flag",
+            "│   ├── Responses         status, description, and model",
+            "│   └── Example           a Python call to the operation",
+            "└── Data Models       a model diagram, and the fields of each model",
             MD_FENCE,
             "",
             "## Services",

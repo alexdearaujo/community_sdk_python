@@ -4,9 +4,8 @@
 
 This folder uses a layered testing strategy. Four layers run fully
 mocked, with no network access, for fast feedback. A fifth layer,
-`e2e`, runs against the real Kentik API for full end-to-end
-confidence, over both the REST and gRPC transports. You opt into
-that layer explicitly.
+`e2e`, runs against the real Kentik API, over both the REST and gRPC
+transports. You opt into that layer explicitly.
 
 ## Test layout
 
@@ -16,32 +15,76 @@ that layer explicitly.
 | [`runtime`](runtime/README.md) | Focused tests for the shared runtime helpers that generated code calls. | Mocked |
 | [`smoke`](smoke/README.md) | Lightweight checks for client wiring and selected wrapper call paths. | Mocked |
 | [`generator`](generator/README.md) | Unit tests for the SDK generator's phase modules ([`scripts/generation/`](../scripts/generation/README.md)): error package generation, swagger selection and parity validation, wrapper generation, generated-code post-processing fixups, docs/endpoint-docs rendering, and [`scripts/generate_sdk.py`](../scripts/generate_sdk.py)'s own schema-patching helpers. | Mocked |
-| `analytics` | Tests of the `analytics` extra: query definitions, the DataFrame cache, and flat-traffic analysis, compared with golden output of the 1.x code (see `analytics/fixtures/README.md`). The test dependency group installs the extra, so `uv run poe test` runs this layer and never skips it. Run it alone with `uv run poe test-analytics`. | Mocked |
-| [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API, REST ([`test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)) and gRPC ([`test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py)) transports. Opt-in only, never part of [`uv run poe test`](../pyproject.toml) or [`uv run poe all`](../pyproject.toml). See [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
+| [`analytics`](analytics/) | Tests of the `analytics` extra: query definitions, the DataFrame cache, and flat-traffic analysis, compared with golden output of the 1.x code (see [`analytics/fixtures/README.md`](analytics/fixtures/README.md)). The test dependency group installs the extra, so [`uv run poe test`](../pyproject.toml) runs this layer and never skips it. Run it alone with `uv run poe test-analytics`. | Mocked |
+| [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API, REST ([`test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)) and gRPC ([`test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py)) transports. Opt-in only, never part of [`uv run poe test`](../pyproject.toml) or [`uv run poe all`](../pyproject.toml). Read [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
 
 ```mermaid
-flowchart TD
-    D["tests/_discovery.py<br/>shared discovery helpers"]
-    D --> G[generated]
-    D --> E1["e2e (REST)<br/>test_endpoints_e2e.py"]
-    D --> E2["e2e (gRPC)<br/>test_endpoints_e2e_grpc.py"]
-    G -.mocked, no network.-> M["respx / monkeypatch"]
-    R[runtime] -.mocked, no network.-> M
-    S[smoke] -.mocked, no network.-> M
-    N[generator] -.mocked, no network.-> M
-    E1 -."opt-in only, -m e2e".-> A["real Kentik API"]
-    E2 -."opt-in only, -m e2e_grpc".-> A
+%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart LR
+  disc("tests/_discovery.py<br/>shared discovery helpers"):::violetSrc
 
+  subgraph mocked["Mocked layers · uv run poe test"]
+    gen("generated/<br/>wrapper contracts, schema coverage"):::blue
+    rt("runtime/<br/>shared runtime helpers"):::blue
+    sm("smoke/<br/>client wiring"):::blue
+    gr("generator/<br/>generator phase modules"):::blue
+    an("analytics/<br/>analytics extra"):::blue
+  end
+
+  subgraph live["e2e/ · opt-in, --run-live-e2e"]
+    rest("REST suite<br/>-m e2e"):::orange
+    grpc("gRPC suite<br/>-m e2e_grpc"):::orange
+  end
+
+  mocks("Mocks and fixtures<br/>respx, monkeypatch, tmp_path<br/>no network"):::hub
+  apiRest("Kentik API, REST<br/>real account"):::redSrc
+  apiGrpc("Kentik API, gRPC<br/>real account"):::redSrc
+
+  disc --> gen
+  disc --> rest
+  disc --> grpc
+  j1@{ shape: f-circ }
+  class j1 join
+  gen --- j1
+  rt --- j1
+  sm --- j1
+  gr --- j1
+  an --- j1
+  j1 -->|"mocked calls"| mocks
+  rest -->|"HTTPS requests"| apiRest
+  apiRest -->|"responses"| rest
+  grpc -->|"gRPC calls"| apiGrpc
+  apiGrpc -->|"responses"| grpc
+
+  click disc "_discovery.py"
+  click gen "generated/README.md"
+  click rt "runtime/README.md"
+  click sm "smoke/README.md"
+  click gr "generator/README.md"
+  click an "analytics/fixtures/README.md"
+  click rest "e2e/test_endpoints_e2e.py"
+  click grpc "e2e/test_endpoints_e2e_grpc.py"
+
+  classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+  classDef redSrc fill:#ffc9c9,stroke:#e03131,color:#c92a2a
+  classDef hub fill:#f8f9fa,stroke:#495057,color:#212529
+  classDef violetSrc,blue,orange,redSrc,hub stroke-width:2px,rx:10px
+  classDef join fill:#868e96,stroke:#868e96
+  style mocked fill:none,stroke:#868e96,stroke-width:2px
+  style live fill:none,stroke:#868e96,stroke-width:2px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
 
 [`tests/_discovery.py`](_discovery.py) lives at the [`tests/`](.) root, outside any one
 layer. It holds the schema and wrapper discovery helpers that
-[`generated/`](generated/README.md) and [`e2e/`](e2e/README.md) both use. Sharing one file keeps the two
+[`generated/`](generated/README.md) and [`e2e/`](e2e/README.md) both use. One shared file keeps the two
 layers from drifting apart.
 
 [`tests/conftest.py`](conftest.py) puts [`tests/`](.) on `sys.path`. This lets
 `import _discovery` resolve the same way from every layer. Neither
-file is itself a test file.
+file is a test file.
 
 ## How to run tests
 
@@ -69,10 +112,10 @@ uv run pytest -m e2e tests/e2e/
 uv run pytest -m e2e_grpc tests/e2e/
 ```
 
-`pyproject.toml` registers the `e2e` and `e2e_grpc` markers with
+[`pyproject.toml`](../pyproject.toml) registers the `e2e` and `e2e_grpc` markers with
 `addopts = "-m 'not e2e and not e2e_grpc'"`. Plain `pytest tests/`
 always deselects [`tests/e2e/`](e2e/README.md). [`uv run poe test`](../pyproject.toml) runs plain `pytest tests/`, so it
-deselects [`tests/e2e/`](e2e/README.md) too. Opt in explicitly with `-m e2e` or `-m e2e_grpc`.
+deselects [`tests/e2e/`](e2e/README.md) too. To opt in, pass `-m e2e` or `-m e2e_grpc`.
 
 ## When to run which suite
 
@@ -81,7 +124,7 @@ deselects [`tests/e2e/`](e2e/README.md) too. Opt in explicitly with `-m e2e` or 
 | Editing [`scripts/generate_sdk.py`](../scripts/generate_sdk.py), [`scripts/generation/`](../scripts/generation/README.md), or template behavior | [`uv run poe test-generator`](../pyproject.toml) for fast feedback on the generator itself, then [`uv run poe test-generated`](../pyproject.toml) to check the SDK it produces |
 | Editing shared request, auth, or error behavior in [`src/kentik_api/core`](../src/kentik_api/core/README.md) | [`uv run poe test-runtime`](../pyproject.toml) |
 | Opening a PR or merging | [`uv run poe test`](../pyproject.toml) |
-| Trusting a schema sync, or a change to error or response handling, against production behavior | [`uv run poe test-e2e`](../pyproject.toml) (needs real credentials; read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first); add [`uv run poe test-e2e-grpc`](../pyproject.toml) too if the change touches gRPC translation |
+| Trusting a schema sync, or a change to error or response handling, against production behavior | [`uv run poe test-e2e`](../pyproject.toml). It needs real credentials, so read [End-to-end tests](#5-end-to-end-tests-real-api-opt-in) first. If the change touches gRPC translation, also run [`uv run poe test-e2e-grpc`](../pyproject.toml). |
 
 ## How to add new tests
 
@@ -97,25 +140,24 @@ wrapper modules. You usually do not add per-service files by hand.
 Shared discovery helpers (wrapper and endpoint discovery, plus
 sample-value and sample-Pydantic-model builders) live in
 [`tests/_discovery.py`](_discovery.py). This file, the schema coverage suite below,
-and the e2e suite all read the same helpers, so they stay in sync
-automatically.
+and the e2e suite all read the same helpers, so they stay in sync.
 
 ### 1b) Endpoint and schema coverage tests
 
 Primary file: [`tests/generated/test_endpoint_schema_coverage.py`](generated/test_endpoint_schema_coverage.py)
 
-This suite discovers every operation through `_discovery.py`. It
-then exercises each operation against every response status code the
+This suite discovers every operation through [`_discovery.py`](_discovery.py). It
+then exercises each operation against every response status code that the
 OpenAPI schema declares for it: each service's generated
 `error/__init__.py::{Operation}Error.response_error_map`, plus the
 success `expected_status`. `respx` mocks the HTTP layer, so the real
 `request_json` runtime and the real generated error classes run.
-This is what AGENTS.md's test coverage requirement (every endpoint,
-every option, every declared status code) maps to concretely.
+The test coverage requirement in [AGENTS.md](../AGENTS.md) (every endpoint,
+every option, every declared status code) maps to this suite.
 
-This suite drives the actual generated code end-to-end. It does not
+This suite drives the generated code end-to-end. It does not
 stop at the wrapper boundary the way the contract tests above do. So
-it also catches generator bugs that only surface at runtime, such as
+it also catches generator bugs that only show at runtime, such as
 a model import that silently resolves to the wrong object.
 
 Add logic here only when the status or error coverage strategy
@@ -126,7 +168,7 @@ manual update: the next [`uv run poe generate`](../pyproject.toml) picks it up a
 
 Primary file: [`tests/generated/test_schema_operations.py`](generated/test_schema_operations.py)
 
-This suite holds the generated REST modules to `schema_operations.json`.
+This suite holds the generated REST modules to [`schema_operations.json`](../schema_operations.json).
 It needs no schema checkout.
 
 ### 2) Runtime tests
@@ -162,20 +204,20 @@ small and fast.
 | [`tests/generator/test_endpoint_docs.py`](generator/test_endpoint_docs.py) | `parse_wrapper_methods()`/wrapper-signature parsing in [`scripts/generation/endpoint_docs.py`](../scripts/generation/endpoint_docs.py) and [`_shared.py`](../scripts/generation/_shared.py) |
 | [`tests/generator/test_docs_rendering.py`](generator/test_docs_rendering.py) | [`scripts/generation/docs_rendering.py`](../scripts/generation/docs_rendering.py)'s `_GROUP_CONFIG`/`_module_group`/`_LAYER_NAMES` consistency (architecture-diagram module grouping) |
 | [`tests/generator/test_generate_sdk.py`](generator/test_generate_sdk.py) | [`scripts/generate_sdk.py`](../scripts/generate_sdk.py)'s top-level helpers: schema-name cleanup, request-body `$ref` inlining, generated gRPC import rewriting, and the validate-before-clean ordering guard |
-| [`tests/generator/test_public_names.py`](generator/test_public_names.py) | `public_names.json`: version-free keys, default names, and the failure when an entry no longer matches the schema |
+| [`tests/generator/test_public_names.py`](generator/test_public_names.py) | [`public_names.json`](../public_names.json): version-free keys, default names, and the failure when an entry no longer matches the schema |
 | [`tests/generator/test_api_surface.py`](generator/test_api_surface.py) | [`scripts/generation/api_surface.py`](../scripts/generation/api_surface.py), with surface dicts built directly instead of a generated SDK |
-| [`tests/generator/test_release_notes.py`](generator/test_release_notes.py) | The `CHANGELOG.md` check in [`scripts/release_notes.py`](../scripts/release_notes.py) |
+| [`tests/generator/test_release_notes.py`](generator/test_release_notes.py) | The [`CHANGELOG.md`](../CHANGELOG.md) check in [`scripts/release_notes.py`](../scripts/release_notes.py) |
 | [`tests/generator/test_impact_report.py`](generator/test_impact_report.py) | The impact report's classification of what changed |
 | [`tests/generator/test_openapi_templates.py`](generator/test_openapi_templates.py) | The custom OpenAPI templates, rendered with the generator's own Jinja settings |
 | [`tests/generator/test_toolchain_versions.py`](generator/test_toolchain_versions.py) | The declared runtime floors against the versions protoc stamps into the generated stubs |
 
 Add tests here when `scripts/generation/*.py` logic changes. These
-are unit tests against the generator itself, not the SDK it
+are unit tests against the generator itself, not the SDK that it
 produces. Most need no real or local schema checkout. Build minimal
 swagger fragments or fake generated-file fixtures with `tmp_path`
 instead. One exception:
 `test_the_real_alert_schema_keeps_acknowledgement_an_object` in
-`test_generate_sdk.py` reads the real local `../api-schema-public`
+[`test_generate_sdk.py`](generator/test_generate_sdk.py) reads the real local `../api-schema-public`
 checkout. It skips when that checkout is absent.
 
 ### 5) End-to-end tests (real API, opt-in)
@@ -184,9 +226,9 @@ Primary files:
 
 - [`tests/e2e/conftest.py`](e2e/conftest.py): the `real_client` and `grpc_real_client`
   fixtures. Both delegate all credential loading to `KentikAPI()` (a
-  project-root `.env` file, or `KENTIK_EMAIL`/`KENTIK_API_TOKEN`),
-  differing only in `protocol="rest"` vs `protocol="grpc"`. Either
-  fixture skips the whole suite when no credentials are configured.
+  project-root `.env` file, or `KENTIK_EMAIL`/`KENTIK_API_TOKEN`).
+  They differ only in `protocol="rest"` vs `protocol="grpc"`. Either
+  fixture skips the whole suite when it finds no credentials.
 - [`tests/e2e/test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py) (REST)
 - [`tests/e2e/test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py) (gRPC)
 
@@ -199,37 +241,37 @@ from the mocked ones:
 - The suite calls only GET (read-only) operations automatically. A
   read call passes when it returns a correctly-typed response, or
   when it raises a generated `KentikError` subclass. Either outcome
-  proves the real request, response, and error path still matches
-  what the schema declares. Only a genuinely unexpected exception
-  counts as a failure, since the test cannot control what data
+  proves that the real request, response, and error path still matches
+  what the schema declares. Only an unexpected exception
+  counts as a failure, because the test cannot control what data
   exists in the real account.
-- The gRPC variant additionally treats `NotImplementedError` as a
-  passing outcome (see AGENTS.md's "gRPC transport is fully
-  implemented" section). A wrapper raises `NotImplementedError` when
+- The gRPC variant also treats `NotImplementedError` as a
+  passing outcome (see the "gRPC transport is fully
+  implemented" section of [AGENTS.md](../AGENTS.md)). A wrapper raises `NotImplementedError` when
   the service's proto companions fail to import, or when no RPC
   shares the operation's HTTP rule. Today every operation has a gRPC
   translation.
-- Create, Update, and Delete operations are deliberately not
-  auto-called, in either transport. `test_mutating_endpoint_excluded_from_e2e`
+- On purpose, neither transport calls Create, Update, or Delete
+  operations automatically. `test_mutating_endpoint_excluded_from_e2e`
   and `test_mutating_endpoint_excluded_from_e2e_grpc` carry a
-  `@pytest.mark.skip` marker on purpose, because a mutating call
+  `@pytest.mark.skip` marker, because a mutating call
   against a real account is hard to reverse. To add live coverage
   for one mutating endpoint, write a dedicated test with its own
   setup and teardown against a disposable resource. Do not wire it
   into the auto-discovered path.
 
-This suite never runs by accident. `addopts` in `pyproject.toml`
+This suite never runs by accident. `addopts` in [`pyproject.toml`](../pyproject.toml)
 excludes both by default. Only `uv run poe test-e2e` (REST) and
-`uv run poe test-e2e-grpc` (gRPC) run them; with plain pytest, add
+`uv run poe test-e2e-grpc` (gRPC) run them. If you use plain pytest, add
 `--run-live-e2e` to `-m e2e` or `-m e2e_grpc`. Never hardcode
 credentials in test code. Never read or print `.env` contents.
 
-## Regression gates added by the pre-PR audit
+## Regression gates from the pre-PR audit
 
-- Derive expected counts from `api_surface.json` or the generated tree. Never hardcode them (see `test_retry_eligibility.py`).
-- Read the client mixin with `ast`, not a regex (see `test_grpc_stub_wiring.py`).
-- Assert exact auth metadata and the region hosts at the transport boundary (`test_credentials.py`, `test_client_mounts_and_calls.py`).
-- Known gaps still open are listed in `reports/pre-pr-audit-2026-10-10/deferred-risks.md`.
+- Derive expected counts from [`api_surface.json`](../api_surface.json) or the generated tree. Never hardcode them (see [`test_retry_eligibility.py`](generated/test_retry_eligibility.py)).
+- Read the client mixin with `ast`, not a regex (see [`test_grpc_stub_wiring.py`](generated/test_grpc_stub_wiring.py)).
+- Assert exact auth metadata and the region hosts at the transport boundary ([`test_credentials.py`](runtime/test_credentials.py), [`test_client_mounts_and_calls.py`](smoke/test_client_mounts_and_calls.py)).
+- [`reports/pre-pr-audit-2026-10-10/deferred-risks.md`](../reports/pre-pr-audit-2026-10-10/deferred-risks.md) lists the known gaps that are still open.
 
 ## Guidelines
 
@@ -238,7 +280,7 @@ credentials in test code. Never read or print `.env` contents.
 - Use `monkeypatch`, other mocks, or `respx` for HTTP-level mocking
   in those three layers.
 - Keep smoke tests minimal.
-- The e2e layer is the one intentional exception to "no network
+- The e2e layer is the one exception, on purpose, to "no network
   calls." Keep it opt-in, read-only by default, and separate from
   the rest of the pipeline.
 - If generation output changes, regenerate first:

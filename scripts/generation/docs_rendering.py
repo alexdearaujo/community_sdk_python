@@ -10,75 +10,74 @@ import ast
 import re
 from pathlib import Path
 
+from . import diagram_kit as dk
 from ._shared import (
     PROJECT_ROOT,
     REGENERATE_COMMAND,
     SDK_OUTPUT_DIR,
     iter_service_dirs,
+    mermaid_init,
     parse_generated_rest_module,
     parse_wrapper_methods,
     write_text_lf,
 )
+from .explorer_docs import fragment, write_static_assets
 
 _GUIDES_DIR = PROJECT_ROOT / "docs" / "sphinx" / "guides"
+# A Mermaid rect takes no CSS variable, so the gray must read on light and dark pages.
+_SHARED_RUNTIME_BAND = "rgba(120,130,140,0.14)"
 
 _GEN_ROOT_README = f"""\
 <!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_gen_root_readme() -->
 <!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->
 # Generated Services (`kentik_api.gen`)
 
-Fully generated. Every [`{REGENERATE_COMMAND}`](../../../pyproject.toml) run wipes and rebuilds every
-subdirectory here, and rewrites this file too. **Never hand-edit
-anything under this folder**, including this README. If output here is
-wrong, fix the generator ([`scripts/generate_sdk.py`](../../../scripts/generate_sdk.py), a phase module in
-[`scripts/generation/`](../../../scripts/generation/README.md)), or a
-template in
-[`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md).
-Then regenerate.
+The generator builds every file in this folder. Each
+[`{REGENERATE_COMMAND}`](../../../pyproject.toml) run deletes each subdirectory here,
+builds it again, and writes this README again.
+
+> [!WARNING]
+> Do not edit any file in this folder, this README included. The next run deletes the edit.
+> If the output is wrong, fix the generator ([`scripts/generate_sdk.py`](../../../scripts/generate_sdk.py)),
+> a phase module in [`scripts/generation/`](../../../scripts/generation/README.md), or a template in
+> [`scripts/openapi_templates/`](../../../scripts/openapi_templates/README.md). Then run the generator again.
 
 ## Layout
 
-Each subdirectory is one Kentik API service (`device`, `alerting`,
-`user`, and so on), built from that service's OpenAPI v3 schema files.
-Every service directory has the same shape:
+Each subdirectory is one Kentik API service (`device`, `alerting`, `user`, and others).
+The generator builds it from the OpenAPI v3 schema files of that service.
+Each service directory has the same shape:
 
-| Path | Contents |
-| --- | --- |
-| `models/` | Pydantic v2 request/response models |
-| `services/` | Raw REST operation functions, plus a unified `<Service>ServiceWrapper` class |
-| `error/` | Per-operation error classes, dispatched from each declared response status code |
-| `pb/` | gRPC stubs (`*_pb2.py`, `*_pb2_grpc.py`) used by the gRPC transport, see below |
-| `README.md` | One-paragraph pointer to the full Sphinx reference for that service |
-
-```mermaid
-flowchart TD
-    G["kentik_api.gen.device"] --> M[models/]
-    G --> S[services/]
-    G --> E[error/]
-    G --> P[pb/]
-    S -->|calls| R["kentik_api.core.rest_runtime.request_json()"]
-    S -->|on error status| E
+```text
+gen/device/
+├── models/      Pydantic v2 request and response models
+├── services/    one REST function per operation, and the DeviceServiceWrapper class
+├── error/       one error class per operation, picked by the response status code
+├── pb/          gRPC stubs (*_pb2.py, *_pb2_grpc.py) for the gRPC transport
+└── README.md    a link to the Sphinx reference page of the service
 ```
 
-## Where a call actually runs
+## Where a call runs
 
-Every generated REST operation, across every service, routes through
-one shared function: `request_json()` in
-[`kentik_api.core`](../core/README.md). No service directory here
-implements its own HTTP, auth, or retry logic. The gRPC transport is
-fully implemented too: a wrapper method routes through `call_grpc()`
-in [`kentik_api.core`](../core/README.md) whenever the generator
-found an RPC that shares that REST operation's HTTP rule (proto
-service, verb, and path). A wrapper method raises
-`NotImplementedError` for `GrpcTransport` only when that service's
-proto companions failed to import, or when no RPC shares that
-operation's HTTP rule.
+No service directory here has its own HTTP, auth, or retry code.
+
+- On a REST transport, each generated REST function calls `request_json()` in
+  [`kentik_api.core`](../core/README.md). That one function sends the REST traffic of every service.
+- On a gRPC transport, a wrapper method calls `call_grpc()` in [`kentik_api.core`](../core/README.md).
+  The generator writes that call when an RPC has the same HTTP rule as the REST operation: the same
+  proto service, verb, and path.
+
+A wrapper method raises `NotImplementedError` on a `GrpcTransport` in two cases only:
+
+1. The proto companions of the service did not import.
+2. No RPC has the same HTTP rule as the operation.
+
+[SDK Runtime Architecture](../../../docs/sphinx/sdk_runtime_architecture.md) shows the full call path.
 
 ## Full reference
 
-For endpoint parameters, response shapes, and usage examples per
-service, see `docs/sphinx/services/<service>.md`, or the built
-Sphinx docs.
+The page `docs/sphinx/services/<service>.md` gives the parameters, the response shapes, and a usage
+example for each operation of a service. The built Sphinx docs show the same pages.
 """
 
 
@@ -102,20 +101,20 @@ def _services_without_wrappers_section() -> list[str]:
     return [
         "## Services Without A Wrapper",
         "",
-        "Wrapper generation is driven by REST paths in the OpenAPI schema. A Service",
-        "whose schema declares no paths produces models and proto stubs but no",
-        "wrapper, so it is not mounted on the client. That is intentional: REST",
-        "operations are this SDK's contract, and proto-driven wrapper generation is",
-        "deliberately out of scope.",
+        "The REST paths in the OpenAPI schema drive wrapper generation. If the schema",
+        "of a Service declares no paths, the generator writes its models and proto",
+        "stubs but no wrapper, and the client does not mount it. This is intentional.",
+        "REST operations are the contract of this SDK. Wrapper generation from protos",
+        "is out of scope.",
         "",
         f"{len(unmounted)} Services are in that state today: "
         + ", ".join(f"`{name}`" for name in unmounted)
         + ".",
         "",
-        "Some of these declare gRPC RPCs upstream but carry no `google.api.http`",
-        "annotation, which is why no path reaches the schema. Those cases are an",
-        "upstream schema gap, not an SDK limitation, and they resolve here",
-        "automatically once the annotation is added.",
+        "Some of these Services declare gRPC RPCs upstream, but the RPCs have no",
+        "`google.api.http` annotation, so no path reaches the schema. That is a gap",
+        "in the upstream schema, not in the SDK. If upstream adds the annotation, the",
+        "next run generates the wrapper.",
         "",
     ]
 
@@ -127,10 +126,10 @@ def _rest_only_services_section(rest_only: frozenset[str]) -> list[str]:
     return [
         "## REST-Only Services",
         "",
-        "These Services come from the local schema base, `schema/openapi/`:",
-        "hand-maintained descriptions of endpoints that upstream does not publish.",
-        "Every client mounts them on a REST transport to their own host, so a",
-        'client created with `protocol="grpc"` sends their calls over REST too: '
+        "These Services come from the local schema base, `schema/openapi/`. It holds",
+        "descriptions, maintained by hand, of endpoints that upstream does not publish.",
+        "Each client mounts these Services on a REST transport to their own host. A",
+        'client with `protocol="grpc"` also sends their calls over REST: '
         + ", ".join(f"`{name}`" for name in sorted(rest_only))
         + ".",
         "",
@@ -149,10 +148,9 @@ def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
     for service_dir in iter_service_dirs():
         service_name = service_dir.name
         source = (
-            "a hand-maintained description in the local schema base, "
-            "`schema/openapi/`. It is REST only."
+            "a description in the local schema base, `schema/openapi/`. It is REST only."
             if service_name in rest_only
-            else "the Kentik OpenAPIv3 schema."
+            else "the Kentik OpenAPI v3 schema."
         )
 
         lines = [
@@ -160,12 +158,13 @@ def _generate_service_readmes(rest_only: frozenset[str] = frozenset()):
             f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
             f"# {service_name.replace('_', ' ').title()} Service",
             "",
-            f"This module was automatically generated from {source}",
+            f"The generator builds this module from {source}",
             "",
             (
-                "For the full endpoint reference (parameters, responses, usage "
-                "examples) and data model documentation, see the Sphinx docs: "
-                f"[`docs/sphinx/services/{service_name}.md`](../../../../docs/sphinx/services/{service_name}.md)."
+                "The Sphinx page "
+                f"[`docs/sphinx/services/{service_name}.md`](../../../../docs/sphinx/services/{service_name}.md) "
+                "gives the parameters, responses, and a usage example for each operation, "
+                "and documents each data model."
             ),
         ]
 
@@ -191,23 +190,24 @@ def _resolve_import_from(current_module: str, level: int, module: str | None) ->
     return ".".join(parts + suffix)
 
 
-_GROUP_CONFIG: dict[str, str] = {
-    "Client API": "client",
-    "Client Mixin": "client",
-    "Auth Credentials": "foundation",
-    "API Config": "foundation",
-    "REST Runtime": "foundation",
-    "gRPC Runtime": "foundation",
-    "Rate Limit": "foundation",
-    "Error Types": "foundation",
-    "Transport Base": "transport",
-    "REST Transport": "transport",
-    "gRPC Transport": "transport",
-    "Generated Service Wrappers": "generated",
-    "Generated REST Services": "generated",
-    "Generated Models": "generated",
-    "Generated Error Classes": "generated",
-    "Generated Proto Stubs": "generated",
+_GROUP_CONFIG: dict[str, tuple[str, str]] = {
+    # label: (layer, source path under kentik_api/)
+    "Client API": ("client", "client.py"),
+    "Client Mixin": ("client", "client_mixin.py"),
+    "Auth Credentials": ("foundation", "auth/"),
+    "API Config": ("foundation", "core/api_config.py"),
+    "REST Runtime": ("foundation", "core/rest_runtime.py"),
+    "gRPC Runtime": ("foundation", "core/grpc_runtime.py"),
+    "Rate Limit": ("foundation", "core/rate_limit.py"),
+    "Error Types": ("foundation", "errors/"),
+    "Transport Base": ("transport", "transports/base.py"),
+    "REST Transport": ("transport", "transports/rest_client.py"),
+    "gRPC Transport": ("transport", "transports/grpc_client.py"),
+    "Generated Service Wrappers": ("generated", "gen/{service}/services/{service}.py"),
+    "Generated REST Services": ("generated", "gen/{service}/services/"),
+    "Generated Models": ("generated", "gen/{service}/models/"),
+    "Generated Error Classes": ("generated", "gen/{service}/error/"),
+    "Generated Proto Stubs": ("generated", "gen/{service}/pb/"),
 }
 
 _LAYER_NAMES: dict[str, str] = {
@@ -216,6 +216,409 @@ _LAYER_NAMES: dict[str, str] = {
     "transport": "Transport Layer",
     "foundation": "Shared Foundation",
 }
+
+# Explorer parts, each a set of module groups. The layout is fixed by hand, so
+# _dependency_explorer() checks every drawn wire against the scanned imports.
+_PART_GROUPS: dict[str, tuple[str, ...]] = {
+    "base": ("API Config", "Auth Credentials", "Error Types", "Rate Limit"),
+    "rj": ("REST Runtime",),
+    "cg": ("gRPC Runtime",),
+    "tr": ("Transport Base", "REST Transport", "gRPC Transport"),
+    "models": ("Generated Models",),
+    "rest": ("Generated REST Services", "Generated Error Classes"),
+    "pb": ("Generated Proto Stubs",),
+    "wrap": ("Generated Service Wrappers",),
+    "client": ("Client API", "Client Mixin"),
+}
+
+_W, _H = 200, 72
+_COLS = (40, 330, 620)
+_ROWS = (30, 170, 310, 450, 590)
+
+# The import graph has one root, KentikAPI, so it starts at the top center and
+# each arrow points from a part to a part that it imports.
+# part: (column, row, family, kind, box lines, card title, role, if it stops)
+_PARTS: dict[str, tuple[int, int, str, str, list[str], str, str, str]] = {
+    "client": (
+        1,
+        0,
+        "orange",
+        "src",
+        ["KentikAPI", "client.py", "client_mixin.py"],
+        "KentikAPI client",
+        "The starting point. Reads the credentials, picks the transport, and mounts every wrapper.",
+        "Expected: nothing in the SDK can be called.",
+    ),
+    "wrap": (
+        1,
+        1,
+        "green",
+        "proc",
+        ["Service wrappers", "client.{service}", "one per service"],
+        "Service wrappers",
+        "Send each call to the REST function or to call_grpc(), for the transport in use.",
+        "Expected: the client does not mount that service, on either transport.",
+    ),
+    "tr": (
+        2,
+        1,
+        "violet",
+        "proc",
+        ["Transports", "transports/", "REST and gRPC"],
+        "Transports",
+        "RestTransport holds the APIConfig. GrpcTransport holds the TLS channel and the default deadline.",
+        "Expected: the client cannot be built, on either transport.",
+    ),
+    "rest": (
+        0,
+        2,
+        "green",
+        "proc",
+        ["REST functions", "gen/{service}/services/", "+ error classes"],
+        "REST functions and error classes",
+        "One function per operation. Each one calls request_json() with its own error class.",
+        "Expected: REST calls fail for that service. gRPC calls through the same wrapper keep working.",
+    ),
+    "models": (
+        1,
+        2,
+        "green",
+        "proc",
+        ["Models", "gen/{service}/models/", "Pydantic v2"],
+        "Models",
+        "The request and response models of every operation. They import nothing else in the SDK.",
+        "Expected: the REST functions and the wrappers of that service do not import, so it does not mount.",
+    ),
+    "pb": (
+        2,
+        2,
+        "green",
+        "proc",
+        ["Proto stubs", "gen/{service}/pb/", "protoc output"],
+        "Proto stubs",
+        "The modules that protoc compiles. Wrappers call them on a gRPC transport.",
+        "Expected: gRPC calls for that service raise NotImplementedError. REST calls keep working.",
+    ),
+    "rj": (
+        0,
+        3,
+        "neutral",
+        "hub",
+        ["request_json()", "core/rest_runtime.py", "all REST traffic"],
+        "request_json()",
+        "The one function that sends REST traffic: auth headers, quota, and errors.",
+        "Expected: every REST call fails. gRPC calls fail too, because they parse responses with it.",
+    ),
+    "cg": (
+        2,
+        3,
+        "neutral",
+        "hub",
+        ["call_grpc()", "core/grpc_runtime.py", "all gRPC traffic"],
+        "call_grpc()",
+        "The one function that sends gRPC traffic: deadline, quota, and errors.",
+        "Expected: every gRPC call fails. REST calls keep working.",
+    ),
+    "base": (
+        1,
+        4,
+        "neutral",
+        "hub",
+        ["Shared foundation", "APIConfig, auth,", "KentikError, RateLimit"],
+        "Shared foundation",
+        "APIConfig, the auth headers, the KentikError hierarchy and RateLimit. Every other part imports it.",
+        "Expected: nothing in the SDK imports, so every call fails.",
+    ),
+}
+
+# wire id: (path, importer>imported keys, label, label position, anchor, arrow)
+_WIRES: list[tuple[str, str, list[str], str | None, tuple[int, int], str, bool]] = [
+    (
+        "client_wrap",
+        "M430,102 V170",
+        ["client>wrap"],
+        "wrappers",
+        (438, 140),
+        "start",
+        True,
+    ),
+    (
+        "client_tr",
+        "M530,66 H720 V170",
+        ["client>tr"],
+        "transports",
+        (625, 58),
+        "middle",
+        True,
+    ),
+    ("wrap_tr", "M530,206 H620", ["wrap>tr"], "transport", (575, 198), "middle", True),
+    (
+        "wrap_rest",
+        "M330,206 H140 V310",
+        ["wrap>rest"],
+        "REST functions",
+        (235, 198),
+        "middle",
+        True,
+    ),
+    (
+        "wrap_models",
+        "M430,242 V310",
+        ["wrap>models"],
+        "models",
+        (422, 290),
+        "end",
+        True,
+    ),
+    (
+        "wrap_pb",
+        "M510,242 V260 H690 V310",
+        ["wrap>pb"],
+        "proto stubs",
+        (698, 290),
+        "start",
+        True,
+    ),
+    (
+        "wrap_cg",
+        "M480,242 V290 H575 V486 H620",
+        ["wrap>cg"],
+        "call_grpc()",
+        (583, 400),
+        "start",
+        True,
+    ),
+    (
+        "rest_models",
+        "M240,346 H330",
+        ["rest>models"],
+        "models",
+        (285, 338),
+        "middle",
+        True,
+    ),
+    (
+        "rest_rj",
+        "M140,382 V450",
+        ["rest>rj"],
+        "request_json()",
+        (148, 420),
+        "start",
+        True,
+    ),
+    ("cg_rj", "M620,506 H240", ["cg>rj"], "parsing", (439, 498), "middle", True),
+    (
+        "rj_base",
+        "M140,522 V626 H330",
+        ["rj>base"],
+        "APIConfig, auth",
+        (148, 570),
+        "start",
+        True,
+    ),
+    (
+        "cg_base",
+        "M720,522 V610 H530",
+        ["cg>base"],
+        "APIConfig, errors",
+        (728, 570),
+        "start",
+        True,
+    ),
+    (
+        "tr_base",
+        "M820,206 H860 V640 H530",
+        ["tr>base"],
+        "APIConfig, auth",
+        (852, 420),
+        "end",
+        True,
+    ),
+]
+
+# Real imports the explorer leaves out, so the figure stays readable.
+_UNDRAWN = {"client>base", "client>rest", "wrap>base", "rest>base"}
+
+_PATHS = {
+    "rest": {
+        "label": "REST call",
+        "family": "blue",
+        "title": "What a REST call uses",
+        "text": "KentikAPI calls a wrapper. The wrapper calls the REST function, which builds the request "
+        "with the models and sends it with request_json().",
+        "links": ["client>wrap", "wrap>rest", "rest>models", "rest>rj", "rj>base"],
+    },
+    "grpc": {
+        "label": "gRPC call",
+        "family": "violet",
+        "title": "What a gRPC call uses",
+        "text": "KentikAPI calls a wrapper. The wrapper builds the proto request with the stubs and sends it "
+        "with call_grpc(), which parses the answer into the same models as REST.",
+        "links": [
+            "client>wrap",
+            "wrap>pb",
+            "wrap>models",
+            "wrap>cg",
+            "cg>rj",
+            "cg>base",
+        ],
+    },
+    "setup": {
+        "label": "Client setup",
+        "family": "orange",
+        "title": "What building the client uses",
+        "text": "KentikAPI builds one transport from the APIConfig and gives it to every wrapper that it mounts.",
+        "links": ["client>tr", "client>wrap", "wrap>tr", "tr>base"],
+    },
+}
+
+_GROUP_ROLES: dict[str, str] = {
+    "Client API": "`KentikAPI`: reads the credentials and selects the transport.",
+    "Client Mixin": "Mounts each service wrapper as `client.<service>`.",
+    "Generated Service Wrappers": "Send each call to the REST function or to the gRPC stub, for the transport in use.",
+    "Generated REST Services": "One function per operation in the OpenAPI schema. Each function calls `request_json()`.",
+    "Generated Models": "Pydantic request and response models.",
+    "Generated Error Classes": "One error class per operation, picked by the response status.",
+    "Generated Proto Stubs": "The modules that protoc compiles. Wrappers call them on a gRPC transport.",
+    "API Config": "`APIConfig`: base URL, credentials, TLS, timeouts, and the shared HTTP client.",
+    "REST Runtime": "`request_json()`: the one function that sends REST traffic.",
+    "gRPC Runtime": "`call_grpc()`: the one function that sends gRPC traffic.",
+    "Error Types": "The shared exception hierarchy under `KentikError`.",
+    "Auth Credentials": "Builds the Kentik auth headers for REST and for gRPC.",
+    "Rate Limit": "`RateLimit`: the quota that each response reports.",
+    "Transport Base": "The base class of both transports.",
+    "REST Transport": "`RestTransport`: holds the `APIConfig` for REST calls.",
+    "gRPC Transport": "`GrpcTransport`: the TLS channel, with auth and the default deadline.",
+}
+
+
+def _call_path_diagram() -> list[str]:
+    """The overview: one REST row and one gRPC row from the caller to the Kentik API."""
+    services = 0
+    operations = 0
+    for service_dir in iter_service_dirs():
+        ops = sum(
+            len(parse_generated_rest_module(module))
+            for module in (service_dir / "services").glob("*.py")
+        )
+        services += ops > 0
+        operations += ops
+
+    return [
+        "```mermaid",
+        mermaid_init(),
+        "sequenceDiagram",
+        "    actor C as Your code",
+        (
+            '    participant W@{ "type": "boundary" } as Service wrapper<br/>'
+            f"({services} services, {operations} operations)"
+        ),
+        "    box transparent REST transport",
+        '    participant R@{ "type": "control" } as REST function<br/>gen/{service}/services/',
+        '    participant RJ@{ "type": "control" } as request_json()',
+        "    participant RA as Kentik REST API",
+        "    end",
+        "    box transparent gRPC transport",
+        '    participant CG@{ "type": "control" } as call_grpc()',
+        "    participant GA as Kentik gRPC API",
+        "    end",
+        "",
+        "    C->>+W: client.{service}.{method}(arguments)",
+        "    alt REST transport",
+        "        W->>+R: arguments",
+        f"        rect {_SHARED_RUNTIME_BAND}",
+        "        Note over RJ,RA: Shared runtime:<br/>every REST endpoint<br/>goes through request_json()",
+        "        R->>+RJ: method, path, body, APIConfig",
+        "        RJ->>+RA: HTTPS request with auth headers",
+        "        RA-->>-RJ: JSON response",
+        "        RJ-->>-R: JSON dict + quota",
+        "        end",
+        "        R-->>-W: Pydantic model",
+        "    else gRPC transport",
+        f"        rect {_SHARED_RUNTIME_BAND}",
+        "        Note over CG,GA: Shared runtime:<br/>every gRPC endpoint<br/>goes through call_grpc()",
+        "        W->>+CG: stub method + proto request",
+        "        CG->>+GA: gRPC call over TLS",
+        "        GA-->>-CG: proto response",
+        "        CG-->>-W: proto response + quota",
+        "        end",
+        "        W->>W: parse_grpc_response()",
+        "    end",
+        "    W-->>-C: Pydantic model",
+        "    Note over C,GA: On a failure, request_json() or call_grpc() raises a KentikError subclass.",
+        "```",
+    ]
+
+
+def _dependency_explorer(edge_counts: dict[tuple[str, str], int]) -> list[str]:
+    """The Module Dependencies explorer: from KentikAPI at the top down to the shared foundation."""
+    part_of = {group: part for part, groups in _PART_GROUPS.items() for group in groups}
+    imports: dict[str, int] = {}
+    for (importer, imported), count in edge_counts.items():
+        user, used = part_of.get(importer), part_of.get(imported)
+        if user and used and user != used:
+            key = f"{user}>{used}"
+            imports[key] = imports.get(key, 0) + count
+
+    drawn = {key for _, _, keys, *_ in _WIRES for key in keys}
+    if missing := sorted(drawn - imports.keys()):
+        raise ValueError(
+            f"the dependency explorer draws imports that do not exist: {missing}"
+        )
+    if left_out := sorted(imports.keys() - drawn - _UNDRAWN):
+        print(
+            f"    \u26a0\ufe0f  The dependency explorer does not draw: {', '.join(left_out)}"
+        )
+
+    def counted(keys: list[str], index: int) -> list[str]:
+        return [
+            f"{_PARTS[key.split('>')[index]][5]} ({imports[key]})"
+            for key in sorted(keys)
+        ]
+
+    parts = {}
+    for pid, (*_, title, role, stops) in _PARTS.items():
+        sources = ", ".join(_GROUP_CONFIG[g][1] for g in _PART_GROUPS[pid])
+        facts = [f"Source: {sources}"]
+        if uses := counted([k for k in imports if k.startswith(f"{pid}>")], 1):
+            facts.append("Imports " + ", ".join(uses))
+        if users := counted([k for k in imports if k.endswith(f">{pid}")], 0):
+            facts.append("Imported by " + ", ".join(users))
+        parts[pid] = {"title": title, "role": role, "facts": facts, "stops": stops}
+
+    prefix = "deps"
+    wires = [
+        dk.seg(sid, d, keys, prefix, label, at, anchor=anchor, arrow=arrow)
+        for sid, d, keys, label, at, anchor, arrow in _WIRES
+    ]
+    boxes = [
+        dk.node(pid, (_COLS[col], _ROWS[row], _W, _H), fam, kind, lines, label=title)
+        for pid, (col, row, fam, kind, lines, title, _, _) in _PARTS.items()
+    ]
+    markup = dk.svg(
+        "deps-svg",
+        (900, 690),
+        "Module dependencies: KentikAPI at the top imports the service wrappers and the transports. "
+        "They import the runtimes, the models and the proto stubs, down to the shared foundation.",
+        # The right channel of the transport wire makes the grid off center by 20 px.
+        '<g transform="translate(20,0)">' + "".join(wires + boxes) + "</g>",
+        prefix,
+    )
+    data = {
+        "select": "client",
+        "parts": parts,
+        "links": {key: f"{imports[key]} import statements" for key in sorted(drawn)},
+        "paths": _PATHS,
+        "words": {"from": "Used by", "to": "Uses"},
+    }
+    return fragment(
+        markup,
+        data,
+        "Start at KentikAPI at the top. Each arrow points from a part to a part that it imports. Select a "
+        "part: moving lines show what it uses, and bold lines show what uses it. Every part also imports "
+        "the shared foundation, but the diagram draws that only for the runtimes and the transports.",
+        legend=("what uses the selected part", "what the selected part uses"),
+    )
 
 
 def _module_group(module_name: str, source_file: Path | None = None) -> str | None:
@@ -289,7 +692,9 @@ def _generate_runtime_architecture_docs(
     nodes: set[str] = set()
 
     for py_file in scan_paths:
-        if not py_file.exists() or py_file.name == "__init__.py":
+        if not py_file.exists() or (
+            py_file.name == "__init__.py" and py_file.parent.name != "error"
+        ):
             continue
         try:
             tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
@@ -323,72 +728,64 @@ def _generate_runtime_architecture_docs(
                 key = (src_group, dst_group)
                 edge_counts[key] = edge_counts.get(key, 0) + 1
 
-    from collections import defaultdict
+    imports_of: dict[str, list[str]] = {}
+    for (src, dst), count in sorted(edge_counts.items()):
+        imports_of.setdefault(src, []).append(f"{dst} ({count})")
 
-    layer_members: dict[str, set[str]] = defaultdict(set)
-    for label, layer_key in _GROUP_CONFIG.items():
-        layer_members[layer_key].add(label)
-    _LAYERS: list[tuple[str, str, set[str]]] = [
-        (key, _LAYER_NAMES[key], layer_members[key])
-        for key in _LAYER_NAMES
-        if layer_members[key]
+    group_rows = [
+        f"| {label} | {_LAYER_NAMES[layer]} | `{path}` | "
+        f"{', '.join(imports_of.get(label, [])) or 'nothing in the SDK'} | "
+        f"{_GROUP_ROLES.get(label, '')} |"
+        for label, (layer, path) in _GROUP_CONFIG.items()
+        if label in nodes
     ]
 
-    mermaid_lines = ["flowchart TB"]
-
-    placed: set[str] = set()
-    for layer_key, layer_label, members in _LAYERS:
-        in_layer = members & nodes
-        if not in_layer:
-            continue
-        mermaid_lines.append(f'    subgraph {layer_key}["{layer_label}"]')
-        for node_name in sorted(in_layer):
-            node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
-            mermaid_lines.append(f'        {node_id}["{node_name}"]')
-            placed.add(node_name)
-        mermaid_lines.append("    end")
-
-    for node_name in sorted(nodes - placed):
-        node_id = re.sub(r"[^A-Za-z0-9_]", "_", node_name)
-        mermaid_lines.append(f'    {node_id}["{node_name}"]')
-
-    mermaid_lines.append("")
-    for (source_group, dest_group), count in sorted(edge_counts.items()):
-        source_group_id = re.sub(r"[^A-Za-z0-9_]", "_", source_group)
-        dest_group_id = re.sub(r"[^A-Za-z0-9_]", "_", dest_group)
-        label = f'|"x{count}"|' if count > 1 else ""
-        mermaid_lines.append(f"    {source_group_id} -->{label} {dest_group_id}")
-
     architecture_md = [
+        "---",
+        "html_theme.sidebar_secondary.remove: true",
+        "---",
+        "",
         "<!-- AUTO-GENERATED: scripts/generation/docs_rendering.py, _generate_runtime_architecture_docs() -->",
         f"<!-- Rebuilt on every `{REGENERATE_COMMAND}`. Do not edit by hand. -->",
         "",
         "# SDK Runtime Architecture",
         "",
-        "This page explains how core runtime modules and generated services connect at runtime.",
+        "This page shows how a call moves through the SDK, and how the hand-written",
+        "runtime modules and the generated services depend on each other.",
         "",
-        "## Runtime Flow",
+        "## Call Path",
         "",
-        "1. `kentik_api.client.KentikAPI` reads credentials and selects transport.",
-        "2. `kentik_api.client_mixin.KentikClientMixin` mounts generated service wrappers.",
-        "3. Wrapper classes in `kentik_api.gen.<service>.services.<service>` delegate\n   to generated REST functions.",
-        "4. Generated REST services use `kentik_api.core.api_config` and `kentik_api.core.rest_runtime`.",
-        "5. Generated wrappers on a gRPC transport call `kentik_api.core.grpc_runtime`\n   instead, against the compiled proto stubs in `kentik_api.gen.<service>.pb`.",
-        "6. Runtime failures are normalized into `kentik_api.errors` and generated\n   service-local error classes.",
+        "Each method call on `client.<service>` takes one of two paths. The transport",
+        "that the client uses selects the path. Both paths return the same Pydantic",
+        "models and raise the same exception types.",
         "",
-        "## Module Dependency Graph",
+        *_call_path_diagram(),
         "",
-        "```mermaid",
-        *mermaid_lines,
-        "```",
+        "1. `kentik_api.client.KentikAPI` reads the credentials and selects the transport.",
+        "2. `kentik_api.client_mixin.KentikClientMixin` mounts one generated service",
+        "   wrapper per service.",
+        "3. On a REST transport, a wrapper calls the generated REST function in",
+        "   `kentik_api.gen.<service>.services`. That function calls `request_json()`",
+        "   in `kentik_api.core.rest_runtime`, with the shared `APIConfig`.",
+        "4. On a gRPC transport, a wrapper calls `call_grpc()` in",
+        "   `kentik_api.core.grpc_runtime`, with the compiled proto stubs in",
+        "   `kentik_api.gen.<service>.pb`.",
+        "5. Both runtimes turn each failure into a `kentik_api.errors` type, or into",
+        "   the error class that the service generates for that operation.",
         "",
-        "## Reading The Graph",
+        "## Module Dependencies",
         "",
-        "- `Client API` and `Client Mixin` are the orchestration entrypoints.",
-        "- `Generated Service Wrappers` are transport-aware facades exposed as `client.<service>`.",
-        "- `Generated REST Services` host operation functions generated from OpenAPI schemas.",
-        "- `Generated Proto Stubs` are the protoc-compiled modules that wrappers call on a gRPC transport.",
-        "- `API Config`, `REST Runtime`, `gRPC Runtime`, and `Error Types` form the shared runtime foundation.",
+        "The SDK splits into the parts below. Select one to see what it imports and what",
+        "imports it. The generator reads the imports from the source on every run.",
+        "",
+        *_dependency_explorer(edge_counts),
+        "",
+        "The table lists each module group, and the groups that it imports, with the",
+        "number of import statements.",
+        "",
+        "| Group | Layer | Source | Imports from | Role |",
+        "| --- | --- | --- | --- | --- |",
+        *group_rows,
         "",
         *_services_without_wrappers_section(),
         *_rest_only_services_section(rest_only),
@@ -559,6 +956,214 @@ def _replace_marker(text: str, marker: str, new_content: str) -> str:
     return pattern.sub(replacement, text)
 
 
+def _transport_paths_explorer() -> list[str]:
+    """The REST vs gRPC guide's explorer: both clients reach the same gRPC services."""
+    p = "tp"
+    # part: (box, family, kind, lines, title, role, facts, if it stops)
+    parts = {
+        "code": (
+            (450, 30),
+            "green",
+            "src",
+            ["Your code", "same methods"],
+            "Your code",
+            "Calls the same service methods on either client.",
+            ["Both clients return the same Pydantic models"],
+            "Nothing is sent.",
+        ),
+        "restc": (
+            (160, 170),
+            "blue",
+            "proc",
+            ['protocol="rest"', "HTTPS + JSON"],
+            'KentikAPI(protocol="rest")',
+            "Sends each call as an HTTPS request with a JSON body.",
+            ["HTTP/1.1", "Every operation, V5 included"],
+            "Expected: REST calls stop. A gRPC client keeps working.",
+        ),
+        "grpcc": (
+            (740, 170),
+            "violet",
+            "proc",
+            ['protocol="grpc"', "HTTP/2 + protobuf"],
+            'KentikAPI(protocol="grpc")',
+            "Sends each call as a gRPC call with a protobuf body.",
+            ["HTTP/2", "Every V6 operation. V5 calls go over REST"],
+            "Expected: gRPC calls stop. A REST client keeps working.",
+        ),
+        "envoy": (
+            (160, 310),
+            "blue",
+            "proc",
+            ["Envoy transcoder", "JSON to gRPC and back"],
+            "Envoy transcoder",
+            "Converts each REST request into a gRPC call, and the answer back into JSON.",
+            [
+                "Answers with the header server: envoy",
+                "Copies the gRPC status into grpc-status",
+            ],
+            "Expected: REST calls fail. gRPC calls keep working.",
+        ),
+        "svc": (
+            (450, 450),
+            "neutral",
+            "hub",
+            ["Kentik gRPC services", "one quota per endpoint"],
+            "Kentik gRPC services",
+            "The services behind both transports.",
+            [
+                "60 requests per 60 seconds for each endpoint",
+                "REST and gRPC take from the same quota",
+            ],
+            "Expected: both transports fail.",
+        ),
+    }
+    # wire id: (path, link, label, label position, anchor, kind)
+    wires = [
+        (
+            "code_rest",
+            "M450,56 H230 V170",
+            "code>restc",
+            "method call",
+            (340, 48),
+            "middle",
+            "call",
+        ),
+        (
+            "rest_code",
+            "M290,170 V86 H450",
+            "restc>code",
+            "Pydantic model",
+            (298, 130),
+            "start",
+            "data",
+        ),
+        (
+            "code_grpc",
+            "M650,56 H870 V170",
+            "code>grpcc",
+            "method call",
+            (760, 48),
+            "middle",
+            "call",
+        ),
+        (
+            "grpc_code",
+            "M810,170 V86 H650",
+            "grpcc>code",
+            "Pydantic model",
+            (802, 130),
+            "end",
+            "data",
+        ),
+        (
+            "rest_envoy",
+            "M230,242 V310",
+            "restc>envoy",
+            "HTTPS + JSON",
+            (222, 280),
+            "end",
+            "call",
+        ),
+        (
+            "envoy_rest",
+            "M290,310 V242",
+            "envoy>restc",
+            "JSON",
+            (298, 280),
+            "start",
+            "data",
+        ),
+        (
+            "envoy_svc",
+            "M290,382 V476 H450",
+            "envoy>svc",
+            "gRPC call",
+            (361, 468),
+            "middle",
+            "call",
+        ),
+        (
+            "svc_envoy",
+            "M450,506 H230 V382",
+            "svc>envoy",
+            "gRPC response",
+            (340, 524),
+            "middle",
+            "data",
+        ),
+        (
+            "grpc_svc",
+            "M810,242 V476 H650",
+            "grpcc>svc",
+            "gRPC call",
+            (802, 420),
+            "end",
+            "call",
+        ),
+        (
+            "svc_grpc",
+            "M650,506 H870 V242",
+            "svc>grpcc",
+            "gRPC response",
+            (878, 420),
+            "start",
+            "data",
+        ),
+    ]
+    segs = [
+        dk.seg(sid, d, [key], p, label, at, anchor=anchor, kind=kind)
+        for sid, d, key, label, at, anchor, kind in wires
+    ]
+    boxes = [
+        dk.node(pid, (x, y, 200, 72), fam, kind, lines, label=title)
+        for pid, ((x, y), fam, kind, lines, title, *_) in parts.items()
+    ]
+    markup = dk.svg(
+        "transports-svg",
+        (1100, 560),
+        "Both clients reach the same Kentik gRPC services: REST through the Envoy transcoder, gRPC directly.",
+        "".join(segs + boxes),
+        p,
+    )
+    data = {
+        "select": "svc",
+        "parts": {
+            pid: {"title": title, "role": role, "facts": facts, "stops": stops}
+            for pid, (*_, title, role, facts, stops) in parts.items()
+        },
+        "paths": {
+            "rest": {
+                "label": "REST",
+                "family": "blue",
+                "title": "A REST call",
+                "text": "Envoy converts the request into a gRPC call and the answer back into JSON.",
+                "links": [
+                    "code>restc",
+                    "restc>envoy",
+                    "envoy>svc",
+                    "svc>envoy",
+                    "envoy>restc",
+                    "restc>code",
+                ],
+            },
+            "grpc": {
+                "label": "gRPC",
+                "family": "violet",
+                "title": "A gRPC call",
+                "text": "The gRPC client calls the services directly.",
+                "links": ["code>grpcc", "grpcc>svc", "svc>grpcc", "grpcc>code"],
+            },
+        },
+    }
+    return fragment(
+        markup,
+        data,
+        "Select a part. Each hop is a call going down and its answer coming back up. "
+        "Both paths end at the same services, so both take from the same quota.",
+    )
+
+
 def _update_guide_snippets() -> None:
     """Injects current generated operation names and counts into docs/sphinx/guides/ marker blocks."""
     if not SDK_OUTPUT_DIR.exists():
@@ -583,6 +1188,13 @@ def _update_guide_snippets() -> None:
         text = gen_md.read_text(encoding="utf-8")
         text = _replace_marker(text, "service-count", str(service_count))
         write_text_lf(gen_md, text)
+
+    transports_md = _GUIDES_DIR / "rest-vs-grpc.md"
+    if transports_md.exists():
+        text = transports_md.read_text(encoding="utf-8")
+        explorer = "\n".join(_transport_paths_explorer())
+        text = _replace_marker(text, "transport-paths-explorer", f"\n{explorer}\n")
+        write_text_lf(transports_md, text)
 
     sphinx_readme = PROJECT_ROOT / "docs" / "sphinx" / "README.md"
     if sphinx_readme.exists():
@@ -668,15 +1280,16 @@ print(response)  # {primary["response_class"]}
             "rest-callflow-diagram",
             f"""
 ```mermaid
+{mermaid_init()}
 sequenceDiagram
-    participant C as Caller
-    participant W as ServiceWrapper
-    participant RJ as request_json()
+    actor C as Caller
+    participant W@{{ "type": "boundary" }} as ServiceWrapper
+    participant RJ@{{ "type": "control" }} as request_json()
     participant API as Kentik REST API
 
-    C->>W: {primary["method"]}()
-    W->>RJ: api_config, method, path, params
-    RJ->>API: HTTP request (HTTPS)
+    C->>+W: {primary["method"]}()
+    W->>+RJ: api_config, method, path, params
+    RJ->>+API: HTTP request (HTTPS)
     alt success
         API-->>RJ: JSON response
         RJ-->>W: parsed dict
@@ -690,6 +1303,9 @@ sequenceDiagram
     else no response (unreachable or timed out)
         RJ-->>C: raise TransportError
     end
+    deactivate API
+    deactivate RJ
+    deactivate W
 ```
 """,
         )
@@ -698,18 +1314,19 @@ sequenceDiagram
             "grpc-callflow-diagram",
             f"""
 ```mermaid
+{mermaid_init()}
 sequenceDiagram
-    participant C as Caller
-    participant W as ServiceWrapper
-    participant CG as call_grpc()
-    participant S as gRPC stub
+    actor C as Caller
+    participant W@{{ "type": "boundary" }} as ServiceWrapper
+    participant CG@{{ "type": "control" }} as call_grpc()
+    participant S@{{ "type": "control" }} as gRPC stub
     participant API as Kentik gRPC API
 
-    C->>W: {primary["method"]}()
+    C->>+W: {primary["method"]}()
     W->>W: build {request_proto} proto<br/>(ParseDict for operations with a body)
-    W->>CG: stub method + proto request
-    CG->>S: {stub_method} (gRPC/TLS, deadline set by the channel)
-    S->>API: serialized proto request
+    W->>+CG: stub method + proto request
+    CG->>+S: {stub_method} (gRPC/TLS, deadline set by the channel)
+    S->>+API: serialized proto request
     alt success
         API-->>S: serialized proto response
         S-->>CG: {primary["response_class"]} proto
@@ -719,6 +1336,10 @@ sequenceDiagram
         S-->>CG: raise RpcError
         CG-->>C: map_grpc_error(): AuthenticationError,<br/>the operation's HTTPException subclass, or TransportError
     end
+    deactivate API
+    deactivate S
+    deactivate CG
+    deactivate W
 ```
 """,
         )
@@ -738,3 +1359,4 @@ def generate(rest_only: frozenset[str] = frozenset()) -> None:
     _generate_gen_root_readme()
     _generate_service_readmes(rest_only)
     _update_guide_snippets()
+    write_static_assets(PROJECT_ROOT / "docs" / "sphinx" / "_static")

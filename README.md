@@ -7,91 +7,106 @@ Kentik's public OpenAPI v3 schema.
 
 ## What this is
 
-The SDK is generated, not hand-written.
-[`scripts/generate_sdk.py`](scripts/generate_sdk.py) builds it from the
+The SDK is not hand-written.
+[`scripts/generate_sdk.py`](scripts/generate_sdk.py) generates it from the
 [Kentik API Public Schema](https://github.com/kentik/api-schema-public).
 The pipeline fixes common OpenAPI generator bugs, removes schema-version
 prefixes from class names, and generates architecture diagrams.
 
-The diagram below shows the key split: hand-written code that survives
-every regeneration, and generated code that [`uv run poe generate`](pyproject.toml) wipes and rebuilds.
+The diagram below shows the key split. The hand-written code survives
+every regeneration. [`uv run poe generate`](pyproject.toml) wipes and rebuilds the generated code.
+Each arrow points from a module to the module that it uses.
 
 ```mermaid
-flowchart TB
-    subgraph HW["Hand-written (survives every regeneration)"]
-        Client["client.py<br/>KentikAPI entrypoint"]
-        Auth["auth/<br/>Credentials"]
-        Core["core/<br/>APIConfig + rest_runtime + grpc_runtime"]
-        Errors["errors/<br/>Base exception hierarchy"]
-        Transports["transports/<br/>REST / gRPC transport base"]
-    end
+%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart LR
+  subgraph hwc["Hand-written · client"]
+    client("client.py<br/>KentikAPI entrypoint"):::blueSrc
+    transports("transports/<br/>REST and gRPC transports"):::blue
+    auth("auth/<br/>credentials"):::blue
+  end
 
-    subgraph GEN["Generated (wiped and rebuilt by uv run poe generate)"]
-        Mixin["client_mixin.py<br/>mounts every service wrapper"]
-        Wrappers["gen/{service}/services/<br/>ServiceWrapper classes"]
-        Models["gen/{service}/models/"]
-        GenErrors["gen/{service}/error/"]
-        Pb["gen/{service}/pb/<br/>compiled gRPC stubs"]
-        Companions["gen/pb_companions/<br/>shared proto descriptors"]
-    end
+  subgraph gen["Generated · rebuilt by uv run poe generate"]
+    mixin("client_mixin.py<br/>mounts every service"):::orange
+    wrappers("gen/{service}/services/<br/>REST functions,<br/>ServiceWrapper class"):::orange
+    models("gen/{service}/models/<br/>Pydantic models"):::orange
+    generr("gen/{service}/error/<br/>per-operation errors"):::orange
+    pb("gen/{service}/pb/<br/>compiled gRPC stubs"):::orange
+    comp("gen/pb_companions/<br/>shared proto descriptors"):::orange
+  end
 
-    Client --> Mixin
-    Client --> Auth
-    Client --> Transports
-    Mixin --> Wrappers
-    Wrappers --> Models
-    Wrappers --> Core
-    Wrappers --> GenErrors
-    Wrappers --> Pb
-    Pb --> Companions
-    Core --> Errors
-    Transports --> Auth
+  subgraph hwr["Hand-written · shared runtime"]
+    core("core/<br/>APIConfig, request_json(),<br/>call_grpc()"):::blue
+    errors("errors/<br/>KentikError hierarchy"):::blue
+  end
 
-    classDef handwritten fill:#d7ecff,stroke:#1c6fb0,color:#0b3554
-    classDef generated fill:#fde9c8,stroke:#c8791a,color:#5a3506
-    class Client,Auth,Core,Errors,Transports handwritten
-    class Mixin,Wrappers,Models,GenErrors,Pb,Companions generated
+  client --> mixin
+  client --> transports
+  client --> auth
+  transports -->|"KentikCredentials"| auth
+  mixin -->|"one wrapper per service"| wrappers
+  wrappers -->|"response models"| models
+  wrappers -->|"error classes"| generr
+  wrappers -->|"gRPC stubs"| pb
+  pb -->|"proto descriptors"| comp
+  wrappers -->|"request_json(), call_grpc()"| core
+  core -->|"exception classes"| errors
+
+  click client "src/kentik_api/client.py"
+  click transports "src/kentik_api/transports/README.md"
+  click auth "src/kentik_api/auth/README.md"
+  click mixin "src/kentik_api/client_mixin.py"
+  click comp "src/kentik_api/gen/pb_companions/"
+  click core "src/kentik_api/core/README.md"
+  click errors "src/kentik_api/errors/README.md"
+
+  classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+  classDef blueSrc,blue,orange stroke-width:2px,rx:10px
+  style hwc fill:none,stroke:#868e96,stroke-width:2px
+  style gen fill:none,stroke:#868e96,stroke-width:2px
+  style hwr fill:none,stroke:#868e96,stroke-width:2px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
 
 ## Staying current with the Kentik API
 
-Kentik evolves its API continuously. Because this SDK is generated
-rather than hand-written, one command adopts a new schema:
+Kentik changes its API continuously. A generator builds this SDK, so one
+command adopts a new schema:
 
 ```bash
 uv run poe sync-schema   # regenerate from the newest schema and move the pin in schema.lock
 ```
 
 If upstream renames a public name, the run stops with `NameDriftError`.
-You then update `public_names.json` and run the command again.
+Then update [`public_names.json`](public_names.json) and run the command again.
 
 One run propagates a change through every layer at once: models, REST
 functions, per-operation error classes, gRPC stubs, the typed client
-attribute, the reference docs, and the test suite. No endpoint is
-maintained by hand, so none is silently missed or left half-wired.
+attribute, the reference docs, and the test suite. Nobody maintains an
+endpoint by hand, so a run cannot miss an endpoint or leave one half-wired.
 
 The arrival of the RBUX Focus Scope API shows the shape of a typical
-run. It required one command and no hand-written code:
+run. It took one command and no hand-written code:
 
 | Layer | Produced by the run |
 | --- | --- |
-| Models and services | 26 files under `gen/rbux/`, covering all five declared operations |
+| Models and services | 26 files under [`gen/rbux/`](src/kentik_api/gen/rbux/README.md), covering all five declared operations |
 | Client surface | `client.rbux` mounted on `KentikAPI`, fully typed and autocompleting |
 | Transports | Both REST and gRPC paths for every operation |
 | Errors | Per-operation error classes for each status code the schema declares |
 | Docs | A service reference page, plus service counts refreshed repo-wide |
 | Tests | 40 cases, auto-discovered rather than written (1855 to 1894 passing) |
 
-That last row matters most. The generated and end-to-end suites derive
-their cases from the generated code itself
-([`tests/_discovery.py`](tests/_discovery.py)), so a new endpoint arrives
-already covered, exercised against every response status the schema
-declares. Coverage cannot drift behind the API.
+The generated and end-to-end suites derive their test cases from the
+generated code ([`tests/_discovery.py`](tests/_discovery.py)). A new
+endpoint thus arrives with tests against every response status that the
+schema declares. Coverage cannot fall behind the API.
 
-The same run also picked up a new optional field on an existing
-`deviceconf` response model, which is the quieter half of the benefit:
-additive changes land without a migration, and a breaking one would
-surface immediately as a failing test rather than a runtime surprise in
+The same run also added a new optional field to an existing `deviceconf`
+response model. An additive change needs no migration. A breaking change
+shows immediately as a failing test, not as a surprise at runtime in
 production.
 
 ## Installation
@@ -100,7 +115,7 @@ production.
 pip install -U "kentik-api>=2"
 ```
 
-Requires Python 3.12 or later.
+The SDK requires Python 3.12 or later.
 
 ## Authentication
 
@@ -111,11 +126,11 @@ KENTIK_EMAIL=you@example.com
 KENTIK_API_TOKEN=your_api_token
 ```
 
-`KentikAPI()` reads these without writing them into the process
-environment. You can also pass credentials as arguments, which keeps them in
-an encrypted store such as sops. See
-[`docs/sphinx/authentication.md`](docs/sphinx/authentication.md) for all
-credential options.
+`KentikAPI()` reads these values without writing them into the process
+environment. You can also pass the credentials as arguments. Then they can
+stay in an encrypted store such as [sops](https://github.com/getsops/sops).
+See [`docs/sphinx/authentication.md`](docs/sphinx/authentication.md) for all
+credential sources.
 
 ## Transport selection
 
@@ -155,8 +170,8 @@ Run [`uv run poe docs`](pyproject.toml) to build the full Sphinx HTML reference 
 
 ## Examples
 
-Runnable scripts are in [`examples/`](examples/README.md). Each service has
-a `rest.py` and a `grpc.py` side by side.
+Runnable scripts are in [`examples/`](examples/README.md). Each service there
+has a `rest.py` and a `grpc.py` side by side.
 
 ```bash
 uv run python -m examples.device.rest   # REST
@@ -167,12 +182,13 @@ uv run python -m examples.device.grpc   # gRPC
 
 ### Prerequisites
 
-- **Python** 3.12 or later
-- **[uv](https://github.com/astral-sh/uv)** package manager
-- **Git**
+- Python 3.12 or later
+- [uv](https://github.com/astral-sh/uv), the package manager
+- Git
 
-These work the same on Windows, macOS, and Linux. Every project task runs
-as `uv run poe <task>`; run `uv run poe` to list them. Make is not needed.
+These tools work the same on Windows, macOS, and Linux. Every project task
+runs as `uv run poe <task>`. To list the tasks, run `uv run poe`. You do not
+need Make.
 
 ### Development setup
 
@@ -219,7 +235,7 @@ uv run poe typecheck     # ty
 
 ## Open-source libraries
 
-This SDK is built on the following open-source libraries:
+This SDK uses these open-source libraries:
 
 | Library | License | Author / Maintainer |
 | --- | --- | --- |
@@ -229,7 +245,7 @@ This SDK is built on the following open-source libraries:
 | [httpx](https://www.python-httpx.org) | BSD-3-Clause | Tom Christie / encode |
 | [pydantic](https://docs.pydantic.dev) | MIT | Samuel Colvin et al. |
 
-The generated code in [`src/kentik_api/gen/`](src/kentik_api/gen/README.md) is produced by:
+These tools produce the generated code in [`src/kentik_api/gen/`](src/kentik_api/gen/README.md):
 
 | Tool | License | Author |
 | --- | --- | --- |
@@ -239,6 +255,6 @@ The generated code in [`src/kentik_api/gen/`](src/kentik_api/gen/README.md) is p
 ## Acknowledgements
 
 This project is a ground-up rewrite of the original
-[kentik-api v1.x SDK](https://github.com/kentik/community_sdk_python/tree/v1.0.7),
-which was created and maintained by [Martin Machacek](https://github.com/mmac-m3a)
-at Kentik.
+[kentik-api v1.x SDK](https://github.com/kentik/community_sdk_python/tree/v1.0.7).
+[Martin Machacek](https://github.com/mmac-m3a) at Kentik created and
+maintained that SDK.

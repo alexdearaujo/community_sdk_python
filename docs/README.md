@@ -20,10 +20,10 @@ All documentation for the SDK is in or linked from this directory.
 
 ## Examples
 
-Runnable scripts live in [examples/](../examples/README.md). Each service has
-a REST and a gRPC variant:
+Runnable scripts are in [examples/](../examples/README.md). Each V6 service has
+a REST and a gRPC variant. The V5 endpoints are REST only:
 
-```bash
+```text
 examples/
 ├── common/
 │   └── error_handling.py
@@ -42,9 +42,13 @@ examples/
 ├── alerting/
 │   ├── rest.py
 │   └── grpc.py
-└── synthetics/
-    ├── rest.py
-    └── grpc.py
+├── synthetics/
+│   ├── rest.py
+│   └── grpc.py
+└── v5/
+    ├── analytics_topx.py
+    ├── batch.py
+    └── query.py
 ```
 
 ## Sphinx HTML documentation
@@ -58,13 +62,11 @@ diagrams.
 
 Each package directory has a README that explains its role:
 
-- [src/kentik_api/](../src/kentik_api/README.md): package overview and
- request flow
+- [src/kentik_api/](../src/kentik_api/README.md): package overview and request flow
 - [src/kentik_api/auth/](../src/kentik_api/auth/README.md): credential loading
 - [src/kentik_api/core/](../src/kentik_api/core/README.md): shared REST/gRPC runtime
 - [src/kentik_api/errors/](../src/kentik_api/errors/README.md): exception hierarchy
-- [src/kentik_api/transports/](../src/kentik_api/transports/README.md):
- transport layer
+- [src/kentik_api/transports/](../src/kentik_api/transports/README.md): transport layer
 - [src/kentik_api/gen/](../src/kentik_api/gen/README.md): generated services
 - [scripts/](../scripts/README.md): SDK generator and tooling
 - [tests/](../tests/README.md): test suite structure

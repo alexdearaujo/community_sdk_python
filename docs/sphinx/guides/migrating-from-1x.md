@@ -5,10 +5,10 @@
 Version 2 is a new SDK with the same package name. It shares no code with
 [kentik-api 1.x](https://github.com/kentik/community_sdk_python/tree/v1.0.7).
 Version 1 wrapped the V5 REST API, which Kentik marks as deprecated, plus two
-V6 gRPC services. Version 2 is generated from Kentik's V6 API schema, and it
-covers every V6 service that the schema publishes. Where V6 has no equivalent
-of a V5 endpoint (the query and batch APIs), `client.v5` calls the V5 endpoint
-itself. See [V5 query and batch calls](v5.md).
+V6 gRPC services. A generator builds version 2 from Kentik's V6 API schema.
+Version 2 covers every V6 service that the schema publishes. Where V6 has no
+equivalent of a V5 endpoint (the query and batch APIs), `client.v5` calls the
+V5 endpoint itself. See [V5 query and batch calls](v5.md).
 
 There is no compatibility layer. Rewrite each call against the new client.
 The table "Every 1.x call in 2.x" below lists the replacement of each call.
@@ -165,10 +165,10 @@ unchanged.
 
 | 1.x example | 2.x |
 | --- | --- |
-| `queries_example.py` | [`examples/v5/query.py`](../../../examples/v5/query.py) |
-| `batch_example.py` | [`examples/v5/batch.py`](../../../examples/v5/batch.py) |
-| `analytics_example_topx.py` | [`examples/v5/analytics_topx.py`](../../../examples/v5/analytics_topx.py) |
-| `analytics_example_sql.py` | No port: the SQL endpoint was retired on 2025-05-01. See `examples/v5/analytics_topx.py` |
+| `queries_example.py` | [`examples/v5/query.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/v5/query.py) |
+| `batch_example.py` | [`examples/v5/batch.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/v5/batch.py) |
+| `analytics_example_topx.py` | [`examples/v5/analytics_topx.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/v5/analytics_topx.py) |
+| `analytics_example_sql.py` | No port: Kentik retired the SQL endpoint on 2025-05-01. See [`examples/v5/analytics_topx.py`](https://github.com/kentik/community_sdk_python/blob/main/examples/v5/analytics_topx.py) |
 | `demos/queries_visualisation_demo.ipynb` | No port |
 
 ## Features that 1.x had and 2.x does not

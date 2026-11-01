@@ -20,8 +20,8 @@ KENTIK_API_TOKEN=your_api_token
 
 ## Transport selection
 
-Pass `protocol` to choose between REST and gRPC. Both transports return
-the same Pydantic response models.
+To choose between REST and gRPC, pass `protocol`. Both transports return the
+same Pydantic response models.
 
 ```python
 client = KentikAPI(protocol="rest", region="us")  # REST (default)
@@ -39,23 +39,25 @@ client = KentikAPI(protocol="grpc", region="us")  # gRPC
 
 The client reads the file only when a value is still missing after steps 1
 and 2. It reads the file into memory and never writes its contents into
-`os.environ`, so subprocesses that your program starts do not inherit them.
+`os.environ`. Subprocesses that your program starts therefore do not inherit
+the credentials.
 
 An argument that is empty or only whitespace raises `ConfigurationError`. The
-client does not fall back to another source, because that would send another
-identity's credentials. Omit the argument, or pass `None`, to use the other
-sources.
+client does not fall back to another source, because a fallback can send the
+credentials of another identity. To use the other sources, omit the argument
+or pass `None`.
 
 | `env_file` | Result |
 | --- | --- |
 | `".env"` (default) | Search for `.env` from the working directory upward. |
-| A `str` or `Path`, such as `Path.home() / ".kentik.env"` | An absolute path is read as is. A relative path is searched for like the default. |
+| A `str` or `Path`, such as `Path.home() / ".kentik.env"` | The client reads an absolute path as is. It searches for a relative path like the default. |
 | `None` | Never read a file. |
 
 ## Keeping credentials out of plaintext files
 
-Decrypt the credentials in your own code, then pass them as arguments. The
-client then reads no file and no environment variable:
+To keep the credentials out of a plaintext file, decrypt them in your own code.
+Then pass them as arguments. The client then reads no file and no environment
+variable:
 
 ```python
 import json
@@ -76,8 +78,8 @@ client = KentikAPI(email=secrets["email"], api_token=secrets["api_token"])
 This works the same way for any secret store, for example a keyring, a
 password manager CLI, or a cloud secret manager.
 
-Without code changes, `sops exec-file` gives the decrypted file to your
-program as a named pipe, so no plaintext file is written to disk:
+With no code change, `sops exec-file` gives the decrypted file to your program
+as a named pipe. sops writes no plaintext file to disk:
 
 ```bash
 sops exec-file kentik.sops.env 'python my_script.py --env-file {}'

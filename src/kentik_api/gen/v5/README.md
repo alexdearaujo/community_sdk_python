@@ -2,6 +2,6 @@
 <!-- Rebuilt on every `uv run poe generate`. Do not edit by hand. -->
 # V5 Service
 
-This module was automatically generated from a hand-maintained description in the local schema base, `schema/openapi/`. It is REST only.
+The generator builds this module from a description in the local schema base, `schema/openapi/`. It is REST only.
 
-For the full endpoint reference (parameters, responses, usage examples) and data model documentation, see the Sphinx docs: [`docs/sphinx/services/v5.md`](../../../../docs/sphinx/services/v5.md).
+The Sphinx page [`docs/sphinx/services/v5.md`](../../../../docs/sphinx/services/v5.md) gives the parameters, responses, and a usage example for each operation, and documents each data model.

@@ -26,20 +26,54 @@ The diagram below traces one API call through these pieces, from
 error.
 
 ```mermaid
+%%{init: {"theme": "base", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "step", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 flowchart LR
-    A["KentikAPI()"] --> B["KentikAPI.__init__<br/>resolve credentials<br/>(args, env vars, .env)"]
-    A --> C["transports/<br/>pick REST or gRPC transport"]
-    A --> D["client_mixin.py<br/>mount service wrappers"]
-    D --> E["gen/{service}<br/>ServiceWrapper, e.g. client.device"]
-    E -->|RestTransport| F["core/rest_runtime.request_json<br/>shared REST call path"]
-    E -->|GrpcTransport| J["core/grpc_runtime.call_grpc<br/>shared gRPC call path"]
-    F --> G["core/api_config.py<br/>APIConfig"]
-    J --> K["gen/{service}/pb<br/>compiled gRPC stubs"]
-    F -->|failure| H["errors/<br/>KentikError hierarchy"]
-    J -->|failure| H
-    E -->|failure| I["gen/{service}/error/<br/>per-operation error classes"]
-    I --> H
+  kapi("KentikAPI()<br/>credentials: args, env vars, .env<br/>REST or gRPC transport"):::blueSrc
+  cfg("APIConfig<br/>host, credentials, timeouts"):::blue
+  mixin("client_mixin.py<br/>mounts service wrappers"):::blue
+  wrap("Service wrapper<br/>gen/{service}, e.g. client.device"):::blue
 
+  subgraph core["core/ · shared runtimes"]
+    rj("request_json()<br/>rest_runtime.py"):::green
+    cg("call_grpc()<br/>grpc_runtime.py<br/>gen/{service}/pb stubs"):::violet
+  end
+
+  restApi("Kentik API, REST<br/>outside the SDK"):::redSrc
+  err("Raised errors<br/>errors/ KentikError hierarchy<br/>gen/{service}/error/ classes"):::orange
+  grpcApi("Kentik API, gRPC<br/>outside the SDK"):::redSrc
+
+  kapi --> cfg
+  kapi --> mixin
+  cfg -->|"api_config, via the transport"| wrap
+  mixin -->|"transport"| wrap
+  wrap -->|"REST call<br/>+ api_config_override"| rj
+  rj -->|"parsed JSON"| wrap
+  wrap -->|"proto request"| cg
+  cg -->|"proto response + quota"| wrap
+  rj -->|"HTTPS request"| restApi
+  restApi -->|"JSON response"| rj
+  rj -->|"failure"| err
+  cg -->|"failure"| err
+  cg -->|"gRPC call"| grpcApi
+  grpcApi -->|"proto response"| cg
+
+  click kapi "client.py"
+  click cfg "core/api_config.py"
+  click mixin "client_mixin.py"
+  click wrap "gen/README.md"
+  click rj "core/rest_runtime.py"
+  click cg "core/grpc_runtime.py"
+  click err "errors/README.md"
+
+  classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+  classDef green fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e
+  classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+  classDef redSrc fill:#ffc9c9,stroke:#e03131,color:#c92a2a
+  classDef blueSrc,blue,green,violet,orange,redSrc stroke-width:2px,rx:10px
+  style core fill:none,stroke:#868e96,stroke-width:2px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
 
 Every generated REST operation, in every service, calls
