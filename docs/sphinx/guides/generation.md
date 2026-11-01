@@ -84,7 +84,9 @@ Every [`uv run poe generate`](https://github.com/kentik/community_sdk_python/blo
 - [`src/kentik_api/client_mixin.py`](https://github.com/kentik/community_sdk_python/blob/main/src/kentik_api/client_mixin.py)
 - [`docs/sphinx/sdk_runtime_architecture.md`](../sdk_runtime_architecture.md)
 - [`docs/sphinx/services/*.md`](../services/index.md): all <!-- kentik-gen:service-count -->43<!-- /kentik-gen:service-count --> service pages
-- [`schema_operations.json`](https://github.com/kentik/community_sdk_python/blob/main/schema_operations.json), [`api_surface.json`](https://github.com/kentik/community_sdk_python/blob/main/api_surface.json), and [`schema.lock`](https://github.com/kentik/community_sdk_python/blob/main/schema.lock)
+- [`schema_operations.json`](https://github.com/kentik/community_sdk_python/blob/main/schema_operations.json),
+  [`api_surface.json`](https://github.com/kentik/community_sdk_python/blob/main/api_surface.json),
+  and [`schema.lock`](https://github.com/kentik/community_sdk_python/blob/main/schema.lock)
 - the `kentik-gen` marker blocks in the guides and in [`docs/sphinx/README.md`](https://github.com/kentik/community_sdk_python/blob/main/docs/sphinx/README.md)
 
 Never edit these files by hand.
