@@ -98,7 +98,9 @@ def seg(
     half of a two-way exchange. The explorer keeps both out of the closure."""
     marker = f' marker-end="url(#{prefix}-ah)"' if arrow else ""
     out = [f'<g class="edge {kind}" data-seg="{sid}" data-links="{",".join(links)}">']
-    out.append(f'<path d="{d}" class="wire{" arrow" if arrow else ""}"{marker}/>')
+    out.append(
+        f'<path d="{_rounded(d)}" data-route="{d}" class="wire{" arrow" if arrow else ""}"{marker}/>'
+    )
     for text, x, y in [(label, *at)] + ([label2] if label2 else []):
         if text:
             out.append(
@@ -250,6 +252,28 @@ def _sign(v: float) -> int:
     return (v > 0) - (v < 0)
 
 
+BEND_RADIUS = 10
+
+
+def _rounded(d: str) -> str:
+    """The route d with each right-angle bend drawn as a short curve."""
+    pts = _points(d)
+    if pts is None or len(pts) < 3:
+        return d
+    out = [f"M{pts[0][0]:g},{pts[0][1]:g}"]
+    for prev, (cx, cy), nxt in zip(pts, pts[1:], pts[2:]):
+        r = min(
+            BEND_RADIUS,
+            (abs(cx - prev[0]) + abs(cy - prev[1])) / 2,
+            (abs(nxt[0] - cx) + abs(nxt[1] - cy)) / 2,
+        )
+        ax, ay = cx - _sign(cx - prev[0]) * r, cy - _sign(cy - prev[1]) * r
+        bx, by = cx + _sign(nxt[0] - cx) * r, cy + _sign(nxt[1] - cy) * r
+        out.append(f"L{ax:g},{ay:g} Q{cx:g},{cy:g} {bx:g},{by:g}")
+    out.append(f"L{pts[-1][0]:g},{pts[-1][1]:g}")
+    return " ".join(out)
+
+
 def _side(box: Box, p: Point) -> str | None:
     """The edge of box that p sits on, clear of the rounded corners."""
     x, y, w, h = box
@@ -302,7 +326,7 @@ def check_routes(markup: str) -> list[str]:
         )
     }
     edges = re.findall(
-        r'<g class="edge [^"]*" data-seg="([^"]+)" data-links="([^"]*)"><path d="([^"]+)" class="([^"]+)"[^>]*/>(.*?)</g>',
+        r'<g class="edge [^"]*" data-seg="([^"]+)" data-links="([^"]*)"><path d="[^"]+" data-route="([^"]+)" class="([^"]+)"[^>]*/>(.*?)</g>',
         markup,
     )
     problems: list[str] = []

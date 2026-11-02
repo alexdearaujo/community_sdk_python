@@ -37,7 +37,7 @@ def _scoped(css: str) -> str:
 
 
 def explorer_css() -> str:
-    """The theme tokens, plus the explorer components and the diagram CSS scoped to .kx."""
+    """The theme tokens, the explorer components and the diagram CSS scoped to .kx, and the Mermaid colors."""
     theme = dk.THEME_CSS
     tokens = re.sub(
         r"/\*.*?\*/", "", theme[: theme.index("* { box-sizing")], flags=re.DOTALL
@@ -75,6 +75,7 @@ def explorer_css() -> str:
                 f"{_SCOPE} .seq-status {{ flex-basis: 100%; font: 0.85rem/1.4 var(--mono); color: var(--muted); "
                 f"border-left: 3px solid var(--tone); padding-left: 8px; }}"
             ),
+            (dk.ASSETS / "mermaid.css").read_text(encoding="utf-8").strip(),
             "",
         ]
     )
