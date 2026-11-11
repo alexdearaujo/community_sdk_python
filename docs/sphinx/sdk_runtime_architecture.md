@@ -16,6 +16,39 @@ Your code calls one generated wrapper per service. The transport of the client
 selects the path below the wrapper: REST through `request_json()`, or gRPC
 through `call_grpc()`. Each path ends at a Kentik API.
 
+<!-- github-only -->
+
+```mermaid
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart TD
+  code("Your code<br/>import kentik_api"):::orangeSrc
+  client("KentikAPI<br/>client.py<br/>picks REST or gRPC"):::orange
+  wrap("Service wrappers<br/>client.{service}<br/>one per service"):::green
+  rest("REST functions<br/>gen/{service}/services/<br/>one per operation"):::blue
+  rj("request_json()<br/>core/rest_runtime.py<br/>all REST traffic"):::blue
+  cg("call_grpc()<br/>core/grpc_runtime.py<br/>all gRPC traffic"):::violet
+  restapi("Kentik REST API<br/>V6: grpc.api.kentik.com<br/>V5: api.kentik.com"):::blueSrc
+  grpcapi("Kentik gRPC API<br/>grpc.api.kentik.com:443<br/>TLS, HTTP/2"):::violetSrc
+  code -->|"arguments / Pydantic model"| wrap
+  code --> client
+  client -->|"transport"| wrap
+  wrap -->|"arguments / Pydantic model"| rest
+  wrap -->|"proto request / proto response + quota"| cg
+  rest -->|"method, path, body / JSON dict + quota"| rj
+  rj -->|"HTTPS + auth headers / JSON + quota headers"| restapi
+  cg -->|"gRPC call over TLS / proto response"| grpcapi
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab,stroke-width:2px,rx:10px
+  classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab,stroke-width:2px,rx:10px
+  classDef green fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e,stroke-width:2px,rx:10px
+  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f,stroke-width:2px,rx:10px
+  classDef orangeSrc fill:#ffd8a8,stroke:#e8590c,color:#d9480f,stroke-width:2px,rx:10px
+  classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4,stroke-width:2px,rx:10px
+  classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4,stroke-width:2px,rx:10px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
+```
+
+<!-- /github-only -->
+<!-- sphinx-only
 ```{raw} html
 <div class="kx">
 <div class="chips" role="group" aria-label="Show one path" data-paths-for="overview-svg"></div>
@@ -28,6 +61,7 @@ through `call_grpc()`. Each path ends at a Kentik API.
 <script type="application/json" id="diagram-data">{"overview-svg": {"select": "wrap", "parts": {"code": {"title": "Your code", "role": "Builds one KentikAPI client, then calls client.<service>.<method>().", "facts": ["Gets the same Pydantic model on REST and gRPC", "Catches one exception hierarchy, KentikError"], "stops": "Nothing is sent."}, "client": {"title": "KentikAPI client", "role": "Reads the credentials, builds one transport, and mounts every service wrapper on it.", "facts": ["Credentials: arguments, then KENTIK_EMAIL and KENTIK_API_TOKEN, then .env", "V5 services always use a second REST transport, to the V5 host"], "stops": "Expected: no client can be built, so nothing in the SDK can be called."}, "wrap": {"title": "Service wrappers", "role": "One per service. Each method sends the call down the path of the client's transport.", "facts": ["37 services, 250 operations", "The same signature and the same models on REST and gRPC"], "stops": "Expected: the client does not mount that service, on either transport."}, "rest": {"title": "REST functions", "role": "Build the path, the query and the body of one operation, and call request_json() with that operation's error class.", "facts": ["Generated from the OpenAPI schema"], "stops": "Expected: REST calls to that service fail. A gRPC client keeps working."}, "rj": {"title": "request_json()", "role": "The one function that sends REST traffic: auth headers, quota, and errors.", "facts": ["One pooled HTTP client for each APIConfig", "A 401 raises AuthenticationError"], "stops": "Expected: every REST call fails, V5 included. gRPC calls fail too, because they parse responses with it."}, "cg": {"title": "call_grpc()", "role": "The one function that sends gRPC traffic: deadline, quota, and errors.", "facts": ["Every call carries a deadline", "map_grpc_error() turns each status into a KentikError"], "stops": "Expected: every gRPC call fails. A REST client keeps working."}, "restapi": {"title": "Kentik REST API", "role": "Kentik's HTTPS endpoints. A proxy turns each V6 request into a gRPC call.", "facts": ["region=\"eu\" uses the .kentik.eu hosts", "Reports the quota of each endpoint in headers"], "stops": "Expected: REST calls raise TransportError or HTTPException. A gRPC client keeps working, except for V5."}, "grpcapi": {"title": "Kentik gRPC API", "role": "Kentik's gRPC services, for V6 only.", "facts": ["The same services and the same quota as the V6 REST API"], "stops": "Expected: gRPC calls raise TransportError. A REST client keeps working."}}, "paths": {"rest": {"label": "REST call", "family": "blue", "title": "A call on a REST client", "text": "The wrapper calls the REST function, which sends the request with request_json(). V5 services always take this path.", "links": ["code>wrap", "wrap>rest", "rest>rj", "rj>restapi", "restapi>rj", "rj>rest", "rest>wrap", "wrap>code"]}, "grpc": {"label": "gRPC call", "family": "violet", "title": "A call on a gRPC client", "text": "The wrapper builds the proto request and sends it with call_grpc(), then parses the answer into the same model as REST.", "links": ["code>wrap", "wrap>cg", "cg>grpcapi", "grpcapi>cg", "cg>wrap", "wrap>code"]}, "setup": {"label": "Client setup", "family": "orange", "title": "Building the client", "text": "KentikAPI builds one transport and gives it to every wrapper that it mounts.", "links": ["code>client", "client>wrap"]}}}}</script>
 </div>
 ```
+-->
 
 ## Call Path
 
@@ -92,6 +126,42 @@ sequenceDiagram
 The SDK splits into the parts below. Select one to see what it imports and what
 imports it. The generator reads the imports from the source on every run.
 
+<!-- github-only -->
+
+```mermaid
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart TD
+  client("KentikAPI<br/>client.py<br/>client_mixin.py"):::orangeSrc
+  wrap("Service wrappers<br/>client.{service}<br/>one per service"):::green
+  tr("Transports<br/>transports/<br/>REST and gRPC"):::violet
+  rest("REST functions<br/>gen/{service}/services/<br/>+ error classes"):::green
+  models("Models<br/>gen/{service}/models/<br/>Pydantic v2"):::green
+  pb("Proto stubs<br/>gen/{service}/pb/<br/>protoc output"):::green
+  rj("request_json()<br/>core/rest_runtime.py<br/>all REST traffic"):::neutral
+  cg("call_grpc()<br/>core/grpc_runtime.py<br/>all gRPC traffic"):::neutral
+  base("Shared foundation<br/>APIConfig, auth,<br/>KentikError, RateLimit"):::neutral
+  client -->|"wrappers"| wrap
+  client -->|"transports"| tr
+  wrap -->|"transport"| tr
+  wrap -->|"REST functions"| rest
+  wrap -->|"models"| models
+  wrap -->|"proto stubs"| pb
+  wrap -->|"call_grpc()"| cg
+  rest -->|"models"| models
+  rest -->|"request_json()"| rj
+  cg -->|"parsing"| rj
+  rj -->|"APIConfig, auth"| base
+  cg -->|"APIConfig, errors"| base
+  tr -->|"APIConfig, auth"| base
+  classDef green fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e,stroke-width:2px,rx:10px
+  classDef neutral fill:#f8f9fa,stroke:#495057,color:#212529,stroke-width:2px,rx:10px
+  classDef orangeSrc fill:#ffd8a8,stroke:#e8590c,color:#d9480f,stroke-width:2px,rx:10px
+  classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4,stroke-width:2px,rx:10px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
+```
+
+<!-- /github-only -->
+<!-- sphinx-only
 ```{raw} html
 <div class="kx">
 <div class="chips" role="group" aria-label="Show one path" data-paths-for="deps-svg"></div>
@@ -104,6 +174,7 @@ imports it. The generator reads the imports from the source on every run.
 <script type="application/json" id="diagram-data">{"deps-svg": {"select": "client", "parts": {"client": {"title": "KentikAPI client", "role": "The starting point. Reads the credentials, picks the transport, and mounts every wrapper.", "facts": ["Source: client.py, client_mixin.py", "Imports Shared foundation (3), REST functions and error classes (37), Transports (4), Service wrappers (37)"], "stops": "Expected: nothing in the SDK can be called."}, "wrap": {"title": "Service wrappers", "role": "Send each call to the REST function or to call_grpc(), for the transport in use.", "facts": ["Source: gen/{service}/services/{service}.py", "Imports Shared foundation (37), call_grpc() (36), Models (37), Proto stubs (108), REST functions and error classes (55), Transports (74)", "Imported by KentikAPI client (37)"], "stops": "Expected: the client does not mount that service, on either transport."}, "tr": {"title": "Transports", "role": "RestTransport holds the APIConfig. GrpcTransport holds the TLS channel and the default deadline.", "facts": ["Source: transports/base.py, transports/rest_client.py, transports/grpc_client.py", "Imports Shared foundation (6)", "Imported by KentikAPI client (4), Service wrappers (74)"], "stops": "Expected: the client cannot be built, on either transport."}, "rest": {"title": "REST functions and error classes", "role": "One function per operation. Each one calls request_json() with its own error class.", "facts": ["Source: gen/{service}/services/, gen/{service}/error/", "Imports Shared foundation (98), Models (96), request_json() (55)", "Imported by KentikAPI client (37), Service wrappers (55)"], "stops": "Expected: REST calls fail for that service. gRPC calls through the same wrapper keep working."}, "models": {"title": "Models", "role": "The request and response models of every operation. They import nothing else in the SDK.", "facts": ["Source: gen/{service}/models/", "Imported by REST functions and error classes (96), Service wrappers (37)"], "stops": "Expected: the REST functions and the wrappers of that service do not import, so it does not mount."}, "pb": {"title": "Proto stubs", "role": "The modules that protoc compiles. Wrappers call them on a gRPC transport.", "facts": ["Source: gen/{service}/pb/", "Imported by Service wrappers (108)"], "stops": "Expected: gRPC calls for that service raise NotImplementedError. REST calls keep working."}, "rj": {"title": "request_json()", "role": "The one function that sends REST traffic: auth headers, quota, and errors.", "facts": ["Source: core/rest_runtime.py", "Imports Shared foundation (4)", "Imported by call_grpc() (1), REST functions and error classes (55)"], "stops": "Expected: every REST call fails. gRPC calls fail too, because they parse responses with it."}, "cg": {"title": "call_grpc()", "role": "The one function that sends gRPC traffic: deadline, quota, and errors.", "facts": ["Source: core/grpc_runtime.py", "Imports Shared foundation (3), request_json() (1)", "Imported by Service wrappers (36)"], "stops": "Expected: every gRPC call fails. REST calls keep working."}, "base": {"title": "Shared foundation", "role": "APIConfig, the auth headers, the KentikError hierarchy and RateLimit. Every other part imports it.", "facts": ["Source: core/api_config.py, auth/, errors/, core/rate_limit.py", "Imported by call_grpc() (3), KentikAPI client (3), REST functions and error classes (98), request_json() (4), Transports (6), Service wrappers (37)"], "stops": "Expected: nothing in the SDK imports, so every call fails."}}, "links": {"cg>base": "3 import statements", "cg>rj": "1 import statements", "client>tr": "4 import statements", "client>wrap": "37 import statements", "rest>models": "96 import statements", "rest>rj": "55 import statements", "rj>base": "4 import statements", "tr>base": "6 import statements", "wrap>cg": "36 import statements", "wrap>models": "37 import statements", "wrap>pb": "108 import statements", "wrap>rest": "55 import statements", "wrap>tr": "74 import statements"}, "paths": {"rest": {"label": "REST call", "family": "blue", "title": "What a REST call uses", "text": "KentikAPI calls a wrapper. The wrapper calls the REST function, which builds the request with the models and sends it with request_json().", "links": ["client>wrap", "wrap>rest", "rest>models", "rest>rj", "rj>base"]}, "grpc": {"label": "gRPC call", "family": "violet", "title": "What a gRPC call uses", "text": "KentikAPI calls a wrapper. The wrapper builds the proto request with the stubs and sends it with call_grpc(), which parses the answer into the same models as REST.", "links": ["client>wrap", "wrap>pb", "wrap>models", "wrap>cg", "cg>rj", "cg>base"]}, "setup": {"label": "Client setup", "family": "orange", "title": "What building the client uses", "text": "KentikAPI builds one transport from the APIConfig and gives it to every wrapper that it mounts.", "links": ["client>tr", "client>wrap", "wrap>tr", "tr>base"]}}, "words": {"from": "Used by", "to": "Uses"}}}</script>
 </div>
 ```
+-->
 
 The table lists each module group, and the groups that it imports, with the
 number of import statements.
