@@ -790,7 +790,6 @@ def _system_overview_explorer() -> list[str]:
         "".join(body),
         p,
     )
-    _write_overview_images(markup)
     rest_path = [
         "code>wrap",
         "wrap>rest",
@@ -847,17 +846,6 @@ def _system_overview_explorer() -> list[str]:
         "Start at your code at the top. Each hop is a call going down and its answer coming back up. "
         "Select a part to see what it needs and what stops without it.",
     )
-
-
-def _write_overview_images(markup: str) -> None:
-    """The README shows these, because GitHub strips the explorer's inline SVG and script."""
-    assets = PROJECT_ROOT / "docs" / "assets"
-    assets.mkdir(parents=True, exist_ok=True)
-    for theme in ("light", "dark"):
-        write_text_lf(
-            assets / f"architecture-overview-{theme}.svg",
-            dk.static_svg(markup, theme) + "\n",
-        )
 
 
 def _call_path_diagram() -> list[str]:
