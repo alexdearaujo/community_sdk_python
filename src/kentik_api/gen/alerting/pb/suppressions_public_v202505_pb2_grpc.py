@@ -10,7 +10,7 @@ import warnings
 import grpc
 
 from . import (
-    suppressions_pb2 as kentik_dot_alerting_dot_public_dot_v202505_dot_suppressions__pb2,
+    suppressions_public_v202505_pb2 as kentik_dot_alerting_dot_public_dot_v202505_dot_suppressions__pb2,
 )
 
 GRPC_GENERATED_VERSION = "1.85.0"

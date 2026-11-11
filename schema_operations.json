@@ -396,7 +396,7 @@
         "default"
       ]
     },
-    "POST /v202505/suppressions": {
+    "POST /v202611/suppressions": {
       "operation": "Create",
       "params": [],
       "body": true,
@@ -405,7 +405,7 @@
         "default"
       ]
     },
-    "POST /v202505/suppressions/list": {
+    "POST /v202611/suppressions/list": {
       "operation": "List",
       "params": [],
       "body": true,
@@ -414,7 +414,7 @@
         "default"
       ]
     },
-    "DELETE /v202505/suppressions/{id}": {
+    "DELETE /v202611/suppressions/{id}": {
       "operation": "Delete",
       "params": [
         "id"
@@ -425,7 +425,7 @@
         "default"
       ]
     },
-    "GET /v202505/suppressions/{id}": {
+    "GET /v202611/suppressions/{id}": {
       "operation": "Get",
       "params": [
         "id"
@@ -436,7 +436,7 @@
         "default"
       ]
     },
-    "PATCH /v202505/suppressions/{id}": {
+    "PATCH /v202611/suppressions/{id}": {
       "operation": "Replace",
       "params": [
         "id"
@@ -860,8 +860,8 @@
     }
   },
   "credential": {
-    "GET /credential/v202407alpha1/group": {
-      "operation": "ListCredentialGroup",
+    "GET /credential/v20261020alpha1/credentials": {
+      "operation": "ListCredentials",
       "params": [],
       "body": false,
       "responses": [
@@ -869,11 +869,96 @@
         "default"
       ]
     },
-    "GET /credential/v202407alpha1/group/{id}": {
+    "DELETE /credential/v20261020alpha1/credentials/{name}": {
+      "operation": "DeleteCredential",
+      "params": [
+        "name",
+        "version"
+      ],
+      "body": false,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "GET /credential/v20261020alpha1/credentials/{name}": {
+      "operation": "GetCredential",
+      "params": [
+        "allVersions",
+        "name",
+        "version"
+      ],
+      "body": false,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "PUT /credential/v20261020alpha1/credentials/{name}/consumer": {
+      "operation": "AssignConsumer",
+      "params": [
+        "name"
+      ],
+      "body": true,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "GET /credential/v20261020alpha1/groups": {
+      "operation": "ListCredentialGroups",
+      "params": [],
+      "body": false,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "POST /credential/v20261020alpha1/groups": {
+      "operation": "CreateCredentialGroup",
+      "params": [],
+      "body": true,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "DELETE /credential/v20261020alpha1/groups/{name}": {
+      "operation": "DeleteCredentialGroup",
+      "params": [
+        "name"
+      ],
+      "body": false,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "GET /credential/v20261020alpha1/groups/{name}": {
       "operation": "GetCredentialGroup",
       "params": [
-        "id"
+        "name"
       ],
+      "body": false,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "PUT /credential/v20261020alpha1/groups/{name}": {
+      "operation": "UpdateCredentialGroup",
+      "params": [
+        "name"
+      ],
+      "body": true,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "GET /credential/v20261020alpha1/overviews": {
+      "operation": "ListCredentialOverviews",
+      "params": [],
       "body": false,
       "responses": [
         "200",
@@ -2476,6 +2561,26 @@
       "operation": "GetTraceForTest",
       "params": [],
       "body": true,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "POST /synthetics/v20261005alpha1/tests/bulk_update": {
+      "operation": "BulkUpdateTests",
+      "params": [],
+      "body": true,
+      "responses": [
+        "200",
+        "default"
+      ]
+    },
+    "GET /synthetics/v20261005alpha1/tests/bulk_update/{workflowId}": {
+      "operation": "GetBulkUpdateTestsStatus",
+      "params": [
+        "workflowId"
+      ],
+      "body": false,
       "responses": [
         "200",
         "default"

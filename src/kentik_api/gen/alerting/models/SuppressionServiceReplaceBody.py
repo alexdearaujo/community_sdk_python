@@ -13,4 +13,7 @@ class SuppressionServiceReplaceBody(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    suppression: Dict[str, Any] = Field(validation_alias="suppression")
+    suppression: Dict[str, Any] = Field(
+        validation_alias="suppression",
+        description="Different matching constraints are ANDed. Values within sources\nand severities are alternatives. At least one non-empty matching constraint is\nrequired; a display name, comment, or strictness flag alone is insufficient.",
+    )

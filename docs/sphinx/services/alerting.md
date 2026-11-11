@@ -2735,11 +2735,11 @@ response = client.alerting.silence_notifications_delete(
 
 ### SuppressionService
 
-#### `POST` `/v202505/suppressions`
+#### `POST` `/v202611/suppressions`
 
 Create Suppression
 
-Creates a new suppression configuration.
+Creates a suppression configuration. At least one source, severity, key filter condition, or context filter condition is required.
 
 ##### REST call flow
 
@@ -2751,7 +2751,7 @@ sequenceDiagram
     participant API as Kentik REST API
 
     C->>+W: suppression_create(data=SuppressionServiceCreateRequest(...))
-    W->>+API: POST /v202505/suppressions
+    W->>+API: POST /v202611/suppressions
     alt success
         API-->>W: SuppressionServiceCreateResponse (JSON)
         W-->>C: SuppressionServiceCreateResponse
@@ -2819,11 +2819,11 @@ response = client.alerting.suppression_create(
 
 ---
 
-#### `POST` `/v202505/suppressions/list`
+#### `POST` `/v202611/suppressions/list`
 
 List Suppressions
 
-Returns a list of suppression configurations.
+Returns suppression configurations, including all matching constraints and resolved timestamps. Timestamp commands are not returned.
 
 ##### REST call flow
 
@@ -2835,7 +2835,7 @@ sequenceDiagram
     participant API as Kentik REST API
 
     C->>+W: suppression_list(data=SuppressionServiceListRequest(...))
-    W->>+API: POST /v202505/suppressions/list
+    W->>+API: POST /v202611/suppressions/list
     alt success
         API-->>W: SuppressionServiceListResponse (JSON)
         W-->>C: SuppressionServiceListResponse
@@ -2903,11 +2903,11 @@ response = client.alerting.suppression_list(
 
 ---
 
-#### `GET` `/v202505/suppressions/{id}`
+#### `GET` `/v202611/suppressions/{id}`
 
 Get Suppression
 
-Returns a suppression configuration.
+Returns a suppression configuration, including all matching constraints and resolved timestamps. Timestamp commands are not returned.
 
 ##### REST call flow
 
@@ -2919,7 +2919,7 @@ sequenceDiagram
     participant API as Kentik REST API
 
     C->>+W: suppression_get(id="id-example")
-    W->>+API: GET /v202505/suppressions/{id}
+    W->>+API: GET /v202611/suppressions/{id}
     alt success
         API-->>W: SuppressionServiceGetResponse (JSON)
         W-->>C: SuppressionServiceGetResponse
@@ -2986,11 +2986,11 @@ response = client.alerting.suppression_get(
 
 ---
 
-#### `PATCH` `/v202505/suppressions/{id}`
+#### `PATCH` `/v202611/suppressions/{id}`
 
 Replace Suppression
 
-Replaces a suppression configuration.
+Replaces the complete writable suppression configuration; this is not a partial update despite the PATCH HTTP method. Omitted matching constraints, display name, and comment are cleared. Output-only fields and server-managed metadata are not replaced. Use timestamp commands to preserve existing start or end times. Once active or starting too soon for changes to propagate, a suppression's start time and matching constraints cannot change; its end time, display name, and comment can change. Suppressions that have ended or are ending too soon cannot be replaced. Timing constraints still apply.
 
 ##### REST call flow
 
@@ -3002,7 +3002,7 @@ sequenceDiagram
     participant API as Kentik REST API
 
     C->>+W: suppression_replace(id="id-example", data=SuppressionServiceReplaceBody(...))
-    W->>+API: PATCH /v202505/suppressions/{id}
+    W->>+API: PATCH /v202611/suppressions/{id}
     alt success
         API-->>W: SuppressionServiceReplaceResponse (JSON)
         W-->>C: SuppressionServiceReplaceResponse
@@ -3072,7 +3072,7 @@ response = client.alerting.suppression_replace(
 
 ---
 
-#### `DELETE` `/v202505/suppressions/{id}`
+#### `DELETE` `/v202611/suppressions/{id}`
 
 Delete Suppression
 
@@ -3088,7 +3088,7 @@ sequenceDiagram
     participant API as Kentik REST API
 
     C->>+W: suppression_delete(id="id-example")
-    W->>+API: DELETE /v202505/suppressions/{id}
+    W->>+API: DELETE /v202611/suppressions/{id}
     alt success
         API-->>W: SuppressionServiceDeleteResponse (JSON)
         W-->>C: SuppressionServiceDeleteResponse
@@ -3156,7 +3156,7 @@ response = client.alerting.suppression_delete(
 ## Data Models
 
 <details>
-<summary>Model relationships (30 of 186 models)</summary>
+<summary>Model relationships (30 of 203 models)</summary>
 
 Each arrow points from a model to a model that one of its fields holds. The label names the field.
 
@@ -3424,6 +3424,14 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.ContextFilter
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.ContextFilterConjunction
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.alerting.models.EventPolicyLevelSettings
 ```
 
@@ -3533,6 +3541,22 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.IdentityPredicate
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.IdentityPredicateIdentityList
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.IpPredicate
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.IpPredicateStringList
+```
+
+```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.alerting.models.JiraCloudContext
 ```
 
@@ -3542,6 +3566,14 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.alerting.models.KeyValueFilter
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.LabelPredicate
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.LabelPredicateStringList
 ```
 
 ```{eval-rst}
@@ -3663,6 +3695,11 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.alerting.models.MultiAttributeFilter
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.alerting.models.NetworkScope
+   :members:
 ```
 
 ```{eval-rst}
@@ -3865,8 +3902,16 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.ProducerPredicates
+```
+
+```{eval-rst}
 .. autoclass:: kentik_api.gen.alerting.models.RatioConditionDirection
    :members:
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.ScopedClause
 ```
 
 ```{eval-rst}
@@ -3901,6 +3946,18 @@ classDiagram
 
 ```{eval-rst}
 .. autopydantic_model:: kentik_api.gen.alerting.models.Source
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.StringPredicate
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.StringPredicateStringList
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.SubjectPredicates
 ```
 
 ```{eval-rst}
@@ -3965,6 +4022,11 @@ classDiagram
 ```
 
 ```{eval-rst}
+.. autoclass:: kentik_api.gen.alerting.models.TimestampSetting
+   :members:
+```
+
+```{eval-rst}
 .. autoclass:: kentik_api.gen.alerting.models.TopKeysConditionTopKeysEvent
    :members:
 ```
@@ -3980,4 +4042,13 @@ classDiagram
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.alerting.models.v202505AlertAcknowledgement
    :members:
+```
+
+```{eval-rst}
+.. autoclass:: kentik_api.gen.alerting.models.v202505PolicyType
+   :members:
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.alerting.models.v202505Source
 ```

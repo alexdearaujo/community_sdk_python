@@ -70,6 +70,8 @@ from ..models import (  # noqa: F401
     ConditionsRatioCondition,
     ConditionsStaticCondition,
     ConditionsTopKeysCondition,
+    ContextFilter,
+    ContextFilterConjunction,
     EventPolicyLevelSettings,
     EventPolicySettings,
     EventPolicySettingsEventType,
@@ -96,9 +98,15 @@ from ..models import (  # noqa: F401
     FragmentFormula,
     FragmentPredicate,
     FragmentPredicateGroup,
+    IdentityPredicate,
+    IdentityPredicateIdentityList,
+    IpPredicate,
+    IpPredicateStringList,
     JiraCloudContext,
     KeyValue,
     KeyValueFilter,
+    LabelPredicate,
+    LabelPredicateStringList,
     Mitigation,
     MitigationActionDetail,
     MitigationEvent,
@@ -128,6 +136,7 @@ from ..models import (  # noqa: F401
     MitigationType,
     MitigationUserAction,
     MultiAttributeFilter,
+    NetworkScope,
     NmsActivateOrClearConditions,
     NmsCondition,
     NmsConditionConnector,
@@ -176,7 +185,9 @@ from ..models import (  # noqa: F401
     PolicyServiceListRequest,
     PolicyServiceListResponse,
     PolicyType,
+    ProducerPredicates,
     RatioConditionDirection,
+    ScopedClause,
     ServiceNowContext,
     Severity,
     SimpleAttributeFilter,
@@ -185,6 +196,9 @@ from ..models import (  # noqa: F401
     SortingConfigField,
     SortingConfigOrder,
     Source,
+    StringPredicate,
+    StringPredicateStringList,
+    SubjectPredicates,
     Suppression,
     SuppressionFilters,
     SuppressionServiceCreateRequest,
@@ -200,10 +214,13 @@ from ..models import (  # noqa: F401
     TCPFlagsPredicate,
     TCPFlagsPredicateGroup,
     TimeRange,
+    TimestampSetting,
     TopKeysConditionTopKeysEvent,
     protobufAny,
     rpcStatus,
     v202505AlertAcknowledgement,
+    v202505PolicyType,
+    v202505Source,
 )
 
 
@@ -215,7 +232,7 @@ def Create(
     """
     Create Suppression
 
-    Creates a new suppression configuration.
+    Creates a suppression configuration. At least one source, severity, key filter condition, or context filter condition is required.
     """
     query_params: Dict[str, Any] = {}
 
@@ -223,8 +240,8 @@ def Create(
 
     body = request_json(
         method="post",
-        path="/v202505/suppressions",
-        path_template="/v202505/suppressions",
+        path="/v202611/suppressions",
+        path_template="/v202611/suppressions",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -239,7 +256,7 @@ def Create(
         body,
         operation_name="Create",
         method="post",
-        path="/v202505/suppressions",
+        path="/v202611/suppressions",
     )
 
 
@@ -251,7 +268,7 @@ def List(
     """
     List Suppressions
 
-    Returns a list of suppression configurations.
+    Returns suppression configurations, including all matching constraints and resolved timestamps. Timestamp commands are not returned.
     """
     query_params: Dict[str, Any] = {}
 
@@ -259,8 +276,8 @@ def List(
 
     body = request_json(
         method="post",
-        path="/v202505/suppressions/list",
-        path_template="/v202505/suppressions/list",
+        path="/v202611/suppressions/list",
+        path_template="/v202611/suppressions/list",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -275,7 +292,7 @@ def List(
         body,
         operation_name="List",
         method="post",
-        path="/v202505/suppressions/list",
+        path="/v202611/suppressions/list",
     )
 
 
@@ -285,7 +302,7 @@ def Get(
     """
     Get Suppression
 
-    Returns a suppression configuration.
+    Returns a suppression configuration, including all matching constraints and resolved timestamps. Timestamp commands are not returned.
     """
     query_params: Dict[str, Any] = {}
 
@@ -293,8 +310,8 @@ def Get(
 
     body = request_json(
         method="get",
-        path=f"/v202505/suppressions/{path_segment(id)}",
-        path_template="/v202505/suppressions/{id}",
+        path=f"/v202611/suppressions/{path_segment(id)}",
+        path_template="/v202611/suppressions/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -308,7 +325,7 @@ def Get(
         body,
         operation_name="Get",
         method="get",
-        path="/v202505/suppressions/{id}",
+        path="/v202611/suppressions/{id}",
     )
 
 
@@ -326,8 +343,8 @@ def Delete(
 
     body = request_json(
         method="delete",
-        path=f"/v202505/suppressions/{path_segment(id)}",
-        path_template="/v202505/suppressions/{id}",
+        path=f"/v202611/suppressions/{path_segment(id)}",
+        path_template="/v202611/suppressions/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         header_params=header_params,
@@ -341,7 +358,7 @@ def Delete(
         body,
         operation_name="Delete",
         method="delete",
-        path="/v202505/suppressions/{id}",
+        path="/v202611/suppressions/{id}",
     )
 
 
@@ -354,7 +371,7 @@ def Replace(
     """
     Replace Suppression
 
-    Replaces a suppression configuration.
+    Replaces the complete writable suppression configuration; this is not a partial update despite the PATCH HTTP method. Omitted matching constraints, display name, and comment are cleared. Output-only fields and server-managed metadata are not replaced. Use timestamp commands to preserve existing start or end times. Once active or starting too soon for changes to propagate, a suppression's start time and matching constraints cannot change; its end time, display name, and comment can change. Suppressions that have ended or are ending too soon cannot be replaced. Timing constraints still apply.
     """
     query_params: Dict[str, Any] = {}
 
@@ -362,8 +379,8 @@ def Replace(
 
     body = request_json(
         method="patch",
-        path=f"/v202505/suppressions/{path_segment(id)}",
-        path_template="/v202505/suppressions/{id}",
+        path=f"/v202611/suppressions/{path_segment(id)}",
+        path_template="/v202611/suppressions/{id}",
         api_config_override=api_config_override,
         query_params=query_params,
         json_body=data.model_dump(by_alias=True, exclude_unset=True),
@@ -378,5 +395,5 @@ def Replace(
         body,
         operation_name="Replace",
         method="patch",
-        path="/v202505/suppressions/{id}",
+        path="/v202611/suppressions/{id}",
     )

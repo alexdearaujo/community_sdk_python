@@ -5,8 +5,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from .Source import Source
 from .TimeRange import TimeRange
+from .v202505Source import v202505Source
 
 
 class SuppressionFilters(BaseModel):
@@ -22,16 +22,16 @@ class SuppressionFilters(BaseModel):
         description="The IDs of the suppression configurations to list.",
     )
 
-    sources: Optional[List[Optional[Source]]] = Field(
+    sources: Optional[List[Optional[v202505Source]]] = Field(
         validation_alias="sources",
         default=None,
-        description="The source policies the suppression configurations are applied to.",
+        description="Select suppressions explicitly associated with any of these source policies.",
     )
 
     userIds: Optional[List[str]] = Field(
         validation_alias="userIds",
         default=None,
-        description="The IDs of the users who created the suppression configurations.",
+        description="The IDs of the users who most recently updated the suppression configurations.",
     )
 
     createdAt: Optional[TimeRange] = Field(validation_alias="createdAt", default=None)

@@ -245,7 +245,7 @@
             "default": "SilenceNotificationsDeleteUnexpectedError"
           }
         },
-        "DELETE /v202505/suppressions/{id}": {
+        "DELETE /v202611/suppressions/{id}": {
           "operation": "Delete",
           "method": "suppression_delete",
           "grpc": "SuppressionService/Delete",
@@ -518,7 +518,7 @@
             "default": "PolicyGetUnexpectedError"
           }
         },
-        "GET /v202505/suppressions/{id}": {
+        "GET /v202611/suppressions/{id}": {
           "operation": "Get",
           "method": "suppression_get",
           "grpc": "SuppressionService/Get",
@@ -576,7 +576,7 @@
             "default": "SilenceNotificationsReplaceUnexpectedError"
           }
         },
-        "PATCH /v202505/suppressions/{id}": {
+        "PATCH /v202611/suppressions/{id}": {
           "operation": "Replace",
           "method": "suppression_replace",
           "grpc": "SuppressionService/Replace",
@@ -864,7 +864,7 @@
             "default": "EnableUnexpectedError"
           }
         },
-        "POST /v202505/suppressions": {
+        "POST /v202611/suppressions": {
           "operation": "Create",
           "method": "suppression_create",
           "grpc": "SuppressionService/Create",
@@ -882,7 +882,7 @@
             "default": "SuppressionCreateUnexpectedError"
           }
         },
-        "POST /v202505/suppressions/list": {
+        "POST /v202611/suppressions/list": {
           "operation": "List",
           "method": "suppression_list",
           "grpc": "SuppressionService/List",
@@ -974,6 +974,8 @@
         "ConditionsRatioCondition",
         "ConditionsStaticCondition",
         "ConditionsTopKeysCondition",
+        "ContextFilter",
+        "ContextFilterConjunction",
         "EventPolicyLevelSettings",
         "EventPolicySettings",
         "EventPolicySettingsEventType",
@@ -1000,9 +1002,15 @@
         "FragmentFormula",
         "FragmentPredicate",
         "FragmentPredicateGroup",
+        "IdentityPredicate",
+        "IdentityPredicateIdentityList",
+        "IpPredicate",
+        "IpPredicateStringList",
         "JiraCloudContext",
         "KeyValue",
         "KeyValueFilter",
+        "LabelPredicate",
+        "LabelPredicateStringList",
         "Mitigation",
         "MitigationActionDetail",
         "MitigationEvent",
@@ -1032,6 +1040,7 @@
         "MitigationsServiceGetResponse",
         "MitigationsServiceListResponse",
         "MultiAttributeFilter",
+        "NetworkScope",
         "NmsActivateOrClearConditions",
         "NmsCondition",
         "NmsConditionConnector",
@@ -1080,7 +1089,9 @@
         "PolicyServiceListRequest",
         "PolicyServiceListResponse",
         "PolicyType",
+        "ProducerPredicates",
         "RatioConditionDirection",
+        "ScopedClause",
         "ServiceNowContext",
         "Severity",
         "SimpleAttributeFilter",
@@ -1089,6 +1100,9 @@
         "SortingConfigField",
         "SortingConfigOrder",
         "Source",
+        "StringPredicate",
+        "StringPredicateStringList",
+        "SubjectPredicates",
         "Suppression",
         "SuppressionFilters",
         "SuppressionServiceCreateRequest",
@@ -1104,10 +1118,13 @@
         "TCPFlagsPredicate",
         "TCPFlagsPredicateGroup",
         "TimeRange",
+        "TimestampSetting",
         "TopKeysConditionTopKeysEvent",
         "protobufAny",
         "rpcStatus",
-        "v202505AlertAcknowledgement"
+        "v202505AlertAcknowledgement",
+        "v202505PolicyType",
+        "v202505Source"
       ],
       "fields": {
         "Alert": {
@@ -1785,6 +1802,22 @@
             "required": true
           }
         },
+        "ContextFilter": {
+          "conjunctions": {
+            "type": "Optional[List[Optional[ContextFilterConjunction]]]",
+            "required": false
+          }
+        },
+        "ContextFilterConjunction": {
+          "clauses": {
+            "type": "Optional[List[Optional[ScopedClause]]]",
+            "required": false
+          },
+          "producerPredicates": {
+            "type": "Optional[ProducerPredicates]",
+            "required": false
+          }
+        },
         "EventPolicyLevelSettings": {
           "filters": {
             "type": "Optional[PolicyDimensionFilters]",
@@ -2131,6 +2164,54 @@
             "required": false
           }
         },
+        "IdentityPredicate": {
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "equals": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "in_": {
+            "type": "Optional[IdentityPredicateIdentityList]",
+            "required": false
+          }
+        },
+        "IdentityPredicateIdentityList": {
+          "values": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "IpPredicate": {
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "equals": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "in_": {
+            "type": "Optional[IpPredicateStringList]",
+            "required": false
+          },
+          "within": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "withinAny": {
+            "type": "Optional[IpPredicateStringList]",
+            "required": false
+          }
+        },
+        "IpPredicateStringList": {
+          "values": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
         "JiraCloudContext": {
           "issueKey": {
             "type": "str",
@@ -2154,6 +2235,30 @@
           },
           "value": {
             "type": "Optional[AttributeFilter]",
+            "required": false
+          }
+        },
+        "LabelPredicate": {
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "equals": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "in_": {
+            "type": "Optional[LabelPredicateStringList]",
+            "required": false
+          },
+          "containsAll": {
+            "type": "Optional[LabelPredicateStringList]",
+            "required": false
+          }
+        },
+        "LabelPredicateStringList": {
+          "values": {
+            "type": "Optional[List[str]]",
             "required": false
           }
         },
@@ -3109,6 +3214,30 @@
             "required": false
           }
         },
+        "ProducerPredicates": {
+          "originId": {
+            "type": "Optional[IdentityPredicate]",
+            "required": false
+          },
+          "originName": {
+            "type": "Optional[StringPredicate]",
+            "required": false
+          },
+          "originLabels": {
+            "type": "Optional[LabelPredicate]",
+            "required": false
+          }
+        },
+        "ScopedClause": {
+          "networkScope": {
+            "type": "Optional[List[Optional[NetworkScope]]]",
+            "required": false
+          },
+          "predicates": {
+            "type": "Optional[SubjectPredicates]",
+            "required": false
+          }
+        },
         "ServiceNowContext": {
           "incidentId": {
             "type": "str",
@@ -3181,37 +3310,131 @@
             "required": true
           }
         },
+        "StringPredicate": {
+          "not_": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "equals": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "contains": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "startsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "endsWith": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "matchesRegex": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "in_": {
+            "type": "Optional[StringPredicateStringList]",
+            "required": false
+          }
+        },
+        "StringPredicateStringList": {
+          "values": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "SubjectPredicates": {
+          "deviceId": {
+            "type": "Optional[IdentityPredicate]",
+            "required": false
+          },
+          "deviceName": {
+            "type": "Optional[StringPredicate]",
+            "required": false
+          },
+          "deviceLabels": {
+            "type": "Optional[LabelPredicate]",
+            "required": false
+          },
+          "siteId": {
+            "type": "Optional[IdentityPredicate]",
+            "required": false
+          },
+          "siteName": {
+            "type": "Optional[StringPredicate]",
+            "required": false
+          },
+          "interfaceId": {
+            "type": "Optional[IdentityPredicate]",
+            "required": false
+          },
+          "interfaceIndex": {
+            "type": "Optional[StringPredicate]",
+            "required": false
+          },
+          "interfaceName": {
+            "type": "Optional[StringPredicate]",
+            "required": false
+          },
+          "interfaceDescription": {
+            "type": "Optional[StringPredicate]",
+            "required": false
+          },
+          "ipAddress": {
+            "type": "Optional[IpPredicate]",
+            "required": false
+          },
+          "macAddress": {
+            "type": "Optional[StringPredicate]",
+            "required": false
+          }
+        },
         "Suppression": {
           "id": {
             "type": "Optional[str]",
             "required": false
           },
-          "userId": {
+          "displayName": {
             "type": "Optional[str]",
-            "required": false
-          },
-          "source": {
-            "type": "Optional[Source]",
-            "required": false
-          },
-          "keyFilter": {
-            "type": "Optional[MultiAttributeFilter]",
-            "required": false
-          },
-          "strict": {
-            "type": "Optional[bool]",
             "required": false
           },
           "comment": {
             "type": "Optional[str]",
             "required": false
           },
+          "contextFilter": {
+            "type": "Optional[ContextFilter]",
+            "required": false
+          },
+          "sources": {
+            "type": "Optional[List[Optional[v202505Source]]]",
+            "required": false
+          },
+          "severities": {
+            "type": "Optional[List[Optional[Severity]]]",
+            "required": false
+          },
+          "keyFilter": {
+            "type": "Optional[MultiAttributeFilter]",
+            "required": false
+          },
           "startTimeAt": {
-            "type": "str",
-            "required": true
+            "type": "Optional[str]",
+            "required": false
+          },
+          "startTimeCode": {
+            "type": "Optional[TimestampSetting]",
+            "required": false
           },
           "endTimeAt": {
             "type": "Optional[str]",
+            "required": false
+          },
+          "endTimeCode": {
+            "type": "Optional[TimestampSetting]",
             "required": false
           },
           "createdAt": {
@@ -3221,14 +3444,6 @@
           "modifiedAt": {
             "type": "Optional[str]",
             "required": false
-          },
-          "displayName": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "severities": {
-            "type": "Optional[List[Optional[Severity]]]",
-            "required": false
           }
         },
         "SuppressionFilters": {
@@ -3237,7 +3452,7 @@
             "required": false
           },
           "sources": {
-            "type": "Optional[List[Optional[Source]]]",
+            "type": "Optional[List[Optional[v202505Source]]]",
             "required": false
           },
           "userIds": {
@@ -3366,6 +3581,16 @@
           "details": {
             "type": "Optional[List[Optional[protobufAny]]]",
             "required": false
+          }
+        },
+        "v202505Source": {
+          "policyType": {
+            "type": "v202505PolicyType",
+            "required": true
+          },
+          "id": {
+            "type": "str",
+            "required": true
           }
         }
       },
@@ -3533,6 +3758,14 @@
           "MITIGATION_USER_ACTION_RETRY",
           "MITIGATION_USER_ACTION_ACK"
         ],
+        "NetworkScope": [
+          "NETWORK_SCOPE_UNSPECIFIED",
+          "NETWORK_SCOPE_ANY",
+          "NETWORK_SCOPE_ROOT",
+          "NETWORK_SCOPE_SOURCE",
+          "NETWORK_SCOPE_DESTINATION",
+          "NETWORK_SCOPE_ADJACENT"
+        ],
         "NmsConditionConnector": [
           "NMS_CONDITION_CONNECTOR_UNSPECIFIED",
           "NMS_CONDITION_CONNECTOR_ANY",
@@ -3632,6 +3865,11 @@
           "TCP_FLAG_ECE",
           "TCP_FLAG_CWR"
         ],
+        "TimestampSetting": [
+          "TIMESTAMP_SETTING_UNSPECIFIED",
+          "TIMESTAMP_SETTING_KEEP_UNCHANGED",
+          "TIMESTAMP_SETTING_AS_SOON_AS_POSSIBLE"
+        ],
         "TopKeysConditionTopKeysEvent": [
           "TOP_KEYS_EVENT_UNSPECIFIED",
           "TOP_KEYS_EVENT_JOINS",
@@ -3642,6 +3880,19 @@
           "ALERT_ACKNOWLEDGEMENT_REQUIRED",
           "ALERT_ACKNOWLEDGEMENT_DONE",
           "ALERT_ACKNOWLEDGEMENT_NOT_ACKED"
+        ],
+        "v202505PolicyType": [
+          "POLICY_TYPE_UNSPECIFIED",
+          "POLICY_TYPE_AGENT",
+          "POLICY_TYPE_COMPONENT",
+          "POLICY_TYPE_DEVICE",
+          "POLICY_TYPE_EVENT",
+          "POLICY_TYPE_INTERFACE",
+          "POLICY_TYPE_CUSTOM",
+          "POLICY_TYPE_CLOUD",
+          "POLICY_TYPE_PROTECT",
+          "POLICY_TYPE_TRAFFIC",
+          "POLICY_TYPE_KMETRICS"
         ]
       }
     },
@@ -6162,10 +6413,83 @@
       "mounted": true,
       "rest_only": false,
       "operations": {
-        "GET /credential/v202407alpha1/group": {
-          "operation": "ListCredentialGroup",
+        "DELETE /credential/v20261020alpha1/credentials/{name}": {
+          "operation": "DeleteCredential",
+          "method": "delete",
+          "grpc": "CredentialService/DeleteCredential",
+          "status": 200,
+          "required_params": [
+            "name",
+            "version"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str",
+            "version": "int"
+          },
+          "returns": "DeleteCredentialResponse",
+          "error": "DeleteError",
+          "error_responses": {
+            "default": "DeleteUnexpectedError"
+          }
+        },
+        "DELETE /credential/v20261020alpha1/groups/{name}": {
+          "operation": "DeleteCredentialGroup",
+          "method": "delete_group",
+          "grpc": "CredentialService/DeleteCredentialGroup",
+          "status": 200,
+          "required_params": [
+            "name"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str"
+          },
+          "returns": "DeleteCredentialGroupResponse",
+          "error": "DeleteGroupError",
+          "error_responses": {
+            "default": "DeleteGroupUnexpectedError"
+          }
+        },
+        "GET /credential/v20261020alpha1/credentials": {
+          "operation": "ListCredentials",
+          "method": "list",
+          "grpc": "CredentialService/ListCredentials",
+          "status": 200,
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCredentialsResponse",
+          "error": "ListError",
+          "error_responses": {
+            "default": "ListUnexpectedError"
+          }
+        },
+        "GET /credential/v20261020alpha1/credentials/{name}": {
+          "operation": "GetCredential",
+          "method": "get",
+          "grpc": "CredentialService/GetCredential",
+          "status": 200,
+          "required_params": [
+            "name"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str",
+            "version": "Optional[int]",
+            "allVersions": "Optional[bool]"
+          },
+          "returns": "GetCredentialResponse",
+          "error": "GetError",
+          "error_responses": {
+            "default": "GetUnexpectedError"
+          }
+        },
+        "GET /credential/v20261020alpha1/groups": {
+          "operation": "ListCredentialGroups",
           "method": "list_group",
-          "grpc": "CredentialService/ListCredentialGroup",
+          "grpc": "CredentialService/ListCredentialGroups",
           "status": 200,
           "required_params": [],
           "params": {
@@ -6177,40 +6501,182 @@
             "default": "ListGroupUnexpectedError"
           }
         },
-        "GET /credential/v202407alpha1/group/{id}": {
+        "GET /credential/v20261020alpha1/groups/{name}": {
           "operation": "GetCredentialGroup",
           "method": "get_group",
           "grpc": "CredentialService/GetCredentialGroup",
           "status": 200,
           "required_params": [
-            "id"
+            "name"
           ],
           "params": {
             "api_config_override": "Optional[APIConfig]",
-            "id": "str"
+            "name": "str"
           },
           "returns": "GetCredentialGroupResponse",
           "error": "GetGroupError",
           "error_responses": {
             "default": "GetGroupUnexpectedError"
           }
+        },
+        "GET /credential/v20261020alpha1/overviews": {
+          "operation": "ListCredentialOverviews",
+          "method": "list_overviews",
+          "grpc": "CredentialService/ListCredentialOverviews",
+          "status": 200,
+          "required_params": [],
+          "params": {
+            "api_config_override": "Optional[APIConfig]"
+          },
+          "returns": "ListCredentialOverviewsResponse",
+          "error": "ListOverviewsError",
+          "error_responses": {
+            "default": "ListOverviewsUnexpectedError"
+          }
+        },
+        "POST /credential/v20261020alpha1/groups": {
+          "operation": "CreateCredentialGroup",
+          "method": "create_group",
+          "grpc": "CredentialService/CreateCredentialGroup",
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "CreateCredentialGroupRequest"
+          },
+          "returns": "CreateCredentialGroupResponse",
+          "error": "CreateGroupError",
+          "error_responses": {
+            "default": "CreateGroupUnexpectedError"
+          }
+        },
+        "PUT /credential/v20261020alpha1/credentials/{name}/consumer": {
+          "operation": "AssignConsumer",
+          "method": "assign_consumer",
+          "grpc": "CredentialService/AssignConsumer",
+          "status": 200,
+          "required_params": [
+            "data",
+            "name"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str",
+            "data": "CredentialServiceAssignConsumerBody"
+          },
+          "returns": "AssignConsumerResponse",
+          "error": "AssignConsumerError",
+          "error_responses": {
+            "default": "AssignConsumerUnexpectedError"
+          }
+        },
+        "PUT /credential/v20261020alpha1/groups/{name}": {
+          "operation": "UpdateCredentialGroup",
+          "method": "update_group",
+          "grpc": "CredentialService/UpdateCredentialGroup",
+          "status": 200,
+          "required_params": [
+            "data",
+            "name"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "name": "str",
+            "data": "CredentialServiceUpdateCredentialGroupBody"
+          },
+          "returns": "UpdateCredentialGroupResponse",
+          "error": "UpdateGroupError",
+          "error_responses": {
+            "default": "UpdateGroupUnexpectedError"
+          }
         }
       },
       "models": [
+        "AssignConsumerResponse",
+        "Consumer",
+        "CreateCredentialGroupRequest",
+        "CreateCredentialGroupResponse",
+        "CreatedBy",
+        "Credential",
         "CredentialGroup",
+        "CredentialOverview",
+        "CredentialServiceAssignConsumerBody",
+        "CredentialServiceUpdateCredentialGroupBody",
+        "CredentialType",
+        "DeleteCredentialGroupResponse",
+        "DeleteCredentialResponse",
         "GetCredentialGroupResponse",
-        "LandingType",
+        "GetCredentialResponse",
         "ListCredentialGroupResponse",
-        "PermissionEntry",
-        "Role",
-        "Secret",
-        "SecretType",
-        "User",
+        "ListCredentialOverviewsResponse",
+        "ListCredentialsResponse",
+        "Token",
+        "UpdateCredentialGroupResponse",
         "protobufAny",
         "rpcStatus"
       ],
       "fields": {
-        "CredentialGroup": {
+        "AssignConsumerResponse": {
+          "credential": {
+            "type": "Optional[Credential]",
+            "required": false
+          }
+        },
+        "Consumer": {
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "consumerId": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "CreateCredentialGroupRequest": {
+          "name": {
+            "type": "str",
+            "required": true
+          },
+          "type": {
+            "type": "CredentialType",
+            "required": true
+          },
+          "description": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "tokens": {
+            "type": "List[Token]",
+            "required": true
+          },
+          "labels": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "CreateCredentialGroupResponse": {
+          "group": {
+            "type": "Optional[CredentialGroup]",
+            "required": false
+          }
+        },
+        "CreatedBy": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "email": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "fullName": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "Credential": {
           "id": {
             "type": "Optional[str]",
             "required": false
@@ -6220,15 +6686,15 @@
             "required": false
           },
           "version": {
-            "type": "int",
-            "required": true
+            "type": "Optional[int]",
+            "required": false
           },
           "description": {
             "type": "Optional[str]",
             "required": false
           },
           "type": {
-            "type": "Optional[SecretType]",
+            "type": "Optional[CredentialType]",
             "required": false
           },
           "cdate": {
@@ -6240,97 +6706,37 @@
             "required": false
           },
           "createdBy": {
-            "type": "Optional[User]",
-            "required": false
-          },
-          "credentials": {
-            "type": "Optional[List[Optional[Secret]]]",
+            "type": "Optional[CreatedBy]",
             "required": false
           },
           "labels": {
             "type": "Optional[List[str]]",
             "required": false
-          }
-        },
-        "GetCredentialGroupResponse": {
-          "group": {
-            "type": "Optional[CredentialGroup]",
+          },
+          "consumers": {
+            "type": "Optional[List[Optional[Consumer]]]",
             "required": false
           }
         },
-        "ListCredentialGroupResponse": {
-          "groups": {
-            "type": "Optional[List[Optional[CredentialGroup]]]",
+        "CredentialGroup": {
+          "id": {
+            "type": "Optional[str]",
             "required": false
           },
-          "invalidCount": {
-            "type": "Optional[int]",
-            "required": false
-          }
-        },
-        "PermissionEntry": {
-          "capability": {
-            "type": "str",
-            "required": true
-          },
-          "allowed": {
-            "type": "bool",
-            "required": true
-          }
-        },
-        "Secret": {
           "name": {
-            "type": "str",
-            "required": true
-          },
-          "value": {
-            "type": "str",
-            "required": true
+            "type": "Optional[str]",
+            "required": false
           },
           "version": {
-            "type": "int",
-            "required": true
+            "type": "Optional[int]",
+            "required": false
           },
           "description": {
             "type": "Optional[str]",
             "required": false
           },
           "type": {
-            "type": "Optional[SecretType]",
-            "required": false
-          },
-          "id": {
-            "type": "str",
-            "required": true
-          }
-        },
-        "User": {
-          "id": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "userEmail": {
-            "type": "str",
-            "required": true
-          },
-          "userFullName": {
-            "type": "str",
-            "required": true
-          },
-          "role": {
-            "type": "Role",
-            "required": true
-          },
-          "permissions": {
-            "type": "Optional[List[Optional[PermissionEntry]]]",
-            "required": false
-          },
-          "filter": {
-            "type": "Optional[str]",
-            "required": false
-          },
-          "lastLogin": {
-            "type": "Optional[str]",
+            "type": "Optional[CredentialType]",
             "required": false
           },
           "cdate": {
@@ -6341,20 +6747,102 @@
             "type": "Optional[str]",
             "required": false
           },
-          "defaultLandingPageType": {
-            "type": "Optional[LandingType]",
+          "createdBy": {
+            "type": "Optional[CreatedBy]",
             "required": false
           },
-          "defaultLandingPageValue": {
+          "labels": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "consumers": {
+            "type": "Optional[List[Optional[Consumer]]]",
+            "required": false
+          },
+          "credentials": {
+            "type": "Optional[List[Optional[Credential]]]",
+            "required": false
+          }
+        },
+        "CredentialOverview": {
+          "name": {
             "type": "Optional[str]",
             "required": false
           },
-          "roles": {
-            "type": "Optional[List[str]]",
+          "type": {
+            "type": "Optional[CredentialType]",
+            "required": false
+          }
+        },
+        "CredentialServiceAssignConsumerBody": {
+          "consumer": {
+            "type": "Consumer",
+            "required": true
+          }
+        },
+        "CredentialServiceUpdateCredentialGroupBody": {
+          "type": {
+            "type": "CredentialType",
+            "required": true
+          },
+          "description": {
+            "type": "Optional[str]",
             "required": false
           },
-          "roleSets": {
+          "tokens": {
+            "type": "List[Token]",
+            "required": true
+          },
+          "labels": {
             "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "DeleteCredentialGroupResponse": {},
+        "DeleteCredentialResponse": {},
+        "GetCredentialGroupResponse": {
+          "group": {
+            "type": "Optional[CredentialGroup]",
+            "required": false
+          }
+        },
+        "GetCredentialResponse": {
+          "credentials": {
+            "type": "Optional[List[Optional[Credential]]]",
+            "required": false
+          }
+        },
+        "ListCredentialGroupResponse": {
+          "groups": {
+            "type": "Optional[List[Optional[CredentialGroup]]]",
+            "required": false
+          }
+        },
+        "ListCredentialOverviewsResponse": {
+          "overviews": {
+            "type": "Optional[List[Optional[CredentialOverview]]]",
+            "required": false
+          }
+        },
+        "ListCredentialsResponse": {
+          "credentials": {
+            "type": "Optional[List[Optional[Credential]]]",
+            "required": false
+          }
+        },
+        "Token": {
+          "key": {
+            "type": "str",
+            "required": true
+          },
+          "value": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "UpdateCredentialGroupResponse": {
+          "group": {
+            "type": "Optional[CredentialGroup]",
             "required": false
           }
         },
@@ -6380,39 +6868,21 @@
         }
       },
       "enums": {
-        "LandingType": [
-          "LANDING_TYPE_UNSPECIFIED",
-          "LANDING_TYPE_LOCAL",
-          "LANDING_TYPE_OBSERVATION_DECK",
-          "LANDING_TYPE_NMS_DASHBOARD",
-          "LANDING_TYPE_NETWORK_EXPLORER",
-          "LANDING_TYPE_LIBRARY",
-          "LANDING_TYPE_SYNTHETICS",
-          "LANDING_TYPE_EXPLORER",
-          "LANDING_TYPE_ALERTING",
-          "LANDING_TYPE_INSIGHTS",
-          "LANDING_TYPE_DASHBOARD",
-          "LANDING_TYPE_SAVED_VIEW",
-          "LANDING_TYPE_QUICK_VIEW",
-          "LANDING_TYPE_MARKET_INTELLIGENCE",
-          "LANDING_TYPE_AI_ADVISOR"
-        ],
-        "Role": [
-          "ROLE_UNSPECIFIED",
-          "ROLE_MEMBER",
-          "ROLE_ADMINISTRATOR",
-          "ROLE_SUPER_ADMINISTRATOR"
-        ],
-        "SecretType": [
-          "SECRET_TYPE_UNSPECIFIED",
-          "SECRET_TYPE_BASIC_AUTH",
-          "SECRET_TYPE_SNMP_V1",
-          "SECRET_TYPE_SNMP_V2C",
-          "SECRET_TYPE_SNMP_V3",
-          "SECRET_TYPE_STREAMING_TELEMETRY",
-          "SECRET_TYPE_BGP_MD5",
-          "SECRET_TYPE_API_TOKEN",
-          "SECRET_TYPE_OTHER"
+        "CredentialType": [
+          "CREDENTIAL_TYPE_UNSPECIFIED",
+          "CREDENTIAL_TYPE_BASIC_AUTH",
+          "CREDENTIAL_TYPE_SNMP_V1",
+          "CREDENTIAL_TYPE_SNMP_V2C",
+          "CREDENTIAL_TYPE_SNMP_V3",
+          "CREDENTIAL_TYPE_STREAMING_TELEMETRY",
+          "CREDENTIAL_TYPE_BGP_MD5",
+          "CREDENTIAL_TYPE_API_TOKEN",
+          "CREDENTIAL_TYPE_OTHER",
+          "CREDENTIAL_TYPE_SSH_KEY",
+          "CREDENTIAL_TYPE_SSH_PASSWORD",
+          "CREDENTIAL_TYPE_AI_API_TOKEN",
+          "CREDENTIAL_TYPE_MCP_HTTP_HEADERS",
+          "CREDENTIAL_TYPE_CLOUD"
         ]
       }
     },
@@ -8495,6 +8965,9 @@
         }
       },
       "models": [
+        "AppProtocol",
+        "AppProtocolMetadata",
+        "AssetTag",
         "BaseUnit",
         "DimensionField",
         "FieldDataType",
@@ -8512,6 +8985,44 @@
         "rpcStatus"
       ],
       "fields": {
+        "AppProtocol": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "displayName": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "addToStandardFields": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "status": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "metadata": {
+            "type": "Optional[AppProtocolMetadata]",
+            "required": false
+          }
+        },
+        "AppProtocolMetadata": {
+          "fullDataOnly": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "AssetTag": {
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "displayName": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
         "DimensionField": {
           "key": {
             "type": "Optional[str]",
@@ -8568,6 +9079,10 @@
           "canCount": {
             "type": "Optional[bool]",
             "required": false
+          },
+          "shared": {
+            "type": "Optional[bool]",
+            "required": false
           }
         },
         "GetDictionaryResponse": {
@@ -8581,6 +9096,14 @@
           },
           "metricFamilies": {
             "type": "Optional[List[Optional[MetricFamilyDef]]]",
+            "required": false
+          },
+          "assetTags": {
+            "type": "Optional[List[Optional[AssetTag]]]",
+            "required": false
+          },
+          "appProtocols": {
+            "type": "Optional[Dict[str, Any]]",
             "required": false
           }
         },
@@ -8711,6 +9234,10 @@
           },
           "baseUnit": {
             "type": "Optional[BaseUnit]",
+            "required": false
+          },
+          "shared": {
+            "type": "Optional[bool]",
             "required": false
           }
         },
@@ -10307,6 +10834,7 @@
         "ConfigLayer",
         "ConfigLayerLayerType",
         "ConfigServiceUpdateConfigBody",
+        "ConfigSource",
         "CreateAgentRequest",
         "CreateAgentResponse",
         "CreateCapabilityResponse",
@@ -10338,6 +10866,7 @@
         "ProvisioningTokenAgentConfig",
         "ProvisioningTokenServiceRevokeProvisioningTokenBody",
         "RegistrationConfig",
+        "ReleaseSource",
         "RevokeProvisioningTokenResponse",
         "RuntimeConfig",
         "RuntimeConfigEnvVar",
@@ -10848,6 +11377,14 @@
           "hostMetadata": {
             "type": "Optional[HostMetadata]",
             "required": false
+          },
+          "releaseSource": {
+            "type": "Optional[ReleaseSource]",
+            "required": false
+          },
+          "configSource": {
+            "type": "Optional[ConfigSource]",
+            "required": false
           }
         },
         "ListAgentCapabilitiesResponse": {
@@ -11082,10 +11619,22 @@
           "LAYER_TYPE_GROUP",
           "LAYER_TYPE_AGENT"
         ],
+        "ConfigSource": [
+          "CONFIG_SOURCE_UNSPECIFIED",
+          "CONFIG_SOURCE_MANAGED",
+          "CONFIG_SOURCE_LOCAL"
+        ],
         "InstallerType": [
           "INSTALLER_TYPE_UNSPECIFIED",
           "INSTALLER_TYPE_LINUX",
-          "INSTALLER_TYPE_DOCKER"
+          "INSTALLER_TYPE_DOCKER",
+          "INSTALLER_TYPE_RPM",
+          "INSTALLER_TYPE_DEB"
+        ],
+        "ReleaseSource": [
+          "RELEASE_SOURCE_UNSPECIFIED",
+          "RELEASE_SOURCE_MANAGED",
+          "RELEASE_SOURCE_LOCAL"
         ]
       }
     },
@@ -15738,6 +16287,24 @@
             "default": "GetTestUnexpectedError"
           }
         },
+        "GET /synthetics/v20261005alpha1/tests/bulk_update/{workflowId}": {
+          "operation": "GetBulkUpdateTestsStatus",
+          "method": "get_bulk_update_tests_status",
+          "grpc": "SyntheticsBulkActionService/GetBulkUpdateTestsStatus",
+          "status": 200,
+          "required_params": [
+            "workflowId"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "workflowId": "str"
+          },
+          "returns": "GetBulkUpdateTestsStatusResponse",
+          "error": "GetBulkUpdateTestsStatusError",
+          "error_responses": {
+            "default": "GetBulkUpdateTestsStatusUnexpectedError"
+          }
+        },
         "POST /synthetics/v202309/agentAlerts": {
           "operation": "CreateAgentAlert",
           "method": "create_agent_alert",
@@ -15826,6 +16393,24 @@
           "error": "GetTraceForTestError",
           "error_responses": {
             "default": "GetTraceForTestUnexpectedError"
+          }
+        },
+        "POST /synthetics/v20261005alpha1/tests/bulk_update": {
+          "operation": "BulkUpdateTests",
+          "method": "bulk_update_tests",
+          "grpc": "SyntheticsBulkActionService/BulkUpdateTests",
+          "status": 200,
+          "required_params": [
+            "data"
+          ],
+          "params": {
+            "api_config_override": "Optional[APIConfig]",
+            "data": "BulkUpdateTestsRequest"
+          },
+          "returns": "BulkUpdateTestsResponse",
+          "error": "BulkUpdateTestsError",
+          "error_responses": {
+            "default": "BulkUpdateTestsUnexpectedError"
           }
         },
         "PUT /synthetics/v202309/agentAlerts/{id}": {
@@ -15920,6 +16505,14 @@
         "AgentTest",
         "AlertingSettings",
         "AlertingType",
+        "BulkActionItemState",
+        "BulkActionItemStatus",
+        "BulkActionState",
+        "BulkActionStatus",
+        "BulkFieldOp",
+        "BulkFieldOpRule",
+        "BulkUpdateTestsRequest",
+        "BulkUpdateTestsResponse",
         "CreateAgentAlertRequest",
         "CreateAgentAlertResponse",
         "CreateTestRequest",
@@ -15935,6 +16528,7 @@
         "FlowTest",
         "GetAgentAlertResponse",
         "GetAgentResponse",
+        "GetBulkUpdateTestsStatusResponse",
         "GetResultsForTestsCsvRequest",
         "GetResultsForTestsCsvResponse",
         "GetResultsForTestsRequest",
@@ -15986,7 +16580,32 @@
         "UrlTest",
         "UserInfo",
         "protobufAny",
-        "rpcStatus"
+        "rpcStatus",
+        "v202309ActivationSettings",
+        "v202309AgentTest",
+        "v202309AlertingSettings",
+        "v202309AlertingType",
+        "v202309DNSRecord",
+        "v202309DisabledMetrics",
+        "v202309DnsTest",
+        "v202309FlowTest",
+        "v202309GroupedAlertSetting",
+        "v202309GroupedAlertSettings",
+        "v202309HealthSettings",
+        "v202309HostnameTest",
+        "v202309IPFamily",
+        "v202309IpTest",
+        "v202309NetworkMeshTest",
+        "v202309PageLoadTest",
+        "v202309ScheduleSettings",
+        "v202309SrcGroupBy",
+        "v202309Test",
+        "v202309TestPingSettings",
+        "v202309TestSettings",
+        "v202309TestStatus",
+        "v202309TestThroughputSettings",
+        "v202309TestTraceSettings",
+        "v202309UrlTest"
       ],
       "fields": {
         "ActivationSettings": {
@@ -16201,6 +16820,112 @@
             "required": false
           }
         },
+        "BulkActionItemStatus": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "state": {
+            "type": "Optional[BulkActionItemState]",
+            "required": false
+          },
+          "error": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "errorType": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "field": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "BulkActionStatus": {
+          "workflowId": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "state": {
+            "type": "Optional[BulkActionState]",
+            "required": false
+          },
+          "startTime": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "endTime": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "totalCount": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "succeededCount": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "failedCount": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "pendingCount": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "items": {
+            "type": "Optional[List[Optional[BulkActionItemStatus]]]",
+            "required": false
+          },
+          "skippedCount": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "skipped": {
+            "type": "Optional[List[Optional[BulkActionItemStatus]]]",
+            "required": false
+          }
+        },
+        "BulkFieldOpRule": {
+          "mask": {
+            "type": "str",
+            "required": true
+          },
+          "op": {
+            "type": "BulkFieldOp",
+            "required": true
+          }
+        },
+        "BulkUpdateTestsRequest": {
+          "ids": {
+            "type": "List[str]",
+            "required": true
+          },
+          "test": {
+            "type": "v202309Test",
+            "required": true
+          },
+          "mask": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "ops": {
+            "type": "Optional[List[Optional[BulkFieldOpRule]]]",
+            "required": false
+          },
+          "allowPartialBatch": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "BulkUpdateTestsResponse": {
+          "status": {
+            "type": "Optional[BulkActionStatus]",
+            "required": false
+          }
+        },
         "CreateAgentAlertRequest": {
           "thresholdSeconds": {
             "type": "Optional[int]",
@@ -16375,6 +17100,12 @@
         "GetAgentResponse": {
           "agent": {
             "type": "Optional[Agent]",
+            "required": false
+          }
+        },
+        "GetBulkUpdateTestsStatusResponse": {
+          "status": {
+            "type": "Optional[BulkActionStatus]",
             "required": false
           }
         },
@@ -17280,6 +18011,614 @@
             "type": "Optional[List[Optional[protobufAny]]]",
             "required": false
           }
+        },
+        "v202309ActivationSettings": {
+          "gracePeriod": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "timeUnit": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "timeWindow": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "times": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "v202309AgentTest": {
+          "target": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "useLocalIp": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "reciprocal": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "v202309AlertingSettings": {
+          "disableWarningNotifications": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "alertingType": {
+            "type": "Optional[v202309AlertingType]",
+            "required": false
+          },
+          "groupedAlertSettings": {
+            "type": "Optional[v202309GroupedAlertSettings]",
+            "required": false
+          }
+        },
+        "v202309DisabledMetrics": {
+          "pingLatency": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "pingJitter": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "pingPacketLoss": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "httpLatency": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "httpHeaders": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "httpCodes": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "httpCertExpiry": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "transactionLatency": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "dnsLatency": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "dnsCodes": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "dnsIps": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "throughputBandwidth": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "v202309DnsTest": {
+          "target": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "timeout": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "recordType": {
+            "type": "Optional[v202309DNSRecord]",
+            "required": false
+          },
+          "servers": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "port": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "v202309FlowTest": {
+          "target": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "targetRefreshIntervalMillis": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "maxProviders": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "maxIpTargets": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "inetDirection": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "direction": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "v202309GroupedAlertSetting": {
+          "metric": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "srcGroupBy": {
+            "type": "Optional[v202309SrcGroupBy]",
+            "required": false
+          },
+          "percentOfSrcGroup": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "filterIds": {
+            "type": "Optional[List[int]]",
+            "required": false
+          }
+        },
+        "v202309GroupedAlertSettings": {
+          "default": {
+            "type": "Optional[v202309GroupedAlertSetting]",
+            "required": false
+          },
+          "overrides": {
+            "type": "Optional[List[Optional[v202309GroupedAlertSetting]]]",
+            "required": false
+          }
+        },
+        "v202309HealthSettings": {
+          "latencyCritical": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "latencyWarning": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "packetLossCritical": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "packetLossWarning": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "jitterCritical": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "jitterWarning": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "httpLatencyCritical": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "httpLatencyWarning": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "httpValidCodes": {
+            "type": "Optional[List[int]]",
+            "required": false
+          },
+          "dnsValidCodes": {
+            "type": "Optional[List[int]]",
+            "required": false
+          },
+          "latencyCriticalStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "latencyWarningStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "jitterCriticalStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "jitterWarningStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "httpLatencyCriticalStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "httpLatencyWarningStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "unhealthySubtestThreshold": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "activation": {
+            "type": "Optional[v202309ActivationSettings]",
+            "required": false
+          },
+          "certExpiryWarning": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "certExpiryCritical": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "dnsValidIps": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "dnsLatencyCritical": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "dnsLatencyWarning": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "dnsLatencyCriticalStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "dnsLatencyWarningStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "perAgentAlerting": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "disabledMetrics": {
+            "type": "Optional[v202309DisabledMetrics]",
+            "required": false
+          },
+          "healthDisabled": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "throughputCritical": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "throughputWarning": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "throughputCriticalStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "throughputWarningStddev": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "disableAlerts": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "v202309HostnameTest": {
+          "target": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "v202309IpTest": {
+          "targets": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "useLocalIp": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "v202309NetworkMeshTest": {
+          "useLocalIp": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "v202309PageLoadTest": {
+          "target": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "timeout": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "headers": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          },
+          "ignoreTlsErrors": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "cssSelectors": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          }
+        },
+        "v202309ScheduleSettings": {
+          "enabled": {
+            "type": "Optional[bool]",
+            "required": false
+          },
+          "start": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "end": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "v202309Test": {
+          "id": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "name": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "type": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "status": {
+            "type": "Optional[v202309TestStatus]",
+            "required": false
+          },
+          "settings": {
+            "type": "Optional[v202309TestSettings]",
+            "required": false
+          },
+          "cdate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "edate": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "createdBy": {
+            "type": "Optional[UserInfo]",
+            "required": false
+          },
+          "lastUpdatedBy": {
+            "type": "Optional[UserInfo]",
+            "required": false
+          },
+          "labels": {
+            "type": "Optional[List[str]]",
+            "required": false
+          }
+        },
+        "v202309TestPingSettings": {
+          "count": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "protocol": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "port": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "timeout": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "delay": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "dscp": {
+            "type": "Optional[int]",
+            "required": false
+          }
+        },
+        "v202309TestSettings": {
+          "hostname": {
+            "type": "Optional[v202309HostnameTest]",
+            "required": false
+          },
+          "ip": {
+            "type": "Optional[v202309IpTest]",
+            "required": false
+          },
+          "agent": {
+            "type": "Optional[v202309AgentTest]",
+            "required": false
+          },
+          "flow": {
+            "type": "Optional[v202309FlowTest]",
+            "required": false
+          },
+          "dns": {
+            "type": "Optional[v202309DnsTest]",
+            "required": false
+          },
+          "url": {
+            "type": "Optional[v202309UrlTest]",
+            "required": false
+          },
+          "networkGrid": {
+            "type": "Optional[v202309IpTest]",
+            "required": false
+          },
+          "pageLoad": {
+            "type": "Optional[v202309PageLoadTest]",
+            "required": false
+          },
+          "dnsGrid": {
+            "type": "Optional[v202309DnsTest]",
+            "required": false
+          },
+          "networkMesh": {
+            "type": "Optional[v202309NetworkMeshTest]",
+            "required": false
+          },
+          "agentIds": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "tasks": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "healthSettings": {
+            "type": "Optional[v202309HealthSettings]",
+            "required": false
+          },
+          "ping": {
+            "type": "Optional[v202309TestPingSettings]",
+            "required": false
+          },
+          "trace": {
+            "type": "Optional[v202309TestTraceSettings]",
+            "required": false
+          },
+          "period": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "family": {
+            "type": "Optional[v202309IPFamily]",
+            "required": false
+          },
+          "notificationChannels": {
+            "type": "Optional[List[str]]",
+            "required": false
+          },
+          "notes": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "throughput": {
+            "type": "Optional[v202309TestThroughputSettings]",
+            "required": false
+          },
+          "schedule": {
+            "type": "Optional[v202309ScheduleSettings]",
+            "required": false
+          },
+          "alerting": {
+            "type": "Optional[v202309AlertingSettings]",
+            "required": false
+          }
+        },
+        "v202309TestThroughputSettings": {
+          "port": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "omit": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "duration": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "bandwidth": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "protocol": {
+            "type": "Optional[str]",
+            "required": false
+          }
+        },
+        "v202309TestTraceSettings": {
+          "count": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "protocol": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "port": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "timeout": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "limit": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "delay": {
+            "type": "Optional[float]",
+            "required": false
+          },
+          "dscp": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "mtu": {
+            "type": "Optional[bool]",
+            "required": false
+          }
+        },
+        "v202309UrlTest": {
+          "target": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "timeout": {
+            "type": "Optional[int]",
+            "required": false
+          },
+          "method": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "headers": {
+            "type": "Optional[Dict[str, Any]]",
+            "required": false
+          },
+          "body": {
+            "type": "Optional[str]",
+            "required": false
+          },
+          "ignoreTlsErrors": {
+            "type": "Optional[bool]",
+            "required": false
+          }
         }
       },
       "enums": {
@@ -17294,6 +18633,30 @@
           "ALERTING_TYPE_AGENT",
           "ALERTING_TYPE_GROUPED",
           "ALERTING_TYPE_SUBTEST"
+        ],
+        "BulkActionItemState": [
+          "BULK_ACTION_ITEM_STATE_UNSPECIFIED",
+          "BULK_ACTION_ITEM_STATE_PENDING",
+          "BULK_ACTION_ITEM_STATE_PROCESSING",
+          "BULK_ACTION_ITEM_STATE_SUCCEEDED",
+          "BULK_ACTION_ITEM_STATE_FAILED"
+        ],
+        "BulkActionState": [
+          "BULK_ACTION_STATE_UNSPECIFIED",
+          "BULK_ACTION_STATE_SUBMITTED",
+          "BULK_ACTION_STATE_RUNNING",
+          "BULK_ACTION_STATE_PAUSED",
+          "BULK_ACTION_STATE_COMPLETED",
+          "BULK_ACTION_STATE_FAILED",
+          "BULK_ACTION_STATE_CANCELLED",
+          "BULK_ACTION_STATE_TERMINATED",
+          "BULK_ACTION_STATE_TIMED_OUT"
+        ],
+        "BulkFieldOp": [
+          "BULK_FIELD_OP_UNSPECIFIED",
+          "BULK_FIELD_OP_REPLACE",
+          "BULK_FIELD_OP_ADD",
+          "BULK_FIELD_OP_REMOVE"
         ],
         "DNSRecord": [
           "DNS_RECORD_UNSPECIFIED",
@@ -17325,6 +18688,42 @@
           "SRC_GROUP_BY_SITE"
         ],
         "TestStatus": [
+          "TEST_STATUS_UNSPECIFIED",
+          "TEST_STATUS_ACTIVE",
+          "TEST_STATUS_PAUSED",
+          "TEST_STATUS_DELETED",
+          "TEST_STATUS_PREVIEW"
+        ],
+        "v202309AlertingType": [
+          "ALERTING_TYPE_UNSPECIFIED",
+          "ALERTING_TYPE_AGENT",
+          "ALERTING_TYPE_GROUPED",
+          "ALERTING_TYPE_SUBTEST"
+        ],
+        "v202309DNSRecord": [
+          "DNS_RECORD_UNSPECIFIED",
+          "DNS_RECORD_A",
+          "DNS_RECORD_AAAA",
+          "DNS_RECORD_CNAME",
+          "DNS_RECORD_DNAME",
+          "DNS_RECORD_NS",
+          "DNS_RECORD_MX",
+          "DNS_RECORD_PTR",
+          "DNS_RECORD_SOA"
+        ],
+        "v202309IPFamily": [
+          "IP_FAMILY_UNSPECIFIED",
+          "IP_FAMILY_V4",
+          "IP_FAMILY_V6",
+          "IP_FAMILY_DUAL"
+        ],
+        "v202309SrcGroupBy": [
+          "SRC_GROUP_BY_UNSPECIFIED",
+          "SRC_GROUP_BY_ALL_AGENTS",
+          "SRC_GROUP_BY_LABEL",
+          "SRC_GROUP_BY_SITE"
+        ],
+        "v202309TestStatus": [
           "TEST_STATUS_UNSPECIFIED",
           "TEST_STATUS_ACTIVE",
           "TEST_STATUS_PAUSED",

@@ -5,14 +5,18 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
+from .ContextFilter import ContextFilter
 from .MultiAttributeFilter import MultiAttributeFilter
 from .Severity import Severity
-from .Source import Source
+from .TimestampSetting import TimestampSetting
+from .v202505Source import v202505Source
 
 
 class Suppression(BaseModel):
     """
-    Suppression model
+    Different matching constraints are ANDed. Values within sources
+    and severities are alternatives. At least one non-empty matching constraint is
+    required; a display name, comment, or strictness flag alone is insufficient.
     """
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
@@ -20,42 +24,59 @@ class Suppression(BaseModel):
     id: Optional[str] = Field(
         validation_alias="id",
         default=None,
-        description="The ID of the suppression configuration.",
+        description="The ID of the suppression configuration. Required to identify the existing suppression on Replace; assigned by the server on Create.",
     )
 
-    userId: Optional[str] = Field(
-        validation_alias="userId",
+    displayName: Optional[str] = Field(
+        validation_alias="displayName",
         default=None,
-        description="The ID of the user who most recently updated the suppression configuration.",
-    )
-
-    source: Optional[Source] = Field(validation_alias="source", default=None)
-
-    keyFilter: Optional[MultiAttributeFilter] = Field(
-        validation_alias="keyFilter", default=None
-    )
-
-    strict: Optional[bool] = Field(
-        validation_alias="strict",
-        default=None,
-        description="Whether the suppression is strict (all alert key dimensions must have some filter applied and matching).",
+        description="The name of the suppression configuration. Omission on Replace clears the name.",
     )
 
     comment: Optional[str] = Field(
         validation_alias="comment",
         default=None,
-        description="The comment for the suppression configuration.",
+        description="The comment for the suppression configuration. Omission on Replace clears the comment.",
     )
 
-    startTimeAt: str = Field(
+    contextFilter: Optional[ContextFilter] = Field(
+        validation_alias="contextFilter", default=None
+    )
+
+    sources: Optional[List[Optional[v202505Source]]] = Field(
+        validation_alias="sources",
+        default=None,
+        description="The source policies whose alerts may be suppressed. IDs are public policy IDs, not internal Alert Manager rule IDs. Any listed source may match. Empty means all source policies, subject to the other matching constraints.",
+    )
+
+    severities: Optional[List[Optional[Severity]]] = Field(
+        validation_alias="severities",
+        default=None,
+        description="The alarm severities the suppression applies to. Any listed severity may match. Empty means all severities, subject to the other matching constraints.",
+    )
+
+    keyFilter: Optional[MultiAttributeFilter] = Field(
+        validation_alias="keyFilter", default=None
+    )
+
+    startTimeAt: Optional[str] = Field(
         validation_alias="startTimeAt",
-        description="The start time when the suppression configuration is active, preventing the alert from being activated.",
+        default=None,
+        description="The resolved start time when suppression becomes active. On Create or Replace, omission defaults to the earliest permitted start unless start_time_code overrides it. On Replace, use KEEP_UNCHANGED to retain the existing start time. Worker propagation may delay effectiveness.",
+    )
+
+    startTimeCode: Optional[TimestampSetting] = Field(
+        validation_alias="startTimeCode", default=None
     )
 
     endTimeAt: Optional[str] = Field(
         validation_alias="endTimeAt",
         default=None,
-        description="The end time when the suppression configuration is no longer active, allowing the alert to be activated again.",
+        description="The resolved time when suppression ceases to be active. Omission on Create or Replace means no expiration unless end_time_code overrides it. An explicit end must be after the start and after the current time, satisfy the minimum suppression window, and allow time for propagation.",
+    )
+
+    endTimeCode: Optional[TimestampSetting] = Field(
+        validation_alias="endTimeCode", default=None
     )
 
     createdAt: Optional[str] = Field(
@@ -68,16 +89,4 @@ class Suppression(BaseModel):
         validation_alias="modifiedAt",
         default=None,
         description="The time when the suppression configuration was last modified.",
-    )
-
-    displayName: Optional[str] = Field(
-        validation_alias="displayName",
-        default=None,
-        description="The name of the suppression configuration.",
-    )
-
-    severities: Optional[List[Optional[Severity]]] = Field(
-        validation_alias="severities",
-        default=None,
-        description="The alarm severities the suppression applies to.",
     )

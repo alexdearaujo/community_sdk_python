@@ -123,8 +123,8 @@ class AlertingServiceWrapper:
                 self._grpc_import_error_7 = exc
             try:
                 __import__("kentik_api.gen.pb_companions")
-                import kentik_api.gen.alerting.pb.suppressions_pb2 as _pb2_8_mod
-                import kentik_api.gen.alerting.pb.suppressions_pb2_grpc as _pb2_grpc_8_mod
+                import kentik_api.gen.alerting.pb.suppressions_public_v202505_pb2 as _pb2_8_mod
+                import kentik_api.gen.alerting.pb.suppressions_public_v202505_pb2_grpc as _pb2_grpc_8_mod
 
                 self._grpc_pb2_8 = _pb2_8_mod
                 self._grpc_stub_8 = _pb2_grpc_8_mod.SuppressionServiceStub(
@@ -134,6 +134,19 @@ class AlertingServiceWrapper:
                 self._grpc_pb2_8 = None
                 self._grpc_stub_8 = None
                 self._grpc_import_error_8 = exc
+            try:
+                __import__("kentik_api.gen.pb_companions")
+                import kentik_api.gen.alerting.pb.suppressions_public_v202611_pb2 as _pb2_9_mod
+                import kentik_api.gen.alerting.pb.suppressions_public_v202611_pb2_grpc as _pb2_grpc_9_mod
+
+                self._grpc_pb2_9 = _pb2_9_mod
+                self._grpc_stub_9 = _pb2_grpc_9_mod.SuppressionServiceStub(
+                    self._transport.channel
+                )
+            except (ImportError, TypeError) as exc:
+                self._grpc_pb2_9 = None
+                self._grpc_stub_9 = None
+                self._grpc_import_error_9 = exc
 
     def auto_ack_create(
         self,
@@ -1652,20 +1665,20 @@ class AlertingServiceWrapper:
         """
         Create Suppression
 
-        Creates a new suppression configuration.
+        Creates a suppression configuration. At least one source, severity, key filter condition, or context filter condition is required.
         """
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
+            if self._grpc_pb2_9 is None or self._grpc_stub_9 is None:
                 raise NotImplementedError(
-                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
-                ) from self._grpc_import_error_8
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_9!r}"
+                ) from self._grpc_import_error_9
             _req = build_grpc_request(
-                self._grpc_pb2_8.SuppressionServiceCreateRequest,
+                self._grpc_pb2_9.SuppressionServiceCreateRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_8.Create,
+                self._grpc_stub_9.Create,
                 _req,
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.SuppressionCreateError,
@@ -1674,7 +1687,7 @@ class AlertingServiceWrapper:
                 rest_models.SuppressionServiceCreateResponse,
                 _resp,
                 _rate_limit,
-                stub_method=self._grpc_stub_8.Create,
+                stub_method=self._grpc_stub_9.Create,
                 operation_name="Create",
             )
         elif isinstance(self._transport, RestTransport):
@@ -1697,20 +1710,20 @@ class AlertingServiceWrapper:
         """
         List Suppressions
 
-        Returns a list of suppression configurations.
+        Returns suppression configurations, including all matching constraints and resolved timestamps. Timestamp commands are not returned.
         """
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
+            if self._grpc_pb2_9 is None or self._grpc_stub_9 is None:
                 raise NotImplementedError(
-                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
-                ) from self._grpc_import_error_8
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_9!r}"
+                ) from self._grpc_import_error_9
             _req = build_grpc_request(
-                self._grpc_pb2_8.SuppressionServiceListRequest,
+                self._grpc_pb2_9.SuppressionServiceListRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
                 {},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_8.List,
+                self._grpc_stub_9.List,
                 _req,
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.SuppressionListError,
@@ -1719,7 +1732,7 @@ class AlertingServiceWrapper:
                 rest_models.SuppressionServiceListResponse,
                 _resp,
                 _rate_limit,
-                stub_method=self._grpc_stub_8.List,
+                stub_method=self._grpc_stub_9.List,
                 operation_name="List",
             )
         elif isinstance(self._transport, RestTransport):
@@ -1739,18 +1752,18 @@ class AlertingServiceWrapper:
         """
         Get Suppression
 
-        Returns a suppression configuration.
+        Returns a suppression configuration, including all matching constraints and resolved timestamps. Timestamp commands are not returned.
         """
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
+            if self._grpc_pb2_9 is None or self._grpc_stub_9 is None:
                 raise NotImplementedError(
-                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
-                ) from self._grpc_import_error_8
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_9!r}"
+                ) from self._grpc_import_error_9
             _req = build_grpc_request(
-                self._grpc_pb2_8.SuppressionServiceGetRequest, None, {"id": id}
+                self._grpc_pb2_9.SuppressionServiceGetRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_8.Get,
+                self._grpc_stub_9.Get,
                 _req,
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.SuppressionGetError,
@@ -1759,7 +1772,7 @@ class AlertingServiceWrapper:
                 rest_models.SuppressionServiceGetResponse,
                 _resp,
                 _rate_limit,
-                stub_method=self._grpc_stub_8.Get,
+                stub_method=self._grpc_stub_9.Get,
                 operation_name="Get",
             )
         elif isinstance(self._transport, RestTransport):
@@ -1782,15 +1795,15 @@ class AlertingServiceWrapper:
         Deletes a suppression configuration.
         """
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
+            if self._grpc_pb2_9 is None or self._grpc_stub_9 is None:
                 raise NotImplementedError(
-                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
-                ) from self._grpc_import_error_8
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_9!r}"
+                ) from self._grpc_import_error_9
             _req = build_grpc_request(
-                self._grpc_pb2_8.SuppressionServiceDeleteRequest, None, {"id": id}
+                self._grpc_pb2_9.SuppressionServiceDeleteRequest, None, {"id": id}
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_8.Delete,
+                self._grpc_stub_9.Delete,
                 _req,
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.SuppressionDeleteError,
@@ -1799,7 +1812,7 @@ class AlertingServiceWrapper:
                 rest_models.SuppressionServiceDeleteResponse,
                 _resp,
                 _rate_limit,
-                stub_method=self._grpc_stub_8.Delete,
+                stub_method=self._grpc_stub_9.Delete,
                 operation_name="Delete",
             )
         elif isinstance(self._transport, RestTransport):
@@ -1823,20 +1836,20 @@ class AlertingServiceWrapper:
         """
         Replace Suppression
 
-        Replaces a suppression configuration.
+        Replaces the complete writable suppression configuration; this is not a partial update despite the PATCH HTTP method. Omitted matching constraints, display name, and comment are cleared. Output-only fields and server-managed metadata are not replaced. Use timestamp commands to preserve existing start or end times. Once active or starting too soon for changes to propagate, a suppression's start time and matching constraints cannot change; its end time, display name, and comment can change. Suppressions that have ended or are ending too soon cannot be replaced. Timing constraints still apply.
         """
         if isinstance(self._transport, GrpcTransport):
-            if self._grpc_pb2_8 is None or self._grpc_stub_8 is None:
+            if self._grpc_pb2_9 is None or self._grpc_stub_9 is None:
                 raise NotImplementedError(
-                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_8!r}"
-                ) from self._grpc_import_error_8
+                    f"gRPC proto modules for alerting service failed to import: {self._grpc_import_error_9!r}"
+                ) from self._grpc_import_error_9
             _req = build_grpc_request(
-                self._grpc_pb2_8.SuppressionServiceReplaceRequest,
+                self._grpc_pb2_9.SuppressionServiceReplaceRequest,
                 data.model_dump(by_alias=True, exclude_unset=True),
                 {"suppression.id": id},
             )
             _resp, _rate_limit = call_grpc(
-                self._grpc_stub_8.Replace,
+                self._grpc_stub_9.Replace,
                 _req,
                 api_config=api_config_override,
                 error_cls=RestAlertingModule8.SuppressionReplaceError,
@@ -1845,7 +1858,7 @@ class AlertingServiceWrapper:
                 rest_models.SuppressionServiceReplaceResponse,
                 _resp,
                 _rate_limit,
-                stub_method=self._grpc_stub_8.Replace,
+                stub_method=self._grpc_stub_9.Replace,
                 operation_name="Replace",
             )
         elif isinstance(self._transport, RestTransport):

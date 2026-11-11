@@ -61,7 +61,7 @@ class KptrServiceStub:
             response_deserializer=kentik_dot_kptr_dot_v202602_dot_kptr__service__pb2.ResolveAddressesResponse.FromString,
             _registered_method=True,
         )
-        self.ListResolvedAddresses = channel.unary_unary(
+        self.ListResolvedAddresses = channel.unary_stream(
             "/kentik.kptr.v202602.KptrService/ListResolvedAddresses",
             request_serializer=kentik_dot_kptr_dot_v202602_dot_kptr__service__pb2.ListResolvedAddressesRequest.SerializeToString,
             response_deserializer=kentik_dot_kptr_dot_v202602_dot_kptr__service__pb2.ListResolvedAddressesResponse.FromString,
@@ -162,7 +162,7 @@ def add_KptrServiceServicer_to_server(servicer, server):
             request_deserializer=kentik_dot_kptr_dot_v202602_dot_kptr__service__pb2.ResolveAddressesRequest.FromString,
             response_serializer=kentik_dot_kptr_dot_v202602_dot_kptr__service__pb2.ResolveAddressesResponse.SerializeToString,
         ),
-        "ListResolvedAddresses": grpc.unary_unary_rpc_method_handler(
+        "ListResolvedAddresses": grpc.unary_stream_rpc_method_handler(
             servicer.ListResolvedAddresses,
             request_deserializer=kentik_dot_kptr_dot_v202602_dot_kptr__service__pb2.ListResolvedAddressesRequest.FromString,
             response_serializer=kentik_dot_kptr_dot_v202602_dot_kptr__service__pb2.ListResolvedAddressesResponse.SerializeToString,
@@ -284,7 +284,7 @@ class KptrService:
         timeout=None,
         metadata=None,
     ):
-        return grpc.experimental.unary_unary(
+        return grpc.experimental.unary_stream(
             request,
             target,
             "/kentik.kptr.v202602.KptrService/ListResolvedAddresses",

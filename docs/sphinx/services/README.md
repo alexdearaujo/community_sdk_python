@@ -38,7 +38,7 @@ This folder holds one Markdown page per Kentik API service.
 | Connectivity Checker | [connectivity_checker.md](connectivity_checker.md) | Create a Connectivity Checker Report. |
 | Core | [core.md](core.md) | |
 | Cost | [cost.md](cost.md) | List all cost providers. |
-| Credential | [credential.md](credential.md) | List credential groups. |
+| Credential | [credential.md](credential.md) | List credentials. |
 | Custom Application | [custom_application.md](custom_application.md) | List Custom Applications |
 | Custom Dimension | [custom_dimension.md](custom_dimension.md) | List Custom Dimensions |
 | Device | [device.md](device.md) | List all devices. |
@@ -66,7 +66,7 @@ This folder holds one Markdown page per Kentik API service.
 | Rbux | [rbux.md](rbux.md) | List Focus Scopes |
 | Saved Filter | [saved_filter.md](saved_filter.md) | Create Saved Filter |
 | Site | [site.md](site.md) | List all site markets. |
-| Synthetics | [synthetics.md](synthetics.md) | List agent alert configurations |
+| Synthetics | [synthetics.md](synthetics.md) | Update multiple synthetic tests |
 | User | [user.md](user.md) | List all users. |
 | V5 | [v5.md](v5.md) | Batch populators |
 | Vault | [vault.md](vault.md) | List secrets. |

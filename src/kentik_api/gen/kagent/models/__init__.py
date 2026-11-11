@@ -29,6 +29,7 @@ from .ConfigLayerLayerType import ConfigLayerLayerType as ConfigLayerLayerType
 from .ConfigServiceUpdateConfigBody import (
     ConfigServiceUpdateConfigBody as ConfigServiceUpdateConfigBody,
 )
+from .ConfigSource import ConfigSource as ConfigSource
 from .CreateAgentRequest import CreateAgentRequest as CreateAgentRequest
 from .CreateAgentResponse import CreateAgentResponse as CreateAgentResponse
 from .CreateCapabilityResponse import (
@@ -95,6 +96,7 @@ from .ProvisioningTokenServiceRevokeProvisioningTokenBody import (
     ProvisioningTokenServiceRevokeProvisioningTokenBody as ProvisioningTokenServiceRevokeProvisioningTokenBody,
 )
 from .RegistrationConfig import RegistrationConfig as RegistrationConfig
+from .ReleaseSource import ReleaseSource as ReleaseSource
 from .RevokeProvisioningTokenResponse import (
     RevokeProvisioningTokenResponse as RevokeProvisioningTokenResponse,
 )
