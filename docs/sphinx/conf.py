@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import sys
+import textwrap
 
 sys.path.insert(0, os.path.abspath("../../src"))
 
@@ -91,8 +92,12 @@ def setup(app):
 
     class SchemaTextFieldDocumenter(PydanticFieldDocumenter):
         def _get_field_description(self) -> str:
-            # Field descriptions are schema prose: `c_` or `*.` is not RST markup.
             text = super()._get_field_description() or ""
+            # Indented schema prose (an example payload) would parse as an RST definition list.
+            # prepare_docstring() dedents every line after the first, so "::" goes on line two.
+            if any(line[:1].isspace() for line in text.splitlines()):
+                return "\n::\n\n" + textwrap.indent(text, "   ")
+            # Field descriptions are schema prose: `c_` or `*.` is not RST markup.
             return _RST_INLINE_MARKUP.sub(r"\\\1", text)
 
     app.add_autodocumenter(SchemaTextFieldDocumenter, override=True)

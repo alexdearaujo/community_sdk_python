@@ -14,6 +14,7 @@ from scripts.generation.endpoint_docs import (
     EndpointDocsCollector,
     GrpcCall,
     _example_value_for_annotation,
+    _nest_headings,
     _provenance,
     _render_example_snippet,
     _render_operation_sequence_diagram,
@@ -595,3 +596,12 @@ def test_a_rest_only_service_documents_rest_for_both_protocols():
     assert "Both transports work" not in snippet
     assert "also sends this call over REST" in diagram
     assert "NotImplementedError" not in diagram
+
+
+def test_description_headings_nest_under_the_endpoint():
+    text = "Intro\n### Fields\n#### Detail\n```\n# not a heading\n```\n### Examples"
+
+    assert _nest_headings(text, 5) == (
+        "Intro\n##### Fields\n###### Detail\n```\n# not a heading\n```\n##### Examples"
+    )
+    assert _nest_headings("No headings", 5) == "No headings"

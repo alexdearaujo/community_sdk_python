@@ -34,6 +34,7 @@ from .explorer_docs import fragment
 
 MD_FENCE = "`" * 3
 SCHEMA_RECORD_FILE = PROJECT_ROOT / "schema_operations.json"
+_MD_HEADING = re.compile(r"^(#{1,6})(?=\s)")
 
 
 def _provenance(writer: FunctionType) -> str:
@@ -514,6 +515,27 @@ def _render_operation_sequence_diagram(
     return rest_diagram + grpc_diagram
 
 
+def _nest_headings(text: str, top_level: int) -> str:
+    """Shifts schema-prose headings so the highest sits at `top_level`.
+
+    A description's own `###` would otherwise break the page outline.
+    """
+    lines = text.split("\n")
+    in_fence = False
+    headings: dict[int, int] = {}
+    for row, line in enumerate(lines):
+        if line.lstrip().startswith(MD_FENCE):
+            in_fence = not in_fence
+        elif not in_fence and (match := _MD_HEADING.match(line)):
+            headings[row] = len(match.group(1))
+    if not headings:
+        return text
+    shift = top_level - min(headings.values())
+    for row, level in headings.items():
+        lines[row] = "#" * min(level + shift, 6) + lines[row][level:]
+    return "\n".join(lines)
+
+
 def _render_endpoint_section(
     service: str,
     doc: EndpointDoc,
@@ -533,7 +555,7 @@ def _render_endpoint_section(
     if doc.summary:
         lines.extend([doc.summary, ""])
     if doc.description and doc.description != doc.summary:
-        lines.extend([doc.description, ""])
+        lines.extend([_nest_headings(doc.description, heading_level + 1), ""])
 
     if method_name is not None:
         lines.extend(
