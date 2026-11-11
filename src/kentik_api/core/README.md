@@ -31,20 +31,19 @@ in every one of the 36 services mounted on the client, under
 ```mermaid
 %%{init: {"theme": "redux", "look": "neo", "layout": "elk", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant Op as Generated operation
-    participant RJ as request_json
-    participant HX as httpx.Client
+    participant Op@{ "type": "boundary" } as Generated operation
+    participant RJ@{ "type": "control" } as request_json()
+    participant HX@{ "type": "control" } as httpx.Client
     participant API as Kentik API
-    Op->>RJ: api_config, params, expected_status
-    RJ->>RJ: check credentials, add auth headers, clean query params
+    Op->>+RJ: api_config, params, expected_status
+    RJ->>RJ: check credentials, add auth headers,<br/>clean query params
+    RJ->>+HX: send request
     alt network failure
-        RJ->>HX: send request
         HX-->>RJ: httpx.RequestError
         RJ-->>Op: raise TransportError
     else response received
-        RJ->>HX: send request
-        HX->>API: HTTP request
-        API-->>HX: HTTP response
+        HX->>+API: HTTP request
+        API-->>-HX: HTTP response
         HX-->>RJ: response
         alt status == expected
             RJ-->>Op: parsed JSON
@@ -54,6 +53,8 @@ sequenceDiagram
             RJ-->>Op: raise error_cls.from_response(...)
         end
     end
+    deactivate HX
+    deactivate RJ
 ```
 
 `request_json()` centralizes:
@@ -87,12 +88,12 @@ and delegates all error mapping to `map_grpc_error()`.
 ```mermaid
 %%{init: {"theme": "redux", "look": "neo", "layout": "elk", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 sequenceDiagram
-    participant W as Generated wrapper
-    participant CG as call_grpc
-    participant MG as map_grpc_error
-    participant S as gRPC stub
-    W->>CG: stub_method, proto_request
-    CG->>S: future(proto_request)
+    participant W@{ "type": "boundary" } as Generated wrapper
+    participant CG@{ "type": "control" } as call_grpc()
+    participant MG@{ "type": "control" } as map_grpc_error()
+    participant S@{ "type": "control" } as gRPC stub
+    W->>+CG: stub_method, proto_request
+    CG->>+S: future(proto_request)
     alt success
         S-->>CG: proto response
         CG-->>W: proto response and quota
@@ -101,14 +102,16 @@ sequenceDiagram
         CG-->>W: raise TransportError (DEADLINE_EXCEEDED)
     else grpc.RpcError
         S-->>CG: RpcError
-        CG->>MG: exc, method, path
-        MG-->>CG: AuthenticationError, TransportError,<br/>or HTTPException
+        CG->>+MG: exc, method, path
+        MG-->>-CG: AuthenticationError, TransportError,<br/>or HTTPException
         CG->>CG: re-type HTTPException as the operation's error class
         CG-->>W: raise
     else other exception
         S-->>CG: Exception
         CG-->>W: raise the same exception, unchanged
     end
+    deactivate S
+    deactivate CG
 ```
 
 ## Concurrency

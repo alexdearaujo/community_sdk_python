@@ -26,7 +26,7 @@ classDiagram
         +APIConfig api_config
     }
     class GrpcTransport {
-        +channel: grpc.Channel
+        +grpc.Channel channel
         +APIConfig api_config
     }
     BaseTransport <|-- RestTransport

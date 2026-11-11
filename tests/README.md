@@ -19,49 +19,24 @@ transports. You opt into that layer explicitly.
 | [`e2e`](e2e/README.md) | End-to-end tests against the real Kentik API, REST ([`test_endpoints_e2e.py`](e2e/test_endpoints_e2e.py)) and gRPC ([`test_endpoints_e2e_grpc.py`](e2e/test_endpoints_e2e_grpc.py)) transports. Opt-in only, never part of [`uv run poe test`](../pyproject.toml) or [`uv run poe all`](../pyproject.toml). Read [`e2e/README.md`](e2e/README.md) before you touch this layer. | Real |
 
 ```mermaid
-%%{init: {"theme": "redux", "look": "neo", "layout": "elk", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
-flowchart LR
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart TD
   disc("tests/_discovery.py<br/>shared discovery helpers"):::violetSrc
-
-  subgraph mocked["Mocked layers · uv run poe test"]
-    gen("generated/<br/>wrapper contracts, schema coverage"):::blue
-    rt("runtime/<br/>shared runtime helpers"):::blue
-    sm("smoke/<br/>client wiring"):::blue
-    gr("generator/<br/>generator phase modules"):::blue
-    an("analytics/<br/>analytics extra"):::blue
-  end
-
-  subgraph live["e2e/ · opt-in, --run-live-e2e"]
-    rest("REST suite<br/>-m e2e"):::orange
-    grpc("gRPC suite<br/>-m e2e_grpc"):::orange
-  end
-
+  mocked("Mocked layers · uv run poe test<br/>generated/, runtime/, smoke/,<br/>generator/, analytics/"):::blue
+  rest("REST suite<br/>e2e/, -m e2e"):::orange
+  grpc("gRPC suite<br/>e2e/, -m e2e_grpc"):::orange
   mocks("Mocks and fixtures<br/>respx, monkeypatch, tmp_path<br/>no network"):::hub
-  apiRest("Kentik API, REST<br/>real account"):::redSrc
-  apiGrpc("Kentik API, gRPC<br/>real account"):::redSrc
+  apiRest("Kentik REST API<br/>real account"):::redSrc
+  apiGrpc("Kentik gRPC API<br/>real account"):::redSrc
 
-  disc --> gen
-  disc --> rest
-  disc --> grpc
-  j1@{ shape: f-circ }
-  class j1 join
-  gen --- j1
-  rt --- j1
-  sm --- j1
-  gr --- j1
-  an --- j1
-  j1 -->|"mocked calls"| mocks
-  rest -->|"HTTPS requests"| apiRest
-  apiRest -->|"responses"| rest
-  grpc -->|"gRPC calls"| apiGrpc
-  apiGrpc -->|"responses"| grpc
+  disc -->|"discovered operations"| mocked
+  disc -->|"discovered operations"| rest
+  disc -->|"discovered operations"| grpc
+  mocked -->|"mocked calls"| mocks
+  rest -->|"HTTPS requests / responses"| apiRest
+  grpc -->|"gRPC calls / responses"| apiGrpc
 
   click disc "_discovery.py"
-  click gen "generated/README.md"
-  click rt "runtime/README.md"
-  click sm "smoke/README.md"
-  click gr "generator/README.md"
-  click an "analytics/fixtures/README.md"
   click rest "e2e/test_endpoints_e2e.py"
   click grpc "e2e/test_endpoints_e2e_grpc.py"
 
@@ -71,9 +46,6 @@ flowchart LR
   classDef redSrc fill:#ffc9c9,stroke:#e03131,color:#c92a2a
   classDef hub fill:#f8f9fa,stroke:#495057,color:#212529
   classDef violetSrc,blue,orange,redSrc,hub stroke-width:2px,rx:10px
-  classDef join fill:#868e96,stroke:#868e96
-  style mocked fill:none,stroke:#868e96,stroke-width:2px
-  style live fill:none,stroke:#868e96,stroke-width:2px
   linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
 

@@ -13,6 +13,7 @@ control, catch a specific subclass.
 classDiagram
     class KentikError {
         <<base>>
+        +RateLimit rate_limit
     }
     class ConfigurationError
     class AuthenticationError

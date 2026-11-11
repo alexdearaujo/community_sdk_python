@@ -26,38 +26,26 @@ The contract, coverage, path encoding, gRPC request mapping, and retry eligibili
 the e2e suite.
 
 ```mermaid
-%%{init: {"theme": "redux", "look": "neo", "layout": "elk", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
-flowchart LR
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart TD
   cmd("uv run poe generate"):::violetSrc
   wrappers("Service wrappers<br/>gen/{service}/services/{service}.py"):::violet
   disc("tests/_discovery.py<br/>discover_cases()<br/>parses wrappers with ast"):::blue
-
-  subgraph suite["tests/generated/ · files that call discover_cases()"]
-    wc("test_wrapper_contracts.py"):::blue
-    sc("test_endpoint_schema_coverage.py"):::blue
-    pe("test_path_encoding.py"):::blue
-    gm("test_grpc_request_mapping.py"):::blue
-    ret("test_retry_eligibility.py"):::blue
-  end
-
+  sc("test_endpoint_schema_coverage.py<br/>every declared status"):::blue
+  others("4 more suites<br/>wrapper contracts, path encoding,<br/>gRPC request mapping, retry eligibility"):::blue
   rj("request_json()<br/>real shared runtime"):::green
   mock("respx mock<br/>no network"):::hub
 
   cmd --> wrappers
   wrappers -->|"wrapper source"| disc
-  disc -->|"WrapperCase list"| suite
-  sc -->|"operation calls"| rj
-  rj -->|"model or generated error"| sc
-  rj -->|"HTTP request"| mock
-  mock -->|"each declared status"| rj
+  disc -->|"WrapperCase list"| sc
+  disc -->|"WrapperCase list"| others
+  sc -->|"operation calls / model or generated error"| rj
+  rj -->|"HTTP request / each declared status"| mock
 
   click wrappers "../../src/kentik_api/gen/README.md"
   click disc "../_discovery.py"
-  click wc "test_wrapper_contracts.py"
   click sc "test_endpoint_schema_coverage.py"
-  click pe "test_path_encoding.py"
-  click gm "test_grpc_request_mapping.py"
-  click ret "test_retry_eligibility.py"
   click rj "../../src/kentik_api/core/rest_runtime.py"
 
   classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
@@ -66,7 +54,6 @@ flowchart LR
   classDef green fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e
   classDef hub fill:#f8f9fa,stroke:#495057,color:#212529
   classDef violetSrc,violet,blue,green,hub stroke-width:2px,rx:10px
-  style suite fill:none,stroke:#868e96,stroke-width:2px
   linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
 
