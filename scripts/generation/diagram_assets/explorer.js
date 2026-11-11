@@ -1,8 +1,12 @@
 /* Explorer for house-style diagrams. It wires each svg inside an .explorer
-   box to its entry in the JSON block #diagram-data, keyed by the svg id. */
+   box to its entry in the JSON blocks #diagram-data, keyed by the svg id. */
 (() => {
   "use strict";
-  const DATA = JSON.parse(document.getElementById("diagram-data")?.textContent || "{}");
+  // A page with several explorers has one data block per explorer.
+  const DATA = Object.assign(
+    {},
+    ...[...document.querySelectorAll('script[id="diagram-data"]')].map((s) => JSON.parse(s.textContent || "{}")),
+  );
 
   function el(tag, attrs = {}, children = []) {
     const e = document.createElement(tag);
