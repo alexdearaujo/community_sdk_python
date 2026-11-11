@@ -7,15 +7,7 @@
       "manifest_hash": "sha256:a1c87d9ce8088e7865f1d352137777a693b0595ccc310957c7c051a604ca1db2",
       "enabled": true,
       "priority": 10,
-      "registered_commands": {
-        "claude": [
-          "speckit.assess.intake",
-          "speckit.assess.research",
-          "speckit.assess.define",
-          "speckit.assess.shape",
-          "speckit.assess.decide"
-        ]
-      },
+      "registered_commands": {},
       "registered_skills": [
         "speckit-assess-intake",
         "speckit-assess-research",
@@ -31,15 +23,7 @@
       "manifest_hash": "sha256:698cc7089602db44622de39730555db4999cda94ab47195bcfe18f41d08b430a",
       "enabled": true,
       "priority": 10,
-      "registered_commands": {
-        "claude": [
-          "speckit.git.feature",
-          "speckit.git.validate",
-          "speckit.git.remote",
-          "speckit.git.initialize",
-          "speckit.git.commit"
-        ]
-      },
+      "registered_commands": {},
       "registered_skills": [
         "speckit-git-feature",
         "speckit-git-validate",
@@ -58,11 +42,7 @@
       "manifest_hash": "sha256:270100175bb742c37b8d549f2233c5b79114869dac754883dbecac2a4813beef",
       "enabled": true,
       "priority": 10,
-      "registered_commands": {
-        "claude": [
-          "speckit.agent-context.update"
-        ]
-      },
+      "registered_commands": {},
       "registered_skills": [
         "speckit-agent-context-update"
       ],
@@ -77,13 +57,7 @@
       "manifest_hash": "sha256:0f8ca9b828f8855be72a17cdef1f355fba81d7173b16f349d500d2ab367384fb",
       "enabled": true,
       "priority": 10,
-      "registered_commands": {
-        "claude": [
-          "speckit.bug.assess",
-          "speckit.bug.fix",
-          "speckit.bug.test"
-        ]
-      },
+      "registered_commands": {},
       "registered_skills": [
         "speckit-bug-assess",
         "speckit-bug-fix",
