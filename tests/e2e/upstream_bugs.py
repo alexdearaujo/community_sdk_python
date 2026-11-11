@@ -34,6 +34,7 @@ SERVER_ERRORS: dict[str, tuple[str, tuple[str, ...]]] = {
     "KagentServiceWrapper.list_capabilities": (NOT_IMPLEMENTED, _BOTH),
     "KmetaServiceWrapper.get_service_now_config": (NOT_IMPLEMENTED, _BOTH),
     "KmetaServiceWrapper.list_service_now_configs": (NOT_IMPLEMENTED, _BOTH),
+    "SyntheticsServiceWrapper.get_bulk_update_tests_status": (NOT_IMPLEMENTED, _BOTH),
 }
 
 
