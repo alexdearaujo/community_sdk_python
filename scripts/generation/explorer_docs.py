@@ -7,15 +7,33 @@ fragment(). write_static_assets() writes the CSS and the script that every
 page loads (docs/sphinx/conf.py lists them).
 """
 
+import html
 import json
 import re
 from pathlib import Path
 
 from . import diagram_kit as dk
-from ._shared import write_text_lf
+from ._shared import mermaid_init, write_text_lf
 
 _SCOPE = ".kx"
 _TONES = ("blue", "violet", "green", "orange", "red", "cyan", "yellow")
+
+# GitHub hides HTML comments and conf.py's source-read hook swaps the two
+# blocks, so GitHub shows the Mermaid fallback and Sphinx shows the explorer.
+GITHUB_ONLY = ("<!-- github-only -->", "<!-- /github-only -->")
+SPHINX_ONLY = ("<!-- sphinx-only", "-->")
+
+# family: (strong fill, pale fill, border, text), from the diagrams skill palette
+_MERMAID_COLORS = {
+    "blue": ("#a5d8ff", "#e7f5ff", "#1971c2", "#1864ab"),
+    "violet": ("#d0bfff", "#f3f0ff", "#7048e8", "#5f3dc4"),
+    "green": ("#b2f2bb", "#ebfbee", "#2f9e44", "#2b8a3e"),
+    "orange": ("#ffd8a8", "#fff4e6", "#e8590c", "#d9480f"),
+    "red": ("#ffc9c9", "#fff5f5", "#e03131", "#c92a2a"),
+    "cyan": ("#99e9f2", "#e3fafc", "#1098ad", "#0b7285"),
+    "yellow": ("#ffec99", "#fff9db", "#f08c00", "#a35a00"),
+    "neutral": ("#f8f9fa", "#f8f9fa", "#495057", "#212529"),
+}
 
 
 def _scoped(css: str) -> str:
@@ -91,6 +109,59 @@ def write_static_assets(static_dir: Path) -> None:
     )
 
 
+def _mermaid_text(raw: str) -> str:
+    return html.unescape(raw).replace('"', "#quot;")
+
+
+def mermaid_fallback(markup: str) -> list[str]:
+    """The explorer as a static Mermaid flowchart, for GitHub, which strips inline SVG and scripts.
+
+    A call and its answer become one arrow in the call's direction, labeled
+    "request / answer".
+    """
+    nodes = re.findall(
+        r'<g class="node fam-(\w+) (\w+)[^"]*" data-id="([^"]+)"[^>]*>(.*?)</g>', markup
+    )
+    edges: dict[tuple[str, str], tuple[str, str]] = {}
+    for kind, links, body in re.findall(
+        r'<g class="edge (\w+)" data-seg="[^"]*" data-links="([^"]*)">(.*?)</g>', markup
+    ):
+        label = " ".join(re.findall(r'class="elabel"[^>]*>(.*?)</text>', body))
+        for link in links.split(","):
+            source, target = link.split(">")
+            edges[(source, target)] = (kind, label)
+    arrows = []
+    for (source, target), (kind, label) in edges.items():
+        answer = edges.get((target, source))
+        if kind != "call" and answer and answer[0] == "call":
+            continue
+        if kind == "call" and answer:
+            label = " / ".join(text for text in (label, answer[1]) if text)
+        arrow = f' -->|"{_mermaid_text(label)}"| ' if label else " --> "
+        arrows.append(f"  {source}{arrow}{target}")
+    lines = ["```mermaid", mermaid_init().replace('"elk"', '"dagre"'), "flowchart TD"]
+    used = set()
+    for fam, kind, nid, body in nodes:
+        texts = [
+            _mermaid_text(t) for t in re.findall(r"<text [^>]*>(.*?)</text>", body)
+        ]
+        cls = f"{fam}{'Src' if kind == 'src' else ''}"
+        used.add((cls, fam, kind))
+        lines.append(f'  {nid}("{"<br/>".join(texts)}"):::{cls}')
+    lines += arrows
+    for cls, fam, kind in sorted(used):
+        strong, pale, border, text = _MERMAID_COLORS[fam]
+        fill = strong if kind == "src" else pale
+        lines.append(
+            f"  classDef {cls} fill:{fill},stroke:{border},color:{text},stroke-width:2px,rx:10px"
+        )
+    lines += [
+        "  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round",
+        "```",
+    ]
+    return lines
+
+
 def fragment(
     markup: str,
     data: dict,
@@ -99,7 +170,8 @@ def fragment(
     access: str | None = None,
     legend: tuple[str, str] | None = None,
 ) -> list[str]:
-    """A MyST raw-HTML block with the path chips, the diagram, the legend and the card.
+    """A Mermaid fallback for GitHub, then a MyST raw-HTML block with the path chips,
+    the diagram, the legend and the card, hidden from GitHub in an HTML comment.
 
     legend renames the bold-line and moving-line entries, for a diagram whose
     arrows mean something other than data flow. Raises ValueError when
@@ -118,7 +190,15 @@ def fragment(
         key = key.replace("what the selected part needs", dk.esc(legend[0])).replace(
             "where its data goes", dk.esc(legend[1])
         )
+    if SPHINX_ONLY[1] in markup + blob + key + caption:
+        raise ValueError(f"{sid}: the explorer cannot sit in an HTML comment")
     return [
+        GITHUB_ONLY[0],
+        "",
+        *mermaid_fallback(markup),
+        "",
+        GITHUB_ONLY[1],
+        SPHINX_ONLY[0],
         "```{raw} html",
         '<div class="kx">',
         f'<div class="chips" role="group" aria-label="Show one path" data-paths-for="{sid}"></div>',
@@ -131,4 +211,5 @@ def fragment(
         f'<script type="application/json" id="diagram-data">{blob}</script>',
         "</div>",
         "```",
+        SPHINX_ONLY[1],
     ]

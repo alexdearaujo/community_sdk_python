@@ -5,6 +5,35 @@
 
 ## Overview
 
+<!-- github-only -->
+
+```mermaid
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart TD
+  code("Your code<br/>client.interface"):::greenSrc
+  wrap("InterfaceServiceWrapper<br/>client.interface<br/>6 operations"):::orange
+  rest("REST functions<br/>gen/interface/services/"):::blue
+  rj("request_json()<br/>core/rest_runtime.py"):::blue
+  restapi("Kentik REST API<br/>HTTPS + JSON"):::blueSrc
+  cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
+  grpcapi("Kentik gRPC API<br/>HTTP/2 + protobuf"):::violetSrc
+  code -->|"method call / Pydantic model"| wrap
+  wrap -->|"arguments / Pydantic model"| rest
+  rest -->|"method, path, body / JSON dict"| rj
+  rj -->|"HTTPS request / JSON response"| restapi
+  wrap -->|"proto request / proto response"| cg
+  cg -->|"gRPC call / proto response"| grpcapi
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab,stroke-width:2px,rx:10px
+  classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab,stroke-width:2px,rx:10px
+  classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e,stroke-width:2px,rx:10px
+  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f,stroke-width:2px,rx:10px
+  classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4,stroke-width:2px,rx:10px
+  classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4,stroke-width:2px,rx:10px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
+```
+
+<!-- /github-only -->
+<!-- sphinx-only
 ```{raw} html
 <div class="kx">
 <div class="chips" role="group" aria-label="Show one path" data-paths-for="overview-svg"></div>
@@ -17,6 +46,7 @@
 <script type="application/json" id="diagram-data">{"overview-svg": {"select": "wrap", "parts": {"code": {"title": "Your code", "role": "Calls a method on the service wrapper.", "facts": ["client.interface.<method>(...)"], "stops": "Nothing in the SDK runs."}, "wrap": {"title": "InterfaceServiceWrapper", "role": "Sends each call to the REST function or to call_grpc(), for the transport that the client uses.", "facts": ["Source: gen/interface/services/interface.py", "Returns models from gen/interface/models/"], "stops": "Expected: no operation of this service can be called."}, "rest": {"title": "REST functions", "role": "One function per operation. Each one calls request_json() with its own error class.", "facts": ["Error classes: gen/interface/error/"], "stops": "Expected: calls on a REST transport fail. A gRPC client keeps working."}, "rj": {"title": "request_json()", "role": "The one function that sends REST traffic: auth headers, quota, and errors.", "facts": ["Raises AuthenticationError on 401", "Raises the operation's error class on other errors"], "stops": "Expected: every REST call of every service fails."}, "restapi": {"title": "Kentik REST API", "role": "The REST endpoints of the service.", "facts": ["Reports the quota in response headers"], "stops": "Expected: REST calls raise TransportError. A gRPC client keeps working."}, "cg": {"title": "call_grpc()", "role": "The one function that sends gRPC traffic: deadline, quota, and errors.", "facts": ["Parses each answer into the same models as REST"], "stops": "Expected: every gRPC call fails. A REST client keeps working."}, "grpcapi": {"title": "Kentik gRPC API", "role": "The gRPC methods of the service.", "facts": ["Reports the quota in response metadata"], "stops": "Expected: gRPC calls raise TransportError. A REST client keeps working."}}, "paths": {"rest": {"label": "REST call", "family": "blue", "title": "A call on a REST transport", "text": "The wrapper calls the REST function, which sends the request with request_json().", "links": ["code>wrap", "wrap>rest", "rest>rj", "rj>restapi", "restapi>rj", "rj>rest", "rest>wrap", "wrap>code"]}, "grpc": {"label": "gRPC call", "family": "violet", "title": "A call on a gRPC transport", "text": "The wrapper builds the proto request and sends it with call_grpc().", "links": ["code>wrap", "wrap>cg", "cg>grpcapi", "grpcapi>cg", "cg>wrap", "wrap>code"]}}}}</script>
 </div>
 ```
+-->
 
 On an error status or a failed call, the SDK raises an error class from `gen/interface/error/`, or a shared type from `kentik_api.errors`.
 

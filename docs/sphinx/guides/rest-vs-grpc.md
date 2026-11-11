@@ -98,6 +98,30 @@ response back to JSON. Three headers on every REST response show this:
 | `grpc-message` | The error text of that gRPC call, when it failed. |
 
 <!-- kentik-gen:transport-paths-explorer -->
+<!-- github-only -->
+
+```mermaid
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart TD
+  code("Your code<br/>same methods"):::greenSrc
+  restc("protocol=#quot;rest#quot;<br/>HTTPS + JSON"):::blue
+  grpcc("protocol=#quot;grpc#quot;<br/>HTTP/2 + protobuf"):::violet
+  envoy("Envoy transcoder<br/>JSON to gRPC and back"):::blue
+  svc("Kentik gRPC services<br/>one quota per endpoint"):::neutral
+  code -->|"method call / Pydantic model"| restc
+  code -->|"method call / Pydantic model"| grpcc
+  restc -->|"HTTPS + JSON / JSON"| envoy
+  envoy -->|"gRPC call / gRPC response"| svc
+  grpcc -->|"gRPC call / gRPC response"| svc
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab,stroke-width:2px,rx:10px
+  classDef greenSrc fill:#b2f2bb,stroke:#2f9e44,color:#2b8a3e,stroke-width:2px,rx:10px
+  classDef neutral fill:#f8f9fa,stroke:#495057,color:#212529,stroke-width:2px,rx:10px
+  classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4,stroke-width:2px,rx:10px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
+```
+
+<!-- /github-only -->
+<!-- sphinx-only
 ```{raw} html
 <div class="kx">
 <div class="chips" role="group" aria-label="Show one path" data-paths-for="transports-svg"></div>
@@ -110,6 +134,7 @@ response back to JSON. Three headers on every REST response show this:
 <script type="application/json" id="diagram-data">{"transports-svg": {"select": "svc", "parts": {"code": {"title": "Your code", "role": "Calls the same service methods on either client.", "facts": ["Both clients return the same Pydantic models"], "stops": "Nothing is sent."}, "restc": {"title": "KentikAPI(protocol=\"rest\")", "role": "Sends each call as an HTTPS request with a JSON body.", "facts": ["HTTP/1.1", "Every operation, V5 included"], "stops": "Expected: REST calls stop. A gRPC client keeps working."}, "grpcc": {"title": "KentikAPI(protocol=\"grpc\")", "role": "Sends each call as a gRPC call with a protobuf body.", "facts": ["HTTP/2", "Every V6 operation. V5 calls go over REST"], "stops": "Expected: gRPC calls stop. A REST client keeps working."}, "envoy": {"title": "Envoy transcoder", "role": "Converts each REST request into a gRPC call, and the answer back into JSON.", "facts": ["Answers with the header server: envoy", "Copies the gRPC status into grpc-status"], "stops": "Expected: REST calls fail. gRPC calls keep working."}, "svc": {"title": "Kentik gRPC services", "role": "The services behind both transports.", "facts": ["60 requests per 60 seconds for each endpoint", "REST and gRPC take from the same quota"], "stops": "Expected: both transports fail."}}, "paths": {"rest": {"label": "REST", "family": "blue", "title": "A REST call", "text": "Envoy converts the request into a gRPC call and the answer back into JSON.", "links": ["code>restc", "restc>envoy", "envoy>svc", "svc>envoy", "envoy>restc", "restc>code"]}, "grpc": {"label": "gRPC", "family": "violet", "title": "A gRPC call", "text": "The gRPC client calls the services directly.", "links": ["code>grpcc", "grpcc>svc", "svc>grpcc", "grpcc>code"]}}}}</script>
 </div>
 ```
+-->
 <!-- /kentik-gen:transport-paths-explorer -->
 
 The two transports therefore share one quota. Kentik allows 60 requests per

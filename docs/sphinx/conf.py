@@ -81,6 +81,14 @@ class SuppressDocutilsFilter(logging.Filter):
 
 
 _RST_INLINE_MARKUP = re.compile(r"([\\*`|_])")
+# The generator writes each explorer twice: a Mermaid fallback that GitHub shows,
+# and the explorer inside an HTML comment that GitHub hides. Sphinx gets the explorer.
+_GITHUB_ONLY = re.compile(r"<!-- github-only -->.*?<!-- /github-only -->\n?", re.DOTALL)
+_SPHINX_ONLY = re.compile(r"<!-- sphinx-only\n(.*?)\n-->", re.DOTALL)
+
+
+def _swap_github_blocks(app, docname, source):
+    source[0] = _SPHINX_ONLY.sub(r"\1", _GITHUB_ONLY.sub("", source[0]))
 
 
 def setup(app):
@@ -101,5 +109,6 @@ def setup(app):
             return _RST_INLINE_MARKUP.sub(r"\\\1", text)
 
     app.add_autodocumenter(SchemaTextFieldDocumenter, override=True)
+    app.connect("source-read", _swap_github_blocks)
     logger = getLogger("sphinx")
     logger.logger.addFilter(SuppressDocutilsFilter())
