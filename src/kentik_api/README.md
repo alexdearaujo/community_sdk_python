@@ -21,58 +21,48 @@ hand-written-vs-generated architecture.
 
 ## Request flow
 
-The diagram below traces one API call through these pieces, from
-`KentikAPI()` construction to a successful response or a raised
-error.
+The diagram below shows what connects to what for one API call, from
+`KentikAPI()` to the Kentik API or a raised error. Each call returns a
+Pydantic model up the same path. Select a box to open its source.
 
 ```mermaid
-%%{init: {"theme": "redux", "look": "neo", "layout": "elk", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
-flowchart LR
-  kapi("KentikAPI()<br/>credentials: args, env vars, .env<br/>REST or gRPC transport"):::blueSrc
-  cfg("APIConfig<br/>host, credentials, timeouts"):::blue
-  mixin("client_mixin.py<br/>mounts service wrappers"):::blue
-  wrap("Service wrapper<br/>gen/{service}, e.g. client.device"):::blue
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart TD
+  kapi("KentikAPI()<br/>credentials: args, env vars, .env<br/>picks REST or gRPC"):::orangeSrc
+  cfg("APIConfig<br/>host, credentials, timeouts"):::orange
+  wrap("Service wrapper<br/>client.{service}<br/><small>mounted by client_mixin.py</small>"):::green
+  rj("request_json()<br/>core/rest_runtime.py"):::blue
+  cg("call_grpc()<br/>core/grpc_runtime.py"):::violet
+  restApi("Kentik REST API"):::blueSrc
+  grpcApi("Kentik gRPC API"):::violetSrc
+  err("Raised errors<br/>KentikError subclasses<br/>gen/{service}/error/ classes"):::red
 
-  subgraph core["core/ · shared runtimes"]
-    rj("request_json()<br/>rest_runtime.py"):::green
-    cg("call_grpc()<br/>grpc_runtime.py<br/>gen/{service}/pb stubs"):::violet
-  end
-
-  restApi("Kentik API, REST<br/>outside the SDK"):::redSrc
-  err("Raised errors<br/>errors/ KentikError hierarchy<br/>gen/{service}/error/ classes"):::orange
-  grpcApi("Kentik API, gRPC<br/>outside the SDK"):::redSrc
-
-  kapi --> cfg
-  kapi --> mixin
-  cfg -->|"api_config, via the transport"| wrap
-  mixin -->|"transport"| wrap
-  wrap -->|"REST call<br/>+ api_config_override"| rj
-  rj -->|"parsed JSON"| wrap
-  wrap -->|"proto request"| cg
-  cg -->|"proto response + quota"| wrap
-  rj -->|"HTTPS request"| restApi
-  restApi -->|"JSON response"| rj
+  kapi -->|"builds"| cfg
+  cfg -->|"one transport"| wrap
+  wrap -->|"REST client"| rj
+  wrap -->|"gRPC client"| cg
+  rj -->|"HTTPS + auth headers"| restApi
+  cg -->|"gRPC over TLS"| grpcApi
   rj -->|"failure"| err
   cg -->|"failure"| err
-  cg -->|"gRPC call"| grpcApi
-  grpcApi -->|"proto response"| cg
 
   click kapi "client.py"
   click cfg "core/api_config.py"
-  click mixin "client_mixin.py"
   click wrap "gen/README.md"
   click rj "core/rest_runtime.py"
   click cg "core/grpc_runtime.py"
   click err "errors/README.md"
 
+  classDef orangeSrc fill:#ffd8a8,stroke:#e8590c,color:#d9480f
+  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+  classDef green fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e
   classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
   classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
-  classDef green fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e
+  classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
   classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
-  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
-  classDef redSrc fill:#ffc9c9,stroke:#e03131,color:#c92a2a
-  classDef blueSrc,blue,green,violet,orange,redSrc stroke-width:2px,rx:10px
-  style core fill:none,stroke:#868e96,stroke-width:2px
+  classDef red fill:#fff5f5,stroke:#e03131,color:#c92a2a
+  classDef orangeSrc,orange,green,blueSrc,blue stroke-width:2px,rx:10px
+  classDef violetSrc,violet,red stroke-width:2px,rx:10px
   linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
 

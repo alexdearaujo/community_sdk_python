@@ -28,12 +28,12 @@ One credential pair becomes the two transport-specific auth shapes:
 
 ```mermaid
 %%{init: {"theme": "redux", "look": "neo", "layout": "elk", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
-flowchart LR
-  pair("email + api_token<br/>resolved by KentikAPI()"):::blueSrc
+flowchart TD
+  pair("email + api_token<br/>resolved by KentikAPI()"):::orangeSrc
   cfg("APIConfig<br/>auth_email, auth_token"):::hub
-  rest("RestTransport"):::green
-  rj("request_json()<br/>calls auth_headers()"):::green
-  hdrs("HTTP headers<br/>X-CH-Auth-Email<br/>X-CH-Auth-API-Token"):::green
+  rest("RestTransport"):::blue
+  rj("request_json()<br/>calls auth_headers()"):::blue
+  hdrs("HTTP headers<br/>X-CH-Auth-Email<br/>X-CH-Auth-API-Token"):::blue
   grpcT("GrpcTransport"):::violet
   plugin("grpc.AuthMetadataPlugin<br/>KentikCredentials.get_grpc_plugin()"):::violet
   meta("Call metadata<br/>x-ch-auth-email<br/>x-ch-auth-api-token"):::violet
@@ -52,11 +52,11 @@ flowchart LR
   click grpcT "../transports/grpc_client.py"
   click plugin "credentials.py"
 
-  classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
-  classDef green fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e
+  classDef orangeSrc fill:#ffd8a8,stroke:#e8590c,color:#d9480f
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
   classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
   classDef hub fill:#f8f9fa,stroke:#495057,color:#212529
-  classDef blueSrc,green,violet,hub stroke-width:2px,rx:10px
+  classDef orangeSrc,blue,violet,hub stroke-width:2px,rx:10px
   linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
 ```
 
