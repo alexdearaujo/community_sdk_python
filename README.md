@@ -13,62 +13,21 @@ The SDK is not hand-written.
 The pipeline fixes common OpenAPI generator bugs, removes schema-version
 prefixes from class names, and generates architecture diagrams.
 
-The diagram below shows the key split. The hand-written code survives
-every regeneration. [`uv run poe generate`](pyproject.toml) wipes and rebuilds the generated code.
-Each arrow points from a module to the module that it uses.
+The diagram below shows how a call moves through the SDK. Each hop is a
+call going down and its answer coming back up. The hand-written runtime
+survives every regeneration. [`uv run poe generate`](pyproject.toml) wipes
+and rebuilds the generated code, and redraws this diagram.
 
-```mermaid
-%%{init: {"theme": "redux", "look": "neo", "layout": "elk", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
-flowchart LR
-  subgraph hwc["Hand-written · client"]
-    client("client.py<br/>KentikAPI entrypoint"):::blueSrc
-    transports("transports/<br/>REST and gRPC transports"):::blue
-    auth("auth/<br/>credentials"):::blue
-  end
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/architecture-overview-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./docs/assets/architecture-overview-light.svg">
+  <img alt="SDK overview: your code calls a generated service wrapper. On REST, the wrapper calls a generated REST function and request_json(), which calls the Kentik REST API. On gRPC, it calls call_grpc(), which calls the Kentik gRPC API." src="./docs/assets/architecture-overview-light.svg">
+</picture>
 
-  subgraph gen["Generated · rebuilt by uv run poe generate"]
-    mixin("client_mixin.py<br/>mounts every service"):::orange
-    wrappers("gen/{service}/services/<br/>REST functions,<br/>ServiceWrapper class"):::orange
-    models("gen/{service}/models/<br/>Pydantic models"):::orange
-    generr("gen/{service}/error/<br/>per-operation errors"):::orange
-    pb("gen/{service}/pb/<br/>compiled gRPC stubs"):::orange
-    comp("gen/pb_companions/<br/>shared proto descriptors"):::orange
-  end
-
-  subgraph hwr["Hand-written · shared runtime"]
-    core("core/<br/>APIConfig, request_json(),<br/>call_grpc()"):::blue
-    errors("errors/<br/>KentikError hierarchy"):::blue
-  end
-
-  client --> mixin
-  client --> transports
-  client --> auth
-  transports -->|"KentikCredentials"| auth
-  mixin -->|"one wrapper per service"| wrappers
-  wrappers -->|"response models"| models
-  wrappers -->|"error classes"| generr
-  wrappers -->|"gRPC stubs"| pb
-  pb -->|"proto descriptors"| comp
-  wrappers -->|"request_json(), call_grpc()"| core
-  core -->|"exception classes"| errors
-
-  click client "src/kentik_api/client.py"
-  click transports "src/kentik_api/transports/README.md"
-  click auth "src/kentik_api/auth/README.md"
-  click mixin "src/kentik_api/client_mixin.py"
-  click comp "src/kentik_api/gen/pb_companions/"
-  click core "src/kentik_api/core/README.md"
-  click errors "src/kentik_api/errors/README.md"
-
-  classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
-  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
-  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
-  classDef blueSrc,blue,orange stroke-width:2px,rx:10px
-  style hwc fill:none,stroke:#868e96,stroke-width:2px
-  style gen fill:none,stroke:#868e96,stroke-width:2px
-  style hwr fill:none,stroke:#868e96,stroke-width:2px
-  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
-```
+An interactive version, and the module dependency graph, are on the
+[SDK Runtime Architecture](docs/sphinx/sdk_runtime_architecture.md) page of
+the Sphinx docs. To build the docs, run `uv run poe docs-build` and open
+`docs/build/html/sdk_runtime_architecture.html`.
 
 ## Staying current with the Kentik API
 

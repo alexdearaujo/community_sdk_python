@@ -168,11 +168,11 @@ def test_dependency_explorer_draws_only_real_imports(sandbox):
     docs_rendering.generate()
 
     page = (sandbox.docs / "sdk_runtime_architecture.md").read_text()
-    blob = re.search(
+    blobs = re.findall(
         r'<script type="application/json" id="diagram-data">(.*?)</script>', page
     )
-    assert blob
-    data = json.loads(blob.group(1))["deps-svg"]
+    assert len(blobs) == 2
+    data = json.loads(blobs[1])["deps-svg"]
     assert set(data["parts"]) == set(docs_rendering._PARTS)
     assert all("import statements" in label for label in data["links"].values())
     assert (sandbox.docs / "_static" / "explorer.js").exists()

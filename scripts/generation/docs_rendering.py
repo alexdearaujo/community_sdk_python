@@ -492,8 +492,8 @@ _GROUP_ROLES: dict[str, str] = {
 }
 
 
-def _call_path_diagram() -> list[str]:
-    """The overview: one REST row and one gRPC row from the caller to the Kentik API."""
+def _operation_counts() -> tuple[int, int]:
+    """The number of services with operations, and the number of operations."""
     services = 0
     operations = 0
     for service_dir in iter_service_dirs():
@@ -503,6 +503,366 @@ def _call_path_diagram() -> list[str]:
         )
         services += ops > 0
         operations += ops
+    return services, operations
+
+
+def _system_overview_explorer() -> list[str]:
+    """The overview: your code down through the SDK to the two Kentik APIs."""
+    services, operations = _operation_counts()
+    p = "ov"
+    L, C, R = 90, 390, 690
+    rows = (30, 180, 330, 480, 630)
+    w, h = 200, 72
+    # part: (column, row, family, kind, box lines, title, role, facts, if it stops)
+    parts = {
+        "code": (
+            C,
+            0,
+            "orange",
+            "src",
+            ["Your code", "import kentik_api"],
+            "Your code",
+            "Builds one KentikAPI client, then calls client.<service>.<method>().",
+            [
+                "Gets the same Pydantic model on REST and gRPC",
+                "Catches one exception hierarchy, KentikError",
+            ],
+            "Nothing is sent.",
+        ),
+        "client": (
+            R,
+            1,
+            "orange",
+            "proc",
+            ["KentikAPI", "client.py", "picks REST or gRPC"],
+            "KentikAPI client",
+            "Reads the credentials, builds one transport, and mounts every service wrapper on it.",
+            [
+                "Credentials: arguments, then KENTIK_EMAIL and KENTIK_API_TOKEN, then .env",
+                "V5 services always use a second REST transport, to the V5 host",
+            ],
+            "Expected: no client can be built, so nothing in the SDK can be called.",
+        ),
+        "wrap": (
+            C,
+            1,
+            "green",
+            "proc",
+            ["Service wrappers", "client.{service}", "one per service"],
+            "Service wrappers",
+            "One per service. Each method sends the call down the path of the client's transport.",
+            [
+                f"{services} services, {operations} operations",
+                "The same signature and the same models on REST and gRPC",
+            ],
+            "Expected: the client does not mount that service, on either transport.",
+        ),
+        "rest": (
+            L,
+            2,
+            "blue",
+            "proc",
+            ["REST functions", "gen/{service}/services/", "one per operation"],
+            "REST functions",
+            (
+                "Build the path, the query and the body of one operation, and call request_json() "
+                "with that operation's error class."
+            ),
+            ["Generated from the OpenAPI schema"],
+            "Expected: REST calls to that service fail. A gRPC client keeps working.",
+        ),
+        "rj": (
+            L,
+            3,
+            "blue",
+            "proc",
+            ["request_json()", "core/rest_runtime.py", "all REST traffic"],
+            "request_json()",
+            "The one function that sends REST traffic: auth headers, quota, and errors.",
+            [
+                "One pooled HTTP client for each APIConfig",
+                "A 401 raises AuthenticationError",
+            ],
+            (
+                "Expected: every REST call fails, V5 included. gRPC calls fail too, because they "
+                "parse responses with it."
+            ),
+        ),
+        "cg": (
+            R,
+            3,
+            "violet",
+            "proc",
+            ["call_grpc()", "core/grpc_runtime.py", "all gRPC traffic"],
+            "call_grpc()",
+            "The one function that sends gRPC traffic: deadline, quota, and errors.",
+            [
+                "Every call carries a deadline",
+                "map_grpc_error() turns each status into a KentikError",
+            ],
+            "Expected: every gRPC call fails. A REST client keeps working.",
+        ),
+        "restapi": (
+            L,
+            4,
+            "blue",
+            "src",
+            ["Kentik REST API", "V6: grpc.api.kentik.com", "V5: api.kentik.com"],
+            "Kentik REST API",
+            "Kentik's HTTPS endpoints. A proxy turns each V6 request into a gRPC call.",
+            [
+                'region="eu" uses the .kentik.eu hosts',
+                "Reports the quota of each endpoint in headers",
+            ],
+            (
+                "Expected: REST calls raise TransportError or HTTPException. A gRPC client keeps "
+                "working, except for V5."
+            ),
+        ),
+        "grpcapi": (
+            R,
+            4,
+            "violet",
+            "src",
+            ["Kentik gRPC API", "grpc.api.kentik.com:443", "TLS, HTTP/2"],
+            "Kentik gRPC API",
+            "Kentik's gRPC services, for V6 only.",
+            ["The same services and the same quota as the V6 REST API"],
+            "Expected: gRPC calls raise TransportError. A REST client keeps working.",
+        ),
+    }
+    top = {pid: rows[part[1]] for pid, part in parts.items()}
+    # Each hop is a call going down and its answer coming back up, 60 px apart.
+    # wire id: (path, link, label, label position, anchor, kind)
+    wires = [
+        (
+            "code_wrap",
+            f"M{C + 70},102 V180",
+            "code>wrap",
+            "arguments",
+            (C + 62, 145),
+            "end",
+            "call",
+        ),
+        (
+            "wrap_code",
+            f"M{C + 130},180 V102",
+            "wrap>code",
+            "Pydantic model",
+            (C + 138, 145),
+            "start",
+            "data",
+        ),
+        (
+            "code_client",
+            f"M{C + w},66 H{R + 100} V180",
+            "code>client",
+            None,
+            (0, 0),
+            "middle",
+            "data",
+        ),
+        (
+            "client_wrap",
+            f"M{R},216 H{C + w}",
+            "client>wrap",
+            "transport",
+            ((R + C + w + 18) // 2, 208),
+            "middle",
+            "data",
+        ),
+        (
+            "wrap_rest",
+            f"M{C},196 H{L + 70} V330",
+            "wrap>rest",
+            "arguments",
+            ((C + L + 70) // 2, 188),
+            "middle",
+            "call",
+        ),
+        (
+            "rest_wrap",
+            f"M{L + 130},330 V236 H{C}",
+            "rest>wrap",
+            "Pydantic model",
+            ((L + 130 + C - 18) // 2, 228),
+            "middle",
+            "data",
+        ),
+        (
+            "wrap_cg",
+            f"M{C + 160},252 V296 H{R + 130} V480",
+            "wrap>cg",
+            "proto request",
+            ((C + 160 + R + 130) // 2, 288),
+            "middle",
+            "call",
+        ),
+        (
+            "cg_wrap",
+            f"M{R + 70},480 V316 H{C + 120} V252",
+            "cg>wrap",
+            "proto response + quota",
+            (R + 62, 436),
+            "end",
+            "data",
+        ),
+        (
+            "rest_rj",
+            f"M{L + 70},402 V480",
+            "rest>rj",
+            "method, path, body",
+            (L + 62, 436),
+            "end",
+            "call",
+        ),
+        (
+            "rj_rest",
+            f"M{L + 130},480 V402",
+            "rj>rest",
+            "JSON dict + quota",
+            (L + 138, 436),
+            "start",
+            "data",
+        ),
+        (
+            "rj_api",
+            f"M{L + 70},552 V630",
+            "rj>restapi",
+            "HTTPS + auth headers",
+            (L + 62, 586),
+            "end",
+            "call",
+        ),
+        (
+            "api_rj",
+            f"M{L + 130},630 V552",
+            "restapi>rj",
+            "JSON + quota headers",
+            (L + 138, 586),
+            "start",
+            "data",
+        ),
+        (
+            "cg_api",
+            f"M{R + 70},552 V630",
+            "cg>grpcapi",
+            "gRPC call over TLS",
+            (R + 62, 586),
+            "end",
+            "call",
+        ),
+        (
+            "api_cg",
+            f"M{R + 130},630 V552",
+            "grpcapi>cg",
+            "proto response",
+            (R + 138, 586),
+            "start",
+            "data",
+        ),
+    ]
+    containers = [
+        (
+            (L - 20, 146, C + w + 20 - (L - 20), 272),
+            "Generated: gen/, rebuilt on every run",
+        ),
+        ((L - 20, 446, R + w + 20 - (L - 20), 122), "Hand-written runtime: core/"),
+        ((L - 20, 596, R + w + 20 - (L - 20), 122), "Kentik, outside the SDK"),
+    ]
+    body = (
+        [dk.container(box, label) for box, label in containers]
+        + [
+            dk.seg(sid, d, [key], p, label, at, anchor=anchor, kind=kind)
+            for sid, d, key, label, at, anchor, kind in wires
+        ]
+        + [
+            dk.node(pid, (x, top[pid], w, h), fam, kind, lines, label=title)
+            for pid, (x, _, fam, kind, lines, title, *_) in parts.items()
+        ]
+    )
+    markup = dk.svg(
+        "overview-svg",
+        (R + w + 60, 740),
+        "SDK overview: your code calls a generated service wrapper. On REST, the wrapper calls a "
+        "generated REST function and request_json(), which calls the Kentik REST API. On gRPC, it "
+        "calls call_grpc(), which calls the Kentik gRPC API. Each answer comes back as a Pydantic model.",
+        "".join(body),
+        p,
+    )
+    _write_overview_images(markup)
+    rest_path = [
+        "code>wrap",
+        "wrap>rest",
+        "rest>rj",
+        "rj>restapi",
+        "restapi>rj",
+        "rj>rest",
+        "rest>wrap",
+        "wrap>code",
+    ]
+    grpc_path = [
+        "code>wrap",
+        "wrap>cg",
+        "cg>grpcapi",
+        "grpcapi>cg",
+        "cg>wrap",
+        "wrap>code",
+    ]
+    data = {
+        "select": "wrap",
+        "parts": {
+            pid: {"title": title, "role": role, "facts": facts, "stops": stops}
+            for pid, (*_, title, role, facts, stops) in parts.items()
+        },
+        "paths": {
+            "rest": {
+                "label": "REST call",
+                "family": "blue",
+                "title": "A call on a REST client",
+                "text": "The wrapper calls the REST function, which sends the request with request_json(). "
+                "V5 services always take this path.",
+                "links": rest_path,
+            },
+            "grpc": {
+                "label": "gRPC call",
+                "family": "violet",
+                "title": "A call on a gRPC client",
+                "text": "The wrapper builds the proto request and sends it with call_grpc(), then parses the "
+                "answer into the same model as REST.",
+                "links": grpc_path,
+            },
+            "setup": {
+                "label": "Client setup",
+                "family": "orange",
+                "title": "Building the client",
+                "text": "KentikAPI builds one transport and gives it to every wrapper that it mounts.",
+                "links": ["code>client", "client>wrap"],
+            },
+        },
+    }
+    return fragment(
+        markup,
+        data,
+        "Start at your code at the top. Each hop is a call going down and its answer coming back up. "
+        "Select a part to see what it needs and what stops without it.",
+    )
+
+
+def _write_overview_images(markup: str) -> None:
+    """The README shows these, because GitHub strips the explorer's inline SVG and script."""
+    assets = PROJECT_ROOT / "docs" / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    for theme in ("light", "dark"):
+        write_text_lf(
+            assets / f"architecture-overview-{theme}.svg",
+            dk.static_svg(markup, theme) + "\n",
+        )
+
+
+def _call_path_diagram() -> list[str]:
+    """The overview: one REST row and one gRPC row from the caller to the Kentik API."""
+    services, operations = _operation_counts()
 
     return [
         "```mermaid",
@@ -752,6 +1112,14 @@ def _generate_runtime_architecture_docs(
         "",
         "This page shows how a call moves through the SDK, and how the hand-written",
         "runtime modules and the generated services depend on each other.",
+        "",
+        "## Overview",
+        "",
+        "Your code calls one generated wrapper per service. The transport of the client",
+        "selects the path below the wrapper: REST through `request_json()`, or gRPC",
+        "through `call_grpc()`. Each path ends at a Kentik API.",
+        "",
+        *_system_overview_explorer(),
         "",
         "## Call Path",
         "",
