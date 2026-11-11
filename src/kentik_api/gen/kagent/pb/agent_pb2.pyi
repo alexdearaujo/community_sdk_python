@@ -22,10 +22,32 @@ class InstallerType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     INSTALLER_TYPE_UNSPECIFIED: _ClassVar[InstallerType]
     INSTALLER_TYPE_LINUX: _ClassVar[InstallerType]
     INSTALLER_TYPE_DOCKER: _ClassVar[InstallerType]
+    INSTALLER_TYPE_RPM: _ClassVar[InstallerType]
+    INSTALLER_TYPE_DEB: _ClassVar[InstallerType]
+
+class ReleaseSource(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    RELEASE_SOURCE_UNSPECIFIED: _ClassVar[ReleaseSource]
+    RELEASE_SOURCE_MANAGED: _ClassVar[ReleaseSource]
+    RELEASE_SOURCE_LOCAL: _ClassVar[ReleaseSource]
+
+class ConfigSource(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CONFIG_SOURCE_UNSPECIFIED: _ClassVar[ConfigSource]
+    CONFIG_SOURCE_MANAGED: _ClassVar[ConfigSource]
+    CONFIG_SOURCE_LOCAL: _ClassVar[ConfigSource]
 
 INSTALLER_TYPE_UNSPECIFIED: InstallerType
 INSTALLER_TYPE_LINUX: InstallerType
 INSTALLER_TYPE_DOCKER: InstallerType
+INSTALLER_TYPE_RPM: InstallerType
+INSTALLER_TYPE_DEB: InstallerType
+RELEASE_SOURCE_UNSPECIFIED: ReleaseSource
+RELEASE_SOURCE_MANAGED: ReleaseSource
+RELEASE_SOURCE_LOCAL: ReleaseSource
+CONFIG_SOURCE_UNSPECIFIED: ConfigSource
+CONFIG_SOURCE_MANAGED: ConfigSource
+CONFIG_SOURCE_LOCAL: ConfigSource
 
 class HostMetadata(_message.Message):
     __slots__ = ("hostname", "machine_id", "public_ip", "private_ip", "os", "arch")
@@ -52,18 +74,24 @@ class HostMetadata(_message.Message):
     ) -> None: ...
 
 class InstallConfig(_message.Message):
-    __slots__ = ("id", "type", "host_metadata")
+    __slots__ = ("id", "type", "host_metadata", "release_source", "config_source")
     ID_FIELD_NUMBER: _ClassVar[int]
     TYPE_FIELD_NUMBER: _ClassVar[int]
     HOST_METADATA_FIELD_NUMBER: _ClassVar[int]
+    RELEASE_SOURCE_FIELD_NUMBER: _ClassVar[int]
+    CONFIG_SOURCE_FIELD_NUMBER: _ClassVar[int]
     id: str
     type: InstallerType
     host_metadata: HostMetadata
+    release_source: ReleaseSource
+    config_source: ConfigSource
     def __init__(
         self,
         id: _Optional[str] = ...,
         type: _Optional[_Union[InstallerType, str]] = ...,
         host_metadata: _Optional[_Union[HostMetadata, _Mapping]] = ...,
+        release_source: _Optional[_Union[ReleaseSource, str]] = ...,
+        config_source: _Optional[_Union[ConfigSource, str]] = ...,
     ) -> None: ...
 
 class Agent(_message.Message):

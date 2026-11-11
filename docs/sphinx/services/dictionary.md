@@ -98,19 +98,21 @@ response = client.dictionary.get()
 ## Data Models
 
 <details>
-<summary>Model relationships (6 of 15 models)</summary>
+<summary>Model relationships (7 of 18 models)</summary>
 
 Each arrow points from a model to a model that one of its fields holds. The label names the field.
 
 ```mermaid
 %%{init: {"theme": "redux", "look": "neo", "layout": "elk", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "sequence": {"activationWidth": 16}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
 classDiagram
+    class AssetTag
     class GetDictionaryResponse
     class MeasurementDetail
     class MetricFamilyDef
     class OperatorSet
     class protobufAny
     class rpcStatus
+    GetDictionaryResponse --> AssetTag : assetTags
     GetDictionaryResponse --> MeasurementDetail : measurements
     GetDictionaryResponse --> MetricFamilyDef : metricFamilies
     GetDictionaryResponse --> OperatorSet : operatorSets
@@ -118,6 +120,18 @@ classDiagram
 ```
 
 </details>
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.dictionary.models.AppProtocol
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.dictionary.models.AppProtocolMetadata
+```
+
+```{eval-rst}
+.. autopydantic_model:: kentik_api.gen.dictionary.models.AssetTag
+```
 
 ```{eval-rst}
 .. autoclass:: kentik_api.gen.dictionary.models.BaseUnit

@@ -5,8 +5,10 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from .ConfigSource import ConfigSource
 from .HostMetadata import HostMetadata
 from .InstallerType import InstallerType
+from .ReleaseSource import ReleaseSource
 
 
 class InstallConfig(BaseModel):
@@ -27,4 +29,12 @@ class InstallConfig(BaseModel):
 
     hostMetadata: Optional[HostMetadata] = Field(
         validation_alias="hostMetadata", default=None
+    )
+
+    releaseSource: Optional[ReleaseSource] = Field(
+        validation_alias="releaseSource", default=None
+    )
+
+    configSource: Optional[ConfigSource] = Field(
+        validation_alias="configSource", default=None
     )

@@ -65,6 +65,36 @@ tables below, which compare against earlier development builds of this SDK.
   files when the newest cached time equals or exceeds the current minute.
   Repeated same-minute refreshes no longer raise an invalid-range error.
 
+### Upstream API changes
+
+The SDK now uses schema commit `5d1d2fa`. Kentik replaced two API versions,
+so these changes can break a caller:
+
+- **`credential`** moves from `v202407alpha1` to `v20261020alpha1`.
+  `client.credential.list_group()` and `get_group()` keep their names but now
+  call `/credential/v20261020alpha1/groups`. The old paths
+  `/credential/v202407alpha1/group` and `/credential/v202407alpha1/group/{id}`
+  are gone, and `get_group()` takes `name` instead of `id`.
+  `ListCredentialGroupResponse` (the schema's `ListCredentialGroupsResponse`)
+  has no `ListCredentialGroupResponse.invalidCount`.
+  `CredentialGroup.version` is optional. `CredentialGroup.createdBy`,
+  `credentials`, and `type` now use `CreatedBy`, `Credential`, and
+  `CredentialType`. The models `LandingType`, `PermissionEntry`, `Role`,
+  `Secret`, `SecretType`, and `User` are removed. New methods: `list`, `get`,
+  `delete`, `assign_consumer`, `create_group`, `update_group`,
+  `delete_group`, and `list_overviews`.
+- **`alerting` suppressions** move from `v202505` to `v202611`. The client
+  methods keep their names, but the old paths `/v202505/suppressions`,
+  `/v202505/suppressions/list`, and `/v202505/suppressions/{id}` are gone.
+  `Suppression.source` becomes `sources`, and `Suppression.strict` and
+  `Suppression.userId` are removed. `Suppression.startTimeAt` is optional.
+  `SuppressionFilters.sources` now holds `v202505Source`, which has the same
+  fields as `Source`. `Suppression` gains `contextFilter`, `startTimeCode`,
+  and `endTimeCode`.
+- **Added:** `client.synthetics.bulk_update_tests()` and
+  `get_bulk_update_tests_status()`, new `dictionary` and `kagent` fields, and
+  the `kagent` installer types `INSTALLER_TYPE_DEB` and `INSTALLER_TYPE_RPM`.
+
 ### Breaking changes
 
 Each change below can stop an existing `except` clause or call from working.

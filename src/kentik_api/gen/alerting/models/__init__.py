@@ -125,6 +125,10 @@ from .ConditionsStaticCondition import (
 from .ConditionsTopKeysCondition import (
     ConditionsTopKeysCondition as ConditionsTopKeysCondition,
 )
+from .ContextFilter import ContextFilter as ContextFilter
+from .ContextFilterConjunction import (
+    ContextFilterConjunction as ContextFilterConjunction,
+)
 from .EventPolicyLevelSettings import (
     EventPolicyLevelSettings as EventPolicyLevelSettings,
 )
@@ -177,9 +181,19 @@ from .Fragment import Fragment as Fragment
 from .FragmentFormula import FragmentFormula as FragmentFormula
 from .FragmentPredicate import FragmentPredicate as FragmentPredicate
 from .FragmentPredicateGroup import FragmentPredicateGroup as FragmentPredicateGroup
+from .IdentityPredicate import IdentityPredicate as IdentityPredicate
+from .IdentityPredicateIdentityList import (
+    IdentityPredicateIdentityList as IdentityPredicateIdentityList,
+)
+from .IpPredicate import IpPredicate as IpPredicate
+from .IpPredicateStringList import IpPredicateStringList as IpPredicateStringList
 from .JiraCloudContext import JiraCloudContext as JiraCloudContext
 from .KeyValue import KeyValue as KeyValue
 from .KeyValueFilter import KeyValueFilter as KeyValueFilter
+from .LabelPredicate import LabelPredicate as LabelPredicate
+from .LabelPredicateStringList import (
+    LabelPredicateStringList as LabelPredicateStringList,
+)
 from .Mitigation import Mitigation as Mitigation
 from .MitigationActionDetail import MitigationActionDetail as MitigationActionDetail
 from .MitigationEvent import MitigationEvent as MitigationEvent
@@ -239,6 +253,7 @@ from .MitigationTarget import MitigationTarget as MitigationTarget
 from .MitigationType import MitigationType as MitigationType
 from .MitigationUserAction import MitigationUserAction as MitigationUserAction
 from .MultiAttributeFilter import MultiAttributeFilter as MultiAttributeFilter
+from .NetworkScope import NetworkScope as NetworkScope
 from .NmsActivateOrClearConditions import (
     NmsActivateOrClearConditions as NmsActivateOrClearConditions,
 )
@@ -327,9 +342,11 @@ from .PolicyServiceListResponse import (
     PolicyServiceListResponse as PolicyServiceListResponse,
 )
 from .PolicyType import PolicyType as PolicyType
+from .ProducerPredicates import ProducerPredicates as ProducerPredicates
 from .protobufAny import protobufAny as protobufAny
 from .RatioConditionDirection import RatioConditionDirection as RatioConditionDirection
 from .rpcStatus import rpcStatus as rpcStatus
+from .ScopedClause import ScopedClause as ScopedClause
 from .ServiceNowContext import ServiceNowContext as ServiceNowContext
 from .Severity import Severity as Severity
 from .SimpleAttributeFilter import SimpleAttributeFilter as SimpleAttributeFilter
@@ -340,6 +357,11 @@ from .SortingConfig import SortingConfig as SortingConfig
 from .SortingConfigField import SortingConfigField as SortingConfigField
 from .SortingConfigOrder import SortingConfigOrder as SortingConfigOrder
 from .Source import Source as Source
+from .StringPredicate import StringPredicate as StringPredicate
+from .StringPredicateStringList import (
+    StringPredicateStringList as StringPredicateStringList,
+)
+from .SubjectPredicates import SubjectPredicates as SubjectPredicates
 from .Suppression import Suppression as Suppression
 from .SuppressionFilters import SuppressionFilters as SuppressionFilters
 from .SuppressionServiceCreateRequest import (
@@ -371,9 +393,12 @@ from .TCPFlagsFormula import TCPFlagsFormula as TCPFlagsFormula
 from .TCPFlagsPredicate import TCPFlagsPredicate as TCPFlagsPredicate
 from .TCPFlagsPredicateGroup import TCPFlagsPredicateGroup as TCPFlagsPredicateGroup
 from .TimeRange import TimeRange as TimeRange
+from .TimestampSetting import TimestampSetting as TimestampSetting
 from .TopKeysConditionTopKeysEvent import (
     TopKeysConditionTopKeysEvent as TopKeysConditionTopKeysEvent,
 )
 from .v202505AlertAcknowledgement import (
     v202505AlertAcknowledgement as v202505AlertAcknowledgement,
 )
+from .v202505PolicyType import v202505PolicyType as v202505PolicyType
+from .v202505Source import v202505Source as v202505Source

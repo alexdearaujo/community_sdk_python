@@ -7,7 +7,6 @@ from typing import Union as _Union
 
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from google.protobuf import struct_pb2 as _struct_pb2
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
@@ -152,6 +151,7 @@ class ComponentType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMPONENT_TYPE_NETWORK: _ClassVar[ComponentType]
     COMPONENT_TYPE_CPU: _ClassVar[ComponentType]
     COMPONENT_TYPE_GPU: _ClassVar[ComponentType]
+    COMPONENT_TYPE_CLOCK: _ClassVar[ComponentType]
     COMPONENT_TYPE_SERVER: _ClassVar[ComponentType]
     COMPONENT_TYPE_VM: _ClassVar[ComponentType]
     COMPONENT_TYPE_CONTAINER: _ClassVar[ComponentType]
@@ -166,6 +166,7 @@ class ComponentType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMPONENT_TYPE_PHYSICAL_ROUTER: _ClassVar[ComponentType]
     COMPONENT_TYPE_DNS: _ClassVar[ComponentType]
     COMPONENT_TYPE_CDN: _ClassVar[ComponentType]
+    COMPONENT_TYPE_TUNNEL: _ClassVar[ComponentType]
     COMPONENT_TYPE_EXTERNAL_API: _ClassVar[ComponentType]
     COMPONENT_TYPE_CLOUD_SERVICE: _ClassVar[ComponentType]
     COMPONENT_TYPE_SAAS: _ClassVar[ComponentType]
@@ -173,6 +174,12 @@ class ComponentType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMPONENT_TYPE_SCHEMA: _ClassVar[ComponentType]
     COMPONENT_TYPE_CERTIFICATE: _ClassVar[ComponentType]
     COMPONENT_TYPE_CREDENTIAL: _ClassVar[ComponentType]
+
+class Audience(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    AUDIENCE_UNSPECIFIED: _ClassVar[Audience]
+    AUDIENCE_CUSTOMER: _ClassVar[Audience]
+    AUDIENCE_INTERNAL: _ClassVar[Audience]
 
 class LinkType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -299,6 +306,7 @@ COMPONENT_TYPE_FILESYSTEM: ComponentType
 COMPONENT_TYPE_NETWORK: ComponentType
 COMPONENT_TYPE_CPU: ComponentType
 COMPONENT_TYPE_GPU: ComponentType
+COMPONENT_TYPE_CLOCK: ComponentType
 COMPONENT_TYPE_SERVER: ComponentType
 COMPONENT_TYPE_VM: ComponentType
 COMPONENT_TYPE_CONTAINER: ComponentType
@@ -313,6 +321,7 @@ COMPONENT_TYPE_SWITCH: ComponentType
 COMPONENT_TYPE_PHYSICAL_ROUTER: ComponentType
 COMPONENT_TYPE_DNS: ComponentType
 COMPONENT_TYPE_CDN: ComponentType
+COMPONENT_TYPE_TUNNEL: ComponentType
 COMPONENT_TYPE_EXTERNAL_API: ComponentType
 COMPONENT_TYPE_CLOUD_SERVICE: ComponentType
 COMPONENT_TYPE_SAAS: ComponentType
@@ -320,6 +329,9 @@ COMPONENT_TYPE_CONFIG: ComponentType
 COMPONENT_TYPE_SCHEMA: ComponentType
 COMPONENT_TYPE_CERTIFICATE: ComponentType
 COMPONENT_TYPE_CREDENTIAL: ComponentType
+AUDIENCE_UNSPECIFIED: Audience
+AUDIENCE_CUSTOMER: Audience
+AUDIENCE_INTERNAL: Audience
 LINK_TYPE_UNSPECIFIED: LinkType
 LINK_TYPE_DASHBOARD: LinkType
 LINK_TYPE_LOGS: LinkType
@@ -496,6 +508,24 @@ class Link(_message.Message):
         url: _Optional[str] = ...,
     ) -> None: ...
 
+class Fact(_message.Message):
+    __slots__ = ("key", "value", "description", "cohort")
+    KEY_FIELD_NUMBER: _ClassVar[int]
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    COHORT_FIELD_NUMBER: _ClassVar[int]
+    key: str
+    value: str
+    description: str
+    cohort: bool
+    def __init__(
+        self,
+        key: _Optional[str] = ...,
+        value: _Optional[str] = ...,
+        description: _Optional[str] = ...,
+        cohort: _Optional[bool] = ...,
+    ) -> None: ...
+
 class ComponentState(_message.Message):
     __slots__ = (
         "name",
@@ -508,8 +538,10 @@ class ComponentState(_message.Message):
         "metrics",
         "labels",
         "links",
-        "annotations",
+        "facts",
         "timestamp",
+        "audience",
+        "version_independent",
     )
     class LabelsEntry(_message.Message):
         __slots__ = ("key", "value")
@@ -531,8 +563,10 @@ class ComponentState(_message.Message):
     METRICS_FIELD_NUMBER: _ClassVar[int]
     LABELS_FIELD_NUMBER: _ClassVar[int]
     LINKS_FIELD_NUMBER: _ClassVar[int]
-    ANNOTATIONS_FIELD_NUMBER: _ClassVar[int]
+    FACTS_FIELD_NUMBER: _ClassVar[int]
     TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
+    AUDIENCE_FIELD_NUMBER: _ClassVar[int]
+    VERSION_INDEPENDENT_FIELD_NUMBER: _ClassVar[int]
     name: str
     type: ComponentType
     description: str
@@ -543,8 +577,10 @@ class ComponentState(_message.Message):
     metrics: _containers.RepeatedCompositeFieldContainer[Metric]
     labels: _containers.ScalarMap[str, str]
     links: _containers.RepeatedCompositeFieldContainer[Link]
-    annotations: _struct_pb2.Struct
+    facts: _containers.RepeatedCompositeFieldContainer[Fact]
     timestamp: _timestamp_pb2.Timestamp
+    audience: Audience
+    version_independent: bool
     def __init__(
         self,
         name: _Optional[str] = ...,
@@ -557,8 +593,10 @@ class ComponentState(_message.Message):
         metrics: _Optional[_Iterable[_Union[Metric, _Mapping]]] = ...,
         labels: _Optional[_Mapping[str, str]] = ...,
         links: _Optional[_Iterable[_Union[Link, _Mapping]]] = ...,
-        annotations: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ...,
+        facts: _Optional[_Iterable[_Union[Fact, _Mapping]]] = ...,
         timestamp: _Optional[
             _Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]
         ] = ...,
+        audience: _Optional[_Union[Audience, str]] = ...,
+        version_independent: _Optional[bool] = ...,
     ) -> None: ...

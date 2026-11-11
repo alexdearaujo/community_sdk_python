@@ -80,6 +80,23 @@ class SyntheticsError(HTTPException):
         )
 
 
+class BulkUpdateTestsError(SyntheticsError):
+    """Operation-local error for client.synthetics.bulk_update_tests()."""
+
+    response_error_map: dict[str, type[SyntheticsError]] = {}
+
+
+class BulkUpdateTestsUnexpectedError(BulkUpdateTestsError):
+    """Operation-local response error for bulk_update_tests (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+BulkUpdateTestsError.response_error_map = {
+    "default": BulkUpdateTestsUnexpectedError,
+}
+
+
 class CreateAgentAlertError(SyntheticsError):
     """Operation-local error for client.synthetics.create_agent_alert()."""
 
@@ -196,6 +213,23 @@ class GetAgentAlertUnexpectedError(GetAgentAlertError):
 
 GetAgentAlertError.response_error_map = {
     "default": GetAgentAlertUnexpectedError,
+}
+
+
+class GetBulkUpdateTestsStatusError(SyntheticsError):
+    """Operation-local error for client.synthetics.get_bulk_update_tests_status()."""
+
+    response_error_map: dict[str, type[SyntheticsError]] = {}
+
+
+class GetBulkUpdateTestsStatusUnexpectedError(GetBulkUpdateTestsStatusError):
+    """Operation-local response error for get_bulk_update_tests_status (default: An unexpected error response. #/components/schemas/rpcStatus)."""
+
+    pass
+
+
+GetBulkUpdateTestsStatusError.response_error_map = {
+    "default": GetBulkUpdateTestsStatusUnexpectedError,
 }
 
 
@@ -386,6 +420,7 @@ UpdateTestError.response_error_map = {
 }
 
 ERROR_BY_METHOD: dict[str, type[SyntheticsError]] = {
+    "bulk_update_tests": BulkUpdateTestsError,
     "create_agent_alert": CreateAgentAlertError,
     "create_test": CreateTestError,
     "delete_agent": DeleteAgentError,
@@ -393,6 +428,7 @@ ERROR_BY_METHOD: dict[str, type[SyntheticsError]] = {
     "delete_test": DeleteTestError,
     "get_agent": GetAgentError,
     "get_agent_alert": GetAgentAlertError,
+    "get_bulk_update_tests_status": GetBulkUpdateTestsStatusError,
     "get_results_for_tests": GetResultsForTestsError,
     "get_results_for_tests_csv": GetResultsForTestsCsvError,
     "get_test": GetTestError,
@@ -408,6 +444,7 @@ ERROR_BY_METHOD: dict[str, type[SyntheticsError]] = {
 
 __all__ = [
     "SyntheticsError",
+    "BulkUpdateTestsUnexpectedError",
     "CreateAgentAlertUnexpectedError",
     "CreateTestUnexpectedError",
     "DeleteAgentUnexpectedError",
@@ -415,6 +452,7 @@ __all__ = [
     "DeleteTestUnexpectedError",
     "GetAgentUnexpectedError",
     "GetAgentAlertUnexpectedError",
+    "GetBulkUpdateTestsStatusUnexpectedError",
     "GetResultsForTestsUnexpectedError",
     "GetResultsForTestsCsvUnexpectedError",
     "GetTestUnexpectedError",
@@ -426,6 +464,7 @@ __all__ = [
     "UpdateAgentUnexpectedError",
     "UpdateAgentAlertUnexpectedError",
     "UpdateTestUnexpectedError",
+    "BulkUpdateTestsError",
     "CreateAgentAlertError",
     "CreateTestError",
     "DeleteAgentError",
@@ -433,6 +472,7 @@ __all__ = [
     "DeleteTestError",
     "GetAgentError",
     "GetAgentAlertError",
+    "GetBulkUpdateTestsStatusError",
     "GetResultsForTestsError",
     "GetResultsForTestsCsvError",
     "GetTestError",
