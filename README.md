@@ -13,18 +13,54 @@ The SDK is not hand-written.
 The pipeline fixes common OpenAPI generator bugs, removes schema-version
 prefixes from class names, and generates architecture diagrams.
 
-The diagram below shows how a call moves through the SDK. Each hop is a
-call going down and its answer coming back up. The hand-written runtime
-survives every regeneration. [`uv run poe generate`](pyproject.toml) wipes
-and rebuilds the generated code, and redraws this diagram.
+The diagram below shows what connects to what when your code calls the
+SDK. Each arrow names what it sends, and each call returns a Pydantic
+model up the same path. The hand-written runtime survives every
+regeneration. [`uv run poe generate`](pyproject.toml) wipes and rebuilds
+the generated code. Select a box to open its source.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/architecture-overview-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./docs/assets/architecture-overview-light.svg">
-  <img alt="SDK overview: your code calls a generated service wrapper. On REST, the wrapper calls a generated REST function and request_json(), which calls the Kentik REST API. On gRPC, it calls call_grpc(), which calls the Kentik gRPC API." src="./docs/assets/architecture-overview-light.svg">
-</picture>
+```mermaid
+%%{init: {"theme": "redux", "look": "neo", "layout": "dagre", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "themeVariables": {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, monospace", "primaryColor": "#f8f9fa", "primaryBorderColor": "#495057", "primaryTextColor": "#212529", "textColor": "#212529", "lineColor": "#77818c", "edgeLabelBackground": "#ffffff", "actorBkg": "#f8f9fa", "actorBorder": "#495057", "actorTextColor": "#212529", "actorLineColor": "#a9b3be", "signalColor": "#57616d", "signalTextColor": "#212529", "labelBoxBkgColor": "#f8f9fa", "labelBoxBorderColor": "#495057", "labelTextColor": "#212529", "loopTextColor": "#57616d", "noteBkgColor": "#fff9db", "noteBorderColor": "#f08c00", "noteTextColor": "#a35a00"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "wrappingWidth": 400}}}%%
+flowchart TD
+  code("Your code"):::orangeSrc
+  client("KentikAPI<br/>client.py<br/><small>hand-written</small>"):::orange
+  wrap("Service wrappers<br/>client.{service}<br/><small>generated</small>"):::green
+  rest("REST functions<br/>one per operation<br/><small>generated</small>"):::blue
+  rj("request_json()<br/>all REST traffic<br/><small>hand-written</small>"):::blue
+  cg("call_grpc()<br/>all gRPC traffic<br/><small>hand-written</small>"):::violet
+  restapi("Kentik REST API<br/>V6 and V5"):::blueSrc
+  grpcapi("Kentik gRPC API<br/>V6"):::violetSrc
 
-An interactive version, and the module dependency graph, are on the
+  code -->|"client.label.list()"| client
+  client -->|"label.list()"| wrap
+  wrap -->|"REST client"| rest
+  wrap -->|"gRPC client"| cg
+  rest -->|"method, path, body"| rj
+  rj -->|"HTTPS + auth headers"| restapi
+  cg -->|"gRPC over TLS"| grpcapi
+
+  click client "src/kentik_api/client.py"
+  click wrap "src/kentik_api/gen/README.md"
+  click rest "src/kentik_api/gen/README.md"
+  click rj "src/kentik_api/core/rest_runtime.py"
+  click cg "src/kentik_api/core/grpc_runtime.py"
+  click restapi "https://github.com/kentik/api-schema-public"
+  click grpcapi "https://github.com/kentik/api-schema-public"
+
+  classDef orangeSrc fill:#ffd8a8,stroke:#e8590c,color:#d9480f
+  classDef orange fill:#fff4e6,stroke:#e8590c,color:#d9480f
+  classDef green fill:#ebfbee,stroke:#2f9e44,color:#2b8a3e
+  classDef blueSrc fill:#a5d8ff,stroke:#1971c2,color:#1864ab
+  classDef blue fill:#e7f5ff,stroke:#1971c2,color:#1864ab
+  classDef violetSrc fill:#d0bfff,stroke:#7048e8,color:#5f3dc4
+  classDef violet fill:#f3f0ff,stroke:#7048e8,color:#5f3dc4
+  classDef orangeSrc,orange,green stroke-width:2px,rx:10px
+  classDef blueSrc,blue,violetSrc,violet stroke-width:2px,rx:10px
+  linkStyle default stroke-width:2px,stroke-linecap:round,stroke-linejoin:round
+```
+
+An interactive version, with what each part needs and what stops
+without it, is on the
 [SDK Runtime Architecture](docs/sphinx/sdk_runtime_architecture.md) page of
 the Sphinx docs. To build the docs, run `uv run poe docs-build` and open
 `docs/build/html/sdk_runtime_architecture.html`.
